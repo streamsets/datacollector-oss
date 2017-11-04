@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.codahale.metrics.Counter;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -1365,5 +1366,68 @@ public class TestFileTailSource {
     Assert.assertEquals(1, issues.size());
     String issue = issues.get(0).toString();
     Assert.assertTrue(issue, issue.contains("TAIL_08"));
+  }
+
+  // SDC-7598
+  @Test
+  public void testInitialFile() throws Exception {
+    final File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    ImmutableList.of("server.log", "server.log.20171013", "server.log.20171014", "server.log.20171015").forEach(name -> {
+      try {
+        Path path = Paths.get(testDataDir.getAbsolutePath(), name);
+        Files.write(path, name.getBytes(), StandardOpenOption.CREATE_NEW);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/server.log";
+    fileInfo.fileRollMode = FileRollMode.ALPHABETICAL;
+    fileInfo.firstFile = "server.log.20171014";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
+
+    SourceRunner runner = createRunner(source);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 30);
+      List<Record> records;
+
+      // Normal output records
+      records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(2, records.size());
+      Assert.assertEquals("server.log.20171014", records.get(0).get("/text").getValueAsString());
+      Assert.assertEquals("server.log.20171015", records.get(1).get("/text").getValueAsString());
+
+      // Metadata output records
+      records = output.getRecords().get("meta");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(5, records.size());
+      Assert.assertEquals("START", records.get(0).get("/event").getValueAsString());
+      Assert.assertTrue(records.get(0).get("/fileName").getValueAsString().endsWith("server.log.20171014"));
+      Assert.assertEquals("END", records.get(1).get("/event").getValueAsString());
+      Assert.assertTrue(records.get(1).get("/fileName").getValueAsString().endsWith("server.log.20171014"));
+      Assert.assertEquals("START", records.get(2).get("/event").getValueAsString());
+      Assert.assertTrue(records.get(2).get("/fileName").getValueAsString().endsWith("server.log.20171015"));
+      Assert.assertEquals("END", records.get(3).get("/event").getValueAsString());
+      Assert.assertTrue(records.get(3).get("/fileName").getValueAsString().endsWith("server.log.20171015"));
+      Assert.assertEquals("START", records.get(4).get("/event").getValueAsString());
+      Assert.assertTrue(records.get(4).get("/fileName").getValueAsString().endsWith("server.log"));
+    } finally {
+      runner.runDestroy();
+    }
   }
 }

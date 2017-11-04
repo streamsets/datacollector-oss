@@ -53,7 +53,7 @@ public class MultiFileInfo {
     this.fileFullPath = resolvedPath;
     this.fileRollMode = source.getFileRollMode();
     this.pattern = source.getPattern();
-    this.firstFile = null;
+    this.firstFile = source.getFirstFile();
     this.multiLineMainLinePatter = source.getMultiLineMainLinePatter();
     this.source = source;
   }
