@@ -464,6 +464,20 @@ angular
             }
           });
         }
+      },
+
+      /**
+       * Returns true if pipeline is Edge pipeline
+       */
+      isEdgePipeline: function() {
+        if ($scope.activeConfigInfo) {
+          var pipelineStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
+          return (
+            pipelineStatus && pipelineStatus.pipelineId === $scope.activeConfigInfo.pipelineId &&
+            pipelineStatus.executionMode === 'EDGE'
+          );
+        }
+        return false;
       }
     });
 

@@ -93,6 +93,9 @@
 
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.title || '--'}}</span></a>
 
+          <span class="edge-pipeline"
+                ng-if="isEdgePipeline(pipeline)">SDCe</span>
+
           <span class="version-text"
                 ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}}) </span>
 
@@ -103,8 +106,6 @@
                 ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
                 ng-repeat="label in pipeline.metadata.labels">{{label}}</span>
 
-          <span class="edge-pipeline"
-                ng-if="isEdgePipeline(pipeline)">EDGE</span>
         </div>
 
         <div class="pipeline-name"

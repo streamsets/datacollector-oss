@@ -140,6 +140,14 @@
         </ul>
       </div>
 
+      <a class="btn btn-link icon-button btn-selected"
+         tooltip-placement="bottom"
+         tooltip="{{'home.header.downloadExecutable' | translate}}"
+         tooltip-popup-delay="500"
+         ng-disabled="!pipelineConfig.valid"
+         ng-click="pipelineConfig.valid && downloadEdgeExecutable()">
+        <span class="fa fa-file-archive-o fa-14x"></span>
+      </a>
 
       <div class="btn-group" dropdown
            ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && common.isDPMEnabled"
@@ -255,7 +263,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode)"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode) && !isEdgePipeline()"
           ng-disabled="!pipelineConfig.previewable"
           ng-click="!pipelineConfig.previewable || previewPipeline()">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
@@ -275,7 +283,7 @@
          tooltip="{{'home.header.validate' | translate}}"
          tooltip-trigger="mouseenter"
          tooltip-popup-delay="500"
-         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !isEdgePipeline()"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="!pipelineConfig.valid"
          ng-click="!pipelineConfig.valid || validatePipeline()">
@@ -286,7 +294,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode)"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode) && !isEdgePipeline()"
           ng-disabled="!pipelineConfig.valid"
           ng-click="!pipelineConfig.valid || startPipeline(); ">
         <span class="glyphicon glyphicon-play fa-14x"></span>
@@ -414,6 +422,9 @@
         <h3 class="pull-left version-text"
             ng-if="pipelineConfig.metadata && pipelineConfig.metadata['dpm.pipeline.version']"> (v{{pipelineConfig.metadata['dpm.pipeline.version']}})</h3>
         <h3 class="pull-left" ng-if="isDPMPipelineDirty" title="{{'global.messages.info.isDPMPipelineDirty' | translate}}"><span class="glyphicon glyphicon-asterisk dirty-icon"></span></h3>
+
+        <span class="edge-pipeline"
+              ng-if="isEdgePipeline(activeConfigInfo)">SDCe</span>
       </div>
     </div>
 
