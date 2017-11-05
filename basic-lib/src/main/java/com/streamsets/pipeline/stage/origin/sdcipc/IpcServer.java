@@ -159,11 +159,14 @@ public class IpcServer {
             Thread.sleep(50);
           }
           if (servlet.isInPost()) {
+            // release the queue before forcing a shutdown
+            cancelBatch();
             LOG.warn("Servlet not completing POST after 30secs, forcing a shutdown");
           }
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
         }
+
         httpServer.stop();
       } catch (Exception ex) {
         LOG.warn("Error while shutting down: {}", ex.toString(), ex);
