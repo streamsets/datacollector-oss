@@ -37,13 +37,13 @@ public class WindowsEventLogSource extends BaseSource {
 
   @Override
   public List<ConfigIssue> init() {
-      LOG.debug("Windows Event Log Source configured with Log Name - '{}', Read Mode -'{}'", logName, readMode);
+      LOG.debug("Windows Event Log Origin configured with Log Name - '{}', Read Mode -'{}'", logName, readMode);
       return super.init();
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    throw new UnsupportedOperationException("Windows Event Log Source Is supported only in " + ExecutionMode.EDGE.name());
+    throw new UnsupportedOperationException("Windows Event Log Origin Is supported only in " + ExecutionMode.EDGE.name());
   }
 
 }

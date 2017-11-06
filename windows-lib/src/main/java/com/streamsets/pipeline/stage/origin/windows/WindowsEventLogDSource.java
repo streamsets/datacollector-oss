@@ -28,10 +28,10 @@ import com.streamsets.pipeline.configurablestage.DSource;
 @StageDef(
     version = 1,
     label = "Windows Event Log",
-    description = "Reads data from Windows Event Log",
+    description = "Reads data from a Windows event log",
     execution = {ExecutionMode.EDGE},
     icon = "winlogo.png",
-    onlineHelpRefUrl = "" // TODO SDC-7119
+    onlineHelpRefUrl = "index.html#Origins/WindowsLog.html#task_lmc_yjv_sbb"
 )
 
 @ConfigGroups(Groups.class)
@@ -40,7 +40,7 @@ public class WindowsEventLogDSource extends DSource {
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "Application",
-      label = "Log Name",
+      label = "Windows log to read from",
       description = "Log Name",
       displayPosition = 10,
       group = "WINDOWS"
@@ -52,7 +52,7 @@ public class WindowsEventLogDSource extends DSource {
       type = ConfigDef.Type.MODEL,
       defaultValue = "ALL",
       label = "Read Mode",
-      description = "Read Mode",
+      description = "Read all events in the log or only new events that occur after the pipeline starts",
       displayPosition = 20,
       group = "WINDOWS"
   )
