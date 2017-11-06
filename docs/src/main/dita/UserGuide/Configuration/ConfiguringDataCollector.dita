@@ -539,8 +539,8 @@
                 Java security properties when running multiple <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> instances within the same JVM.</p><p>The <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                    configuration file includes the following Java security property:</p><p>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file includes the following Java security property:</p><p>
                 <table frame="all" rowsep="1" colsep="1" id="table_bjx_fjr_y1b">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -891,21 +891,7 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                         </row>
                     </tbody>
                 </tgroup>
-            </table><p>The <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file includes the following properties that enable the <xref
-                    href="PublishMetadata.dita#concept_q4y_4mt_p1b">publishing of pipeline
-                    metadata</xref> to Cloudera Navigator:<table
-                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table_uhx_g25_p1b"
-                    id="table_vqt_myz_p1b">
-                    <tgroup cols="1">
-                        <tbody>
-                            <row>
-                                <entry/>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table></p></context>
+            </table></context>
     </taskbody>
     <related-links>
         <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>

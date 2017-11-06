@@ -137,15 +137,6 @@
    <topicref href="../Configuration/Vault-Step1-VaultProps.dita"/>
    <topicref href="../Configuration/Vault-Step2-CallVault.dita"/>
   </topicref>
-  <topicref href="../Configuration/PublishMetadata.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Configuration/PublishMetadata-Prereqs.dita"/>
-   <topicref href="../Configuration/PublishMetadata-Viewing.dita"/>
-   <topicref href="../Configuration/PublishMetadata-SupportedStages.dita"/>
-   <topicref href="../Configuration/PublishMetadata-Configuring.dita"/>
-  </topicref>
   <topicref href="../Configuration/JMXMetrics-EnableExternalTools.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
