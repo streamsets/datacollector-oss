@@ -25,8 +25,8 @@ import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
     version = 2,
-    label = "Write to Mqtt",
-    description = "Writes error records to Mqtt brocker",
+    label = "Write to MQTT",
+    description = "Writes error records to MQTT broker",
     icon = "mqtt.png",
     execution = {
         ExecutionMode.STANDALONE,
