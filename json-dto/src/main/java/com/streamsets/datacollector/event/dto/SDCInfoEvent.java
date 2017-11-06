@@ -27,17 +27,21 @@ public class SDCInfoEvent implements Event {
   private List<String> labels;
   private boolean edge = false;
   private int offsetProtocolVersion;
+  private String deploymentId;
 
   public SDCInfoEvent() {
   }
 
-  public SDCInfoEvent(String id,
-    String httpUrl,
-    String javaVersion,
-    List<StageInfo> stageInfoList,
-    SDCBuildInfo sdcBuildInfo,
-    List<String> labels,
-    int offsetProtocolVersion) {
+  public SDCInfoEvent(
+      String id,
+      String httpUrl,
+      String javaVersion,
+      List<StageInfo> stageInfoList,
+      SDCBuildInfo sdcBuildInfo,
+      List<String> labels,
+      int offsetProtocolVersion,
+      String deploymentId
+  ) {
     this.sdcId = id;
     this.httpUrl = httpUrl;
     this.javaVersion = javaVersion;
@@ -45,6 +49,7 @@ public class SDCInfoEvent implements Event {
     this.sdcBuildInfo = sdcBuildInfo;
     this.labels = labels;
     this.offsetProtocolVersion = offsetProtocolVersion;
+    this.deploymentId = deploymentId;
   }
 
   public String getSdcId() {
@@ -117,5 +122,13 @@ public class SDCInfoEvent implements Event {
 
   public void setOffsetProtocolVersion(int offsetProtocolVersion) {
     this.offsetProtocolVersion = offsetProtocolVersion;
+  }
+
+  public String getDeploymentId() {
+    return deploymentId;
+  }
+
+  public void setDeploymentId(String deploymentId) {
+    this.deploymentId = deploymentId;
   }
 }

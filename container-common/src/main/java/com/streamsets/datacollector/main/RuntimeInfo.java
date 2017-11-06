@@ -61,6 +61,7 @@ public abstract class RuntimeInfo {
 
   private boolean DPMEnabled;
   private boolean aclEnabled;
+  private String deploymentId;
 
   private final static String USER_ROLE = "user";
 
@@ -255,6 +256,14 @@ public abstract class RuntimeInfo {
     return this.remoteRegistrationSuccessful;
   }
 
+  public String getDeploymentId() {
+    return deploymentId;
+  }
+
+  public void setDeploymentId(String deploymentId) {
+    this.deploymentId = deploymentId;
+  }
+
   public void setSSLContext(SSLContext sslContext) {
     this.sslContext = sslContext;
   }
@@ -297,6 +306,8 @@ public abstract class RuntimeInfo {
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
+        String deploymentId = conf.get(RemoteSSOService.DPM_DEPLOYMENT_ID, null);
+        runtimeInfo.setDeploymentId(deploymentId);
         boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
         String auth = conf.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT);
         if (aclEnabled && (!"none".equals(auth) || isDPMEnabled)) {

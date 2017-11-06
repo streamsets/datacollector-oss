@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
@@ -197,10 +198,20 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       stageInfoList.add(new StageInfo(stageDef.getName(), stageDef.getVersion(), stageDef.getLibrary()));
     }
     BuildInfo buildInfo = new DataCollectorBuildInfo();
-    SDCInfoEvent sdcInfoEvent =
-      new SDCInfoEvent(runtimeInfo.getId(), runtimeInfo.getBaseHttpUrl(), System.getProperty("java.runtime.version"),
-        stageInfoList, new SDCBuildInfo(buildInfo.getVersion(), buildInfo.getBuiltBy(), buildInfo.getBuiltDate(),
-          buildInfo.getBuiltRepoSha(), buildInfo.getSourceMd5Checksum()), labelList, OFFSET_PROTOCOL_VERSION);
+    SDCInfoEvent sdcInfoEvent = new SDCInfoEvent(runtimeInfo.getId(),
+        runtimeInfo.getBaseHttpUrl(),
+        System.getProperty("java.runtime.version"),
+        stageInfoList,
+        new SDCBuildInfo(buildInfo.getVersion(),
+            buildInfo.getBuiltBy(),
+            buildInfo.getBuiltDate(),
+            buildInfo.getBuiltRepoSha(),
+            buildInfo.getSourceMd5Checksum()
+        ),
+        labelList,
+        OFFSET_PROTOCOL_VERSION,
+        Strings.emptyToNull(runtimeInfo.getDeploymentId())
+    );
     return new ClientEvent(UUID.randomUUID().toString(), appDestinationList, false, false, EventType.SDC_INFO_EVENT, sdcInfoEvent, null);
   }
 

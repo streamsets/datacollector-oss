@@ -28,6 +28,7 @@ public class SDCInfoEventJson implements EventJson {
   private boolean edge = false;
   // default for sdc 2.4 and below is 1
   private int offsetProtocolVersion = 1;
+  private String deploymentId;
 
   public String getSdcId() {
     return sdcId;
@@ -99,5 +100,13 @@ public class SDCInfoEventJson implements EventJson {
 
   public void setOffsetProtocolVersion(int offsetProtocolVersion) {
     this.offsetProtocolVersion = offsetProtocolVersion;
+  }
+
+  public String getDeploymentId() {
+    return deploymentId;
+  }
+
+  public void setDeploymentId(String deploymentId) {
+    this.deploymentId = deploymentId;
   }
 }

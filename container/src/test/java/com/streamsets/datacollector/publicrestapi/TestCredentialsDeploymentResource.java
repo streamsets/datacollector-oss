@@ -18,7 +18,7 @@ package com.streamsets.datacollector.publicrestapi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.ConfigurationTestInjector;
 import com.streamsets.datacollector.restapi.RuntimeInfoTestInjector;
@@ -30,6 +30,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CredentialDeploymentResponseJson;
 import com.streamsets.lib.security.http.CredentialDeploymentStatus;
 import com.streamsets.lib.security.http.CredentialsBeanJson;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -170,8 +171,9 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
           dpmProps.getProperty("dpm.appAuthToken"));
       Assert.assertEquals("https://dpm.streamsets.com:18631", dpmProps.getProperty("dpm.base.url"));
 
-      Assert.assertEquals(StringUtils.join(labels.toArray(), ","), dpmProps.getProperty(CredentialsDeploymentResource.DPM_REMOTE_CONTROL_JOB_LABELS));
-      Assert.assertEquals("deployment1:org", dpmProps.getProperty(CredentialsDeploymentResource.DPM_DEPLOYMENT_ID));
+      Assert.assertEquals(StringUtils.join(labels.toArray(), ","), dpmProps.getProperty(RemoteEventHandlerTask
+          .REMOTE_JOB_LABELS));
+      Assert.assertEquals("deployment1:org", dpmProps.getProperty(RemoteSSOService.DPM_DEPLOYMENT_ID));
 
 
       File tokenFile = new File(RuntimeInfoTestInjector.confDir, "application-token.txt");

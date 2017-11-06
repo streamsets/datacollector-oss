@@ -85,6 +85,8 @@ public class SlaveRuntimeModule {
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
+        String deploymentId = conf.get(RemoteSSOService.DPM_DEPLOYMENT_ID, null);
+        runtimeInfo.setDeploymentId(deploymentId);
         boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
         runtimeInfo.setAclEnabled(aclEnabled);
       } catch (IOException ex) {

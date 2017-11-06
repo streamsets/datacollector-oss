@@ -773,7 +773,8 @@ public class TestRemoteEventHandler {
         stageInfoList,
         sdcBuildInfo,
         Arrays.asList("label_1", "label_2"),
-        2
+        2,
+        "foo"
     );
     ClientEvent clientEvent = new ClientEvent(
         id1.toString(),

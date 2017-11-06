@@ -16,12 +16,14 @@
 package com.streamsets.datacollector.publicrestapi;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CredentialDeploymentResponseJson;
 import com.streamsets.lib.security.http.CredentialDeploymentStatus;
 import com.streamsets.lib.security.http.CredentialsBeanJson;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.Charsets;
@@ -63,16 +65,10 @@ import static java.nio.file.StandardOpenOption.WRITE;
 @PermitAll
 public class CredentialsDeploymentResource {
   private static final Logger LOG = LoggerFactory.getLogger(CredentialsDeploymentResource.class);
-  private static final String DPM_BASE_URL = "dpm.base.url";
-  private static final String DPM_ENABLED = "dpm.enabled";
-  private static final String DPM_APP_AUTH_TOKEN = "dpm.appAuthToken";
   private static final String APPLICATION_TOKEN_TXT = "application-token.txt";
   private static final int MAX_FAILURES_ALLOWED = 100;
 
   static final String DPM_AGENT_PUBLIC_KEY = "streamsets.cluster.manager.public.key";
-  static final String DPM_DEPLOYMENT_ID = "dpm.remote.deployment.id";
-  static final String DPM_REMOTE_CONTROL_JOB_LABELS = "dpm.remote.control.job.labels";
-
   private final RuntimeInfo runtimeInfo;
   private final AtomicInteger failedCount = new AtomicInteger(0);
 
@@ -158,27 +154,28 @@ public class CredentialsDeploymentResource {
       conf.load(reader);
     }
 
-    conf.unset(DPM_BASE_URL);
-    conf.set(DPM_ENABLED, true);
+    conf.unset(RemoteSSOService.DPM_BASE_URL_CONFIG);
+    conf.set(RemoteSSOService.DPM_ENABLED, true);
 
     conf.set(
-        DPM_APP_AUTH_TOKEN,
+        RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG,
         Configuration.FileRef.PREFIX + APPLICATION_TOKEN_TXT + Configuration.FileRef.SUFFIX
     );
 
-    conf.set(DPM_DEPLOYMENT_ID, credentialsBeanJson.getDeploymentId());
+    conf.set(RemoteSSOService.DPM_DEPLOYMENT_ID, credentialsBeanJson.getDeploymentId());
+    runtimeInfo.setDeploymentId(credentialsBeanJson.getDeploymentId());
 
     if(!CollectionUtils.isEmpty(credentialsBeanJson.getLabels())) {
       String labelsString = StringUtils.join(credentialsBeanJson.getLabels().toArray(), ",");
       LOG.info("SDC will have the following Labels: {}", labelsString);
-      conf.set(DPM_REMOTE_CONTROL_JOB_LABELS, labelsString);
+      conf.set(RemoteEventHandlerTask.REMOTE_JOB_LABELS, labelsString);
     }
     try (FileWriter writer = new FileWriter(dpmProperties)) {
       conf.save(writer);
     }
     Files.write(
         Paths.get(dpmProperties.getPath()) ,
-        (DPM_BASE_URL + "=" + credentialsBeanJson.getDpmUrl()).getBytes(),
+        (RemoteSSOService.DPM_BASE_URL_CONFIG + "=" + credentialsBeanJson.getDpmUrl()).getBytes(),
         StandardOpenOption.APPEND
     );
     runtimeInfo.setDPMEnabled(true);
