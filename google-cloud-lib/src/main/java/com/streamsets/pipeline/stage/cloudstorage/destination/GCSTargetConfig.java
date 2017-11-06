@@ -131,6 +131,18 @@ public class GCSTargetConfig {
   @ConfigDefBean(groups = "CREDENTIALS")
   public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Compress with gzip",
+      displayPosition = 230,
+      group = "GCS",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "XML", "PROTOBUF", "SDC_JSON"}
+  )
+  public boolean compress;
+
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     dataGeneratorFormatConfig.init(
         context,

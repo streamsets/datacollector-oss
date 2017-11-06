@@ -25,6 +25,7 @@ public enum Errors implements ErrorCode {
   GCS_03("File Path '{}' already exists"),
   GCS_04("Error evaluating EL. Reason {}"),
   GCS_05("Object Name Suffix contains '/' or starts with '.'"),
+  GCS_06("Error handling failed for {}.Reason: {}")
   ;
 
   private final String msg;

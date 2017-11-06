@@ -20,6 +20,7 @@ import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.base.Strings;
 import com.google.common.collect.MinMaxPriorityQueue;
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.lib.util.AntPathMatcher;
 import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
+import com.streamsets.pipeline.stage.cloudstorage.lib.GcsUtil;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -72,6 +74,8 @@ public class GoogleCloudStorageSource extends BaseSource {
   private long noMoreDataRecordCount;
   private long noMoreDataErrorCount;
   private long noMoreDataFileCount;
+  private Blob blob = null;
+  private GcsObjectPostProcessingHandler errorBlobHandler;
 
   GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
     this.gcsOriginConfig = gcsOriginConfig;
@@ -111,7 +115,7 @@ public class GoogleCloudStorageSource extends BaseSource {
 
     rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
     rateLimitElVars = getContext().createELVars();
-
+    errorBlobHandler = new GcsObjectPostProcessingHandler(storage, gcsOriginConfig.gcsOriginErrorConfig);
     return issues;
   }
 
@@ -152,7 +156,7 @@ public class GoogleCloudStorageSource extends BaseSource {
 
     // Process Blob
     if (parser == null) {
-      Blob blob = minMaxPriorityQueue.pollFirst();
+      blob = minMaxPriorityQueue.pollFirst();
 
       if (blobId.equals(blob.getGeneratedId()) && fileOffset.equals("-1")) {
         return lastSourceOffset;
@@ -225,6 +229,12 @@ public class GoogleCloudStorageSource extends BaseSource {
       getContext().reportError(Errors.GCS_00, blobId, fileOffset ,e);
       fileOffset = END_FILE_OFFSET;
       noMoreDataErrorCount++;
+      try {
+        errorBlobHandler.handleError(blob.getBlobId());
+      } catch (StorageException se) {
+        LOG.error("Error handling failed for {}. Reason{}", blobId, e);
+        getContext().reportError(Errors.GCS_06, blobId, se);
+      }
     }
     return String.format(OFFSET_FORMAT, minTimestamp, fileOffset, blobId);
   }
@@ -232,7 +242,7 @@ public class GoogleCloudStorageSource extends BaseSource {
   private void poolForFiles(long minTimeStamp) {
     Page<Blob> blobs = storage.list(
         gcsOriginConfig.bucketTemplate,
-        Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix)
+        Storage.BlobListOption.prefix(GcsUtil.normalizePrefix(gcsOriginConfig.commonPrefix))
     );
     blobs.iterateAll().forEach(blob ->  {
       if (isBlobEligible(blob, minTimeStamp)) {
@@ -243,7 +253,8 @@ public class GoogleCloudStorageSource extends BaseSource {
 
   private boolean isBlobEligible(Blob blob, long minTimeStamp) {
     String blobName = blob.getName();
-    String prefixToMatch =  blobName.substring(gcsOriginConfig.commonPrefix.length(), blobName.length());
+    String prefixToMatch =  blobName.substring(
+        GcsUtil.normalizePrefix(gcsOriginConfig.commonPrefix).length(), blobName.length());
     return blob.getSize() > 0 && blob.getUpdateTime() > minTimeStamp
         && antPathMatcher.match(gcsOriginConfig.prefixPattern, prefixToMatch);
   }
@@ -263,5 +274,6 @@ public class GoogleCloudStorageSource extends BaseSource {
   @Override
   public void destroy() {
     IOUtils.closeQuietly(parser);
+    blob = null;
   }
 }

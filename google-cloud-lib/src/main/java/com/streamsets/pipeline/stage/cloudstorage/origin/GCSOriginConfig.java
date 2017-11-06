@@ -21,9 +21,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -88,9 +85,11 @@ public class GCSOriginConfig {
     @ConfigDefBean()
     public DataParserFormatConfig dataParserFormatConfig;
 
+    @ConfigDefBean
+    public GcsOriginErrorConfig gcsOriginErrorConfig;
+
     @ConfigDefBean(groups = "CREDENTIALS")
     public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
-
 
     List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
         dataParserFormatConfig.init(
