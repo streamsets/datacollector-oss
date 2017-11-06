@@ -68,6 +68,8 @@
           to a Kinesis Firehose delivery stream.</li>
         <li><xref href="KinProducer.dita#concept_swk_h1j_yr">Kinesis Producer</xref> - Writes data
           to Kinesis Streams.</li>
+        <li><xref href="KineticaDB.dita#concept_hxh_5xg_qbb">KineticaDB</xref> - Writes data to a
+          table in a Kinetica cluster.</li>
         <li><xref href="Kudu.dita#concept_chy_xxg_4v">Kudu</xref> - Writes data to Kudu.</li>
         <li><xref href="LocalFS.dita#concept_zvc_bv5_1r">Local FS</xref> - Writes data to a local
           file system. </li>

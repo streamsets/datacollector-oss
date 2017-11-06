@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_r1q_vxg_qbb">
+    <title>Configuring a KineticaDB Destination</title>
+    <taskbody>
+        <context>
+            <p><indexterm>KineticaDB
+                destination<indexterm>configuring</indexterm></indexterm>Configure a KineticaDB
+                destination to write data to a KineticaDB cluster.</p>
+        </context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Connection</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bhn_kqc_rbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Connection Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Kinetica URL</entry>
+                                    <entry>The URL for the head node of the Kinetica
+                                        cluster.</entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Size</entry>
+                                    <entry>The batch size to use for the Kinetica bulk
+                                            inserter.<p>Default is 10,000 records.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Transport Compression</entry>
+                                    <entry>Compresses data before writing to Kinetica. </entry>
+                                </row>
+                                <row>
+                                    <entry>Disable Multihead Ingest <xref
+                                            href="KineticaDB-MultiheadIngest.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w55_4yn_lw"/></xref></entry>
+                                    <entry>Disables the default multihead ingest processing. When
+                                        selected, the destination passes data to the Kinetica head
+                                        node for redistribution.</entry>
+                                </row>
+                                <row>
+                                    <entry>IP Regex</entry>
+                                    <entry>Regular expression to specify the IP addresses to write
+                                        to. Use to filter out invalid IP addresses associated with
+                                        multihome hosts. <p>For example, if Kinetica hosts have both
+                                            internal and external IP addresses, you can enter a
+                                            regular expression to allow writing to only the external
+                                            IP addresses.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Credentials</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_oly_pqc_rbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>Username for the connection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for the connection.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Table</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yfn_5qc_rbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Table Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Table Name</entry>
+                                    <entry>Table to write to. Table names are case
+                                        sensitive.</entry>
+                                </row>
+                                <row>
+                                    <entry>Update on Existing PK <xref
+                                            href="KineticaDB-InsertsUpdates.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ddt_cxh_sbb"/></xref></entry>
+                                    <entry>Determines the behavior when a record with the same
+                                        primary key is already in the Kinetica table. <p>Select to
+                                            allow updates to existing records. By default, the
+                                            destination does not write records when one with the
+                                            same primary key already exists.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

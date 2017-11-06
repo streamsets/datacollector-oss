@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hxh_5xg_qbb">
+ <title>KineticaDB</title>
+ <conbody>
+  <p><indexterm>KineticaDB
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>KineticaDB</indexterm></indexterm>The
+            KineticaDB destination writes data to a table in a Kinetica cluster using the Kinetica
+            bulk inserter. </p>
+        <p>When you configure the KineticaDB destination, you specify the URL for the Kinetica head
+            node, the credentials for the connection, and the table name. You specify the batch size
+            for the bulk inserter and whether to compress the data before passing it to Kinetica. </p>
+        <p>When necessary, you can disable multihead ingest, and you can specify a regular
+            expression to filter the IP addresses that the bulk inserter uses. </p>
+ </conbody>
+</concept>

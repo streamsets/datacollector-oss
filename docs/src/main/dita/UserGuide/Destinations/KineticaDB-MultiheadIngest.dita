@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jx1_25h_sbb">
+ <title>Multihead Ingest</title>
+ <conbody>
+  <p><indexterm>KineticaDB destination<indexterm>multihead ingestion</indexterm></indexterm>By
+            default, the KineticaDB destination writes to Kinetica using multihead ingest when
+            possible. </p>
+        <p>When using multihead ingest, the destination can send data directly to the appropriate
+            shard manager. When writing to a replicated table, the destination passes the data only
+            to the head node, which then replicates the data as expected. </p>
+        <p>You can configure the Kinetica DB destination to send data only to the Kinetica head node
+            instead. You might need to disable multihead ingest, for example, when the Kinetica
+            worker nodes reside behind a firewall.</p>
+        <p>To disable multihead ingest, select the Disable Multihead Ingest property on the
+            Connection tab. For more information about multihead ingestion, see the Kinetica
+            documentation.</p>
+ </conbody>
+</concept>

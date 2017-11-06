@@ -331,10 +331,12 @@
               <entry/>
             </row>
             <row>
+              <entry>KineticaDB</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>Kudu</entry>
-              <entry namest="c2" nameend="c9">* * * Not Applicable * * *</entry>
-              <entry/>
-              <entry/>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
               <entry>Local FS</entry>
