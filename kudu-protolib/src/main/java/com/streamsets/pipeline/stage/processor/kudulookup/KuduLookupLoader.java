@@ -117,24 +117,12 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
     // Scanner is not reusable. Need to build per record.
     AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder = kuduClient.newScannerBuilder(kuduTable)
         .setProjectedColumnNames(projectColumns);
-    List<String> kColumns = new ArrayList<>(keyColumns);
     try {
-      // Set primary keys to scanner
       Schema schema = kuduTable.getSchema();
-      for (ColumnSchema keySchema : schema.getPrimaryKeyColumns()) {
-        if (!kColumns.contains(keySchema.getName())){
-          // Primary key is not configured in Key Column Mapping. Worth stopping pipeline.
-          throw new StageException(Errors.KUDU_34, keySchema.getName());
-        }
-        String keyColumnName = keySchema.getName();
-        addPredicate(key.columns.get(keyColumnName), scannerBuilder, kuduTable, keySchema.getName());
-        kColumns.remove(keyColumnName);
-      }
-      // Set non-primary key columns to scanner if specified in Key Column Mapping
-      if (!kColumns.isEmpty()) {
-        for (String nonPrimary : kColumns) {
-          addPredicate(key.columns.get(nonPrimary), scannerBuilder, kuduTable, nonPrimary);
-        }
+      // Set key columns to scanner if specified in Key Column Mapping.
+      // We removed the restriction that requires primary keys here.
+      for (String keyColumn : keyColumns) {
+        addPredicate(key.columns.get(keyColumn), scannerBuilder, kuduTable, keyColumn);
       }
       try {
         scanner = scannerBuilder.build();
