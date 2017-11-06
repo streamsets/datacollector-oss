@@ -22,6 +22,10 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
@@ -863,6 +867,49 @@ public class ClusterHDFSSourceIT {
       th.interrupt();
     }
   }
+
+  @Test(timeout = 30000)
+  public void testLineageEvent() throws Exception {
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
+        .addOutputLane("lane")
+        .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
+        .setResourcesDir(resourcesDir)
+        .build();
+
+    sourceRunner.runInit();
+
+    List<Map.Entry> list = new ArrayList<>();
+    list.add(new Pair("HEADER_COL_1,HEADER_COL_2", null));
+    list.add(new Pair("path::" + "1", new String("a,b\nC,D\nc,d")));
+
+    Thread th = createThreadForAddingBatch(sourceRunner, list);
+    try {
+      sourceRunner.runProduce(null, 5);
+      List<LineageEvent> events = sourceRunner.getLineageEvents();
+      Assert.assertEquals(1, events.size());
+      Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(0).getEventType());
+      Assert.assertEquals("path", events.get(0).getSpecificAttribute(LineageSpecificAttribute.DESCRIPTION));
+      Assert.assertEquals(EndPointType.HDFS.name(), events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE));
+    } finally {
+      th.interrupt();
+    }
+  }
+
 
   private byte[] createAvroData(String name, int age, List<String> emails)  throws IOException {
     String AVRO_SCHEMA = "{\n"

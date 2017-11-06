@@ -30,6 +30,10 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
@@ -44,6 +48,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.file.FileReader;
@@ -89,6 +94,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +129,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private long recordsProduced;
   private boolean hasHeader;
 
+  private final Set<String> visitedFiles;
 
   public ClusterHdfsSource(ClusterHdfsConfigBean conf) {
     ControlChannel controlChannel = new ControlChannel();
@@ -132,6 +140,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.previewBuffer = new LinkedHashMap<>();
     this.countDownLatch = new CountDownLatch(1);
     this.conf = conf;
+    visitedFiles = new HashSet<>();
   }
 
   @Override
@@ -725,6 +734,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         throw new IllegalStateException(Utils.format("Unrecognized data format: '{}'", conf.dataFormat));
       }
       listRecords.forEach(batchMaker::addRecord);
+
+      if (!listRecords.isEmpty()) {
+        String fileName = listRecords.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE);
+        if (!visitedFiles.contains(fileName)) {
+          visitedFiles.add(fileName);
+          sendLineageEvent(fileName);
+        }
+      }
     }
     if (count == 0) {
       LOG.info("Received no records, returning null");
@@ -739,6 +756,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       try (DataParser parser = parserFactory.getParser(messageId, (byte[]) message)) {
         Record record = parser.parse();
         if (record != null) {
+          setHeaders(record);
           records.add(record);
         }
       } catch (IOException | DataParserException ex) {
@@ -763,6 +781,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             continue;
           }
           if (record != null) {
+            setHeaders(record);
             records.add(record);
           }
         } while(record != null);
@@ -783,6 +802,20 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
     }
     return records;
+  }
+
+  private void setHeaders(Record record) {
+    String[] source = record.getHeader().getSourceId().split("::");
+    record.getHeader().setAttribute(HeaderAttributeConstants.FILE, source[0]);
+    record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, source[1]);
+  }
+
+  private void sendLineageEvent(String fileName) {
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, fileName);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HDFS.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, fileName);
+    getContext().publishLineageEvent(event);
   }
 
   @Override
