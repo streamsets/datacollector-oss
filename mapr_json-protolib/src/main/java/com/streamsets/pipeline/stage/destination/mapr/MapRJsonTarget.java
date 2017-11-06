@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.mapr;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.mapr.db.MapRDB;
 import com.mapr.db.Table;
 import com.mapr.db.exceptions.DBException;
 import com.mapr.org.apache.hadoop.hbase.util.Bytes;
@@ -39,6 +38,8 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
+import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.ojai.Document;
@@ -51,7 +52,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +71,6 @@ public class MapRJsonTarget extends BaseTarget {
   private ELVars tableNameVars;
   private String tab;
   private boolean hasEL;
-  private Map<String, Table> theTables = new HashMap<>();
 
   public MapRJsonTarget(MapRJsonConfigBean mapRJsonConfigBean) {
     this.mapRJsonConfigBean = mapRJsonConfigBean;
@@ -142,7 +141,7 @@ public class MapRJsonTarget extends BaseTarget {
     while (iter.hasNext()) {
       Record rec = iter.next();
 
-      openMapRTable(rec);
+      resolveTableName(rec);
 
       try {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024 * 1024);
@@ -158,7 +157,7 @@ public class MapRJsonTarget extends BaseTarget {
 
   }
 
-  private void openMapRTable(Record rec) throws StageException {
+  private void resolveTableName(Record rec) throws StageException {
 
     if(hasEL) {
       RecordEL.setRecordInContext(tableNameVars, rec);
@@ -173,32 +172,6 @@ public class MapRJsonTarget extends BaseTarget {
     }
     // if tableName contains an EL, "tab" was initialized above,
     // otherwise use the tableName from the UI
-
-    // if we've encountered this table name already, it's open.
-    if(theTables.containsKey(tab)) {
-      return;
-    }
-
-    // open table (optionally create it)
-    // and add to the group of open tables.
-    try {
-      theTables.put(tab, MapRDB.getTable(tab));
-
-    } catch (DBException ex) {
-      if (mapRJsonConfigBean.createTable) {
-        try {
-          theTables.put(tab, MapRDB.createTable(tab));
-        } catch (DBException ee) {
-          LOG.error(Errors.MAPR_JSON_03.getMessage(), mapRJsonConfigBean.tableName, ee);
-          throw new StageException(Errors.MAPR_JSON_03, mapRJsonConfigBean.tableName, ee);
-
-        }
-      } else {
-        LOG.error(Errors.MAPR_JSON_02.getMessage(), mapRJsonConfigBean.tableName, ex);
-        throw new StageException(Errors.MAPR_JSON_02, mapRJsonConfigBean.tableName, ex);
-
-      }
-    }
   }
 
   private void createJson(OutputStream os, Record rec) throws OnRecordErrorException {
@@ -293,7 +266,7 @@ public class MapRJsonTarget extends BaseTarget {
   private Document populateDocument(ByteArrayOutputStream os, Record rec) throws OnRecordErrorException {
     Document document;
     try {
-      document = MapRDB.newDocument(new String(os.toByteArray(), StandardCharsets.UTF_8));
+      document = MapRJsonDocumentLoader.createDocument(new String(os.toByteArray(), StandardCharsets.UTF_8));
 
     } catch (DecodingException ex) {
       LOG.error(Errors.MAPR_JSON_10.getMessage(), ex.toString(), ex);
@@ -307,22 +280,22 @@ public class MapRJsonTarget extends BaseTarget {
 
     if (mapRJsonConfigBean.insertOrReplace == InsertOrReplace.REPLACE) {
       try {
-        theTables.get(tab).insertOrReplace(document);
+        MapRJsonDocumentLoader.commitReplace(tab, document, mapRJsonConfigBean.createTable);
 
-      } catch (DBException ex) {
+      } catch (MapRJsonDocumentLoaderException ex) {
         LOG.error(Errors.MAPR_JSON_06.getMessage(), ex.toString(), ex);
         throw new StageException(Errors.MAPR_JSON_06, ex.toString(), ex);
       }
 
     } else {
       try {
-        theTables.get(tab).insert(document);
+        MapRJsonDocumentLoader.commit(tab, document, mapRJsonConfigBean.createTable);
 
       } catch (DocumentExistsException ex) {
         LOG.error(Errors.MAPR_JSON_07.getMessage(), ex.toString(), ex);
         throw new OnRecordErrorException(record, Errors.MAPR_JSON_07, ex.toString(), ex);
 
-      } catch (DBException ex) {
+      } catch (MapRJsonDocumentLoaderException ex) {
         LOG.error(Errors.MAPR_JSON_06.getMessage(), ex.toString(), ex);
         throw new StageException(Errors.MAPR_JSON_06, ex.toString(), ex);
       }
@@ -330,7 +303,7 @@ public class MapRJsonTarget extends BaseTarget {
     }
 
     try {
-      theTables.get(tab).flush();
+      MapRJsonDocumentLoader.flush(tab);
 
     } catch (DBException ex) {
       LOG.error(Errors.MAPR_JSON_04.getMessage(), mapRJsonConfigBean.tableName, ex);
@@ -341,17 +314,7 @@ public class MapRJsonTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-
-    for(Map.Entry<String, Table> entry: theTables.entrySet()) {
-      try{
-        entry.getValue().close();
-      }
-      catch(DBException ex) {
-        LOG.error(Errors.MAPR_JSON_05.getMessage(), entry.getKey(), ex);
-      }
-    }
-
-    theTables.clear();
+    MapRJsonDocumentLoader.close();
   }
 
 }

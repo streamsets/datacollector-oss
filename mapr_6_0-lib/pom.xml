@@ -185,6 +185,22 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-mapr_json-6_0-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.mapr.db</groupId>
+          <artifactId>maprdb</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-mapr_json-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
