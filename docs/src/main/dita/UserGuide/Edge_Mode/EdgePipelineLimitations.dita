@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pbm_q4r_4bb">
+ <title>Edge Pipeline Limitations</title>
+    <shortdesc>Edge pipelines run on <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> which
+        is a lightweight agent without a UI. As a result, some features available for standalone
+        pipelines are not available for edge pipelines at this time. We will provide support for
+        some of these features in edge pipelines in a future release.</shortdesc>
+ <conbody>
+  <p><indexterm>edge pipelines<indexterm>limitations</indexterm></indexterm>Please note the
+            following limitations for edge pipelines:<ul id="ul_qrw_gqr_4bb">
+                <li>Email and webhook notifications cannot be sent by edge pipelines.</li>
+                <li>Rules and alerts cannot be defined for edge pipelines.</li>
+                <li>Edge pipelines do not support dataflow triggers.</li>
+                <li>Edge pipelines do not support multithreaded processing.</li>
+                <li>Edge pipelines cannot be previewed or validated.</li>
+                <li>Edge pipelines cannot be viewed in Monitor mode. As a result, you cannot capture
+                    snapshots nor view real-time statistics about running edge pipelines in the UI.
+                        <p>You can use the REST API to view metrics for edge pipelines. If you use
+                            <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />, you run edge pipelines from <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> jobs. You can monitor real-time statistics for edge pipelines run by <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> jobs in the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> UI.</p></li>
+                <li>Edge pipelines can only write statistics to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> directly. As a result, <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> cannot display aggregated statistics for a job run on multiple instances of
+                        <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                    />. When you monitor the job, you can view the statistics for each remote
+                    pipeline instance separately.</li>
+            </ul></p>
+ </conbody>
+</concept>

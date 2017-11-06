@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lqx_vtq_4bb">
+ <title>Data Collector Receiving Pipelines</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        receiving pipelines run in the standalone execution mode. You design and run receiving
+        pipelines in <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+ <conbody>
+        <p><indexterm>edge pipelines<indexterm>Data Collector
+                    receiving</indexterm></indexterm><indexterm>pipelines<indexterm>receiving from
+                    edge pipelines</indexterm></indexterm><indexterm>receiving
+                    pipelines<indexterm>from Data Collector Edge</indexterm></indexterm>A <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline <ph
+                conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/SDCReceivingPipeline"
+            /></p>
+        <p>Optionally, you can also design the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline to monitor the data being processed and then send data to an edge
+            receiving pipeline running on <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>.
+            The edge receiving pipeline acts on the data to control the edge device.</p>
+        <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline includes the corresponding origin to read from the destination in the
+            edge sending pipeline. For example, if the edge sending pipeline writes to a CoAP Client
+            destination, then the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline uses a CoAP Server origin to read the data.</p>
+        <p>The MQTT stages require using an intermediary MQTT broker. The edge sending pipeline uses
+            an MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline reads the data. </p>
+        <p>The CoAP, HTTP and WebSocket stages can directly communicate with each other. They do not
+            require an intermediary storage location. </p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipelines support a limited number of stages. The following table lists the
+            supported stages:<table frame="all" rowsep="1" colsep="1" id="table_ijw_tqs_4bb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Stage Type</entry>
+                            <entry>Supported Stages</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Origins</entry>
+                            <entry>
+                                <ul id="ul_npd_drs_4bb">
+                                    <li>CoAP Server</li>
+                                    <li>HTTP Server </li>
+                                    <li>MQTT Subscriber</li>
+                                    <li>WebSocket Server</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Processors</entry>
+                            <entry>Any</entry>
+                        </row>
+                        <row>
+                            <entry>Destinations</entry>
+                            <entry>Any</entry>
+                        </row>
+                        <row>
+                            <entry>Executors</entry>
+                            <entry>Any</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+    </conbody>
+</concept>

@@ -33,7 +33,7 @@
         </context>
         <steps id="steps_tsx_d2w_kq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline2">
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline3">
                 <cmd/>
             </step>
             <step id="pipeProperties">
@@ -108,6 +108,12 @@
                                                 /> spawns additional workers as needed to process
                                                 data. Use to stream data from a Kafka cluster that
                                                 uses Spark Streaming on Mesos.</li>
+                                            <li>Edge - A single <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"
+                                                /> (<ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                                                />) process runs the pipeline on an edge
+                                                device.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

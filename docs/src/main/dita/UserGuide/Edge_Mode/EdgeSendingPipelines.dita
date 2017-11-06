@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kly_qtq_4bb">
+ <title>Edge Sending Pipelines</title>
+ <shortdesc>An edge sending pipeline <ph
+            conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/EdgeSendingPipeline"
+        /></shortdesc>
+ <conbody>
+  <p><indexterm>edge pipelines<indexterm>sending data</indexterm></indexterm>Optionally, you can
+            also design an edge sending pipeline to monitor the data being processed and then send
+            data to an edge receiving pipeline running on the same <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>.
+            The edge receiving pipeline acts on the data to control the edge device.</p>
+        <p>Edge sending pipelines support a limited number of stages. The following table lists the
+            supported stages:<draft-comment author="alisontaylor">for any updates to supported
+                stages, also update the list of Origins, Processors, Destinations in the overview of
+                each of those chapters</draft-comment><table frame="all" rowsep="1" colsep="1"
+                id="table_ijw_tqs_4bb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Stage Type</entry>
+                            <entry>Supported Stages</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Origins</entry>
+                            <entry>
+                                <ul id="ul_lrs_4rs_4bb">
+                                    <li>Dev Random Record Source</li>
+                                    <li>Directory <p>Edge pipelines do not support multithreaded
+                                            processing. In an edge pipeline, the Directory origin
+                                            always creates a single thread to read the files even if
+                                            you configure multiple threads.</p></li>
+                                    <li>File Tail <p>In edge pipelines, the File Tail origin can
+                                            read a single set of files. If you configure multiple
+                                            sets of files for the origin, the origin reads only the
+                                            files configured in the first set. </p></li>
+                                    <li>Windows Event Log</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Processors</entry>
+                            <entry>
+                                <ul id="ul_mrs_4rs_4bb">
+                                    <li>Delay</li>
+                                    <li>Dev Identity</li>
+                                    <li>Expression Evaluator<p
+                                            conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/p_ExpressionLimitation"
+                                        /></li>
+                                    <li>Field Remover</li>
+                                    <li>Stream Selector</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Destinations</entry>
+                            <entry>
+                                <ul id="ul_nrs_4rs_4bb">
+                                    <li>CoAP Client</li>
+                                    <li>HTTP Client</li>
+                                    <li>MQTT Publisher</li>
+                                    <li>Trash</li>
+                                    <li>WebSocket Client</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Executors</entry>
+                            <entry>None</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline includes the corresponding origin to read from the destination in the
+            edge sending pipeline. For example, if the edge sending pipeline writes to a CoAP Client
+            destination, then the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline uses a CoAP Server origin to read the data.</p>
+        <p>The MQTT stages require using an intermediary MQTT broker. The edge sending pipeline uses
+            an MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            receiving pipeline reads the data. </p>
+        <p>The CoAP, HTTP and WebSocket stages can directly communicate with each other. They do not
+            require an intermediary storage location. </p>
+ </conbody>
+</concept>

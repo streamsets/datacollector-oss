@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nd5_z4f_pbb">
+ <title>Getting Started with Sample Edge Pipelines</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
+            (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>)
+        includes several sample pipelines that make it easy to get started. You simply create the
+        appropriate <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        receiving pipeline, download and install <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> on the
+        edge device, and then run the sample edge pipeline.</shortdesc>
+ <conbody>
+  <p>For a description of the available sample pipelines, see <xref
+                href="https://github.com/streamsets/datacollector-edge" format="html"
+                scope="external"/>. Note the data format that each stage in the sample pipeline
+            processes. You cannot use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            edit the sample pipelines. If you need a stage to use another data format or require
+            other changes to the pipeline, you can design your own edge pipeline.</p>
+        <p>The sample pipelines use runtime parameters so that you can specify the values for
+            pipeline properties when you start the pipeline.</p>
+        <p>In the following steps, we'll use the Directory Spooler to HTTP sample pipeline as an
+            example. This sample edge pipeline uses a Directory origin to read a local text file on
+            the edge device and write the data in JSON format to an HTTP Client destination:</p>
+        <p><image href="../Graphics/EdgePipelineTemplate.png" scale="60" id="image_lly_xzb_sbb"
+            /></p>
+ </conbody>
+</concept>

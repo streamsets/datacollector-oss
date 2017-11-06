@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_p45_s5k_pbb">
+    <title>Downloading from Data Collector</title>
+    <shortdesc>Use <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+        download the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
+        executable along with your designed edge pipelines. The downloaded tarball includes the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
+        executable, the sample edge pipelines, and your selected edge pipelines. </shortdesc>
+    <taskbody>
+        <context id="context_hhz_3lm_sbb"><p>Selecting edge pipelines and downloading them with the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
+            executable is the simplest way to deploy your designed edge pipelines to an edge device.
+            If you use another installation method, you'll need to export your edge pipelines from
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> and copy them to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+            />.</p></context>
+        <steps>
+            <step
+                conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/InstallEdgefromSDC1"
+                conrefend="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/InstallEdgefromSDC3">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/InstallEdgefromSDC4"
+                conrefend="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/InstallEdgefromSDC5">
+                <cmd/>
+            </step>
+        </steps>
+    </taskbody>
+</task>

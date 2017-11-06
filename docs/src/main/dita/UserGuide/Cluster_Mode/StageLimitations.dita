@@ -21,7 +21,10 @@
  <title>Stage Limitations</title>
  <conbody>
   <p><indexterm>cluster mode<indexterm>unsupported stages</indexterm></indexterm>Please note the
-            following stage limitations in cluster pipelines:<ul id="ul_rrk_s5y_fz">
+            following stage limitations in cluster pipelines:<draft-comment author="alisontaylor"
+                >for any updates to supported or non-supported stages, also update the list of
+                Origins, Processors, Destinations in the overview of each of those
+                chapters</draft-comment><ul id="ul_rrk_s5y_fz">
                 <li>Non-cluster origins - Do not use non-cluster origins in cluster pipelines. For a
                     description of the origins to use, see <xref
                         href="ClusterPipelines-ExecutionMode.dita#concept_rjc_4m5_lx"/>.</li>

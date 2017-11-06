@@ -23,8 +23,9 @@
     <p><indexterm>processors<indexterm>overview</indexterm></indexterm>A processor stage represents
       a type of data processing that you want to perform. You can use as many processors in a
       pipeline as you need.</p>
-    <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      provides the following processors:<ul id="ul_mxz_jxm_jq">
+    <p>You can use different processors based on the execution mode of the pipeline. </p>
+    <p>In standalone or cluster pipelines, you can use the following processors:<ul
+        id="ul_mxz_jxm_jq">
         <li><xref href="Base64Decoder.dita#concept_ujj_spy_kv">Base64 Field Decoder</xref> - Decodes
           Base64 encoded data to binary data.</li>
         <li><xref href="Base64Encoder.dita#concept_wtr_mpy_kv">Base64 Field Encoder</xref> - Encodes
@@ -83,8 +84,6 @@
           in Kudu to enrich records with data.</li>
         <li><xref href="LogParser.dita#concept_ulm_qdq_fs">Log Parser</xref> - Parses log data in a
           field based on the specified log format.</li>
-        <li><xref href="RDeduplicator.dita#concept_z3m_v52_zq">Record Deduplicator</xref> - Removes
-          duplicate records.</li>
         <li><xref href="RedisLookup.dita#concept_ng3_lpr_pv">Redis Lookup</xref> - Performs
           key-value lookups in Redis to enrich records with data.</li>
         <li><xref href="SalesforceLookup.dita#concept_k23_3rk_yx">Salesforce Lookup</xref> -
@@ -103,6 +102,18 @@
           data in a string field.</li>
         <li><xref href="XMLParser.dita#concept_dtt_q5q_k5">XML Parser</xref> - Parses XML data in a
           string field. </li>
+      </ul></p>
+    <p>In standalone pipelines, you can also use the following processor:<ul id="ul_zw2_tp5_sbb">
+        <li><xref href="RDeduplicator.dita#concept_z3m_v52_zq">Record Deduplicator</xref> - Removes
+          duplicate records.</li>
+      </ul></p>
+    <p>In edge pipelines, you can use the following processors:<ul id="ul_imx_tp5_sbb">
+        <li><xref href="Expression.dita#concept_zm2_pp3_wq">Expression Evaluator</xref> - Performs
+          calculations on data. Can also add or modify record header attributes.</li>
+        <li><xref href="FieldRemover.dita#concept_jdd_blr_wq">Field Remover</xref> - Removes fields
+          from a record.</li>
+        <li><xref href="StreamSelector.dita#concept_tqv_t5r_wq">Stream Selector</xref> - Routes data
+          to different streams based on conditions.</li>
       </ul></p>
     <p>To help create or test pipelines, you can use the following development processors:<ul
         id="ul_c3m_m1p_qv">

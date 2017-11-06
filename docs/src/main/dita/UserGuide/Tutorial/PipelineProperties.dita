@@ -44,7 +44,12 @@
             </step>
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline title and
-                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
+                    optional description, and choose to run the pipeline on <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />. </cmd>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
                             id="image_jnr_wtk_5s" scale="50"/></p></info>
                 <info>Note a few helpful areas: <table frame="all" rowsep="1" colsep="1"
@@ -94,8 +99,7 @@
                                 </row>
                                 <row>
                                     <entry>5</entry>
-                                    <entry>Properties panel / Preview panel / Monitor panel
-                                    </entry>
+                                    <entry>Properties panel / Preview panel / Monitor panel </entry>
                                     <entry>When you configure a pipeline, the Properties panel
                                         displays the properties of the pipeline or selected stage.
                                         You can resize, minimize and maximize the panel. <p>When you

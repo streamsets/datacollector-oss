@@ -46,7 +46,19 @@
             </step>
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline title and
-                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
+                    optional description, and select where you want the pipeline to run:</cmd>
+                <choices id="choices_gxy_lg2_rbb">
+                    <choice><ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> -
+                        Select to design a standalone or cluster execution mode pipeline that runs
+                        on <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />.</choice>
+                    <choice><ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/> -
+                        Select to design an edge execution mode pipeline that runs on <ph
+                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>.</choice>
+                </choices>
+            </step>
+            <step id="CreatePipeline3">
+                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
                 <stepresult>The pipeline canvas displays the pipeline title, the generated pipeline
                     ID, and an error icon. The error icon indicates that you need to configure error
                     handling for the pipeline. The Properties panel displays the pipeline

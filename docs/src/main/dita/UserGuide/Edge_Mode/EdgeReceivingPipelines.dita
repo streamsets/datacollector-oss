@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_q3j_ytq_4bb">
+    <title>Edge Receiving Pipelines</title>
+    <shortdesc>An edge receiving pipeline <ph
+            conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/EdgeReceivingPipeline"
+        /></shortdesc>
+    <conbody>
+        <p><indexterm>edge pipelines<indexterm>receiving data</indexterm></indexterm>Edge receiving
+            pipelines can listen for data sent by another edge pipeline running on the same <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> or
+            by a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> receiving pipeline.</p>
+        <p>The edge receiving pipeline includes the corresponding origin to read from the
+            destination in the pipeline that sends the data. For example, if the sending pipeline
+            writes to an HTTP Client destination, then the edge receiving pipeline uses an HTTP
+            Server origin to read the data.</p>
+        <p>The MQTT stages require using an intermediary MQTT broker. The sending pipeline uses an
+            MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the edge receiving pipeline reads
+            the data. </p>
+        <p>The HTTP stages can directly communicate with each other. They do not require an
+            intermediary storage location.</p>
+        <p>Edge receiving pipelines support a limited number of stages. The following table lists
+            the supported stages:<draft-comment author="alisontaylor">for any updates to supported
+                stages, also update the list of Origins, Processors, Destinations in the overview of
+                each of those chapters</draft-comment><table frame="all" rowsep="1" colsep="1"
+                id="table_ijw_tqs_4bb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Stage Type</entry>
+                            <entry>Supported Stages</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Origins</entry>
+                            <entry>
+                                <ul id="ul_npd_drs_4bb">
+                                    <li>Dev Random Record Source </li>
+                                    <li>HTTP Server<p>Edge pipelines do not support multithreaded
+                                            processing. In an edge pipeline, the HTTP Server origin
+                                            always creates a single thread to read the files even if
+                                            you configure multiple threads.</p></li>
+                                    <li>MQTT Subscriber</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Processors</entry>
+                            <entry>
+                                <ul id="ul_opd_drs_4bb">
+                                    <li>Delay</li>
+                                    <li>Dev Identity</li>
+                                    <li>Expression Evaluator<p
+                                            conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/p_ExpressionLimitation"
+                                        /></li>
+                                    <li>Field Remover</li>
+                                    <li>Stream Selector</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Destinations</entry>
+                            <entry>
+                                <ul id="ul_ppd_drs_4bb">
+                                    <li>CoAP Client</li>
+                                    <li>HTTP Client</li>
+                                    <li>MQTT Publisher</li>
+                                    <li>Trash</li>
+                                    <li>WebSocket Client</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Executors</entry>
+                            <entry>None</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+    </conbody>
+</concept>

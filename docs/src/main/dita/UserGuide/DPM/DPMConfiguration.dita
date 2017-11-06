@@ -57,8 +57,12 @@
                         <entry>dpm.base.url</entry>
                         <entry>Base URL to access <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                            />. Set to:
-                            <systemoutput>https://cloud.streamsets.com/</systemoutput></entry>
+                            />. Enter the appropriate URL:
+                            <ul
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ul_DPMURL"
+                                id="ul_c2n_5kd_j1b">
+                                <li/>
+                            </ul></entry>
                     </row>
                     <row>
                         <entry>dpm.registration.retry.attempts</entry>

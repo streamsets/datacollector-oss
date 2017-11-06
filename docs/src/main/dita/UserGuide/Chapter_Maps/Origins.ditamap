@@ -319,6 +319,7 @@
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>
+   <topicref href="../Origins/MapRStreamsCons-RecordHeaderAtts.dita"/>
    <topicref href="../Origins/MapRStreamsCons-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MapRStreamsMultiConsumer.dita" chunk="to-content">

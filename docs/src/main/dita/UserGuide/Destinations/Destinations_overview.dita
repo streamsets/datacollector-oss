@@ -22,8 +22,11 @@
  <shortdesc>A destination stage represents the target for a pipeline. You can use one or more
     destinations in a pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following
-      types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
+  <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use different
+      destinations based on the execution mode of the pipeline. </p>
+    <p>In standalone or cluster pipelines, you can use the following destinations: </p>
+    <p>
+      <ul id="ul_mxz_jxm_jq">
         <li><xref href="AmazonS3.dita#concept_avx_bnq_rt">Amazon S3</xref> - Writes data to Amazon
           S3. </li>
         <li><xref href="DataLakeStore.dita#concept_jzm_kf4_zx">Azure Data Lake Store</xref> - Writes
@@ -85,15 +88,12 @@
           MongoDB.</li>
         <li><xref href="MQTTPublisher.dita#concept_odz_txt_lz">MQTT Publisher</xref> - Publishes
           messages to a topic on an MQTT broker.</li>
-        <li><xref href="MongoDB.dita#concept_eth_k5n_4v">Rabbit MQ Producer</xref> - Writes data to
-          RabbitMQ.</li>
         <li><xref href="Redis.dita#concept_ktc_gw2_gw">Redis</xref> - Writes data to Redis.</li>
         <li><xref href="Salesforce.dita#concept_rlb_rt3_rx">Salesforce</xref> - Writes data to
           Salesforce.</li>
         <li><xref href="SDC_RPCdest.dita#concept_lfk_hx2_ct">SDC RPC</xref> - Passes data to an SDC
           RPC origin in an SDC RPC pipeline.</li>
-        <li><xref href="Solr.dita">Solr</xref> - Writes data to a Solr node or
-          cluster.</li>
+        <li><xref href="Solr.dita">Solr</xref> - Writes data to a Solr node or cluster.</li>
         <li><xref href="ToError.dita#concept_ryn_v3z_lr">To Error</xref> - Passes records to the
           pipeline for error handling.</li>
         <li><xref href="Trash.dita#concept_htf_ydj_wq">Trash</xref> - Removes records from the
@@ -102,7 +102,23 @@
           to Salesforce Wave Analytics.</li>
         <li><xref href="WebSocketClient.dita#concept_l4d_mjn_lz">WebSocket Client</xref> - Writes
           data to a WebSocket endpoint.</li>
-      </ul>To help create or test pipelines, you can use the following development destination:<ul
+      </ul>
+    </p>
+    <p>In standalone pipelines, you can also use the following destination:<ul id="ul_ms3_np5_sbb">
+        <li><xref href="MongoDB.dita#concept_eth_k5n_4v">Rabbit MQ Producer</xref> - Writes data to
+          RabbitMQ.</li>
+      </ul></p>
+    <p>In edge pipelines, you can use the following destinations: <ul id="ul_nxf_rx2_rbb">
+        <li><xref href="CoAPClient.dita#concept_hw5_s3n_sz">CoAP Client</xref> - Writes data to a
+          CoAP endpoint.</li>
+        <li><xref href="HTTPClient.dita#concept_khl_sg5_lz">HTTP Client</xref> - Writes data to an
+          HTTP endpoint.</li>
+        <li><xref href="MQTTPublisher.dita#concept_odz_txt_lz">MQTT Publisher</xref> - Publishes
+          messages to a topic on an MQTT broker.</li>
+        <li><xref href="WebSocketClient.dita#concept_l4d_mjn_lz">WebSocket Client</xref> - Writes
+          data to a WebSocket endpoint.</li>
+      </ul></p>
+    <p>To help create or test pipelines, you can use the following development destination:<ul
         id="ul_wvk_p3f_lx">
         <li>To Event</li>
       </ul></p>

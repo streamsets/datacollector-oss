@@ -138,6 +138,18 @@
         <li><xref href="MapRStreamsCons.dita#concept_cvy_xsf_2v">MapR Streams Consumer</xref> -
           Reads messages from MapR Streams.</li>
       </ul></p>
+    <p>In edge pipelines, you can use the following origins:<ul id="ul_r4p_zs2_rbb">
+        <li><xref href="Directory.dita#concept_qcq_54n_jq">Directory</xref> - Reads fully-written
+          files from a directory.</li>
+        <li><xref href="FileTail.dita#concept_n1y_qyp_5q">File Tail</xref> - Reads lines of data
+          from an active file after reading related archived files in the directory. </li>
+        <li><xref href="HTTPServer.dita#concept_s2p_5hb_4y">HTTP Server</xref> - Listens on an HTTP
+          endpoint and processes the contents of all authorized HTTP POST requests.</li>
+        <li><xref href="MQTTSubscriber.dita#concept_ukz_3vt_lz">MQTT Subscriber</xref> - Subscribes
+          to a topic on an MQTT broker to read messages from the broker.</li>
+        <li><xref href="WindowsLog.dita#concept_agf_5jv_sbb">Windows Event Log</xref> - Reads data
+          from a Microsoft Windows event log located on a Windows machine. </li>
+      </ul></p>
     <p>To help create or test pipelines, you can use the following development origins:<ul
         id="ul_nr2_c1p_qv">
         <li>Dev Data Generator </li>

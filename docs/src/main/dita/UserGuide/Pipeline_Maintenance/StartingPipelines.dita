@@ -19,15 +19,24 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wpy_1xr_5q">
     <title>Starting Pipelines</title>
-    <shortdesc>You can start pipelines when they are valid. When you start a pipeline, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
-        the pipeline until you stop the pipeline or shut down <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For most origins, when
-                you restart a pipeline, <ph
+            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>You can start <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> pipelines when they are valid. When you start a pipeline, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> runs the pipeline until you stop the pipeline or shut down <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />.</p>
+            <note>You cannot use <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to start edge pipelines. Edge pipelines run on <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
+                    (<ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                />). For more information about starting edge pipelines, see <xref
+                    href="../Edge_Mode/EdgePipelines_ManageSDCe.dita#concept_rk3_2hm_pbb"/>.</note>
+            <p>For most origins, when you restart a pipeline, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>

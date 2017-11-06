@@ -29,6 +29,9 @@
                   Collector</ph></p>
             <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>DPM short: <ph id="DPM-short">DPM</ph></p>
+            <p>Full, init cap version of the edge: <ph id="Edge-Long">Data Collector Edge</ph></p>
+            <p>Full, init cap version of the edge in plural form: <ph id="Edge-Long-Plural">Edge Data Collectors</ph></p>
+            <p>Shortened version of edge: <ph id="Edge-Short">SDCe</ph></p>
             <p>
                   <draft-comment author="Loretta">The old Hive Drift Solution
                         rename.</draft-comment>
