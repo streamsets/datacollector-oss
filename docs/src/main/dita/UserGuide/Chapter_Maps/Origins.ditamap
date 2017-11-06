@@ -557,5 +557,9 @@
    <topicref href="../Origins/WebSocketServer-DataFormat.dita"/>
    <topicref href="../Origins/WebSocketServer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/WindowsLog.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/WindowsLog-Configuring.dita"/>
+  </topicref>
  </topicref>
 </map>

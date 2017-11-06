@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_lmc_yjv_sbb">
+    <title>Configuring a Windows Event Log Origin</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Windows Event Log
+                origin<indexterm>configuring</indexterm></indexterm>Configure a Windows Event Log
+                origin to read data from a Windows event log. </p>
+        </context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Windows</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_vw4_swv_sbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Windows Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Log Name</entry>
+                                    <entry>Name of the Windows log to read from:<ul
+                                            id="ul_awt_xwv_sbb">
+                                            <li>Application</li>
+                                            <li>System</li>
+                                            <li>Security</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Read Mode</entry>
+                                    <entry>Determines how the origin reads the log:<ul
+                                            id="ul_vnv_1xv_sbb">
+                                            <li>All - Read all events in the log.</li>
+                                            <li>New - Read only new events in the log that occur
+                                                after the pipeline starts. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

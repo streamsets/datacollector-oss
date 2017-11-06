@@ -658,6 +658,10 @@
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rzk_jvf_3z"
                 /></entry>
             </row>
+            <row>
+              <entry>Windows Event Log</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
           </tbody>
         </tgroup>
             </table>

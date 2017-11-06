@@ -825,6 +825,10 @@
                             <entry>streamsets-datacollector-vault-credentialstore-lib</entry>
                             <entry>For the Hashicorp Vault credential store system.</entry>
                         </row>
+                        <row>
+                            <entry>streamsets-datacollector-windows-lib</entry>
+                            <entry>For Windows.<p>Includes the Windows Event Log origin.</p></entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table></p>
