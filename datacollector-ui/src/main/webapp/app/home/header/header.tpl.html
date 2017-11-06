@@ -93,12 +93,6 @@
             </a>
           </li>
 
-          <li role="presentation" ng-if="activeConfigInfo.valid && executionMode === 'EDGE'">
-            <a href="#" dropdown-toggle ng-click="downloadEdgeExecutable()">
-              <i class="fa fa-file-archive-o"></i> {{'home.header.downloadExecutable' | translate}}
-            </a>
-          </li>
-
         </ul>
       </div>
 
@@ -144,6 +138,7 @@
          tooltip-placement="bottom"
          tooltip="{{'home.header.downloadExecutable' | translate}}"
          tooltip-popup-delay="500"
+         ng-if="isEdgePipeline()"
          ng-disabled="!pipelineConfig.valid"
          ng-click="pipelineConfig.valid && downloadEdgeExecutable()">
         <span class="fa fa-file-archive-o fa-14x"></span>
