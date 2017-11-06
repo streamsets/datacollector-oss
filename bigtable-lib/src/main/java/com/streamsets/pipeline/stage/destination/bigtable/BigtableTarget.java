@@ -534,11 +534,13 @@ public class BigtableTarget extends BaseTarget {
       Put put = new Put(rowKey, timeStamp);
 
       for (BigtableFieldMapping f : conf.fieldColumnMapping) {
-        theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
-            destinationNames.get(f.column).qualifier,
-            timeStamp,
-            values.get(f.source)
-        ));
+        if (values.containsKey(f.source)) {
+          theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
+              destinationNames.get(f.column).qualifier,
+              timeStamp,
+              values.get(f.source)
+          ));
+        }
       }
 
       counter++;
