@@ -26,7 +26,6 @@
     <version>3.0.0.0-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-mongodb_3-lib</artifactId>
   <version>3.0.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector MongoDB 3.0.2 Lib</description>
@@ -35,8 +34,7 @@
 
   <properties>
     <!--https://docs.mongodb.com/ecosystem/drivers/driver-compatibility-reference/#reference-compatibility-mongodb-java-->
-    <!-- Version 3.4.1 seems to be compatible with all the lower versions  so i upgraded the version -->
-    <mongodb-driver.version>3.4.1</mongodb-driver.version>
+    <mongodb-driver.version>3.5.0</mongodb-driver.version>
   </properties>
 
   <dependencies>
