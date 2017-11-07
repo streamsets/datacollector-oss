@@ -31,6 +31,9 @@ public class RawTypeHandler {
 
   @VisibleForTesting
   static byte[] parseRaw(String column, String value, int columnType) throws StageException {
+    if (value == null) {
+      return null;
+    }
     Matcher m = HEX_TO_RAW_PATTERN.matcher(value);
     if (m.find()) {
       try {

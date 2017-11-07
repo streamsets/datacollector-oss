@@ -48,4 +48,9 @@ public class TestRawTypeHandler {
     }
   }
 
+  @Test
+  public void testNull() throws DecoderException, StageException {
+    Assert.assertNull(RawTypeHandler.parseRaw("don't care", null, 2932));
+  }
+
 }
