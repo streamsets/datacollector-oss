@@ -91,7 +91,7 @@ public class OracleCDCConfigBean {
       description = "Buffer changes in SDC memory or on Disk. Use this to reduce PGA memory usage on the DB",
       displayPosition = 80,
       group = "CDC",
-      defaultValue = "false"
+      defaultValue = "true"
   )
   public boolean bufferLocally;
 
