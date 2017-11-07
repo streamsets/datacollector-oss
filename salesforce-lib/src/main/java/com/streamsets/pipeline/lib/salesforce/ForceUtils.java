@@ -69,6 +69,7 @@ public class ForceUtils {
   private static TimeZone TZ = TimeZone.getTimeZone("GMT");
   private static List<String> BOOLEAN_TYPES = Arrays.asList("boolean", "checkbox");
   private static List<String> STRING_TYPES = Arrays.asList(
+      "combobox",
       "email",
       "encryptedstring",
       "id",
