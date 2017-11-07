@@ -128,7 +128,10 @@ public class RemoteSSOService extends AbstractSSOService {
     boolean active;
     try {
       URL url = new URL(getLoginPageUrl());
-      int status = ((HttpURLConnection)url.openConnection()).getResponseCode();
+      HttpURLConnection httpURLConnection = ((HttpURLConnection)url.openConnection());
+      httpURLConnection.setConnectTimeout(connTimeout);
+      httpURLConnection.setReadTimeout(connTimeout);
+      int status = httpURLConnection.getResponseCode();
       active = status == HttpURLConnection.HTTP_OK;
       if (!active) {
         LOG.warn("DPM reachable but returning '{}' HTTP status on login", status);
