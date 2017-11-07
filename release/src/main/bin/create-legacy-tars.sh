@@ -19,6 +19,13 @@ VERSION=$1
 DIST=$2
 TARGET=$3
 
+# Human readable index file
+INDEX_FILE_PATH="${TARGET}/index.html"
+
+echo "<html><head><title>StreamSets Data Collector Legacy Stage Libraries</title></head><body>" > $INDEX_FILE_PATH
+echo "<h1>StreamSets Data Collector Legacy Stage Libraries</h1><ul>" > $INDEX_FILE_PATH
+
+# Machine readable manifest file
 STAGE_LIB_MANIFEST_FILE="stage-lib-manifest.properties"
 STAGE_LIB_MANIFEST_FILE_PATH="${TARGET}/${STAGE_LIB_MANIFEST_FILE}"
 
@@ -50,8 +57,14 @@ do
     cd ${CURRENT_DIR}
     LIB_NAME=`unzip -p ${STAGE_LIBS}/${LIB_DIR}/lib/${LIB_DIR}-*.jar data-collector-library-bundle.properties | grep library.name | sed 's/library.name=//'`
     echo "stage-lib.${LIB_DIR}=${LIB_NAME}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
+
+    # Human readable file
+    echo "<li><a href='${LIB_DIR}-${VERSION}.tgz'>$LIB_DIR</a> (<a href='${LIB_DIR}-${VERSION}.tgz.sha1'>checksum</a>)</li>" >> $INDEX_FILE_PATH
   fi
 done
 
 cd ${TARGET} || exit
 sha1sum ${STAGE_LIB_MANIFEST_FILE} > ${STAGE_LIB_MANIFEST_FILE}.sha1
+
+# Finish the human readable index file
+echo "</ul></body></html>" >> $INDEX_FILE_PATH
