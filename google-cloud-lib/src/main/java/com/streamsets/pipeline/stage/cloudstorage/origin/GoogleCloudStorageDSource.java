@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
     version = 1,
-    label = "Google Cloud Storage Origin",
+    label = "Google Cloud Storage",
     description = "Reads from Google Cloud Storage",
     icon = "cloud-storage-logo.png",
     recordsByRef = true,

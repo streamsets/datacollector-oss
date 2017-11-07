@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Google Cloud Storage Destination",
+    label = "Google Cloud Storage",
     description = "Writes to google cloud storage.",
     icon = "cloud-storage-logo.png",
     producesEvents = true,
