@@ -176,6 +176,7 @@
       "title": "Title",
       "toStage": "To Stage",
       "type": "Type",
+      "quickTips": "Quick Tips",
       "userId": "User ID",
       "userIdPlaceholder": "Enter User ID",
       "userName": "Display Name",
