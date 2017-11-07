@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-stage-lib-tutorial</artifactId>
-  <version>3.0.0.0-SNAPSHOT</version>
+  <version>3.1.0.0-SNAPSHOT</version>
   <name>StreamSets Data Collector Stage Library Tutorial</name>
   <description>StreamSets Stage Library Archetype</description>
   <packaging>maven-archetype</packaging>

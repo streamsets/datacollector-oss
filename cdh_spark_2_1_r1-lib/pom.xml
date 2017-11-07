@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.0.0.0-SNAPSHOT</version>
+    <version>3.1.0.0-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -31,7 +31,7 @@
   <artifactId>streamsets-datacollector-cdh_spark_2_1_r1-lib</artifactId>
   <name>Streamsets Data Collector CDH5 Spark 2.1 Release 1 Lib</name>
   <description>Streamsets Data Collector CDH5 Spark 2.1 Release 1 Lib</description>
-  <version>3.0.0.0-SNAPSHOT</version>
+  <version>3.1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
 
