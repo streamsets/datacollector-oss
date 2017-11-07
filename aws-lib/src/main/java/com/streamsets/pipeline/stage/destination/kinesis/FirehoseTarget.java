@@ -158,6 +158,7 @@ public class FirehoseTarget extends BaseTarget {
       for (int i = 0; i < responses.size(); i++) {
         PutRecordBatchResponseEntry response = responses.get(i);
         if (response.getErrorCode() != null) {
+          LOG.error(Errors.KINESIS_05.getMessage(), sdcRecords.get(i), response.getErrorMessage());
           errorRecordHandler.onError(
               new OnRecordErrorException(
                   sdcRecords.get(i),
