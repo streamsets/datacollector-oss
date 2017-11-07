@@ -4,7 +4,11 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" ng-if="!forceStop" translate="home.header.downloadExecutable">Download Edge Executable</h3>
+
+    <h3 class="modal-title" ng-if="!downloaded" translate="home.header.downloadExecutable">Download Edge Executable</h3>
+
+    <h3 class="modal-title" ng-if="downloaded" translate="global.form.quickTips">Quick Tips</h3>
+
   </div>
   <div class="modal-body">
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
@@ -37,12 +41,13 @@
     </div>
 
     <div ng-if="downloaded">
-      <p>Quick Tips</p>
       <div class="stepper">
         <div class="step cursor-pointer">
           <div>
             <div class="title">1. Extract the downloaded tar file</div>
-            <div class="body"></div>
+            <div class="body">
+              <pre>tar -xvf streamsets-datacollector-edge*.tgz</pre>
+            </div>
           </div>
         </div>
         <div class="step cursor-pointer">
@@ -61,11 +66,23 @@ bin/edge --start={{pipelineConfig.pipelineId}}
             <div class="title">3. Use REST APIs to manage edge pipelines</div>
             <div class="body">
               <pre>
-curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/status
-curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/start
-curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/stop
-curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/resetOffset
-curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/metrics
+### List all pipelines
+    curl -X POST http://localhost:18633/rest/v1/pipelines
+
+### Start Pipeline
+    curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/start
+
+### Check Pipeline Status
+    curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/status
+
+### Check Pipeline Metrics
+    curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/metrics
+
+### Stop Pipeline
+    curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/stop
+
+### Reset Origin Offset
+    curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/resetOffset
               </pre>
             </div>
           </div>
