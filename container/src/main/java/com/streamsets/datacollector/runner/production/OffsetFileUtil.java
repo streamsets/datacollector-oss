@@ -108,10 +108,20 @@ public class OffsetFileUtil {
 
   public static String getSourceOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     SourceOffset sourceOffset = getOffset(runtimeInfo, pipelineName, rev);
+    if (sourceOffset == null) {
+      LOG.warn("Source offset is not present for pipeline: {}", pipelineName);
+      sourceOffset = new SourceOffset(SourceOffset.CURRENT_VERSION, DEFAULT_OFFSET);
+    }
     try {
       return ObjectMapperFactory.get().writeValueAsString(new SourceOffsetJson(sourceOffset));
     } catch (JsonProcessingException e) {
-      throw new IllegalStateException(Utils.format("Failed to serialize source offset : {}", e.toString(), e));
+      throw new IllegalStateException(Utils.format(
+          "Failed to fetch source offset: {} for pipeline: {}, error is: {}",
+          sourceOffset,
+          pipelineName,
+          e.toString(),
+          e
+      ));
     }
   }
 

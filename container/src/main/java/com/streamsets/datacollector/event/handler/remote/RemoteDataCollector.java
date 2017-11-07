@@ -310,7 +310,7 @@ public class RemoteDataCollector implements DataCollector {
           pipelineState.getMessage(),
           workerInfos,
           isClusterMode,
-          getSourceOffset(offset),
+          getSourceOffset(name, offset),
           null,
           runnerCount
       ));
@@ -464,12 +464,15 @@ public class RemoteDataCollector implements DataCollector {
     return validatorIdList;
   }
 
-  private String getSourceOffset(Map<String, String> offset) {
+  private String getSourceOffset(String pipelineId, Map<String, String> offset) {
     SourceOffset sourceOffset = new SourceOffset(SourceOffset.CURRENT_VERSION, offset);
     try {
       return ObjectMapperFactory.get().writeValueAsString(new SourceOffsetJson(sourceOffset));
     } catch (JsonProcessingException e) {
-      throw new IllegalStateException(Utils.format("Failed to serialize source offset : {}", e.toString(), e));
+      throw new IllegalStateException(Utils.format("Failed to fetch source offset for pipeline: {} due to error: {}",
+          pipelineId,
+          e.toString()
+      ), e);
     }
   }
 
