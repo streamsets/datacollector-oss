@@ -23,17 +23,17 @@
   <p><indexterm>MongoDB
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MongoDB</indexterm></indexterm>The
             MongoDB destination writes data to MongoDB. To write to MongoDB, records must include a
-            CRUD operation record header attribute. The CRUD operation header attribute indicates
-            the operation to perform for each record - INSERT, UPSERT, or DELETE. <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
+            CRUD operation record header attribute. </p>
+        <p>The CRUD operation header attribute indicates the operation to perform for each record.
+            You can also enable upserts for Update and Replace records. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/>
+        </p>
         <p>When you configure the MongoDB destination, you define connection information, such as
             the connection string and MongoDB credentials. You also configure the database, and
-            collection, and write concern to use. To perform upserts, you must specify a unique key
-            field. When you do not specify a unique key field, upsert records are sent to the stage
-            for error handling.</p>
-        <p>Note that when performing a DELETE operation, the destination deletes a maximum of one
-            matching document in MongoDB. It does not delete all matching documents, as is sometimes
-            possible with MongoDB.</p>
+            collection, and write concern to use.</p>
+        <p>To replace and update records, you must specify a unique key field and can optionally
+            enable an upsert flag. When you do not specify a unique key field, replace and update
+            records are sent to the stage for error handling.</p>
         <p>You can optionally configure advanced options that determine how the destination connects
             to MongoDB, including enabling SSL/TLS for the destination.</p>
  </conbody>

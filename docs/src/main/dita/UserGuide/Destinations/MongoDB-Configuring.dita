@@ -67,9 +67,17 @@
                                 </row>
                                 <row>
                                     <entry>Unique Key Field</entry>
-                                    <entry>Field in the record to be used to upsert records. When
-                                        not set, upsert records are sent to stage for error
-                                        handling.</entry>
+                                    <entry>Field in the record to be used to update and replace
+                                        records. When not set, records flagged for update or replace
+                                        are sent to stage for error handling.</entry>
+                                </row>
+                                <row>
+                                    <entry>Upsert <xref
+                                            href="MongoDB-Upserts.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_dpb_pyn_lw"/></xref></entry>
+                                    <entry>Inserts records flagged for update or replace when the
+                                        record does not exist in the database.</entry>
                                 </row>
                                 <row>
                                     <entry>Write Concern</entry>

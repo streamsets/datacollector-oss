@@ -118,14 +118,14 @@
                             <entry>
                                 <ul id="ul_qkk_jcd_ty">
                                     <li>INSERT</li>
-                                    <li>UPSERT</li>
+                                    <li>UPDATE</li>
+                                    <li>REPLACE</li>
                                     <li>DELETE</li>
                                 </ul>
                             </entry>
-                            <entry>Determines the operation based on information in either of the
-                                following: <ul id="ul_fz3_hcd_ty">
+                            <entry>Determines the operation to use based on: <ul id="ul_fz3_hcd_ty">
                                     <li>sdc.operation.type record header attribute</li>
-                                    <li>MONGO.OPERATION.TYPE record header attribute</li>
+                                    <li>Upsert property in the stage</li>
                                 </ul><p>For more information, see <xref
                                         href="../Destinations/MongoDB-CRUDOperation.dita#concept_bkc_m24_4v"
                                     />.</p></entry>

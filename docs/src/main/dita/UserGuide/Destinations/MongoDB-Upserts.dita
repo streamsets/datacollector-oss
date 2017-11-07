@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_syh_s1l_tbb">
+ <title>Performing Upserts</title>
+ <conbody>
+  <p><indexterm>MongoDB destination<indexterm>upsert flag</indexterm></indexterm>You can configure
+            the destination to perform upserts. When you enable upserts, the destination inserts
+            records for Update and Replace records when it does not find an existing record to
+            update or replace.</p>
+        <p>By default, the destination does not perform upserts. If the destination does not find an
+            existing record for a record flagged for update or replace, it does not write the record
+            to MongoDB.</p>
+        <p>For more information about MongoDB operations and the upsert flag, see the MongoDB
+            documentation.</p>
+ </conbody>
+</concept>
