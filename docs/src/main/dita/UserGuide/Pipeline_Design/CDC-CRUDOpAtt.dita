@@ -31,6 +31,8 @@
                 <li>3 for UPDATE records</li>
                 <li>4 for UPSERT records</li>
                 <li>5 for unsupported operations or codes</li>
+                <li>6 for UNDELETE records</li>
+                <li>7 for REPLACE records</li>
             </ul></p>
         <note>Some origins use only a subset of the operations, based on the operations supported by
             the origin system. Similarly, destinations recognize only the subset of the operations
