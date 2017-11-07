@@ -24,7 +24,8 @@ public class TimeZoneChooserValuesTest {
 
   @Test
   public void getLabelForTimeZoneId() {
-    ZoneId zoneId = ZoneId.of("America/Los_Angeles");
-    Assert.assertEquals("-07:00 PT (America/Los_Angeles)", TimeZoneChooserValues.getLabelForTimeZoneId(zoneId));
+    // Carefully choosing timezones that do not have daylight savings time switch
+    Assert.assertEquals("-07:00 MT (America/Phoenix)", TimeZoneChooserValues.getLabelForTimeZoneId(ZoneId.of("America/Phoenix")));
+    Assert.assertEquals("+00:00 UTC (UTC)", TimeZoneChooserValues.getLabelForTimeZoneId(ZoneId.of("UTC")));
   }
 }
