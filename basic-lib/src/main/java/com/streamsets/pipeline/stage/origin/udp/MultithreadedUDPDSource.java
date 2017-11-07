@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Origins/UDPMulti.html#task_g2k_v5f_5bb"
 )
 
 @ConfigGroups(Groups.class)

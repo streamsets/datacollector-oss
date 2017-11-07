@@ -96,7 +96,8 @@ public class UDPSourceConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Number of Receiver Threads",
-      description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be dedicated to the pipeline",
+      description = "Number of receiver threads for each port.  This controls the number of epoll threads bound to" +
+          " each port.",
       defaultValue = "1",
       group = "UDP",
       dependsOn = "enableEpoll",

@@ -28,7 +28,7 @@ import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 @StageDef(
     version = 4,
     label = "UDP Source",
-    description = "Listens for UDP messages on a single port",
+    description = "Listens for UDP messages on one or more ports",
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
