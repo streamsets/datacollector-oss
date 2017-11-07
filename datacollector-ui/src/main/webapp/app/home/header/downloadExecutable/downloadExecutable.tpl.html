@@ -16,11 +16,11 @@
                 name="density"
                 ng-model="selectedEdgeOs">
           <option value="{{pipelineConstant.DARWIN_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.DARWIN_OS">{{pipelineConstant.DARWIN_OS}}</option>
+                  ng-selected="selectedEdgeOs === pipelineConstant.DARWIN_OS">Darwin (Mac OS)</option>
           <option value="{{pipelineConstant.LINUX_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.LINUX_OS">{{pipelineConstant.LINUX_OS}}</option>
+                  ng-selected="selectedEdgeOs === pipelineConstant.LINUX_OS">Linux</option>
           <option value="{{pipelineConstant.WINDOWS_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.WINDOWS_OS">{{pipelineConstant.WINDOWS_OS}}</option>
+                  ng-selected="selectedEdgeOs === pipelineConstant.WINDOWS_OS">Windows</option>
         </select>
       </div>
       <div class="form-group">
@@ -29,7 +29,7 @@
                 name="density"
                 ng-model="selectedEdgeArch">
           <option value="{{pipelineConstant.AMD64_ARCH}}"
-                  ng-selected="selectedEdgeArch === pipelineConstant.AMD64_ARCH">{{pipelineConstant.AMD64_ARCH}}</option>
+                  ng-selected="selectedEdgeArch === pipelineConstant.AMD64_ARCH">AMD64</option>
           <option value="{{pipelineConstant.ARM_ARCH}}"
                   ng-selected="selectedEdgeArch === pipelineConstant.ARM_ARCH">{{pipelineConstant.ARM_ARCH}}</option>
         </select>
@@ -41,13 +41,13 @@
       <div class="stepper">
         <div class="step cursor-pointer">
           <div>
-            <div class="title">1. Extract Downloaded Tar File</div>
+            <div class="title">1. Extract the downloaded tar file</div>
             <div class="body"></div>
           </div>
         </div>
         <div class="step cursor-pointer">
           <div>
-            <div class="title">2. Starting SDC Edge Pipeline</div>
+            <div class="title">2. Start SDCe and an Edge Pipeline</div>
             <div class="body">
               <pre>
 cd streamsets-datacollector-edge
@@ -58,7 +58,7 @@ bin/edge --start={{pipelineConfig.pipelineId}}
         </div>
         <div class="step cursor-pointer">
           <div>
-            <div class="title">3. REST APIs</div>
+            <div class="title">3. Use REST APIs to manage edge pipelines</div>
             <div class="body">
               <pre>
 curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/status

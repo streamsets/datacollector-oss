@@ -570,8 +570,8 @@ angular
        * @param instanceName
        */
       onIssueClick: function(issue, instanceName) {
-        var pipelineConfig = $scope.pipelineConfig,
-          stageInstance;
+        var pipelineConfig = $scope.pipelineConfig;
+        var stageInstance;
 
         if (instanceName) {
           //Select stage instance
@@ -610,8 +610,8 @@ angular
               configName: issue.configName,
               statsAggregatorStage: true
             });
-          } else if (pipelineConfig.startEventStage[0] &&
-            pipelineConfig.startEventStage[0].instanceName === instanceName){
+          } else if (pipelineConfig.startEventStages[0] &&
+            pipelineConfig.startEventStages[0].instanceName === instanceName){
             //StartEvent Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
@@ -622,8 +622,8 @@ angular
               configName: issue.configName,
               startEventStage: true
             });
-          } else if (pipelineConfig.stopEventStage[0] &&
-            pipelineConfig.stopEventStage[0].instanceName === instanceName){
+          } else if (pipelineConfig.stopEventStages[0] &&
+            pipelineConfig.stopEventStages[0].instanceName === instanceName){
             //StopEvent Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
