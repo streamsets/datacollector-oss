@@ -90,7 +90,7 @@
                   Collector</span> worker for each topic partition in the Kafka cluster. So each partition has a
                         <span class="ph">Data
                   Collector</span> worker to process data. When Spark Streaming runs on YARN, you can limit the
-                    number of workers spawned by configuring the <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>. And you can use the Extra
+                    number of workers spawned by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>. And you can use the Extra
                     Spark Configuration property to pass Spark configurations to the spark-submit
                         script.<p class="p">Use the Kafka Consumer origin to process data from a Kafka cluster
                         in cluster streaming mode.</p>
@@ -122,7 +122,7 @@
                   Collector</span> worker for each topic partition in the MapR cluster. So each
                                 partition has a <span class="ph">Data
                   Collector</span> worker to process data. You can limit the number of workers
-                                spawned by configuring the <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>.</p>
+                                spawned by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>.</p>
 <p class="p">Use the
                                 MapR Streams Consumer origin to process data from a MapR cluster in
                                 cluster streaming mode.</p>
@@ -167,12 +167,10 @@
             configuration file, <samp class="ph codeph">sdc.properties</samp>. You can optionally generate a
             truststore file for the gateway and worker nodes.</p>
 
+        <p class="p"><span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_rdt_h54_cw">Configuring HTTPS for Cluster Pipelines</a>.</span></p>
+
  </div>
 
-    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#concept_rdt_h54_cw" title="Configuring HTTPS for Cluster Pipelines">Configuring HTTPS for Cluster Pipelines</a></div>
-</div>
-</div>
 </div>
 <div class="topic concept nested2" id="concept_cs4_lcg_j5">
     <h3 class="title topictitle3">Checkpoint Storage for Streaming Pipelines</h3>
@@ -291,9 +289,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d32264e491">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d33419e491">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d32264e494">Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d33419e494">Requirement</th>
 
                             </tr>
 
@@ -301,16 +299,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d32264e491 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e491 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d32264e494 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e494 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d32264e491 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e491 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d32264e494 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e494 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -354,38 +352,38 @@
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8582">The SDC_USER environment variable defines the system
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8681">The SDC_USER environment variable defines the system
                     user used to run Data Collector as a service. The variable is defined in the
                     $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8585">For example, say SDC_USER is defined as
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8684">For example, say SDC_USER is defined as
                         <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2653e8590">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2653e8689">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2653e8632">If necessary, specify the location of the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2653e8732">If necessary, specify the location of the
                     spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8635"><span class="ph">Data
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8735"><span class="ph">Data
                   Collector</span> assumes that the spark-submit script used to submit job requests to Spark
                     Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8641">If the script is not in this directory, use
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8741">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8644">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8744">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8647"><span class="ph" id="task_hhk_bfv_cy__d2653e8648">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8747"><span class="ph" id="task_hhk_bfv_cy__d2653e8748">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2653e8652">=/usr/bin/spark2-submit</span></pre>
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2653e8752">=/usr/bin/spark2-submit</span></pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8656">
-                    <div class="note note" id="task_hhk_bfv_cy__d2653e8658"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8756">
+                    <div class="note note" id="task_hhk_bfv_cy__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -429,13 +427,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2653e8706"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
                 <div class="itemgroup info">Once enabled, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
-                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</div>
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -456,7 +456,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
 </div>
 </div>
@@ -512,7 +512,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2653e8658"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -538,7 +538,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
 </div>
 </div>
@@ -555,9 +555,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d32264e959">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d33419e964">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d32264e962">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d33419e967">Requirement</th>
 
                         </tr>
 
@@ -565,16 +565,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d32264e959 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e964 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d32264e962 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e967 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d32264e959 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e964 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d32264e962 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e967 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -669,13 +669,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2653e8706"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
                 <div class="itemgroup info">Once enabled, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
-                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</div>
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -696,7 +698,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR FS</a></div>
 </div>
 </div>
@@ -719,14 +721,14 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8582">The SDC_USER environment variable defines the system
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8681">The SDC_USER environment variable defines the system
                     user used to run Data Collector as a service. The variable is defined in the
                     $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8585">For example, say SDC_USER is defined as
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8684">For example, say SDC_USER is defined as
                         <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2653e8590">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2653e8689">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
@@ -749,7 +751,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2653e8658"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -797,13 +799,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2653e8706"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
                 <div class="itemgroup info">Once enabled, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
-                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</div>
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -824,7 +828,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a></div>
 </div>
 </div>
@@ -909,13 +913,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2653e8706"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
                 <div class="itemgroup info">Once enabled, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
-                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</div>
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -941,7 +947,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface. Use this origin only in pipelines configured for cluster batch execution mode.">Hadoop FS</a></div>
 </div>
 </div>
@@ -987,30 +993,6 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navnext"><a class="link" href="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

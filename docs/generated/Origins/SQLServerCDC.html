@@ -45,19 +45,19 @@
                   Collector</span>
             changed data processing and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>. </p>
 
-        <p class="p">Note that the origin supports the SQL Server insert and delete operations. Updates
-            captured after the update operation are treated as update, and updates captured before
-            the update operation are treated as an unsupported operation.</p>
-
         <p class="p">You might use this origin to perform database replication. You can use a separate
             pipeline with the JDBC Query Consumer or JDBC Multitable Consumer origin to read
             existing data. Then start a pipeline with the SQL Server CDC Client origin to process
             subsequent changes.</p>
 
-        <p class="p">When you configure the origin, you specify the SQL Server source table names - the origin
-            processes the related CDC tables. You can define groups of tables in the same database
-            and any initial offsets to use. When you omit initial offsets, the origin processes all
-            available data in the CDC tables.</p>
+        <p class="p">When you configure the origin, you specify the SQL Server capture instance names - the
+            origin processes the related CDC tables. You can define groups of tables in the same
+            database and any initial offsets to use. When you omit initial offsets, the origin
+            processes all available data in the CDC tables.</p>
+
+        <p class="p">You can enable late table processing to allow the origin to process tables that appear
+            after the pipeline starts. You can also configure the origin to check for schema changes
+            in processed tables and to generate an event after discovering a change.</p>
 
         <p class="p">To determine how the origin connects to the database, you specify connection information,
             a query interval, number of retries, and any custom JDBC configuration properties that
@@ -70,7 +70,7 @@
                   stream. For more information about dataflow triggers and the event framework, see
                         <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
 
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_aq1_lxp_fs">
@@ -80,9 +80,22 @@
     <p class="p">Before you use the SQL Server CDC Client origin, <span class="ph">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </span></p>
 
-    <p class="p">For more information about installing drivers, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>.</p>
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
 
   </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ckz_pzt_sbb">
+ <h2 class="title topictitle2">Supported Operations</h2>
+
+ <div class="body conbody">
+        <p class="p">The SQL Server CDC Client origin supports the SQL
+            Server insert and delete operations. Updates captured after the update operation are
+            treated as update, and updates captured before the update operation are treated as an
+            unsupported operation. </p>
+
+ </div>
 
 </div>
 <div class="topic concept nested1" id="concept_ofh_gns_r1b">
@@ -180,7 +193,7 @@
                         create the first set of batches from the table. The database caches the
                         remaining rows in a result set in the database for the same thread to access
                         again, and then the thread switches to the next available table. A table is
-                        available in the following situations:<ul class="ul" id="concept_qms_jns_r1b__d59726e48">
+                        available in the following situations:<ul class="ul" id="concept_qms_jns_r1b__d65228e48">
                             <li class="li">The table does not have an open result set cache. In this case, the
                                 thread runs an initial SQL query to create the first batch, caching
                                 the remaining rows in a result set in the database.</li>
@@ -238,46 +251,111 @@
  <h2 class="title topictitle2">Table Configuration</h2>
 
  <div class="body conbody">
-  <div class="p">When you
-            configure SQL Server CDC Client, you define multiple CDC tables using a single set of
-            table configuration properties and you can define multiple table configurations to
-            process multiple groups of CDC tables. When you define table configurations you can
-            define the following properties for each set of tables:<ul class="ul" id="concept_sx3_d11_s1b__ul_nrw_s21_s1b">
-                <li class="li">Schema - The schema where the tables reside.</li>
+  <p class="p">When you configure
+            SQL Server CDC Client, you can define multiple CDC tables using a single set of table
+            configuration properties. You can also define multiple table configurations to process
+            multiple groups of CDC tables. </p>
+
+        <div class="p">When you define table configurations you can define the following properties for each set
+            of tables:<dl class="dl">
+                
+                    <dt class="dt dlterm">Capture Instance Name</dt>
+
+                    <dd class="dd">Determines the CDC tables to process. The naming convention for Microsoft
+                        SQL Server CDC tables is &lt;capture instance name&gt;_CT. When specifying this
+                        property, use the capture instance name, not the names of the CDC tables to
+                        be processed. For example, specify the <samp class="ph codeph">dbo.customer</samp> source
+                        table, not the associated CDC table, <samp class="ph codeph">dbo_customer_CT</samp>.</dd>
+
+                    <dd class="dd">When you configure the Capture Instance Name property, you can specify a
+                        pattern that describes a set of capture instance names to use. If capture
+                        instance names are not set up in the database, then you specify a pattern
+                        for the table names to process. </dd>
+
+                    <dd class="dd">You can use SQL-like syntax to define the set of CDC tables to process. For
+                        example, the pattern <samp class="ph codeph">east%</samp> matches tables whose names start
+                        with "east". For more information about SQL LIKE syntax, see <a class="xref" href="https://msdn.microsoft.com/en-us/library/ms179859.aspx" target="_blank">https://msdn.microsoft.com/en-us/library/ms179859.aspx</a>. </dd>
+
+                    <dd class="dd">
+                        <div class="p">When configuring the Capture Instance Name property, you can use one of
+                            the following formats:<ul class="ul" id="concept_sx3_d11_s1b__ul_g52_x1q_qbb">
+                  <li class="li"><span class="ph" id="concept_sx3_d11_s1b__d40085e2339">To process the CDC tables that match the
+                              specified capture instance name pattern, use the following
+                              format:</span><pre class="pre codeblock" id="concept_sx3_d11_s1b__d40085e2341">&lt;capture instance name pattern&gt;</pre>
+<p class="p">Use
+                              this format when CDC tables are created based on capture instance
+                              names. You can use the pattern to process a full set of CDC tables or
+                              to exclude some CDC tables from processing. </p>
+<p class="p">For example, say
+                              you have a <samp class="ph codeph">Sales.Accounts</samp> table with a CDC table
+                              named <samp class="ph codeph">Sales_Accounts_CT</samp>. After adding several columns
+                              to the table, you create a new CDC table called
+                                    <samp class="ph codeph">Sales_Accounts2_CT</samp>. </p>
+<p class="p">To process both CDC
+                              tables, you can specify the following capture instance name pattern:
+                                    <samp class="ph codeph">Sales_Accounts%</samp>. To process only the CDC data
+                              that occurred after the schema change, you can specify the following
+                              capture instance name: <samp class="ph codeph">Sales_Accounts2</samp>.</p>
+</li>
+
+                  <li class="li"><span class="ph" id="concept_sx3_d11_s1b__d40085e2366">To process all available CDC tables for the
+                              specified data tables, use the following
+                              format:</span><pre class="pre codeblock" id="concept_sx3_d11_s1b__d40085e2368">&lt;schema name&gt;_&lt;data table name pattern&gt;</pre>
+<p class="p">Use
+                              this format when CDC tables are created based on data tables instead
+                              of capture instance names. </p>
+<p class="p">For example, to process all
+                              available CDC tables for data tables in a Sales schema, you might use
+                                    <samp class="ph codeph">Sales_%</samp>. Or, to process the CDC tables
+                              associated with a set of data tables with the Transact prefix, you
+                              might use <samp class="ph codeph">Sales_Transact%</samp>.</p>
+</li>
+
+                  <li class="li"><span class="ph" id="concept_sx3_d11_s1b__d40085e2382">To process all CDC tables associated with the
+                              schema, use the following format:</span><div class="p">
+                              <pre class="pre codeblock" id="concept_sx3_d11_s1b__d40085e2386">&lt;schema name&gt;_%</pre>
+
+                        </div>
+<p class="p">For example, to process all tables in the sales schema, enter
+                                    <samp class="ph codeph">sales_%</samp>.</p>
+</li>
 
             </ul>
-<ul class="ul" id="concept_sx3_d11_s1b__ul_gkr_r21_s1b">
-                <li class="li">Table name pattern - <span class="ph">When specifying the table names, use the names for the
-                        source tables that contain the data, not the names of the CDC tables. For
-                        example, specify the dbo.customer source table, not the associated CDC
-                        table, cdc.dbo_customer_CT. </span><p class="p">When defining the table name pattern, use SQL-like syntax to define a
-                        set of tables to process. For example, the table name pattern st% matches
-                        tables whose names start with "st". The default pattern, %, matches all
-                        tables in the schema. </p>
-<p class="p">For more information about valid patterns for
-                        the SQL LIKE syntax, see <a class="xref" href="https://msdn.microsoft.com/en-us/library/ms179859.aspx" target="_blank">https://msdn.microsoft.com/en-us/library/ms179859.aspx</a>. </p>
-</li>
+</div>
 
-                <li class="li">Table exclusion pattern - When necessary, use a regex pattern to exclude certain
-                    tables that match the table name pattern from being read. <p class="p">For example, say
-                        you want to process all CDC tables in the schema except for those that start
-                        with "dept". You can use the default % for the table name pattern, and enter
-                        dept* for the table exclusion pattern.</p>
-<p class="p">For more information about
-                        using regular expressions with <span class="ph">Data
-                  Collector</span>, see <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">Regular Expressions Overview</a>.
-                    </p>
-</li>
+                    </dd>
 
-                <li class="li">Initial offset - The SQL Server CDC Client origin uses the __$start_lsn column
-                    as the offset column. To process existing data, define the offset value to use.
-                    The offset is used for all tables included in the table configuration. <p class="p">When
-                        not set, the origin processes all available CDC data. </p>
-<div class="note important"><span class="importanttitle">Important:</span> When processing an offset, the origin starts with the first
-                        value greater than the specified offset. </div>
-</li>
+                
+                
+                    <dt class="dt dlterm">Table exclusion pattern</dt>
 
-            </ul>
+                    <dd class="dd">Optionally specify a regex pattern for the table names that you want to
+                        exclude from the query.<p class="p">For example, say you want to process all CDC
+                            tables in the schema except for those that start with "dept". You can
+                            use the default % for the table name pattern, and enter dept* for the
+                            table exclusion pattern.</p>
+<p class="p">For more information about using regular
+                            expressions with <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">Regular Expressions Overview</a>. </p>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Initial offset</dt>
+
+                    <dd class="dd">To process existing data, specify an initial offset. When not set, the
+                        origin processes all available CDC data. </dd>
+
+                    <dd class="dd">The SQL Server CDC Client origin uses the <samp class="ph codeph">__$start_lsn</samp>
+                        column as the offset column. To process existing data, define the offset
+                        value to use. The offset is used for all tables included in the table
+                        configuration. <div class="note important"><span class="importanttitle">Important:</span> When you specify an initial offset,
+                            the origin starts with the first value greater than the specified
+                            offset. </div>
+</dd>
+
+                
+            </dl>
 </div>
 
  </div>
@@ -310,6 +388,76 @@
         <p class="p">The origin uses the table order strategy only for the initial reading of the tables. When
             threads switch back to previously read tables, they read from the next available table,
             regardless of the defined order.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_nxm_1lp_qbb">
+ <h2 class="title topictitle2">Allow Late Table Processing</h2>
+
+ <div class="body conbody">
+  <p class="p">You can
+            configure the SQL Server CDC Client to process data in CDC tables that appear after the
+            pipeline starts. </p>
+
+        <p class="p">When you allow late table processing, the SQL Server CDC Client origin uses a background
+            thread to check for late CDC tables. The origin checks at regular user-defined
+            intervals.</p>
+
+        <div class="p">To enable late table processing, configure the following properties: <ul class="ul" id="concept_nxm_1lp_qbb__ul_emp_jk4_sbb">
+                <li class="li">On the JDBC tab, select the Allow Late Tables property. </li>
+
+                <li class="li">To define the time to wait before checking for new tables, configure the New
+                    Table Discovery Interval property.</li>
+
+                <li class="li">On the Advanced tab, set the Maximum Pool Size and Minimum Idle Connections
+                    properties to one thread more than the Number of Threads property.</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_avq_s2q_qbb">
+ <h2 class="title topictitle2">Checking for Schema Changes</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the SQL Server CDC Client origin to
+            check for schema changes in the tables being processed. When checking for schema
+            changes, the origin includes a schema check statement in the SQL query. </p>
+
+        <div class="p">When the origin checks for schema changes, it performs the following tasks:<ol class="ol" id="concept_avq_s2q_qbb__ol_xhx_b3q_qbb">
+                <li class="li">Compares current table schemas with the original table schemas at regular
+                    intervals, based on the Query Interval property.</li>
+
+                <li class="li">If it determines that the schema of a table has changed, it generates a
+                    schema-change event that states the table or capture instance name with the
+                    changed schema.<p class="p">The origin generates a schema-change event each time that it
+                        finds a schema change: one for each table with a schema change. </p>
+<div class="p">
+                        <div class="note note"><span class="notetitle">Note:</span> Since the origin continues to check for schema changes at regular
+                            intervals until the pipeline stops, a single schema change can generate
+                            a large volume of events.</div>
+
+                    </div>
+</li>
+
+                <li class="li">It can write the exact column name or data type change to the <span class="ph">Data
+                  Collector</span> log. To enable writing to the log, the log level must be set to Trace. For
+                    information about changing the log level, see <a class="xref" href="../Administration/Administration_title.html#task_lkv_g2f_wy" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</li>
+
+            </ol>
+</div>
+
+        <div class="p">To enable the SQL Server CDC Client origin to check for schema changes and generate
+            events when discovering them, enable both of the following properties:<ul class="ul" id="concept_avq_s2q_qbb__ul_wrj_pkv_qbb">
+                <li class="li">On the General tab, select the Produce Events property.</li>
+
+                <li class="li">On the JDBC tab, select the Enable Schema Changes Event property.</li>
+
+            </ul>
+</div>
 
  </div>
 
@@ -348,9 +496,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d326673e442">Header Attribute Name</th>
+                            <th class="entry" valign="top" width="40%" id="d344038e658">Header Attribute Name</th>
 
-                            <th class="entry" valign="top" width="60%" id="d326673e445">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d344038e661">Description</th>
 
                         </tr>
 
@@ -358,9 +506,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">sdc.operation.type</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">sdc.operation.type</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">
                                 <div class="p">The origin uses the following values to represent the operation
                                     type: <ul class="ul" id="concept_pc4_xts_r1b__ul_qnr_xmz_t1b">
                                         <li class="li">1 for Insert</li>
@@ -381,19 +529,22 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.tables</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.tables</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Provides a comma-separated list of source
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Provides a comma-separated list of source
                                 tables for the fields in the record.<div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers
                                     provide this information.</div>
+<p class="p"><span class="ph">Oracle uses all caps for schema, table, and column names by
+                        default. Names can be lower- or mixed-case only if the schema, table, or
+                        column was created with quotation marks around the name.</span></p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Provides the original SQL data type for each field in the record.
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Provides the original SQL data type for each field in the record.
                                     <p class="p">Because the record read from the SQL Server CDC table
                                     includes CDC columns, the generated record also includes
                                     corresponding jdbc.&lt;column name&gt;.jdbcType header attributes
@@ -408,54 +559,54 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Provides the original precision for all
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Provides the original precision for all
                                 numeric and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Provides the original scale for all numeric
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Provides the original scale for all numeric
                                 and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.__$end_lsn</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.__$end_lsn</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Data from the SQL Server CDC __$end_lsn column.</td>
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Data from the SQL Server CDC __$end_lsn column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.__$operation</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.__$operation</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">The CRUD operation type using SQL Server codes, as defined in the
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">The CRUD operation type using SQL Server codes, as defined in the
                                 SQL Server CDC __$operation column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.__$seqval</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.__$seqval</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Data from the SQL Server CDC __$seqval column.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.__$start_lsn</td>
-
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Data from the SQL Server CDC __$start_lsn column.</td>
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Data from the SQL Server CDC __$seqval column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d326673e442 ">jdbc.__$update_mask</td>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.__$start_lsn</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d326673e445 ">Data from the SQL Server CDC __$update_mask column.</td>
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Data from the SQL Server CDC __$start_lsn column.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d344038e658 ">jdbc.__$update_mask</td>
+
+                            <td class="entry" valign="top" width="60%" headers="d344038e661 ">Data from the SQL Server CDC __$update_mask column.</td>
 
                         </tr>
 
@@ -499,12 +650,12 @@
 
                     <dd class="dd">
                         <p class="p">If you use a CRUD-enabled destination in the pipeline such as
-                  JDBC Producer or Kudu, the destination can use the operation type when writing to
-                  destination systems. When necessary, you can use an Expression Evaluator or
-                  scripting processors to manipulate the value in the sdc.operation.type header
-                  attribute. For an overview of <span class="ph">Data
-                  Collector</span>
-                  changed data processing and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</p>
+                  JDBC Producer or Elasticsearch, the destination can use the operation type when
+                  writing to destination systems. When necessary, you can use an Expression
+                  Evaluator or scripting processors to manipulate the value in the
+                  sdc.operation.type header attribute. For an overview of <span class="ph">Data
+                  Collector</span> changed data processing and a list
+                  of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</p>
 
                     </dd>
 
@@ -552,13 +703,21 @@
             the origin generates an event when it completes processing the data returned by the
             specified queries for all tables. </p>
 
+        <p class="p">If you enable schema change event generation, the origin also generates an event each
+            time it finds a schema change.</p>
+
         <div class="p">SQL Server CDC Client events can be used in any logical way. For example: <ul class="ul" id="concept_byp_dgv_s1b__ul_j5y_bkv_s1b">
-                <li class="li">With the Pipeline Finisher executor to stop the pipeline and transition the
-                    pipeline to a Finished state when the origin completes processing available
-                        data.<p class="p">When you restart a pipeline stopped by the Pipeline Finisher
-                        executor, the origin continues processing from the last-saved offsets unless
-                        you reset the origin.</p>
+                <li class="li">With the Pipeline Finisher executor to
+                              stop the pipeline and transition the pipeline to a Finished state when
+                              the origin completes processing available data.<p class="p">When you restart a
+                                    pipeline stopped by the Pipeline Finisher executor, the origin
+                                    continues processing from the last-saved offset unless you reset
+                                    the origin.</p>
 <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_kff_ykv_lz">Case Study: Stop the Pipeline</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
 </li>
 
             </ul>
@@ -573,16 +732,16 @@
  <h3 class="title topictitle3">Event Record</h3>
 
  <div class="body conbody">
-  <div class="p">Event records generated by SQL Server CDC
+        <div class="p">Event records generated by SQL Server CDC
             Client origin have the following event-related record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ckx_z3v_s1b__EventHead-NoMoreData-table" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d326673e747">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d344038e978">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d326673e750">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d344038e981">Description</th>
 
                         </tr>
 
@@ -590,11 +749,15 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d326673e747 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d344038e978 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d326673e750 ">Event type. Uses the following type:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
+                            <td class="entry" valign="top" width="70%" headers="d344038e981 ">Event type. Uses one of the following types:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
                                     <li class="li" id="concept_ckx_z3v_s1b__noMoreData-bullet">no-more-data - Generated when the
                                         origin completes processing the requested CDC data.</li>
+
+                                    <li class="li">schema-change - Generated only when <a class="xref" href="SQLServerCDC.html#concept_avq_s2q_qbb">checking for schema changes</a> is enabled and when
+                                        the origin determines that a schema change has occurred for
+                                        one of the tables being processed. </li>
 
                                 </ul>
 </td>
@@ -602,16 +765,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e747 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e978 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e750 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d344038e981 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e747 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e978 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_ckx_z3v_s1b__d37145e2083" valign="top" width="70%" headers="d326673e750 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_ckx_z3v_s1b__d40184e2088" valign="top" width="70%" headers="d344038e981 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -622,9 +785,88 @@
 </div>
 </div>
 
-        <p class="p">The no-more-data event record includes no record fields.</p>
+        <div class="p">The SQL Server CDC Client origin can generate the following types of event records: <dl class="dl">
+                
+                    <dt class="dt dlterm">no-more-data</dt>
 
- </div>
+                    <dd class="dd">
+                        <p class="p">The origin generates a no-more-data event record when the origin
+                            completes processing all available data and the number of seconds
+                            configured for Batch Wait Time elapses without any new files appearing
+                            to be processed. </p>
+
+                        <p class="p">The no-more-data event record generated by the origin has the
+                            sdc.event.type set to no-more-data and does not include any additional
+                            fields.</p>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">schema-change</dt>
+
+                <dd class="dd">
+                    <p class="p">The origin generates a schema-change event record only when you enable the
+                        origin to <a class="xref" href="SQLServerCDC.html#concept_avq_s2q_qbb">check for schema changes</a>, and the origin discovers a schema
+                        change. </p>
+
+                    <div class="p">The schema-change event record generated by the origin has the sdc.event.type
+                        set to schema-change and includes the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ckx_z3v_s1b__table_bcf_zwv_qbb" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="30%" id="d344038e1080">Event Record Field</th>
+
+                                        <th class="entry" valign="top" width="70%" id="d344038e1083">Description</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d344038e1080 ">capture-instance-name</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d344038e1083 ">The name of the capture instance or CDC table
+                                            associated with the table with the schema
+                                            change.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d344038e1080 ">source-table-schema-name</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d344038e1083 ">The name of the schema that contains the data
+                                            table.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d344038e1080 ">source-table-name</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d344038e1083 ">The name of the data table that has a schema
+                                            changes.</td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</div>
+
+                </dd>
+
+            
+        </dl>
+
+    </div>
 
 </div>
 </div>
@@ -645,9 +887,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e838">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d344038e1166">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e841">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1169">Description</th>
 
                                 </tr>
 
@@ -655,34 +897,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e838 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1166 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e841 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e838 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d326673e841 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d344038e1169 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e838 ">Produce Events <a class="xref" href="SQLServerCDC.html#concept_byp_dgv_s1b">
+       <td class="entry" valign="top" width="30%" headers="d344038e1166 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d344038e1169 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1166 ">Produce Events <a class="xref" href="SQLServerCDC.html#concept_byp_dgv_s1b">
                                             <img class="image" id="task_nsg_fxc_v1b__image_wnk_4bc_x1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e841 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1169 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_nsg_fxc_v1b__d37145e795" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_nsg_fxc_v1b__d40184e795" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e838 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_nsg_fxc_v1b__d37145e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1166 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_nsg_fxc_v1b__d40184e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e841 ">Error record handling for the stage: <ul class="ul" id="task_nsg_fxc_v1b__d37145e808">
+       <td class="entry" valign="top" width="70%" headers="d344038e1169 ">Error record handling for the stage: <ul class="ul" id="task_nsg_fxc_v1b__d40184e808">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -710,9 +952,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e934">JDBC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d344038e1262">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e937">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1265">Description</th>
 
                                 </tr>
 
@@ -720,9 +962,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 ">
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">
                                         <p class="p">Connection string to use to connect to the database. </p>
 
                                     </td>
@@ -730,28 +972,32 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Use Credentials</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Query Interval</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
-        You can use SECONDS, MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
-        </p>
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Amount of time to wait between queries. Enter an
+                                        expression based on a unit of time. You can use SECONDS,
+                                        MINUTES, or HOURS.<p class="p">Also used as the interval between
+                                            checking for schema changes when Enable Schema Changes
+                                            Event is enabled. </p>
+<p class="p">Default is 10 seconds: ${10 *
+                                            SECONDS}. </p>
 </td>
 
-      </tr>
+                                </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">Number of Threads <a class="xref" href="SQLServerCDC.html#concept_ofh_gns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Number of Threads <a class="xref" href="SQLServerCDC.html#concept_ofh_gns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 ">Number of threads the origin generates and uses for
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Number of threads the origin generates and uses for
         multithreaded processing.<p class="p">Configure the Maximum Pool Size property on the Advanced tab to
          be equal to or greater than this value.</p>
 </td>
@@ -759,10 +1005,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">Per Batch Strategy <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Per Batch Strategy <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 ">Strategy to create each batch of data:<ul class="ul" id="task_nsg_fxc_v1b__d37145e2317">
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Strategy to create each batch of data:<ul class="ul" id="task_nsg_fxc_v1b__d40184e2322">
          <li class="li">Switch Tables - Each thread creates a set of batches from one table, and then switches
           to the next available table to create the next set of batches. Define the Result Set Cache
           Size and the Batches from Result Set properties when you configure a switch tables
@@ -777,17 +1023,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">Batches from Result Set <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Batches from Result Set <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 ">Number of batches to create from the result set. After a
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Number of batches to create from the result set. After a
         thread creates this number of batches, the database closes the result set and then another
         thread can read from the same table.<p class="p">Use a positive integer to set a limit on the number
          of batches created from the result set. Use -1 to opt out of this property.</p>
@@ -799,10 +1045,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">Result Set Cache Size <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Result Set Cache Size <a class="xref" href="SQLServerCDC.html#concept_qms_jns_r1b"><img class="image" id="task_nsg_fxc_v1b__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 ">Number of result sets to cache in the database. Use a
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Number of result sets to cache in the database. Use a
         positive integer to set a limit on the number of cached result sets. Use -1 to opt out of
         this property.<p class="p">By default, the origin caches an unlimited number of result
         sets.</p>
@@ -811,17 +1057,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Max Clob Size (characters)</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Max Clob Size (characters)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Maximum number of characters to be read in a Clob field. Larger data is
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Max Blob Size (bytes)</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Max Blob Size (bytes)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">
         <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
        </td>
@@ -829,9 +1075,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Number of Retries on SQL Error</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Number of Retries on SQL Error</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Number of times a thread tries to read a batch of data after receiving an SQL error.
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Number of times a thread tries to read a batch of data after receiving an SQL error.
         After a thread retries this number of times, the thread handles the error based on the error
         handling configured for the origin.<p class="p">Use to handle transient network or connection issues
          that prevent a thread from reading a batch of data.</p>
@@ -841,9 +1087,43 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e934 ">Fetch Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Enable Schema Changes Event <a class="xref" href="SQLServerCDC.html#concept_avq_s2q_qbb"><img class="image" id="task_nsg_fxc_v1b__image_a3d_54v_qbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e937 "><span class="ph">Maximum number of rows to fetch and store in memory on the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Enables regular checks for schema changes. <p class="p">When
+                                            enabled, the origin checks for schema changes for all
+                                            processed tables at regular intervals based on the Query
+                                            Interval property. The origin generates a schema change
+                                            event each time it discovers a schema change.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Allow Late Tables</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Allows the origin to process tables that appear after the
+                                        pipeline starts. <p class="p">When enabled, the origin uses a
+                                            background thread to check for additional tables to
+                                            process. For information about adjusting related
+                                            configuration properties, see <a class="xref" href="SQLServerCDC.html#concept_nxm_1lp_qbb">Allow Late Table Processing</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">New Table Discovery Interval</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Time to wait before checking for additional tables to
+                                        process.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Fetch Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1265 "><span class="ph">Maximum number of rows to fetch and store in memory on the <span class="ph">Data
                   Collector</span> machine.
          The size cannot be zero.</span><p class="p"><span class="ph">Default is 1,000.</span></p>
 </td>
@@ -851,9 +1131,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e934 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1262 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e937 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="70%" headers="d344038e1265 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -869,7 +1149,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">CDC</span> tab, define one or more table configurations.
-                    Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon
+                    Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon
                     to define another table configuration.</span>
                 <div class="itemgroup info">
                     
@@ -878,10 +1158,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e1153">CDC Property <a class="xref" href="SQLServerCDC.html#concept_sx3_d11_s1b"><img class="image" id="task_nsg_fxc_v1b__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <th class="entry" valign="top" width="30%" id="d344038e1522">CDC Property <a class="xref" href="SQLServerCDC.html#concept_sx3_d11_s1b"><img class="image" id="task_nsg_fxc_v1b__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e1160">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1529">Description</th>
 
                                 </tr>
 
@@ -889,38 +1169,36 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1153 ">Schema Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1522 ">Capture Instance Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1160 ">Name of the schema to use for this table
-                                        configuration.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1529 ">Determines the set of CDC tables to process. Use SQL LIKE
+                                        syntax to define a table name pattern for the table names.
+                                        Use one of the following formats:<ul class="ul" id="task_nsg_fxc_v1b__ul_yzh_2kv_qbb">
+                                            <li class="li"><span class="ph">To process the CDC tables that match the
+                              specified capture instance name pattern, use the following
+                              format:</span><pre class="pre codeblock">&lt;capture instance name pattern&gt;</pre>
+</li>
 
-                                </tr>
+                                            <li class="li"><span class="ph">To process all available CDC tables for the
+                              specified data tables, use the following
+                              format:</span><pre class="pre codeblock">&lt;schema name&gt;_&lt;data table name pattern&gt;</pre>
+</li>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1153 ">Table Name Pattern <a class="xref" href="SQLServerCDC.html#concept_sx3_d11_s1b"><img class="image" id="task_nsg_fxc_v1b__image_pyb_2cc_x1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
-                                        </a></td>
+                                            <li class="li"><span class="ph">To process all CDC tables associated with the
+                              schema, use the following format:</span><pre class="pre codeblock">&lt;schema name&gt;_%</pre>
+</li>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1160 ">
-                                        <p class="p">Pattern of the table names to read
-                                            for this table configuration. Use the SQL LIKE syntax to
-                                            define the pattern. </p>
-
-                                        <p class="p"><span class="ph">When specifying the table names, use the names for the
-                        source tables that contain the data, not the names of the CDC tables. For
-                        example, specify the dbo.customer source table, not the associated CDC
-                        table, cdc.dbo_customer_CT. </span></p>
-
-                                        <p class="p">Default is the percentage wildcard
-                                            (%) which matches all tables in the schema.</p>
-
-                                    </td>
+                                        </ul>
+<p class="p">Default is dbo_%, which processes all available CDC
+                                            tables in the  default dbo schema.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1153 ">Table Exclusion Pattern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1522 ">Table Exclusion Pattern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1160 ">Pattern of the table names
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1529 ">Pattern of the table names
                                         to exclude from being read for this table configuration. Use
                                         a Java-based regular expression, or regex, to define the
                                             pattern.<p class="p">Leave empty if you do not need to exclude any
@@ -930,9 +1208,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1153 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1522 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1160 ">Offset value to use for this table configuration when the
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1529 ">Offset value to use for this table configuration when the
                                         pipeline starts. When processing an offset, the origin
                                         starts with the first value greater than the specified
                                             offset.<p class="p">Use -1 to opt out of an initial offset. With
@@ -956,14 +1234,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsg_fxc_v1b__d37132e3296" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsg_fxc_v1b__d40502e3352" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e1248">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d344038e1616">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e1251">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1619">Description</th>
 
                                 </tr>
 
@@ -971,17 +1249,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1248 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1616 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1251 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1619 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_nsg_fxc_v1b__d37132e3327">
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1248 ">Password</td>
+                                <tr id="task_nsg_fxc_v1b__d40502e3383">
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1616 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1251 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames and passwords, you
-                  can use <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1619 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
 </td>
 
                                 </tr>
@@ -999,14 +1277,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsg_fxc_v1b__d37132e3353" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsg_fxc_v1b__d40502e3408" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e1324">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d344038e1692">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e1327">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1695">Description</th>
 
                                 </tr>
 
@@ -1014,17 +1292,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1324 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1692 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1327 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1695 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1324 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1692 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1327 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1695 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1046,9 +1324,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d326673e1380">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d344038e1748">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d326673e1383">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d344038e1751">Description</th>
 
                                 </tr>
 
@@ -1056,27 +1334,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Maximum Pool Size</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Maximum Pool Size</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">The maximum number of connections to create. Must be equal to or greater than the
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">The maximum number of connections to create. Must be equal to or greater than the
         value of the Number of Threads property.<p class="p">Default is 1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -1085,9 +1363,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -1097,9 +1375,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1109,30 +1387,30 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Auto Commit</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
         the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+       <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
          transaction isolation level set for the database. You can override the database default by
          setting the level to any of the following:</p>
-<ul class="ul" id="task_nsg_fxc_v1b__d37145e2669">
+<ul class="ul" id="task_nsg_fxc_v1b__d40184e2674">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -1147,10 +1425,10 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d326673e1380 ">Initial Table Order Strategy <a class="xref" href="SQLServerCDC.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_nsg_fxc_v1b__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d344038e1748 ">Initial Table Order Strategy <a class="xref" href="SQLServerCDC.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_nsg_fxc_v1b__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d326673e1383 ">Initial order used to read the tables:<ul class="ul" id="task_nsg_fxc_v1b__ul_d5f_kcd_t1b">
+                                    <td class="entry" valign="top" width="70%" headers="d344038e1751 ">Initial order used to read the tables:<ul class="ul" id="task_nsg_fxc_v1b__ul_d5f_kcd_t1b">
                                             <li class="li">None - Reads the tables in the order that they are listed in
           the database.</li>
 
@@ -1174,30 +1452,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

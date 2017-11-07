@@ -59,22 +59,23 @@
 
     
     
-     <dt class="dt dlterm">Runtime error information</dt>
+          <dt class="dt dlterm">Runtime error information</dt>
 
-     <dd class="dd">You can view error information when you monitor a running pipeline. In the canvas, the
-      pipeline displays error record counts for each stage generating error records. </dd>
+          <dd class="dd">You can view error information when you monitor a running pipeline. In the canvas, the
+            pipeline displays error record counts for each stage generating error records. </dd>
 
-     <dd class="dd">On the Errors tab, you can view error record statistics and the latest set of error records
-      with error messages. If the error was produced by an exception, you can click <span class="ph uicontrol">View
-       Stack Trace</span> to view the full stack trace.</dd>
+          <dd class="dd">On the Errors tab, you can view error record statistics and the latest set of error
+            records with error messages. If the error was produced by an exception, you can click
+              <span class="ph uicontrol">View Stack Trace</span> to view the full stack trace.</dd>
 
-     <dd class="dd">
-      <div class="note note"><span class="notetitle">Note:</span> This information becomes unavailable when you stop the pipeline. To preserve information
-       about error records, use the Error Records pipeline property to save error records.</div>
+          <dd class="dd">
+            <div class="note note"><span class="notetitle">Note:</span> This information becomes unavailable when you stop the pipeline. To preserve
+              information about error records, use the Error Records pipeline property to save error
+              records.</div>
 
-     </dd>
+          </dd>
 
-    
+        
     
      <dt class="dt dlterm">Error record information</dt>
 
@@ -96,13 +97,12 @@
       functionality in the <span class="ph">Data
                   Collector</span> log. You
       can view or download the logs from the <span class="ph">Data
-                  Collector</span> UI. For
-      details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Viewing Data Collector Logs</a>.</dd>
+                  Collector</span> UI. <span class="ph">For details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Viewing Data Collector Logs</a>.</span></dd>
 
      <dd class="dd">By default, <span class="ph">Data
                   Collector</span> logs
       messages at the INFO severity level. You can modify the log level to display messages at
-      another severity level. For details, see <a class="xref" href="../Administration/Administration_title.html#task_lkv_g2f_wy" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</dd>
+      another severity level. <span class="ph">For details, see <a class="xref" href="../Administration/Administration_title.html#task_lkv_g2f_wy" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</span></dd>
 
     
    </dl>
@@ -276,8 +276,8 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
                   Collector</span>. </dd>
 
                     <dd class="dd">If you need to use a stage that is not installed on the <span class="ph">Data
-                  Collector</span>, install the related stage library. For an RPM installation, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a>.
-                        For a tarball installation, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_h5k_jbl_nx">Installing for Tarball Using the Package Manager</a> or <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_bnl_n3n_s5">Installing for Tarball Using the Command Line</a>.</dd>
+                  Collector</span>, install the related stage library. <span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></dd>
 
                 
             </dl>
@@ -475,6 +475,75 @@ after &lt;error count&gt; errors as per stage configuration. First error: &lt;fi
  </div>
 
 </div>
+<div class="topic concept nested2" id="concept_f5z_s3q_qbb">
+ <h3 class="title topictitle3">SQL Server CDC Client</h3>
+
+ <div class="body conbody">
+        <dl class="dl">
+            
+                <dt class="dt dlterm">A pipeline with the SQL Server CDC Client origin cannot establish a connection.
+                    The pipeline fails with the following error:</dt>
+
+                <dd class="dd">
+                    <pre class="pre codeblock">java.sql.SQLTransientConnectionException: HikariPool-3 - 
+   Connection is not available, request timed out after 30004ms.
+at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:213)
+at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:163)
+at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.
+  java:85)
+at com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager.
+  getNewConnection(ConnectionManager.java:45)
+at com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager.
+  getConnection(ConnectionManager.java:57)
+at com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.
+  SQLServerCDCSource.getCDCTables(SQLServerCDCSource.java:181)</pre>
+
+                </dd>
+
+                <dd class="dd">
+                    <p class="p">This can occur when the origin is configured to use a certain number of
+                        threads, but the thread pool is not set high enough. On the Advanced tab,
+                        check the settings for the Maximum Pool Size and Minimum Idle Connections
+                        properties. </p>
+
+                </dd>
+
+                <dd class="dd">When using <a class="xref" href="../Origins/SQLServerChange.html#concept_ofh_gns_r1b">multithreaded processing</a>, you want these properties to be set to
+                    greater than or equal to the value of the Number of Threads property on the JDBC
+                    tab.</dd>
+
+                <dd class="dd">
+                    <p class="p">Also, <a class="xref" href="../Origins/SQLServerCDC.html#concept_nxm_1lp_qbb">allowing late table processing</a> requires the origin to use an
+                        additional background thread. When you enable processing late tables, you
+                        should set the Maximum Pool Size and Minimum Idle Connections properties to
+                        one thread more than the Number of Threads property.</p>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">After dropping and recreating a table, the origin won't seem to read the data in
+                    the table. What's the problem?</dt>
+
+                <dd class="dd">The SQL Server CDC Client origin stores the offset for every table that it
+                    processes to track its progress. If you drop a table and recreate it using the
+                    same name, the origin assumes it is the same table and uses the last-saved
+                    offset for the table. </dd>
+
+                <dd class="dd">If you need the origin to process data earlier than the last-saved offset, you
+                    might need to <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#task_hdg_j1s_5q" title="You can reset the origin when you want the Data Collector to process all available data instead of processing data from the last-saved offset. Reset the origin when the pipeline is not running.">reset
+                        the origin</a>. </dd>
+
+                <dd class="dd">Note that after you reset the origin, the origin drops all stored offsets. And
+                    when you restart the pipeline, the origin processes all available data in the
+                    specified tables. You cannot reset the origin for a particular table.</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_m4g_qyk_2s">
  <h2 class="title topictitle2">Destinations </h2>
@@ -524,7 +593,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_1754135012">
+<div class="topic concept nested2" id="unique_1611234676">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -668,6 +737,46 @@ java.net.ConnectException: Connection refused]</pre>
 
 </div>
 </div>
+<div class="topic concept nested1" id="concept_wms_z44_nbb">
+ <h2 class="title topictitle2">Executors</h2>
+
+ <div class="body conbody">
+  <p class="p">Use
+            the following tips for help with executors.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_njt_1p4_nbb">
+ <h3 class="title topictitle3">Hive Query</h3>
+
+ <div class="body conbody">
+  <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">When I enter the name of the Impala JDBC driver in the stage, I receive an
+                        error saying that the driver is not present in the class path:</dt>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">HIVE_15 - Hive JDBC Driver &lt;driver name&gt; not present in the class path.</pre>
+
+                    </dd>
+
+                
+            </dl>
+
+        </div>
+
+        <p class="p">To use an Impala JDBC driver with the Hive Query executor, the driver must be installed
+            as an external library. And it must be installed for the stage library that the Hive
+            Query executor uses. </p>
+
+        <p class="p">If you already installed the driver, verify that you have it installed for the correct
+            stage library. For more information, see <a class="xref" href="../Executors/HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a>.</p>
+
+ </div>
+
+</div>
+</div>
 <div class="topic concept nested1" id="concept_vrq_qh1_hy">
  <h2 class="title topictitle2">JDBC Connections</h2>
 
@@ -716,7 +825,7 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
 </div>
 
         <p class="p">Verify that you have followed the instructions to install additional drivers, as
-            explained in <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>. </p>
+            explained in <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</p>
 
         <p class="p">You can also use these additional tips to help resolve the issue:</p>
 
@@ -960,23 +1069,24 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
 
         
     
-     <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
+          <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 
-     <dd class="dd">Review the information available in the <span class="ph">Data
+          <dd class="dd">Review the information available in the <span class="ph">Data
                   Collector</span> UI
             in Monitor mode. Charts provide information about the record count, record throughput,
             and batch throughput for the pipeline. To determine where processing slows, you can
             click each stage to view the count and throughput details for the stage.</dd>
 
-     <dd class="dd">If the origin is the issue, you might tune the batch size or batch wait time properties or
-      adjust related properties in the origin system. If the destinations cause the problem, try
-      adjusting  any performance-related properties in the destination or related properties in the
-      destination system.</dd>
+          <dd class="dd">If the origin is the issue, you might tune the batch size or batch wait time
+            properties or adjust related properties in the origin system. If the destinations cause
+            the problem, try adjusting any performance-related properties in the destination or
+            related properties in the destination system.</dd>
 
-     <dd class="dd">If a processor causes the problem, you might take a snapshot of the pipeline to review how
-      data passes through the pipeline and consider options for streamlining processing. </dd>
+          <dd class="dd">If a processor causes the problem, you might take a snapshot of the pipeline to review
+            how data passes through the pipeline and consider options for streamlining processing.
+          </dd>
 
-    
+        
     
      <dt class="dt dlterm">How can I improve the general pipeline performance? </dt>
 
@@ -989,7 +1099,8 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
       increase the processing speed. Or if the records are small and arrive quickly, you might
       increase the batch size.</dd>
 
-     <dd class="dd">Experiment with the batch size and review the results in Monitor mode. </dd>
+     <dd class="dd">Experiment with the batch size and review the results<span class="ph"> in Monitor
+              mode</span>. </dd>
 
      <dd class="dd">To change the batch size, configure the <strong class="ph b">production.maxBatchSize</strong> property in the <span class="ph">Data
                   Collector</span>
@@ -1058,7 +1169,9 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
 
           <dd class="dd">It's likely that the cluster is configured to use Kerberos, but the <span class="ph">Data
                   Collector</span> is
-            not configured to use Kerberos. For more information see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</dd>
+            not configured to use Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></dd>
 
         
         
@@ -1084,30 +1197,6 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" title="Extended Tutorial"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Extended Tutorial</span></a></span>  
-<span class="navnext"><a class="link" href="../Glossary/Glossary_title.html#concept_xbx_rs1_tq" title="Glossary"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Glossary</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navnext"><a class="link" href="../Glossary/Glossary_title.html#concept_xbx_rs1_tq" title="Glossary"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Glossary</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

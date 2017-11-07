@@ -1,0 +1,581 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Runtime Values" /><meta name="abstract" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="description" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h5b_kcr_kz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Values</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_h5b_kcr_kz">
+ <h1 class="title topictitle1">Runtime Values</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage and
+        pipeline properties. You can change the values for each pipeline run without having to edit
+        the pipeline. </p>
+
+        <p class="p">You can use runtime values for any pipeline property that allows the use of the
+            expression language. You can, for example, use runtime values to represent batch sizes,
+            timeouts, directories, and URI. You cannot use runtime values to represent fields.</p>
+
+  <p class="p">You can use the following methods of passing runtime values to pipelines:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Runtime parameters</dt>
+
+                <dd class="dd">Use runtime parameters when you want to specify the values for pipeline
+                    properties when you start the pipeline. </dd>
+
+                <dd class="dd">You define runtime parameters when you configure the pipeline, and then you call
+                    the parameters from within that pipeline. When you start the pipeline, you
+                    specify the parameter values to use. </dd>
+
+                <dd class="dd">Runtime parameters are defined for a single pipeline - only that pipeline can
+                    call them.<div class="note note"><span class="notetitle">Note:</span> In <span class="ph">Data
+                  Collector</span> versions earlier than 2.5.0.0, pipeline runtime parameters were named
+                        pipeline constants. </div>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">Runtime properties</dt>
+
+                <dd class="dd">Use runtime properties when you want to define values for multiple pipeline
+                    properties in a file.</dd>
+
+                <dd class="dd">You define runtime properties in a file local to the <span class="ph">Data
+                  Collector</span>, and then you call the properties from within a pipeline. At runtime, <span class="ph">Data
+                  Collector</span> loads the property values from the file. A runtime properties file can
+                    contain multiple properties.</dd>
+
+                <dd class="dd">Runtime properties are defined for the entire <span class="ph">Data
+                  Collector</span> - any pipeline can call them.</dd>
+
+            
+            
+                <dt class="dt dlterm">Runtime resources</dt>
+
+                <dd class="dd">Use runtime resources when you want to secure sensitive information in files
+                    with restricted permissions.</dd>
+
+                <dd class="dd">You define runtime resources in a file local to the <span class="ph">Data
+                  Collector</span>, and then you call the resources from within a pipeline. You can restrict the
+                    permissions for the resource files to secure sensitive information. A resource
+                    file must contain one piece of information.</dd>
+
+                <dd class="dd">Runtime resources are defined for the entire <span class="ph">Data
+                  Collector</span> - any pipeline can call them.</dd>
+
+            
+        </dl>
+
+        <div class="note note"><span class="notetitle">Note:</span> When configuring runtime values for pipelines run by <span class="ph">DPM</span>,
+            all <span class="ph">Data
+                  Collector</span> that run the pipeline must have the values locally defined in the expected
+            locations.</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_rjh_ntz_qr">
+ <h2 class="title topictitle2">Using Runtime Parameters</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Runtime parameters are parameters that you define in a pipeline and then call from
+        within that same pipeline. When you start the pipeline, you specify the parameter values to
+        use. Use runtime parameters to specify values for pipeline properties when you start the
+        pipeline.</p>
+
+  <p class="p">Use runtime parameters to
+            define values for stage and pipeline properties. For example, you can define an error
+            directory parameter that points to different directories on a test machine and a
+            production machine. Or you can define a connection parameter that points to different
+            database connections for an origin in the test and production environments.</p>
+
+        <p class="p">When you define a runtime parameter, you enter the default value to use. When you start
+            the pipeline, you can specify another value to override the default. When the pipeline
+            runs, the value replaces the name of the runtime parameter.</p>
+
+        <div class="note note"><span class="notetitle">Note:</span> If you shut down and then restart the <span class="ph">Data
+                  Collector</span>
+            without stopping the pipeline, the pipeline continues running with the last set
+            parameter values.</div>
+
+        <div class="p">To implement runtime parameters, perform the following steps:<ol class="ol" id="concept_rjh_ntz_qr__ol_m24_1bh_1s">
+                <li class="li">Define runtime parameters. </li>
+
+                <li class="li">Use an expression in the pipeline to call a runtime parameter.</li>
+
+                <li class="li">Start the pipeline with parameter values.</li>
+
+            </ol>
+</div>
+
+        <p class="p">When you monitor a pipeline started with parameters, you can view the
+            parameter values that the pipeline is currently using.</p>
+
+ </div>
+
+<div class="topic task nested2" id="task_zt3_sbt_kz">
+    <h3 class="title topictitle3">Step 1. Define Runtime Parameters</h3>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Define
+                runtime parameters when you configure the pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, click the <span class="ph uicontrol">Parameters</span>
+                    tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon
+                    and define the name and the default value for each parameter.</span>
+                <div class="itemgroup info">For example, define a parameter named JDBCConnectionString with the default
+                    value of <samp class="ph codeph">jdbc:mysql://localhost:3306/sample</samp>.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_v4k_gdt_kz">
+ <h3 class="title topictitle3">Step 2. Call the Runtime Parameter</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use an expression to call a runtime parameter. You can use runtime parameters to
+        represent any stage or pipeline property that allows the use of the expression language. </p>
+
+        <div class="p">To
+            call a runtime parameter in a stage or pipeline property, use the following syntax:
+            <pre class="pre codeblock">${&lt;parameter name&gt;}</pre>
+</div>
+
+        <div class="p">For example, to use the JDBCConnectionString runtime parameter for the JDBC Multitable
+            Consumer origin, enter the following syntax for the JDBC Connection String
+            property:<pre class="pre codeblock">${JDBCConnectionString}</pre>
+</div>
+
+        <div class="p">You can call a runtime parameter from within an expression language function by simply
+            entering the parameter name. For example, the following expression returns the value of
+            the JDBCConnectionString runtime
+            parameter:<pre class="pre codeblock"> ${record:value(JDBCConnectionString)}</pre>
+</div>
+
+        <div class="p">You can use a runtime parameter to represent a part of a property. For example, you could
+            use a RootDir runtime parameter and append the rest of the directory in the property as
+            follows:<pre class="pre codeblock">${RootDir}/logfiles</pre>
+</div>
+
+        <p class="p">You can also call a runtime parameter in the code developed for a scripting processor.
+            The method you use to call the runtime parameter depends on the following scripting
+            processor types:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">JavaScript Evaluator or Jython Evaluator processor</dt>
+
+                <dd class="dd">Use the following syntax in any of the processor scripts:
+                        <samp class="ph codeph">${&lt;parameter name&gt;}</samp>. For example, the following line of
+                    JavaScript code assigns the value of the NewFieldValue parameter to a map
+                    field:<pre class="pre codeblock">records[i].value.V= ${NewFieldValue}</pre>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">Groovy Evaluator processor</dt>
+
+                <dd class="dd">Use the <samp class="ph codeph">sdcFunctions.pipelineParameters()</samp> method in any of the
+                    processor scripts to return a map of all runtime parameters defined for the
+                    pipeline. For example, the following line of Groovy code assigns the value of
+                    the CompanyParam parameter to the Company Name
+                    field:<pre class="pre codeblock">record.value['Company Name'] = sdcFunctions.pipelineParameters()['CompanyParam']</pre>
+</dd>
+
+            
+        </dl>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_qgb_1kt_kz">
+    <h3 class="title topictitle3">Step 3. Start the Pipeline with Parameters</h3>
+
+    <div class="body taskbody">
+        <div class="section context" id="task_qgb_1kt_kz__context_msx_lkt_kz">
+            <div class="p">When you start the pipeline, specify
+                the values to use for the parameters. <div class="note note"><span class="notetitle">Note:</span> If you
+                    want to use the default parameter values, you can simply click the
+                        <span class="ph uicontrol">Start</span> icon to start the pipeline.</div>
+</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline canvas, click the <span class="ph uicontrol">More</span> icon, and then
+                    click <span class="ph uicontrol">Start with Parameters</span>.</span>
+                <div class="itemgroup info">If <span class="ph uicontrol">Start with Parameters</span> is not enabled, the pipeline
+                    is not valid.<p class="p">The <span class="ph uicontrol">Start with Parameters</span> dialog box
+                        lists all parameters defined for the pipeline and their default
+                    values.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Override any default values with the values you want to use for this pipeline
+                    run.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Start</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_awv_tlm_lz">
+    <h3 class="title topictitle3">Viewing Runtime Parameters</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc"> When you monitor a pipeline started with parameters, you can view the parameter
+        values that the pipeline is currently using. </p>
+
+        <div class="section context">
+            <p class="p">Before you can view
+                the current runtime parameter values, verify that the monitoring settings include
+                the Runtime Parameters chart.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Summary</span> tab of the Monitor panel, click the
+                        <span class="ph uicontrol">More</span> icon, and then click
+                        <span class="ph uicontrol">Settings</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Monitoring Settings</span> dialog box, click in the
+                        <span class="ph uicontrol">Charts</span> field and then select <span class="ph uicontrol">Runtime
+                        Parameters</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">When you monitor a pipeline that you started with parameter values, the
+                    Runtime Parameters chart displays as follows:<p class="p"><img class="image" id="task_awv_tlm_lz__image_rqq_2pm_lz" src="../Graphics/RuntimeParametersMonitor.png" height="235" width="361" /></p>
+<p class="p">The Runtime Parameters chart does not display when you start a
+                        pipeline without parameters.</p>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_fjx_g31_1s">
+ <h2 class="title topictitle2">Using Runtime Properties</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data
+                  Collector</span> and call
+    from within a pipeline. With runtime properties, you can define different sets of values for
+    different <span class="ph">Data
+                  Collector</span>s.</p>
+
+  <p class="p">Use runtime properties
+      to define values for stage and pipeline properties. For example, you can define an error
+      directory runtime property that points to different directories on a test machine and a
+      production machine. Similarly, you might create test and production runtime properties for the
+      origin and destination stages. </p>
+
+  <div class="p">To implement runtime properties, perform the following steps:<ol class="ol" id="concept_fjx_g31_1s__ol_m24_1bh_1s">
+    <li class="li">Define runtime properties. </li>
+
+    <li class="li">Use an expression in the pipeline to call a runtime property.</li>
+
+   </ol>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_dys_tp1_1s">
+ <h3 class="title topictitle3">Step 1. Define Runtime Properties</h3>
+
+ <div class="body conbody">
+    <p class="p">You can define
+      runtime properties in the <span class="ph">Data
+                  Collector</span>
+      configuration file, <samp class="ph codeph">sdc.properties</samp>, or in a separate runtime properties file. </p>
+
+    <p class="p">If you define the properties in a separate runtime properties file, use the required
+      procedure for your installation type.</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm"><span class="ph">Data
+                  Collector</span>
+            configuration file</dt>
+
+     <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data
+                  Collector</span>
+            configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
+              <li class="li">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, configure the
+                  <strong class="ph b">runtime.conf.location</strong> property as
+                follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
+</li>
+
+              <li class="li">Define the runtime properties in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>
+                file using the following format:
+                <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
+For example, the
+                following runtime property defines a Hadoop FS directory template location:
+                <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+              <li class="li">Restart <span class="ph">Data
+                  Collector</span>
+                to enable the changes.</li>
+
+            </ol>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Separate runtime properties file for RPM and tarball</dt>
+
+     <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties file
+            for an RPM or tarball installation:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
+              <li class="li">Create a text file and save it in a directory relative to the
+                  <samp class="ph codeph">$SDC_CONF</samp> directory.</li>
+
+              <li class="li">Define the runtime properties in the text file using the following
+                format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+For example, the
+                following runtime property defines the same Hadoop FS directory template in a
+                separate runtime properties
+                file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+              <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, configure the
+                  <strong class="ph b">runtime.conf.location</strong> property to point to the relative location of the
+                separate runtime properties file. <p class="p">For example, the following separate runtime
+                  properties file is located in a <samp class="ph codeph">runtime</samp> directory that is
+                  relative to the <samp class="ph codeph">$SDC_CONF</samp>
+                directory:</p>
+<pre class="pre codeblock">runtime.conf.location=runtime/test-runtime.properties</pre>
+</li>
+
+              <li class="li">Restart <span class="ph">Data
+                  Collector</span>
+                to enable the changes.</li>
+
+            </ol>
+</dd>
+
+    
+        
+          <dt class="dt dlterm">Separate runtime properties file for Cloudera Manager</dt>
+
+          <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
+            file for a Cloudera Manager installation:<ol class="ol" id="concept_dys_tp1_1s__ol_crg_jdj_h1b">
+              <li class="li">Create a text file and define the runtime properties in the text file using the
+                following format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+For example,
+                the following runtime property defines the same Hadoop FS directory template in a
+                separate runtime properties
+                file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+              <li class="li">Save the text file in the same directory on every node that runs <span class="ph">Data
+                  Collector</span>.</li>
+
+              <li class="li">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and
+                click <span class="ph uicontrol">Configuration</span>.</li>
+
+              <li class="li">On the <span class="ph uicontrol">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
+                  Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span> field,
+                add the following line to define the runtime properties file
+                  directory:<pre class="pre codeblock">ln -sf /&lt;directory&gt;/runtime.properties "${CONF_DIR}/runtime.properties"</pre>
+<div class="p">For
+                  example:<pre class="pre codeblock">ln -sf /opt/sdc-runtime/runtime.properties "${CONF_DIR}/runtime.properties"</pre>
+</div>
+</li>
+
+              <li class="li">In the <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
+                  sdc.properties</span> field, configure the
+                  <span class="ph uicontrol">runtime.conf.location</span> property to point to the separate
+                runtime properties file by adding the following
+                line:<pre class="pre codeblock">runtime.conf.location=runtime.properties </pre>
+</li>
+
+              <li class="li">Restart <span class="ph">Data
+                  Collector</span>
+                to enable the changes.</li>
+
+            </ol>
+</dd>
+
+        
+   </dl>
+
+  </div>
+
+    <p class="p"><span class="ph">
+                        <span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a></span>.</span></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_pdh_glg_1s">
+ <h3 class="title topictitle3">Step 2. Call the Runtime Property</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:conf</samp> function to call a runtime property. You can use
+        runtime properties to represent any stage or pipeline property that allows the use of the
+        expression language. </p>
+
+  <div class="p">To call
+            a runtime property, use the following syntax:
+            <pre class="pre codeblock">${runtime:conf(&lt;property name&gt;)}</pre>
+</div>
+
+    <div class="note note"><span class="notetitle">Note:</span> If you defined the runtime properties in the <span class="ph">Data
+                  Collector</span>
+      configuration file, enter just <samp class="ph codeph">&lt;property name&gt;</samp> and not <samp class="ph codeph">runtime.conf_&lt;property name&gt;</samp>.</div>
+
+  <div class="p">For example, to use the HDFSDirTemplate runtime property for the Hadoop FS destination, enter
+      the following syntax for the Directory Template
+      property:<pre class="pre codeblock">${runtime:conf('HDFSDirTemplate')}</pre>
+</div>
+
+  <div class="p">You can use a runtime property to represent a part of a property. For example, you could use a
+   RootDir runtime property and append the rest of the directory in the property as
+   follows:<pre class="pre codeblock">${runtime:conf('RootDir')}/logfiles</pre>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_bs4_5nm_2s">
+ <h2 class="title topictitle2">Using Runtime Resources</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Similar to runtime properties, runtime resources are values that you define in a file
+        local to the <span class="ph">Data
+                  Collector</span> and
+        call from within a pipeline. But with runtime resources, you can restrict the permissions
+        for the files to secure sensitive information. Use runtime resources to load sensitive
+        information from files at runtime.</p>
+
+  <p class="p">Use runtime resources to
+            define sensitive values for stage and pipeline properties. You can, for example, use
+            runtime resources to represent user names and passwords, or OAuth authentication
+            information. </p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> To more securely define sensitive values for JDBC stages, use <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
+                stores</a>.</div>
+
+  <div class="p">To implement runtime resources, perform the following steps: <ol class="ol" id="concept_bs4_5nm_2s__ol_jzr_4sm_2s">
+    <li class="li">Define each runtime resource. </li>
+
+    <li class="li">Use an expression in the pipeline to call a runtime resource.</li>
+
+   </ol>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_jh2_ysm_2s">
+ <h3 class="title topictitle3">Step 1. Define Runtime Resources</h3>
+
+ <div class="body conbody">
+  <div class="p">Use the following steps
+      to define runtime resources:<ol class="ol" id="concept_jh2_ysm_2s__ol_j2q_ftm_2s">
+        <li class="li">For each resource, create a text file and save it in the <samp class="ph codeph">$SDC_RESOURCES</samp>
+            directory.<p class="p">A file must contain one piece of information to be used when the resource
+            is called. </p>
+<div class="note note"><span class="notetitle">Note:</span> When you call a runtime resource, the <span class="ph">Data
+                  Collector</span>
+            replaces the expression with the entire contents of the file. Avoid including
+            unnecessary characters such as spaces or carriage returns. Many text editors add
+            additional characters by default. </div>
+</li>
+
+        <li class="li">Optionally, restrict the permissions for the file. <p class="p">Generally, anyone can read a file.
+            To restrict permissions, configure the file so only the owner has read or write
+            permissions for the file - in octals, that's 600 or 400. And the owner must be the
+            system user that runs the <span class="ph">Data
+                  Collector</span>.
+            </p>
+<p class="p">When you use the resource in the pipeline, you specify whether the file is
+            restricted.</p>
+</li>
+
+      </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_aky_bwm_2s">
+ <h3 class="title topictitle3">Step 2. Call the Runtime Resource</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:loadResource</samp> function to call a runtime resource. You
+  can use runtime resources to represent sensitive information in any stage or pipeline property
+  that allows the use of the expression language. </p>
+
+  <p class="p">To call a
+      runtime resource, use the following syntax: </p>
+
+  <pre class="pre codeblock">${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> To strip any leading or trailing white space characters from the file,
+                add the <samp class="ph codeph">str:trim</samp> function as
+                follows:<pre class="pre codeblock">${str:trim(runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
+</div>
+
+        </div>
+
+  <div class="p">For example, the following expression returns the contents of the JDBCpassword.txt file,
+            stripping any leading or trailing white space characters. The file contains a password
+            and is restricted so only the owner can read the
+            file:<pre class="pre codeblock">${str:trim(runtime:loadResource("JDBCpassword.txt", true))}</pre>
+</div>
+
+ </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
+</body>
+</html>

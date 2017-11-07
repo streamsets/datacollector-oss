@@ -174,8 +174,8 @@
           <dd class="dd">The stage silently discards the record. <span class="ph">Data
                   Collector</span> does
             not log information about the error or note the specific record that encountered an
-            error. The discarded record is not included in Monitor mode error record counts or
-            metrics. </dd>
+            error. The discarded record is not included in <span class="ph">Monitor mode </span>error
+            record counts or metrics. </dd>
 
         
         
@@ -184,9 +184,9 @@
           <dd class="dd">The stage sends the record to the pipeline for error handling. The pipeline processes
             the record based on the pipeline error handling configuration.</dd>
 
-          <dd class="dd">When you monitor the pipeline, you can view the most recent error records and the
-            issues they encountered on the Error Records tab for the stage. This information becomes
-            unavailable after you stop the pipeline. </dd>
+          <dd class="dd">When you monitor the pipeline, you can view the most recent error
+            records and the issues they encountered on the Error Records tab for the stage. This
+            information becomes unavailable after you stop the pipeline. </dd>
 
         
         
@@ -195,7 +195,8 @@
           <dd class="dd"><span class="ph">Data
                   Collector</span>
             stops the pipeline and logs information about the error. The error that stopped the
-            pipeline displays as an alert in Monitor mode and as an error in the pipeline history. </dd>
+            pipeline displays <span class="ph">as an alert in Monitor mode and </span>as an error in
+            the pipeline history. </dd>
 
           <dd class="dd">Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
 
@@ -220,16 +221,16 @@
    based on how you configure the pipeline error handling: <ul class="ul" id="concept_y4z_n4y_5r__ul_a3h_mjy_5r">
     <li class="li">When the pipeline discards error records, <span class="ph">Data
                   Collector</span>
-          discards the record without noting the action or the cause. <p class="p">When you monitor the
-            pipeline, you can view the most recent set of error records and information about the
-            errors on the Error Records tab for the stage. But this information becomes unavailable
-            after you stop the pipeline. </p>
+          discards the record without noting the action or the cause. <p class="p">When you
+            monitor the pipeline, you can view the most recent set of error records and information
+            about the errors on the Error Records tab for the stage. But this information becomes
+            unavailable after you stop the pipeline. </p>
 </li>
 
     <li class="li">When the pipeline writes error records to a destination, <span class="ph">Data
                   Collector</span> writes
           the error record and additional error information to the destination. It also includes the
-          error records in monitor counts and metrics. </li>
+          error records in <span class="ph">monitor </span>counts and metrics. </li>
 
    </ul>
 </div>
@@ -269,30 +270,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

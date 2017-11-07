@@ -45,8 +45,12 @@
                 Synchronization Solution for Hive</a> or to configure table properties for
             newly-created tables.</p>
 
+        <p class="p">When using the Hive Query executor with Impala, you can use the default driver included
+            with <span class="ph">Data
+                  Collector</span>, or you can install an Impala JDBC driver. </p>
+
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d29425e4421">The Hive Query executor waits for
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d32289e4706">The Hive Query executor waits for
                               each query to complete before continuing with the next query for the
                               same event record. It also waits for all queries to complete before
                               starting the queries for the next event record. Depending on the speed
@@ -61,7 +65,7 @@
             a query fails.</p>
 
         <p class="p">You can also configure the executor to generate events for
-                  another event stream. <span class="ph" id="concept_kjw_llk_fx__d29425e1717">For more information about dataflow
+                  another event stream. <span class="ph" id="concept_kjw_llk_fx__d32289e1890">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
         <p class="p">For a case study about using the Hive Query executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</p>
@@ -83,6 +87,43 @@
             changes table structures and after the Hadoop FS destination writes files to Hive. </p>
 
     </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rfq_xk4_nbb">
+ <h2 class="title topictitle2">Installing the Impala Driver</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use the Apache Hive JDBC
+            driver included with <span class="ph">Data
+                  Collector</span> to
+            perform Impala queries. However, some distributions recommend using a native Impala JDBC
+            driver. </p>
+
+        <p class="p">To use the included Apache Hive JDBC driver included with <span class="ph">Data
+                  Collector</span>,
+            you do not need to perform any additional steps. </p>
+
+        <div class="p">To use an Impala JDBC driver, perform the following steps:<ol class="ol" id="concept_rfq_xk4_nbb__ol_ilv_fm4_nbb">
+                <li class="li">Download the native Impala JDBC driver for the Hive distribution that you use. </li>
+
+                <li class="li">Install the driver as an external library for the stage library used by the Hive
+                    Query executor. <p class="p">For example, say the executor is configured to use the CDH
+                        5.12.0 stage library. If you use the Package Manager to install the driver,
+                        then in the Install External Libraries dialog box, you select the CDH 5.12.0
+                        stage library, then browse to select the Impala driver libraries to install.
+                    </p>
+</li>
+
+            </ol>
+</div>
+
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
+
+        <p class="p">If you have trouble determining the URL format to use when configuring the executor,
+            check out our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8" target="_blank">Ask StreamSets post</a>.</p>
+
+ </div>
 
 </div>
 <div class="topic concept nested1" id="concept_jzl_yrr_mx">
@@ -207,9 +248,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d168615e284">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d176749e356">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d168615e287">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d176749e359">Description</th>
 
                         </tr>
 
@@ -217,9 +258,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d168615e284 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d176749e356 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d168615e287 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d176749e359 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
                                     <li class="li">successful-query - Generated when the executor determines
                                         that Hive successfully ran the submitted query. </li>
 
@@ -232,16 +273,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e284 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d176749e356 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d168615e287 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d176749e359 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e284 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d176749e356 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_iwg_r2p_my__d29514e2083" valign="top" width="70%" headers="d168615e287 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_iwg_r2p_my__d32378e2088" valign="top" width="70%" headers="d176749e359 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -268,9 +309,9 @@
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d168615e363">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d176749e435">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d168615e366">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d176749e438">Description</th>
 
                                         </tr>
 
@@ -278,9 +319,9 @@
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d168615e363 ">query</td>
+                                            <td class="entry" valign="top" width="30%" headers="d176749e435 ">query</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d168615e366 ">The query that Hive ran successfully.</td>
+                                            <td class="entry" valign="top" width="70%" headers="d176749e438 ">The query that Hive ran successfully.</td>
 
                                         </tr>
 
@@ -308,9 +349,9 @@
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d168615e414">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d176749e486">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d168615e417">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d176749e489">Description</th>
 
                                         </tr>
 
@@ -318,16 +359,16 @@
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d168615e414 ">query</td>
+                                            <td class="entry" valign="top" width="30%" headers="d176749e486 ">query</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d168615e417 ">The query that Hive failed to run. </td>
+                                            <td class="entry" valign="top" width="70%" headers="d176749e489 ">The query that Hive failed to run. </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d168615e414 ">unexecuted-queries</td>
+                                            <td class="entry" valign="top" width="30%" headers="d176749e486 ">unexecuted-queries</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d168615e417 ">Any additional queries that did not execute.
+                                            <td class="entry" valign="top" width="70%" headers="d176749e489 ">Any additional queries that did not execute.
                                                   <p class="p">The event record includes this field only when
                                                   you configure the executor to skip running
                                                   subsequent queries when a query fails.
@@ -368,14 +409,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d29496e5317" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d32360e5474" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d168615e496">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d176749e567">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d168615e499">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d176749e570">Description</th>
 
                                 </tr>
 
@@ -383,41 +424,41 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
-                                            <img class="image" id="task_mgm_4lk_fx__d29496e5372" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
+                                            <img class="image" id="task_mgm_4lk_fx__d32360e5529" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Generates event records when events occur. Use for event
                                         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_mgm_4lk_fx__d29496e5378" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_mgm_4lk_fx__d32360e5535" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_mgm_4lk_fx__d29496e5387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mgm_4lk_fx__d32360e5544" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -429,10 +470,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_mgm_4lk_fx__d29496e5404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mgm_4lk_fx__d32360e5561" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -443,10 +484,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e496 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_mgm_4lk_fx__d29496e5421" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e567 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_mgm_4lk_fx__d32360e5578" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e499 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d29496e5425">
+                                    <td class="entry" valign="top" width="70%" headers="d176749e570 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d32360e5582">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -476,9 +517,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d168615e637">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d176749e708">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d168615e640">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d176749e711">Description</th>
 
                                 </tr>
 
@@ -486,24 +527,33 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e637 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d176749e708 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d168615e640 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
-        name with a specific database name when appropriate.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e637 ">JDBC Driver Name</td>
-
-       <td class="entry" valign="top" width="70%" headers="d168615e640 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d176749e711 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+        name with a specific database name when appropriate.<p class="p">For more information about specifying
+         the URL, see our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8" target="_blank">Ask StreamSets post</a>.</p>
+</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e637 ">Hadoop Configuration Directory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e708 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d168615e640 ">
+                                    <td class="entry" valign="top" width="70%" headers="d176749e711 ">
+                                        <p class="p">The fully-qualified JDBC driver name. </p>
+
+                                        <p class="p">Before using an Impala JDBC driver, install the driver as
+                                            an external library for the stage library used by the
+                                            Hive Query executor. For more information, see <a class="xref" href="HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d176749e708 ">Hadoop Configuration Directory</td>
+
+       <td class="entry" valign="top" width="70%" headers="d176749e711 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -525,9 +575,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d168615e637 ">Additional Hadoop Configuration</td>
+       <td class="entry" valign="top" width="30%" headers="d176749e708 ">Additional Hadoop Configuration</td>
 
-       <td class="entry" valign="top" width="70%" headers="d168615e640 ">
+       <td class="entry" valign="top" width="70%" headers="d176749e711 ">
         <p class="p">Additional properties to use. </p>
 
         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
@@ -554,9 +604,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d168615e739">Query Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d176749e826">Query Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d168615e742">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d176749e829">Description</th>
 
                                 </tr>
 
@@ -564,11 +614,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e739 ">SQL Queries <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
+                                    <td class="entry" valign="top" width="30%" headers="d176749e826 ">SQL Queries <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
                                             <img class="image" id="task_mgm_4lk_fx__image_rfz_thp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e742 ">One or more SQL queries to execute on Hive or Impala upon
-                                        receiving an event record.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d176749e829 ">One or more SQL queries to execute on Hive or Impala upon
+                                        receiving an event record.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add additional
                                             queries.</p>
 <p class="p">The executor processes multiple queries
@@ -587,9 +637,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d168615e739 ">Stop on Query Failure</td>
+                                    <td class="entry" valign="top" width="30%" headers="d176749e826 ">Stop on Query Failure</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d168615e742 ">Skips the remaining queries for an event record when a
+                                    <td class="entry" valign="top" width="70%" headers="d176749e829 ">Skips the remaining queries for an event record when a
                                         query fails. <p class="p">By default, upon a failed query, the
                                             executor continues to run all configured queries for the
                                             event record. </p>
@@ -614,30 +664,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

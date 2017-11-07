@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Oracle CDC Client processes change data capture (CDC) information provided by Oracle LogMiner redo logs. Use Oracle CDC Client to process data from Oracle version 12c. When needed, you can use a ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Oracle CDC Client" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rs5_hjj_tw" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Oracle CDC Client</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Oracle CDC Client processes change data capture (CDC) information provided by Oracle LogMiner redo logs. Use Oracle CDC Client to process data from Oracle 11g or 12c. When needed, you can use a ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Oracle CDC Client" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rs5_hjj_tw" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Oracle CDC Client</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -32,7 +32,7 @@
     <div class="body conbody">
         <p class="p">The Oracle CDC Client
             processes change data capture (CDC) information provided by Oracle LogMiner redo logs.
-            Use Oracle CDC Client to process data from Oracle version 12c.</p>
+            Use Oracle CDC Client to process data from Oracle 11g or 12c.</p>
 
         <p class="p">When needed, you can use a separate pipeline with the JDBC Query Consumer or JDBC
             Multitable  Consumer origin to read existing data before you start a pipeline with
@@ -209,7 +209,7 @@ alter database open;</pre>
                     3</a>.</p>
 </li>
 
-                <li class="li">Enable identification key or full supplemental logging. <div class="p">For multitenant
+                <li class="li">Enable identification key or full supplemental logging. <div class="p">For 12c multitenant
                         databases, best practice is to enable logging for the container for the
                         tables, rather than the entire database. You can use the following command
                         first to apply the changes to just the
@@ -339,7 +339,35 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <li class="li">Create the user
                                     account:<pre class="pre codeblock">CREATE USER &lt;user name&gt; IDENTIFIED BY &lt;password&gt;;
-GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;username&gt;;
+GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;user name&gt;;
+GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
+<p class="p">Repeat
+                                    the final command for each table that you want to use.</p>
+</li>
+
+                        </ol>
+</dd>
+
+                    <dd class="dd">
+                        <p class="p">When you configure the origin, use this user account for the JDBC
+                            credentials. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Oracle 11g databases</dt>
+
+                    <dd class="dd">For Oracle 11g databases, create a user account with the necessary
+                        privileges: <ol class="ol" id="concept_jnz_bd2_3y__ol_jkg_3zy_mbb">
+                            <li class="li">Log into the database as a user with DBA privileges.</li>
+
+                            <li class="li">Create the user
+                                    account:<pre class="pre codeblock">CREATE USER &lt;user name&gt; IDENTIFIED BY &lt;password&gt;;
+GRANT create session, alter session, execute_catalog_role, select any dictionary, select any transaction, select any table to &lt;user name&gt;;
+GRANT select on v$logmnr_parameters to &lt;user name&gt;;
+GRANT select on v$logmnr_logs to &lt;user name&gt;;
+GRANT select on v$archived_log to &lt;user name&gt;;
 GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 <p class="p">Repeat
                                     the final command for each table that you want to use.</p>
@@ -373,7 +401,7 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
         <p class="p">Oracle recommends that you extract the dictionary only at off-peak hours since the
             extraction can consume database resources.</p>
 
-        <div class="p">To extract the dictionary for Oracle 12c databases, run the following
+        <div class="p">To extract the dictionary for Oracle 11g or 12c databases, run the following
             command:<pre class="pre codeblock">EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre>
 </div>
 
@@ -393,8 +421,8 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
             Oracle CDC Client origin connects to Oracle through JDBC. You cannot access the database
             until you install the required driver. </p>
 
-        <p class="p">Install the Oracle JDBC driver for the Oracle database version that you use. For more
-            information, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>.</p>
+        <p class="p">Install the Oracle JDBC driver for the Oracle database version that you use. <span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
 
  </div>
 
@@ -568,10 +596,8 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
 
                     </dd>
 
-                    <dd class="dd">30 represents the number of bytes in the statement ID, which is also stored. </dd>
-
-                    <dd class="dd">For information about setting the <span class="ph">Data
-                  Collector</span> heap size, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">Java Heap Size</a>.</dd>
+                    <dd class="dd">30 represents the number of bytes in the statement ID, which is also stored.
+                    </dd>
 
                 
                 
@@ -631,12 +657,12 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
 
                     </dd>
 
-                    <dd class="dd">For information about setting the <span class="ph">Data
-                  Collector</span> heap size, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">Java Heap Size</a>.</dd>
-
                 
             </dl>
 </div>
+
+        <p class="p"><span class="ph">For information about configuring the <span class="ph">Data
+                  Collector</span> heap size, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">Java Heap Size</a>.</span></p>
 
  </div>
 
@@ -746,11 +772,11 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="23.076923076923077%" id="d298053e974">Oplog Operation</th>
+                            <th class="entry" valign="top" width="23.076923076923077%" id="d314715e988">Oplog Operation</th>
 
-                            <th class="entry" valign="top" width="53.84615384615385%" id="d298053e977">Identification/Primary Key Logging Only</th>
+                            <th class="entry" valign="top" width="53.84615384615385%" id="d314715e991">Identification/Primary Key Logging Only</th>
 
-                            <th class="entry" valign="top" width="23.076923076923077%" id="d298053e980">Full Supplemental Logging</th>
+                            <th class="entry" valign="top" width="23.076923076923077%" id="d314715e994">Full Supplemental Logging</th>
 
                         </tr>
 
@@ -758,38 +784,38 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e974 ">INSERT</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e988 ">INSERT</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d298053e977 ">All fields that contain data, ignoring fields with null values. </td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d314715e991 ">All fields that contain data, ignoring fields with null values. </td>
 
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e980 ">All fields.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e974 ">UPDATE</td>
-
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d298053e977 ">Primary key field and fields with updated values.</td>
-
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e980 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e994 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e974 ">SELECT_FOR_ UPDATE</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e988 ">UPDATE</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d298053e977 ">Primary key field and fields with updated values.</td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d314715e991 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e980 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e994 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e974 ">DELETE</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e988 ">SELECT_FOR_ UPDATE</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d298053e977 ">Primary key field.</td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d314715e991 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry" valign="top" width="23.076923076923077%" headers="d298053e980 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e994 ">All fields.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e988 ">DELETE</td>
+
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d314715e991 ">Primary key field.</td>
+
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d314715e994 ">All fields.</td>
 
                         </tr>
 
@@ -827,12 +853,12 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</pre
 
                     <dd class="dd">
                         <p class="p">If you use a CRUD-enabled destination in the pipeline such as
-                  JDBC Producer or Kudu, the destination can use the operation type when writing to
-                  destination systems. When necessary, you can use an Expression Evaluator or
-                  scripting processors to manipulate the value in the sdc.operation.type header
-                  attribute. For an overview of <span class="ph">Data
-                  Collector</span>
-                  changed data processing and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</p>
+                  JDBC Producer or Elasticsearch, the destination can use the operation type when
+                  writing to destination systems. When necessary, you can use an Expression
+                  Evaluator or scripting processors to manipulate the value in the
+                  sdc.operation.type header attribute. For an overview of <span class="ph">Data
+                  Collector</span> changed data processing and a list
+                  of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</p>
 
                     </dd>
 
@@ -974,9 +1000,9 @@ CRUD-enabled destinations check for this attribute for the operation
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d298053e1286">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d314715e1300">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d298053e1289">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d314715e1303">Description</th>
 
                         </tr>
 
@@ -984,9 +1010,9 @@ CRUD-enabled destinations check for this attribute for the operation
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d298053e1286 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d314715e1300 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d298053e1289 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cbz_sz1_vy__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d314715e1303 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cbz_sz1_vy__ul_m12_mgp_qx">
                                     <li class="li">STARTUP </li>
 
                                     <li class="li">ALTER</li>
@@ -1003,31 +1029,31 @@ CRUD-enabled destinations check for this attribute for the operation
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1286 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1300 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1289 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d314715e1303 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1286 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1300 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_cbz_sz1_vy__d37145e2083" valign="top" width="70%" headers="d298053e1289 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_cbz_sz1_vy__d40184e2088" valign="top" width="70%" headers="d314715e1303 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d298053e1286 ">oracle.cdc.table</td>
+                            <td class="entry" valign="top" width="30%" headers="d314715e1300 ">oracle.cdc.table</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d298053e1289 ">Name of the Oracle database table that changed.</td>
+                            <td class="entry" valign="top" width="70%" headers="d314715e1303 ">Name of the Oracle database table that changed.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d298053e1286 ">oracle.cdc.ddl</td>
+                            <td class="entry" valign="top" width="30%" headers="d314715e1300 ">oracle.cdc.ddl</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d298053e1289 ">The DDL statement that triggered the event.</td>
+                            <td class="entry" valign="top" width="70%" headers="d314715e1303 ">The DDL statement that triggered the event.</td>
 
                         </tr>
 
@@ -1125,9 +1151,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e1502">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e1516">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e1505">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e1519">Description</th>
 
                                 </tr>
 
@@ -1135,24 +1161,24 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1502 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1516 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1505 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1502 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d298053e1505 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d314715e1519 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1502 ">Produce Events <a class="xref" href="OracleCDC.html#concept_h2t_hx1_vy">
+       <td class="entry" valign="top" width="30%" headers="d314715e1516 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d314715e1519 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1516 ">Produce Events <a class="xref" href="OracleCDC.html#concept_h2t_hx1_vy">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1505 ">When the origin uses redo logs as the dictionary source,
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1519 ">When the origin uses redo logs as the dictionary source,
                                         can generate event records when the origin reads DDL
                                         statements. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
                                             <img class="image" id="task_ehh_mjj_tw__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
@@ -1160,10 +1186,10 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1502 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_ehh_mjj_tw__d37145e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1516 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_ehh_mjj_tw__d40184e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1505 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d37145e808">
+       <td class="entry" valign="top" width="70%" headers="d314715e1519 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d40184e808">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -1192,9 +1218,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e1598">Change Data Capture Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e1612">Change Data Capture Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e1601">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e1615">Description</th>
 
                                 </tr>
 
@@ -1202,35 +1228,41 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Schema Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Schema Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Name of the schema to use.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Tables</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Tables to use.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Name of the schema to use. The origin submits the schema
+                                        name in all caps by default. To use a lower- or mixed-case
+                                        name, enable the Case-Sensitive Names.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Case-Sensitive Names</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Tables</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Enables case-sensitive schema, table, and column names.
-                                        Use when the schema, tables, or columns were created with
-                                        quotation marks surrounding the names.<p class="p">By default, the
-                                            origin uses all caps for the names. </p>
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Tables to use.<p class="p">The origin submits tables names in all
+                                            caps by default. To use lower- or mixed-case names,
+                                            enable the Case-Sensitive Names.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Initial Change <a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Case-Sensitive Names</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Enables using case-sensitive schema, table, and column
+                                        names. When not enabled, the origin submits names in all
+                                                caps.<p class="p"><span class="ph">Oracle uses all caps for schema, table, and column names by
+                        default. Names can be lower- or mixed-case only if the schema, table, or
+                        column was created with quotation marks around the name.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Initial Change <a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">
                                             <img class="image" id="task_ehh_mjj_tw__image_cwg_hrk_dx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">The starting point for the read. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">The starting point for the read. Use one of the following
                                             options:<ul class="ul" id="task_ehh_mjj_tw__ul_nty_bnk_dx">
                                             <li class="li">From Latest Change - Processes changes that arrive
                                                 after you start the pipeline.</li>
@@ -1247,9 +1279,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Start Date</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Start Date</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">The datetime to read from when you start the pipeline.
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">The datetime to read from when you start the pipeline.
                                         For a date-based initial change. <p class="p"><span class="ph">Use the following format: <samp class="ph codeph">DD-MM-YYYY
                               HH24:MI:SS</samp>.</span></p>
 </td>
@@ -1257,26 +1289,26 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Start SCN</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Start SCN</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">The system change number to read from when you start the
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">The system change number to read from when you start the
                                         pipeline. For an SCN-based initial change.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Operations</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Operations</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Operations to include when creating records. All unlisted
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Operations to include when creating records. All unlisted
                                         operations are ignored. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Dictionary Source <a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Dictionary Source <a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">
                                             <img class="image" id="task_ehh_mjj_tw__image_ur4_4yn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
                                             <li class="li">Redo logs - Use when schemas can change. Allows the
                                                 origin to adapt to schema changes and to generate
                                                 events for DDL statements.</li>
@@ -1290,10 +1322,10 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Buffer Changes Locally <a class="xref" href="OracleCDC.html#concept_yqk_3hn_n1b">
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Buffer Changes Locally <a class="xref" href="OracleCDC.html#concept_yqk_3hn_n1b">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Determines the buffers that the origin uses. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Determines the buffers that the origin uses. Select to
                                         use local <span class="ph">Data
                   Collector</span> buffers. By default, the Oracle LogMiner buffers the
                                         data. </td>
@@ -1301,9 +1333,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Buffer Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Buffer Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Determines which local buffers are used:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Determines which local buffers are used:<ul class="ul">
                                             <li class="li">In memory</li>
 
                                             <li class="li">To disk</li>
@@ -1316,18 +1348,18 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Discard Old Uncommitted Transactions <a class="xref" href="OracleCDC.html#concept_ssg_tgm_p1b">
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Discard Old Uncommitted Transactions <a class="xref" href="OracleCDC.html#concept_ssg_tgm_p1b">
                                             <img class="image" id="task_ehh_mjj_tw__image_q13_plm_p1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Discards older uncommitted transactions rather than
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Discards older uncommitted transactions rather than
                                         processing them into error records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Unsupported Field Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Unsupported Field Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Determines the behavior when the origin encounters
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Determines the behavior when the origin encounters
                                         unsupported data types in the record:<ul class="ul" id="task_ehh_mjj_tw__ul_ufl_lzp_x1b">
                                             <li class="li">Ignore and Send Record to Pipeline - The origin
                                                 ignores unsupported data types and passes the record
@@ -1348,18 +1380,18 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Include Nulls</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Include Nulls</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Includes null values in records generated from full
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Includes null values in records generated from full
                                         supplemental logging that include null values. By default,
                                         the origin generates a record without null values. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Maximum Transaction Length </td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Maximum Transaction Length </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Time in seconds to wait for changes for a transaction.
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Time in seconds to wait for changes for a transaction.
                                         Enter the longest period of time that you expect a
                                         transaction to require. <p class="p">Default is ${ 1 * HOURS } which
                                             is 3600 seconds.</p>
@@ -1368,9 +1400,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">LogMiner Session Window</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">LogMiner Session Window</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Time in seconds to keep a LogMiner session open. Set to
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Time in seconds to keep a LogMiner session open. Set to
                                         larger than the maximum transaction length. Reduce when not
                                         using local buffering to reduce LogMiner resource
                                             use.<p class="p">Default is ${ 2 * HOURS } which is 7200
@@ -1380,9 +1412,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Query Timeout</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Query Timeout</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Time to wait before timing out a LogMiner query.
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Time to wait before timing out a LogMiner query.
                                             <p class="p">Default is ${ 5 * MINUTES } which is 300
                                         seconds.</p>
 </td>
@@ -1390,9 +1422,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">JDBC Fetch Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">JDBC Fetch Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Minimum number of records to fetch before passing a batch
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Minimum number of records to fetch before passing a batch
                                         to the pipeline. <p class="p">Keep this value low to allow the origin
                                             to pass records to the pipeline as soon as possible,
                                             rather than waiting for a larger number of records to
@@ -1405,17 +1437,17 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">Send Redo Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">Send Redo Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Includes the LogMiner redo query in the oracle.cdc.query
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Includes the LogMiner redo query in the oracle.cdc.query
                                         record header attribute.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1598 ">DB Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1612 ">DB Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1601 ">Time zone of the database. Specify when the database
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1615 ">Time zone of the database. Specify when the database
                                         operates in a different time zone from <span class="ph">Data
                   Collector</span>.</td>
 
@@ -1438,9 +1470,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e1899">JDBC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e1916">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e1902">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e1919">Description</th>
 
                                 </tr>
 
@@ -1448,9 +1480,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1899 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1916 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1902 ">
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1919 ">
                                         <div class="p">Connection string to use to connect to the database.
                                                 <div class="note note"><span class="notetitle">Note:</span> If you include the JDBC credentials in the
                                                 connection string, use the user account created for
@@ -1464,9 +1496,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1899 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1916 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1902 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d314715e1919 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -1476,9 +1508,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e1899 ">PDB</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e1916 ">PDB</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e1902 ">Name of the pluggable database that contains the schema
+                                    <td class="entry" valign="top" width="70%" headers="d314715e1919 ">Name of the pluggable database that contains the schema
                                         you want to use. Use only when the schema was created in a
                                         pluggable database. <p class="p">Required for schemas created in
                                             pluggable databases. </p>
@@ -1487,17 +1519,17 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1899 ">Use Credentials</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1916 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1902 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="70%" headers="d314715e1919 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e1899 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e1916 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e1902 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="70%" headers="d314715e1919 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -1522,9 +1554,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e2005">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e2022">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e2008">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e2025">Description</th>
 
                                 </tr>
 
@@ -1532,9 +1564,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e2005 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e2022 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e2008 ">
+                                    <td class="entry" valign="top" width="70%" headers="d314715e2025 ">
                                         <p class="p">User name for the JDBC connection. Use the user account
                                             created for the origin. Common user accounts for Oracle
                                             12c multitenant databases start with "c##".</p>
@@ -1546,10 +1578,10 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e2005 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e2022 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e2008 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames and passwords, you
-                  can use <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
+                                    <td class="entry" valign="top" width="70%" headers="d314715e2025 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
 </td>
 
                                 </tr>
@@ -1567,14 +1599,14 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d37132e3353" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d40502e3408" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e2091">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e2108">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e2094">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e2111">Description</th>
 
                                 </tr>
 
@@ -1582,17 +1614,17 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e2091 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e2108 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e2094 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d314715e2111 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d298053e2091 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314715e2108 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d298053e2094 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d314715e2111 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1614,9 +1646,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d298053e2147">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314715e2164">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d298053e2150">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314715e2167">Description</th>
 
                                 </tr>
 
@@ -1624,27 +1656,27 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Maximum Pool Size </td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -1653,9 +1685,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -1665,9 +1697,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1677,21 +1709,21 @@ STARTUP event records are generated when the pipeline starts. The origin creates
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d298053e2147 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d314715e2164 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d298053e2150 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+       <td class="entry" valign="top" width="70%" headers="d314715e2167 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
          transaction isolation level set for the database. You can override the database default by
          setting the level to any of the following:</p>
-<ul class="ul" id="task_ehh_mjj_tw__d37145e2669">
+<ul class="ul" id="task_ehh_mjj_tw__d40184e2674">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -1718,30 +1750,6 @@ STARTUP event records are generated when the pipeline starts. The origin creates
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>

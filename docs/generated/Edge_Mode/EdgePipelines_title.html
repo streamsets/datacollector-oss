@@ -1,0 +1,1223 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="An edge pipeline is a pipeline that runs on an edge device with limited resources. Use edge pipelines to read data from the edge device or to receive data from another pipeline and then act on that ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Edge Pipelines" /><meta name="DC.Relation" scheme="URI" content="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fyf_gkq_4bb" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Edge Pipelines</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" title="Multithreaded Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Multithreaded Pipelines</span></a></span>  
+<span class="navnext"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_fyf_gkq_4bb">
+ <h1 class="title topictitle1">Edge Pipelines</h1>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_d4h_kkq_4bb">
+ <h2 class="title topictitle2">Edge Pipelines Overview</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">An <em class="ph i">edge pipeline</em> is a pipeline that runs on an edge device with limited
+        resources. Use edge pipelines to read data from the edge device or to receive data from
+        another pipeline and then act on that data to control the edge device.</p>
+
+  <p class="p">You can design edge pipelines in <span class="ph">Data
+                  Collector</span> or
+                <span class="ph">Dataflow Performance Manager</span>
+                (<span class="ph">DPM</span>). You run edge pipelines in edge execution mode on <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDCe</span>). <span class="ph">SDCe</span> is a lightweight agent without a UI that runs pipelines on edge devices. Install <span class="ph">SDCe</span> on
+            each edge device where you want to run edge pipelines. </p>
+
+        <div class="p">Edge pipelines work in tandem with standalone execution mode pipelines running on <span class="ph">Data
+                  Collector</span>.
+            Edge pipelines are bidirectional - they can both send data to other pipelines and
+            receive data from other pipelines. To use edge pipelines, you'll work with the following
+            types of pipelines:<dl class="dl">
+                
+                    <dt class="dt dlterm">Edge sending pipeline</dt>
+
+                    <dd class="dd">An edge sending pipeline runs on <span class="ph">SDCe</span>. It <span class="ph">uses an origin specific to the edge device to read local
+                    data residing on the device. The pipeline can perform minimal processing on the
+                    data before sending the data to a <span class="ph">Data
+                  Collector</span> receiving
+                    pipeline. </span></dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector receiving pipeline</dt>
+
+                    <dd class="dd">A <span class="ph">Data
+                  Collector</span> receiving pipeline runs on <span class="ph">Data
+                  Collector</span>. It <span class="ph">reads data from the edge sending pipeline destination.
+                    Some systems require an intermediary message broker. The <span class="ph">Data
+                  Collector</span> receiving
+                    pipeline performs more complex processing on the data as needed, and then it
+                    writes the data to the final destinations. </span></dd>
+
+                
+                
+                    <dt class="dt dlterm">Edge receiving pipeline</dt>
+
+                    <dd class="dd">An edge receiving pipeline runs on <span class="ph">SDCe</span>. It <span class="ph">listens for data sent by another pipeline running on
+                        <span class="ph">Data
+                  Collector</span> or on
+                        <span class="ph">SDCe</span> and
+                    then acts on that data to control the edge device. </span></dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">The following image displays how the edge and <span class="ph">Data
+                  Collector</span>
+            pipelines work together to process data from an edge device: </p>
+
+        <p class="p"><img class="image" id="concept_d4h_kkq_4bb__image_oly_crq_4bb" src="../Graphics/EdgePipelines.png" /></p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> To use edge pipelines, you design and run multiple pipelines that interact
+            together. You can use <span class="ph">DPM</span> to
+            map multiple dataflows running across multiple instances of <span class="ph">Data
+                  Collector</span>
+            and <span class="ph">SDCe</span> in a single visual topology. For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Dataflow Performance Manager (DPMTM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization.">Meet Dataflow Performance Manager</a>. </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_yxr_b5q_4bb">
+ <h2 class="title topictitle2">Supported Platforms</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Install <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>) on
+        each edge device where you want to run edge pipelines.</p>
+
+  <div class="p"><span class="ph">SDCe</span> is
+            supported on the following operating systems and architectures:<ul class="ul" id="concept_yxr_b5q_4bb__ul_otf_x5q_4bb">
+                <li class="li">Darwin AMD64</li>
+
+                <li class="li">Linux AMD64 and ARM</li>
+
+                <li class="li">Windows AMD64</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_c14_m4r_4bb">
+ <h2 class="title topictitle2">Edge Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">Edge pipelines run in edge execution mode. Use edge pipelines to read data
+            from an edge device or to receive data from another pipeline and then act on that data
+            to control the edge device. </p>
+
+  <div class="p">You can design the following types of edge pipelines in <span class="ph">Data
+                  Collector</span>:<ul class="ul" id="concept_c14_m4r_4bb__ul_sjj_kks_4bb">
+                <li class="li">Edge sending pipelines</li>
+
+                <li class="li">Edge receiving pipelines</li>
+
+            </ul>
+</div>
+
+        <p class="p">After designing the edge pipelines, you export the pipelines, and then use
+            the command line to run the pipelines on <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDCe</span>).</p>
+
+        
+        
+        
+ </div>
+
+<div class="topic concept nested2" id="concept_kly_qtq_4bb">
+ <h3 class="title topictitle3">Edge Sending Pipelines</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">An edge sending pipeline <span class="ph">uses an origin specific to the edge device to read local
+                    data residing on the device. The pipeline can perform minimal processing on the
+                    data before sending the data to a <span class="ph">Data
+                  Collector</span> receiving
+                    pipeline. </span></p>
+
+  <p class="p">Optionally, you can
+            also design an edge sending pipeline to monitor the data being processed and then send
+            data to an edge receiving pipeline running on the same <span class="ph">SDCe</span>.
+            The edge receiving pipeline acts on the data to control the edge device.</p>
+
+        <div class="p">Edge sending pipelines support a limited number of stages. The following table lists the
+            supported stages:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kly_qtq_4bb__table_ijw_tqs_4bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e340">Stage Type</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e343">Supported Stages</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Origins</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                                <ul class="ul" id="concept_kly_qtq_4bb__ul_lrs_4rs_4bb">
+                                    <li class="li">Dev Random Record Source</li>
+
+                                    <li class="li">Directory <p class="p">Edge pipelines do not support multithreaded
+                                            processing. In an edge pipeline, the Directory origin
+                                            always creates a single thread to read the files even if
+                                            you configure multiple threads.</p>
+</li>
+
+                                    <li class="li">File Tail <p class="p">In edge pipelines, the File Tail origin can
+                                            read a single set of files. If you configure multiple
+                                            sets of files for the origin, the origin reads only the
+                                            files configured in the first set. </p>
+</li>
+
+                                    <li class="li">Windows Event Log</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Processors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                                <ul class="ul" id="concept_kly_qtq_4bb__ul_mrs_4rs_4bb">
+                                    <li class="li">Delay</li>
+
+                                    <li class="li">Dev Identity</li>
+
+                                    <li class="li">Expression Evaluator<p class="p">At this time, you can use a limited number of record, math, and string functions in
+                an Expression Evaluator processor included in an edge pipeline.</p>
+</li>
+
+                                    <li class="li">Field Remover</li>
+
+                                    <li class="li">Stream Selector</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Destinations</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                                <ul class="ul" id="concept_kly_qtq_4bb__ul_nrs_4rs_4bb">
+                                    <li class="li">CoAP Client</li>
+
+                                    <li class="li">HTTP Client</li>
+
+                                    <li class="li">MQTT Publisher</li>
+
+                                    <li class="li">Trash</li>
+
+                                    <li class="li">WebSocket Client</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">None</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p">The <span class="ph">Data
+                  Collector</span>
+            receiving pipeline includes the corresponding origin to read from the destination in the
+            edge sending pipeline. For example, if the edge sending pipeline writes to a CoAP Client
+            destination, then the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline uses a CoAP Server origin to read the data.</p>
+
+        <p class="p">The MQTT stages require using an intermediary MQTT broker. The edge sending pipeline uses
+            an MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline reads the data. </p>
+
+        <p class="p">The CoAP, HTTP and WebSocket stages can directly communicate with each other. They do not
+            require an intermediary storage location. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_q3j_ytq_4bb">
+    <h3 class="title topictitle3">Edge Receiving Pipelines</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">An edge receiving pipeline <span class="ph">listens for data sent by another pipeline running on
+                        <span class="ph">Data
+                  Collector</span> or on
+                        <span class="ph">SDCe</span> and
+                    then acts on that data to control the edge device. </span></p>
+
+        <p class="p">Edge receiving
+            pipelines can listen for data sent by another edge pipeline running on the same <span class="ph">SDCe</span> or
+            by a <span class="ph">Data
+                  Collector</span> receiving pipeline.</p>
+
+        <p class="p">The edge receiving pipeline includes the corresponding origin to read from the
+            destination in the pipeline that sends the data. For example, if the sending pipeline
+            writes to an HTTP Client destination, then the edge receiving pipeline uses an HTTP
+            Server origin to read the data.</p>
+
+        <p class="p">The MQTT stages require using an intermediary MQTT broker. The sending pipeline uses an
+            MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the edge receiving pipeline reads
+            the data. </p>
+
+        <p class="p">The HTTP stages can directly communicate with each other. They do not require an
+            intermediary storage location.</p>
+
+        <div class="p">Edge receiving pipelines support a limited number of stages. The following table lists
+            the supported stages:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_q3j_ytq_4bb__table_ijw_tqs_4bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e525">Stage Type</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e528">Supported Stages</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Origins</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                                <ul class="ul" id="concept_q3j_ytq_4bb__ul_npd_drs_4bb">
+                                    <li class="li">Dev Random Record Source </li>
+
+                                    <li class="li">HTTP Server<p class="p">Edge pipelines do not support multithreaded
+                                            processing. In an edge pipeline, the HTTP Server origin
+                                            always creates a single thread to read the files even if
+                                            you configure multiple threads.</p>
+</li>
+
+                                    <li class="li">MQTT Subscriber</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Processors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                                <ul class="ul" id="concept_q3j_ytq_4bb__ul_opd_drs_4bb">
+                                    <li class="li">Delay</li>
+
+                                    <li class="li">Dev Identity</li>
+
+                                    <li class="li">Expression Evaluator<p class="p">At this time, you can use a limited number of record, math, and string functions in
+                an Expression Evaluator processor included in an edge pipeline.</p>
+</li>
+
+                                    <li class="li">Field Remover</li>
+
+                                    <li class="li">Stream Selector</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Destinations</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                                <ul class="ul" id="concept_q3j_ytq_4bb__ul_ppd_drs_4bb">
+                                    <li class="li">CoAP Client</li>
+
+                                    <li class="li">HTTP Client</li>
+
+                                    <li class="li">MQTT Publisher</li>
+
+                                    <li class="li">Trash</li>
+
+                                    <li class="li">WebSocket Client</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">None</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_anm_21f_pbb">
+ <h3 class="title topictitle3">Error Record Handling</h3>
+
+ <div class="body conbody">
+  <div class="p">You can configure the following error record
+            handling options for an edge pipeline:<dl class="dl">
+                
+                    <dt class="dt dlterm">Discard</dt>
+
+                    <dd class="dd">The pipeline discards the record. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Write to File</dt>
+
+                    <dd class="dd">The pipeline writes error records and related details to a local directory
+                        on the edge device. Create another edge pipeline with a Directory origin to
+                        process the error records written to the file.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Write to MQTT</dt>
+
+                    <dd class="dd">The pipeline publishes error records and related details to a topic on an
+                        MQTT broker. Create another edge or standalone <span class="ph">Data
+                  Collector</span> pipeline with an MQTT Subscriber origin to process the error records
+                        published to the broker.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_i32_2vf_pbb">
+ <h3 class="title topictitle3">Data Formats</h3>
+
+ <div class="body conbody">
+  <div class="p">Edge pipelines can
+            process the following data formats:<ul class="ul" id="concept_i32_2vf_pbb__ul_wyg_kvf_pbb">
+                <li class="li">JSON</li>
+
+                <li class="li">Text</li>
+
+            </ul>
+</div>
+
+        <p class="p">Configure corresponding stages to use the same data format. For example, if the MQTT
+            Publisher destination in an edge sending pipeline uses the JSON data format, then
+            configure the MQTT Subscriber origin in the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline to also use the JSON data format.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_pbm_q4r_4bb">
+ <h3 class="title topictitle3">Edge Pipeline Limitations</h3>
+
+    
+ <div class="body conbody"><p class="shortdesc">Edge pipelines run on <span class="ph">SDCe</span> which
+        is a lightweight agent without a UI. As a result, some features available for standalone
+        pipelines are not available for edge pipelines at this time. We will provide support for
+        some of these features in edge pipelines in a future release.</p>
+
+  <div class="p">Please note the
+            following limitations for edge pipelines:<ul class="ul" id="concept_pbm_q4r_4bb__ul_qrw_gqr_4bb">
+                <li class="li">Email and webhook notifications cannot be sent by edge pipelines.</li>
+
+                <li class="li">Rules and alerts cannot be defined for edge pipelines.</li>
+
+                <li class="li">Edge pipelines do not support dataflow triggers.</li>
+
+                <li class="li">Edge pipelines do not support multithreaded processing.</li>
+
+                <li class="li">Edge pipelines cannot be previewed or validated.</li>
+
+                <li class="li">Edge pipelines cannot be viewed in Monitor mode. As a result, you cannot capture
+                    snapshots nor view real-time statistics about running edge pipelines in the UI.
+                        <p class="p">You can use the REST API to view metrics for edge pipelines. If you use
+                            <span class="ph">DPM</span>, you run edge pipelines from <span class="ph">DPM</span> jobs. You can monitor real-time statistics for edge pipelines run by <span class="ph">DPM</span> jobs in the <span class="ph">DPM</span> UI.</p>
+</li>
+
+                <li class="li">Edge pipelines can only write statistics to <span class="ph">DPM</span> directly. As a result, <span class="ph">DPM</span> cannot display aggregated statistics for a job run on multiple instances of
+                        <span class="ph">SDCe</span>. When you monitor the job, you can view the statistics for each remote
+                    pipeline instance separately.</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_lqx_vtq_4bb">
+ <h2 class="title topictitle2">Data Collector Receiving Pipelines</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+        receiving pipelines run in the standalone execution mode. You design and run receiving
+        pipelines in <span class="ph">Data
+                  Collector</span>.</p>
+
+        <p class="p">A <span class="ph">Data
+                  Collector</span>
+            receiving pipeline <span class="ph">reads data from the edge sending pipeline destination.
+                    Some systems require an intermediary message broker. The <span class="ph">Data
+                  Collector</span> receiving
+                    pipeline performs more complex processing on the data as needed, and then it
+                    writes the data to the final destinations. </span></p>
+
+        <p class="p">Optionally, you can also design the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline to monitor the data being processed and then send data to an edge
+            receiving pipeline running on <span class="ph">SDCe</span>.
+            The edge receiving pipeline acts on the data to control the edge device.</p>
+
+        <p class="p">The <span class="ph">Data
+                  Collector</span>
+            receiving pipeline includes the corresponding origin to read from the destination in the
+            edge sending pipeline. For example, if the edge sending pipeline writes to a CoAP Client
+            destination, then the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline uses a CoAP Server origin to read the data.</p>
+
+        <p class="p">The MQTT stages require using an intermediary MQTT broker. The edge sending pipeline uses
+            an MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the <span class="ph">Data
+                  Collector</span>
+            receiving pipeline reads the data. </p>
+
+        <p class="p">The CoAP, HTTP and WebSocket stages can directly communicate with each other. They do not
+            require an intermediary storage location. </p>
+
+        <div class="p"><span class="ph">Data
+                  Collector</span>
+            receiving pipelines support a limited number of stages. The following table lists the
+            supported stages:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lqx_vtq_4bb__table_ijw_tqs_4bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e870">Stage Type</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e873">Supported Stages</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Origins</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">
+                                <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
+                                    <li class="li">CoAP Server</li>
+
+                                    <li class="li">HTTP Server </li>
+
+                                    <li class="li">MQTT Subscriber</li>
+
+                                    <li class="li">WebSocket Server</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Processors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Destinations</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_nd5_z4f_pbb">
+ <h2 class="title topictitle2">Getting Started with Sample Edge Pipelines</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector Edge</span>
+            (<span class="ph">SDCe</span>)
+        includes several sample pipelines that make it easy to get started. You simply create the
+        appropriate <span class="ph">Data
+                  Collector</span>
+        receiving pipeline, download and install <span class="ph">SDCe</span> on the
+        edge device, and then run the sample edge pipeline.</p>
+
+  <p class="p">For a description of the available sample pipelines, see <a class="xref" href="https://github.com/streamsets/datacollector-edge" target="_blank">https://github.com/streamsets/datacollector-edge</a>. Note the data format that each stage in the sample pipeline
+            processes. You cannot use <span class="ph">Data
+                  Collector</span> to
+            edit the sample pipelines. If you need a stage to use another data format or require
+            other changes to the pipeline, you can design your own edge pipeline.</p>
+
+        <p class="p">The sample pipelines use runtime parameters so that you can specify the values for
+            pipeline properties when you start the pipeline.</p>
+
+        <p class="p">In the following steps, we'll use the Directory Spooler to HTTP sample pipeline as an
+            example. This sample edge pipeline uses a Directory origin to read a local text file on
+            the edge device and write the data in JSON format to an HTTP Client destination:</p>
+
+        <p class="p"><img class="image" id="concept_nd5_z4f_pbb__image_lly_xzb_sbb" src="../Graphics/EdgePipelineTemplate.png" height="125" width="304" /></p>
+
+ </div>
+
+<div class="topic task nested2" id="task_mxg_ltf_pbb">
+    <h3 class="title topictitle3">Step 1. Create and Start a Data Collector Receiving Pipeline</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Edge sending pipelines work in tandem with <span class="ph">Data
+                  Collector</span>
+        pipelines. So after choosing the sample edge pipeline that you want to use, create and start
+        the corresponding <span class="ph">Data
+                  Collector</span>
+        receiving pipeline. The <span class="ph">Data
+                  Collector</span>
+        receiving pipeline must start before the edge sending pipeline.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In <span class="ph">Data
+                  Collector</span>, create a new pipeline.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">General</span> tab, select
+                        <span class="ph uicontrol">Standalone</span> for the <span class="ph uicontrol">Execution
+                        Mode</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Error Records</span> tab, select
+                        <span class="ph uicontrol">Discard</span> or <span class="ph uicontrol">Write to File</span> for
+                    the error record handling.</span>
+                <div class="itemgroup info">If writing the error records to file, click the <span class="ph uicontrol">Error Records -
+                        Write to File</span> tab and configure the required properties.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the remaining pipeline properties as needed.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add the corresponding origin to read from the destination in the sample edge
+                    pipeline.</span>
+                <div class="itemgroup info">To receive data from the Directory Spooler to HTTP sample pipeline - which
+                    uses an HTTP Client destination defined - add an HTTP Server origin. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the origin properties used to receive the data.</span>
+                <div class="itemgroup info">To receive data from the Directory Spooler to HTTP sample pipeline, on the
+                        <span class="ph uicontrol">HTTP</span> tab of the HTTP Server origin, enter a unique
+                    port number for the <span class="ph uicontrol">HTTP Listening Port</span> and enter a
+                    unique application ID for the <span class="ph uicontrol">Application ID</span>.<p class="p">When you
+                        start the sample edge pipeline, you'll use runtime parameters to specify the
+                        same values for the corresponding destination.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Data Format</span> tab, select JSON or Text based on the
+                    sample edge pipeline.</span>
+                <div class="itemgroup info">For the Directory Spooler to HTTP pipeline template, select JSON.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add and configure any number of processors, executors, and destinations.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Validate the pipeline, and then click the <span class="ph uicontrol">Start</span> icon to
+                    start the pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_rg3_fyf_pbb">
+    <h3 class="title topictitle3">Step 2. Download and Install SDCe</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Download and install <span class="ph">SDCe</span> on
+        each edge device where you want to run edge pipelines. All sample edge pipelines are
+        included in each <span class="ph">SDCe</span>
+        installation.</p>
+
+        <div class="section context"></div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>) tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
+                    edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_vpd_rzf_pbb">
+    <h3 class="title topictitle3">Step 3. Start SDCe and the Edge Pipeline</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Run a single command to start <span class="ph">SDCe</span> and a
+        sample edge pipeline at the same time. You can then run additional commands to start
+        additional pipelines and to manage running pipelines after <span class="ph">SDCe</span> is
+        running. </p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the edge device, run the following command from the <span class="ph">SDCe</span> home directory to start <span class="ph">SDCe</span> and the sample pipeline:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">bin/edge -start=&lt;sample_pipeline_name&gt; -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;",
+"&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+
+                    <p class="p">See <a class="xref" href="https://github.com/streamsets/datacollector-edge" target="_blank">https://github.com/streamsets/datacollector-edge</a> for a list of parameters used by each
+                        sample pipeline.</p>
+
+                    <p class="p">For example, to run the Directory Spooler to HTTP sample pipeline, use the
+                        following command, ensuring that you use the same port number and
+                        application ID that you configured for the corresponding HTTP Server origin
+                        in the <span class="ph">Data
+                  Collector</span> receiving pipeline:</p>
+
+                    <pre class="pre codeblock">bin/edge -start=directoryToHttp -runtimeParameters='{"directoryPath":"/tmp/out/dir","httpUrl":"http://localhost:9999","sdcAppId":"sde"}'</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To optionally run another sample pipeline when <span class="ph">SDCe</span> is already running, use the following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;sample_pipeline_name&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_qhp_1th_pbb">
+ <h2 class="title topictitle2">Install SDCe</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">Download and install <span class="ph">SDCe</span> on
+        each edge device where you want to run edge pipelines. </p>
+
+  <div class="p">Install
+                <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDCe</span>) in one of the following ways:<ul class="ul" id="concept_qhp_1th_pbb__ul_s1g_ptk_pbb">
+                <li class="li">Use <span class="ph">Data
+                  Collector</span> to download the <span class="ph">SDCe</span> executable along with your designed edge pipelines. <p class="p">The downloaded tarball
+                        includes the <span class="ph">SDCe</span> executable, the sample edge pipelines, and your selected edge pipelines.
+                    </p>
+</li>
+
+                <li class="li">Download the <span class="ph">SDCe</span> executable from the StreamSets website.<p class="p">The downloaded tarball includes the
+                            <span class="ph">SDCe</span> executable and the sample edge pipelines.</p>
+</li>
+
+                <li class="li">Run an <span class="ph">SDCe</span> container from the Docker image.<p class="p">The image includes the <span class="ph">SDCe</span> executable and the sample edge pipelines.</p>
+</li>
+
+            </ul>
+</div>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> Using <span class="ph">Data
+                  Collector</span> to
+            download the executable along with your edge pipelines is the simplest way to deploy
+            your designed edge pipelines to an edge device. If you use another installation method,
+            you'll need to export your edge pipelines from <span class="ph">Data
+                  Collector</span>
+            and copy them to <span class="ph">SDCe</span>,
+            as described in <a class="xref" href="EdgePipelines_title.html#task_rzb_zgm_pbb" title="When you first get started with SDCe, the easiest way to deploy pipelines to SDCe is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDCe is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDCe installed on the edge device.">Export Pipelines to SDCe</a>.</div>
+
+ </div>
+
+<div class="topic task nested2" id="task_p45_s5k_pbb">
+    <h3 class="title topictitle3">Downloading from Data Collector</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Use <span class="ph">Data
+                  Collector</span> to
+        download the <span class="ph">SDCe</span>
+        executable along with your designed edge pipelines. The downloaded tarball includes the <span class="ph">SDCe</span>
+        executable, the sample edge pipelines, and your selected edge pipelines. </p>
+
+        <div class="section context" id="task_p45_s5k_pbb__context_hhz_3lm_sbb"><p class="p">Selecting edge pipelines and downloading them with the <span class="ph">SDCe</span>
+            executable is the simplest way to deploy your designed edge pipelines to an edge device.
+            If you use another installation method, you'll need to export your edge pipelines from
+                <span class="ph">Data
+                  Collector</span> and copy them to <span class="ph">SDCe</span>.</p>
+</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph">Data
+                  Collector</span>
+                    <span class="ph uicontrol">Home</span> page, select the edge pipelines that you want to run
+                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d30437e72" src="../Reusable_Content/Reusable_Topics/../../Graphics/icon_MonMore.png" height="13" width="18" />),
+                    and then click <span class="ph uicontrol">Download Edge Executable</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Download Edge Executable</span> window, select the
+                    operating system and architecture of the edge device.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Download</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> downloads
+                    a tarball to the local machine. The tarball includes the <span class="ph">SDCe</span> executable,
+                    the sample edge pipelines, and the edge pipelines that you selected from the
+                        <span class="ph uicontrol">Home</span> page.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Move the tarball downloaded on the <span class="ph">Data
+                  Collector</span> machine to
+                    the edge device.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
+                    edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_adb_x5k_pbb">
+    <h3 class="title topictitle3">Downloading from the StreamSets Website</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can download the <span class="ph">SDCe</span>
+        executable from the StreamSets website. The downloaded tarball includes the <span class="ph">SDCe</span>
+        executable and the sample edge pipelines.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">SDCe</span> tarball from the StreamSets website to the edge device: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                <div class="itemgroup info">The downloaded tarball includes the <span class="ph">SDCe</span> executable and the sample edge pipelines.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
+                    edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_k53_dvk_pbb">
+ <h3 class="title topictitle3">Running from Docker</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can run an <span class="ph">SDCe</span>
+        container from the StreamSets <span class="ph">Data Collector Edge</span> Docker
+        image. The image includes the <span class="ph">SDCe</span>
+        executable and the sample edge pipelines.</p>
+
+        <div class="p">To run an <span class="ph">SDCe</span>
+            container from the Docker image, use the following command in the Docker Quickstart
+            Terminal:<pre class="pre codeblock">docker run --publish 18633:18633 --name edge --rm streamsets/datacollector-edge</pre>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_ahx_zvl_pbb">
+ <h2 class="title topictitle2">Administer SDCe</h2>
+
+ <p class="shortdesc">Administering <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>)
+        involves configuring, starting, and shutting down the agent.</p>
+
+<div class="topic concept nested2" id="concept_hbv_3wl_pbb">
+ <h3 class="title topictitle3">Configuring SDCe</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can customize <span class="ph">SDCe</span> by
+        editing the <span class="ph">SDCe</span>
+        configuration file, <samp class="ph codeph">&lt;SDCe_home&gt;/etc/edge.conf</samp>.</p>
+
+  <p class="p">Use
+            a text editor to edit the configuration file. To enable the changes, shut down and then
+            restart <span class="ph">SDCe</span>.</p>
+
+        <div class="p">The <span class="ph">SDCe</span>
+            configuration file includes the following general properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_dkt_g1m_pbb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e1634">General Property</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e1637">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1634 ">max-batch-size</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1637 ">Maximum number of records included in a batch when the pipeline
+                                    runs.<p class="p">Default is 1000.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1634 ">bind-address</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1637 ">Address that <span class="ph">SDCe</span> binds to - localhost and the defined port number.<p class="p">Default port
+                                    number is 18633.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p">The <span class="ph">SDCe</span>
+            configuration file includes properties that define how <span class="ph">SDCe</span>
+            works with <span class="ph">DPM</span>.</p>
+
+        <div class="p">The configuration file includes the following <span class="ph">DPM</span>
+                properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_r3q_cbm_pbb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e1701">DPM Property</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e1704">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">enabled</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Specifies whether the <span class="ph">SDCe</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">base-url</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Base URL to access <span class="ph">DPM</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
+        <li class="li">For <span class="ph">DPM</span> cloud, use
+          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+        <li class="li">For <span class="ph">DPM</span> on-premises, use
+         the URL provided by your system administrator. For example,
+          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+       </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">app-auth-token</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Authentication token for this <span class="ph">SDCe</span> instance when enabled to work with <span class="ph">DPM</span>. </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">job-labels</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Labels to assign to this <span class="ph">SDCe</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
+                                labels. <p class="p">Default is "all", which you can use to run a job on all
+                                    registered instances of <span class="ph">SDCe</span>. </p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">events-recipient</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">SDCe</span> sends events. <p class="p">Do not change this value.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">ping-frequency</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Frequency in milliseconds that <span class="ph">SDCe</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 6,000.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">status-events-interval</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Frequency in milliseconds that <span class="ph">SDCe</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are
+                                running on this <span class="ph">SDCe</span>.<p class="p">Default is 60,000.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_zfb_lwl_pbb">
+ <h3 class="title topictitle3">Starting SDCe</h3>
+
+ <div class="body conbody">
+        <div class="p">To
+            start <span class="ph">SDCe</span>,
+            run the following command from the <span class="ph">SDCe</span>
+            home directory:<pre class="pre codeblock">bin/edge</pre>
+</div>
+
+        <div class="p">To start <span class="ph">SDCe</span>
+            with the debug log level enabled for troubleshooting, run the following
+            command:<pre class="pre codeblock">bin/edge -debug</pre>
+</div>
+
+        <div class="p">To start <span class="ph">SDCe</span>
+            and an edge pipeline at the same time, run the following command from the <span class="ph">SDCe</span>
+            home directory:<pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
+</div>
+
+        <p class="p">To start <span class="ph">SDCe</span>
+            and an edge pipeline that uses parameters, see <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDCe</a>.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_tyz_mwl_pbb">
+    <h3 class="title topictitle3">Shutting Down SDCe</h3>
+
+    <div class="body conbody">
+        <p class="p">To shut down <span class="ph">SDCe</span>,
+            type <span class="ph uicontrol">Ctrl+C</span> in the command prompt. </p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_rzb_zgm_pbb">
+    <h2 class="title topictitle2">Export Pipelines to SDCe</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When you first get started with <span class="ph">SDCe</span>, the
+        easiest way to deploy pipelines to <span class="ph">SDCe</span> is to
+        use <span class="ph">Data
+                  Collector</span> to
+        download the <span class="ph">Data Collector Edge</span>
+        executable along with your designed edge pipelines. After <span class="ph">SDCe</span> is
+        installed, you'll need to export new and updated edge pipelines from <span class="ph">Data
+                  Collector</span> and
+        move them to <span class="ph">SDCe</span>
+        installed on the edge device. </p>
+
+        <div class="section context">
+            <p class="p">
+                
+            </p>
+
+        </div>
+
+        <div class="li step p">
+                <span class="ph cmd"></span><br />
+            </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rk3_2hm_pbb">
+ <h2 class="title topictitle2">Manage Pipelines on SDCe</h2>
+
+ <div class="body conbody">
+        <p class="p">Use the command line
+            and REST API to manage edge pipelines on <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDCe</span>) - including starting, stopping, resetting the offset, and viewing the pipeline
+            status and metrics.</p>
+
+  <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When you use <span class="ph">DPM</span>, you add edge pipelines to jobs and then start, stop, and monitor the jobs
+                running on groups of <span class="ph">Edge Data Collectors</span> from the <span class="ph">DPM</span>
+                UI. For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Dataflow Performance Manager (DPMTM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization.">Meet Dataflow Performance Manager</a>. </div>
+
+        </div>
+
+        <div class="section" id="concept_rk3_2hm_pbb__section_w3m_qwm_pbb"><h3 class="title sectiontitle">Starting a Pipeline at Start Up</h3>
+            
+            <div class="p">You can start an edge pipeline at the same time that you start <span class="ph">SDCe</span>. <div class="note important"><span class="importanttitle">Important:</span> Be sure to start the receiving pipelines before starting
+                    the sending pipelines.</div>
+</div>
+
+            <p class="p">On the edge device, run the following command from the <span class="ph">SDCe</span> home directory:</p>
+
+            <pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
+
+            <div class="p">For example, use the following command to start <span class="ph">SDCe</span> and an edge pipeline with the specified
+                ID:<pre class="pre codeblock">bin/edge -start=FileTailToHTTP74f418f8-c7d3-4d0c-8788-b6474f7160e0</pre>
+</div>
+
+            <div class="p">If the edge pipeline uses parameters, use the following
+                command:<pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt; -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;",
+"&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+</div>
+
+            <div class="p">For example, use the following command if the edge pipeline uses parameters to define
+                the file path used by the File Tail
+                origin:<pre class="pre codeblock">bin/edge -start=FileTailToHTTP74f418f8-c7d3-4d0c-8788-b6474f7160e0 -runtimeParameters='{"filePath":"/tmp/sds.log"}'</pre>
+</div>
+
+        </div>
+
+        <div class="section" id="concept_rk3_2hm_pbb__section_rxk_swm_pbb"><h3 class="title sectiontitle">Managing Pipelines After Start Up</h3>
+            
+            <div class="p">After <span class="ph">SDCe</span> is started, use the following command to start another edge
+                pipeline:<pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start</pre>
+</div>
+
+            <div class="p">For example, use the following command to start a pipeline on a running <span class="ph">SDCe</span>:<pre class="pre codeblock">curl -X POST http://localhost:18633/rest/v1/pipeline/fileTailControl74f418f8-cl2f5-4r7k-8790-b9854h1450e8/start</pre>
+</div>
+
+            <div class="p">If the edge pipeline uses parameters, use the following
+                command:<pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+</div>
+
+            <div class="p">To manage running pipelines - including stopping, resetting the offset, and viewing
+                the pipeline status and metrics - use the following
+                commands:<pre class="pre codeblock">curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/status
+curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/stop
+curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/resetOffset
+curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/metrics</pre>
+</div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_hnx_h1k_rbb">
+    <h2 class="title topictitle2">Uninstalling SDCe</h2>
+
+    <div class="body taskbody">
+        <div class="section context" id="task_hnx_h1k_rbb__context_k11_j1k_rbb">
+            <p class="p">To uninstall <span class="ph">SDCe</span>, shut down <span class="ph">SDCe</span> and then remove the <span class="ph">SDCe</span> home directory.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_hnx_h1k_rbb__steps_l11_j1k_rbb"><li class="li step">
+                <span class="ph cmd">To shut down <span class="ph">SDCe</span> running on the edge device, type <span class="ph uicontrol">Ctrl+C</span> in the command
+                    prompt. </span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Remove the <span class="ph">SDCe</span> home directory from the edge device.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navprev"><a class="link" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" title="Multithreaded Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Multithreaded Pipelines</span></a></span>  
+<span class="navnext"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
+</body>
+</html>

@@ -51,7 +51,7 @@
 
             <p class="p"><a class="xref" href="RPM.html#task_zk4_tr5_xv" title="Stop all pipelines and then shut down the previous version of Data Collector.">Step 1. Shut Down the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the data and resource directories. You’ll also need to create a backup of the environment configuration file, $SDC_DIST/libexec/sdcd-env.sh, so that the file is not overwritten when you install the new version. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
+            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw">Step 2. Back Up the Previous Version</a></p>
 
             <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires sudo privileges on the root directory.">Step 3. Install the New Version</a></p>
 
@@ -104,13 +104,13 @@
 <div class="topic concept nested1" id="concept_nzl_hkb_mw">
     <h2 class="title topictitle2">Step 2. Back Up the Previous Version</h2>
 
-    
-    <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the files in the previous
-        version by copying and renaming the data and resource directories. You’ll also need to
-        create a backup of the environment configuration file,
-            <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten when
-        you install the new version. That way, you can continue to run the previous version if
-        needed. </p>
+    <div class="body conbody">
+        <p class="p">Before you install the new version, create a backup of the files in the previous version
+            by copying and renaming the data and resource directories. You’ll also need to create a
+            backup of the environment configuration file,
+                <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten
+            when you install the new version. That way, you can continue to run the previous version
+            if needed. </p>
 
         <div class="p">Copy and rename the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
                 <li class="li">Data directory defined in the SDC_DATA environment variable. Default is
@@ -125,10 +125,10 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 2.6.0.0, copy the Data Collector data directory
-            and rename it as follows: <samp class="ph codeph">/var/lib/sdc2600</samp>. Create a backup of the
+        <p class="p">For example, if you are upgrading version 2.7.0.0, copy the Data Collector data directory
+            and rename it as follows: <samp class="ph codeph">/var/lib/sdc2700</samp>. Create a backup of the
             environment configuration file by renaming the file as follows:
-                <samp class="ph codeph">sdcd-env-2600.sh</samp>.</p>
+                <samp class="ph codeph">sdcd-env-2700.sh</samp>.</p>
 
     </div>
 
@@ -155,8 +155,8 @@
                 <div class="itemgroup info">
                     <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version <span class="ph">2.7.0.0</span>, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">2.7.0.0</span>-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span>, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -174,8 +174,8 @@
                     as needed, use the following command:</span>
                 <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 For
-                    example, to install version <span class="ph">2.7.0.0</span>, use the following
-                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">2.7.0.0</span>-1.noarch.rpm</pre>
+                    example, to install version <span class="ph">3.0.0.0</span>, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">3.0.0.0</span>-1.noarch.rpm</pre>
 </div>
             </li>
 </ol>
@@ -201,7 +201,7 @@ For
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Open the environment configuration file that you backed up in the previous
                     version.</span>
-                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2600.sh</samp>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2700.sh</samp>
                     file.</div>
             </li>
 <li class="li step stepexpand">
@@ -258,7 +258,7 @@ For
                         <samp class="ph codeph">.old</samp>.</span>
                 <div class="itemgroup info">The previous version of the <samp class="ph codeph">application-token.txt</samp> file
                     includes the authentication token that this <span class="ph">Data
-                  Collector</span> instance requires to issue authenticated requests to <span class="ph">DPM</span>. As a result, we'll need <span class="ph">Data
+                  Collector</span> instance requires to issue authenticated requests to <span class="ph">DPM</span>. As a result, you'll need <span class="ph">Data
                   Collector</span> to use the previous version of the file.</div>
             </li>
 <li class="li step stepexpand">
@@ -278,6 +278,8 @@ For
                         <li class="li">The appropriate realm.properties file, based on the authentication type
                             that you use.</li>
 
+                        <li class="li">credential stores properties file</li>
+
                         <li class="li"><samp class="ph codeph">email-password.txt</samp></li>
 
                         <li class="li">keystore files</li>
@@ -291,8 +293,9 @@ For
                         <li class="li">Vault properties file<p class="p">As of version 2.7.0.0, most of the Vault
                                 configuration properties have been moved to the new credential
                                 stores properties file. The properties use the same name, with an
-                                added "credentialStore.vault.config" prefix. Copy any values that
-                                you customized in the previous Vault properties file into the same
+                                added "credentialStore.vault.config" prefix. If you are upgrading
+                                from a version earlier than 2.7.0.0, copy any values that you
+                                customized in the previous Vault properties file into the same
                                 property names in the credential stores properties file.</p>
 </li>
 
@@ -329,8 +332,9 @@ For
                     Collector
                         version:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "&lt;version&gt;"</pre>
 <div class="p">For
-                        example, to list all stage libraries used by Data Collector version <span class="ph">2.7.0.0</span>, run the following
-                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "<span class="ph">2.7.0.0</span>"</pre>
+                        example, to list all stage libraries used by Data Collector version 2.7.0.0,
+                        run the following
+                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "2.7.0.0"</pre>
 </div>
 </li>
 
@@ -362,30 +366,6 @@ For
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-60917135-3', 'auto');
-  ga('send', 'pageview');
-</script></div>
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
 </body>
 </html>
