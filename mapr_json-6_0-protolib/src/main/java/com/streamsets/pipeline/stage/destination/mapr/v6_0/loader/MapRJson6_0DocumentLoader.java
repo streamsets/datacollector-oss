@@ -15,9 +15,13 @@
  */
 package com.streamsets.pipeline.stage.destination.mapr.v6_0.loader;
 
+import com.mapr.db.MapRDB;
+import com.mapr.db.exceptions.DBException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
+import org.ojai.exceptions.OjaiException;
 import org.ojai.store.Connection;
 import org.ojai.store.DocumentMutation;
 import org.ojai.store.DocumentStore;
@@ -101,10 +105,6 @@ public class MapRJson6_0DocumentLoader extends MapRJsonDocumentLoader {
   }
 
   private void initTable(String tableName, boolean createTable) throws MapRJsonDocumentLoaderException {
-    if(createTable) {
-      throw new MapRJsonDocumentLoaderException("MapR 6.0 Stage Lib does not support auto-creation of tables.");
-    }
-
     if(connection == null) {
       startConnection();
     }
@@ -114,9 +114,26 @@ public class MapRJson6_0DocumentLoader extends MapRJsonDocumentLoader {
       return;
     }
 
-    // open table
+    // open table (optionally create it)
     // and add to the group of open tables.
-    theStores.put(tableName, connection.getStore(tableName));
+    try {
+      theStores.put(tableName, connection.getStore(tableName));
+      // isReadOnly() call triggers TableNotFoundException, since getStore() doesn't even check for table existence
+      if(theStores.get(tableName).isReadOnly()) {
+        throw new MapRJsonDocumentLoaderException("Cannot edit readonly table " + tableName);
+      }
+    } catch (OjaiException ex) {
+      if(createTable) {
+        try {
+          MapRDB.createTable(tableName);
+        } catch (DBException ex2) {
+          throw new MapRJsonDocumentLoaderException("Encountered error creating table " + tableName, ex2);
+        }
+      } else {
+        throw new MapRJsonDocumentLoaderException(
+            "MapR DB table " + tableName + "does not exist, and not configured to create", ex);
+      }
+    }
   }
 
   private void startConnection() {
