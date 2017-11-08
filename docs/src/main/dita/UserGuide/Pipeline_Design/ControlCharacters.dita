@@ -39,6 +39,7 @@
         <li>CoAP Server origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
+        <li>Google Cloud Storage origin</li>
         <li>Google Pub/Sub Subscriber origin</li>
         <li>Hadoop FS origin</li>
         <li>HTTP Client origin</li>

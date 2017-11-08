@@ -145,6 +145,17 @@
                                         stage.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Data Time Zone <xref href="AmazonS3-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_zyk_bd5_5bb"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p>Time zone for the destination system. Used with the time
+                                            basis to resolve datetimes in a time-based bucket or
+                                            partition prefix. </p>
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>Time Basis <xref href="AmazonS3-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_d73_kf8_wv"/>
@@ -154,23 +165,18 @@
                                             partition prefix. Use one of the following
                                                 expressions:<ul id="ul_wbn_qdt_r5">
                                                 <li><codeph>${time:now()}</codeph> - Uses the
-                                                  processing time as the time basis. </li>
+                                                  processing time as the time basis in conjunction
+                                                  with the specified Data Time Zone.</li>
                                                 <li>An expression that calls a field and resolves to
                                                   a datetime value, such as
                                                   <codeph>${record:value(&lt;date field
                                                   path>)}</codeph>. Uses the time associated with
-                                                  the record as the time basis. </li>
+                                                  the record as the time basis, adjusted for the
+                                                  specified Data Time Zone.</li>
                                             </ul></p>
                                         <p>When the Bucket and Partition Prefix properties have no
                                             time component, you can ignore this property. </p>
                                         <p>Default is <codeph>${time:now()}</codeph>.</p>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry>Data Time Zone</entry>
-                                    <entry>
-                                        <p>Time zone for the destination system. Used to resolve
-                                            datetimes in a time-based partition prefix. </p>
                                     </entry>
                                 </row>
                                 <row>
@@ -182,43 +188,17 @@
                                     <entry>Defines a prefix for object names written by the
                                         destination. By default, object names start with "sdc" as
                                         follows: <codeph>sdc-&lt;UTC
-                                            timestamp>-&lt;counter></codeph>. <p>Not required for
-                                            the whole file data format. </p></entry>
+                                            timestamp>-&lt;counter></codeph>. </entry>
                                 </row>
                                 <row>
                                     <entry>Object Name Suffix</entry>
                                     <entry>Suffix to use for object names, such as txt or json. When
                                         used, the destination adds a period and the configured
-                                        suffix as follows: &lt;filename>.&lt;suffix>.<p>You can
+                                        suffix as follows: &lt;object name>.&lt;suffix>.<p>You can
                                             include periods within the suffix, but do not start the
                                             suffix with a period. Forward slashes are not
                                             allowed.</p><p>Not available for the whole file data
                                             format. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="../Destinations/AmazonS3-DataFormat.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_w4w_q3p_ht"/>
-                                        </xref></entry>
-                                    <entry>Data format to write data: <ul id="ul_lw1_2kx_rt">
-                                            <li>Avro</li>
-                                            <li>Binary</li>
-                                            <li>Delimited</li>
-                                            <li>JSON</li>
-                                            <li>Protobuf</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_wjh_ycl_br"
-                                                  placement="inline"/></xref></li>
-                                            <li>Text</li>
-                                            <li>Whole File <xref
-                                                  href="../Data_Formats/WholeFile.dita">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" placement="inline"
-                                                  id="image_ylz_vsm_zw"/></xref></li>
-                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Compress with Gzip</entry>

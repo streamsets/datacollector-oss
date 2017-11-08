@@ -123,6 +123,19 @@
    </topicref>
    <topicref href="../Origins/BigQuery-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/GCS.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/GCS-Credentials.dita">
+    <topicref href="../Origins/GCS-CredentialsDefault.dita"/>
+    <topicref href="../Origins/GCS-CredentialsFile.dita"/>
+   </topicref>
+   <topicref href="../Origins/GCS-CommonPrefixPatterns.dita"/>
+   <topicref href="../Origins/GCS-EventGeneration.dita">
+    <topicref href="../Origins/GCS-EventRecords.dita"/>
+   </topicref>
+   <topicref href="../Origins/GCS-DataFormats.dita"/>
+   <topicref href="../Origins/GCS-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/PubSub.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/PubSub-Credentials.dita">

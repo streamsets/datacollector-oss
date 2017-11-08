@@ -17,8 +17,23 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_iyd_wql_nbb">
  <title>Google Cloud Storage</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+        <p><indexterm>origins<indexterm>Google Cloud
+                Storage</indexterm></indexterm><indexterm>Google Cloud Storage
+                    origin<indexterm>overview</indexterm></indexterm>The Google Cloud Storage origin
+            reads objects stored in Google Cloud Storage. The objects must be fully written and
+            reside in a single bucket. The object names must share a prefix pattern.</p>
+        <p>With the Google Cloud Storage origin, you define the bucket, prefix pattern, and optional
+            common prefix. These properties determine the objects that the origin processes. </p>
+        <p>You also define the project and credentials provider to use to connect to Google Cloud
+            Storage. The origin can retrieve credentials from the Google Application Default
+            Credentials or from a Google Cloud service account credentials file. </p>
+        <p>After processing an object or upon encountering errors, the origin can keep, archive, or
+            delete the object. When archiving, the origin can copy or move the object. </p>
+        <p>When the pipeline stops, the Google Cloud Storage origin notes where it stops reading.
+            When the pipeline starts again, the origin continues processing from where it stopped by
+            default. You can reset the origin to process all requested objects. </p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
  </conbody>
 </concept>

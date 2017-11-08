@@ -17,14 +17,162 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_vn4_nrl_nbb">
     <title>Configuring a Google Cloud Storage Destination</title>
-    <shortdesc/>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
-        <steps>
+        <context id="context_lfp_5f4_sbb"><indexterm>Google Cloud Storage
+                    destination<indexterm>configuring</indexterm></indexterm>Configure an Google
+            Cloud Storage destination to write objects to Google Cloud Storage.</context>
+        <steps id="steps_tzg_m3r_rt">
             <step>
-                <cmd></cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yxz_pvs_5x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref href="GCS-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_xsl_2rx_mx"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-entry-Events"
+                                    />
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-ReqFields">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Precond">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-GoogleCloudStorage">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref
+                                            href="../Destinations/AmazonS3-DataFormat.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ivq_1fj_vx"/>
+                                        </xref></entry>
+                                    <entry>Data format to write data: <ul id="ul_jvq_1fj_vx">
+                                            <li>Avro</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Protobuf</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_kvq_1fj_vx"/></xref></li>
+                                            <li>Text</li>
+                                            <li>Whole File <xref
+                                                  href="../Data_Formats/WholeFile.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_lvq_1fj_vx"/></xref></li>
+                                            <li>XML</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>For whole files, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wvv_hcw_1x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Whole File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileNameExp">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileExists">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-IncludeChecksum">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ChecksumAlgo">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-WriteXML-messages">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-GCS-Credentials">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

@@ -137,6 +137,25 @@
    <topicref href="../Destinations/Bigtable-TimeBasis.dita"/>
    <topicref href="../Destinations/Bigtable-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/GCS.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/GCS-Credentials.dita">
+    <topicref href="../Destinations/GCS-CredentialsDefault.dita"/>
+    <topicref href="../Destinations/GCS-CredentialsFile.dita"/>
+   </topicref>
+   <topicref href="../Destinations/GCS-PartitionPrefix.dita"/>
+   <topicref href="../Destinations/GCS-TimeBasis.dita"/>
+   <topicref href="../Destinations/GCS-ObjectNames.dita">
+    <topicref href="../Destinations/GCS-ObjectNames-WholeFile.dita"/>
+   </topicref>
+   <topicref href="../Destinations/GCS-EventGeneration.dita">
+    <topicref href="../Destinations/GCS-EventRecords.dita"/>
+   </topicref>
+   <topicref href="../Destinations/GCS-DataFormats.dita"/>
+   <topicref href="../Destinations/GCS-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/PubSubPublisher.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

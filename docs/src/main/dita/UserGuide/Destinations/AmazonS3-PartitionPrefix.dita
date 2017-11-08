@@ -19,15 +19,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qw5_gtq_yv">
  <title>Partition Prefix</title>
- <shortdesc>You can use a partition prefix to organize objects by partitions. You can use the
-        partition prefix to write to existing partitions or to create new partitions as needed. When
-        a partition specified in the partition prefix does not exist, the destination creates the
-        partition.</shortdesc>
  <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>partition
                 prefix</indexterm></indexterm><indexterm>partition prefix<indexterm>Amazon S3
-                    destination</indexterm></indexterm>You can specify an exact partition name for
-            the partition prefix, or you can use an expression that evaluates to a partition name. </p>
+                    destination</indexterm></indexterm>You can use a partition prefix to organize
+            objects by partitions. You can use the partition prefix to write to existing partitions
+            or to create new partitions as needed. When a partition specified in the partition
+            prefix does not exist, the destination creates the partition.</p>
+        <p>You can specify an exact partition name for the partition prefix, or you can use an
+            expression that evaluates to a partition name. </p>
         <p>For example, to write to partitions based on data in the Country field, you can use the
             following expression as the partition prefix:
                 <codeph>${record:value('/Country')}</codeph>. </p>
@@ -35,7 +35,9 @@
             data in the record, and creates partitions for countries that do not already have a
             partition.</p>
         <p>If you use datetime variables in the expression, be sure to configure the <xref
-                href="AmazonS3-TimeBasis.dita#concept_qtb_njg_vw">time basis</xref> for the
-            stage.</p>
+                href="AmazonS3-TimeBasis.dita#concept_qtb_njg_vw">time basis</xref> for the stage.
+            You might also need to configure the Data Time Zone property.<draft-comment
+                author="Loretta">This Google Cloud Storage > Partition Prefix topic based on this.
+                Check if changes here belong there?</draft-comment></p>
     </conbody>
 </concept>

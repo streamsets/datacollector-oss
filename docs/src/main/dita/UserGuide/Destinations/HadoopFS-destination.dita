@@ -33,9 +33,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-HiveSolutionOverview1"/>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview2"/>
         <p>You can configure the Hadoop FS destination to write to Azure HDInsight.</p>
-        <p>The destination can also generate events for an event stream. For more information about
-            the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-event-xref"
+            /></p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>
         <draft-comment author="Loretta">Changes to Hadoop FS might need to go to Local FS and MapR

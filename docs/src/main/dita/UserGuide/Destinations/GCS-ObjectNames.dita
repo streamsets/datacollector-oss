@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_s1m_j24_sbb">
+ <title>Object Names</title>
+    <conbody>
+        <p><indexterm>Google Cloud Storage destination<indexterm>object
+                names</indexterm></indexterm>The Google Cloud Storage destination creates an object,
+            or file, for each batch of data written. Objects generally use the following naming
+            convention: <codeblock>&lt;prefix>-&lt;UUID></codeblock></p>
+        <p>You configure the object name prefix. For example:
+                <codeph>sdc-c9a2db16-b5d0-44cb-b3f5-d0781cced760</codeph>.</p>
+        <p>You can optionally configure an object name suffix for all data formats except whole
+            file. When you configure a suffix, it is added to the object name after a period, as
+            follows:<codeblock>&lt;prefix>-&lt;UUID>.&lt;optional suffix></codeblock></p>
+        <p>For example: <codeph>sdc-c9a2db16-b5d0-44cb-b3f5-d0781cced760.txt</codeph>.</p>
+    </conbody>
+</concept>

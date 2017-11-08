@@ -65,6 +65,20 @@
           <dd>Write to file is not supported for cluster pipelines at this time.</dd>
         </dlentry>
         <dlentry>
+          <dt>Write to Google Cloud Storage</dt>
+          <dd>The pipeline writes error records and related details to Google Cloud Storage. <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            includes the records in error record counts and metrics.</dd>
+          <dd>You define the Google Cloud Storage configuration properties. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Write to Google Sub/Pub</dt>
+          <dd>The pipeline writes error records and related details to Google Sub/Pub. <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            includes the records in error record counts and metrics.</dd>
+          <dd>You define the Google Sub/Pub configuration properties. </dd>
+        </dlentry>
+        <dlentry>
           <dt>Write to Kafka</dt>
           <dd>The pipeline writes error records and related details to Kafka. <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

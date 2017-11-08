@@ -17,16 +17,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qsj_hk1_v1b">
  <title>Google Pub/Sub Publisher</title>
- <shortdesc>The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub
-        topic.</shortdesc>
  <conbody>
   <p><indexterm>Google Pub/Sub Publisher
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
-                    Pub/Sub Publisher</indexterm></indexterm>When you configure the destination, you
-            define the Google Pub/Sub topic ID to write messages to. You also define the project and
-            credentials provider to use to connect to Google Pub/Sub. The destination can retrieve
-            credentials from the Google Application Default Credentials or from a Google Cloud
-            service account credentials file.</p>
+                    Pub/Sub Publisher</indexterm></indexterm>The Google Pub/Sub Publisher
+            destination publishes messages to a Google Pub/Sub topic. You can use other destinations
+            to write to <xref href="BigQuery.dita#concept_hj4_brk_dbb">Google BigQuery</xref>, <xref
+                href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref>, and <xref
+                href="GCS.dita#concept_p4n_jrl_nbb">Google Cloud Storage</xref>.</p>
+        <p>When you configure the destination, you define the Google Pub/Sub topic ID to write
+            messages to. You also define the project and credentials provider to use to connect to
+            Google Pub/Sub. The destination can retrieve credentials from the Google Application
+            Default Credentials or from a Google Cloud service account credentials file.</p>
         <p>A Google Pub/Sub message contains a payload and optional user-defined attributes that
             describe the payload content. When records include record header attributes, the Google
             Pub/Sub Publisher destination includes the record header attributes in message

@@ -28,77 +28,12 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-            <step>
-                <cmd>On the <uicontrol>Pub/Sub</uicontrol> tab, configure the following
-                    property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ypc_bzq_v1b">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Pub/Sub Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Topic ID</entry>
-                                    <entry>Google Pub/Sub topic ID to write messages to.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-GooglePubSub">
+                <cmd/>
             </step>
-            <step>
-                <cmd>On the <uicontrol>Credentials</uicontrol> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ffd_w3p_v1b">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Project ID</entry>
-                                    <entry>Google Pub/Sub project ID to connect to.</entry>
-                                </row>
-                                <row>
-                                    <entry>Credentials Provider
-                                        <xref
-                                            href="PubSubPublisher-Credentials.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_d3x_vhk_lz"
-                                            /></xref></entry>
-                                    <entry>Credentials provider to use to connect to Google
-                                        Pub/Sub:<ul id="ul_tmm_2rp_v1b">
-                                            <li>Default credentials provider</li>
-                                            <li>Service account credentials file (JSON)
-                                            </li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Credentials File Path (JSON)</entry>
-                                    <entry>When using a Google Cloud service account credentials
-                                        file, path to the file that the destination uses to connect
-                                        to Google Pub/Sub. The credentials file must be a JSON
-                                            file.<p>Enter a path relative to the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
-                                            or enter an absolute path. </p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-GooglePubSub-Creds">
+                <cmd/>
             </step>
             <step>
                 <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following

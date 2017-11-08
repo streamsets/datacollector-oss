@@ -377,6 +377,10 @@
                                                 specified Elasticsearch cluster.</li>
                                             <li>Write to File - Writes error records to a file in
                                                 the specified directory. </li>
+                                            <li>Write to Google Cloud Storage - Writes error records
+                                                to Google Cloud Storage.</li>
+                                            <li>Write to Google Pub/Sub - Writes error records to
+                                                Google Pub/Sub.</li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
                                             <li>Write to Kinesis - Writes error records to the
@@ -563,6 +567,99 @@
                                     <entry>Maximum size for error files. Exceeding this size creates
                                         a new error file. <p>Use 0 to avoid using this
                                         property.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When writing error records to Google Cloud Storage, click the <wintitle>Error
+                        Records - Write to Google Cloud Storage</wintitle> tab and configure the
+                    following properties: </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_rkp_53v_5bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Google Cloud Storage Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-ProjectID">
+                                    <entry/>
+                                </row>  <row
+                                   conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3Bucket">
+                                   <entry/>
+                               </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-CredProvider">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-CredFilePath">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-CPrefix">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-PartPrefix">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-DataTimeZone">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-TimeBasis">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-ObjNamePrefix">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When writing error records to Google Pub/Sub, click the <wintitle>Error Records
+                        - Write to Google Pub/Sub</wintitle> tab and configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wdw_vhv_5bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Google Pub/Sub Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-PubSub-TopicID">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-PubSub-ProjectID">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-PubSub-CredProvider">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/roe-PubSub-CredFilePath">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

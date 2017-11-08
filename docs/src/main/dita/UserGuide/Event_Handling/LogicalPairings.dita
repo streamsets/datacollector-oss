@@ -81,7 +81,9 @@
                                 <entry>
                                     <ul id="ul_wvy_h4p_1y">
                                         <li>Pipeline Finisher executor to stop the pipeline after
-                                            processing all available files.</li>
+                                            processing queried data from all objects.</li>
+                                        <li>Email executor to send email when the origin completes
+                                            processing available objects.</li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
@@ -114,6 +116,18 @@
                                     <ul id="ul_u3c_hng_x1b">
                                         <li>Email executor to send email each time the origin
                                             successfully completes a query.</li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>Google Cloud Storage</entry>
+                                <entry>
+                                    <ul>
+                                        <li>Pipeline Finisher executor to stop the pipeline after
+                                            processing queried data from all objects.</li>
+                                        <li>Email executor to send email when the origin completes
+                                            processing available objects.</li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
@@ -260,6 +274,18 @@
                                     <ul id="ul_swb_lng_x1b">
                                         <li>Email executor to send email after closing a file or
                                             streaming a whole file. </li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>Google Cloud Storage</entry>
+                                <entry>
+                                    <ul id="ul_ltl_yfv_sbb">
+                                        <li>Spark executor to run a Spark application after closing
+                                            an object or whole file. </li>
+                                        <li>Email executor to send email after closing an object or
+                                            whole file. </li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>

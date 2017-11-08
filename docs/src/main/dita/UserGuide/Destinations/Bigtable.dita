@@ -19,13 +19,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pl5_tmq_tx">
  <title>Google Bigtable</title>
- <shortdesc>The Google Bigtable destination writes data to Google Cloud Bigtable.</shortdesc>
  <conbody>
   <p><indexterm>Google Bigtable
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
-                    Bigtable</indexterm></indexterm>Before you configure the destination, you must
-            complete several prerequisites including installing the BoringSSL library and
-            configuring the Google Application Default Credentials.</p>
+                    Bigtable</indexterm></indexterm>The Google Bigtable destination writes data to
+            Google Cloud Bigtable. You can use other destinations to write to <xref
+                href="BigQuery.dita#concept_hj4_brk_dbb">Google BigQuery</xref>, <xref
+                href="GCS.dita#concept_p4n_jrl_nbb">Google Cloud Storage</xref>, and <xref
+                href="PubSubPublisher.dita#concept_qsj_hk1_v1b">Google Pub/Sub</xref>.</p>
+        <p>Before you configure the destination, you must complete several prerequisites including
+            installing the BoringSSL library and configuring the Google Application Default
+            Credentials.</p>
         <p>When you configure the destination, you define the instance ID, project ID, and the table
             that you want to write to. The destination can write to an existing table or can create
             and write to a new table. You specify the row key for the table, and then map fields

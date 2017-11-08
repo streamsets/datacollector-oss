@@ -1242,11 +1242,10 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
-                        used by Directory and File Tail</draft-comment>
+                        used by Directory and File Tail and a lot of other origins</draft-comment>
             </p>
-            <p id="O-EventHandling-overview">The origin can also generate events for an event
-                  stream. For more information about dataflow triggers and the event framework, see
-                        <xref
+            <p id="O-EventHandling-overview">The origin can generate events for an event stream. For
+                  more information about dataflow triggers and the event framework, see <xref
                         href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>. </p>
             <p>
                   <draft-comment author="Loretta">Event Generation topic with multiple ph and p used
@@ -1374,10 +1373,12 @@ web-0011.log</codeblock></dd>
                   Salesforce.</draft-comment>
             <p id="p-ERec-NoMoreData">The no-more-data event record includes no record fields.</p>
             <p>
-                  <draft-comment author="Loretta">Origins: used in First File to Process for
-                  </draft-comment>
+                  <draft-comment author="Loretta">D-event-xref</draft-comment>
             </p>
-            <p/>
+            <p><ph id="D-event-xref">The destination can generate events for an event stream. For
+                        more information about the event framework, see <xref
+                              href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
+                        />.</ph></p>
             <p>
                   <draft-comment author="Loretta">multithreaded stuff below. </draft-comment>
             </p>
@@ -3210,6 +3211,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         events:<ul id="ul_l51_mvd_nx">
                         <li>Amazon S3 origin</li>
                         <li>Directory origin</li>
+                        <li>Google Cloud Storage origin</li>
                         <li>JDBC Query Consumer origin</li>
                         <li>JDBC Multitable Consumer origin</li>
                         <li>Salesforce origin</li>
