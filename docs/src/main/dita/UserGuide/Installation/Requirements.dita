@@ -64,7 +64,7 @@
           </row>
           <row>
             <entry>Java</entry>
-            <entry>Oracle Java 8.<note>OpenJDK is not supported.</note></entry>
+            <entry>Oracle Java 8 or OpenJDK 8</entry>
           </row>
           <row>
             <entry>Browser</entry>

@@ -22,13 +22,16 @@
  <conbody>
         <p><indexterm>Oracle JVM<indexterm>JCE requirement for AES-256
                 encryption</indexterm></indexterm>If you use AES-256 encryption with your Oracle
-            JVM, install the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction
-            Policy on the <ph
+            JVM, configure the JDK on the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine.</p>
-        <p>For JCE installation instructions, see the README.txt file included in the
-            jce_policy_x-zip file. </p>
-        <p>After the installation, restart <ph
+            machine to use the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction
+            Policy.</p>
+        <p>To configure the JDK to use unlimited cryptography, set the
+                <codeph>crypto.policy</codeph> Java Security property in the
+                <codeph>java.security</codeph> file included in your JDK installation to a value of
+                <codeph>unlimited</codeph>. See the notes in the <codeph>java.security</codeph> file
+            for more information.</p>
+        <p>After you configure unlimited cryptography, restart <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
     </conbody>
