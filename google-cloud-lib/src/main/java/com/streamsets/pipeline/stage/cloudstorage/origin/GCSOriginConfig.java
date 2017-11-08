@@ -85,7 +85,7 @@ public class GCSOriginConfig {
     @ConfigDefBean()
     public DataParserFormatConfig dataParserFormatConfig;
 
-    @ConfigDefBean
+    @ConfigDefBean(groups = {"ERROR_HANDLING"})
     public GcsOriginErrorConfig gcsOriginErrorConfig;
 
     @ConfigDefBean(groups = "CREDENTIALS")
