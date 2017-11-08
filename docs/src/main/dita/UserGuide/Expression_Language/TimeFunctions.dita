@@ -117,7 +117,7 @@
                 </dd>
                 <dd>For example, the following expression returns the month as a string value from
                     the Date object stored in the Timestamp
-                    field:<codeblock>${time:extractStringFromDate(record:value('/Timestamp')), "MMM")}</codeblock></dd>
+                    field:<codeblock>${time:extractStringFromDate(record:value('/Timestamp'), "MMM")}</codeblock></dd>
                 <dd>Return type: String.</dd>
             </dlentry>
             <dlentry>

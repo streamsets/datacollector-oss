@@ -7,7 +7,7 @@
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
-        http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0k
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,26 +33,6 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>streamsets-datacollector-apache-kafka_0_8_1-lib </entry>
-                            <entry>For Kafka version 0.8.1.<p>Includes: <ul id="ul_hfn_3yp_vw">
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>Kafka Producer destination</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-apache-kafka_0_8_2-lib </entry>
-                            <entry>For Kafka version 0.8.2.<p>Includes: <ul id="ul_jfg_jyp_vw">
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>Kafka Producer destination</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
                             <entry>For Kafka version 0.9.x.<p>Includes:<ul id="ul_hpb_htg_qw">
                                         <li>HTTP to Kafka origin</li>
@@ -75,19 +55,26 @@
                                     </ul></p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-apache-kudu_1_0-lib</entry>
-                            <entry>For Kudu version 1.0.x. <p>Includes the Kudu Lookup processor and
-                                    Kudu destination.</p></entry>
+                            <entry>streamsets-datacollector-apache-kafka_0_11-lib</entry>
+                            <entry>For Kafka version 0.11.x.<p>Includes:<ul id="ul_bzj_2zv_sbb">
+                                        <li>HTTP to Kafka origin</li>
+                                        <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-apache-kudu_1_1-lib</entry>
-                            <entry>For Kudu version 1.1.x.<p>Includes the Kudu Lookup processor and
-                                    Kudu destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-apache-kudu_1_2-lib</entry>
-                            <entry>For Kudu version 1.2.x.<p>Includes the Kudu Lookup processor and
-                                    Kudu destination.</p></entry>
+                            <entry>streamsets-datacollector-apache-kafka_1_0-lib</entry>
+                            <entry>For Kafka version 1.0.x.<p>Includes:<ul id="ul_ql4_l2j_tbb">
+                                        <li>HTTP to Kafka origin</li>
+                                        <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kudu_1_3-lib</entry>
@@ -97,6 +84,11 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kudu_1_4-lib</entry>
                             <entry>For Kudu version 1.4.x.<p>Includes the Kudu Lookup processor and
+                                    Kudu destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-apache-kudu_1_5-lib</entry>
+                            <entry>For Kudu version 1.5.x.<p>Includes the Kudu Lookup processor and
                                     Kudu destination.</p></entry>
                         </row>
                         <row>
@@ -152,107 +144,6 @@
                             <entry>streamsets-datacollector-cassandra_3-lib</entry>
                             <entry>For Cassandra 1.2, 2.x, and 3.x. <p>Includes the Cassandra
                                     destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_2-lib </entry>
-                            <entry>
-                                <p>For the Cloudera CDH version 5.2 distribution of Hadoop. </p>
-                                <p>Includes:</p>
-                                <ul id="ul_kqw_ghh_cw">
-                                    <li>Hadoop FS origin for cluster mode pipelines </li>
-                                    <li>HBase Lookup processor</li>
-                                    <li>Flume destination </li>
-                                    <li>Hadoop FS destination </li>
-                                    <li>HBase destination </li>
-                                    <li>Solr destination</li>
-                                    <li>HDFS File Metadata executor</li>
-                                    <li>MapReduce executor</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_3-lib</entry>
-                            <entry>
-                                <p>For the Cloudera CDH version 5.3 distribution of Hadoop. </p>
-                                <p>Includes:</p>
-                                <ul id="ul_mdq_ghh_cw">
-                                    <li>Hadoop FS origin for cluster mode pipelines </li>
-                                    <li>HBase Lookup processor</li>
-                                    <li>Flume destination </li>
-                                    <li>Hadoop FS destination </li>
-                                    <li>HBase destination </li>
-                                    <li>Solr destination</li>
-                                    <li>HDFS File Metadata executor</li>
-                                    <li>MapReduce executor</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_4-lib</entry>
-                            <entry>
-                                <p>For the Cloudera CDH version 5.4 distribution of Hadoop. </p>
-                                <p>Includes:</p>
-                                <ul id="ul_xqj_ghh_cw">
-                                    <li>Hadoop FS origin for cluster mode pipelines </li>
-                                    <li>HBase Lookup processor</li>
-                                    <li>Hive Metadata processor</li>
-                                    <li>Spark Evaluator processor</li>
-                                    <li>Flume destination </li>
-                                    <li>Hadoop FS destination </li>
-                                    <li>HBase destination </li>
-                                    <li>Hive Metastore destination</li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr destination</li>
-                                    <li>HDFS File Metadata executor</li>
-                                    <li>Hive Query executor</li>
-                                    <li>MapReduce executor</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_5-lib</entry>
-                            <entry>
-                                <p>For the Cloudera CDH version 5.5 distribution of Hadoop. </p>
-                                <p>Includes:</p>
-                                <ul id="ul_dp2_ghh_cw">
-                                    <li>Hadoop FS origin for cluster mode pipelines </li>
-                                    <li>HBase Lookup processor</li>
-                                    <li>Hive Metadata processor</li>
-                                    <li>Spark Evaluator processor</li>
-                                    <li>Flume destination </li>
-                                    <li>Hadoop FS destination </li>
-                                    <li>HBase destination </li>
-                                    <li>Hive Metastore destination</li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr destination</li>
-                                    <li>HDFS File Metadata executor</li>
-                                    <li>Hive Query executor</li>
-                                    <li>MapReduce executor</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_7-lib</entry>
-                            <entry>
-                                <p>For the Cloudera CDH version 5.7 distribution of Hadoop. </p>
-                                <p>Includes:</p>
-                                <ul id="ul_oxh_kfh_cw">
-                                    <li>Hadoop FS origin for cluster mode pipelines </li>
-                                    <li>HBase Lookup processor</li>
-                                    <li>Hive Metadata processor</li>
-                                    <li>Spark Evaluator processor</li>
-                                    <li>Flume destination </li>
-                                    <li>Hadoop FS destination </li>
-                                    <li>HBase destination </li>
-                                    <li>Hive Metastore destination</li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr destination</li>
-                                    <li>HDFS File Metadata executor</li>
-                                    <li>Hive Query executor</li>
-                                    <li>MapReduce executor</li>
-                                    <li>Spark executor</li>
-                                </ul>
-                            </entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_5_8-lib</entry>
@@ -370,35 +261,29 @@
                             </entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</entry>
+                            <entry>streamsets-datacollector-cdh_5_13-lib</entry>
                             <entry>
-                                <p>For the Cloudera version 5.4 distribution of Apache Kafka
-                                    1.2.</p>
-                                <p>Includes the Kafka Consumer origin for cluster mode pipelines.
-                                </p>
+                                <p>For the Cloudera CDH version 5.13 distribution of Hadoop. </p>
+                                <p>Includes:</p>
+                                <ul id="ul_nc5_31w_sbb">
+                                    <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Kudu Lookup processor</li>
+                                    <li>Spark Evaluator processor</li>
+                                    <li>Flume destination </li>
+                                    <li>Hadoop FS destination </li>
+                                    <li>HBase destination </li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
+                                    <li>Kudu destination</li>
+                                    <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
+                                    <li>Spark executor</li>
+                                </ul>
                             </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib </entry>
-                            <entry>
-                                <p>For the Cloudera version 5.4 distribution of Apache Kafka 1.3. </p>
-                                <p>Includes the Kafka Consumer origin for cluster mode pipelines.
-                                </p>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</entry>
-                            <entry>
-                                <p>For the Cloudera version 5.5 distribution of Apache Kafka 1.3. </p>
-                                <p>Includes the Kafka Consumer origin for cluster mode
-                                    pipelines.</p>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</entry>
-                            <entry><p>For the Cloudera version 5.7 distribution of Apache Kafka
-                                    2.0.</p>Includes the Kafka Consumer origin for cluster mode
-                                pipelines.</entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</entry>
@@ -441,28 +326,6 @@
                             </entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-cdh_kafka_1_2-lib </entry>
-                            <entry>For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
-                                    <p>Includes: <ul id="ul_pt3_nyp_vw">
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>Kafka Producer destination</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-cdh_kafka_1_3-lib </entry>
-                            <entry>For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
-                                    <p>Includes: <ul id="ul_w1y_nyp_vw">
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>Kafka Producer destination</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
                             <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
                                     <p>Includes: <ul id="ul_kjf_ntg_qw">
@@ -478,6 +341,18 @@
                             <entry>streamsets-datacollector-cdh_kafka_2_1-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
                                     <p>Includes: <ul id="ul_scl_wym_pz">
+                                        <li>HTTP to Kafka origin</li>
+                                        <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-cdh_kafka_3_0-lib </entry>
+                            <entry>For the Cloudera distribution of Apache Kafka 3.0.0
+                                    (0.11.0).<p>Includes: <ul id="ul_jtg_xzv_sbb">
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>Kafka Multitopic Consumer origin</li>
@@ -518,54 +393,6 @@
                                     processor.</p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-hdp_2_2-lib</entry>
-                            <entry>For the Hortonworks version 2.2 distribution of Apache Hadoop.
-                                        <p>Includes:<ul id="ul_j4w_kqm_s5">
-                                        <li>
-                                            <p>Hadoop FS origin for cluster mode pipelines</p>
-                                        </li>
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>HBase Lookup processor</li>
-                                        <li>Hive Metadata processor</li>
-                                        <li>Flume destination </li>
-                                        <li>Hadoop FS destination </li>
-                                        <li>HBase destination </li>
-                                        <li>Hive Metastore destination</li>
-                                        <li>Hive Streaming destination</li>
-                                        <li>Kafka Producer destination</li>
-                                        <li>HDFS File Metadata executor</li>
-                                        <li>Hive Query executor</li>
-                                        <li>MapReduce executor</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-hdp_2_3-lib </entry>
-                            <entry>For the Hortonworks version 2.3 distribution of Apache Hadoop.
-                                        <p>Includes:<ul id="ul_nwd_jhh_cw">
-                                        <li>
-                                            <p>Hadoop FS origin for cluster mode pipelines</p>
-                                        </li>
-                                        <li>HTTP to Kafka origin</li>
-                                        <li>Kafka Consumer origin</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>HBase Lookup processor</li>
-                                        <li>Hive Metadata processor</li>
-                                        <li>Flume destination </li>
-                                        <li>Hadoop FS destination </li>
-                                        <li>HBase destination </li>
-                                        <li>Hive Metastore destination</li>
-                                        <li>Hive Streaming destination</li>
-                                        <li>Kafka Producer destination</li>
-                                        <li>HDFS File Metadata executor</li>
-                                        <li>Hive Query executor</li>
-                                        <li>MapReduce executor</li>
-                                    </ul></p></entry>
-                        </row>
-                        <row>
                             <entry>streamsets-datacollector-hdp_2_4-lib </entry>
                             <entry>For the Hortonworks version 2.4 distribution of Apache Hadoop.
                                         <p>Includes:<ul id="ul_uh3_lhh_cw">
@@ -578,16 +405,22 @@
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
-                                        <li>Hive Metadata processor</li>
                                         <li>Flume destination </li>
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
-                                        <li>Hive Metastore destination</li>
-                                        <li>Hive Streaming destination</li>
                                         <li>Kafka Producer destination</li>
                                         <li>HDFS Metadata executor</li>
-                                        <li>Hive Query executor</li>
                                         <li>MapReduce executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_4-hive1-lib</entry>
+                            <entry>For the Hortonworks version 2.4.x distribution of Apache Hive
+                                version 1.x. <p>Includes:<ul id="ul_qv2_sk5_5bb">
+                                        <li>Hive Metadata processor</li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Hive Query executor</li>
                                     </ul></p></entry>
                         </row>
                         <row>
@@ -605,7 +438,6 @@
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
-                                        <li>Flume destination </li>
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
                                         <li>Hive Metastore destination</li>
@@ -615,6 +447,11 @@
                                         <li>Hive Query executor</li>
                                         <li>MapReduce executor</li>
                                     </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_5-flume-lib</entry>
+                            <entry>For the Hortonworks version 2.5.x distribution of Apache
+                                    Flume.<p>Includes the Flume destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-hdp_2_6-lib </entry>
@@ -630,16 +467,47 @@
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
-                                        <li>Hive Metadata processor</li>
                                         <li>Flume destination </li>
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
-                                        <li>Hive Metastore destination</li>
-                                        <li>Hive Streaming destination</li>
                                         <li>Kafka Producer destination</li>
                                         <li>HDFS Metadata executor</li>
-                                        <li>Hive Query executor</li>
                                         <li>MapReduce executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_6-flume-lib</entry>
+                            <entry>For the Hortonworks version 2.6.x distribution of Apache
+                                    Flume.<p>Includes the Flume destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_6-hive2-lib</entry>
+                            <entry>For the Hortonworks version 2.6.x distribution of Apache Hive
+                                version 2.1. <p>Includes:<ul id="ul_tw3_nx5_5bb">
+                                        <li>Hive Metadata processor</li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Hive Query executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_6_1-hive1-lib</entry>
+                            <entry>For the Hortonworks version 2.6.1 distribution of Apache Hive
+                                version 1.x. <p>Includes:<ul id="ul_ehb_tx5_5bb">
+                                        <li>Hive Metadata processor</li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Hive Query executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_6_2-hive1-lib</entry>
+                            <entry>For the Hortonworks version 2.6.2 distribution of Apache Hive
+                                version 1.x. <p>Includes:<ul id="ul_nvw_wx5_5bb">
+                                        <li>Hive Metadata processor</li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Hive Query executor</li>
                                     </ul></p></entry>
                         </row>
                         <row>
@@ -678,7 +546,7 @@
                             <entry>For Jython version 2.7.x. <p>Includes the Jython Evaluator
                                     processor.</p></entry>
                         </row>
-                        <row>
+   <row>
                             <entry>streamsets-datacollector-kinetica_6_0-lib</entry>
                             <entry>For Kinetica 6.0.<p>Includes the KineticaDB
                                 destination.</p></entry>
@@ -735,24 +603,13 @@
                                 </p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-mapr_6_0-lib<draft-comment
-                                    author="Loretta">Everything from 5.2 + MapR DB CDC
-                                    origin</draft-comment></entry>
+                            <entry>streamsets-datacollector-mapr_6_0-lib</entry>
                             <entry>For MapR version 6.0.<p>Includes:</p><p>
                                     <ul id="ul_njh_b5m_pbb">
                                         <li>MapR DB CDC origin</li>
                                         <li>MapR DB JSON origin</li>
                                         <li>MapR FS origin for cluster mode pipelines</li>
-                                        <li>MapR Streams Consumer origin for standalone and cluster
-                                            mode pipelines</li>
                                         <li>MapR Streams Multitopic Consumer origin</li>
-                                        <li>HBase Lookup processor</li>
-                                        <li>Hive Metadata processor</li>
-                                        <li>Spark Evaluator processor</li>
-                                        <li>HBase destination</li>
-                                        <li>Hive Metastore destination</li>
-                                        <li>Hive Streaming destination using the MapR library</li>
-                                        <li>MapR Streams Producer destination</li>
                                         <li>MapR DB destination</li>
                                         <li>MapR DB JSON destination</li>
                                         <li>MapR FS destination</li>
@@ -761,9 +618,20 @@
                                 </p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib<draft-comment
-                                    author="Loretta">Add all the stages I'm seeing in Tony M's
-                                    build?</draft-comment></entry>
+                            <entry>streamsets-datacollector-mapr_6_0-mep4-lib</entry>
+                            <entry>
+                                <ul id="ul_nbk_zy5_5bb">
+                                    <li>MapR Streams Consumer origin for standalone and cluster mode
+                                        pipelines</li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination using the MapR library</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</entry>
                             <entry>For the MapR distribution of Spark 2.1.<p>Includes:<ul
                                         id="ul_ayp_qbh_c1b">
                                         <li>Spark Evaluator processor</li>
@@ -805,7 +673,7 @@
                                         <li>Salesforce origin</li>
                                         <li>Salesforce Lookup processor</li>
                                         <li>Salesforce destination</li>
-                                        <li>Wave Analytics destination</li>
+                                        <li>Einstein Analytics destination</li>
                                     </ul></p>
                             </entry>
                         </row>

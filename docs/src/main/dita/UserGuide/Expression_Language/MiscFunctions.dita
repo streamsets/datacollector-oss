@@ -33,11 +33,11 @@
           data drift alerts. </dd>
       </dlentry>
    <dlentry>
-    <dt>emptyList</dt>
+    <dt>emptyList()</dt>
     <dd>Creates an empty list.</dd>
    </dlentry>
    <dlentry>
-    <dt>emptyMap</dt>
+    <dt>emptyMap()</dt>
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>

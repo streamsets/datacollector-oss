@@ -145,6 +145,10 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
+              <entry>Einstein Analytics</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>Flume</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ph3_1xc_kv"
                 /></entry>
@@ -486,10 +490,6 @@
             </row>
             <row>
               <entry>Trash</entry>
-              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
-            </row>
-            <row>
-              <entry>Wave Analytics</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>

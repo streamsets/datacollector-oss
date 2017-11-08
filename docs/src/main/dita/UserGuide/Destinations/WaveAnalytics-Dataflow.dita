@@ -19,23 +19,23 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d4h_2lj_tx">
  <title>Dataflow</title>
- <shortdesc>The Wave Analytics destination typically creates multiple datasets, based on the
-        configured dataset wait time. You can optionally configure the destination to use a Wave
+ <shortdesc>The Einstein Analytics destination typically creates multiple datasets, based on the
+        configured dataset wait time. You can optionally configure the destination to use a Einstein
         Analytics dataflow to combine multiple datasets together. </shortdesc>
  <conbody>
-        <p><indexterm>Wave Analytics
-                    destination<indexterm>dataflow</indexterm></indexterm><indexterm>dataflow<indexterm>Wave
-                    Analytics destination</indexterm></indexterm>A Wave Analytics dataflow includes
-            instructions and transformations to combine datasets. Create the dataflow in Wave
-            Analytics. Then when you configure the Wave Analytics destination, specify the name of
-            the existing dataflow. The dataflow should not contain any content, as the Wave
-            destination overwrites any existing content.</p>
+        <p><indexterm>Einstein Analytics
+                    destination<indexterm>dataflow</indexterm></indexterm><indexterm>dataflow<indexterm>Einstein
+                    Analytics destination</indexterm></indexterm>An Einstein Analytics dataflow
+            includes instructions and transformations to combine datasets. Create the dataflow in
+            Einstein Analytics. Then when you configure the Einstein Analytics destination, specify
+            the name of the existing dataflow. The dataflow should not contain any content, as the
+            Einstein Analytics destination overwrites any existing content.</p>
         <p>By default, a dataflow runs every 24 hours. However, you can configure the dataflow to
-            run each time the destination closes and uploads a dataset to Wave Analytics. In Wave
-            Analytics, you can run a dataflow a maximum of 24 times in a 24 hour period. So if you
-            choose to run the dataflow after each dataset upload, make sure that the configured
-            dataset wait time is more than an hour. </p>
-        <p>For more information about creating dataflows, see the Salesforce Wave Analytics
+            run each time the destination closes and uploads a dataset to Einstein Analytics. In
+            Einstein Analytics, you can run a dataflow a maximum of 24 times in a 24 hour period. So
+            if you choose to run the dataflow after each dataset upload, make sure that the
+            configured dataset wait time is more than an hour. </p>
+        <p>For more information about creating dataflows, see the Salesforce Einstein Analytics
             documentation.</p>
     </conbody>
 </concept>

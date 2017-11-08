@@ -217,8 +217,8 @@
        <entry>
         <ul id="ul_xks_xg2_gs">
          <li>alert:info()</li>
-         <li>emptyList</li>
-         <li>emptyMap</li>
+         <li>emptyList()</li>
+         <li>emptyMap()</li>
          <li>every(&lt;interval>, &lt;mm() | ss()>)</li>
          <li>field:field()</li>
          <li>jvm:maxMemoryMB()</li>
