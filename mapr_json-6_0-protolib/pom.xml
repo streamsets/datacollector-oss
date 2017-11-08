@@ -34,7 +34,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <mapr.vesion>6.0.0-beta</mapr.vesion>
+    <mapr.version>6.0.0-mapr-beta</mapr.version>
   </properties>
 
   <dependencies>
@@ -48,6 +48,11 @@
       <groupId>org.ojai</groupId>
       <artifactId>ojai</artifactId>
       <version>2.0-mapr-1707-beta</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mapr.db</groupId>
+      <artifactId>maprdb</artifactId>
+      <version>${mapr.version}</version>
     </dependency>
 
   </dependencies>
