@@ -17,14 +17,199 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_wzm_2rl_nbb">
     <title>Configuring a Google Cloud Storage Origin</title>
-    <shortdesc/>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context><indexterm>Google Cloud Storage
+                origin<indexterm>configuring</indexterm></indexterm>Configure a Google Cloud Storage
+            origin to read data from objects in Google Cloud Storage.</context>
         <steps>
             <step>
-                <cmd></cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ac1_hss_5x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref href="GCS-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_plp_tp2_px"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>GCS</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pmk_4gx_mv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>GCS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3Bucket">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Common Prefix <xref
+                                            href="../Origins/GCS-CommonPrefixPatterns.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wm3_212_wv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-CommonPrefix"/>
+                                </row>
+                                <row>
+                                    <entry>Prefix Pattern <xref
+                                            href="../Origins/GCS-CommonPrefixPatterns.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_aqx_gvn_sbb"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-PrefixPattern"/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-ObjectErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3DataFormat">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-SDCRecord">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-WholeFile-Checksum">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Credentials</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_inj_kqv_sbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Project ID</entry>
+                                    <entry>Google Cloud Storage project ID to connect to.</entry>
+                                </row>
+                                <row>
+                                    <entry>Credentials Provider <xref href="GCS-Credentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_jnj_kqv_sbb"/></xref></entry>
+                                    <entry>Credentials provider to use to connect to Google Cloud
+                                            Storage:<ul id="ul_knj_kqv_sbb">
+                                            <li>Default credentials provider</li>
+                                            <li>Service account credentials file (JSON) </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Credentials File Path (JSON) </entry>
+                                    <entry>When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google Cloud Storage. The credentials file must be a JSON
+                                            file.<p>Enter a path relative to the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
+                                            or enter an absolute path. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

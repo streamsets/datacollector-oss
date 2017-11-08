@@ -33,6 +33,7 @@
                 <li>Directory</li>
                 <li>Elasticsearch</li>
                 <li>File Tail</li>
+                <li>Google Cloud Storage</li>
                 <li>JDBC Multitable Consumer</li>
                 <li>JDBC Query Consumer</li>
                 <li>Kinesis Consumer - For unique details about resetting this origin, see <xref

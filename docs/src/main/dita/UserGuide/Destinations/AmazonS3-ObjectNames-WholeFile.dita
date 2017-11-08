@@ -18,7 +18,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_iqn_1k4_jx">
- <title>Names for Whole Files</title>
+ <title>Whole File Names</title>
  <conbody>
   <p><indexterm>Amazon S3 destination<indexterm>whole file object names</indexterm></indexterm>When
             you use the whole file data format, the object name prefix is optional. Whole files are

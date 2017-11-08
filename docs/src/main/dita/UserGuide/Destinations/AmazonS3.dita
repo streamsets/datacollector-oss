@@ -28,15 +28,15 @@
                     S3</indexterm></indexterm>With the Amazon S3 destination, you configure the
             region, bucket, and common prefix to define where to write objects. You can use a
             partition prefix to specify the S3 partition to write to. You can also configure a
-            prefix and suffix for the object name, and a time basis for the stage.</p>
+            prefix and suffix for the object name, and a time basis and data time zone for the
+            stage.</p>
         <p>The Amazon S3 destination can write data asynchronously to improve performance when
             writing to multiple prefixes. You can configure advanced properties to tune performance. </p>
         <p>You can configure the destination to use Amazon Web Services server-side encryption to
             protect the data written to Amazon S3. You can also use a proxy user and compress data
             with gzip when writing to Amazon S3.</p>
-        <p>The destination creates an object for each batch of data written to Amazon S3. </p>
-        <p>The Amazon S3 destination can generate events for an event stream. For more information
-            about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
- </conbody>
+        <p>The Amazon S3 destination creates an object for each batch of data written to Amazon S3. </p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-event-xref"
+            /></p>
+    </conbody>
 </concept>

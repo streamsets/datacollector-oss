@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qsx_ryn_sbb">
+ <title>Partition Prefix</title>
+    <conbody>
+        <p><indexterm>Google Cloud Storage destination<indexterm>partition
+                prefix</indexterm></indexterm><indexterm>partition prefix<indexterm>Google Cloud
+                    Storage destination</indexterm></indexterm>You can use a partition prefix to
+            organize objects by partitions. You can use the partition prefix to write to existing
+            partitions or to create new partitions as needed. When a partition specified in the
+            partition prefix does not exist, the destination creates the partition.</p>
+        <p>You can specify an exact partition name for the partition prefix, or you can use an
+            expression that evaluates to a partition name. </p>
+        <p>For example, to write to partitions based on data in the Country field, you can use the
+            following expression as the partition prefix:
+                <codeph>${record:value('/Country')}</codeph>. </p>
+        <p>With this expression, the destination writes records to partitions based on the country
+            data in the record, and creates partitions for countries that do not already have a
+            partition.</p>
+        <p>If you use datetime variables in the expression, be sure to configure the <xref
+                href="AmazonS3-TimeBasis.dita#concept_qtb_njg_vw">time basis</xref> for the
+            stage.</p>
+        <p>
+            <draft-comment author="Loretta">This topic is based on the Amazon S3 dest > Partition
+                Prefix topic. The code is copied, not reused, so they can be
+                different.</draft-comment>
+        </p>
+    </conbody>
+</concept>

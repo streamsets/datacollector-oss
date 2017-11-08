@@ -605,8 +605,8 @@
        <entry>Common Prefix <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wm3_212_wv"/>
         </xref></entry>
-       <entry>Optional common prefix that describes the location of the objects. When defined, the
-        common prefix acts as a root for the prefix pattern.</entry>
+       <entry id="entry-CommonPrefix">Optional common prefix that describes the location of the
+        objects. When defined, the common prefix acts as a root for the prefix pattern.</entry>
       </row>
       <row id="S3ObjectPathDelimiter">
        <entry>Delimiter</entry>
@@ -624,11 +624,9 @@
        <entry>Prefix Pattern <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_tfr_bk5_ht"/>
         </xref></entry>
-       <entry>
-        Prefix pattern that describes the objects to be processed.
-        <p>You can include the entire path to the objects. You can also use Ant-style path patterns
-         to read objects recursively. </p>
-       </entry>
+       <entry id="entry-PrefixPattern">Prefix pattern that describes the objects to be processed.
+         <p>You can include the entire path to the objects. You can also use Ant-style path patterns
+         to read objects recursively. </p></entry>
       </row>
       <row id="S3BufferLimit">
        <entry>Buffer Limit (KB)</entry>

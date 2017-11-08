@@ -49,6 +49,8 @@
           into Google BigQuery.</li>
         <li><xref href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref> - Writes data to
           Google Cloud Bigtable.</li>
+        <li><xref href="GCS.dita#concept_p4n_jrl_nbb">Google Cloud Storage</xref> - Writes data to
+          Google Cloud Storage.</li>
         <li><xref href="PubSubPublisher.dita#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</xref> -
           Publishes messages to Google Pub/Sub.</li>
         <li><xref href="HadoopFS-destination.dita#concept_awl_4km_zq">Hadoop FS</xref> - Writes data

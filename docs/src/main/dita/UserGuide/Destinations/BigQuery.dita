@@ -17,15 +17,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hj4_brk_dbb">
  <title>Google BigQuery</title>
- <shortdesc>The Google BigQuery destination streams data into Google BigQuery. </shortdesc>
  <conbody>
         <p><indexterm>Google BigQuery
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
-                    BigQuery</indexterm></indexterm>When you configure the destination, you define
-            the existing BigQuery dataset and table to stream data into. The destination streams
-            each record into a row in a BigQuery table. You can optionally define an expression to
-            specify the insert ID to insert or update. The insert ID is a unique ID for each row. If
-            you do not specify an insert ID, the destination inserts each record into a new row. </p>
+                    BigQuery</indexterm></indexterm>The Google BigQuery destination streams data
+            into Google BigQuery. You can use other destinations to write to <xref
+                href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref>, <xref
+                href="GCS.dita#concept_p4n_jrl_nbb">Google Cloud Storage</xref>, and <xref
+                href="PubSubPublisher.dita#concept_qsj_hk1_v1b">Google Pub/Sub</xref>.</p>
+        <p>When you configure the destination, you define the existing BigQuery dataset and table to
+            stream data into. The destination streams each record into a row in a BigQuery table.
+            You can optionally define an expression to specify the insert ID to insert or update.
+            The insert ID is a unique ID for each row. If you do not specify an insert ID, the
+            destination inserts each record into a new row. </p>
         <p>The destination maps fields from records to BigQuery columns based on matching names and
             compatible data types. You can configure the destination to ignore invalid columns when
             the destination cannot map a field to an existing BigQuery column. You can also

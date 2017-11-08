@@ -25,9 +25,12 @@
             generally use the following naming convention:
             <codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter></codeblock></p>
         <p>For example: <codeph>sdc-1462405014177-1</codeph>.</p>
-        <p>You configure the object name prefix. The UTC timestamp is the time when the object is
-            created, to the millisecond. The counter is used when multiple objects are created in
-            the same millisecond. </p>
-        <p>You can optionally configure an object name suffix for most data formats. </p>
+        <p>You configure the object name prefix. </p>
+        <p>The UTC timestamp is the time when the object is created, to the millisecond. The counter
+            is used when multiple objects are created in the same millisecond. </p>
+        <p>You can optionally configure an object name suffix for all data formats except whole
+            file. When you configure a suffix, it is added to the object name after a period, as
+            follows:<codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter>.&lt;optional suffix></codeblock></p>
+        <p>For example: <codeph>sdc-1462405014177-1.txt</codeph>.</p>
  </conbody>
 </concept>

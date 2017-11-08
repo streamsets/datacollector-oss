@@ -23,7 +23,7 @@
         it is used.</shortdesc>
     <taskbody>
         <context/>
-        <steps id="steps_pf2_wvz_sq">
+        <steps>
             <step>
                 <cmd id="PIPE_PROPS">
                     <draft-comment author="Loretta"><uicontrol>PIPELINE
@@ -1587,6 +1587,61 @@
                     <draft-comment author="Loretta"><uicontrol>ORIGIN-MIXED REUSE - </uicontrol>The
                         following handful of steps are for origin/origin, origin/processor or
                         possibly origin/destination reuse. In alphabetical order.</draft-comment>
+                    <draft-comment author="Loretta">Amazon S3 and Google Cloud Storage
+                        origins:</draft-comment>
+                </cmd>
+            </step>
+            <step id="Step-ObjectErrorHandling">
+                <cmd>On the <uicontrol>Error Handling</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_o42_2qv_ht">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Error Handling Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-ErrorHandlingOption">
+                                    <entry>Error Handling Option</entry>
+                                    <entry>The action taken when an error occurs while processing an
+                                            object:<ul id="ul_hvm_gqv_ht">
+                                            <li>None - Keeps the object in place.</li>
+                                            <li>Archive - Copies or moves the object to another
+                                                prefix or bucket.</li>
+                                            <li>Delete - Deletes the object.</li>
+                                        </ul><p>When archiving processed objects, best practice is
+                                            to also archive objects that cannot be processed.
+                                        </p></entry>
+                                </row>
+                                <row id="row-ArchivingOption">
+                                    <entry>Archiving Option</entry>
+                                    <entry>The action to take when archiving an object that cannot
+                                        be processed. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
+                                            /><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
+                                        /></entry>
+                                </row>
+                                <row id="row-ErrorPrefix">
+                                    <entry>Error Prefix</entry>
+                                    <entry>Prefix for the objects that cannot be processed.</entry>
+                                </row>
+                                <row id="row-ErrorBucket">
+                                    <entry>Error Bucket</entry>
+                                    <entry>Bucket for the objects that cannot be processed.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>HTTPClient-Credentials</uicontrol> -
                         The following steps are used in HTTP Client origin, processor, and
                         destination Configuring topics:</draft-comment>
@@ -1786,7 +1841,8 @@
                                     <entry>Password to the keystore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"/>
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"
+                                            />
                                         </p></entry>
                                 </row>
                                 <row id="TLS-KeystoreKeyAlgo-row">
@@ -1819,7 +1875,8 @@
                                     <entry>Password to the truststore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"/>
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"
+                                            />
                                         </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreKeyAlgo-row">
@@ -2728,7 +2785,7 @@
                                     <entry><ph id="ph-Netflow-CacheTimeout-desc1">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
-                                            the cache.  For more information about templates, see
+                                            the cache. For more information about templates, see
                                                 <xref
                                                 href="../Data_Formats/NetFlow_CachingTemplates.dita#concept_ivr_j1l_3bb"
                                             />.</ph><p><ph id="ph-Netflow-CacheTimeout-desc2"
@@ -4587,6 +4644,237 @@
                                             Elasticsearch property. </p>
                                         <p>Not necessary for Elastic Cloud clusters. </p>
                                     </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">the following are used by Google Pub Sub and
+                        rows by Pipeline > Write to Error</draft-comment>
+                </cmd>
+            </step>
+            <step id="step-GooglePubSub">
+                <cmd>On the <uicontrol>Pub/Sub</uicontrol> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ypc_bzq_v1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Pub/Sub Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-PubSub-TopicID">
+                                    <entry>Topic ID</entry>
+                                    <entry>Google Pub/Sub topic ID to write messages to.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="step-GooglePubSub-Creds">
+                <cmd>On the <uicontrol>Credentials</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ffd_w3p_v1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-PubSub-ProjectID">
+                                    <entry>Project ID</entry>
+                                    <entry>Google Pub/Sub project ID to connect to.</entry>
+                                </row>
+                                <row id="row-PubSub-CredProvider">
+                                    <entry>Credentials Provider <xref
+                                            href="../Destinations/PubSubPublisher-Credentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_d3x_vhk_lz"
+                                        /></xref></entry>
+                                    <entry>Credentials provider to use to connect to Google
+                                            Pub/Sub:<ul id="ul_tmm_2rp_v1b">
+                                            <li>Default credentials provider</li>
+                                            <li>Service account credentials file (JSON) </li>
+                                        </ul></entry>
+                                </row>
+                                <row id="roe-PubSub-CredFilePath">
+                                    <entry>Credentials File Path (JSON)</entry>
+                                    <entry>When using a Google Cloud service account credentials
+                                        file, path to the file that the destination uses to connect
+                                        to Google Pub/Sub. The credentials file must be a JSON
+                                            file.<p>Enter a path relative to the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
+                                            or enter an absolute path. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">the following are used by Google Cloud Storage
+                        and rows by Pipeline > Write to Error</draft-comment>
+                </cmd>
+            </step>
+            <step id="step-GoogleCloudStorage">
+                <cmd>On the <wintitle>GCS</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fbj_bkw_rt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>GCS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3Bucket">
+                                    <entry/>
+                                </row>
+                                <row id="row-GCS-CPrefix">
+                                    <entry>Common Prefix</entry>
+                                    <entry>Common prefix that determines where objects are written.
+                                    </entry>
+                                </row>
+                                <row id="row-GCS-PartPrefix">
+                                    <entry>Partition Prefix <xref
+                                            href="../Destinations/GCS-PartitionPrefix.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v34_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry>Optional partition prefix to specify the partition to
+                                        use. <p>Use a specific partition prefix or define an
+                                            expression that evaluates to a partition prefix.
+                                            </p><p>When using datetime variables in the expression,
+                                            be sure to configure the time basis for the
+                                        stage.</p></entry>
+                                </row>
+                                <row id="row-GCS-DataTimeZone">
+                                    <entry>Data Time Zone</entry>
+                                    <entry>
+                                        <p>Time zone for the destination system. Used to resolve
+                                            datetimes in a time-based partition prefix. </p>
+                                    </entry>
+                                </row>
+                                <row id="row-GCS-TimeBasis">
+                                    <entry>Time Basis <xref
+                                            href="../Destinations/GCS-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_d73_kf8_wv"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p>Time basis to use for writing to a time-based bucket or
+                                            partition prefix. Use one of the following
+                                                expressions:<ul id="ul_wbn_qdt_r53">
+                                                <li><codeph>${time:now()}</codeph> - Uses the
+                                                  processing time as the time basis in conjunction
+                                                  with the specified Data Time Zone.</li>
+                                                <li>An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <codeph>${record:value(&lt;date field
+                                                  path>)}</codeph>. Uses the time associated with
+                                                  the record as the time basis, adjusted for the
+                                                  specified Data Time Zone.</li>
+                                            </ul></p>
+                                        <p>When the Partition Prefix property has no time component,
+                                            you can ignore this property. </p>
+                                        <p>Default is <codeph>${time:now()}</codeph>.</p>
+                                    </entry>
+                                </row>
+                                <row id="row-GCS-ObjNamePrefix">
+                                    <entry>Object Name Prefix <xref
+                                            href="../Destinations/GCS-ObjectNames.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_d34_kf2_wv"/>
+                                        </xref></entry>
+                                    <entry>Defines a prefix for object names written by the
+                                        destination. By default, object names start with "sdc" as
+                                        follows: <codeph>sdc-&lt;UUID></codeph>. <p>Not required for
+                                            the whole file data format. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Object Name Suffix <xref
+                                            href="../Destinations/GCS-ObjectNames.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_swx_rvt_5bb"/>
+                                        </xref></entry>
+                                    <entry>Suffix to use for object names, such as txt or json. When
+                                        used, the destination adds a period and the configured
+                                        suffix as follows: &lt;object name>.&lt;suffix>.<p>You can
+                                            include periods within the suffix, but do not start the
+                                            suffix with a period. Forward slashes are not
+                                            allowed.</p><p>Not available for the whole file data
+                                            format. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Compress with Gzip</entry>
+                                    <entry>Compresses files with gzip before writing to Google Cloud
+                                        Storage. <p>Not available for the whole file data
+                                            format.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="Step-GCS-Credentials">
+                <cmd>On the <uicontrol>Credentials</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zfm_ypx_q1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-GCS-ProjectID">
+                                    <entry>Project ID</entry>
+                                    <entry>Project ID to connect to.</entry>
+                                </row>
+                                <row id="row-GCS-CredProvider">
+                                    <entry>Credentials Provider <xref
+                                            href="../Destinations/GCS-Credentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_pls_tp4_hj"/></xref></entry>
+                                    <entry>Credentials provider to use to connect:<ul
+                                            id="ul_tmm_2rp_v3b">
+                                            <li>Default credentials provider</li>
+                                            <li>Service account credentials file (JSON) </li>
+                                        </ul></entry>
+                                </row>
+                                <row id="row-GCS-CredFilePath">
+                                    <entry>Credentials File Path (JSON) </entry>
+                                    <entry>When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google Cloud Storage. The credentials file must be a JSON
+                                            file.<p>Enter a path relative to the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
+                                            or enter an absolute path. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

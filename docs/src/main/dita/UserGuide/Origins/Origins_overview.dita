@@ -43,6 +43,8 @@
           from an active file after reading related archived files in the directory. </li>
         <li><xref href="BigQuery.dita#concept_cg3_y3v_q1b">Google BigQuery</xref> - Executes a query
           job and reads the result from Google BigQuery. </li>
+        <li><xref href="GCS.dita#concept_iyd_wql_nbb">Google Cloud Storage</xref> - Reads fully
+          written objects from Google Cloud Storage.</li>
         <li><xref href="PubSub.dita#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</xref> - Consumes
           messages from a Google Pub/Sub subscription. Creates multiple threads to enable parallel
           processing in a multithreaded pipeline.</li>

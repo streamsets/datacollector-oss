@@ -17,8 +17,22 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_p4n_jrl_nbb">
  <title>Google Cloud Storage</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>Google Cloud Storage
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
+                    Cloud Storage</indexterm></indexterm>The Google Cloud Storage destination writes
+            data to objects in Google Cloud Storage. You can use other destinations to write to
+                <xref href="BigQuery.dita#concept_hj4_brk_dbb">Google BigQuery</xref>, <xref
+                href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref>, and <xref
+                href="PubSubPublisher.dita#concept_qsj_hk1_v1b">Google Pub/Sub</xref>.</p>
+        <p>The destination creates an object for each batch of data written to Google Cloud Storage. </p>
+        <p>With the Google Cloud Storage destination, you configure the bucket and common prefix to
+            define where to write objects. You can use a partition prefix to specify the partition
+            to write to. You can configure a prefix for the object name, and a time basis and data
+            time zone for the stage. When using any data format except whole file, you can also
+            configure a suffix for the object name and compress data with gzip before writing to
+            Google Cloud Storage. </p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-event-xref"
+            /></p>
  </conbody>
 </concept>

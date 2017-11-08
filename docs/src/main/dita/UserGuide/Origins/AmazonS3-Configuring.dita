@@ -212,54 +212,9 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <uicontrol>Error Handling</uicontrol> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_o42_2qv_ht">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Error Handling Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Error Handling Option</entry>
-                                    <entry>The action taken when an error occurs while processing an
-                                            object:<ul id="ul_hvm_gqv_ht">
-                                            <li>None - Keeps the object in place.</li>
-                                            <li>Archive - Copies or moves the object to another
-                                                prefix or bucket.</li>
-                                            <li>Delete - Deletes the object.</li>
-                                        </ul><p>When archiving processed objects, best practice is
-                                            to also archive objects that cannot be processed.
-                                        </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Archiving Option</entry>
-                                    <entry>The action to take when archiving an object that cannot
-                                        be processed. <p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
-                                            /><p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
-                                        /></entry>
-                                </row>
-                                <row>
-                                    <entry>Error Prefix</entry>
-                                    <entry>Prefix for the objects that cannot be processed.</entry>
-                                </row>
-                                <row>
-                                    <entry>Error Bucket</entry>
-                                    <entry>Bucket for the objects that cannot be processed.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-ObjectErrorHandling">
+                <cmd/>
             </step>
             <step>
                 <cmd>On the <uicontrol>Post Processing</uicontrol> tab, configure the following

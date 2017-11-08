@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fkf_bmn_sbb">
+ <title>Event Generation</title>
+    <conbody>
+        <p><indexterm>Google Cloud Storage origin<indexterm>event
+                generation</indexterm></indexterm><indexterm>the event framework<indexterm>Google
+                    Cloud Storage origin event generation</indexterm></indexterm>The Google Cloud
+            Storage origin can generate events when it completes processing all available data and
+            the configured batch wait time has elapsed.</p>
+        <p>Google Cloud Storage events can be used in any logical way. For example: <ul
+                id="ul_v2q_qdp_jbb">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"/>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
+            </ul></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
+    </conbody>
+</concept>
