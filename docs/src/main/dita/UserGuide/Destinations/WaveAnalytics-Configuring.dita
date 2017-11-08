@@ -18,18 +18,18 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_mdt_dv3_rx">
-    <title>Configuring a Wave Analytics Destination</title>
+    <title>Configuring an Einstein Analytics Destination</title>
     <taskbody>
-        <context><indexterm>Wave Analytics
-                destination<indexterm>configuring</indexterm></indexterm><indexterm>Salesforce Wave
-                Analytics destination<indexterm>configuring</indexterm></indexterm>Configure a Wave
-            Analytics destination to write data to Salesforce Wave Analytics.</context>
+        <context><indexterm>Einstein Analytics
+                destination<indexterm>configuring</indexterm></indexterm>Configure an Einstein
+            Analytics destination to write data to Salesforce Einstein Analytics.</context>
         <steps>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>Wave</wintitle> tab, configure the following properties:</cmd>
+                <cmd>On the <wintitle>Analytics</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_qyk_lmj_tx">
                         <tgroup cols="2">
@@ -37,7 +37,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                             <thead>
                                 <row>
-                                    <entry>Wave Property</entry>
+                                    <entry>Analytics Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

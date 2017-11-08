@@ -19,12 +19,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fb2_qmn_bz">
  <title>Install Additional Stage Libraries</title>
- <shortdesc>Install additional stage libraries to use stages that are not included in the core
-        installation of <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. This
-        is an optional step, but generally you'll want to install additional libraries to process
-        data after completing a core installation.</shortdesc>
  <conbody>
+        <p>Install additional stage libraries to use stages that are not included in the core
+            installation of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            This is an optional step, but generally you'll want to install additional stage
+            libraries to process data after completing a core installation. When necessary, you can
+            also install legacy stage libraries.</p>
         <note type="important">You must perform additional steps to install the MapR stage libraries, as described in
                 <xref href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note>
         <p>For a complete list of the stages installed with each stage library, see <xref

@@ -18,26 +18,27 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hlx_r53_rx">
- <title>Wave Analytics</title>
- <shortdesc>The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination
-        connects to Wave Analytics to create a dataset with external data.</shortdesc>
+ <title>Einstein Analytics</title>
+ <shortdesc>The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The
+        destination connects to Einstein Analytics to create a dataset with external
+        data.</shortdesc>
  <conbody>
-  <p><indexterm>Wave Analytics
-                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Wave
-                    Analytics</indexterm></indexterm><indexterm>Salesforce Wave Analytics
-                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Salesforce
-                    Wave Analytics</indexterm></indexterm>When you configure the Wave Analytics
-            destination, you define connection information, including the API version that the
-            destination uses to connect to Salesforce Wave Analytics. </p>
+  <p><indexterm>Einstein Analytics
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Einstein
+                    Analytics</indexterm></indexterm><indexterm>Wave Analytics
+                    destination<index-see>Einstein Analytics destination</index-see></indexterm>When
+            you configure the Einstein Analytics destination, you define connection information,
+            including the API version that the destination uses to connect to Salesforce Einstein
+            Analytics. </p>
         <p>You specify the <i>edgemart alias</i> or name of the dataset to create. The destination
             typically creates multiple datasets for the edgemart alias, based on the dataset wait
             time that you configure for the destination. After no data has arrived for the specified
-            wait time, the destination closes and uploads the dataset to Wave Analytics. When new
-            data arrives, the destination creates a new dataset. Each dataset is named with the
+            wait time, the destination closes and uploads the dataset to Einstein Analytics. When
+            new data arrives, the destination creates a new dataset. Each dataset is named with the
             edgemart alias name and appended with the timestamp of when the dataset is uploaded. </p>
-        <p>You can optionally configure the destination to use a Wave Analytics dataflow to combine
-            multiple datasets together. You can also specify the metadata of the external data in a
-            JSON format.</p>
-        <p>You can optionally use an HTTP proxy to connect to Salesforce Wave Analytics. </p>
+        <p>You can optionally configure the destination to use a Einstein Analytics dataflow to
+            combine multiple datasets together. You can also specify the metadata of the external
+            data in a JSON format.</p>
+        <p>You can optionally use an HTTP proxy to connect to Salesforce Einstein Analytics. </p>
  </conbody>
 </concept>

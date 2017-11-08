@@ -21,7 +21,7 @@
     <title>Changing the API Version</title>
     <taskbody>
         <context>
-            <p><indexterm>Wave Analytics destination<indexterm>API
+            <p><indexterm>Einstein Analytics destination<indexterm>API
                     version</indexterm></indexterm><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> ships with version <ph
