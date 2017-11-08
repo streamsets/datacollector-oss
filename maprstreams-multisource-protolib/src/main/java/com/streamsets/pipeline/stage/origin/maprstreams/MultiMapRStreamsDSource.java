@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePrevie
 
 @StageDef(
     version = 1,
-    label = "MapR Streams Multitopic Consumer",
+    label = "MapR Multitopic Streams Consumer",
     description = "Reads data from multiple topics of a MapR streams",
     execution = ExecutionMode.STANDALONE,
     icon = "mapr.png",
