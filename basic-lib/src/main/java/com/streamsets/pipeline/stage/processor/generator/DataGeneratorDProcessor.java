@@ -24,16 +24,16 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
-@StageDef(
-  version=1,
-  label="Data Generator",
-  description = "Serializes records to various different data formats.",
-  icon="coding.png",
-  services = @ServiceDependency(service = DataFormatGeneratorService.class),
-  onlineHelpRefUrl = "" // TODO(Add proper link)
-)
-@ConfigGroups(Groups.class)
-@GenerateResourceBundle
+//@StageDef(
+//  version=1,
+//  label="Data Generator",
+//  description = "Serializes records to various different data formats.",
+//  icon="coding.png",
+//  services = @ServiceDependency(service = DataFormatGeneratorService.class),
+//  onlineHelpRefUrl = "" // TODO(Add proper link)
+//)
+//@ConfigGroups(Groups.class)
+//@GenerateResourceBundle
 public class DataGeneratorDProcessor extends DProcessor {
 
   @ConfigDefBean
