@@ -160,7 +160,7 @@
     <profile>
       <id>edge</id>
       <activation>
-        <activeByDefault>false</activeByDefault>
+        <activeByDefault>true</activeByDefault>
         <property>
           <name>edge</name>
         </property>
