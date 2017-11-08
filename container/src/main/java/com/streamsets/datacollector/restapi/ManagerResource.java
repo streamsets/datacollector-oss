@@ -174,10 +174,20 @@ public class ManagerResource {
       if (manager.isRemotePipeline(pipelineId, rev)) {
         throw new PipelineException(ContainerError.CONTAINER_01101, "START_PIPELINE", pipelineId);
       }
+
+      PipelineState pipelineState = manager.getPipelineState(pipelineId, rev);
+
+      if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE ||
+          pipelineState.getExecutionMode() == ExecutionMode.EDGE) {
+        throw new PipelineException(
+            ContainerError.CONTAINER_01601,
+            pipelineId,
+            pipelineState.getExecutionMode()
+        );
+      }
+
       try {
         Runner runner = manager.getRunner(pipelineId, rev);
-        Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
-            "This operation is not supported in SLAVE mode");
 
         if (runtimeParameters != null && !runtimeParameters.isEmpty()) {
           Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
@@ -227,14 +237,22 @@ public class ManagerResource {
           continue;
         }
 
+        PipelineState pipelineState = manager.getPipelineState(pipelineId, "0");
+
+        if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE ||
+            pipelineState.getExecutionMode() == ExecutionMode.EDGE) {
+          errorMessages.add(Utils.format(
+              ContainerError.CONTAINER_01601.getMessage(),
+              pipelineId,
+              pipelineState.getExecutionMode()
+          ));
+          continue;
+        }
+
         Runner runner = manager.getRunner( pipelineId, "0");
         try {
-          Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
-              "This operation is not supported in SLAVE mode");
-
           runner.start(user);
           successEntities.add(runner.getState());
-
         } catch (Exception ex) {
           errorMessages.add("Failed starting pipeline: " + pipelineId + ". Error: " + ex.getMessage());
         }

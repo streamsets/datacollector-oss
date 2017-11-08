@@ -172,6 +172,7 @@ public enum ContainerError implements ErrorCode {
 
 
   CONTAINER_01600("Download executable not supported for pipeline execution mode: '{}'"),
+  CONTAINER_01601("Start operation is not supported for pipeline '{}' with execution mode: '{}'"),
   ;
 
   private final String msg;
