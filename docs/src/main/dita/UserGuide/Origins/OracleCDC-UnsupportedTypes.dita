@@ -26,7 +26,10 @@
                 <li>Discard the record.</li>
             </ul>
         </p>
-        <p>The following data types are not supported by the Oracle CDC Client origin:<ul
+        <p>You can configure the origin to include the unsupported data types in the record. When
+            you include unsupported types, the origin includes the field names and passes the data
+            as unparsed strings. </p>
+        <p>The following Oracle data types are not supported by the Oracle CDC Client origin:<ul
                 id="ul_mwq_g4n_n1b">
                 <li>Array</li>
                 <li>Blob</li>
@@ -43,5 +46,8 @@
                 <li>Timestamp with Timezone</li>
                 <li>Time with Timezone</li>
             </ul></p>
+        <p>The Oracle Raw datatype is treated as a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            Byte Array.</p>
  </conbody>
 </concept>

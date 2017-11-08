@@ -44,8 +44,10 @@
                 <dlentry>
                     <dt>From a specified system change number (SCN)</dt>
                     <dd>The origin processes all changes that occurred in the specified SCN and
-                        later. when using the specified SCN, the origin starts processing with the
-                        timestamp associated with the SCN.</dd>
+                        later. When using the specified SCN, the origin starts processing with the
+                        timestamp associated with the SCN. If the SCN cannot be found in the redo
+                        logs, the origin continues reading from the next higher SCN that is
+                        available in the redo logs. </dd>
                     <dd>Typically, a database admin can provide the SCN to use.</dd>
                 </dlentry>
             </dl></p>

@@ -129,8 +129,11 @@
                                 </row>
                                 <row>
                                     <entry>Start SCN</entry>
-                                    <entry>The system change number to read from when you start the
-                                        pipeline. For an SCN-based initial change.</entry>
+                                    <entry>The system change number to start reading from when you
+                                        start the pipeline. If the SCN cannot be found in the redo
+                                        logs, the origin continues reading from the next higher SCN
+                                        that is available in the redo logs.<p>For an SCN-based
+                                            initial change.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Operations</entry>
@@ -158,8 +161,9 @@
                                     <entry>Determines the buffers that the origin uses. Select to
                                         use local <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> buffers. By default, the Oracle LogMiner buffers the
-                                        data. </entry>
+                                        /> buffers. Clear to use Oracle LogMiner buffers. Generally,
+                                        using local buffers will enhance pipeline performance.<p>By
+                                            default, the origin uses local buffers. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Buffer Location</entry>
@@ -195,6 +199,12 @@
                                         </ul><p>For a list of unsupported data types, see <xref
                                                 href="OracleCDC-UnsupportedTypes.dita#concept_gwp_d4n_n1b"
                                             />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Add Unsupported Fields to Records</entry>
+                                    <entry>Includes fields with unsupported data types in the
+                                        record. Includes the field names and the unparsed string
+                                        values of the unsupported fields.</entry>
                                 </row>
                                 <row>
                                     <entry>Include Nulls</entry>

@@ -17,26 +17,10 @@
  <title>Choosing Buffers</title>
  <conbody>
   <p><indexterm>Oracle CDC Client origin<indexterm>using local buffers</indexterm></indexterm>When
-            processing data, the Oracle CDC Client can use Oracle LogMiner buffers or buffer data
-            locally, on the <ph
+            processing data, the Oracle CDC Client can buffer data locally on the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine:</p>
+            machine or use Oracle LogMiner buffers:</p>
         <dl>
-            <dlentry>
-                <dt>Oracle LogMiner buffers</dt>
-                <dd>By default, when processing data, the Oracle CDC Client requests data from
-                    Oracle LogMiner for a particular time period. LogMiner then buffers all
-                    transactions for that time period for all tables in the database, rather than
-                    only the tables needed by the origin.</dd>
-                <dd>LogMiner keeps the transaction information in the buffers until it reads commits
-                    in the logs, then it passes the committed data to the Oracle CDC Client
-                    origin.</dd>
-                <dd>Depending on the size and number of the transactions and the time period being
-                    buffered, buffering the transactions can monopolize the PGA, the private memory
-                    region for the Oracle server process.</dd>
-                <dd>Use LogMiner buffers when you do not expect the volume of transactions to
-                    overtax Oracle resources.</dd>
-            </dlentry>
             <dlentry>
                 <dt>Local buffers</dt>
                 <dd>
@@ -46,6 +30,8 @@
                         seeing a commit, it parses and processes the committed data. </p>
                     <p>The origin can buffer the redo SQL statements completely in memory or write
                         them primarily to disk while using a small amount of memory for tracking. </p>
+                    <p>By default, the origin uses local buffers. In general, using local buffers
+                        should provide better performance than Oracle Log Miner buffers. </p>
                     <p>Use local buffers to process large transactions or to avoid monopolizing the
                         Oracle PGA. Buffer information in memory for better performance when <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -53,6 +39,21 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> resources. </p>
                 </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Oracle LogMiner buffers</dt>
+                <dd>When using Oracle LogMiner buffers, the origin requests data from Oracle
+                    LogMiner for a particular time period. LogMiner then buffers all transactions
+                    for that time period for all tables in the database, rather than only the tables
+                    needed by the origin.</dd>
+                <dd>LogMiner keeps the transaction information in the buffers until it reads commits
+                    in the logs, then it passes the committed data to the Oracle CDC Client
+                    origin.</dd>
+                <dd>Depending on the size and number of the transactions and the time period being
+                    buffered, buffering the transactions can monopolize the PGA, the private memory
+                    region for the Oracle server process.</dd>
+                <dd>Use LogMiner buffers when you do not expect the volume of transactions to
+                    overtax Oracle resources.</dd>
             </dlentry>
         </dl>
  </conbody>
