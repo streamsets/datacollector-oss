@@ -185,7 +185,10 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' || common.pipelineStatusMap[pipeline.pipelineId].status === 'STARTING' || common.pipelineStatusMap[pipeline.pipelineId].status === 'STOPPING' || !pipeline.valid">
+                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' ||
+                common.pipelineStatusMap[pipeline.pipelineId].status === 'STARTING' ||
+                common.pipelineStatusMap[pipeline.pipelineId].status === 'STOPPING' ||
+                !pipeline.valid || isEdgePipeline(pipeline)">
               <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-play"></i>
                 <span>{{'home.header.start' | translate}}</span>
