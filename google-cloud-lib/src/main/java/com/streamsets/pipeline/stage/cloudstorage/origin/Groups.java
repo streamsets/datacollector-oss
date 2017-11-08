@@ -21,18 +21,20 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-    GCS("GCS"),
-    DATA_FORMAT("Data Format"),
-    CREDENTIALS("CREDENTIALS");
+  GCS("GCS"),
+  DATA_FORMAT("Data Format"),
+  CREDENTIALS("CREDENTIALS"),
+  ERROR_HANDLING("Error Handling"),
+  ;
 
-    private final String label;
+  private final String label;
 
-    private Groups(String label) {
-        this.label = label;
-    }
+  private Groups(String label) {
+    this.label = label;
+  }
 
-    @Override
-    public String getLabel() {
-        return label;
-    }
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }
