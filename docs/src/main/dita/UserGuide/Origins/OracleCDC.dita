@@ -49,9 +49,9 @@
             the schema and tables to read from, how to read the initial change, the dictionary
             source location, and the operations to include. You also specify the transaction window
             and LogMiner session windows to use. </p>
-        <p>You can configure the origin to buffer records locally rather than using database
-            buffers. When enabling this option, perform the local buffer prerequisite task and
-            specify the action to take for uncommitted transactions.</p>
+        <p>You can configure the origin to buffer records locally or to use database buffers. Before
+            using local buffers, verify that the required resources are available and specify the
+            action to take for uncommitted transactions.</p>
         <p>You can specify the behavior when the origin encounters an unsupported data type, and you
             can configure the origin to pass null values when it receives them from supplemental
             logging data. </p>
