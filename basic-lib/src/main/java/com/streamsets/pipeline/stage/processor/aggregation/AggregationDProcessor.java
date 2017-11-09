@@ -24,11 +24,11 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version=1,
-    label="Aggregation Processor",
-    description = "",
+    label="Aggregator",
+    description = "Aggregates data that arrives within a window of time",
     icon="aggregation.png",
     producesEvents = true,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Processors/Aggregator.html#task_bd3_vvm_5bb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
