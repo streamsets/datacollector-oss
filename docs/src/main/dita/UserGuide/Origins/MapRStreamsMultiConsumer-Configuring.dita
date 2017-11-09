@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_pkc_lww_lbb">
-    <title>Configuring a MapR Streams Multitopic Consumer</title>
+    <title>Configuring a MapR Multitopic Streams Consumer</title>
     <taskbody>
-        <context id="context_bjz_ttj_mbb"><indexterm>MapR Streams Multitopic Consumer
-                    origin<indexterm>configuring</indexterm></indexterm>Configure a MapR Streams
-            Multitopic Consumer to read messages from MapR Streams. </context>
+        <context id="context_bjz_ttj_mbb"><indexterm>MapR Multitopic Streams Consumer
+                    origin<indexterm>configuring</indexterm></indexterm>Configure a MapR Multitopic
+            Streams Consumer to read messages from MapR Streams. </context>
         <steps id="steps_i5h_xtl_2v">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
@@ -34,7 +34,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>MapR Streams Multitopic Property</entry>
+                                    <entry>MapR Multitopic Streams Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

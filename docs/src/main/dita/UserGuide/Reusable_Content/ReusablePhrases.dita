@@ -1439,7 +1439,7 @@ web-0011.log</codeblock></dd>
                               MapR Streams.</li>
                         <li><xref
                                     href="../Origins/MapRStreamsMultiConsumer.dita#concept_hvd_hww_lbb"
-                                    >MapR Streams Multitopic Consumer</xref> - Reads data from
+                                    >MapR Multitopic Streams Consumer</xref> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
                         <li><xref href="../Origins/SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server
                                     CDC Client</xref> - Reads data from Microsoft SQL Server CDC

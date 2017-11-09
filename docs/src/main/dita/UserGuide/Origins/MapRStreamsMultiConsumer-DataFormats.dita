@@ -20,10 +20,10 @@
 <concept id="concept_xgs_nlc_wr">
  <title>Data Formats</title>
  <conbody>
-  <p><indexterm>data formats<indexterm>MapR Streams Multitopic
-        Consumer</indexterm></indexterm><indexterm>MapR Streams Multitopic Consumer
-          origin<indexterm>data formats</indexterm></indexterm>The MapR Streams Multitopic Consumer
-      origin processes data differently based on the data format. MapR Streams Multitopic Consumer
+  <p><indexterm>data formats<indexterm>MapR Multitopic Streams
+        Consumer</indexterm></indexterm><indexterm>MapR Multitopic Streams Consumer
+          origin<indexterm>data formats</indexterm></indexterm>The MapR Multitopic Streams Consumer
+      origin processes data differently based on the data format. MapR Multitopic Streams Consumer
       can process the following types of data:</p>
   <dl>
       <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">

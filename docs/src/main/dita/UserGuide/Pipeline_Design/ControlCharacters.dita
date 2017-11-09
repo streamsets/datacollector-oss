@@ -49,8 +49,8 @@
         <li>Kafka Multitopic Consumer origin</li>
         <li>Kinesis Consumer origin</li>
         <li>MapR FS origin</li>
+        <li>MapR Multitopic Streams Consumer origin</li>
         <li>MapR Streams Consumer origin</li>
-        <li>MapR Streams Multitopic Consumer origin</li>
         <li>MQTT Subscriber origin</li>
         <li>RabbitMQ Consumer origin</li>
         <li>Redis Consumer origin</li>

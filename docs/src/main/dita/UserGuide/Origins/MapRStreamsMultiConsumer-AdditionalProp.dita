@@ -19,17 +19,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d5f_n2g_vq">
  <title>Additional Properties</title>
- <shortdesc>You can add custom configuration properties to the MapR Streams Multitopic Consumer. You
+ <shortdesc>You can add custom configuration properties to the MapR Multitopic Streams Consumer. You
         can use any MapR or Kafka property supported by MapR Streams. For more information, see the
         MapR Streams documentation. </shortdesc>
  <conbody>
-  <p><indexterm>additional properties<indexterm>MapR Streams Multitopic
-                Consumer</indexterm></indexterm><indexterm>MapR Streams Multitopic Consumer
+  <p><indexterm>additional properties<indexterm>MapR Multitopic Streams
+                Consumer</indexterm></indexterm><indexterm>MapR Multitopic Streams Consumer
                     origin<indexterm>additional properties</indexterm></indexterm>When you add a
-            configuration property, enter the exact property name and the value. The MapR Streams
-            Multitopic Consumer does not validate the property names or values.</p>
+            configuration property, enter the exact property name and the value. The MapR Multitopic
+            Streams Consumer does not validate the property names or values.</p>
   <p>
-   <note>The MapR Streams Multitopic Consumer origin uses the following MapR Streams configuration
+   <note>The MapR Multitopic Streams Consumer origin uses the following MapR Streams configuration
                 properties. The origin ignores user-defined values for these properties:<p>
                     <ul id="ul_ajb_c3g_vq">
                         <li>auto.commit.interval.ms</li>

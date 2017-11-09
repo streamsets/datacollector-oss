@@ -20,10 +20,10 @@
 <concept id="concept_zlc_ppn_js">
  <title>Initial and Subsequent Offsets</title>
  <conbody>
-  <p><indexterm>offsets<indexterm>for MapR Streams Multitopic
-                Consumer</indexterm></indexterm><indexterm>MapR Streams Multitopic Consumer
+  <p><indexterm>offsets<indexterm>for MapR Multitopic Streams
+                Consumer</indexterm></indexterm><indexterm>MapR Multitopic Streams Consumer
                     origin<indexterm>initial and subsequent offsets</indexterm></indexterm>When you
-            start a pipeline for the first time, the MapR Streams Multitopic Consumer becomes a new
+            start a pipeline for the first time, the MapR Multitopic Streams Consumer becomes a new
             consumer group for each specified topic.</p>
     <p>By default, the origin reads only incoming data, processing data from all partitions and
             ignoring any existing data in the topic. After the origin passes data to destinations,
