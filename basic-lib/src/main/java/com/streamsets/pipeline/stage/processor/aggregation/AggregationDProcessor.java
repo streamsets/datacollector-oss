@@ -26,7 +26,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     version=1,
     label="Aggregation Processor",
     description = "",
-    icon="dev.png",
+    icon="aggregation.png",
     producesEvents = true,
     onlineHelpRefUrl = ""
 )
