@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qv5_yjg_5bb">
+ <title>Multithreaded Pipelines</title>
+ <conbody>
+        <p><indexterm>UDP Multithreaded Source origin<indexterm>multithreaded
+                processing</indexterm></indexterm><indexterm>Number of Worker Threads<indexterm>UDP
+                    Multithreaded Source </indexterm></indexterm>The UDP Multithreaded Source origin
+            performs parallel processing and enables the creation of a multithreaded pipeline. </p>
+        <p>When you enable multithreaded processing, the UDP Multithreaded Source origin uses
+            multiple concurrent threads for pipeline processing based on the Number of Worker
+            Threads property. When you start the pipeline, the origin creates the number of threads
+            specified in the property. </p>
+        <p>As packets arrive from the specified UDP ports, they enter the packet queue. There is a
+            single instance of the packet queue per pipeline. All receiver threads (which can be
+            more than one, when using epoll) place packets onto the queue. At the same time, each
+            worker thread removes packets from the queue, parses them according to the specified
+            data format, and processes the rest of the pipeline using a pipeline runner.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-PipeRunnerDef"/>
+            <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-batchorder"
+            /></p>
+        <p>For example, say you enable multithreaded processing and set the Number of Worker Threads
+            property to 5. When you start the pipeline, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-createsthreads"
+            /> The origin adds incoming data to the packet queue, creates batches of data from the
+            queue and then passes the batches to the pipeline runners for processing.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def3"
+            /></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-p"/>
+        <p>For more information about multithreaded pipelines, see <xref
+                href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
+            />.</p>
+ </conbody>
+</concept>

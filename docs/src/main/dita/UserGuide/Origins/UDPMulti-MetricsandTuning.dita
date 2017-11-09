@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lbj_slg_5bb">
+ <title>Metrics for Performance Tuning</title>
+ <conbody>
+  <p><indexterm>UDP Multithreaded Source origin<indexterm>metrics for performance
+                tuning</indexterm></indexterm><indexterm>metrics<indexterm>UDP Multithreaded
+                    Source</indexterm></indexterm>The UDP Multithreaded Source origin provides
+            packet queue metrics that you can use to tune pipeline performance. </p>
+        <p>The origin provides the following packet queue metrics:<ul id="ul_itx_kpg_5bb">
+                <li>Dropped Packets - The number of packets that were dropped because the packet
+                    queue was full.</li>
+                <li>Queue Size - The current size of the packet queue. </li>
+                <li>Queued Packets - The total number of packets that have passed through the packet
+                    queue for processing. </li>
+            </ul></p>
+        <p>These metrics can help you determine how to improve pipeline performance. For example, if
+            you have a high volume of dropped packets and the queue size seems to be maxed out as
+            you monitor the pipeline, you might increase the number of worker threads for the
+            pipeline to allow for greater throughput. Or, if you have relatively high bursts of data
+            volume and find packets getting dropped during those bursts, consider increasing the
+            packet queue size to better accommodate them.</p>
+        <p>If the queue size is not maxed out, but the number of queued packets does not seem as
+            high as you expect, you might be dropping packets on the operating system side. When
+            epoll is available - that is, when <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            runs on recent versions of 64-bit Linux - increasing the number of receiver threads can
+            increase the volume of packets that are passed to the origin.</p>
+ </conbody>
+</concept>
