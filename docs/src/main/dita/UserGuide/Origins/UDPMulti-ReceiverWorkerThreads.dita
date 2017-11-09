@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qtl_jzg_5bb">
+ <title>Receiver and Worker Threads</title>
+ <conbody>
+  <p><indexterm>UDP Multithreaded Source origin<indexterm>receiver threads and worker
+                    threads</indexterm></indexterm>The UDP Multithreaded Source origin uses both of
+            the following types of threads:<dl>
+                <dlentry>
+                    <dt>Receiver threads</dt>
+                    <dd>Used to pass data from the operating system socket to the origin's packet
+                        queue. By default, the origin uses a single receiver thread. <p>You can
+                            configure the origin to use multiple receiver threads when <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> runs on a machine enabled for epoll. Epoll requires native libraries
+                            and is only available when Data Collector runs on recent versions of
+                            64-bit Linux. </p><p>When you enable multiple receiver threads, you
+                            increase the rate that data can be passed to the origin, but at the cost
+                            of a standard increase of overhead for thread management. </p><p>To use
+                            additional receiver threads, select the Use Native Transports (epoll)
+                            property, and then configure Number of Receiver
+                            Threads.</p><draft-comment author="Loretta">Info in this DLentry is also
+                            used in the UDP Source > Receiver Threads section. Updates here might
+                            also want to go there.</draft-comment></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Worker threads</dt>
+                    <dd>Used to perform multithreaded pipeline processing. By default, the origin
+                        uses a single thread for pipeline processing. You can increase the number of
+                        threads to use to perform parallel processing of larger volumes of data. For
+                        more information, see <xref
+                            href="UDPMulti-Multithreaded.dita#concept_qv5_yjg_5bb"/>.</dd>
+                    <dd>To use additional worker threads for parallel processing, increase the
+                        Number of Worker Threads property.  </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

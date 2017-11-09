@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dc3_wkg_5bb">
+ <title>Packet Queue</title>
+ <conbody>
+  <p><indexterm>UDP Multithreaded Source origin<indexterm>packet
+                queue</indexterm></indexterm><indexterm>packet queue<indexterm>UDP Multithreaded
+                    Source</indexterm></indexterm>The UDP Multithreaded Source origin uses a packet
+            queue to hold incoming data in memory until the data can be incorporated in a batch and
+            passed through the pipeline. When the packet queue is full, incoming packets are
+            dropped. The number of packets that are dropped is noted in <xref
+                href="UDPMulti-MetricsandTuning.dita#concept_lbj_slg_5bb">stage metrics</xref>. </p>
+        <p>When you configure the origin, you can specify the maximum number of packets to allow in
+            the queue. The default is 200,000. Because the packet queue uses <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            heap memory, when increasing the size of the queue, you should consider increasing the
+                <xref href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> heap size</xref> as well. </p>
+ </conbody>
+</concept>

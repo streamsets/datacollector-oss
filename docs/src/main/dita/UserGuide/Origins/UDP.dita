@@ -22,8 +22,11 @@
  <conbody>
         <p><indexterm>origins<indexterm>UDP Source</indexterm></indexterm><indexterm>UDP Source
                     origin<indexterm>overview</indexterm></indexterm>The UDP Source origin reads
-            messages from one or more UDP ports. UDP Source generates a record for every message.
-            UDP Source <ph
+            messages from one or more UDP ports. To use multiple threads for pipeline processing,
+            use the <xref href="UDPMulti.dita#concept_wng_g5f_5bb">UDP Mulithreaded Source</xref>.
+            For a discussion about the differences between the two origins, see <xref
+                href="Origins-UDP.dita#concept_ffh_5vf_5bb"/>.</p>
+        <p>UDP Source generates a record for every message. UDP Source <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-messagetypes"
                 /><ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-syslog"
@@ -34,7 +37,8 @@
             /></p>
         <p>The origin can also read binary or character-based raw data. </p>
         <p>When you configure UDP Source, you specify the ports to use and the batch size and wait
-            time. You specify the data format for the data, then configure any related properties.
-        </p>
+            time. When epoll is available, you can specify the number of receiver threads to use to
+            increase the throughput of packets to the pipeline. </p>
+        <p>You also specify the data format for the data, then configure any related properties. </p>
     </conbody>
 </concept>

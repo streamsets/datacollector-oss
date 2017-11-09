@@ -24,6 +24,7 @@
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
    <topicref href="../Origins/Origins-MapRComparison.dita"/>
+   <topicref href="../Origins/Origins-UDP.dita"/>
    <topicref href="../Origins/Origins-WebSocketComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/MaxRecordSize.dita"/>
@@ -545,9 +546,19 @@
    <topicref href="../Origins/TCPServer-DataFormats.dita"/>
    <topicref href="../Origins/TCPServer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/UDPMulti.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/UDPMulti-RawData.dita"/>
+   <topicref href="../Origins/UDPMulti-ReceiverWorkerThreads.dita"/>
+   <topicref href="../Origins/UDPMulti-PacketQueue.dita"/>
+   <topicref href="../Origins/UDPMulti-Multithreaded.dita"/>
+   <topicref href="../Origins/UDPMulti-MetricsandTuning.dita"/>
+   <topicref href="../Origins/UDPMulti-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-RawData.dita"/>
+   <topicref href="../Origins/UDP-ReceiverThreads.dita"/>
    <topicref href="../Origins/UDP-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDPtoKafka.dita" chunk="to-content">

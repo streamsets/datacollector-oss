@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_wng_g5f_5bb">
+ <title>UDP Multithreaded Source</title>
+    <conbody>
+        <p><indexterm>origins<indexterm>UDP Multithreaded
+                Source</indexterm></indexterm><indexterm>UDP Multithreaded Source
+                    origin<indexterm>overview</indexterm></indexterm>The UDP Multithreaded Source
+            origin reads messages from one or more UDP ports. The origin can create multiple worker
+            threads to enable parallel processing in a multithreaded pipeline. </p>
+        <p>UDP Multithreaded Source generates a record for every message. UDP Multithreaded Source
+                <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-messagetypes"
+                /><ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-syslog"
+                id="ul_fcp_mm4_4x">
+                <li/>
+            </ul></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowInfo"
+            /></p>
+        <p>The origin can also read binary or character-based raw data. </p>
+        <p>When you configure UDP Multithreaded Source, you specify the ports to use and the batch
+            size and wait time. You specify the number of worker threads to use in multithreaded
+            processing and you can specify the packet queue size. When epoll is available on the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            machine, you can also specify the number of receiver threads to use to increase the
+            throughput of packets to the pipeline. </p>
+        <p>You specify the data format for the data, then configure any related properties. </p>
+    </conbody>
+</concept>

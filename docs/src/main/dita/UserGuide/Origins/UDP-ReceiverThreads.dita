@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_olw_hch_5bb">
+ <title>Receiver Threads</title>
+ <conbody>
+        <p><indexterm>UDP Source origin<indexterm>receiver threads</indexterm></indexterm>Receiver
+            threads are used to pass data from the UDP source system to the origin. By default, the
+            origin uses a single receiver thread. </p>
+        <p>You can configure the UDP Source origin to use additional receiver threads when Data
+            Collector runs on a machine enabled for epoll. Epoll requires native libraries and is
+            only available when Data Collector runs on recent versions of 64-bit Linux. When you
+            enable multiple receiver threads, you increase the volume of data that can be passed to
+            the origin at one time. </p>
+        <p>To use additional receiver threads, select the Use Native Transports (epoll) property,
+            and then configure Number of Receiver Threads.</p>
+        <p>
+            <draft-comment author="Loretta">Info in this DLentry is also used in the UDP
+                Multithreaded Source > Receiver and Worker Threads section. Updates here might also
+                want to go there.</draft-comment>
+        </p>
+    </conbody>
+</concept>
