@@ -23,13 +23,8 @@
         <p>With version 2.7.0.0, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             introduces a credential store API and credential expression language functions to access
-            Hashicorp Vault secrets. At this time, the following JDBC stages can use the credential
-            functions:</p>
-        <ul
-            conref="../Reusable_Content/Reusable_Topics/CredentialStores_Reusable.dita#concept_jjh_crs_r1b/ul_ttt_v5x_v1b"
-            id="ul_u5f_1wx_v1b">
-            <li/>
-        </ul>
+            Hashicorp Vault secrets. </p>
+        
         <p>In addition, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             Vault integration now relies on Vault's App Role authentication backend. </p>
@@ -42,12 +37,11 @@
             ways:</p>
         <dl>
             <dlentry>
-                <dt>Use the new credential store expression language functions in pipelines that
-                    include JDBC stages (recommended)</dt>
+                <dt>Use the new credential store expression language functions (recommended)</dt>
                 <dd>To use the new credential functions, install the Vault credential store stage
                     library and define the configuration properties used to connect to Vault. Then,
-                    update each upgraded pipeline that includes JDBC stages using Vault functions to
-                    use the new credential functions to retrieve the credential values.</dd>
+                    update each upgraded pipeline that includes stages using Vault functions to use
+                    the new credential functions to retrieve the credential values.</dd>
                 <dd>For details on using the Vault credential store system, see <xref
                         href="../Configuration/CredentialStores-Vault.dita#concept_s3y_dps_51b"
                     />.</dd>
