@@ -325,18 +325,10 @@
    <topicref href="../Origins/MapRFS-DataFormat-origin.dita"/>
    <topicref href="../Origins/MapRFS-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/MapRStreamsCons-AllData.dita"/>
-   <topicref href="../Origins/MapRStreamsCons-DataFormats.dita">
-    <topicref href="../Origins/LogFormats.dita"/>
-   </topicref>
-   <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>
-   <topicref href="../Origins/MapRStreamsCons-RecordHeaderAtts.dita"/>
-   <topicref href="../Origins/MapRStreamsCons-Configuring.dita"/>
-  </topicref>
   <topicref href="../Origins/MapRStreamsMultiConsumer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MapRStreamsMultiConsumer-Offsets.dita"/>
    <topicref href="../Origins/MapRStreamsMultiConsumer-ExistingData.dita"/>
    <topicref href="../Origins/MapRStreamsMultiConsumer-MultithreadProcessing.dita"/>
@@ -346,6 +338,16 @@
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/MapRStreamsMultiConsumer-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MapRStreamsCons-AllData.dita"/>
+   <topicref href="../Origins/MapRStreamsCons-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>
+   <topicref href="../Origins/MapRStreamsCons-RecordHeaderAtts.dita"/>
+   <topicref href="../Origins/MapRStreamsCons-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MongoDB.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

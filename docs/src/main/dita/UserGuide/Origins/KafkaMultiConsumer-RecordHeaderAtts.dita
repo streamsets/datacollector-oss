@@ -20,17 +20,17 @@
 <concept id="concept_tlj_3g1_2z">
  <title>Record Header Attributes</title>
  <conbody>
-        <p><indexterm>MapR Streams Multitopic Consumer origin<indexterm>record header
+        <p><indexterm>Kafka Multitopic Consumer origin<indexterm>record header
                     attributes</indexterm></indexterm><indexterm>record header
-                    attributes<indexterm>MapR Streams Multitopic Consumer
-                origin</indexterm></indexterm>The MapR Streams Multitopic Consumer origin <ph
+                    attributes<indexterm>Kafka Multitopic Consumer origin</indexterm></indexterm>The
+            Kafka Multitopic Consumer origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"
             /> When the origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Avro-HeaderAttribute"
             /></p>
         <p
             conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
-        <p>The MapR Streams Multitopic Consumer origin <ph
+        <p>The Kafka Multitopic Consumer origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/leadin-ph"
                 /><ul id="ul_i4q_2qv_jw">
                 <li

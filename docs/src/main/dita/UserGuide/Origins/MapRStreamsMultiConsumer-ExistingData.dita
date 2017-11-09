@@ -20,10 +20,10 @@
 <concept id="concept_hdc_fvn_sx">
  <title>Processing All Unread Data</title>
  <conbody>
-  <p><indexterm>MapR Streams Multitopic Consumer origin<indexterm>processing all unread
-                    data</indexterm></indexterm>You can configure the MapR Streams Multitopic
-            Consumer origin to read all unread data in a topic. By default, the MapR Streams
-            Multitopic Consumer origin reads only incoming data. </p>
+  <p><indexterm>MapR Multitopic Streams Consumer origin<indexterm>processing all unread
+                    data</indexterm></indexterm>You can configure the MapR Multitopic Streams
+            Consumer origin to read all unread data in a topic. By default, the MapR Multitopic
+            Streams Consumer origin reads only incoming data. </p>
         <p>To read all unread data in the topic, add the auto.offset.reset MapR Streams
             configuration property to the origin:<ol id="ol_n4r_rvn_sx">
                 <li>On the <wintitle>MapR Streams</wintitle> tab, click the

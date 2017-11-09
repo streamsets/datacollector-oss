@@ -14,23 +14,23 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hvd_hww_lbb">
- <title>MapR Streams Multitopic Consumer</title>
+ <title>MapR Multitopic Streams Consumer</title>
     <conbody>
-        <p><indexterm>origins<indexterm>MapR Streams Multitopic Consumer</indexterm><indexterm>MapR
-                    Streams Multitopic
-                Consumer<indexterm>overview</indexterm></indexterm></indexterm>The MapR Streams
-            Multitopic Consumer origin reads data from multiple topics in a MapR Streams cluster.
-            The origin can use multiple threads to enable parallel processing of data. </p>
-        <p>When you configure a MapR Streams Multitopic Consumer, you configure the consumer group
+        <p><indexterm>origins<indexterm>MapR Multitopic Streams Consumer</indexterm><indexterm>MapR
+                    Multitopic Streams
+                Consumer<indexterm>overview</indexterm></indexterm></indexterm>The MapR Multitopic
+            Streams Consumer origin reads data from multiple topics in a MapR Streams cluster. The
+            origin can use multiple threads to enable parallel processing of data. </p>
+        <p>When you configure a MapR Multitopic Streams Consumer, you configure the consumer group
             name, the topics to process, and the number of threads to use.</p>
         <p>You can configure the origin to produce a single record when a message includes multiple
             objects. And you can add additional MapR Streams and supported Kafka configuration
             properties as needed.</p>
-        <p>When processing Avro data, you can configure the MapR Streams Multitopic Consumer to work
+        <p>When processing Avro data, you can configure the MapR Multitopic Streams Consumer to work
             with the Confluent Schema Registry. The Confluent Schema Registry is a distributed
             storage layer for Avro schemas which uses MapR Streams as its underlying storage
             mechanism.</p>
-        <p>MapR Streams Multitopic Consumer includes record header attributes that enable you to use
+        <p>MapR Multitopic Streams Consumer includes record header attributes that enable you to use
             information about the record in pipeline processing. </p>
         <p>
             <note type="tip"><ph

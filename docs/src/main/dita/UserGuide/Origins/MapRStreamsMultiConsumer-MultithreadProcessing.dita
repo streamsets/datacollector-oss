@@ -20,14 +20,14 @@
 <concept id="concept_ifs_wtm_3z">
  <title>Multithreaded Processing</title>
  <conbody>
-  <p><indexterm>MapR Streams Multitopic Consumer origin<indexterm>multithreaded
+  <p><indexterm>MapR Multitopic Streams Consumer origin<indexterm>multithreaded
                     processing</indexterm></indexterm><indexterm>Number of Threads<indexterm>MapR
-                    Streams Multitopic Consumer origin</indexterm></indexterm>The MapR Streams
-            Multitopic Consumer origin performs parallel processing and enables the creation of a
-            multithreaded pipeline. The MapR Streams Multitopic Consumer origin uses multiple
+                    Multitopic Streams Consumer origin</indexterm></indexterm>The MapR Multitopic
+            Streams Consumer origin performs parallel processing and enables the creation of a
+            multithreaded pipeline. The MapR Multitopic Streams Consumer origin uses multiple
             concurrent threads based on the Number of Threads property. MapR Streams distributes
             partitions equally among all the consumers in a group.</p>
-        <p>When performing multithreaded processing, the MapR Streams Multitopic Consumer origin
+        <p>When performing multithreaded processing, the MapR Multitopic Streams Consumer origin
             checks the list of topics to process and creates the specified number of threads. Each
             thread connects to MapR Streams and creates a batch of data from a partition assigned by
             MapR Streams. Then, it passes the batch to an available pipeline runner. </p>

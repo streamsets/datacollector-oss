@@ -587,9 +587,9 @@
                                     <ul id="ul_rwr_fzf_nx">
                                         <li>MapR DB JSON origin</li>
                                         <li>MapR FS origin for cluster mode pipelines</li>
+                                        <li>MapR Multitopic Streams Consumer origin</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
-                                        <li>MapR Streams Multitopic Consumer</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
                                         <li>Spark Evaluator processor</li>
@@ -611,7 +611,7 @@
                                         <li>MapR DB CDC origin</li>
                                         <li>MapR DB JSON origin</li>
                                         <li>MapR FS origin for cluster mode pipelines</li>
-                                        <li>MapR Streams Multitopic Consumer origin</li>
+                                        <li>MapR Multitopic Streams Consumer origin</li>
                                         <li>MapR DB destination</li>
                                         <li>MapR DB JSON destination</li>
                                         <li>MapR FS destination</li>
