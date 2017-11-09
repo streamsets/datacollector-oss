@@ -3071,7 +3071,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <uicontrol>Tip_AccessKeys</uicontrol> used in AWS Credentials topic for AWS
                   stages. <uicontrol>Tip_Passwords</uicontrol> used in keystore/truststore password
                   properties for all stages.</draft-comment>
-            <note type="tip" id="SDCDPM_Tip_Usernames_JDBC">To secure sensitive information such as
+            <note type="tip" id="SDCDPM_Tip_Usernames">To secure sensitive information such as
                   usernames and passwords, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref> or <ph product="SDC"><xref
@@ -3081,77 +3081,56 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
                               format="html" scope="external">Credential Stores</xref> in the Data
                         Collector documentation.</ph></note>
-            <note type="tip" id="SDCDPM_Tip_Usernames">To secure sensitive information such as
-                  usernames and passwords, you can use <xref
-                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph product="SDC"><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              >Hashicorp Vault secrets.</xref></ph>
-                  <ph product="DPM">Hashicorp Vault secrets. For more information about Hashicorp
-                        Vault secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph></note>
             <note type="tip" id="SDCDPM_Tip_AccessKeys">To secure sensitive information such as
                   access key pairs, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
-                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
-                        secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph>
-            </note>
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
             <note type="tip" id="SDCDPM_Tip_Passwords">To secure sensitive information such as
                   passwords, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
-                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
-                        secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph>
-            </note>
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
             <note type="tip" id="SDCDPM_Tip_ConsumerKey">To secure sensitive information such as the
                   consumer key and secret, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
-                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
-                        secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph>
-            </note>
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
             <note type="tip" id="SDCDPM_Tip_ClientID">To secure sensitive information such as the
                   client ID and secret, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
-                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
-                        secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph>
-            </note>
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
             <note type="tip" id="SDCDPM_Tip_JWTKey">To secure sensitive information such as the JWT
                   signing key, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref> or <ph><xref
-                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
-                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
-                        secrets, see <xref
-                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
-                              format="html" scope="external">Accessing Vault Secrets with Vault
-                              Functions</xref> in the Data Collector documentation.</ph>
-            </note>
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
             <p>
                   <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
                         requirements:</draft-comment>

@@ -2069,7 +2069,7 @@
                                 <row id="row-JDBCpassword">
                                     <entry>Password</entry>
                                     <entry>Password for the JDBC account.<note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames_JDBC"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                             </tbody>
