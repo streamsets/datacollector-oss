@@ -343,7 +343,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
         randBetween(1, 12),
         randBetween(1, 28),
         randBetween(0, 23),
-        randBetween(0, 60),
+        randBetween(0, 59),
         0,
         0,
         ZoneId.of(zoneId));

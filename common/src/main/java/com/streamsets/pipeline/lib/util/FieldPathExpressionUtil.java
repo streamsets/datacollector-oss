@@ -41,9 +41,7 @@ import java.util.regex.Pattern;
 public class FieldPathExpressionUtil {
   public static final Logger LOG = LoggerFactory.getLogger(FieldPathExpressionUtil.class);
   public static final String FIELD_PATH_EXPRESSION_PATTERN_STR = "^\\s*(\\$\\{.*\\})\\s*$";
-  public static final String FIELD_PATH_CONTAINING_EXPRESSION_STR = "^.*\\[\\$\\{.*\\}\\].*$";
   public static final Pattern FIELD_PATH_EXPRESSION_PATTERN = Pattern.compile(FIELD_PATH_EXPRESSION_PATTERN_STR);
-  public static final Pattern FIELD_PATH_CONTAINING_EXPRESSION = Pattern.compile(FIELD_PATH_CONTAINING_EXPRESSION_STR);
 
   /**
    * Evaluates a given field path expression against a given record and returns all field paths that satisfy the
@@ -64,7 +62,7 @@ public class FieldPathExpressionUtil {
       ELVars elVars,
       Record record
   ) throws ELEvalException {
-    if (FIELD_PATH_CONTAINING_EXPRESSION.matcher(fieldExpression).matches()) {
+    if (isFieldPathExpressionFast(fieldExpression)) {
       // this field path expression actually does contain an EL expression, so need to evaluate against all fields
       return evaluateMatchingFieldPathsImpl(fieldExpression, elEval, elVars, record);
     } else {
@@ -210,5 +208,16 @@ public class FieldPathExpressionUtil {
    */
   public static boolean isFieldPathExpression(String expression) {
     return FIELD_PATH_EXPRESSION_PATTERN.matcher(expression).matches();
+  }
+
+  /**
+   * Quickly checks whether a given expression is a likely a valid field path expression (i.e. contains an EL
+   * expression)
+   *
+   * @param expression the expression to test
+   * @return true if a valid field path expression, false otherwise
+   */
+  public static boolean isFieldPathExpressionFast(String expression) {
+    return expression.contains("${");
   }
 }
