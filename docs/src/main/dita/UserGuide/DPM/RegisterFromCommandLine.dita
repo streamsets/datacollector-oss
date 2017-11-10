@@ -27,6 +27,12 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> must
         be running before you can use the command line interface.</shortdesc>
  <conbody>
+        <note>For a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            installation with Cloudera Manager, you must <xref
+                href="RegisterFromClouderaManager.dita#task_oxx_y5m_xw">use Cloudera Manager to
+                register</xref> the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </note>
         <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
                 the same updates both places.</draft-comment>Start <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
