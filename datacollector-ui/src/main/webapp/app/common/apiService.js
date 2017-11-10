@@ -1657,7 +1657,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       uploadSupportBundle: function (generators) {
-        var url = apiBase + '/system/bundle/upload?=generators=';
+        var url = apiBase + '/system/bundle/upload?generators=';
         return $http({
           method: 'GET',
           url: url + generators.join(',')
