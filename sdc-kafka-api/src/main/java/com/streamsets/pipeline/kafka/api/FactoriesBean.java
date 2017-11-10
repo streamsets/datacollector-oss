@@ -17,10 +17,15 @@ package com.streamsets.pipeline.kafka.api;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ServiceLoader;
 import java.util.Set;
 
 public abstract class FactoriesBean {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FactoriesBean.class);
 
   public abstract SdcKafkaProducerFactory createSdcKafkaProducerFactory();
 
@@ -35,7 +40,6 @@ public abstract class FactoriesBean {
   private static FactoriesBean factoriesBean;
 
   private final static Set<String> subclassNames = ImmutableSet.of(
-    "com.streamsets.pipeline.kafka.impl.MapRStreams09FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean"
@@ -45,6 +49,7 @@ public abstract class FactoriesBean {
     int serviceCount = 0;
     FactoriesBean subclassBean = null;
     for (FactoriesBean bean : factoriesBeanLoader) {
+      LOG.info("Found FactoriesBean loader {}", bean.getClass().getName());
       factoriesBean = bean;
       serviceCount++;
 
