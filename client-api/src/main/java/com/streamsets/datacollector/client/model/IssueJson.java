@@ -34,7 +34,7 @@ public class IssueJson   {
   private String configGroup = null;
   private String configName = null;
   private Map<String, Object> additionalInfo = new HashMap<String, Object>();
-
+  private long count;
 
   /**
    **/
@@ -118,6 +118,16 @@ public class IssueJson   {
     this.additionalInfo = additionalInfo;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("count")
+  public long getCount() {
+    return count;
+  }
+  public void setCount(long count) {
+    this.count = count;
+  }
 
 
   @Override
