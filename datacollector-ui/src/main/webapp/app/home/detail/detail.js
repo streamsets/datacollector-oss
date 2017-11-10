@@ -251,11 +251,10 @@ angular
        * @returns {Boolean} - Returns true if configuration has any issue otherwise false.
        */
       hasConfigurationIssues: function(stageInstance) {
-        var config = $scope.pipelineConfig,
-          commonErrors = $rootScope.common.errors,
-          issuesMap,
-          issues = [];
-
+        var config = $scope.pipelineConfig;
+        var commonErrors = $rootScope.common.errors;
+        var issuesMap;
+        var issues = [];
 
         if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
           issuesMap = commonErrors[0];
