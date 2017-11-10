@@ -25,10 +25,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.management.RuntimeMBeanException;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
@@ -232,15 +237,20 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
 
   private void writeJmx(BundleWriter writer) throws IOException {
     MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-    JsonGenerator generator = writer.createGenerator("runtime/jmx.json");
-    generator.useDefaultPrettyPrinter();
-    generator.writeStartObject();
-    generator.writeArrayFieldStart("beans");
 
-    try {
-      for (Object name : mBeanServer.queryNames(null, null)) {
-        ObjectName objectName = (ObjectName) name;
-        MBeanInfo info = mBeanServer.getMBeanInfo(objectName);
+    try (JsonGenerator generator = writer.createGenerator("runtime/jmx.json")) {
+      generator.useDefaultPrettyPrinter();
+      generator.writeStartObject();
+      generator.writeArrayFieldStart("beans");
+
+      for (ObjectName objectName : mBeanServer.queryNames(null, null)) {
+        MBeanInfo info;
+        try {
+          info = mBeanServer.getMBeanInfo(objectName);
+        } catch (InstanceNotFoundException | IntrospectionException | ReflectionException ex) {
+          LOG.warn("Exception accessing MBeanInfo ", ex);
+          continue;
+        }
 
         generator.writeStartObject();
         generator.writeStringField("name", objectName.toString());
@@ -253,7 +263,8 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
               attr.getName(),
               mBeanServer.getAttribute(objectName, attr.getName())
             );
-          } catch(RuntimeMBeanException ex) {
+          } catch (MBeanException | AttributeNotFoundException | InstanceNotFoundException | ReflectionException |
+              RuntimeMBeanException ex) {
             generator.writeStringField(attr.getName(), "Exception: " + ex.toString());
           }
         }
@@ -262,14 +273,11 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
         generator.writeEndObject();
         writer.writeLn("");
       }
-    } catch (Exception e) {
-      throw new IOException("Can't serialize JMX beans", e);
-    }
 
-    generator.writeEndArray();
-    generator.writeEndObject();
-    generator.close();
-    writer.markEndOfFile();
+      generator.writeEndArray();
+      generator.writeEndObject();
+      writer.markEndOfFile();
+    }
   }
 
   private void writeAttribute(JsonGenerator jg, String attName, Object value) throws IOException {
