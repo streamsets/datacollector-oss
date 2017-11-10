@@ -20,20 +20,37 @@
 <concept id="concept_inh_ccs_bx">
  <title>Manage the Orchestration of Jobs</title>
  <shortdesc>In <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
-        pipelines are the design of the dataflow. Jobs are the execution of the
-        dataflow.</shortdesc>
+        pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
+        engineers design pipelines on an authoring <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+        DevOps or site reliability engineers run jobs on groups of execution <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />s.</shortdesc>
  <conbody>
-        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>As a DevOps or site reliability
-            engineer - the person responsible for ensuring that all services and systems are
-            scalable and reliable - you create <ph
+        <p>
+            <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
+                the same updates in both places. </draft-comment>
+        </p>
+        <p>As a DevOps or site reliability engineer - the person responsible for ensuring that all
+            services and systems are scalable and reliable - you register both authoring and
+            execution <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />. You register <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            by manually administering them or by automatically provisioning them on a container
+            orchestration framework such as Kubernetes. All registered <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s -
+            either manually administered or automatically provisioned - function in the same
+            way.</p>
+        <p>You create <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-            jobs to run pipelines on groups of <ph
+            jobs to run pipelines on groups of execution <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.
             When you start a job on a group of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-            remotely runs the pipeline on all <ph
+            remotely runs the pipeline on the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
             in the group. This enables you to manage and orchestrate large scale dataflows run
             across multiple <ph
