@@ -521,6 +521,9 @@ public class OracleCDCSource extends BaseSource {
                 }
                 lastCommitSCN = commitSCN;
                 sequenceNumber = seq;
+                if (configBean.keepOriginalQuery) {
+                  attributes.put(QUERY_KEY, queryString);
+                }
                 Record record = generateRecord(attributes, ctxOp.operationCode, ctxOp.context);
                 if (record != null && record.getEscapedFieldPaths().size() > 0) {
                   recordQueue.put(new RecordOffset(record, offset));
