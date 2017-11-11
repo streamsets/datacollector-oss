@@ -93,11 +93,15 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
       String pipelineId,
       String pipelineTitle,
       String description,
-      boolean isRemote
+      boolean isRemote,
+      boolean draft
   ) throws PipelineException {
     synchronized (lockCache.getLock(pipelineId)) {
-      PipelineConfiguration pipelineConf = pipelineStore.create(user, pipelineId, pipelineTitle, description, isRemote);
-      pipelineInfoMap.put(pipelineConf.getInfo().getPipelineId(), pipelineConf.getInfo());
+      PipelineConfiguration pipelineConf = pipelineStore
+          .create(user, pipelineId, pipelineTitle, description, isRemote, draft);
+      if (!draft) {
+        pipelineInfoMap.put(pipelineConf.getInfo().getPipelineId(), pipelineConf.getInfo());
+      }
       return pipelineConf;
     }
   }
@@ -156,9 +160,13 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
-    throws PipelineException {
-    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
+  public RuleDefinitions storeRules(
+      String pipelineName,
+      String tag,
+      RuleDefinitions ruleDefinitions,
+      boolean draft
+  ) throws PipelineException {
+    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions, draft);
   }
 
   @Override

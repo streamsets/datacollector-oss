@@ -77,7 +77,7 @@ public class MiniITDataCollector implements DataCollector {
     StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
     PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
     PipelineConfiguration tmpPipelineConfig =
-      store.create(user, pipelineName, pipelineName, desc, false);
+      store.create(user, pipelineName, pipelineName, desc, false, false);
     // we might want to add an import API as now to import have to create one then update it
     realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
     PipelineConfigurationValidator validator =
@@ -223,7 +223,7 @@ public class MiniITDataCollector implements DataCollector {
     ObjectMapper json = ObjectMapperFactory.getOneLine();
     RuleDefinitionsJson ruleDefinitionsJson = json.readValue(ruleDefinitionsJsonString, RuleDefinitionsJson.class);
     RuleDefinitions ruleDefinitions = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
-    RuleDefinitions ruleDefinitions1 = pipelineTask.getPipelineStoreTask().storeRules(name, tag, ruleDefinitions);
+    RuleDefinitions ruleDefinitions1 = pipelineTask.getPipelineStoreTask().storeRules(name, tag, ruleDefinitions, false);
     return ObjectMapperFactory.get().writeValueAsString(BeanHelper.wrapRuleDefinitions(ruleDefinitions1));
   }
 

@@ -175,21 +175,25 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       String pipelineId,
       String pipelineTitle,
       String description,
-      boolean isRemote
+      boolean isRemote,
+      boolean draft
   ) throws PipelineStoreException {
     synchronized (lockCache.getLock(pipelineId)) {
       if (hasPipeline(pipelineId)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0201, pipelineId);
       }
-      try {
-        Files.createDirectory(getPipelineDir(pipelineId));
-      } catch (IOException e) {
-        throw new PipelineStoreException(
-            ContainerError.CONTAINER_0202,
-            pipelineId,
-            Utils.format("'{}' mkdir failed", getPipelineDir(pipelineId)),
-            e
-        );
+
+      if (!draft) {
+        try {
+          Files.createDirectory(getPipelineDir(pipelineId));
+        } catch (IOException e) {
+          throw new PipelineStoreException(
+              ContainerError.CONTAINER_0202,
+              pipelineId,
+              Utils.format("'{}' mkdir failed", getPipelineDir(pipelineId)),
+              e
+          );
+        }
       }
 
       Date date = new Date();
@@ -226,19 +230,22 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           Collections.emptyList()
       );
 
-      try (
-          OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
-          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId));
-      ){
-        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
-        json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
-      } catch (Exception ex) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
+      if (!draft) {
+        try (
+            OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
+            OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId));
+        ){
+          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+          json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
+        } catch (Exception ex) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
+        }
+        if (pipelineStateStore != null) {
+          pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote);
+        }
       }
+
       pipeline.setPipelineInfo(info);
-      if (pipelineStateStore != null) {
-        pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote);
-      }
       return pipeline;
     }
   }
@@ -485,34 +492,45 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
+  public RuleDefinitions storeRules(
+      String pipelineName,
+      String tag,
+      RuleDefinitions ruleDefinitions,
+      boolean draft
+  )
     throws PipelineStoreException {
     synchronized (lockCache.getLock(pipelineName)) {
-      // check the uuid of the ex
-      if (!hasPipeline(pipelineName)) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
-      }
-      // Listing rule definition to detect any change since the previous load.
-      // two browsers could modify the same rule definition
-      if (pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)) != null) {
-        UUID savedUuid = pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)).getUuid();
-        if (!savedUuid.equals(ruleDefinitions.getUuid())) {
-          throw new PipelineStoreException(ContainerError.CONTAINER_0205, pipelineName);
+      if (!draft) {
+        // check the uuid of the ex
+        if (!hasPipeline(pipelineName)) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
+        }
+        // Listing rule definition to detect any change since the previous load.
+        // two browsers could modify the same rule definition
+        if (pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)) != null) {
+          UUID savedUuid = pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)).getUuid();
+          if (!savedUuid.equals(ruleDefinitions.getUuid())) {
+            throw new PipelineStoreException(ContainerError.CONTAINER_0205, pipelineName);
+          }
         }
       }
 
       UUID uuid = UUID.randomUUID();
       ruleDefinitions.setUuid(uuid);
-      DataStore dataStore = new DataStore(getRulesFile(pipelineName).toFile());
-      try (OutputStream os = dataStore.getOutputStream()) {
-        ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
-        dataStore.commit(os);
-        pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
-      } catch (IOException ex) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.toString(), ex);
-      } finally {
-        dataStore.release();
+
+      if (!draft) {
+        DataStore dataStore = new DataStore(getRulesFile(pipelineName).toFile());
+        try (OutputStream os = dataStore.getOutputStream()) {
+          ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+          dataStore.commit(os);
+          pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
+        } catch (IOException ex) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.toString(), ex);
+        } finally {
+          dataStore.release();
+        }
       }
+
       return ruleDefinitions;
     }
   }

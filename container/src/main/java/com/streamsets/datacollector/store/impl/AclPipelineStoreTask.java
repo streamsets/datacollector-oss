@@ -89,9 +89,11 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       String pipelineId,
       String pipelineTitle,
       String description,
-      boolean isRemote
+      boolean isRemote,
+      boolean draft
   ) throws PipelineException {
-    PipelineConfiguration pipelineConf = pipelineStore.create(user, pipelineId, pipelineTitle, description, isRemote);
+    PipelineConfiguration pipelineConf = pipelineStore
+        .create(user, pipelineId, pipelineTitle, description, isRemote, draft);
     aclStore.createAcl(pipelineId, ResourceType.PIPELINE, System.currentTimeMillis(), user);
     return pipelineConf;
   }
@@ -154,10 +156,11 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
   public RuleDefinitions storeRules(
       String pipelineName,
       String tag,
-      RuleDefinitions ruleDefinitions
+      RuleDefinitions ruleDefinitions,
+      boolean draft
   ) throws PipelineException {
     aclStore.validateWritePermission(pipelineName, currentUser);
-    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
+    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions, draft);
   }
 
   @Override

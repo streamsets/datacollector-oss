@@ -561,7 +561,8 @@ public class PipelineStoreResource {
                 "0",
                 false,
                 true,
-                envelope
+                envelope,
+                false
             );
             successEntities.add(envelope.getPipelineConfig().getInfo());
           } catch (Exception ex) {
@@ -675,14 +676,15 @@ public class PipelineStoreResource {
   public Response createPipeline(
       @PathParam("pipelineTitle") String pipelineTitle,
       @QueryParam("description") @DefaultValue("") String description,
-      @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId
+      @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
+      @QueryParam("draft") @DefaultValue("false") boolean draft
   ) throws URISyntaxException, PipelineException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
       pipelineId = pipelineTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
     }
     RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + pipelineId);
-    PipelineConfiguration pipeline = store.create(user, pipelineId, pipelineTitle, description, false);
+    PipelineConfiguration pipelineConfig = store.create(user, pipelineId, pipelineTitle, description, false, draft);
 
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
@@ -717,12 +719,23 @@ public class PipelineStoreResource {
         null,
         stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
     );
-    store.storeRules(pipelineId, "0", ruleDefinitions);
+    store.storeRules(pipelineId, "0", ruleDefinitions, draft);
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipelineId, pipeline);
-    pipeline = validator.validate();
-    return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
-        BeanHelper.wrapPipelineConfiguration(pipeline)).build();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        pipelineId,
+        pipelineConfig
+    );
+    pipelineConfig = validator.validate();
+
+    if (draft) {
+      return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
+          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, true))
+          .build();
+    } else {
+      return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
+          BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
+    }
   }
 
   @Path("/pipeline/{pipelineId}")
@@ -875,7 +888,7 @@ public class PipelineStoreResource {
         pipelineConfigBean != null ? pipelineConfigBean.constants : null
     );
     ruleDefinitionValidator.validateRuleDefinition();
-    ruleDefs = store.storeRules(pipelineId, rev, ruleDefs);
+    ruleDefs = store.storeRules(pipelineId, rev, ruleDefs, false);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapRuleDefinitions(ruleDefs)).build();
   }
 
@@ -1005,10 +1018,11 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
       @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName,
+      @QueryParam("draft") @DefaultValue("false") boolean draft,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineException, URISyntaxException {
     RestAPIUtils.injectPipelineInMDC("*");
-    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGenerateName, pipelineEnvelope);
+    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGenerateName, pipelineEnvelope, draft);
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
   }
@@ -1018,7 +1032,8 @@ public class PipelineStoreResource {
       String rev,
       boolean overwrite,
       boolean autoGenerateName,
-      PipelineEnvelopeJson pipelineEnvelope
+      PipelineEnvelopeJson pipelineEnvelope,
+      boolean draft
   ) throws PipelineException {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
@@ -1041,21 +1056,22 @@ public class PipelineStoreResource {
         if (autoGenerateName) {
           name = UUID.randomUUID().toString();
         }
-        newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false);
+        newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
       }
     } else {
       if (autoGenerateName) {
         name = UUID.randomUUID().toString();
       }
-      newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false);
+      newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
     }
 
-    newRuleDefinitions = store.retrieveRules(name, rev);
+    if (!draft) {
+      newRuleDefinitions = store.retrieveRules(name, rev);
+      ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
 
-    pipelineConfig.setUuid(newPipelineConfig.getUuid());
-    pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
-
-    ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
+      pipelineConfig.setUuid(newPipelineConfig.getUuid());
+      pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
+    }
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
         .create(pipelineConfig, Collections.emptyList(), null);
@@ -1065,12 +1081,12 @@ public class PipelineStoreResource {
         pipelineConfigBean.constants
     );
     ruleDefinitionValidator.validateRuleDefinition();
-    ruleDefinitions = store.storeRules(name, rev, ruleDefinitions);
 
-    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
-    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+    if ((!draft)) {
+      ruleDefinitions = store.storeRules(name, rev, ruleDefinitions, false);
+    }
 
-    return pipelineEnvelope;
+    return getPipelineEnvelope(pipelineConfig, ruleDefinitions, draft);
   }
 
   @Path("/pipelines/addLabels")
@@ -1096,7 +1112,7 @@ public class PipelineStoreResource {
         Map<String, Object> metadata = pipelineConfig.getMetadata();
 
         Object objLabels = metadata.get("labels");
-        List<String> metaLabels = objLabels == null ? new ArrayList<String>() : (List<String>) objLabels;
+        List<String> metaLabels = objLabels == null ? new ArrayList<>() : (List<String>) objLabels;
 
         for (String label : labels) {
           if (!metaLabels.contains(label)) {

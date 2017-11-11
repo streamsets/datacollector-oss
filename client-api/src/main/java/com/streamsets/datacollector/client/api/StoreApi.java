@@ -137,7 +137,6 @@ public class StoreApi {
     Map<String, Object> formParams = new HashMap<String, Object>();
 
     queryParams.addAll(apiClient.parameterToPairs("", "description", description));
-
     queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
 
     final String[] accepts = {
@@ -153,6 +152,57 @@ public class StoreApi {
     String[] authNames = new String[] { "basic" };
 
     TypeRef returnType = new TypeRef<PipelineConfigurationJson>() {};
+    return apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
+
+  /**
+   * Add a new Pipeline Configuration to the store
+   *
+   * @param pipelineId
+   * @param description
+   * @param autoGeneratePipelineId
+   * @return PipelineEnvelopeJson
+   */
+  public PipelineEnvelopeJson createDraftPipeline (
+      String pipelineId,
+      String description,
+      boolean autoGeneratePipelineId
+  ) throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling createPipeline");
+    }
+
+    // create path and map variables
+    String path = "/v1/pipeline/{pipelineId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "description", description));
+    queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
+    queryParams.addAll(apiClient.parameterToPairs("", "draft", true));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};
     return apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
         contentType, authNames, returnType);
   }
@@ -474,6 +524,7 @@ public class StoreApi {
       String rev,
       Boolean overwrite,
       Boolean autoGeneratePipelineId,
+      boolean draft,
       PipelineEnvelopeJson pipelineEnvelope
   ) throws ApiException {
     Object postBody = pipelineEnvelope;
@@ -500,10 +551,9 @@ public class StoreApi {
 
 
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
-
     queryParams.addAll(apiClient.parameterToPairs("", "overwrite", overwrite));
-
     queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
+    queryParams.addAll(apiClient.parameterToPairs("", "draft", draft));
 
     final String[] accepts = {
         "application/json"

@@ -731,7 +731,8 @@ public class TestRemoteDataCollector {
         String pipelineId,
         String pipelineTitle,
         String description,
-        boolean isRemote
+        boolean isRemote,
+        boolean draft
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return new PipelineConfiguration(
@@ -798,7 +799,8 @@ public class TestRemoteDataCollector {
     public RuleDefinitions storeRules(
         String pipelineName,
         String tag,
-        RuleDefinitions ruleDefinitions
+        RuleDefinitions ruleDefinitions,
+        boolean draft
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;

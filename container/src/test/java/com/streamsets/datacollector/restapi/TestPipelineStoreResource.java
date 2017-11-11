@@ -656,7 +656,7 @@ public class TestPipelineStoreResource extends JerseyTest {
             .thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
-        Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false, false)).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
@@ -711,13 +711,16 @@ public class TestPipelineStoreResource extends JerseyTest {
         }
         try {
           Mockito.when(pipelineStore.storeRules(
-            Matchers.anyString(), Matchers.anyString(), (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any()))
-            .thenReturn(rules.getRuleDefinitions());
+              Matchers.anyString(),
+              Matchers.anyString(),
+              (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any(),
+              Mockito.anyBoolean()
+          )).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
           LOG.debug("Ignoring exception", e);
         }
 
-        Mockito.when(pipelineStore.create("user1", "newFromImport", "newFromImport",null, false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "newFromImport", "newFromImport",null, false, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (com.streamsets.datacollector.util.PipelineException e) {
