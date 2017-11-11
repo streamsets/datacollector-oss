@@ -66,8 +66,12 @@
                 />:<codeblock>curl -X POST http://localhost:18633/rest/v1/pipeline/fileTailControl74f418f8-cl2f5-4r7k-8790-b9854h1450e8/start</codeblock></p>
             <p>If the edge pipeline uses parameters, use the following
                 command:<codeblock>curl -X POST http://&lt;SDCe_hostname>:&lt;port>/rest/v1/pipeline/&lt;pipelineID>/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1>":"&lt;parameter_value1>","&lt;parameter_name2":"&lt;parameter_value2>"}'</codeblock></p>
-            <p>To manage running pipelines - including stopping, resetting the offset, and viewing
-                the pipeline status and metrics - use the following
+            <p>To list all edge pipelines deployed to <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                />, use the following
+                command:<codeblock>curl -X GET http://&lt;SDCe_hostname>:18633/rest/v1/pipelines</codeblock></p>
+            <p>To manage running edge pipelines - including stopping, resetting the offset, and
+                viewing the pipeline status and metrics - use the following
                 commands:<codeblock>curl -X GET http://&lt;SDCe_hostname>:18633/rest/v1/pipeline/&lt;pipelineID>/status
 curl -X POST http://&lt;SDCe_hostname>:18633/rest/v1/pipeline/&lt;pipelineID>/stop
 curl -X POST http://&lt;SDCe_hostname>:18633/rest/v1/pipeline/&lt;pipelineID>/resetOffset

@@ -69,14 +69,8 @@
                         /></dd>
                 </dlentry>
             </dl></p>
-        <p>The following image displays how the edge and <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            pipelines work together to process data from an edge device: <draft-comment
-                author="alisontaylor">update image to have an SDC pipeline sending data to the edge
-                receiving pipeline</draft-comment></p>
-        <p><image href="../Graphics/EdgePipelines.png" id="image_oly_crq_4bb"/></p>
-        <note type="tip">To use edge pipelines, you design and run multiple pipelines that interact
-            together. You can use <ph
+        <note type="tip" product="SDC">To use edge pipelines, you design and run multiple pipelines
+            that interact together. You can use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             map multiple dataflows running across multiple instances of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

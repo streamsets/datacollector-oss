@@ -33,6 +33,10 @@
             command:<codeblock>bin/edge -debug</codeblock></p>
         <p>To start <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
+            and send the log to the console, run the following
+            command:<codeblock>bin/edge -logToConsole</codeblock></p>
+        <p>To start <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
             and an edge pipeline at the same time, run the following command from the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
             home directory:<codeblock>bin/edge -start=&lt;pipelineID></codeblock></p>
