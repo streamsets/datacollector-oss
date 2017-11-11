@@ -80,7 +80,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineManager instanceof StandaloneAndClusterPipelineManager);
 
     PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
-    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false);
+    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false, false);
     //Create previewer
     Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getPipelineId(), "1");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
@@ -122,7 +122,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineStoreTask instanceof SlavePipelineStoreTask);
 
     try {
-      pipelineStoreTask.create("user", "p1", "p1", "description", false);
+      pipelineStoreTask.create("user", "p1", "p1", "description", false, false);
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 

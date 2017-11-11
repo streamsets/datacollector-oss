@@ -41,7 +41,8 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
       String pipelineId,
       String pipelineTitle,
       String description,
-      boolean isRemote
+      boolean isRemote,
+      boolean draft
   ) throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }
@@ -88,9 +89,14 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   }
 
   @Override
-  public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
+  public RuleDefinitions storeRules(
+      String pipelineName,
+      String tag,
+      RuleDefinitions ruleDefinitions,
+      boolean draft
+  )
     throws PipelineException {
-    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
+    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions, draft);
   }
 
   @Override

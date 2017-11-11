@@ -78,6 +78,7 @@ public class ImportPipelineCommand extends BaseCommand {
             "0",
             overwrite,
             autoGeneratePipelineId,
+            false,
             pipelineEnvelopeJson
         );
         System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineTitle );

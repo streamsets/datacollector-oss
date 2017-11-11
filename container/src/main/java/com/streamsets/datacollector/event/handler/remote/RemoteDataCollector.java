@@ -188,7 +188,7 @@ public class RemoteDataCollector implements DataCollector {
     }
     UUID uuid;
     if (!pipelineExists) {
-      uuid = pipelineStore.create(user, name, name, description, true).getUuid();
+      uuid = pipelineStore.create(user, name, name, description, true, false).getUuid();
     } else {
       validateIfRemote(name, rev, "SAVE");
       PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
@@ -199,7 +199,7 @@ public class RemoteDataCollector implements DataCollector {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfiguration);
     pipelineConfiguration = validator.validate();
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
-    pipelineStore.storeRules(name, rev, ruleDefinitions);
+    pipelineStore.storeRules(name, rev, ruleDefinitions, false);
     if (acl != null) { // can be null for old dpm or when DPM jobs have no acl
       aclStoreTask.saveAcl(name, acl);
     }
@@ -217,7 +217,7 @@ public class RemoteDataCollector implements DataCollector {
     // Check for existence of pipeline first
     pipelineStore.getInfo(name);
     ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
-    pipelineStore.storeRules(name, rev, ruleDefinitions);
+    pipelineStore.storeRules(name, rev, ruleDefinitions, false);
   }
 
   @Override

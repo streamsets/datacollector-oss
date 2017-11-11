@@ -152,7 +152,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x", "y"))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
-        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false)).thenReturn(
+        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
@@ -202,8 +202,11 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
         }
         try {
           Mockito.when(pipelineStore.storeRules(
-            Matchers.anyString(), Matchers.anyString(), (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any()))
-            .thenReturn(rules.getRuleDefinitions());
+              Matchers.anyString(),
+              Matchers.anyString(),
+              (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any(),
+              Mockito.anyBoolean()
+          )).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
           LOG.debug("Ignoring exception", e);
         }

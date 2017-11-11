@@ -245,6 +245,7 @@ public class TestFileAclStoreTask {
         pipelineName,
         "label",
         TestCachePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION,
+        false,
         false
     );
   }
@@ -255,6 +256,7 @@ public class TestFileAclStoreTask {
         TestFilePipelineStoreTask.DEFAULT_PIPELINE_NAME,
         "label",
         TestFilePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION,
+        false,
         false
     );
   }

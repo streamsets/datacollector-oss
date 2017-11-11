@@ -136,7 +136,7 @@ public class TestFilePipelineStoreTask {
     try {
       store.init();
       Assert.assertEquals(0, store.getPipelines().size());
-      store.create("foo", "a","label", "A", false);
+      store.create("foo", "a","label", "A", false, false);
       Assert.assertEquals(1, store.getPipelines().size());
       store.save("foo2", "a", "A", "", store.load("a", "0"));
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
@@ -152,8 +152,8 @@ public class TestFilePipelineStoreTask {
   public void testCreateExistingPipeline() throws Exception {
     try {
       store.init();
-      store.create("foo", "a", "label", "A", false);
-      store.create("foo", "a", "label", "A", false);
+      store.create("foo", "a", "label", "A", false, false);
+      store.create("foo", "a", "label", "A", false, false);
     } finally {
       store.stop();
     }
@@ -296,7 +296,7 @@ public class TestFilePipelineStoreTask {
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true, timestamp));
 
-    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions, false);
 
     RuleDefinitions actualRuleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
@@ -346,11 +346,11 @@ public class TestFilePipelineStoreTask {
       1000, true, false, true, timestamp));
 
     //store ruleDefinition1
-    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1, false);
 
     //attempt storing rule definition 2, should fail
     try {
-      store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
+      store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2, false);
       Assert.fail("Expected PipelineStoreException as the rule definition being saved is not the latest copy.");
     } catch (PipelineStoreException e) {
       Assert.assertEquals(e.getErrorCode(), ContainerError.CONTAINER_0205);
@@ -367,7 +367,7 @@ public class TestFilePipelineStoreTask {
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
       1000, true, false, true, timestamp));
 
-    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
+    store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2, false);
 
     RuleDefinitions actualRuleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
@@ -376,7 +376,7 @@ public class TestFilePipelineStoreTask {
   }
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineException {
-    store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, "label", DEFAULT_PIPELINE_DESCRIPTION, false);
+    store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, "label", DEFAULT_PIPELINE_DESCRIPTION, false, false);
   }
 
   @Test
