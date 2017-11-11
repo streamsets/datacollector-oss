@@ -33,14 +33,62 @@
         installed on the edge device. </shortdesc>
     <taskbody>
         <context>
-            <p>
-                <draft-comment author="alisontaylor">Madhu might improve this process, so waiting to
-                    doc it</draft-comment>
-            </p>
+            <note>We recognize that this export process should be easier -  it will be improved in a
+                future release.</note>
         </context>
         <steps>
+            <step id="step1">
+                <cmd>Open the edge pipeline displayed in the pipeline canvas.</cmd>
+            </step>
+            <step id="step2">
+                <cmd>From the <uicontrol>Properties</uicontrol> panel, click the
+                        <uicontrol>More</uicontrol> icon (<image href="../Graphics/icon_MonMore.png"
+                        id="image_n3g_rz5_xt" scale="80"/>) to view the pipeline configuration REST
+                    response data:</cmd>
+                <info><image href="../Graphics/EdgePipelineExportRESTResponse.png" scale="70"
+                        id="image_iwd_trc_vbb"/><p>The browser displays the pipeline configuration
+                        in JSON format.</p></info>
+            </step>
+            <step id="step3">
+                <cmd>In the browser, copy the complete contents of the pipeline configuration and
+                    save it to a text file named <codeph>pipeline.json</codeph>.</cmd>
+            </step>
             <step>
-                <cmd></cmd>
+                <cmd>In the address bar of the browser, type <codeph>?get=info</codeph> after the
+                    pipeline ID.</cmd>
+                <info>For
+                        example:<codeblock>https://localhost:18630/rest/v1/pipeline/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5<b>?get=info</b></codeblock><p>The
+                        browser displays the pipeline information in JSON format.</p></info>
+            </step>
+            <step>
+                <cmd>In the browser, copy the complete contents of the pipeline information and save
+                    it to a text file named <codeph>info.json</codeph>.</cmd>
+            </step>
+            <step>
+                <cmd>On the edge device where <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                    /> is installed, create a folder named with the pipeline ID in the following
+                    directory:</cmd>
+                <info>
+                    <codeblock>&lt;SDCe_home>/data/pipelines</codeblock>
+                    <p>For
+                        example:<codeblock>&lt;SDCe_home>/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd>Copy the <codeph>pipeline.json</codeph> and <codeph>info.json</codeph> files
+                    that you created for the pipeline into this folder.</cmd>
+                <info><p>Now you can start and manage the pipeline on <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                    /> as described in <xref
+                        href="EdgePipelines_ManageSDCe.dita#concept_rk3_2hm_pbb"/>.</p>
+                    <p>If you modify the same pipeline in <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />, view the pipeline configuration REST response data and then copy the
+                        updated data into the existing <codeph>pipeline.json</codeph> in the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                        /> installation. You do not need to update the <codeph>info.json</codeph>
+                        file after you originally create it in the pipeline folder.</p></info>
             </step>
         </steps>
     </taskbody>

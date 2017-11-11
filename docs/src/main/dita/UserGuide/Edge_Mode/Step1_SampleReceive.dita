@@ -39,10 +39,10 @@
             </step>
             <step>
                 <cmd>On the <uicontrol>Error Records</uicontrol> tab, select
-                        <uicontrol>Discard</uicontrol> or <uicontrol>Write to File</uicontrol> for
-                    the error record handling.</cmd>
-                <info>If writing the error records to file, click the <uicontrol>Error Records -
-                        Write to File</uicontrol> tab and configure the required properties.</info>
+                        <uicontrol>Discard</uicontrol>, <uicontrol>Write to File</uicontrol>, or
+                        <uicontrol>Write to MQTT</uicontrol> for the error record handling.</cmd>
+                <info>If writing the error records to file or MQTT, click the appropriate error
+                    records tab and configure the required properties.</info>
             </step>
             <step>
                 <cmd>Configure the remaining pipeline properties as needed.</cmd>

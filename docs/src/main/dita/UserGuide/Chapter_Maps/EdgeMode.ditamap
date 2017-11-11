@@ -23,6 +23,7 @@
             <shortdesc/>
         </topicmeta>
     </topicref>
+        <topicref href="../Edge_Mode/CaseStudy-IoT.dita"/>
         <topicref href="../Edge_Mode/SupportedPlatforms.dita">
             <topicmeta>
                 <shortdesc/>
