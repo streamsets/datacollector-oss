@@ -82,7 +82,7 @@
   </div>
 
   <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageGauges">
-  <div class="col-sm-4 chartPanels" ng-repeat="customStageGauge in customStageGauges" ng-if="!customStageGauge.gaugeKey.startsWith('custom.AggregationProcessor')">
+  <div class="col-sm-4 chartPanels" ng-repeat="customStageGauge in customStageGauges" ng-if="!customStageGauge.gaugeKey.startsWith('custom.Aggregator')">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span>{{customStageGauge.label}}</span>
@@ -101,7 +101,7 @@
 
   <!-- Aggregations -->
   <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageGauges">
-    <div class="col-sm-12 col-md-12 col-lg-12" ng-repeat="customStageGauge in customStageGauges" ng-if="customStageGauge.gaugeKey.startsWith('custom.AggregationProcessor')">
+    <div class="col-sm-12 col-md-12 col-lg-12" ng-repeat="customStageGauge in customStageGauges" ng-if="customStageGauge.gaugeKey.startsWith('custom.Aggregator')">
       <div class="panel panel-default" ng-controller="CustomBarChartController">
         <div class="panel-heading">
           <span>{{chartTitle}}</span>
