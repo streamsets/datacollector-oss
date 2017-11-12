@@ -15,20 +15,29 @@
  */
 package com.streamsets.pipeline.stage.processor.aggregation;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-public class WindowLengthChooserValues extends BaseEnumChooserValues<TimeWindow> {
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
 
-  public WindowLengthChooserValues() {
-    super(
-        TimeWindow.TW_1M,
-        TimeWindow.TW_5M,
-        TimeWindow.TW_10M,
-        TimeWindow.TW_30M,
-        TimeWindow.TW_1H,
-        TimeWindow.TW_6H,
-        TimeWindow.TW_12H,
-        TimeWindow.TW_1D
-    );
+  AGGREGATOR_00("Aggregation names must be unique. Found duplicate names : {}"),
+
+  ;
+
+  private final String msg;
+
+  Errors(String msg) {
+    this.msg = msg;
+  }
+
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }

@@ -36,9 +36,9 @@ public class AggregatorConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "When there are multiple aggregations, name identifies them uniquely",
+      defaultValue = "",
       label = "Name",
-      description = "",
+      description = "When there are multiple aggregations, the names identify them uniquely",
       displayPosition = 5,
       group = "AGGREGATIONS"
   )
