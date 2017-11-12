@@ -23,8 +23,10 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class AggregationConfigBean {
 
@@ -115,7 +117,7 @@ public class AggregationConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "All Aggregators Event",
-      description = "Produce one record for an aggregation config that contains aggregations for all group by values",
+      description = "Produce one event record for all aggregations computed by this processor",
       group = "EVENTS",
       displayPosition = 10
   )
@@ -126,7 +128,7 @@ public class AggregationConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Per Aggregator Events",
-      description = "Produce one record for each of the group by values for an aggregation",
+      description = "Produce one record for each aggregation computed by this processor",
       group = "EVENTS",
       displayPosition = 20
   )
@@ -135,11 +137,31 @@ public class AggregationConfigBean {
   private TimeZone timeZone;
 
   protected List<Stage.ConfigIssue> init(Processor.Context context) {
+    List<Stage.ConfigIssue> configIssues = new ArrayList<>();
+
     this.timeZone = TimeZone.getTimeZone(timeZoneID);
+
+    // validate unique Aggregation names
+    List<String> aggregateConfigNames = new ArrayList<>();
+    aggregatorConfigs.forEach(aggregatorConfig -> {
+      aggregateConfigNames.add(aggregatorConfig.aggregationName);
+    });
+    List<String> duplicates = aggregateConfigNames.stream().distinct().filter(
+        entry -> Collections.frequency(aggregateConfigNames, entry) > 1).collect(
+            Collectors.toList()
+    );
+    if (duplicates.size() > 0) {
+      configIssues.add(context.createConfigIssue(
+          Groups.AGGREGATIONS.name(),
+          "config.aggregatorConfigs",
+          Errors.AGGREGATOR_00,
+          String.join(", ", duplicates)
+      ));
+    }
 
     // TODO validate all configs
 
-    return new ArrayList<>();
+    return configIssues;
   }
 
   public TimeZone getTimeZone() {
