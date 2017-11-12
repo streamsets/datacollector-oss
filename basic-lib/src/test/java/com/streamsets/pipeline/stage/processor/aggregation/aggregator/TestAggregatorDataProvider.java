@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -79,7 +80,7 @@ public class TestAggregatorDataProvider {
     GroupByAggregator groupByAggregator = Mockito.mock(GroupByAggregator.class);
     Mockito.when(groupByAggregator.getName()).thenReturn("groupByAggregator");
     Mockito.when(groupByAggregator.createAggregatorData(Mockito.eq(1L))).thenReturn(Mockito.mock(AggregatorData.class));
-    AggregatorDataProvider provider = new AggregatorDataProvider(1);
+    AggregatorDataProvider provider = new AggregatorDataProvider(1, WindowType.ROLLING);
 
     provider.addAggregator(aggregator);
     provider.addAggregator(groupByAggregator);
@@ -90,7 +91,7 @@ public class TestAggregatorDataProvider {
   @Test(expected = IllegalStateException.class)
   public void testProviderAddAggregatorFail() {
     Aggregator aggregator = Mockito.mock(Aggregator.class);
-    AggregatorDataProvider provider = new AggregatorDataProvider(1);
+    AggregatorDataProvider provider = new AggregatorDataProvider(1, WindowType.ROLLING);
 
     provider.start(1L);
     provider.addAggregator(aggregator);
@@ -99,7 +100,7 @@ public class TestAggregatorDataProvider {
   @Test
   public void testStart() {
     CountAggregator aggregator = new CountAggregator("count");
-    AggregatorDataProvider provider = new AggregatorDataProvider(2);
+    AggregatorDataProvider provider = new AggregatorDataProvider(2, WindowType.ROLLING);
     provider = Mockito.spy(provider);
 
     aggregator.setDataProvider(provider);
@@ -127,7 +128,7 @@ public class TestAggregatorDataProvider {
   @Test
   public void testRoll() {
     CountAggregator aggregator = new CountAggregator("count");
-    AggregatorDataProvider provider = new AggregatorDataProvider(2);
+    AggregatorDataProvider provider = new AggregatorDataProvider(2, WindowType.ROLLING);
     provider = Mockito.spy(provider);
 
     aggregator.setDataProvider(provider);
@@ -167,7 +168,7 @@ public class TestAggregatorDataProvider {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetDataTopAggregatorFail() {
-    AggregatorDataProvider provider = new AggregatorDataProvider(1);
+    AggregatorDataProvider provider = new AggregatorDataProvider(1, WindowType.ROLLING);
     provider.start(1L);
 
     CountAggregator aggregator = new CountAggregator("count");
@@ -176,7 +177,7 @@ public class TestAggregatorDataProvider {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetDataGroupByElementAggregatorFail() {
-    AggregatorDataProvider provider = new AggregatorDataProvider(1);
+    AggregatorDataProvider provider = new AggregatorDataProvider(1, WindowType.ROLLING);
     provider.start(1L);
 
     CountAggregator aggregator = new CountAggregator("count");
@@ -191,7 +192,7 @@ public class TestAggregatorDataProvider {
     GroupByAggregator groupByAggregator = Mockito.mock(GroupByAggregator.class);
     Mockito.when(groupByAggregator.getName()).thenReturn("groupByAggregator");
     Mockito.when(groupByAggregator.createAggregatorData(Mockito.eq(1L))).thenReturn(Mockito.mock(AggregatorData.class));
-    AggregatorDataProvider provider = new AggregatorDataProvider(1);
+    AggregatorDataProvider provider = new AggregatorDataProvider(1, WindowType.ROLLING);
 
     provider.addAggregator(aggregator);
     provider.addAggregator(groupByAggregator);

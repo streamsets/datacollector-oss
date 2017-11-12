@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -69,8 +70,8 @@ public class Aggregators {
    *
    * @param windowsToKeep datawindows to remember, including the active one.
    */
-  public Aggregators(int windowsToKeep) {
-    dataProvider = new AggregatorDataProvider(windowsToKeep);
+  public Aggregators(int windowsToKeep, WindowType windowType) {
+    dataProvider = new AggregatorDataProvider(windowsToKeep, windowType);
   }
 
   /**

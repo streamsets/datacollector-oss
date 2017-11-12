@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TestAggregators {
 
   @Test
   public void testAggregators() {
-    Aggregators aggregators = new Aggregators(2);
+    Aggregators aggregators = new Aggregators(2, WindowType.ROLLING);
     CountAggregator count = aggregators.createSimple("count", CountAggregator.class);
     GroupByAggregator<CountAggregator, Long> groupBy =
         aggregators.createGroupBy("gbCount", CountAggregator.class);

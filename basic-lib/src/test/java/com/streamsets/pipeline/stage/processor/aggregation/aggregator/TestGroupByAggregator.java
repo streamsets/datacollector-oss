@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,11 +26,11 @@ public class TestGroupByAggregator {
 
   @Test
   public void testAggregator() {
-    Aggregators aggregators = new Aggregators(2);
+    Aggregators aggregators = new Aggregators(2, WindowType.ROLLING);
     GroupByAggregator aggregator = aggregators.createGroupBy("g", CountAggregator.class);
     aggregators.start(1);
 
-    Aggregators aggregatorsA = new Aggregators(2);
+    Aggregators aggregatorsA = new Aggregators(2, WindowType.ROLLING);
     GroupByAggregator aggregatorA = aggregatorsA.createGroupBy("g", CountAggregator.class);
     aggregatorsA.start(1);
 
