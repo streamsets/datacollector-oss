@@ -47,7 +47,7 @@ public class TestAggregationEvaluator {
     config.aggregationFunction = AggregationFunction.COUNT;
     config.aggregationExpression = "1";
 
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
 
     AggregationEvaluator
         evaluator = new AggregationEvaluator(context, WindowType.ROLLING, "label", config, aggregators);

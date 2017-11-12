@@ -70,7 +70,7 @@ public class AggregationEvaluators {
     this.config = config;
     this.queue = queue;
     evaluators = new ArrayList<>();
-    aggregators = new Aggregators(config.getNumberOfTimeWindows());
+    aggregators = new Aggregators(config.getNumberOfTimeWindows(), config.windowType);
     executor = new SafeScheduledExecutorService(1, context.getStageInfo().getInstanceName() + "_" + config.windowType);
   }
 
@@ -145,37 +145,32 @@ public class AggregationEvaluators {
       long dataWindowTimeMillis = allAggregatorsData.get(0).getTime();
       if (config.allAggregatorsEvent) {
         String recordSrcId = sdcId + "::" + pipelineId + "::" + dataWindowTimeMillis;
-        EventRecord windowRollEvent = context.createEventRecord(config.windowType + ALL_AGGREGATORS_EVENT, 1, recordSrcId);
-        JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
-        try {
-          String jsonData = json.writeValueAsString(allAggregatorsData);
-          windowRollEvent.set(Field.create(jsonData));
-          queue.add(windowRollEvent);
-        } catch (IOException ex) {
-          context.toError(windowRollEvent, ex);
-        }
+        createEventRecord(allAggregatorsData, config.windowType + ALL_AGGREGATORS_EVENT, recordSrcId);
       }
       if (config.perAggregatorEvents) {
         for (AggregatorData aggregatorData : allAggregatorsData) {
           String recordSrcId = sdcId + "::" + pipelineId + "::" + aggregatorData.getName() + "::" + dataWindowTimeMillis;
-          EventRecord windowRollEvent = context.createEventRecord(config.windowType + SINGLE_AGGREGATOR_EVENT, 1, recordSrcId);
-          JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
-          try {
-            String jsonData = json.writeValueAsString(aggregatorData);
-            windowRollEvent.set(Field.create(jsonData));
-            queue.add(windowRollEvent);
-          } catch (IOException ex) {
-            context.toError(windowRollEvent, ex);
-          }
+          createEventRecord(allAggregatorsData, config.windowType + SINGLE_AGGREGATOR_EVENT, recordSrcId);
         }
       }
     }
   }
 
-
   public void evaluate(Record record) throws StageException {
     for (AggregationEvaluator evaluator : evaluators) {
       evaluator.evaluate(record);
+    }
+  }
+
+  private void createEventRecord(List<AggregatorData> allAggregatorsData, String eventType, String recordSrcId) {
+    EventRecord windowRollEvent = context.createEventRecord(eventType, 1, recordSrcId);
+    JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+    try {
+      String jsonData = json.writeValueAsString(allAggregatorsData);
+      windowRollEvent.set(Field.create(jsonData));
+      queue.add(windowRollEvent);
+    } catch (IOException ex) {
+      context.toError(windowRollEvent, ex);
     }
   }
 

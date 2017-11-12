@@ -40,7 +40,7 @@ public class TestAggregatorMetric {
     config.aggregationTitle = "title";
     config.aggregationFunction = AggregationFunction.COUNT;
 
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     CountAggregator aggregator = aggregators.createSimple("count", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 
@@ -83,7 +83,7 @@ public class TestAggregatorMetric {
     config.aggregationFunction = AggregationFunction.COUNT;
     config.groupBy = true;
 
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     GroupByAggregator aggregator = aggregators.createGroupBy("gb", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 

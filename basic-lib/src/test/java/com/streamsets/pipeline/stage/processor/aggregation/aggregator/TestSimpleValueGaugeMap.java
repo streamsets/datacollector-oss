@@ -27,7 +27,7 @@ public class TestSimpleValueGaugeMap {
 
   @Test
   public void testMapRolling() {
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     CountAggregator aggregator = aggregators.createSimple("count", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 
@@ -77,7 +77,7 @@ public class TestSimpleValueGaugeMap {
 
   @Test
   public void testMapSliding() {
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     CountAggregator aggregator = aggregators.createSimple("count", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 

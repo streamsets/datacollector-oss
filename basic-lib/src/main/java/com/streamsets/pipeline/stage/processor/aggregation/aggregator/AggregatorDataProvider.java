@@ -19,9 +19,11 @@ package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +113,7 @@ public class AggregatorDataProvider {
     }
   }
 
+  private final WindowType windowType;
   private final Set<Aggregator> aggregators;
   private volatile Map<Aggregator, AggregatorData> data;
   private EvictingQueue<DataWindow> dataWindowQueue;
@@ -124,11 +127,12 @@ public class AggregatorDataProvider {
    *
    * @param windowsToKeep number of data windows to keep in memory, including the live one.
    */
-  public AggregatorDataProvider(int windowsToKeep) {
+  public AggregatorDataProvider(int windowsToKeep, WindowType windowType) {
     Utils.checkArgument(windowsToKeep > 0, "windows to keep must be greater than zero");
     aggregators = new HashSet<>();
     dataWindowQueue = EvictingQueue.create(windowsToKeep);
     dataWindowList = Collections.emptyList();
+    this.windowType = windowType;
   }
 
   @VisibleForTesting
@@ -170,7 +174,9 @@ public class AggregatorDataProvider {
     for(Map.Entry<Aggregator, AggregatorData> e : data.entrySet()) {
       e.getValue().setTime(currentTimeMillis);
     }
-    return data;
+    Map<Aggregator, AggregatorData> result = data;
+    result = aggregateDataWindows(result);
+    return result;
   }
 
   /**
@@ -183,12 +189,16 @@ public class AggregatorDataProvider {
     Utils.checkState(started, "Not started");
     Utils.checkState(!stopped, "Already stopped");
 
-    Map<Aggregator, AggregatorData> oldData = data;
+    Map<Aggregator, AggregatorData> result = data;
     Map<Aggregator, AggregatorData> newData = new ConcurrentHashMap<>();
     for (Aggregator aggregator : aggregators) {
       newData.put(aggregator, aggregator.createAggregatorData(newDataWindowEndTimeMillis));
     }
     data = newData;
+
+    Map<Aggregator, AggregatorData> oldData = result;
+    // In case of sliding window, aggregate the data windows to get the result
+    result = aggregateDataWindows(result);
 
     if (currentDataWindow != null) {
       currentDataWindow.setDataAndClose(oldData);
@@ -199,7 +209,7 @@ public class AggregatorDataProvider {
       dataWindowList = new ArrayList<>(dataWindowQueue);
     }
     currentDataWindow = newDataWindow;
-    return oldData;
+    return result;
   }
 
   /**
@@ -238,6 +248,22 @@ public class AggregatorDataProvider {
         Utils.formatL("Aggregator {} is not registered to provider", aggregator)
     );
     return data.get(aggregator);
+  }
+
+  private Map<Aggregator, AggregatorData> aggregateDataWindows(Map<Aggregator, AggregatorData> result) {
+    int windowSize = dataWindowList.size();
+    if (WindowType.SLIDING == windowType && windowSize > 0) {
+      result = new HashMap<>();
+      List<DataWindow> oldDataWindowList = new ArrayList<>(dataWindowList);
+      for (Aggregator aggregator : aggregators) {
+        AggregatorData aggregatorData = aggregator.createAggregatorData(oldDataWindowList.get(windowSize-1).getEndTimeMillis());
+        for (DataWindow dataWindow : oldDataWindowList) {
+          aggregatorData.aggregate(dataWindow.getData(aggregator).getAggregatable());
+        }
+        result.put(aggregator, aggregatorData);
+      }
+    }
+    return result;
   }
 
 }

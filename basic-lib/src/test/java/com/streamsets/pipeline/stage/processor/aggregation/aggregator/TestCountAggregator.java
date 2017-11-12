@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,11 +23,11 @@ public class TestCountAggregator {
 
   @Test
   public void testAggregator() {
-    Aggregators aggregators = new Aggregators(2);
+    Aggregators aggregators = new Aggregators(2, WindowType.ROLLING);
     CountAggregator aggregator = aggregators.createSimple("a", CountAggregator.class);
     aggregators.start(1);
 
-    Aggregators aggregatorsA = new Aggregators(2);
+    Aggregators aggregatorsA = new Aggregators(2, WindowType.ROLLING);
     CountAggregator aggregatorA = aggregatorsA.createSimple("a", CountAggregator.class);
     aggregatorsA.start(1);
 

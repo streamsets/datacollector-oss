@@ -28,7 +28,7 @@ public class TestGroupByValueGaugeList {
 
   @Test
   public void testListRolling() {
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     GroupByAggregator<CountAggregator, Long> aggregator = aggregators.createGroupBy("gb", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 
@@ -71,7 +71,7 @@ public class TestGroupByValueGaugeList {
 
   @Test
   public void testListSliding() {
-    Aggregators aggregators = new Aggregators(3);
+    Aggregators aggregators = new Aggregators(3, WindowType.ROLLING);
     GroupByAggregator<CountAggregator, Long> aggregator = aggregators.createGroupBy("gb", CountAggregator.class);
     AggregatorDataProvider provider = aggregators.getDataProvider();
 

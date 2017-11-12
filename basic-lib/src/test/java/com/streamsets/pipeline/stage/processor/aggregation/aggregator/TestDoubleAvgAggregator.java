@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
+import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,11 +23,11 @@ public class TestDoubleAvgAggregator {
 
   @Test
   public void testAggregator() {
-    Aggregators aggregators = new Aggregators(2);
+    Aggregators aggregators = new Aggregators(2, WindowType.ROLLING);
     DoubleAvgAggregator aggregator = aggregators.createSimple("a", DoubleAvgAggregator.class);
     aggregators.start(1);
 
-    Aggregators aggregatorsA = new Aggregators(2);
+    Aggregators aggregatorsA = new Aggregators(2, WindowType.ROLLING);
     DoubleAvgAggregator aggregatorA = aggregatorsA.createSimple("a", DoubleAvgAggregator.class);
     aggregatorsA.start(1);
 
