@@ -1182,7 +1182,7 @@ angular
           return c.name === 'statsAggregatorStage';
         });
         statsAggregatorStageConfig.value = "streamsets-datacollector-basic-lib::" +
-          "com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
+                 "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
       }
 
       //Determine edges from input lanes and output lanes
