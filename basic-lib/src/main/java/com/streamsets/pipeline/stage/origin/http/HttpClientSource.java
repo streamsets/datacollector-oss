@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.Errors;
@@ -67,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
@@ -82,10 +85,15 @@ public class HttpClientSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
 
+  private static final Set<PaginationMode> LINK_PAGINATION = ImmutableSet.of(
+      PaginationMode.LINK_HEADER,
+      PaginationMode.LINK_FIELD
+  );
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
   private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
   private static final String HEADER_CONFIG_NAME = "headers";
+  private static final String STOP_CONFIG_NAME = "stopCondition";
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String TLS_CONFIG_PREFIX = "conf.tlsConfig.";
   private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
@@ -110,10 +118,12 @@ public class HttpClientSource extends BaseSource {
   private ELVars resourceVars;
   private ELVars bodyVars;
   private ELVars headerVars;
+  private ELVars stopVars;
 
   private ELEval resourceEval;
   private ELEval bodyEval;
   private ELEval headerEval;
+  private ELEval stopEval;
 
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
@@ -164,7 +174,8 @@ public class HttpClientSource extends BaseSource {
     headerVars = getContext().createELVars();
     headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
 
-
+    stopVars = getContext().createELVars();
+    stopEval = getContext().createELEval(STOP_CONFIG_NAME);
 
     next = null;
     haveMorePages = false;
@@ -332,7 +343,7 @@ public class HttpClientSource extends BaseSource {
    */
   private String resolveNextPageUrl(String sourceOffset) throws ELEvalException {
     String url;
-    if (conf.pagination.mode == PaginationMode.LINK_HEADER && next != null) {
+    if (LINK_PAGINATION.contains(conf.pagination.mode) && next != null) {
       url = next.getUri().toString();
     } else if (conf.pagination.mode == PaginationMode.BY_OFFSET || conf.pagination.mode == PaginationMode.BY_PAGE) {
       if (sourceOffset != null) {
@@ -575,6 +586,18 @@ public class HttpClientSource extends BaseSource {
           break;
         }
 
+        // LINK_FIELD pagination
+        if (conf.pagination.mode == PaginationMode.LINK_FIELD) {
+          // evaluate stopping condition
+          RecordEL.setRecordInContext(stopVars, record);
+          haveMorePages = !stopEval.eval(stopVars, conf.pagination.stopCondition, Boolean.class);
+          if (haveMorePages) {
+            next = Link.fromUri(record.get(conf.pagination.nextPageFieldPath).getValueAsString()).build();
+          } else {
+            next = null;
+          }
+        }
+
         if (conf.pagination.mode != PaginationMode.NONE && record.has(conf.pagination.resultFieldPath)) {
           subRecordCount = parsePaginatedResult(batchMaker, sourceOffset.toString(), record);
           recordCount += subRecordCount;
@@ -706,7 +729,9 @@ public class HttpClientSource extends BaseSource {
       batchMaker.addRecord(r);
       ++numSubRecords;
     }
-    haveMorePages = numSubRecords > 0;
+    if (conf.pagination.mode != PaginationMode.LINK_FIELD) {
+      haveMorePages = numSubRecords > 0;
+    }
     return numSubRecords;
   }
 

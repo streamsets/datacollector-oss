@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.http;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,33 @@ public class PaginationConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Next Page Link Field",
+      description = "Field path in the response containing a URL to the next page.",
+      group = "#0",
+      dependsOn = "mode",
+      triggeredByValue = "LINK_FIELD",
+      displayPosition = 30
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String nextPageFieldPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Stop Condition",
+      description = "Expression that evaluates to true when there are no more pages to process.",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = { RecordEL.class },
+      group = "#0",
+      dependsOn = "mode",
+      triggeredByValue = "LINK_FIELD",
+      displayPosition = 35
+  )
+  public String stopCondition;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Initial Page/Offset",
       description = "Value of ${startAt} variable the first time the pipeline is run or Reset Origin is invoked",
@@ -59,7 +87,7 @@ public class PaginationConfigBean {
       group = "#0",
       displayPosition = 40,
       dependsOn = "mode",
-      triggeredByValue = { "LINK_HEADER", "BY_PAGE", "BY_OFFSET" }
+      triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )
   @FieldSelectorModel(singleValued = true)
   public String resultFieldPath;
@@ -73,7 +101,7 @@ public class PaginationConfigBean {
       group = "#0",
       displayPosition = 50,
       dependsOn = "mode",
-      triggeredByValue = { "LINK_HEADER", "BY_PAGE", "BY_OFFSET" }
+      triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )
   public boolean keepAllFields;
 
@@ -87,7 +115,7 @@ public class PaginationConfigBean {
       group = "#0",
       displayPosition = 50,
       dependsOn = "mode",
-      triggeredByValue = { "LINK_HEADER", "BY_PAGE", "BY_OFFSET" }
+      triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )
   public long rateLimit = 2000;
 }

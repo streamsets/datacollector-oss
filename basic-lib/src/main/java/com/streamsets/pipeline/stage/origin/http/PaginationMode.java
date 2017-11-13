@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.Label;
 public enum PaginationMode implements Label {
   NONE("None"),
   LINK_HEADER("Link HTTP Header"),
+  LINK_FIELD("Link in Response Field"),
   BY_PAGE("By Page Number"),
   BY_OFFSET("By Offset Number")
   ;

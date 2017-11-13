@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -50,12 +52,15 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.streamsets.pipeline.stage.origin.http.PaginationMode.BY_OFFSET;
 import static com.streamsets.pipeline.stage.origin.http.PaginationMode.BY_PAGE;
+import static com.streamsets.pipeline.stage.origin.http.PaginationMode.LINK_FIELD;
 import static com.streamsets.pipeline.stage.origin.http.PaginationMode.LINK_HEADER;
 import static com.streamsets.testing.ParametrizedUtils.crossProduct;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +76,7 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
     return crossProduct(
         new Integer[]{1, 3},
         new Integer[]{2, 4},
-        new Object[]{LINK_HEADER, BY_OFFSET, BY_PAGE},
+        new Object[]{LINK_HEADER, LINK_FIELD, BY_OFFSET, BY_PAGE},
         new Boolean[]{false, true}
     );
   }
@@ -129,7 +134,12 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
     }
 
     private String getRows(int pageNum, int limit, PaginationMode mode) {
-      StringBuilder sb = new StringBuilder("{\"metadata\":\"some metadata\",\"results\": [");
+      Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+      Map<String, Object> envelope = new HashMap<>();
+      envelope.put("metadata", "some metadata");
+      if (pageNum * limit <= rows.size()) {
+        envelope.put("next", uri.getBaseUri() + "paging?pageNum=" + (pageNum + 1) + "&limit=" + limit);
+      }
 
       // 1 is first page
       int startOffset;
@@ -140,17 +150,18 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
         startOffset = Math.min(pageNum, rows.size());
       }
 
+      List<Map<String, String>> response = new ArrayList<>();
+
       for (int r = startOffset; r < Math.min(startOffset + limit, rows.size()); r++) {
-        sb.append(rows.get(r)).append(",");
+        Map<String, String> row = new HashMap<>();
+        row.put("row", String.valueOf(r+1));
+        response.add(row);
       }
 
-      int lastComma = sb.lastIndexOf(",");
-      if (lastComma > 29) { // need to skip the comma after "some metadata",
-        sb.deleteCharAt(lastComma);
-      }
-      sb.append("]}");
-      LOG.debug(sb.toString());
-      return sb.toString();
+      envelope.put("results", response);
+      String json = gson.toJson(envelope);
+      LOG.info("JSON: {}", json);
+      return json;
     }
   }
 
@@ -236,6 +247,8 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
     conf.pagination.resultFieldPath = "/results";
     conf.pagination.rateLimit = 0;
     conf.pagination.keepAllFields = keepAllFields;
+    conf.pagination.nextPageFieldPath = "/next";
+    conf.pagination.stopCondition = "${!record:exists('/next')}";
     return conf;
   }
 }
