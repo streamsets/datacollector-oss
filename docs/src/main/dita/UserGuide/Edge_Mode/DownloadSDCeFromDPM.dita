@@ -38,7 +38,7 @@
                 runs a remote pipeline instance on any <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                 /> with all listed job labels. <p>For more information, see <xref
-                        href="../../dpm/index.html#UserGuide/DataCollectorEdge/DataCollectorEdge_title.html%23concept_u2x_dy3_qbb"
+                        href="/docs/index.html#UserGuide/DataCollectorEdge/DataCollectorEdge_title.html%23concept_u2x_dy3_qbb"
                         format="html" scope="external">Edge Data Collectors</xref>.</p></note>
         </context>
         <steps>
