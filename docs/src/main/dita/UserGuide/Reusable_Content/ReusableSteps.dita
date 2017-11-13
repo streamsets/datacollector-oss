@@ -5313,9 +5313,9 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step id="CSDInstallRestart">
                 <cmd>Use one of the following commands to restart Cloudera Manager Server:</cmd>
-                <info><p>For Ubuntu 14.04, CentOS 6, or RedHat Enterprise Linux 6:
+                <info><p>For Ubuntu 14.04, CentOS 6, or Red Hat Enterprise Linux 6:
                         <codeblock>service cloudera-scm-server restart</codeblock></p>For Ubuntu
-                    16.04, CentOS 7, or RedHat Enterprise Linux 7:
+                    16.04, CentOS 7, or Red Hat Enterprise Linux 7:
                     <codeblock>systemctl restart cloudera-scm-server</codeblock></info>
             </step>
             <step id="CSDInstallRestartService">
@@ -5365,7 +5365,8 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step id="MongoDBEnableSSL_step2">
                 <cmd>Define the following options in the SDC_JAVA_OPTS environment variable in the
-                    Data Collector environment configuration file:</cmd>
+                    Data Collector environment configuration file located in the
+                        <codeph>$SDC_DIST/libexec</codeph> directory:</cmd>
                 <choices id="choices_vwy_pg2_ww">
                     <choice><codeph>javax.net.ssl.trustStore</codeph> - path to truststore
                         file</choice>
@@ -5396,16 +5397,18 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                 </cmd>
             </step>
             <step id="Cluster-CheckpointStorage">
-                <cmd>To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                <cmd>To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <filepath>/user/$SDC_USER</filepath>.</cmd>
-                <info id="Cluster-info-SDCUSER">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </info>
-                <info id="Cluster-info-SDCUser-Example">For example, say SDC_USER is defined as
-                        <filepath>sdc</filepath> and the cluster does not use Kerberos. Then you
-                    might use the following commands to create the directory and configure the
-                    necessary write
+                <info id="Cluster-info-SDCUSER">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <xref
+                        href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v"/>. </info>
+                <info id="Cluster-info-SDCUser-Example">For example, say the user environment
+                    variable is defined as <filepath>sdc</filepath> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
                     permissions:<codeblock id="Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
             </step>
@@ -5416,8 +5419,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
                 </cmd>
             </step>
             <step id="Cluster-CheckpointStorage-Mesos">
-                <cmd>To enable checkpoint metadata storage, grant $SDC_USER write permission on
-                        <filepath>/user/$SDC_USER</filepath>.</cmd>
+                <cmd>To enable checkpoint metadata storage, grant the user defined in the user
+                    environment variable write permission on
+                    <filepath>/user/$SDC_USER</filepath>.</cmd>
                 <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUSER"/>
                 <info>For example, say $SDC_USER is defined as <filepath>sdc</filepath>. Then you
                     might use the following commands to create the directory and configure the
@@ -5462,7 +5466,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
                 </cmd>
             </step>
             <step id="ClusterBatch-SDCUser">
-                <cmd>Grant the user defined in the SDC_USER environment variable write permission on
+                <cmd>Grant the user defined in the user environment variable write permission on
                         <filepath>/user/$SDC_USER</filepath>.</cmd>
                 <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUSER"/>
                 <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUser-Example"/>

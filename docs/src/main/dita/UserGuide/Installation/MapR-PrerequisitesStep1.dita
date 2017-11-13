@@ -50,7 +50,4 @@
                 conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
         </ol>
     </conbody>
-    <related-links>
-        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
-    </related-links>
 </concept>

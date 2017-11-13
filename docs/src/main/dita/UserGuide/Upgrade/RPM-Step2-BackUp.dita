@@ -31,8 +31,15 @@
                         <codeph>/var/lib/sdc</codeph>.</li>
                 <li>Resource directory defined in the SDC_RESOURCES environment variable. Default is
                         <codeph>/var/lib/sdc-resources</codeph>.</li>
-                <li>Environment configuration file,
-                    <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>.</li>
+                <li>Environment configuration file used by your operating system:<ul
+                        id="ul_z4r_t5w_5bb">
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                            />, open the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file.</li>
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                            />, open the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file.</li>
+                    </ul></li>
             </ul></p>
         <p>For example, if you are upgrading version 2.7.0.0, copy the Data Collector data directory
             and rename it as follows: <codeph>/var/lib/sdc2700</codeph>. Create a backup of the

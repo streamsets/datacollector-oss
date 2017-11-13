@@ -19,11 +19,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bt1_zcp_kq">
     <title>Full Installation and Launch (Manual Start)</title>
-    <shortdesc>To install the full <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
-        start it manually, download the full <ph
+    <shortdesc>You can install the full <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        tarball. </shortdesc>
+        tarball and start it manually on all supported operating systems.</shortdesc>
     <taskbody>
         <context>
             <p>When you start <ph

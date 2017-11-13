@@ -38,11 +38,6 @@
                 <dt>Tarball or RPM installation</dt>
                 <dd>Define the garbage collector in the SDC_JAVA8_OPTS environment variable. </dd>
                 <dd>
-                    <p
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
-                    />
-                </dd>
-                <dd>
                     <p>For example, the default garbage collector is defined as follows:</p>
                     <codeblock>export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</uicontrol>"}</codeblock>
                     <p>To use the G1 garbage collector, set the option as follows: </p>
@@ -71,11 +66,6 @@
                     <dd>Set the SDC_GC_LOGGING environment variable to false in the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> environment configuration file.</dd>
-                    <dd>
-                        <p
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
-                        />
-                    </dd>
                     <dd>For example:</dd>
                     <dd>
                         <codeblock>export SDC_GC_LOGGING=false</codeblock>

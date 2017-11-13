@@ -46,7 +46,6 @@
         <dt>Tarball or RPM installation</dt>
         <dd>
           <p>Define the heap size in the SDC_JAVA_OPTS environment variable.</p>
-          <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>
           <p>For example, to double the heap size, change the following default settings in the
             environment configuration
             file:<codeblock>export SDC_JAVA_OPTS="<uicontrol>-Xmx1024m -Xms1024m</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>

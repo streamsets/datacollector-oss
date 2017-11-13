@@ -30,10 +30,13 @@
       <ul id="ul_vmp_l3h_1t">
         <li><codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> - Used when you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          manually from the command line. </li>
+          manually from the command line or when you start Data Collector as a service on operating
+          systems that use the systemd init system - including <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"/>. </li>
         <li><codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> - Used when you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-          service.</li>
+          service on operating systems that use the SysV init system - including <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"/>.</li>
       </ul>
     </p>
     <p>Use a text editor to edit the appropriate environment configuration file. Some of the

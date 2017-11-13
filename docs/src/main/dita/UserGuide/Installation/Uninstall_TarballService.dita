@@ -38,8 +38,12 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />:</cmd>
                 <choices id="choices_hwp_k2c_rx">
-                    <choice>To use the command line, use the following
-                        command:<codeblock>service sdc stop</codeblock></choice>
+                    <choice>To use the command line, use the requred command for your operating
+                            system.<p>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
+                            />, use: <codeph>service sdc stop</codeph></p><p>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
+                            />, use: <codeph>systemctl stop sdc</codeph></p></choice>
                     <choice>To use the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> UI, click <menucascade>
@@ -53,9 +57,9 @@
                 <cmd>Remove the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> directories.</cmd>
-                <info>For example, if you used the default directories, run the following command to
-                    remove the
-                    directories:<codeblock>rm -rf /etc/init.d/sdc  /etc/sdc /var/log/sdc /var/lib/sdc /var/lib/sdc-resources</codeblock></info>
+                <info>For example, if you used the default directories on Red Hat Enterprise Linux
+                    6, run the following command to remove the directories:
+                    <codeblock>rm -rf /etc/init.d/sdc  /etc/sdc /var/log/sdc /var/lib/sdc /var/lib/sdc-resources</codeblock></info>
             </step>
             <step>
                 <cmd>Remove the directory where you extracted the tarball.</cmd>

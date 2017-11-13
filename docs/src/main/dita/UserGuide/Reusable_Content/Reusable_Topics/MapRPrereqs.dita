@@ -27,14 +27,12 @@
                 <li id="MapR_loginAuth">If the MapR cluster uses username/password login
                     authentication, uncomment the following line in the <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
-                    configuration file:
-                        <codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</codeblock><p>If
-                        you start <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> as a service, modify the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>
-                        file. If you start <ph
-                            conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                        manually, modify the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file.
-                    </p></li>
+                    configuration file located in the <codeph>$SDC_DIST/libexec</codeph> directory:
+                        <codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</codeblock><p>Modify
+                        the <xref
+                            href="../../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                            >environment configuration file</xref> used by your installation
+                        type.</p></li>
             </ol>
         </p>
         <draft-comment author="alisontaylor">These rows and steps used in the MapR Prereqs in

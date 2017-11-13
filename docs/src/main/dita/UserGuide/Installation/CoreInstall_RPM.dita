@@ -19,7 +19,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_ijj_cvr_kv">
     <title>Installing the Core RPM Package</title>
-    <shortdesc>To install the core version of <ph
+    <shortdesc>You can install the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> RPM
+        package and start it as a service on CentOS or Red Hat Enterprise Linux. To install the core
+        version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
         download the RPM package. After you perform the core installation and launch, install
         individual stage libraries as needed. </shortdesc>
@@ -43,18 +46,28 @@
             <step>
                 <cmd>Use the following URL to download the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> RPM package from the StreamSets website: <xref
+                    /> RPM package for your operating system from the StreamSets website: <xref
                         href="https://streamsets.com/opensource" format="html" scope="external"
-                    />.</cmd>
+                    />:</cmd>
+                <choices id="choices_s4c_cnt_5bb">
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                        />,
+                        download:<codeblock>streamsets-datacollector-&lt;version>-all-el6-rpms.tgz</codeblock></choice>
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                        />,
+                        download:<codeblock>streamsets-datacollector-&lt;version>-all-el7-rpms.tgz</codeblock></choice>
+                </choices>
             </step>
             <step>
                 <cmd>Use the following command to extract the file to the desired location:</cmd>
                 <info>
-                    <codeblock>tar -xzf streamsets-datacollector-&lt;version>-all-rpms.tgz</codeblock>
+                    <codeblock>tar xf streamsets-datacollector-&lt;version>-all-&lt;operating_system>-rpms.tgz</codeblock>
                     <p>For example, to extract version <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
-                        />, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-all-rpms.tgz</codeblock></p>
+                        /> on CentOS 7, use the following
+                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-all-el7-rpms.tgz</codeblock></p>
                 </info>
             </step>
             <step>
@@ -72,10 +85,15 @@
             <step>
                 <cmd>To start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service, use the following command:</cmd>
-                <info>
-                    <codeblock>service sdc start</codeblock>
-                </info>
+                    /> as a service, use the required command for your operating system:</cmd>
+                <choices id="choices_t32_52t_5bb">
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                        />, use:<codeblock>service sdc start</codeblock></choice>
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                        />, use:<codeblock>systemctl start sdc</codeblock></choice>
+                </choices>
             </step>
             <step>
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> UI, enter the following URL

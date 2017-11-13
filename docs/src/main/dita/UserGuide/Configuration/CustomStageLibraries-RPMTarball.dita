@@ -52,8 +52,9 @@
             <step>
                 <cmd>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment configuration file, add the USER_LIBRARIES_DIR environment
-                    variable and point it to the custom stage library directory.</cmd>
+                    /> environment configuration file located in the
+                        <codeph>$SDC_DIST/libexec</codeph> directory, add the USER_LIBRARIES_DIR
+                    environment variable and point it to the custom stage library directory.</cmd>
                 <info>
                     <p
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>

@@ -18,19 +18,26 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pnf_344_1r">
-    <title>Installing from the Tarball</title>
-    <shortdesc>This procedure walks through setting the default directories and the default system
-        user and group used to start <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service.</shortdesc>
+    <title>Installing from the Tarball for Systems Using SysV Init</title>
+    <shortdesc>You can install the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        tarball and start it as a service for supported operating systems that use the SysV init
+        system - including <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"/>. </shortdesc>
     <taskbody>
-        <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
-                        Collector<indexterm>service start</indexterm></indexterm>Before you install,
-                you can alternatively use the <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath>
-                file to modify the environment variables that define directories and the system user
-                and group.</p>
-            <p>Installing the full Data Collector as a service requires sudo privileges on the root
-                directory. </p></context>
+        <context>
+            <p><indexterm>installation<indexterm>service
+                    start</indexterm></indexterm><indexterm>launch Data Collector<indexterm>service
+                        start</indexterm></indexterm>For tarball installation instructions for
+                operating systems that use the systemd init system, see <xref
+                    href="Installing_the_DC-ServiceTarball_EL7.dita#task_kdc_vht_5bb"/>.</p>
+            <p>This procedure walks through setting the default directories and the default system
+                user and group used to start <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service.</p><p>Before you install, you can alternatively use the
+                    <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath> file to modify the
+                environment variables that define directories and the system user and group.</p>
+            <p>Installing the full Data Collector as a service requires root privileges.  </p></context>
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd>Use the following URL to download the <ph
@@ -43,11 +50,11 @@
                 <cmd>Use the following command to extract the tarball to the desired location,
                     typically <codeph>/opt/local/</codeph>:</cmd>
                 <info>
-                    <codeblock>tar -xzf streamsets-datacollector-all-&lt;version>.tgz</codeblock>
+                    <codeblock>tar xf streamsets-datacollector-all-&lt;version>.tgz -C &lt;extraction directory></codeblock>
                     <p>For example, to extract version <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
                         />, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-all-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>.tgz</codeblock></p>
+                        command:<codeblock>tar xf streamsets-datacollector-all-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>.tgz -C /opt/local</codeblock></p>
                 </info>
             </step>
             <step>

@@ -41,7 +41,8 @@
    <topicref href="../Upgrade/Tarball-Step2-BackUp.dita"/>
    <topicref href="../Upgrade/Tarball-Step3-Install.dita">
     <topicref href="../Upgrade/Tarball-ManualStart.dita"/>
-    <topicref href="../Upgrade/Tarball-ServiceStart.dita"/>
+    <topicref href="../Upgrade/Tarball-ServiceStart_EL6.dita"/>
+    <topicref href="../Upgrade/Tarball-ServiceStart_EL7.dita"/>
    </topicref>
    <topicref href="../Upgrade/Tarball-Step4-EnvConfig.dita"/>
    <topicref href="../Upgrade/Tarball-Step5-UpdateConfigFiles.dita"/>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_xld_dvw_5bb">
+    <title>Installing from the Tarball for Systems Using Systemd (Service Start)</title>
+    <shortdesc>Operating systems that use the systemd init system include <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"/>. </shortdesc>
+    <taskbody>
+        <context>
+            <p>Install the new version of the tarball. Installing the full <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service requires root privileges. </p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Use the following URL to download the full or core <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> tarball from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step>
+                <cmd>Extract the tarball to a different directory than the previous version.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy <codeph>systemd/sdc.service</codeph> to the
+                        <codeph>/etc/systemd/system</codeph> directory:</cmd>
+                <info>
+                    <codeblock>cp systemd/sdc.service /etc/systemd/system/sdc.service</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Edit the <systemoutput>/etc/systemd/system/sdc.service</systemoutput> file to
+                    modify the environment variables as follows:</cmd>
+                <info>
+                    <ul id="ul_bw4_zvw_5bb">
+                        <li>User and Group - Same system user and group used by the previous
+                            version.</li>
+                        <li>SDC_CONF - New location outside of the base <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> runtime directory and unique from the previous renamed directory. For
+                            example, if you renamed the previous configuration directory to
+                                <codeph>/etc/sdc2700</codeph>, use the value
+                                <codeph>/etc/sdc</codeph>.</li>
+                        <li>SDC_HOME - Base <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> runtime directory for the new version.</li>
+                        <li>SDC_LOG - Same directory used by the previous version.</li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy <codeph>systemd/sdc.socket</codeph> to the
+                        <codeph>/etc/systemd/system</codeph> directory:</cmd>
+                <info>
+                    <codeblock>cp systemd/sdc.socket /etc/systemd/system/sdc.socket</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Edit the <systemoutput>/etc/systemd/system/sdc.socket</systemoutput> file to
+                    modify the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> port number to match the previous version. The port must match the one
+                    defined in <codeph>sdc.properties</codeph>. Default is 18630.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to reload the systemd manager configuration:</cmd>
+                <info>
+                    <codeblock>systemctl daemon-reload</codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
