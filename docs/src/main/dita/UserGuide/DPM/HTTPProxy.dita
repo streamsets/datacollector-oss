@@ -25,7 +25,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. Define
         the proxy properties in the SDC_JAVA_OPTS environment variable in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        environment configuration file. </shortdesc>
+        environment configuration file located in the <codeph>$SDC_DIST/libexec</codeph> directory. </shortdesc>
  <conbody>
         <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make the
             same updates in both places. </draft-comment>

@@ -41,6 +41,14 @@
                   in the install and upgrade steps:</draft-comment>
             <p><ph id="version">3.0.0.0</ph></p>
             <p><ph id="version_DirName">3000</ph></p>
+            <draft-comment author="alisontaylor">Supported operating systems for install
+                  instructions</draft-comment>
+            <p><ph id="ph_LinuxEL6">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</ph></p>
+            <p><ph id="ph_LinuxEL6_RPM">CentOS 6 or Red Hat Enterprise Linux 6</ph></p>
+            <p><ph id="ph_LinuxEL7">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</ph></p>
+            <p><ph id="ph_LinuxEL7_RPM">CentOS 7 or Red Hat Enterprise Linux 7</ph></p>
             <draft-comment author="Loretta">
                   <p>For SDC/DPM xrefs to Configuring SDC.</p>
             </draft-comment>
@@ -3471,10 +3479,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </ul>
             <draft-comment author="alisontaylor">Use this for any location in the help that mentions
                   these environment variable files.</draft-comment>
-            <p id="EnvFileLocation">If you start Data Collector as a service, set the environment
-                  variable in the <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file.
-                  If you start Data Collector manually, set the variable in the
-                        <systemoutput>$SDC_DIST/libexec/sdc-env.sh</systemoutput> file.</p>
+            <p id="EnvFileLocation">Modify the <xref
+                        href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                        >environment configuration file</xref> used by your installation type.</p>
             <draft-comment author="alisontaylor">Use this for the pipeline --name option for any
                   commands in the CLI docs</draft-comment>
             <p id="CliPipelineName"><ph
@@ -3550,8 +3557,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                           /> machine. </li>
                                     <li>In the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                          /> environment configuration file, add the
-                                                <codeph>GOOGLE_APPLICATION_CREDENTIALS</codeph>
+                                          /> environment configuration file located in the
+                                                <codeph>$SDC_DIST/libexec</codeph> directory, add
+                                          the <codeph>GOOGLE_APPLICATION_CREDENTIALS</codeph>
                                           environment variable and point it to the credentials
                                                 file.<p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"

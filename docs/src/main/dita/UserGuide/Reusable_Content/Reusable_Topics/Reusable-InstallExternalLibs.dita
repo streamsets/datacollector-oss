@@ -31,10 +31,11 @@
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in the
                     following directory: <codeblock>/opt/sdc/</codeblock>you might create the
                     external directory at: <codeblock>/opt/sdc-extras</codeblock></p></li>
-            <li id="RPMTarball_EnvVar">In the <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
-                variable and point it to the external directory. <p
-                    conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
+            <li id="RPMTarball_EnvVar">In the <ph
+                    conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
+                configuration file located in the <codeph>$SDC_DIST/libexec</codeph> directory, add
+                the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
+                directory. <p conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
                     /><p>Set the environment variable as
                     follows:</p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock><p>For
                     example:

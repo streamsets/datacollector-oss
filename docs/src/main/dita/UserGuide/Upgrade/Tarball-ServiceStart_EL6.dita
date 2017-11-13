@@ -18,11 +18,15 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_hsl_ccm_5v">
-    <title>Installing from the Tarball (Service Start)</title>
-    <shortdesc>Install the new version of the tarball. Installing the full <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service requires sudo privileges on the root directory. </shortdesc>
+    <title>Installing from the Tarball for Systems Using SysV (Service Start)</title>
+    <shortdesc>Operating systems that use the SysV init system include <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"/>. </shortdesc>
     <taskbody>
+        <context id="context_a5l_jvw_5bb">
+            <p>Install the new version of the tarball. Installing the full <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service requires root privileges.  </p>
+        </context>
         <steps>
             <step>
                 <cmd>Use the following URL to download the full or core <ph

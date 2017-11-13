@@ -20,8 +20,15 @@
 <concept id="concept_n35_s55_xv">
  <title>Step 8. Start the New Version of Data Collector</title>
  <conbody>
-        <p>Use the following command to start the new version of <ph
+        <p>Use the required command for your operating system to start the new version of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />:<codeblock>service sdc start</codeblock></p>
+                />:<ul id="ul_g5m_bgv_5bb">
+                <li>For <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                    />, use:<codeblock>service sdc start</codeblock></li>
+                <li>For <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                    />, use:<codeblock>systemctl start sdc</codeblock></li>
+            </ul></p>
     </conbody>
 </concept>

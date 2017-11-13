@@ -45,13 +45,13 @@
                 <dt>To start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service</dt>
-                <dd>Use the following command:<pre>service sdc start  </pre></dd>
-                <dd>To add the <ph>Data Collector</ph> service to the system startup, use the
-                    required command for your operating system:<ul id="ul_m3d_2gr_yx">
-                        <li>For CentOS, use the following
-                            command:<codeblock>chkconfig --add sdc</codeblock></li>
-                        <li>For Ubuntu, use the following
-                            command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></li>
+                <dd>Use the required command for your operating system:<ul id="ul_ozx_tbv_5bb">
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
+                            />, use:<codeblock>service sdc start</codeblock></li>
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
+                            />, use:<codeblock>systemctl start sdc</codeblock></li>
                     </ul></dd>
             </dlentry>
         </dl>

@@ -85,7 +85,7 @@
                 <cmd>Use the following command to extract the tarball to the desired location on the
                     edge device, typically <codeph>/opt/local</codeph>:</cmd>
                 <info>
-                    <codeblock>tar -xzf streamsets-datacollector-edge-&lt;version>-&lt;os>-&lt;architecture>.tgz</codeblock>
+                    <codeblock>tar xf streamsets-datacollector-edge-&lt;version>-&lt;os>-&lt;architecture>.tgz</codeblock>
                 </info>
             </step>
             <step>

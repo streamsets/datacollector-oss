@@ -33,7 +33,9 @@
                     <li>Install and launch manually. For details, see <xref
                             href="Installing_the_DC.dita#task_bt1_zcp_kq"/>.</li>
                     <li>Install and launch as a service. For details, see <xref
-                            href="Installing_the_DC-ServiceTarball.dita#task_pnf_344_1r"/>. </li>
+                            href="Installing_the_DC-ServiceTarball_EL6.dita#task_pnf_344_1r"/> or
+                            <xref href="Installing_the_DC-ServiceTarball_EL7.dita#task_kdc_vht_5bb"
+                        />. </li>
                 </ul></p>
         </context>
     </taskbody>

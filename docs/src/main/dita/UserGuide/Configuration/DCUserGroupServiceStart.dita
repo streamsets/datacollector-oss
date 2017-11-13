@@ -21,27 +21,50 @@
  <title>User and Group for Service Start</title>
     <shortdesc>When you run <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service,  <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
-        as the system user account and group defined in the SDC_USER and SDC_GROUP environment
-        variables. The default system user and group are named sdc.</shortdesc>
+        service, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /> runs as the system user account and group defined in environment variables. The default
+        system user and group are named sdc.</shortdesc>
  <conbody>
      <p><indexterm>SDC_USER<indexterm>environment
                     variable</indexterm></indexterm><indexterm>SDC_GROUP<indexterm>environment
                     variable</indexterm></indexterm><indexterm>environment
                     variables<indexterm>system user</indexterm></indexterm><indexterm>environment
                     variables<indexterm>system group</indexterm></indexterm>You must create a system
-            user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP
-            environment variables to point to an existing system user or group. </p>
-        <p>The <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file includes the following user and
-            group environment variables: <ul id="ul_gpg_4jt_3v">
-                <li>SDC_USER - Defines the system user used to run <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service. Default is sdc.</li>
-                <li>SDC_GROUP - Defines the system group used to run <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service. Default is sdc.</li>
-            </ul></p>
+            user and group named sdc, or you must edit the values of the environment variables to
+            point to an existing system user or group. </p>
+        <p>The file that you edit to define the user and group environment variable depends on your
+            operating system:<dl>
+                <dlentry>
+                    <dt>Operating systems that use the SysV init system </dt>
+                    <dd>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
+                        />, edit the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file which
+                        includes the following user and group environment variables: <ul
+                            id="ul_gpg_4jt_3v">
+                            <li>SDC_USER - Defines the system user used to run <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> as a service. Default is sdc.</li>
+                            <li>SDC_GROUP - Defines the system group used to run <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> as a service. Default is sdc.</li>
+                        </ul></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Operating systems that use the systemd init system</dt>
+                    <dd>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
+                        />, edit the <codeph>$SDC_DIST/systemd/sdc.service</codeph> file which
+                        includes the following user and group environment variables:<ul
+                            id="ul_bjy_1q5_5bb">
+                            <li>User - Defines the system user used to run <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> as a service. Default is sdc.</li>
+                            <li>Group - Defines the system group used to run <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> as a service. Default is sdc.</li>
+                        </ul></dd>
+                </dlentry>
+            </dl></p>
         <note>When you run <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             manually, <ph

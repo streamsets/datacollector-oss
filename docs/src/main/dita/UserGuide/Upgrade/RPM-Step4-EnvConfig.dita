@@ -37,8 +37,18 @@
             </step>
             <step>
                 <cmd>In the new version of <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />, open the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file.</cmd>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, open the environment variable file used by your operating system: </cmd>
+                <info>
+                    <ul id="ul_xzj_vfv_5bb">
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                            />, open the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file.</li>
+                        <li>For <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                            />, open the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file.</li>
+                    </ul>
+                </info>
             </step>
             <step>
                 <cmd>Compare the previous and new versions of the environment configuration file,

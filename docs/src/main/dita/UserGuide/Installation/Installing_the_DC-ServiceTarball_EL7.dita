@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_kdc_vht_5bb">
+    <title>Installing from the Tarball for Systems Using Systemd Init</title>
+    <shortdesc>You can install the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        tarball and start it as a service for supported operating systems that use the systemd init
+        system - including <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"/>. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>installation<indexterm>service
+                    start</indexterm></indexterm><indexterm>launch Data Collector<indexterm>service
+                        start</indexterm></indexterm>For tarball installation instructions for
+                operating systems that use the SysV init system, see <xref
+                    href="Installing_the_DC-ServiceTarball_EL6.dita#task_pnf_344_1r"/>.</p>
+            <p>This procedure walks through setting the default directories and the default system
+                user and group used to start <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service.</p>
+            <p>Before you install, you can alternatively use the
+                    <filepath>$SDC_DIST/systemd/sdc.service</filepath> file to modify the
+                environment variables that define directories and the system user and group.</p>
+            <p>Installing the full Data Collector as a service requires root privileges. </p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Use the following URL to download the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> tarball from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to extract the tarball to the desired location,
+                    typically <codeph>/opt/local/</codeph>:</cmd>
+                <info>
+                    <codeblock>tar xf streamsets-datacollector-all-&lt;version>.tgz -C &lt;extraction directory></codeblock>
+                    <p>For example, to extract version <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                        />, use the following
+                        command:<codeblock>tar xf streamsets-datacollector-all-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>.tgz -C /opt/local</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy <codeph>systemd/sdc.service</codeph> to the
+                        <codeph>/etc/systemd/system</codeph> directory:</cmd>
+                <info>
+                    <codeblock>cp systemd/sdc.service /etc/systemd/system/sdc.service</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Edit the <systemoutput>/etc/systemd/system/sdc.service</systemoutput> file to
+                    modify the environment variables that define <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> directories and the system user and group.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy <codeph>systemd/sdc.socket</codeph> to the
+                        <codeph>/etc/systemd/system</codeph> directory:</cmd>
+                <info>
+                    <codeblock>cp systemd/sdc.socket /etc/systemd/system/sdc.socket</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally, edit the
+                        <systemoutput>/etc/systemd/system/sdc.socket</systemoutput> file to modify
+                    the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> port number. The port must match the one defined in
+                        <codeph>sdc.properties</codeph>. Default is 18630.</cmd>
+            </step>
+            <step>
+                <cmd>Create a system user and group named sdc.</cmd>
+                <info>
+                    <p>For example, use the following command to create a system user and group with
+                        the next available group ID and user ID:
+                        <codeblock>groupadd -r sdc &amp;&amp; useradd -r -d &lt;installation dir> -g sdc -s /sbin/nologin sdc</codeblock></p>
+                    <p>If you’re installing <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> on multiple machines, we recommend explicitly specifying a group ID and
+                        user ID to ensure that the IDs are consistent across the machines. Use the
+                        -g and -u flags respectively to specify the ID.</p>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to reload the systemd manager configuration:</cmd>
+                <info>
+                    <codeblock>systemctl daemon-reload</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory at <codeph>/etc/sdc</codeph>:</cmd>
+                <info>
+                    <codeblock>mkdir /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy all files from etc into the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory that you just created:</cmd>
+                <info>
+                    <codeblock>cp -R etc/* /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to change the owner of the <codeph>/etc/sdc</codeph>
+                    directory and all files in the directory to sdc:sdc:</cmd>
+                <info>
+                    <codeblock>chown -R sdc:sdc /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following commands to create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> log directory at <systemoutput>/var/log/sdc</systemoutput> and change the
+                    owner to sdc:sdc:</cmd>
+                <info>
+                    <codeblock>mkdir /var/log/sdc
+chown sdc:sdc /var/log/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service: </cmd>
+                <info>
+                    <codeblock>systemctl start sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>To add the <ph>Data Collector</ph> service to the system startup, use the
+                    following command:</cmd>
+                <info>
+                    <codeblock>systemctl enable sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> UI, enter the following URL
+                    in the address bar of your browser: </cmd>
+                <info>
+                    <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="../Configuration/DCDirectories.dita#concept_mnx_j3r_3v"/>
+        <link href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v"/>
+    </related-links>
+</task>

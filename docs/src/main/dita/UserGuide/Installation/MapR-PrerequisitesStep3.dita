@@ -85,15 +85,17 @@ MapR credentials of user 'myappuser' for cluster 'mycluster' are written to '/tm
                         /> is installed from the RPM package or from the tarball and started as a
                         service, <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> runs as the system user account and group defined in the SDC_USER and
-                        SDC_GROUP environment variables configured in the
-                            <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file. The
-                        default system user and group are named sdc.</dd>
+                        /> runs as the system user account and group defined in environment
+                        variables. The default system user and group are named sdc.</dd>
                     <dd>To connect to a secure MapR cluster enabled for wire-level security and
-                        username/password authentication, set the SDC_USER environment variable to
-                        the system user account granted access in the MapR user or service ticket.
-                        Set the SDC_GROUP environment variable to the system group that the user
-                        account belongs to.</dd>
+                        username/password authentication, set the user environment variable to the
+                        system user account granted access in the MapR user or service ticket. Set
+                        the group environment variable to the system group that the user account
+                        belongs to.</dd>
+                    <dd>For instructions on setting the user and group environment variables, see
+                            <xref
+                            href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v"
+                        />.</dd>
                 </dlentry>
             </dl>
         </p>

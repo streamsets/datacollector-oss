@@ -30,9 +30,6 @@
                     <dt>Tarball or RPM installation</dt>
                     <dd>
                         <p>Define debugging options in the SDC_JAVA_OPTS environment variable.</p>
-                        <p
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
-                        />
                     </dd>
                     <dd>
                         <p>Add the following debugging options to the environment variable, where

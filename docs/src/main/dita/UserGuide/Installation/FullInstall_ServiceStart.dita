@@ -21,8 +21,17 @@
  <title>Full Installation and Launch (Service Start)</title>
  <conbody>
   <p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
-                    Collector<indexterm>service start</indexterm></indexterm>To install the full
-            Data Collector as a service, you can download the Data Collector RPM package or the Data
-            Collector tarball from the StreamSets website. </p>
+                    Collector<indexterm>service start</indexterm></indexterm>To install the full <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as
+            a service, you can download the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            RPM package or the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            tarball from the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/>
+            website. </p>
+        <p>You can run <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as
+            a service on all supported Linux operating systems.</p>
  </conbody>
 </concept>

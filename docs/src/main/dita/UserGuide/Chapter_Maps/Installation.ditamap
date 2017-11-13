@@ -39,7 +39,8 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Installation/Installing_the_DC-ServiceRPM.dita"/>
-   <topicref href="../Installation/Installing_the_DC-ServiceTarball.dita"/>
+   <topicref href="../Installation/Installing_the_DC-ServiceTarball_EL6.dita"/>
+   <topicref href="../Installation/Installing_the_DC-ServiceTarball_EL7.dita"/>
   </topicref>
   <topicref href="../Installation/CoreInstall_Overview.dita" chunk="to-content">
    <topicmeta>

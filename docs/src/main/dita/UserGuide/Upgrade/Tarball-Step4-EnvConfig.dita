@@ -47,10 +47,15 @@
                     <ul id="ul_amx_q35_xv">
                         <li><codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> - Used when you start <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> manually from the command line.</li>
+                            /> manually from the command line or when you start Data Collector as a
+                            service on <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
+                            />. </li>
                         <li><codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> - Used when you start <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> as a service.</li>
+                            /> as a service on <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
+                            />.</li>
                     </ul>
                 </info>
             </step>
