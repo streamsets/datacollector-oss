@@ -52,6 +52,14 @@
                                 </p></entry>
                         </row>
                         <row>
+                            <entry>Amazon SQS Consumer origin</entry>
+                            <entry>Can be configured to include SQS message attributes in record
+                                header attributes.  <xref
+                                    href="../Origins/AmazonSQS-MessageAttributes.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_zxr_lvc_vbb"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>Directory origin</entry>
                             <entry>Includes <ph
                                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"

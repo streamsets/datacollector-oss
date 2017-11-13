@@ -19,14 +19,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kvs_3hh_ht">
  <title>Amazon S3</title>
- <shortdesc>The Amazon S3 origin reads objects stored in Amazon S3. The object names must share a
-        prefix pattern and should be fully written.</shortdesc>
+    <shortdesc/>
  <conbody>
   <p><indexterm>origins<indexterm>Amazon S3</indexterm></indexterm><indexterm>Amazon S3
-                    origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you
-            define the region, bucket, prefix pattern, optional common prefix, and read order. These
-            properties determine the objects that the origin processes. You can optionally include
-            Amazon S3 object metadata in the record as record header attributes. </p>
+                    origin<indexterm>overview</indexterm></indexterm>The Amazon S3 origin reads
+            objects stored in Amazon S3. The object names must share a prefix pattern and should be
+            fully written. To read messages from Amazon SQS, use the <xref
+                href="AmazonSQS.dita#concept_xsh_knm_5bb">Amazon SQS Consumer origin</xref>.</p>
+        <p>With the Amazon S3 origin, you define the region, bucket, prefix pattern, optional common
+            prefix, and read order. These properties determine the objects that the origin
+            processes. You can optionally include Amazon S3 object metadata in the record as record
+            header attributes. </p>
   <p>After processing an object or upon encountering errors, the origin can keep, archive, or delete
             the object. When archiving, the origin can copy or move the object. </p>
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline

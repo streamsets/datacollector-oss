@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hcg_5cc_vbb">
+ <title>Multithreaded Processing</title>
+    <conbody>
+        <p><indexterm>Amazon SQS Consumer origin<indexterm>multithreaded
+                processing</indexterm></indexterm><indexterm>Max Threads<indexterm>Amazon SQS
+                    Consumer origin</indexterm></indexterm>The Amazon SQS Consumer origin performs
+            parallel processing and enables the creation of a multithreaded pipeline. The Amazon SQS
+            Consumer origin uses multiple concurrent threads based on the Max Threads property. </p>
+        <p>When performing multithreaded processing, the Amazon SQS Consumer origin determines the
+            number of queues to process and creates the specified number of threads. When there are
+            more queues than threads, the queues are divided up and assigned to different threads.
+            Each thread processes data from a specific set of queues and cycles round-robin through
+            the set of queues. </p>
+        <p>When a thread requests data from a queue, the queue returns messages based on the
+            configured Number of Messages per Request property. The thread creates a batch of data
+            and passes the batch to an available pipeline runner. After processing the batch, the
+            thread continues to the next assigned queue.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-PipeRunnerDef"/>
+            <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
+            /></p>
+        <p>Multithreaded pipelines preserve the order of records within each batch, just like a
+            single-threaded pipeline. But the order that batches are written to destinations is not
+            ensured.</p>
+        <p>For example, say you set the Max Threads property to 5 and the origin is configured to
+            process 20 queues. When you start the pipeline, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-createsthreads"
+            /> Each thread is assigned 4 queues to process. Each thread cycles through the queues,
+            creating one batch of data at a time and passing it to a pipeline runner for
+            processing.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-p"/>
+        <p>For more information about multithreaded pipelines, see <xref
+                href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
+            />. </p>
+    </conbody>
+</concept>

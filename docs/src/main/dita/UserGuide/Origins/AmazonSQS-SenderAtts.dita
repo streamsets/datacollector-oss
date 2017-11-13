@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_y2j_xgk_vbb">
+ <title>Including Sender Attributes</title>
+ <conbody>
+  <p><indexterm>Amazon SQS Consumer origin<indexterm>including sender
+                attributes</indexterm></indexterm>In addition to SQS message attributes, you can
+            include sender attributes in record headers. Sender attributes are custom attributes
+            included in messages by the message sender. </p>
+        <p>To include message sender attributes, you perform the following steps: <ol
+                id="ol_w12_khk_vbb">
+                <li>Set the SQS Message Attribute Level property to All Attributes.</li>
+                <li>Configure the SQS Sender Attribute property, adding the name of each attribute
+                    that you want to include in the record.   </li>
+            </ol></p>
+        <p>SQS attributes are added to record header attributes using the following naming
+            convention: <codeph>sqs.messageAttr.&lt;sender attribute name></codeph>. </p>
+        <p>For example, a <codeph>senderId</codeph> attribute appears in the record header as
+                <codeph>sqs.messageAttr.senderId</codeph>.</p>
+ </conbody>
+</concept>

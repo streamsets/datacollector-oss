@@ -14,11 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ffh_5vf_5bb">
-    <title>Comparing UDP Origins</title>
+    <title>Comparing UDP Source Origins</title>
     <conbody>
-        <p><indexterm>UDP origins<indexterm>comparing</indexterm></indexterm>The UDP Source and UDP
-            Multithreaded Source origins are very similar. The main differentiator is: the UDP
-            Multithreaded Source can use multiple threads to process data within the pipeline. </p>
+        <p><indexterm>UDP Source origins<indexterm>comparing</indexterm></indexterm>The UDP Source
+            and UDP Multithreaded Source origins are very similar. The main differentiator is that
+            the UDP Multithreaded Source can use multiple threads to process data within the
+            pipeline. </p>
         <p>The UDP Multithreaded Source has a processing queue that aids multithreaded processing.
             But use of this queue can slow processing under certain circumstances.</p>
         <p>The following table describes some cases when you might want to use each origin:<table
@@ -34,7 +35,8 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>UDP Multithreaded Source</entry>
+                            <entry><xref href="UDPMulti.dita#concept_wng_g5f_5bb">UDP Multithreaded
+                                    Source</xref></entry>
                             <entry>
                                 <ul id="ul_cgc_jxf_5bb">
                                     <li>Epoll support enables the use of multiple receiver threads
@@ -52,7 +54,8 @@
                             </entry>
                         </row>
                         <row>
-                            <entry>UDP Source </entry>
+                            <entry><xref href="UDP.dita#concept_rst_2y5_1s">UDP Source</xref>
+                            </entry>
                             <entry>
                                 <ul id="ul_f2w_2xf_5bb">
                                     <li>Epoll support enables the use of multiple receiver threads
@@ -66,5 +69,9 @@
                     </tbody>
                 </tgroup>
             </table></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            also provides a <xref href="UDPtoKafka.dita#concept_jzq_jcz_pw">UDP to Kafka
+                origin</xref> for reading large volumes of data from multiple UDP ports and writing
+            the data immediately to Kafka, without additional processing. </p>
     </conbody>
 </concept>
