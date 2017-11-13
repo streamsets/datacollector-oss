@@ -48,6 +48,13 @@
   </topicref>
   <topicref href="../Origins/AmazonSQS.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/AmazonSQS-AWSCredentials.dita"/>
+   <topicref href="../Origins/AmazonSQS-QueueNamePrefix.dita"/>
+   <topicref href="../Origins/AmazonSQS-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/AmazonSQS-MessageAttributes.dita">
+    <topicref href="../Origins/AmazonSQS-SenderAtts.dita"/>
+   </topicref>
+   <topicref href="../Origins/AmazonSQS-DataFormats.dita"/>
    <topicref href="../Origins/AmazonSQS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/AzureEventHub.dita" chunk="to-content">

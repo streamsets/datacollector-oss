@@ -1446,7 +1446,7 @@
     <tbody>
      <row id="row-UseProxy">
       <entry>Use Proxy</entry>
-      <entry>Specifies whether to use a proxy to connect to Amazon S3.</entry>
+      <entry>Specifies whether to use a proxy to connect.</entry>
      </row>
      <row id="row-ProxyHost">
       <entry>Proxy Host</entry>

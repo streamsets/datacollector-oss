@@ -47,9 +47,13 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UDPport">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UDPdataformat">
-                                    <entry/>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Data format passed by UDP:<ul id="ul_xnb_xzc_vbb">
+                                            <li>collectd</li>
+                                            <li>NetFlow</li>
+                                            <li>syslog</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

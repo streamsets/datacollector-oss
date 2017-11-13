@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_isr_jzb_vbb">
+ <title>Queue Name Prefix</title>
+ <conbody>
+  <p><indexterm>Amazon SQS Consumer origin<indexterm>queue name prefix</indexterm></indexterm>The
+            Amazon SQS Consumer origin uses the queue name prefix to determine the queues to
+            process. You can define multiple queue name prefixes.</p>
+        <p>When you specify the queue name prefix, enter a string that represents the beginning of
+            the queue names that you want to use. The origin processes data from every queue with a
+            matching prefix. You cannot use wildcards within the queue name prefix.</p>
+        <p>For example, say you have the following
+            queues:<codeblock>sales-eu-france
+sales-eu-germany
+sales-us
+sales-egypt</codeblock></p>
+        <p>If you use "sales" as the prefix, the origin processes messages from all of the queues. </p>
+        <p>If you use "sales-eu" as the prefix, the origin processes only sales-eu-france and
+            sales-eu-germany.</p>
+        <p>If you use "sales-e" as the prefix, the origin processes all queues except for sales-us. </p>
+ </conbody>
+</concept>

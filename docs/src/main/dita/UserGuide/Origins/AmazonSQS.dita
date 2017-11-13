@@ -17,8 +17,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xsh_knm_5bb">
  <title>Amazon SQS Consumer</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>Amazon SQS Consumer
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Amazon
+                    SQS Consumer origin</indexterm></indexterm>Use the Amazon SQS Consumer origin to
+            read data from queues in Amazon Simple Queue Services (SQS). The origin can use multiple
+            threads to enable parallel processing of data. To read data from Amazon S3, use the
+                <xref href="AmazonS3.dita#concept_kvs_3hh_ht">Amazon S3 origin</xref>.</p>
+        <p>When you configure the Amazon SQS Consumer origin, you define the region and the set of
+            queue name prefixes to use. These properties determine the objects that the origin
+            processes. You can use IAM roles or AWS access key pairs to access the data.</p>
+        <p>You can optionally include Amazon SQS message attributes and sender attributes in records
+            as record header attributes.</p>
  </conbody>
 </concept>
