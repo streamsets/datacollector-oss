@@ -59,6 +59,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -551,7 +552,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     @Override
     public JsonGenerator createGenerator(String fileName) throws IOException {
       markStartOfFile(fileName);
-      return new JsonFactory().createGenerator(new DelegateOutputStreamIgnoreClose(zipOutputStream));
+      return new JsonFactory().createGenerator(new JsonGeneratorOutputStream(zipOutputStream, redactor));
     }
 
     private void copyReader(BufferedReader reader, String path, long startOffset) throws IOException {
@@ -570,17 +571,25 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     }
   }
 
-  private static class DelegateOutputStreamIgnoreClose extends OutputStream {
+  private static class JsonGeneratorOutputStream extends OutputStream {
 
-    ZipOutputStream zipOutputStream;
+    private final ZipOutputStream zipOutputStream;
+    private final StringRedactor redactor;
 
-    public DelegateOutputStreamIgnoreClose(ZipOutputStream stream) {
+    public JsonGeneratorOutputStream(ZipOutputStream stream, StringRedactor redactor) {
       this.zipOutputStream = stream;
+      this.redactor = redactor;
     }
 
     @Override
     public void write(int b) throws IOException {
-      zipOutputStream.write(b);
+      throw new IOException("Writing individual bytes is not supported.");
+    }
+
+    @Override
+    public void write(byte b[], int off, int len) throws IOException {
+      String string = new String(b, off, len, Charset.defaultCharset());
+      zipOutputStream.write(redactor.redact(string).getBytes());
     }
 
     @Override
