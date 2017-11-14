@@ -19,6 +19,8 @@ VERSION=$1
 DIST=$2
 TARGET=$3
 
+mkdir -p $TARGET
+
 # Human readable index file
 INDEX_FILE_PATH="${TARGET}/index.html"
 
@@ -41,7 +43,6 @@ echo "" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 echo "download.url=${DOWNLOAD_URL}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 echo "version=${VERSION}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 
-mkdir -p $TARGET
 
 cd ${DIST} || exit
 for STAGE_LIB in ${DIST}/*
@@ -50,7 +51,7 @@ do
   then
     LIB_DIR=`basename ${STAGE_LIB}`
     echo "Processing stage library: ${LIB_DIR}"
-    tar czf ${TARGET}/${LIB_DIR}-${VERSION}.tgz ${DIST}/${LIB_DIR}/*
+    tar -C ${DIST} -czf ${TARGET}/${LIB_DIR}-${VERSION}.tgz ${LIB_DIR}/*
     CURRENT_DIR=`pwd`
     cd ${TARGET} || exit
     sha1sum ${LIB_DIR}-${VERSION}.tgz > ${LIB_DIR}-${VERSION}.tgz.sha1
