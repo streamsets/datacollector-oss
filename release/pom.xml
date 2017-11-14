@@ -34,6 +34,7 @@
   <packaging>jar</packaging>
 
   <properties>
+    <edge.release-dir>target/SDCe</edge.release-dir>
     <datacollector-edge.version>3.1.0.0-SNAPSHOT</datacollector-edge.version>
   </properties>
 
@@ -53,6 +54,59 @@
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependency</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-arm</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${edge.release-dir}</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${edge.release-dir}</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>darwin-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${edge.release-dir}</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>windows-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${edge.release-dir}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -157,82 +211,6 @@
   </build>
 
   <profiles>
-    <profile>
-      <id>edge</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>edge</name>
-        </property>
-      </activation>
-      <properties>
-        <edge.dist-dir>${basedir}/dist/target/edge-binaries</edge.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-docs</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-dependency</id>
-                <phase>compile</phase>
-                <goals>
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>linux-arm</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/SDCe</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>linux-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/SDCe</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>darwin-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/SDCe</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>windows-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/SDCe</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>docker</id>
       <activation>

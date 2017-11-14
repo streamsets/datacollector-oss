@@ -37,6 +37,7 @@
     <!-- trick to avoid pulling files from 'ui' & 'docs' if their profiles are not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
     <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
+    <edge.dist-dir>${basedir}/dist/target/edge-binaries</edge.dist-dir>
     <sdc.log4j.level>DEBUG</sdc.log4j.level>
     <snappy.version>1.0.5</snappy.version>
     <datacollector-edge.version>3.1.0.0-SNAPSHOT</datacollector-edge.version>
@@ -109,6 +110,59 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependency</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-arm</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>darwin-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>windows-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -202,82 +256,6 @@
       </properties>
     </profile>
 
-    <profile>
-      <id>edge</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>edge</name>
-        </property>
-      </activation>
-      <properties>
-        <edge.dist-dir>${basedir}/dist/target/edge-binaries</edge.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-docs</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-dependency</id>
-                <phase>compile</phase>
-                <goals>
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>linux-arm</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/edge-binaries</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>linux-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/edge-binaries</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>darwin-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/edge-binaries</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.streamsets</groupId>
-                      <artifactId>streamsets-datacollector-edge</artifactId>
-                      <classifier>windows-amd64</classifier>
-                      <version>${datacollector-edge.version}</version>
-                      <type>tgz</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target/edge-binaries</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>docs</id>
       <activation>
