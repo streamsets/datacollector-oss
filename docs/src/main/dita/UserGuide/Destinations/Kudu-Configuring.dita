@@ -65,6 +65,18 @@
                                     <entry
                                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_DefaultOperation"/>
                                 </row>
+                                <row>
+                                    <entry>Change Log Format</entry>
+                                    <entry>If the incoming data is a change data capture log read
+                                        from the following source systems, select the source system
+                                        so that the destination can determine the format of the
+                                            log:<ul id="ul_add_3ph_vbb">
+                                            <li>Microsoft SQL Server</li>
+                                            <li>Oracle CDC Client</li>
+                                            <li>MySQL Binary Log</li>
+                                            <li>MongoDB Oplog</li>
+                                        </ul><p>For any other source data, set to None.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

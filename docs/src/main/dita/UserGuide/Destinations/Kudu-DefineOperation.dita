@@ -47,14 +47,6 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UnsupportedOp"/>
-                <dd>
-                    <draft-comment author="Loretta">Alison: some old info I'm dropping, unless you
-                        think we should add it to the conref. "Unsupported values include
-                        non-numeric values, negative numeric values, or zero." – because it also
-                        applies to any integer that's not supported? figured I'd rather skip the
-                        whole thing since we list what's valid above? Also the fact that it's on the
-                        Advanced tab –  I was thinking of logging a bug for that?</draft-comment>
-                </dd>
             </dlentry>
         </dl>
  </conbody>
