@@ -113,4 +113,15 @@ public class TestOffset {
     Assert.assertEquals(fileName, offsetV2.getFile());
     Assert.assertEquals(initialOffset, offsetV2.getOffset());
   }
+
+  @Test
+  public void testWithNullOffset() throws Exception {
+    final String fileName = "retail.tar.gz";
+    final String offsetString = "{\"POS\":null}";
+
+    Offset offset = new Offset(Offset.VERSION_ONE, fileName, offsetString);
+
+    Assert.assertEquals(fileName, offset.getFile());
+    Assert.assertEquals("0", offset.getOffset());
+  }
 }
