@@ -39,6 +39,10 @@
    <topicref href="../Processors/DataParser-DataFormats.dita"/>
    <topicref href="../Processors/DataParser-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/Delay.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Delay-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Expression-OutputField.dita"/>
