@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 
 public final class CommonSourceConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(CommonSourceConfigBean.class);
-  public static final String DEFAULT_QUERIES_PER_SECONDS = "0.1";
+  public static final String DEFAULT_QUERIES_PER_SECONDS = "10";
 
   public CommonSourceConfigBean() {}
 
