@@ -21,8 +21,8 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum SqsAttributesOption implements Label {
   NONE("No Attributes"),
-  BASIC("Basic Attributes (message ID and queue name)"),
-  ALL("All Attributes (including SQS attributes)"),
+  BASIC("Basic Attributes"),
+  ALL("All Attributes"),
   ;
 
   private final String label;

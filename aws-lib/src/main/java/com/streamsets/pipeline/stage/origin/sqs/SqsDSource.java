@@ -25,13 +25,13 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 
 @StageDef(
     version = 1,
-    label = "SQS Consumer",
-    description = "Reads data from SQS",
+    label = "Amazon SQS Consumer",
+    description = "Reads messages from Amazon SQS",
     icon = "sqs.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Origins/AmazonSQS.html#task_jxn_nnm_5bb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

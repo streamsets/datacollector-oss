@@ -167,10 +167,11 @@ public class SqsConsumerConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
-      label = "SQS Message Fetch Attributes",
-      description = "List of SQS message attributes to include when fetching. Required if these need to" +
-          " be included as SDC attributes.",
+      label = "Include SQS Sender Attributes",
+      description = "Required for any sender attributes that you want to include as record header attributes.",
       displayPosition = 210,
+      dependsOn = "sqsAttributesOption",
+      triggeredByValue = "ALL",
       group = "SQS"
   )
   public List<String> sqsMessageAttributeNames;
