@@ -108,6 +108,32 @@ public class TestProtobufDataGenerator {
 
   }
 
+  @Test
+  public void testProtobufNonRepeatedField() throws Exception {
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    byte[] expected = FileUtils.readFileToByteArray(new File(Resources.getResource("TestProtobuf3_no_repeated.ser").getPath()));
+    DataGenerator dataGenerator = getDataGenerator(bOut, "TestRecordProtobuf3.desc", "TestRecord", true);
+
+    Record record = getContext().createRecord("");
+    // "samples" field has repeated keyword, so we won't include that in this record
+    Map<String, Field> rootField = new HashMap<>();
+    rootField.put("first_name", Field.create("Adam"));
+    rootField.put("full_name", Field.create(Field.Type.STRING, null));
+    Map<String, Field> entries = ImmutableMap.of(
+        "hello", Field.create("world"),
+        "bye", Field.create("earth")
+    );
+    rootField.put("test_map", Field.create(entries));
+    record.set(Field.create(rootField));
+
+    dataGenerator.write(record);
+    dataGenerator.flush();
+    dataGenerator.close();
+
+    assertArrayEquals(expected, bOut.toByteArray());
+  }
+
+
   public DataGenerator getDataGenerator(OutputStream os, String protoFile, String messageType, boolean isDelimited)
       throws IOException, DataParserException {
     return getDataGeneratorFactory(protoFile, messageType, isDelimited).getGenerator(os);

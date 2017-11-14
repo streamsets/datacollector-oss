@@ -671,15 +671,17 @@ public class ProtobufTypeUtil {
       if (f.isMapField()) {
         handleMapField(record, mapField, fieldPath, messageTypeToExtensionMap, defaultValueMap, f, builder);
       } else if (f.isRepeated()) {
-        handleRepeatedField(
-            record,
-            mapField,
-            fieldPath,
-            messageTypeToExtensionMap,
-            defaultValueMap,
-            f,
-            builder
-        );
+        if (mapField != null) {
+          handleRepeatedField(
+              record,
+              mapField,
+              fieldPath,
+              messageTypeToExtensionMap,
+              defaultValueMap,
+              f,
+              builder
+          );
+        }
       } else {
         // non repeated field
         handleNonRepeatedField(
