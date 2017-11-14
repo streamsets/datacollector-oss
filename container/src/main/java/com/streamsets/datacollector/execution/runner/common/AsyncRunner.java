@@ -20,7 +20,6 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
-import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
@@ -126,10 +125,6 @@ public class AsyncRunner implements Runner, PipelineInfo {
 
   @Override
   public void forceQuit(String user) throws PipelineException {
-    if (getState().getStatus() != PipelineStatus.STOPPING){
-      // Should not call force quit when pipeline is not stopping. No-op
-      return;
-    }
     Callable<Object> callable = () -> {
       runner.forceQuit(user);
       return null;

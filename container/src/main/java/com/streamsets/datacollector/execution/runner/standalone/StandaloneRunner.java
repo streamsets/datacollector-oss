@@ -127,6 +127,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       PipelineStatus.STOPPING
   );
 
+  private static final ImmutableSet<PipelineStatus> FORCE_QUIT_ALLOWED_STATES = ImmutableSet.of(
+    PipelineStatus.STOPPING,
+    PipelineStatus.STOPPING_ERROR,
+    PipelineStatus.STARTING_ERROR,
+    PipelineStatus.RUNNING_ERROR,
+    PipelineStatus.FINISHING
+  );
+
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject SnapshotStore snapshotStore;
@@ -456,9 +464,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void forceQuit(String user) throws PipelineException {
-    LOG.debug("Force Quit the pipeline '{}'::'{}'", name,  rev);
-    if (pipelineRunnable != null && pipelineRunnable.isStopped() && getState().getStatus() == PipelineStatus.STOPPING ) {
+    if (pipelineRunnable != null && FORCE_QUIT_ALLOWED_STATES.contains(getState().getStatus())) {
+      LOG.debug("Force Quit the pipeline '{}'::'{}'", name,  rev);
       pipelineRunnable.forceQuit();
+    } else {
+      LOG.info("Ignoring force quit request because pipeline is in {} state", getState().getStatus());
     }
   }
 
