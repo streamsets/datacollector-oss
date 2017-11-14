@@ -49,7 +49,7 @@ public class Offset {
       try {
         if (offset.startsWith("{")) {
           Map<String, String> map = OffsetUtil.deserializeOffsetMap(offset);
-          this.fileOffset = map.get(POS);
+          this.fileOffset = map.get(POS) == null ? ZERO : map.get(POS);
         } else {
           this.fileOffset = offset;
         }
@@ -73,7 +73,11 @@ public class Offset {
   }
 
   public String getOffset() {
-    if (fileOffset != null && fileOffset.isEmpty()) {
+    if (fileOffset == null) {
+      return ZERO;
+    }
+
+    if (fileOffset.isEmpty()) {
       return MINUS_ONE;
     }
 
