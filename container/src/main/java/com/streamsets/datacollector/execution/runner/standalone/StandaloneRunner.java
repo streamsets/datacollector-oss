@@ -221,7 +221,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     ))
     .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(
       PipelineStatus.CONNECTING,
-      PipelineStatus.STARTING
+      PipelineStatus.STARTING,
+      PipelineStatus.RETRY
     ))
     .put(PipelineStatus.CONNECTING, ImmutableSet.of(
       PipelineStatus.STARTING,
