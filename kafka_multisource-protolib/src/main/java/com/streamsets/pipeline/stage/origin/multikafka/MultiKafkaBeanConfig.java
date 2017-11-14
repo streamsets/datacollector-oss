@@ -122,7 +122,7 @@ public class MultiKafkaBeanConfig {
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
-      label = "Kafka Configuration",
+      label = "Configuration properties",
       description = "Additional Kafka properties to pass to the underlying Kafka consumer",
       displayPosition = 80,
       group = "KAFKA"
