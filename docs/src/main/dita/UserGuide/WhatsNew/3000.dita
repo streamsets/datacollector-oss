@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cjx_y4k_wbb">
+ <title>What's New in 3.0.0.0</title>
+ <conbody>
+  <p><indexterm>what's new<indexterm>version 3.0.0.0</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version 3.0.0.0 includes the following new features:<dl>
+                <dlentry>
+                    <dt>Installation</dt>
+                    <dd>
+                        <ul id="ul_dxx_z5k_wbb">
+                            <li><xref href="../Installation/Requirements.dita#concept_vzg_n2p_kq"
+                                    >Java requirement</xref> - Data Collector now supports both
+                                Oracle Java 8 and OpenJDK 8.</li>
+                            <li><xref
+                                    href="../Installation/Installing_the_DC-ServiceRPM.dita#task_th5_1yj_dx"
+                                    >RPM packages</xref> - StreamSets now provides the following
+                                Data Collector RPM packages:<ul id="ul_k13_cvk_wbb">
+                                    <li>EL6 - Use to install Data Collector on CentOS 6, Red Hat
+                                        Enterprise Linux 6, or Ubuntu 14.04 LTS.</li>
+                                    <li>EL7 - Use to install Data Collector on CentOS 7, Red Hat
+                                        Enterprise Linux 7, or Ubuntu 16.04 LTS.</li>
+                                </ul><p>Previously, StreamSets provided a single RPM package used to
+                                    install Data Collector on any of these operating
+                                systems.</p></li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Edge Pipelines</dt>
+                    <dd>You can now design and run <xref
+                            href="../Edge_Mode/EdgePipelines_Overview.dita#concept_d4h_kkq_4bb">edge
+                            pipelines</xref> to read data from or send data to an edge device. Edge
+                        pipelines are bidirectional. They can send edge data to other Data Collector
+                        pipelines for further processing. Or, they can receive data from other
+                        pipelines and then act on that data to control the edge device. </dd>
+                    <dd>Edge pipelines run in edge execution mode on a Data Collector Edge (SDCe).
+                        SDCe is a lightweight agent without a UI that runs pipelines on edge
+                        devices. Install SDCe on each edge device where you want to run edge
+                        pipelines. </dd>
+                    <dd>You design edge pipelines in Data Collector, export the edge pipelines, and
+                        then use commands to run the edge pipelines on an SDCe installed on an edge
+                        device. </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Origins</dt>
+                    <dd>
+                        <ul id="ul_xdj_qvk_wbb">
+                            <li><xref href="../Origins/AmazonSQS.dita#concept_xsh_knm_5bb">New
+                                    Amazon SQS Consumer origin</xref> - An origin that reads
+                                messages from Amazon Simple Queue Service (SQS). Can create multiple
+                                threads to enable parallel processing in a multithreaded
+                                pipeline.</li>
+                            <li><xref href="../Origins/GCS.dita#concept_iyd_wql_nbb">New Google
+                                    Cloud Storage origin</xref> - An origin that reads fully written
+                                objects in Google Cloud Storage. </li>
+                            <li><xref href="../Origins/MapRdbCDC.dita#concept_qwj_5vm_pbb">New MapR
+                                    DB CDC origin</xref> - An origin that reads changed MapR DB data
+                                that has been written to MapR Streams. Can create multiple threads
+                                to enable parallel processing in a multithreaded pipeline.</li>
+                            <li><xref
+                                    href="../Origins/MapRStreamsMultiConsumer.dita#concept_hvd_hww_lbb"
+                                    >New MapR Multitopic Streams Consumer origin</xref> - An origin
+                                that reads messages from multiple MapR Streams topics. It can create
+                                multiple threads to enable parallel processing in a multithreaded
+                                pipeline.</li>
+                            <li><xref href="../Origins/UDPMulti.dita#concept_wng_g5f_5bb">New UDP
+                                    Multithreaded Source origin</xref> - The origin listens for UDP
+                                messages on one or more ports and queues incoming packets on an
+                                intermediate queue for processing. It can create multiple threads to
+                                enable parallel processing in a multithreaded pipeline.</li>
+                            <li><xref href="../Origins/WebSocketClient.dita#concept_unk_nzk_fbb">New
+                                    WebSocket Client origin</xref> - An origin that reads data from
+                                a WebSocket server endpoint.</li>
+                            <li><xref href="../Origins/WindowsLog.dita#concept_agf_5jv_sbb">New
+                                    Windows Event Log origin</xref> - An origin that reads data from
+                                Microsoft Windows event logs. You can use this origin only in
+                                pipelines configured for edge execution mode.</li>
+                            <li>Amazon S3 origin enhancements:<ul id="ul_gxg_dbl_wbb">
+                                    <li>The origin now produces <xref
+                                            href="../Origins/AmazonS3-EventGeneration.dita#concept_vtn_ty4_jbb"
+                                            >no-more-data events</xref> and includes a new socket
+                                        timeout property.</li>
+                                    <li>You can now specify the number of times the origin retries a
+                                        query. The default is three.</li>
+                                </ul></li>
+                            <li>Directory origin enhancement - The origin can now <xref
+                                    href="../Origins/Directory-MultithreadProcessing.dita#concept_pcl_nwn_qbb"
+                                    >use multiple threads</xref> to perform parallel processing of
+                                files.</li>
+                            <li>JDBC Multitable Consumer origin enhancements:<ul id="ul_ij2_lbl_wbb">
+                                    <li>The origin can now use <xref
+                                            href="../Origins/MultitableJDBCConsumer-NonIncremental.dita#concept_xwr_bhm_nbb"
+                                            >non-incremental processing</xref> for tables with no
+                                        primary key or offset column. </li>
+                                    <li>You can now specify a query to be executed after
+                                        establishing a connection to the database, before performing
+                                        other tasks. This can be used, for example, to modify
+                                        session attributes. </li>
+                                    <li>A new Queries Per Second property determines how many
+                                        queries can be run every second. <p>This property replaces
+                                            the Query Interval property. For information about
+                                            possible upgrade impact, see <xref
+                                                href="../Upgrade/PostUpgrade-JDBCMultitable-QueryInterval.dita#concept_hky_ljl_wbb"
+                                                >JDBC Multitable Consumer Query Interval
+                                                Change</xref>.</p></li>
+                                </ul></li>
+                            <li>JDBC Query Consumer origin enhancements:<ul id="ul_hzy_tbl_wbb">
+                                    <li>You can now specify a query to be executed after
+                                        establishing a connection to the database, before performing
+                                        other tasks. This can be used, for example, to modify
+                                        session attributes.</li>
+                                    <li>The Microsoft SQL Server CDC functionality in the JDBC Query
+                                        Consumer origin is now deprecated and will be removed from
+                                        the origin in a future release. For upgrade information, see
+                                            <xref
+                                            href="../Upgrade/PostUpgrade-JDBCQuery-CDC.dita#concept_ys3_bjl_wbb"
+                                            >Update JDBC Query Consumer Pipelines used for SQL
+                                            Server CDC Data</xref>.</li>
+                                </ul></li>
+                            <li>Kafka Multitopic Consumer origin enhancement - The origin is now
+                                available in the following stage libraries, in addition to the
+                                Apache Kafka 0.10 stage library:<ul id="ul_emj_ccl_wbb">
+                                    <li dir="ltr">
+                                        <p dir="ltr">Apache Kafka 0.9</p>
+                                    </li>
+                                    <li dir="ltr">
+                                        <p dir="ltr">CDH Kafka 2.0 (0.9.0) and 2.1 (0.9.0)</p>
+                                    </li>
+                                    <li dir="ltr">
+                                        <p>HDP 2.5 and 2.6</p>
+                                    </li>
+                                </ul></li>
+                            <li>Kinesis Consumer origin enhancement - You can now specify the number
+                                of times the origin retries a query. The default is three.</li>
+                            <li>Oracle CDC Client origin enhancements:<ul id="ul_wbj_fcl_wbb">
+                                    <li>When using <xref
+                                            href="../Origins/OracleCDC-InitialChange.dita#concept_zrc_pyj_dx"
+                                            >SCNs for the initial change</xref>, the origin now
+                                        treats the specified SCN as a starting point rather than
+                                        looking for an exact match.</li>
+                                    <li>The origin now passes <xref
+                                            href="../Origins/OracleCDC-UnsupportedTypes.dita#concept_gwp_d4n_n1b"
+                                            >raw data</xref> to the pipeline as a byte array.</li>
+                                    <li>The origin can now include unparsed strings from the parsed
+                                        SQL query for <xref
+                                            href="../Origins/OracleCDC-UnsupportedTypes.dita#concept_gwp_d4n_n1b"
+                                            >unsupported data types</xref> in records.</li>
+                                    <li>The origin now uses <xref
+                                            href="../Origins/OracleCDC-ChoosingBuffers.dita#concept_yqk_3hn_n1b"
+                                            >local buffering</xref> instead of Oracle LogMiner
+                                        buffering by default. Upgraded pipelines require no changes.
+                                    </li>
+                                </ul></li>
+                            <li>SQL Server CDC Client origin enhancements - You can now perform the
+                                following tasks with the SQL Server CDC Client origin:<ul
+                                    id="ul_et1_pcl_wbb">
+                                    <li><xref
+                                            href="../Origins/SQLServerCDC-LateTables.dita#concept_nxm_1lp_qbb"
+                                            >Process CDC tables</xref> that appear after the
+                                        pipeline starts.</li>
+                                    <li><xref
+                                            href="../Origins/SQLServerCDC-SchemaChanges.dita#concept_avq_s2q_qbb"
+                                            >Check for schema changes and generate events</xref>
+                                        when they are found.</li>
+                                    <li>
+                                        <p dir="ltr">In addition, a new Capture Instance Name
+                                            property replaces the Schema and Table Name Pattern
+                                            properties from earlier releases.</p>
+                                        <p dir="ltr">You can simply use the schema name and table
+                                            name pattern for the capture instance name. Or, you can
+                                            specify the schema name and a capture instance name
+                                            pattern, which allows you to specify specific CDC tables
+                                            to process when you have multiple CDC tables for a
+                                            single data table.</p>
+                                        <p dir="ltr">Upgraded pipelines require no changes.</p>
+                                    </li>
+                                </ul></li>
+                            <li>UDP Source origin enhancement - The Enable Multithreading property
+                                that enabled using multiple epoll receiver threads is now named Use
+                                Native Transports (epoll).</li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Processors</dt>
+                    <dd>
+                        <ul id="ul_qfc_3fl_wbb">
+                            <li>New Aggregator processor - A processor that aggregates data that
+                                arrives within a window of time.</li>
+                            <li><xref href="../Processors/Delay.dita#concept_ez5_pvf_wbb">New Delay
+                                    processor</xref> - A processor that can delay processing a batch
+                                of records for a specified amount of time.</li>
+                            <li>Field Converter processor enhancement - You can now convert strings
+                                to the Zoned Datetime data type, and vice versa. You can also
+                                specify the format to use. </li>
+                            <li>Hive Metadata processor enhancement - You can now configure
+                                additional JDBC configuration properties to pass to the JDBC
+                                driver.</li>
+                            <li>HTTP Client processor enhancement - The Rate Limit now defines the
+                                maximum number of requests to make per millisecond. Previously, it
+                                defined the maximum number of requests per second.</li>
+                            <li>JDBC Lookup and JDBC Tee processor enhancements - You can now
+                                specify a query to be executed after establishing a connection to
+                                the database, before performing other tasks. This can be used, for
+                                example, to modify session attributes. </li>
+                            <li>Kudu Lookup processor enhancement - The Cache Kudu Table property is
+                                now named Enable Table Caching. The Maximum Entries to Cache Table
+                                Objects property is now named Maximum Table Entries to Cache. </li>
+                            <li>Salesforce Lookup processor enhancement - You can use a new Retrieve
+                                lookup mode to look up data for a batch of records instead of
+                                record-by-record.</li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Destinations</dt>
+                    <dd>
+                        <ul id="ul_rv3_nfl_wbb">
+                            <li><xref href="../Destinations/GCS.dita#concept_p4n_jrl_nbb">New Google
+                                    Cloud Storage destination</xref> - A new destination that writes
+                                data to objects in Google Cloud Storage. The destination can
+                                generate events for use as dataflow triggers.</li>
+                            <li><xref href="../Destinations/KineticaDB.dita#concept_hxh_5xg_qbb">New
+                                    KineticaDB destination</xref> - A new destination that writes
+                                data to a Kinetica table. </li>
+                            <li>Hive Metastore destination enhancement - You can now configure
+                                additional JDBC configuration properties to pass to the JDBC
+                                driver.</li>
+                            <li>HTTP Client destination enhancement - You can now use the HTTP
+                                Client destination to write Avro, Delimited, and Protobuf data in
+                                addition to the previous data formats. </li>
+                            <li>JDBC Producer destination enhancement - You can now specify a query
+                                to be executed after establishing a connection to the database,
+                                before performing other tasks. This can be used, for example, to
+                                modify session attributes. </li>
+                            <li><xref href="../Destinations/Kudu-Configuring.dita#task_c4x_tmh_4v"
+                                    >Kudu destination enhancement</xref> - If the destination
+                                receives a change data capture log from the following source
+                                systems, you now must specify the source system in the Change Log
+                                Format property so that the destination can determine the format of
+                                the log: Microsoft SQL Server, Oracle CDC Client, MySQL Binary Log,
+                                or MongoDB Oplog. </li>
+                            <li>MapR DB JSON destination enhancement - The destination now supports
+                                writing to MapR DB based on the CRUD operation in record header
+                                attributes.</li>
+                            <li>MongoDB destination enhancements - With this release, the Upsert
+                                operation is no longer supported by the destination. Instead, the
+                                destination includes the following enhancements:<ul
+                                    id="ul_xfc_xfl_wbb">
+                                    <li>Support for the <xref
+                                            href="../Destinations/MongoDB-CRUDOperation.dita#concept_bkc_m24_4v"
+                                            >Replace and Update operations</xref>. </li>
+                                    <li>Support for an <xref
+                                            href="../Destinations/MongoDB-Upserts.dita#concept_syh_s1l_tbb"
+                                            >Upsert flag</xref> that, when enabled, is used with
+                                        both the Replace and Update operations. </li>
+                                </ul><p>For information about upgrading existing upsert pipelines,
+                                    see <xref
+                                        href="../Upgrade/PostUpgrade-MongoDBdest-Upsert.dita#concept_ncs_5jl_wbb"
+                                        >Update MongoDB Destination Upsert Pipelines</xref>.
+                                </p></li>
+                            <li>Redis destination enhancement - The destination now supports writing
+                                data using CRUD operations stored in record header attributes. </li>
+                            <li>Salesforce destination enhancement - When using the Salesforce Bulk
+                                API to update, insert, or upsert data, you can now use a colon (:)
+                                or period (.) as a field separator when defining the Salesforce
+                                field to map the Data Collector field to. For example,
+                                    <codeph>Parent__r:External_Id__c</codeph> or
+                                    <codeph>Parent__r.External_Id__c</codeph> are both valid
+                                Salesforce fields. </li>
+                            <li>Wave Analytics destination rename - With this release, the Wave
+                                Analytics destination is now named the <xref
+                                    href="../Destinations/WaveAnalytics.dita#concept_hlx_r53_rx"
+                                    >Einstein Analytics destination</xref>, following the recent
+                                Salesforce rebranding. All of the properties and functionality of
+                                the destination remain the same. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Executor</dt>
+                    <dd>
+                        <ul id="ul_if5_jgl_wbb">
+                            <li>Hive Query executor enhancement - You can now configure additional
+                                JDBC configuration properties to pass to the JDBC driver. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Credential Stores</dt>
+                    <dd>
+                        <ul id="ul_o1b_mgl_wbb">
+                            <li><xref
+                                    href="../Configuration/CredentialStores-CyberArk.dita#concept_v21_nvd_fbb"
+                                    >CyberArk</xref> - Data Collector now provides a credential
+                                store implementation for CyberArk Application Identity Manager. You
+                                can define the credentials required by external systems - user names
+                                or passwords - in CyberArk. Then you use credential expression
+                                language functions in JDBC stage properties to retrieve those
+                                values, instead of directly entering credential values in stage
+                                properties. </li>
+                            <li><xref
+                                    href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                                    >Supported stages</xref> - You can now use the credential
+                                functions in all stages that require you to enter sensitive
+                                information. Previously, you could only use the credential functions
+                                in JDBC stages. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Data Collector Configuration</dt>
+                    <dd>By default when Data Collector restarts, it automatically restarts all
+                        pipelines that were running before Data Collector shut down. You can now
+                        disable the automatic restart of pipelines by enabling the
+                            <codeph>runner.boot.pipeline.restart</codeph> property in the
+                            <codeph>$SDC_CONF/sdc.properties</codeph> file. </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Dataflow Performance Manager</dt>
+                    <dd>
+                        <ul id="ul_p2b_4hl_wbb">
+                            <li><xref href="../DPM/AggStatistics_MapR.dita#concept_qh5_v5t_mbb"
+                                    >Aggregated statistics</xref> - When working with DPM, you can
+                                now configure a pipeline to write aggregated statistics to MapR
+                                Streams. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Data Formats</dt>
+                    <dd>
+                        <ul id="ul_sp4_rhl_wbb">
+                            <li><xref
+                                    href="../Data_Formats/NetFlow_Overview.dita#concept_thl_nnr_hbb"
+                                    >New NetFlow 9 support</xref> - Data Collector now supports
+                                processing NetFlow 9 template-based messages. Stages that previously
+                                processed NetFlow 5 data can now process NetFlow 9 data as well. </li>
+                            <li>Datagram data format enhancement - The Datagram Data Format property
+                                is now named the Datagram Packet Format. </li>
+                            <li>Delimited data format enhancement - Data Collector can now process
+                                data using the Postgres CSV and Postgres Text delimited format
+                                types. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Expression Language</dt>
+                    <dd>
+                        <ul id="ul_ppq_whl_wbb">
+                            <li>New field-path syntax - You can use a powerful new field-path syntax
+                                in certain stages to specify the fields that you want to use in an
+                                expression. </li>
+                            <li><xref
+                                    href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
+                                    >New string functions</xref> - The release includes the
+                                following new functions:<ul id="ul_uss_whl_wbb">
+                                        <li>str:isNullOrEmpty() - Returns true or false based on
+                                            whether a string is null or is the empty string.</li>
+                                        <li>str:splitKV() - Splits key-value pairs in a string into
+                                            a map of string values.</li>
+                                    
+                                </ul></li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Stage Libraries</dt>
+                    <dd>
+                        <ul id="ul_qhq_c3l_wbb">
+                            <li><xref
+                                    href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
+                                    >New stage libraries</xref> - This release includes the
+                                following new stage libraries:<ul id="ul_rcr_23l_wbb">
+                                    <li>Apache Kafka 1.0 </li>
+                                    <li>Apache Kafka 0.11 </li>
+                                    <li>Apache Kudu 1.5 </li>
+                                    <li>Cloudera CDH 5.13 </li>
+                                    <li>Cloudera Kafka 3.0.0 (0.11.0) </li>
+                                    <li>Hortonworks 2.6.1, including Hive 1.2 </li>
+                                    <li>Hortonworks 2.6.2, including Hive 1.2 and 2.0 </li>
+                                    <li>MapR version 6.0 (MEP 4) <draft-comment author="Loretta"
+                                            >remove?</draft-comment></li>
+                                    <li>MapR Spark 2.1 (MEP 3) </li>
+                                </ul></li>
+                            <li><xref
+                                    href="../Installation/LegacyLibraries.dita#concept_fw3_zt3_tbb"
+                                    >Legacy stage libraries</xref> - Stage libraries that are more
+                                than two years old are no longer included with Data Collector.
+                                Though not recommended, you can still download and install the older
+                                stage libraries as custom stage libraries. <p>If you have pipelines
+                                    that use these legacy stage libraries, you will need to update
+                                    the pipelines to use a more current stage library or install the
+                                    legacy stage library manually, For moe information see <xref
+                                        href="../Upgrade/PostUpgrade-LegacyLibraries.dita#concept_wnl_zk4_5bb"
+                                        >Update Pipelines using Legacy Stage
+                                Libraries</xref>.</p></li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Miscellaneous</dt>
+                    <dd>
+                        <ul id="ul_fw1_s3l_wbb">
+                            <li>New data type - Data Collector now supports the Zoned Datetime data
+                                type.</li>
+                            <li>New Data Collector metrics - JVM metrics have been renamed Data
+                                Collector Metrics and now include general Data Collector metrics in
+                                addition to JVM metrics. The JVM Metrics menu item has also been
+                                renamed SDC Metrics.</li>
+                            <li>Pipeline error records - You can now write error records to Google
+                                Pub/Sub, Google Cloud Storage, or an MQTT broker.</li>
+                            <li>Snapshot enhancements:<ul id="ul_cv5_53l_wbb">
+                                    <li>You can now configure the pipeline to take a snapshot of
+                                        data if the pipeline fails due to a data-related
+                                        exception.</li>
+                                    <li>You can now download snapshots through the UI and the REST
+                                        API.</li>
+                                </ul></li>
+                            <li>Time zone enhancement - Time zones have been organized and updated
+                                to use JDK 8 names. This should make it easier to select time zones
+                                in stage properties. In the rare case that your pipeline uses a
+                                format not supported by JDK 8, edit the pipeline to select a
+                                compatible time zone.</li>
+                        </ul>
+                    </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

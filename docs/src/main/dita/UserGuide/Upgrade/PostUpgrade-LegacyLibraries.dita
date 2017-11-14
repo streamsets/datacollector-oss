@@ -15,7 +15,6 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wnl_zk4_5bb">
  <title>Update Pipelines using Legacy Stage Libraries</title>
- <shortdesc></shortdesc>
  <conbody>
   <p>With version 3.0.0.0, a set of older stage libraries are no longer included with Data
             Collector. Pipelines that use these legacy stage libraries will not run until you
@@ -35,9 +34,9 @@
                 <dlentry>
                     <dt>Install the legacy library</dt>
                     <dd>Though not recommended, you can still download and install the older stage
-                        libraries as custom stage libraries. For more information, see<xref
-                            href="https://docs.google.com/document/d/1hXKDH5roNgpqRxqQAgMuJ1dBAWd-6PQM-vgR77AvaXo/edit?ts=59fdbe93#heading=h.apqskmrvtbol"
-                            format="html" scope="external"> Legacy Stage Libraries</xref>.</dd>
+                        libraries as custom stage libraries. For more information, see <xref
+                            href="../Installation/LegacyLibraries.dita#concept_fw3_zt3_tbb">Legacy
+                            Stage Libraries</xref>.</dd>
                 </dlentry>
             </dl></p>
  </conbody>
