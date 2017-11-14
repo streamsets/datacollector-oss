@@ -35,8 +35,9 @@
 
   <properties>
     <!-- Closed source artifacts should be provided dependency -->
-    <hadoop.version>2.7.0-mapr-1506</hadoop.version>
-    <hbase.version>0.98.12-mapr-1506-m7-5.0.0</hbase.version>
+    <hadoop.version>2.7.0-mapr-1710</hadoop.version>
+    <hbase.version>1.1.8-mapr-1710</hbase.version>
+    <mapr.version>6.0.0-mapr</mapr.version>
  </properties>
 
   <dependencies>
@@ -109,7 +110,7 @@
     <dependency>
       <groupId>com.mapr.db</groupId>
       <artifactId>maprdb-cdc</artifactId>
-      <version>6.0.0-mapr-beta</version>
+      <version>${mapr.version}</version>
     </dependency>
 
     <dependency>
