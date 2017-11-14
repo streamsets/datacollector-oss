@@ -205,6 +205,13 @@
       <artifactId>streamsets-datacollector-maprdb-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
+      <exclusions>
+        <!-- We explicitly exclude packaging, so that we link the proper version during runtime -->
+        <exclusion>
+          <groupId>com.mapr.db</groupId>
+          <artifactId>maprdb-cdc</artifactId>
+        </exclusion>
+       </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
