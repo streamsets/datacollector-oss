@@ -40,7 +40,7 @@ import java.util.Iterator;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Processors/Delay.html#task_jh5_qxf_wbb"
 )
 public class DelayProcessor extends SingleLaneRecordProcessor {
 
