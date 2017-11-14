@@ -77,6 +77,10 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/PostUpgrade-LegacyLibraries.dita"/>
+   <topicref href="../Upgrade/PostUpgrade-JDBCMultitable-QueryInterval.dita"/>
+   <topicref href="../Upgrade/PostUpgrade-JDBCQuery-CDC.dita"/>
+   <topicref href="../Upgrade/PostUpgrade-MongoDBdest-Upsert.dita"/>
+   <topicref href="../Upgrade/PostUpgrade-TimeZones.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
    <topicref href="../Upgrade/PostUpgrade-JDBCMultitable.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>

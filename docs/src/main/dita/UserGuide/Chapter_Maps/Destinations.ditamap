@@ -100,7 +100,10 @@
    <topicref href="../Destinations/Elastic-DefineOperation.dita"/>
    <topicref href="../Destinations/Elasticsearch-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/WaveAnalytics.dita">
+  <topicref href="../Destinations/WaveAnalytics.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Destinations/WaveAnalytics-APIVersion.dita"/>
    <topicref href="../Destinations/WaveAnalytics-Dataflow.dita"/>
    <topicref href="../Destinations/WaveAnalytics-Configuring.dita"/>
