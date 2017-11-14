@@ -38,7 +38,7 @@ public class MapRDBCDCBeanConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MAP,
-      defaultValue = "{ \"key\": \"/stream:topic\", \"value\": \"table\" }",
+      defaultValue = "{ \"/stream:topic\": \"table\" }",
       label = "Topic List",
       description = "List of MapR Streams topics to consume. The Streams CDC topics typically follow the pattern /<stream_name>:<topic_name>. Table name is required for each topic.",
       displayPosition = 30,
