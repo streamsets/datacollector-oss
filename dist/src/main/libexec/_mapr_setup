@@ -178,6 +178,11 @@ function create_symlinks {
 
   echo "Removing old Hadoop 0.20 jars ...."
   rm -rf ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/hadoop-0.20*.jar
+
+  echo "Removing troublesome Jackson dependencies"
+  rm -rf ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/jackson-annotations-2.4.*.jar
+  rm -rf ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/jackson-core-2.4.*.jar
+  rm -rf ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/jackson-databind-2.4.*.jar
 }
 
 echo ""
