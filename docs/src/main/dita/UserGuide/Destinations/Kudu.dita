@@ -30,6 +30,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"
                 /><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"
             /></p>
+        <p>If the destination receives a change data capture log from some origin systems, you must
+            select the format of the change log.</p>
         <p>You can also configure the external consistency mode and the operation timeout for the
             destination.</p>
  </conbody>

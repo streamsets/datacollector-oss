@@ -19,35 +19,65 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_epj_gqd_rx">
  <title>Update Kudu Pipelines</title>
- <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        version 2.2.0.0 provides support for Apache Kudu version 1.0.x and no longer supports
-        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination from <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage alias for the
-        earlier Kudu version to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </shortdesc>
  <conbody>
-        <p>The configuration file includes stage aliases to enable backward compatibility for
-            pipelines created with earlier versions of <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />.</p>
-        <p>To update Kudu pipelines:</p>
-  <p>
-            <ol id="ol_gpt_ssd_rx">
-                <li>Upgrade your Kudu cluster to version 1.0.x.<p>For instructions, see the Apache
-                        Kudu documentation.</p></li>
-                <li>Open the <codeph>$SDC_CONF/sdc.properties</codeph> file and locate the following
-                    comment:<codeblock># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</codeblock></li>
-                <li>Below the comment, add a stage alias for the earlier Kudu version as
-                        follows:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-&lt;version>-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock><p>Where
-                        &lt;version> is the earlier Kudu version: 0_7, 0_8, or 0_9. For example, if
-                        you previously used Kudu version 0.9, add the following stage
-                        alias:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock></p></li>
-                <li>Restart <ph
+        <p>Consider the following upgrade tasks for Kudu pipelines, based on the version that you
+            are upgrading from:</p>
+        <dl>
+            <dlentry>
+                <dt>Upgrade from versions earlier than 3.0.0.0</dt>
+                <dd>With version 3.0.0.0, if the destination receives a change data capture log from
+                    the following source systems, you must specify the source system so that the
+                    destination can determine the format of the log: Microsoft SQL Server, Oracle
+                    CDC Client, MySQL Binary Log, or MongoDB Oplog. </dd>
+                <dd>Previously, the Kudu destination could not directly receive changed data from
+                    these source systems. You either had to include a scripting processor in the
+                    pipeline to modify the field paths in the record to a format that the
+                    destination could read. Or, you had to add multiple Kudu destinations to the
+                    pipeline - one per operation type - and include a Stream Selector processor to
+                    send records to the destination by operation type. </dd>
+                <dd>If you implemented one of these workarounds, then after upgrading, modify the
+                    pipeline to remove the scripting processor or the Stream Selector processor and
+                    the multiple destinations. In the Kudu destination, set the Change Log Format to
+                    the appropriate format of the log: Microsoft SQL Server, Oracle CDC Client,
+                    MySQL Binary Log, or MongoDB Oplog. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Upgrade from versions earlier than 2.2.0.0</dt>
+                <dd>With version 2.2.0.0, <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to enable the changes.</li>
-            </ol>
-        </p>
+                    /> provides support for Apache Kudu version 1.0.x and no longer supports earlier
+                    Kudu versions. To upgrade pipelines that contain a Kudu destination from <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage
+                    alias for the earlier Kudu version to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>
+                <dd>
+                    <p>The configuration file includes stage aliases to enable backward
+                        compatibility for pipelines created with earlier versions of <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />.</p>
+                    <p>To update Kudu pipelines:</p>
+                    <p>
+                        <ol id="ol_gpt_ssd_rx">
+                            <li>Upgrade your Kudu cluster to version 1.0.x.<p>For instructions, see
+                                    the Apache Kudu documentation.</p></li>
+                            <li>Open the <codeph>$SDC_CONF/sdc.properties</codeph> file and locate
+                                the following
+                                comment:<codeblock># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</codeblock></li>
+                            <li>Below the comment, add a stage alias for the earlier Kudu version as
+                                    follows:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-&lt;version>-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock><p>Where
+                                    &lt;version> is the earlier Kudu version: 0_7, 0_8, or 0_9. For
+                                    example, if you previously used Kudu version 0.9, add the
+                                    following stage
+                                    alias:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock></p></li>
+                            <li>Restart <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> to enable the changes.</li>
+                        </ol>
+                    </p>
+                </dd>
+            </dlentry>
+        </dl>
  </conbody>
 </concept>

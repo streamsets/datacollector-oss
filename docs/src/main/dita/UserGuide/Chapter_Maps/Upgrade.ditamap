@@ -77,6 +77,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/PostUpgrade-LegacyLibraries.dita"/>
+   <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
    <topicref href="../Upgrade/PostUpgrade-JDBCMultitable.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
    <topicref href="../Upgrade/PostUpgrade-JDBCProducer.dita"/>
@@ -84,7 +85,6 @@
    <topicref href="../Upgrade/2410DockerAuthentication.dita"/>
    <topicref href="../Upgrade/2400-PipelinePermissions.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Elasticsearch.dita"/>
-   <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
   </topicref>
   <topicref href="../Upgrade/Upgrade-ExternalSystems.dita" chunk="to-content">
    <topicmeta>
