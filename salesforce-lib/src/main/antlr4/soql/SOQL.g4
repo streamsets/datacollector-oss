@@ -196,6 +196,8 @@ LAST_N_FISCAL_YEARS_N : L A S T '_' N '_' F I S C A L '_' Y E A R S ':' INTEGER 
 
 STRING              : '\'' ( ~['] )* '\'' ;
 
+EL                  : '$' '{' ( ~[}] )* '}';
+
 /*
  * IDENTIFIER must be last!!!
  */
@@ -289,7 +291,8 @@ value               : REAL
                     | subquery
                     | TRUE
                     | FALSE
-                    | IDENTIFIER;
+                    | IDENTIFIER
+                    | EL;
 
 set                 : '(' value (',' value)* ')' ;
 

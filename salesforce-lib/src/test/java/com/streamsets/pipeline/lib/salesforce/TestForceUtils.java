@@ -317,7 +317,10 @@ public class TestForceUtils {
           "FROM Account\n" +
           "WHERE id = '0013600000EVlZVAA1'", "Account"},
       // SDC-7548 Salesforce Lookup Processor fails when record ID includes 'FROM'
-      {"SELECT some, fields FROM Lead WHERE Id = '00QC000001VZfROMA1'", "Lead"}
+      {"SELECT some, fields FROM Lead WHERE Id = '00QC000001VZfROMA1'", "Lead"},
+      // SDC-7894 SOQL problem using DateTime as ${OFFSET} value
+      {"SELECT * FROM Task WHERE LastModifiedDate > ${OFFSET}", "Task"},
+      {"SELECT * FROM Task WHERE Id > '${OFFSET}'", "Task"},
   };
 
   @Parameterized.Parameters
