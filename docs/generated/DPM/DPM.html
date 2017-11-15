@@ -143,18 +143,35 @@
 
  
  <div class="body conbody"><p class="shortdesc">In <span class="ph">DPM</span>,
-        pipelines are the design of the dataflow. Jobs are the execution of the
-        dataflow.</p>
+        pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
+        engineers design pipelines on an authoring <span class="ph">Data
+                  Collector</span>.
+        DevOps or site reliability engineers run jobs on groups of execution <span class="ph">Data
+                  Collector</span>s.</p>
 
-        <p class="p">As a DevOps or site reliability
-            engineer - the person responsible for ensuring that all services and systems are
-            scalable and reliable - you create <span class="ph">DPM</span>
-            jobs to run pipelines on groups of <span class="ph">Data
+        <p class="p">
+            
+        </p>
+
+        <p class="p">As a DevOps or site reliability engineer - the person responsible for ensuring that all
+            services and systems are scalable and reliable - you register both authoring and
+            execution <span class="ph">Data
+                  Collector</span>s
+            with <span class="ph">DPM</span>. You register <span class="ph">Data
+                  Collector</span>s
+            by manually administering them or by automatically provisioning them on a container
+            orchestration framework such as Kubernetes. All registered <span class="ph">Data
+                  Collector</span>s -
+            either manually administered or automatically provisioned - function in the same
+            way.</p>
+
+        <p class="p">You create <span class="ph">DPM</span>
+            jobs to run pipelines on groups of execution <span class="ph">Data
                   Collector</span>s.
             When you start a job on a group of <span class="ph">Data
                   Collector</span>s,
                 <span class="ph">DPM</span>
-            remotely runs the pipeline on all <span class="ph">Data
+            remotely runs the pipeline on the <span class="ph">Data
                   Collector</span>s
             in the group. This enables you to manage and orchestrate large scale dataflows run
             across multiple <span class="ph">Data

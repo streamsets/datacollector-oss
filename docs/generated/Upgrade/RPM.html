@@ -53,7 +53,7 @@
 
             <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw">Step 2. Back Up the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires sudo privileges on the root directory.">Step 3. Install the New Version</a></p>
+            <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires root privileges.">Step 3. Install the New Version</a></p>
 
             <p class="p"><a class="xref" href="RPM.html#task_krt_sj5_xv" title="Each RPM installation uses the same default values as the previous version for all of the directory environment variables. If the previous version used the default values, the new version is configured to use the same working directories.">Step 4. Update the Environment Configuration File</a></p>
 
@@ -119,8 +119,13 @@
                 <li class="li">Resource directory defined in the SDC_RESOURCES environment variable. Default is
                         <samp class="ph codeph">/var/lib/sdc-resources</samp>.</li>
 
-                <li class="li">Environment configuration file,
-                    <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>.</li>
+                <li class="li">Environment configuration file used by your operating system:<ul class="ul" id="concept_nzl_hkb_mw__ul_z4r_t5w_5bb">
+                        <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</li>
+
+                        <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file.</li>
+
+                    </ul>
+</li>
 
             </ul>
 </div>
@@ -133,7 +138,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -143,20 +148,31 @@
     
     <div class="body taskbody"><p class="shortdesc">Install the new version of the RPM package. Installing the full <span class="ph">Data
                   Collector</span> as a
-        service requires sudo privileges on the root directory.</p>
+        service requires root privileges. </p>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
-                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                  Collector</span> RPM package for your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
+                <ul class="ul choices" id="task_ofc_2zl_5v__choices_dw4_xdt_5bb">
+                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>,
+                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el6-rpms.tgz</pre>
+</li>
+
+                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>,
+                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el7-rpms.tgz</pre>
+</li>
+
+                </ul>
+
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to extract the file to a different directory than the
                     previous version:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-all-&lt;operating_system&gt;-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span>, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span> on CentOS 7, use the following
+                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-el7-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -206,7 +222,16 @@ For
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the new version of <span class="ph">Data
-                  Collector</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</span>
+                  Collector</span>, open the environment variable file used by your operating system: </span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_krt_sj5_xv__ul_xzj_vfv_5bb">
+                        <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</li>
+
+                        <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file.</li>
+
+                    </ul>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Compare the previous and new versions of the environment configuration file,
@@ -218,7 +243,7 @@ For
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -357,8 +382,15 @@ For
  <h2 class="title topictitle2">Step 8. Start the New Version of Data Collector</h2>
 
  <div class="body conbody">
-        <div class="p">Use the following command to start the new version of <span class="ph">Data
-                  Collector</span>:<pre class="pre codeblock">service sdc start</pre>
+        <div class="p">Use the required command for your operating system to start the new version of <span class="ph">Data
+                  Collector</span>:<ul class="ul" id="concept_n35_s55_xv__ul_g5m_bgv_5bb">
+                <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, use:<pre class="pre codeblock">service sdc start</pre>
+</li>
+
+                <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, use:<pre class="pre codeblock">systemctl start sdc</pre>
+</li>
+
+            </ul>
 </div>
 
     </div>

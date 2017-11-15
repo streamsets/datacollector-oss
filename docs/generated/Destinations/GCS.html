@@ -1,0 +1,1544 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Google Cloud Storage destination writes data to objects in Google Cloud Storage. You can use other destinations to write to Google BigQuery , Google Bigtable , and Google Pub/Sub . The destination ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Cloud Storage" /><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_p4n_jrl_nbb" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Google Cloud Storage</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_p4n_jrl_nbb">
+ <h1 class="title topictitle1">Google Cloud Storage</h1>
+
+ <div class="body conbody">
+  <p class="p">The Google Cloud Storage destination writes
+            data to objects in Google Cloud Storage. You can use other destinations to write to
+                <a class="xref" href="BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination maps fields from records to BigQuery columns in existing tables based on matching names and compatible data types. If needed, the destination converts Data Collector data types to BigQuery data types.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google BigQuery</a>, <a class="xref" href="Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination requires the BoringSSL library. You must download and install the external library so that the Google Bigtable destination can access it.Configure the Google Application Default Credentials that the Google Bigtable destination uses to connect to Google Cloud Bigtable. Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key. When you map record fields to Google Cloud Bigtable columns, you specify whether the Cloud Bigtable storage type is text or binary. The destination converts the data types of the record fields to the Cloud Bigtable storage types. When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">Google Bigtable</a>, and <a class="xref" href="PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google Pub/Sub</a>.</p>
+
+        <p class="p">The destination creates an object for each batch of data written to Google Cloud Storage. </p>
+
+        <p class="p">With the Google Cloud Storage destination, you configure the bucket and common prefix to
+            define where to write objects. You can use a partition prefix to specify the partition
+            to write to. You can configure a prefix for the object name, and a time basis and data
+            time zone for the stage. When using any data format except whole file, you can also
+            configure a suffix for the object name and compress data with gzip before writing to
+            Google Cloud Storage. </p>
+
+        <p class="p"><span class="ph">The destination can generate events for an event stream. For
+                        more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_otx_vxn_sbb">
+ <h2 class="title topictitle2">Credentials</h2>
+
+ <div class="body conbody">
+  <p class="p">Before writing to Google Cloud
+            Storage, the Google Cloud Storage destination must pass credentials to Google Cloud
+            Storage. Configure the destination to retrieve the credentials from the Google
+            Application Default Credentials or from a Google Cloud service account credentials
+            file.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_sv1_byn_sbb">
+ <h3 class="title topictitle3">Default Credentials Provider</h3>
+
+    <div class="body conbody">
+        <p class="p">When configured to use the Google Application
+            Default Credentials, the destination checks for the credentials file defined in the
+                <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp> environment variable. If the
+            environment variable doesn't exist and <span class="ph">Data
+                  Collector</span> is
+            running on a virtual machine (VM) in Google Cloud, the origin uses the built-in service
+            account associated with the virtual machine instance. </p>
+
+        <p class="p">For more information about the default credentials, see <a class="xref" href="https://developers.google.com/identity/protocols/application-default-credentials" target="_blank">Google Application Default Credentials</a> in the
+            Google Developer documentation.</p>
+
+        <p class="p">Complete the following steps to define the credentials file in the environment
+            variable:</p>
+
+        <ol class="ol" id="concept_sv1_byn_sbb__ol_o51_ttq_v1b">
+                                    <li class="li">Use the Google Cloud Platform Console or the
+                                                <samp class="ph codeph">gcloud</samp> command-line tool to create
+                                          a Google service account and have your application use it
+                                          for API access.<div class="p">For example, to use the command line
+                                                tool, run the following
+                                                commands:<pre class="pre codeblock">gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</pre>
+</div>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. </li>
+
+                                    <li class="li">In the <span class="ph">Data
+                  Collector</span> environment configuration file located in the
+                                                <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add
+                                          the <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+                                          environment variable and point it to the credentials
+                                                file.<p class="p">Modify the <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation type.</p>
+<p class="p">Set the environment variable as
+                                          follows:</p>
+<pre class="pre codeblock">export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</pre>
+</li>
+
+                                    <li class="li">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Default Credentials Provider</span>
+                                          for the credentials provider. </li>
+
+                              </ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_hbh_lyn_sbb">
+ <h3 class="title topictitle3">Service Account Credentials (JSON)</h3>
+
+    <div class="body conbody">
+        <p class="p">When configured to use the Google Cloud
+            service account credentials file, the destination checks for the file defined in the
+            origin properties. </p>
+
+        <div class="p">Complete the following steps to use the service account credentials file:<ol class="ol" id="concept_hbh_lyn_sbb__ol_ztr_wtq_v1b">
+                                    <li class="li">Generate a service account credentials file in JSON
+                                                format.<p class="p">Use the Google Cloud Platform Console or
+                                                the <samp class="ph codeph">gcloud</samp> command-line tool to
+                                                generate and download the credentials file. For more
+                                                information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a
+                                                  service account credential</a> in the Google
+                                                Cloud Platform documentation.</p>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">As a best practice, store the file in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                    </p>
+</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Service Account Credentials
+                                                File</span> for the credentials provider and
+                                          enter the path to the credentials file.</li>
+
+                              </ol>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_qsx_ryn_sbb">
+ <h2 class="title topictitle2">Partition Prefix</h2>
+
+    <div class="body conbody">
+        <p class="p">You can use a partition prefix to
+            organize objects by partitions. You can use the partition prefix to write to existing
+            partitions or to create new partitions as needed. When a partition specified in the
+            partition prefix does not exist, the destination creates the partition.</p>
+
+        <p class="p">You can specify an exact partition name for the partition prefix, or you can use an
+            expression that evaluates to a partition name. </p>
+
+        <p class="p">For example, to write to partitions based on data in the Country field, you can use the
+            following expression as the partition prefix:
+                <samp class="ph codeph">${record:value('/Country')}</samp>. </p>
+
+        <p class="p">With this expression, the destination writes records to partitions based on the country
+            data in the record, and creates partitions for countries that do not already have a
+            partition.</p>
+
+        <p class="p">If you use datetime variables in the expression, be sure to configure the <a class="xref" href="AmazonS3.html#concept_qtb_njg_vw">time basis</a> for the
+            stage.</p>
+
+        <p class="p">
+            
+        </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ffn_tc4_sbb">
+ <h2 class="title topictitle2">Time Basis, Data Time Zone, and Time-Based Partition Prefixes</h2>
+
+    <div class="body conbody">
+        <p class="p">The time basis and the data time zone comprises the time
+            used by the Google Cloud Storage destination to write records to a time-based partition
+            prefix. When the configured partition prefix does not include time-based functions, you
+            can ignore the time basis property.</p>
+
+        <p class="p">A partition prefix has a time component when it includes datetime variables, such as
+                <samp class="ph codeph">${YYYY()}</samp> or <samp class="ph codeph">${DD()}</samp>, or when it includes an
+            expression that evaluates to a datetime value, such as
+                <samp class="ph codeph">${record:value("/Timestamp")}.</samp></p>
+
+        <p class="p">For details about datetime variables, see <a class="xref" href="../Expression_Language/DateTimeVariables.html#concept_gh4_qd2_sv" title="The expression language provides datetime variables for use in expressions.">Datetime Variables</a>.</p>
+
+        <div class="p">You can use the following times as the time basis: <dl class="dl">
+                
+                    <dt class="dt dlterm">Processing Time</dt>
+
+                    <dd class="dd">When you use processing time as the time basis, the destination performs
+                        writes based on the processing time and the configured partition prefix. The
+                        processing time is the time associated with the <span class="ph">Data
+                  Collector</span> running the pipeline, by default. You can specify a different time zone
+                        by configuring the Data Time Zone property. To use the processing time as
+                        the time basis, use the following expression:
+                        <pre class="pre codeblock">${time:now()}</pre>
+This is the default time basis. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Record Time</dt>
+
+                    <dd class="dd">When you use the time associated with a record as the time basis, you
+                        specify a date field in the record. The destination writes data based on the
+                        datetimes associated with the records, adjusting for the value specified for
+                        the Data Time Zone property.</dd>
+
+                    <dd class="dd">To use a time associated with the record, use an expression that calls a
+                        field and resolves to a datetime value, such as
+                            <samp class="ph codeph">${record:value("/Timestamp")}</samp>. </dd>
+
+                
+            </dl>
+</div>
+
+        <div class="p">For example, say you define the Partition Prefix property using the following datetime
+            variables: <pre class="pre codeblock">logs-${YYYY()}-${MM()}-${DD()}</pre>
+</div>
+
+        <p class="p">If you use the time of processing as the time basis, the destination writes records to
+            partitions based on when it processes each record. If you use the time associated with
+            the data, such as a transaction timestamp, then the destination writes records to the
+            partitions based on that timestamp. If a partition does not exist, the destination
+            creates the needed partition.</p>
+
+        <p class="p">
+            
+        </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_s1m_j24_sbb">
+ <h2 class="title topictitle2">Object Names</h2>
+
+    <div class="body conbody">
+        <div class="p">The Google Cloud Storage destination creates an object,
+            or file, for each batch of data written. Objects generally use the following naming
+            convention: <pre class="pre codeblock">&lt;prefix&gt;-&lt;UUID&gt;</pre>
+</div>
+
+        <p class="p">You configure the object name prefix. For example:
+                <samp class="ph codeph">sdc-c9a2db16-b5d0-44cb-b3f5-d0781cced760</samp>.</p>
+
+        <div class="p">You can optionally configure an object name suffix for all data formats except whole
+            file. When you configure a suffix, it is added to the object name after a period, as
+            follows:<pre class="pre codeblock">&lt;prefix&gt;-&lt;UUID&gt;.&lt;optional suffix&gt;</pre>
+</div>
+
+        <p class="p">For example: <samp class="ph codeph">sdc-c9a2db16-b5d0-44cb-b3f5-d0781cced760.txt</samp>.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_p2r_k24_sbb">
+ <h3 class="title topictitle3">Whole File Names</h3>
+
+ <div class="body conbody">
+        <div class="p">When you use the whole file data format, the object
+            name prefix is optional. Whole files are named based on the File Name Expression whole
+            file property. If you configure an object name prefix, whole files are named as
+            follows:<pre class="pre codeblock">&lt;prefix&gt;-&lt;results of the file name expression&gt;</pre>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_xjx_h4n_sbb">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+    <div class="body conbody">
+        <p class="p">The Google Cloud
+            Storage destination can generate events that you can use in an event stream. When you
+            enable event generation, Google Cloud Storage generates event records each time the
+            destination completes writing to an object or completes streaming a whole file. </p>
+
+        <div class="p"> Google Cloud Storage events can be used in any logical way. For example: <ul class="ul" id="concept_xjx_h4n_sbb__ul_dzf_tpg_zx">
+                <li class="li">With the Email executor to send a custom email
+                              after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+            </ul>
+</div>
+
+        <p class="p"><span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_i21_j4n_sbb">
+ <h3 class="title topictitle3">Event Records</h3>
+
+    <div class="body conbody">
+        <div class="p">Event records generated by the Google
+            Cloud Storage destination have the following event-related record header attributes.
+            Record header attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d95395e563">Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d95395e566">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d95395e563 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d95395e566 ">Event type. Uses one of the following types:<ul class="ul" id="concept_i21_j4n_sbb__ul_m12_mgp_qx">
+                                    <li class="li">GCS Object Written - Generated when the destination
+                                        completes writing to an object.</li>
+
+                                    <li class="li">wholeFileProcessed - Generated when the destination
+                                        completes streaming a whole file.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e563 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e566 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e563 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_i21_j4n_sbb__d15973e2087" valign="top" width="70%" headers="d95395e566 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <div class="p">The Google Cloud Storage destination can generate the following types of event records:<dl class="dl">
+                
+                    <dt class="dt dlterm">Object written</dt>
+
+                    <dd class="dd">The destination generates an object written event record when it completes
+                        writing to an object. </dd>
+
+                    <dd class="dd">Object written event records have the <samp class="ph codeph">sdc.event.type</samp> record
+                        header attribute set to <samp class="ph codeph">GCS Object Written</samp> and include the
+                        following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_dh2_5gc_rx" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="30%" id="d95395e643">Field</th>
+
+                                        <th class="entry" valign="top" width="70%" id="d95395e646">Description</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d95395e643 ">bucket</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d95395e646 ">Bucket where the object is located.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d95395e643 ">objectKey</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d95395e646 ">Object key name that was written.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d95395e643 ">recordCount</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d95395e646 ">Number of records written to the object.</td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Whole file processed</dt>
+
+                    <dd class="dd">The destination generates an event record when it completes streaming a
+                        whole file. Whole file event records have the
+                            <samp class="ph codeph">sdc.event.type</samp> record header attribute set to
+                            <samp class="ph codeph">wholeFileProcessed</samp> and include the following
+                            fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_eh2_5gc_rx" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="30%" id="d95395e709">Field</th>
+
+                                        <th class="entry" valign="top" width="70%" id="d95395e712">Description</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d95395e709 ">sourceFileInfo</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d95395e712 ">A map of attributes about the original whole file
+                                            that was processed. <p class="p">The attribute names depend on the
+                                                information provided by the origin
+                                            system.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d95395e709 ">targetFileInfo</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d95395e712 ">A map of attributes about the whole file written to
+                                            the destination system. The attributes include:<ul class="ul" id="concept_i21_j4n_sbb__ul_pcx_lkc_rx">
+                                                <li class="li">bucket - The bucket where the whole file is
+                                                  written.</li>
+
+                                                <li class="li">objectKey - The object key name that was
+                                                  written.</li>
+
+                                            </ul>
+</td>
+
+                                    </tr>
+
+                                    <tr>
+                                                  <td class="entry" valign="top" width="30%" headers="d95395e709 ">checksum</td>
+
+                                                  <td class="entry" valign="top" width="70%" headers="d95395e712 ">Checksum generated for the written file.
+                                                  <p class="p">Included only when you configure the
+                                                  destination to include checksums in the event
+                                                  record. </p>
+</td>
+
+                                                  </tr>
+
+                                    <tr>
+                                                  <td class="entry" valign="top" width="30%" headers="d95395e709 ">checksumAlgorithm</td>
+
+                                                  <td class="entry" valign="top" width="70%" headers="d95395e712 ">Algorithm used to generate the checksum.
+                                                  <p class="p">Included only when you configure the
+                                                  destination to include checksums in the event
+                                                  record. </p>
+</td>
+
+                                                  </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_pt4_y24_sbb">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+    <div class="body conbody">
+        <div class="p">The Google Cloud Storage destination
+            writes data to Google Cloud Storage based on the data format that you select. You can
+            use the following data formats: <dl class="dl">
+                
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
+
+                              <dd class="dd">
+                                    <ul class="ul" id="concept_pt4_y24_sbb__d15901e2910">
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Record Header</span> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p class="p">If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema
+                                                Registry.</p>
+</li>
+
+                                    </ul>
+
+                              </dd>
+
+                              <dd class="dd">The destination includes the schema definition in each file.</dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    properties in the destination. </dd>
+
+                        
+                
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_pt4_y24_sbb__d15901e3062">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes a batch of messages in each file. </dd>
+
+                        <dd class="dd">Uses the user-defined message type and the definition of the message
+                              type in the descriptor file to generate the messages in the file. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+                
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+                
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a Unix-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+                
+                        <dt class="dt dlterm">Whole File</dt>
+
+                        <dd class="dd">Streams whole files to the destination system. The destination writes
+                              the data to the file and location defined in the stage. If a file of
+                              the same name already exists, you can configure the destination to
+                              overwrite the existing file or send the current file to error.</dd>
+
+                        <dd class="dd">Written files use the default permissions defined in the destination
+                              system. </dd>
+
+                        <dd class="dd">You can configure the destination to generate a checksum for the written
+                              file and pass checksum information to the destination system in an
+                              event record. </dd>
+
+                        <dd class="dd">For more information about the whole file data format, see <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">Whole File Data Format</a>.</dd>
+
+                  
+                
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">The destination creates a valid XML document for each record. The
+                                    destination requires the record to have a single root field that
+                                    contains the rest of the record data. For details and
+                                    suggestions for how to accomplish this, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.<p class="p">The destination can include indentation to produce
+                                          human-readable documents. It can also validate <span class="ph" id="concept_pt4_y24_sbb__d15901e3282">that the generated
+                                                XML conforms to the specified schema definition.
+                                                Records with invalid schemas are handled based on
+                                                the error handling configured for the
+                                                destination.</span></p>
+</dd>
+
+                        
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_vn4_nrl_nbb">
+    <h2 class="title topictitle2">Configuring a Google Cloud Storage Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context" id="task_vn4_nrl_nbb__context_lfp_5f4_sbb">Configure an Google
+            Cloud Storage destination to write objects to Google Cloud Storage.</div>
+
+        <ol class="ol steps" id="task_vn4_nrl_nbb__steps_tzg_m3r_rt"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e990">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e993">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e990 ">Name</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e993 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e990 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e993 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e990 ">Produce Events <a class="xref" href="GCS.html#concept_xjx_h4n_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e993 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_vn4_nrl_nbb__d15973e1956" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e990 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_vn4_nrl_nbb__d15973e1965" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e993 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+<p class="p">Records
+         that do not include all required fields are processed based on the error handling
+         configured for the pipeline.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e990 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_vn4_nrl_nbb__d15973e1982" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e993 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+        processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
+         that do not meet all preconditions are processed based on the error handling configured for
+         the stage.</p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">GCS</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e8179" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d95395e1097">GCS Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d95395e1100">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Bucket</td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Bucket that contains the objects to be read.</td>
+
+      </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8206">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Common Prefix</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Common prefix that determines where objects are written.
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8215">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Partition Prefix <a class="xref" href="GCS.html#concept_qsx_ryn_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e8221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Optional partition prefix to specify the partition to
+                                        use. <p class="p">Use a specific partition prefix or define an
+                                            expression that evaluates to a partition prefix.
+                                            </p>
+<p class="p">When using datetime variables in the expression,
+                                            be sure to configure the time basis for the
+                                        stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8232">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Data Time Zone</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">
+                                        <p class="p">Time zone for the destination system. Used to resolve
+                                            datetimes in a time-based partition prefix. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8244">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Time Basis <a class="xref" href="GCS.html#concept_ffn_tc4_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e8250" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">
+                                        <div class="p">Time basis to use for writing to a time-based bucket or
+                                            partition prefix. Use one of the following
+                                                expressions:<ul class="ul" id="task_vn4_nrl_nbb__d16111e8257">
+                                                <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
+                                                  processing time as the time basis in conjunction
+                                                  with the specified Data Time Zone.</li>
+
+                                                <li class="li">An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <samp class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</samp>. Uses the time associated with
+                                                  the record as the time basis, adjusted for the
+                                                  specified Data Time Zone.</li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">When the Partition Prefix property has no time component,
+                                            you can ignore this property. </p>
+
+                                        <p class="p">Default is <samp class="ph codeph">${time:now()}</samp>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8283">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Object Name Prefix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e8289" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Defines a prefix for object names written by the
+                                        destination. By default, object names start with "sdc" as
+                                        follows: <samp class="ph codeph">sdc-&lt;UUID&gt;</samp>. <p class="p">Not required for
+                                            the whole file data format. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Object Name Suffix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e8307" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Suffix to use for object names, such as txt or json. When
+                                        used, the destination adds a period and the configured
+                                        suffix as follows: &lt;object name&gt;.&lt;suffix&gt;.<p class="p">You can
+                                            include periods within the suffix, but do not start the
+                                            suffix with a period. Forward slashes are not
+                                            allowed.</p>
+<p class="p">Not available for the whole file data
+                                            format. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95395e1097 ">Compress with Gzip</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95395e1100 ">Compresses files with gzip before writing to Google Cloud
+                                        Storage. <p class="p">Not available for the whole file data
+                                            format.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1270">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1273">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1270 ">Data Format <a class="xref" href="AmazonS3.html#concept_k2z_ncx_rt">
+                                            <img class="image" id="task_vn4_nrl_nbb__image_ivq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1273 ">Data format to write data: <ul class="ul" id="task_vn4_nrl_nbb__ul_jvq_1fj_vx">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Protobuf</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_vn4_nrl_nbb__image_kvq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Text</li>
+
+                                            <li class="li">Whole File <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">
+                                                  <img class="image" id="task_vn4_nrl_nbb__image_lvq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">XML</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e5987" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1365">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1368">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Avro Schema Location</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_vn4_nrl_nbb__d16111e6016">
+                                            <li class="li">In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+
+                                            <li class="li">In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                                  <img class="image" id="task_vn4_nrl_nbb__d16111e6025" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+
+                                        </ul>
+<p class="p">The destination includes the schema definition in
+                                            each generated file. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Avro schema definition used to write the data. <p class="p">You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Register Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <span class="ph uicontrol">Add</span>. Use the following format to
+                                        enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Look Up Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_vn4_nrl_nbb__d16111e6075">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID.
+                                            </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p class="p">If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <span class="ph uicontrol">Look Up Schema By</span>
+                                            property to Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1365 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1368 ">The Avro compression type to use. <p class="p">When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e6540" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1514">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1517">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Format for delimited data:<ul class="ul" id="task_vn4_nrl_nbb__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Replace New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Replaces new line characters with the configured
+                                            string.<p class="p">Recommended when writing data as a single line
+                                            of text.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">New Line Character Replacement</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p class="p">Leave empty to remove the new line
+                                        characters.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e1514 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e1517 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e6680" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1676">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1679">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1676 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1679 ">Determines how JSON data is written:<ul class="ul" id="task_vn4_nrl_nbb__d16111e6709">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e1676 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e1679 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e6752" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1739">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1742">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1739 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1742 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
+                                            see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1739 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1742 ">The fully-qualified name for the message type to use when
+                                        writing data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e6926" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1855">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1858">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1855 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1858 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1855 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1858 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1855 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1858 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d95395e1855 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d95395e1858 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For whole files, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_wvv_hcw_1x" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e1932">Whole File Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e1935">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1932 ">File Name Expression</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1935 ">
+                                        <p class="p">Expression to use for the file names. </p>
+
+                                        <p class="p">For tips on how to name files based on input file names,
+                                            see <a class="xref" href="../Data_Formats/WholeFile.html#concept_a2s_4jw_1x">Writing Whole Files</a>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1932 ">File Exists</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1935 ">Action to take when a file of the same name already
+                                        exists in the output directory. Use one of the following
+                                            options:<ul class="ul" id="task_vn4_nrl_nbb__d16111e7076">
+                                            <li class="li">Send to Error - Handles the record based on stage
+                                                error record handling. </li>
+
+                                            <li class="li">Overwrite - Overwrites the existing file.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1932 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e7092" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1935 ">Includes checksum information in whole file event
+                                        records. <p class="p">Use only when the destination generates event
+                                            records. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e1932 ">Checksum Algorithm</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e1935 ">Algorithm to generate the checksum.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e7133" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e2029">XML Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e2032">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2029 ">Pretty Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2032 ">Adds indentation to make the resulting XML document
+                                        easier to read. Increases the record size
+                                        accordingly.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2029 ">Validate Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2032 ">Validates <span class="ph">that the generated
+                                                XML conforms to the specified schema definition.
+                                                Records with invalid schemas are handled based on
+                                                the error handling configured for the
+                                                destination.</span><div class="p">
+                                            <div class="note important"><span class="importanttitle">Important:</span> Regardless of whether you
+                                                validate the XML schema, the destination requires
+                                                the record in a specific format. For more
+                                                information, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.</div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2029 ">XML Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2032 ">The XML schema to use to validate records.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d16111e8345" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d95395e2104">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d95395e2107">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_vn4_nrl_nbb__d16111e8367">
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2104 ">Project ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2107 ">Project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8376">
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2104 ">Credentials Provider <a class="xref" href="GCS.html#concept_otx_vxn_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d16111e8382" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2107 ">Credentials provider to use to connect:<ul class="ul" id="task_vn4_nrl_nbb__d16111e8386">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON) </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr id="task_vn4_nrl_nbb__d16111e8396">
+                                    <td class="entry" valign="top" width="30%" headers="d95395e2104 ">Credentials File Path (JSON) </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d95395e2107 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google Cloud Storage. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
+                                            or enter an absolute path. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
+</body>
+</html>

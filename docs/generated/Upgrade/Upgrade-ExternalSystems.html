@@ -148,15 +148,11 @@ To ensure that file permissions are set as expected, update all properties in
                 <li class="li">If the MapR cluster uses username/password login
                     authentication, uncomment the following line in the <span class="ph">Data
                   Collector</span> environment
-                    configuration file:
+                    configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory:
                         <pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</pre>
-<p class="p">If
-                        you start <span class="ph">Data
-                  Collector</span> as a service, modify the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>
-                        file. If you start <span class="ph">Data
-                  Collector</span>
-                        manually, modify the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file.
-                    </p>
+<p class="p">Modify
+                        the <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation
+                        type.</p>
 </li>
 
                 <li class="li">Run the <samp class="ph codeph">setup-mapr </samp>command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
@@ -171,7 +167,7 @@ To ensure that file permissions are set as expected, update all properties in
  </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>

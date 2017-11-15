@@ -64,6 +64,8 @@
 
                   <li class="li">JDBC Producer destination</li>
 
+                  <li class="li">JMS Producer destination</li>
+
                   <li class="li">JDBC Query executor</li>
 
             </ul>
@@ -84,6 +86,14 @@
 
         <li class="li">You can install external Java libraries to call external Java code from the scripting
           processors: Groovy, Java, and Jython Evaluator.</li>
+
+        <li class="li">You can install the DataStax Enterprise (DSE) Java driver to configure the Cassandra
+          destination to use DSE username and password authentication or Kerberos authentication. </li>
+
+        <li class="li">Before you use the Google Bigtable destination, install the BoringSSL library.</li>
+
+        <li class="li">Before you use the JMS Producer destination, install the JMS drivers for the
+          implementation that you are using.  </li>
 
         <li class="li">You can install the Impala JDBC driver under the stage library selected for the
           executor. For more information, see <a class="xref" href="../Executors/HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a>.</li>
@@ -149,12 +159,10 @@ you might create the
 </li>
 
                 <li class="li">In the <span class="ph">Data
-                  Collector</span>
-                environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
-                variable and point it to the external directory. <p class="p">If you start Data Collector as a service, set the environment
-                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
-                  If you start Data Collector manually, set the variable in the
-                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+                  Collector</span> environment
+                configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add
+                the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
+                directory. <p class="p">Modify the <a class="xref" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation type.</p>
 <p class="p">Set the environment variable as
                     follows:</p>
 <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
@@ -166,7 +174,7 @@ you might create the
 
                 <li class="li">When using the Java Security Manager, which is enabled by default, update the <span class="ph">Data
                   Collector</span> security policy
-                to include the external directory as follows:<ol class="ol" type="a" id="concept_hhl_nxz_bz__d5721e53">
+                to include the external directory as follows:<ol class="ol" type="a" id="concept_hhl_nxz_bz__d5767e56">
                     <li class="li">In the <span class="ph">Data
                   Collector</span>
                         configuration directory, open the security policy file,
@@ -257,7 +265,7 @@ grant codebase "file:///opt/sdc-extras/-" {
  </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -392,12 +400,10 @@ you might create the
             <li class="li">Copy the external libraries to the appropriate subdirectories.</li>
 
             <li class="li">In the <span class="ph">Data
-                  Collector</span>
-                environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
-                variable and point it to the external directory. <p class="p">If you start Data Collector as a service, set the environment
-                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
-                  If you start Data Collector manually, set the variable in the
-                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+                  Collector</span> environment
+                configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add
+                the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
+                directory. <p class="p">Modify the <a class="xref" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation type.</p>
 <p class="p">Set the environment variable as
                     follows:</p>
 <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
@@ -409,7 +415,7 @@ you might create the
 
             <li class="li">When using the Java Security Manager, which is enabled by default, update the <span class="ph">Data
                   Collector</span> security policy
-                to include the external directory as follows:<ol class="ol" type="a" id="concept_chn_2mt_gz__d5721e53">
+                to include the external directory as follows:<ol class="ol" type="a" id="concept_chn_2mt_gz__d5767e56">
                     <li class="li">In the <span class="ph">Data
                   Collector</span>
                         configuration directory, open the security policy file,
@@ -439,7 +445,7 @@ grant codebase "file:///opt/sdc-extras/-" {
  </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -516,7 +522,7 @@ grant codebase "file:///opt/sdc-extras/-" {
  </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>

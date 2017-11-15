@@ -35,6 +35,219 @@
         you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_wnl_zk4_5bb">
+ <h2 class="title topictitle2">Update Pipelines using Legacy Stage Libraries</h2>
+
+ <div class="body conbody">
+  <div class="p">With version 3.0.0.0, a set of older stage libraries are no longer included with Data
+            Collector. Pipelines that use these legacy stage libraries will not run until you
+            perform one of the following tasks:<dl class="dl">
+                
+                    <dt class="dt dlterm">Use a current stage library</dt>
+
+                    <dd class="dd">We strongly recommend that you upgrade your system and use a current stage
+                        library in the pipeline:<ol class="ol" id="concept_wnl_zk4_5bb__ol_fct_hl4_5bb">
+                            <li class="li">Upgrade the system to a more current version.</li>
+
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install the stage library</a> for the upgraded system. </li>
+
+                            <li class="li">In the pipeline, edit the stage and select the appropriate stage
+                                library. </li>
+
+                        </ol>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Install the legacy library</dt>
+
+                    <dd class="dd">Though not recommended, you can still download and install the older stage
+                        libraries as custom stage libraries. For more information, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fw3_zt3_tbb">Legacy
+                            Stage Libraries</a>.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_hky_ljl_wbb">
+ <h2 class="title topictitle2">JDBC Multitable Consumer Query Interval Change</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the Query Interval property is replaced by the new Queries per Second
+            property.</p>
+
+        <div class="p">Upgraded pipelines with the Query Interval specified using a constant or the default
+            format and unit of time, ${10 * SECONDS}, has the new Queries per Second property
+            calculated and defined as follows:
+            <pre class="pre codeblock">Queries per Second = Number of Threads / Query Interval (in seconds)</pre>
+For
+            example, say the origin uses 3 threads and Query Interval is configured for ${15 *
+            SECONDS}. Then, the upgraded origin sets Queries per Seconds to 3 divided by 15, which
+            is .2. This means the origin will run a maximum of 2 queries every 10 seconds. </div>
+
+        <p class="p">The upgrade would occur the same way if Query Interval were set to 15. </p>
+
+        <p class="p">Pipelines with a Query Interval configured to use other units of time, such as ${.1
+            *MINUTES}, or configured with a different expression format, such as ${SECONDS * 5}, are
+            upgraded to use the default for Queries per Second, which is .1. This means the pipeline
+            will run a maximum of one query per second. The fact that these types of expressions are
+            not automatically upgraded correctly to “Queries per Second” is noted in the Data
+            Collector log.</p>
+
+        <p class="p">If necessary, update the Queries per Second property as needed after the upgrade. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ys3_bjl_wbb">
+ <h2 class="title topictitle2">Update JDBC Query Consumer Pipelines used for SQL Server CDC Data</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the Microsoft SQL Server CDC functionality in the JDBC Query Consumer
+            origin has been deprecated and will be removed in a future release. </p>
+
+        <div class="p">For pipelines that use the JDBC Query Consumer to process Microsoft SQL Server CDC data,
+            replace the JDBC Query Consumer origin with another origin: <ul class="ul" id="concept_ys3_bjl_wbb__ul_ylc_fjl_wbb">
+                <li class="li">To read data from Microsoft SQL Server CDC tables, use the <a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC
+                        Client origin</a>. </li>
+
+                <li class="li">To read data from Microsoft SQL Server change tracking tables, use the <a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server Change
+                        Tracking origin</a>. </li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ncs_5jl_wbb">
+ <h2 class="title topictitle2">Update MongoDB Destination Upsert Pipelines</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the MongoDB destination supports the replace and update operation codes,
+            and no longer supports the upsert operation code. You can use a new Upsert flag in
+            conjunction with Replace and Update. </p>
+
+        <p class="p">After upgrading to this release, update the pipeline as needed to ensure that records
+            passed to the destination do not use the upsert operation code (sdc.operation.type = 4).
+            Records that use the upsert operation code will be sent to error. </p>
+
+        <p class="p">In previous releases, records flagged for upsert were treated in the MongoDB system as
+            Replace operations with the Upsert flag set. </p>
+
+        <div class="p">If you want to replicate the upsert behavior from earlier releases, perform the following
+                steps:<ol class="ol" id="concept_ncs_5jl_wbb__ol_hll_bkl_wbb">
+                <li class="li">Configure the pipeline to use the Replace operation code. <p class="p">Make sure that the
+                        sdc.operation.type is set to 7 for Replace instead of 4 for Upsert.</p>
+</li>
+
+                <li class="li">In the MongoDB destination, enable the new Upsert property.</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_o1s_gkl_wbb">
+ <h2 class="title topictitle2">Time Zones in Stages</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, time zones have been organized and updated to use JDK 8 names. This
+            should make it easier to select time zones in stage properties. </p>
+
+        <p class="p">In the rare case that an upgraded pipeline uses a format not supported by JDK 8, edit the
+            pipeline to select a compatible time zone. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_epj_gqd_rx">
+ <h2 class="title topictitle2">Update Kudu Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">Consider the following upgrade tasks for Kudu pipelines, based on the version that you
+            are upgrading from:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Upgrade from versions earlier than 3.0.0.0</dt>
+
+                <dd class="dd">With version 3.0.0.0, if the destination receives a change data capture log from
+                    the following source systems, you must specify the source system so that the
+                    destination can determine the format of the log: Microsoft SQL Server, Oracle
+                    CDC Client, MySQL Binary Log, or MongoDB Oplog. </dd>
+
+                <dd class="dd">Previously, the Kudu destination could not directly receive changed data from
+                    these source systems. You either had to include a scripting processor in the
+                    pipeline to modify the field paths in the record to a format that the
+                    destination could read. Or, you had to add multiple Kudu destinations to the
+                    pipeline - one per operation type - and include a Stream Selector processor to
+                    send records to the destination by operation type. </dd>
+
+                <dd class="dd">If you implemented one of these workarounds, then after upgrading, modify the
+                    pipeline to remove the scripting processor or the Stream Selector processor and
+                    the multiple destinations. In the Kudu destination, set the Change Log Format to
+                    the appropriate format of the log: Microsoft SQL Server, Oracle CDC Client,
+                    MySQL Binary Log, or MongoDB Oplog. </dd>
+
+            
+            
+                <dt class="dt dlterm">Upgrade from versions earlier than 2.2.0.0</dt>
+
+                <dd class="dd">With version 2.2.0.0, <span class="ph">Data
+                  Collector</span> provides support for Apache Kudu version 1.0.x and no longer supports earlier
+                    Kudu versions. To upgrade pipelines that contain a Kudu destination from <span class="ph">Data
+                  Collector</span> versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage
+                    alias for the earlier Kudu version to the <span class="ph">Data
+                  Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </dd>
+
+                <dd class="dd">
+                    <p class="p">The configuration file includes stage aliases to enable backward
+                        compatibility for pipelines created with earlier versions of <span class="ph">Data
+                  Collector</span>.</p>
+
+                    <p class="p">To update Kudu pipelines:</p>
+
+                    <div class="p">
+                        <ol class="ol" id="concept_epj_gqd_rx__ol_gpt_ssd_rx">
+                            <li class="li">Upgrade your Kudu cluster to version 1.0.x.<p class="p">For instructions, see
+                                    the Apache Kudu documentation.</p>
+</li>
+
+                            <li class="li">Open the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file and locate
+                                the following
+                                comment:<pre class="pre codeblock"># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</pre>
+</li>
+
+                            <li class="li">Below the comment, add a stage alias for the earlier Kudu version as
+                                    follows:<pre class="pre codeblock">stage.alias.streamsets-datacollector-apache-kudu-&lt;version&gt;-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</pre>
+<div class="p">Where
+                                    &lt;version&gt; is the earlier Kudu version: 0_7, 0_8, or 0_9. For
+                                    example, if you previously used Kudu version 0.9, add the
+                                    following stage
+                                    alias:<pre class="pre codeblock">stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</pre>
+</div>
+</li>
+
+                            <li class="li">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</li>
+
+                        </ol>
+
+                    </div>
+
+                </dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_hhc_15s_dbb">
  <h2 class="title topictitle2">Update JDBC Multitable Consumer Pipelines</h2>
 
@@ -59,30 +272,9 @@
         <p class="p">With version 2.7.0.0, <span class="ph">Data
                   Collector</span>
             introduces a credential store API and credential expression language functions to access
-            Hashicorp Vault secrets. At this time, the following JDBC stages can use the credential
-            functions:</p>
+            Hashicorp Vault secrets. </p>
 
-        <ul class="ul" id="concept_yyv_v45_zw__ul_u5f_1wx_v1b">
-         <li class="li">JDBC Multitable Consumer origin</li>
-
-         <li class="li">JDBC Query Consumer origin</li>
-
-         <li class="li">Oracle CDC Client origin</li>
-
-                <li class="li">SQL Server CDC Client origin</li>
-
-         <li class="li">SQL Server Change Tracking origin</li>
-
-         <li class="li">JDBC Lookup processor</li>
-
-         <li class="li">JDBC Tee processor</li>
-
-         <li class="li">JDBC Producer destination</li>
-
-         <li class="li">JDBC Query executor</li>
-
-     </ul>
-
+        
         <p class="p">In addition, the <span class="ph">Data
                   Collector</span>
             Vault integration now relies on Vault's App Role authentication backend. </p>
@@ -98,13 +290,12 @@
 
         <dl class="dl">
             
-                <dt class="dt dlterm">Use the new credential store expression language functions in pipelines that
-                    include JDBC stages (recommended)</dt>
+                <dt class="dt dlterm">Use the new credential store expression language functions (recommended)</dt>
 
                 <dd class="dd">To use the new credential functions, install the Vault credential store stage
                     library and define the configuration properties used to connect to Vault. Then,
-                    update each upgraded pipeline that includes JDBC stages using Vault functions to
-                    use the new credential functions to retrieve the credential values.</dd>
+                    update each upgraded pipeline that includes stages using Vault functions to use
+                    the new credential functions to retrieve the credential values.</dd>
 
                 <dd class="dd">For details on using the Vault credential store system, see <a class="xref" href="../Configuration/CredentialStores.html#concept_s3y_dps_51b" title="By default, a full Data Collector installation includes the Vault keystore credential store stage library. The core installation does not include the library.Use the credential:get() or credential:getWithOptions() function in pipeline stage properties to retrieve credential values from Vault.">Vault Credential Store</a>.</dd>
 
@@ -284,55 +475,6 @@
         </div>
 
     </div>
-
-</div>
-<div class="topic concept nested1" id="concept_epj_gqd_rx">
- <h2 class="title topictitle2">Update Kudu Pipelines</h2>
-
- 
- <div class="body conbody"><p class="shortdesc"><span class="ph">Data
-                  Collector</span>
-        version 2.2.0.0 provides support for Apache Kudu version 1.0.x and no longer supports
-        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination from <span class="ph">Data
-                  Collector</span>
-        versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage alias for the
-        earlier Kudu version to the <span class="ph">Data
-                  Collector</span>
-        configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </p>
-
-        <p class="p">The configuration file includes stage aliases to enable backward compatibility for
-            pipelines created with earlier versions of <span class="ph">Data
-                  Collector</span>.</p>
-
-        <p class="p">To update Kudu pipelines:</p>
-
-  <div class="p">
-            <ol class="ol" id="concept_epj_gqd_rx__ol_gpt_ssd_rx">
-                <li class="li">Upgrade your Kudu cluster to version 1.0.x.<p class="p">For instructions, see the Apache
-                        Kudu documentation.</p>
-</li>
-
-                <li class="li">Open the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file and locate the following
-                    comment:<pre class="pre codeblock"># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</pre>
-</li>
-
-                <li class="li">Below the comment, add a stage alias for the earlier Kudu version as
-                        follows:<pre class="pre codeblock">stage.alias.streamsets-datacollector-apache-kudu-&lt;version&gt;-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</pre>
-<div class="p">Where
-                        &lt;version&gt; is the earlier Kudu version: 0_7, 0_8, or 0_9. For example, if
-                        you previously used Kudu version 0.9, add the following stage
-                        alias:<pre class="pre codeblock">stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</pre>
-</div>
-</li>
-
-                <li class="li">Restart <span class="ph">Data
-                  Collector</span> to enable the changes.</li>
-
-            </ol>
-
-        </div>
-
- </div>
 
 </div>
 </div>

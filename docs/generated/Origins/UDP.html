@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a record for every message. UDP Source can process collectd messages, NetFlow 5 and NetFlow 9 messages , and the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="UDP Source" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rst_2y5_1s" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>UDP Source</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The UDP Source origin reads messages from one or more UDP ports. To use multiple threads for pipeline processing, use the UDP Mulithreaded Source . For a discussion about the differences between the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="UDP Source" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rst_2y5_1s" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>UDP Source</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -30,9 +30,12 @@
  <h1 class="title topictitle1">UDP Source</h1>
 
  <div class="body conbody">
-        <div class="p">The UDP Source origin reads
-            messages from one or more UDP ports. UDP Source generates a record for every message.
-            UDP Source <span class="ph">can process <a class="xref" href="https://collectd.org/" target="_blank">collectd</a> messages, <span class="ph" id="concept_rst_2y5_1s__d40085e2411">NetFlow 5 and NetFlow 9 messages</span>, and the
+        <p class="p">The UDP Source origin reads
+            messages from one or more UDP ports. To use multiple threads for pipeline processing,
+            use the <a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Mulithreaded Source</a>.
+            For a discussion about the differences between the two origins, see <a class="xref" href="Origins_overview.html#concept_ffh_5vf_5bb">Comparing UDP Source Origins</a>.</p>
+
+        <div class="p">UDP Source generates a record for every message. UDP Source <span class="ph">can process <a class="xref" href="https://collectd.org/" target="_blank">collectd</a> messages, <span class="ph" id="concept_rst_2y5_1s__d41476e2449">NetFlow 5 and NetFlow 9 messages</span>, and the
                         following types of syslog messages:</span><ul class="ul" id="concept_rst_2y5_1s__ul_fcp_mm4_4x">
                         <li class="li">RFC 5424 (<a class="xref" href="https://tools.ietf.org/html/rfc5424" target="_blank">https://tools.ietf.org/html/rfc5424</a>)</li>
 
@@ -52,8 +55,10 @@
         <p class="p">The origin can also read binary or character-based raw data. </p>
 
         <p class="p">When you configure UDP Source, you specify the ports to use and the batch size and wait
-            time. You specify the data format for the data, then configure any related properties.
-        </p>
+            time. When epoll is available, you can specify the number of receiver threads to use to
+            increase the throughput of packets to the pipeline. </p>
+
+        <p class="p">You also specify the data format for the data, then configure any related properties. </p>
 
     </div>
 
@@ -84,6 +89,30 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_olw_hch_5bb">
+ <h2 class="title topictitle2">Receiver Threads</h2>
+
+ <div class="body conbody">
+        <p class="p">Receiver
+            threads are used to pass data from the UDP source system to the origin. By default, the
+            origin uses a single receiver thread. </p>
+
+        <p class="p">You can configure the UDP Source origin to use additional receiver threads when Data
+            Collector runs on a machine enabled for epoll. Epoll requires native libraries and is
+            only available when Data Collector runs on recent versions of 64-bit Linux. When you
+            enable multiple receiver threads, you increase the volume of data that can be passed to
+            the origin at one time. </p>
+
+        <p class="p">To use additional receiver threads, select the Use Native Transports (epoll) property,
+            and then configure Number of Receiver Threads.</p>
+
+        <p class="p">
+            
+        </p>
+
+    </div>
+
+</div>
 <div class="topic task nested1" id="task_kgn_rcv_1s">
     <h2 class="title topictitle2">Configuring a UDP Source</h2>
 
@@ -99,14 +128,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d40502e361" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d41778e361" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d360377e152">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d379402e197">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d360377e155">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d379402e200">Description</th>
 
                                 </tr>
 
@@ -114,24 +143,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d360377e152 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d379402e197 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d360377e155 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d360377e152 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d360377e155 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d379402e200 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d360377e152 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_kgn_rcv_1s__d40502e407" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d379402e197 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d360377e155 ">Error record handling for the stage: <ul class="ul" id="task_kgn_rcv_1s__d40502e411">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d379402e200 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d379402e197 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_kgn_rcv_1s__d41778e407" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d379402e200 ">Error record handling for the stage: <ul class="ul" id="task_kgn_rcv_1s__d41778e411">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -160,9 +189,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d360377e231">UDP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d379402e276">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d360377e234">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d379402e279">Description</th>
 
                                 </tr>
 
@@ -170,9 +199,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e234 ">Port to listen to for data. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the<span class="ph uicontrol">
+                                    <td class="entry" valign="top" width="70%" headers="d379402e279 ">Port to listen to for data. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the<span class="ph uicontrol">
                                             Add</span> icon to list additional ports.<div class="note note"><span class="notetitle">Note:</span> To
                                             listen to a port below 1024, <span class="ph">Data
                   Collector</span> must be run by a user with root privileges.
@@ -183,38 +212,39 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Enable Multithreading</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Use Native Transports (epoll)</td>
 
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4416" valign="top" width="70%" headers="d360377e234 ">On 64-bit Linux,
-                                        specifies whether to use multiple receiver threads for each
-                                        port. Using multiple receiver threads can improve
-                                        performance. <p class="p">Because the multithreading requires native
-                                            libraries, it is only available when <span class="ph">Data
-                  Collector</span> runs on 64-bit Linux.</p>
+                                    <td class="entry" id="task_kgn_rcv_1s__d41778e4612" valign="top" width="70%" headers="d379402e279 ">Specifies whether to use
+                                        multiple receiver threads for each port. Using multiple
+                                        receiver threads can improve performance. <p class="p">You can use
+                                            multiple receiver threads using epoll, which can be
+                                            available when <span class="ph">Data
+                  Collector</span> runs on recent versions of 64-bit Linux. </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Number of Receiver Threads</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Number of Receiver Threads <a class="xref" href="UDP.html#concept_olw_hch_5bb">
+                                            <img class="image" id="task_kgn_rcv_1s__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4429" valign="top" width="70%" headers="d360377e234 "><span class="ph" id="task_kgn_rcv_1s__d40502e4430">Number of receiver
+                                    <td class="entry" valign="top" width="70%" headers="d379402e279 "><span class="ph" id="task_kgn_rcv_1s__d41778e4626">Number of receiver
                                             threads to use for each port. For example, if you
                                             configure two threads per port and configure the origin
                                             to use three ports, the origin uses a total of six
-                                            threads.</span><p class="p">Set to the expected number of CPU cores
-                                            of the <span class="ph">Data
-                  Collector</span> machine that are dedicated to the <span class="ph">Data
-                  Collector</span>.</p>
+                                            threads.</span><p class="p" id="task_kgn_rcv_1s__d41778e4628">Use to
+                                            increase the number of threads passing data to the
+                                            origin when epoll is available on the <span class="ph">Data
+                  Collector</span> machine.</p>
 <p class="p">Default is 1.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e234 ">Data format passed by UDP:<ul class="ul" id="task_kgn_rcv_1s__ul-UDPDataFormat">
+                                    <td class="entry" valign="top" width="70%" headers="d379402e279 ">Data format passed by UDP:<ul class="ul" id="task_kgn_rcv_1s__d41778e4643">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -229,9 +259,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Max Batch Size (messages)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Max Batch Size (messages)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e234 ">Maximum number of messages to include in a batch and pass
+                                    <td class="entry" valign="top" width="70%" headers="d379402e279 ">Maximum number of messages to include in a batch and pass
                                         through the pipeline at one time. Honors values up to the
                                             <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
@@ -241,113 +271,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e231 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
-                                            <img class="image" id="task_kgn_rcv_1s__d40502e4484" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e276 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+                                            <img class="image" id="task_kgn_rcv_1s__d41778e4681" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e234 ">Milliseconds to wait before sending a partial or empty
-                                        batch.</td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="keyword wintitle">UDP</span> tab, configure the following properties:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d40502e4368" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d360377e380">UDP Property</th>
-
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d360377e383">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr id="task_kgn_rcv_1s__d40502e4390">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Port</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e383 ">Port to listen to for data. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the<span class="ph uicontrol">
-                                            Add</span> icon to list additional ports.<div class="note note"><span class="notetitle">Note:</span> To
-                                            listen to a port below 1024, <span class="ph">Data
-                  Collector</span> must be run by a user with root privileges.
-                                            Otherwise, the operating system does not allow <span class="ph">Data
-                  Collector</span> to bind to the port.</div>
-</td>
-
-                                </tr>
-
-                                <tr id="task_kgn_rcv_1s__d40502e4411">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Enable Multithreading</td>
-
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4416" valign="top" width="66.66666666666666%" headers="d360377e383 ">On 64-bit Linux,
-                                        specifies whether to use multiple receiver threads for each
-                                        port. Using multiple receiver threads can improve
-                                        performance. <p class="p">Because the multithreading requires native
-                                            libraries, it is only available when <span class="ph">Data
-                  Collector</span> runs on 64-bit Linux.</p>
-</td>
-
-                                </tr>
-
-                                <tr id="task_kgn_rcv_1s__d40502e4424">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Number of Receiver Threads</td>
-
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4429" valign="top" width="66.66666666666666%" headers="d360377e383 "><span class="ph" id="task_kgn_rcv_1s__d40502e4430">Number of receiver
-                                            threads to use for each port. For example, if you
-                                            configure two threads per port and configure the origin
-                                            to use three ports, the origin uses a total of six
-                                            threads.</span><p class="p">Set to the expected number of CPU cores
-                                            of the <span class="ph">Data
-                  Collector</span> machine that are dedicated to the <span class="ph">Data
-                  Collector</span>.</p>
-<p class="p">Default is 1.</p>
-</td>
-
-                                </tr>
-
-                                <tr id="task_kgn_rcv_1s__d40502e4442">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Data Format</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e383 ">Data format passed by UDP:<ul class="ul" id="task_kgn_rcv_1s__d40502e4449">
-                                            <li class="li">collectd</li>
-
-                                            <li class="li">NetFlow</li>
-
-                                            <li class="li">syslog </li>
-
-                                        </ul>
-</td>
-
-                                </tr>
-
-                                <tr id="task_kgn_rcv_1s__d40502e4462">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Max Batch Size (messages)</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e383 ">Maximum number of messages to include in a batch and pass
-                                        through the pipeline at one time. Honors values up to the
-                                            <span class="ph">Data
-                  Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
-                  Collector</span> default is 1000.</p>
-</td>
-
-                                </tr>
-
-                                <tr id="task_kgn_rcv_1s__d40502e4478">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e380 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
-                                            <img class="image" id="task_kgn_rcv_1s__d40502e4484" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e383 ">Milliseconds to wait before sending a partial or empty
+                                    <td class="entry" valign="top" width="70%" headers="d379402e279 ">Milliseconds to wait before sending a partial or empty
                                         batch.</td>
 
                                 </tr>
@@ -372,9 +299,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d360377e535">collectd Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d379402e435">collectd Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d360377e538">Properties</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d379402e438">Properties</th>
 
                                 </tr>
 
@@ -382,46 +309,46 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4540" valign="top" width="33.33333333333333%" headers="d360377e535 ">TypesDB File Path</td>
+                                    <td class="entry" id="task_kgn_rcv_1s__d41778e4737" valign="top" width="33.33333333333333%" headers="d379402e435 ">TypesDB File Path</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e538 "><span class="ph" id="task_kgn_rcv_1s__d40502e4544">Path to a user-provided types.db
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d379402e438 "><span class="ph" id="task_kgn_rcv_1s__d41778e4741">Path to a user-provided types.db
                                             file. Overrides the default types.db file.</span>
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4551" valign="top" width="33.33333333333333%" headers="d360377e535 ">Convert Hi-Res Time &amp;
+                                    <td class="entry" id="task_kgn_rcv_1s__d41778e4748" valign="top" width="33.33333333333333%" headers="d379402e435 ">Convert Hi-Res Time &amp;
                                         Interval</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e538 "><span class="ph" id="task_kgn_rcv_1s__d40502e4555">Converts the collectd high
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d379402e438 "><span class="ph" id="task_kgn_rcv_1s__d41778e4752">Converts the collectd high
                                             resolution time format interval and timestamp to UNIX
                                             time, in milliseconds.</span></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4561" valign="top" width="33.33333333333333%" headers="d360377e535 ">Exclude Interval</td>
+                                    <td class="entry" id="task_kgn_rcv_1s__d41778e4758" valign="top" width="33.33333333333333%" headers="d379402e435 ">Exclude Interval</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e538 "><span class="ph" id="task_kgn_rcv_1s__d40502e4565">Excludes the interval field from
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d379402e438 "><span class="ph" id="task_kgn_rcv_1s__d41778e4762">Excludes the interval field from
                                             output record.</span></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" id="task_kgn_rcv_1s__d40502e4571" valign="top" width="33.33333333333333%" headers="d360377e535 ">Auth File</td>
+                                    <td class="entry" id="task_kgn_rcv_1s__d41778e4768" valign="top" width="33.33333333333333%" headers="d379402e435 ">Auth File</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e538 "><span class="ph" id="task_kgn_rcv_1s__d40502e4575">Path to an optional authentication
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d379402e438 "><span class="ph" id="task_kgn_rcv_1s__d41778e4772">Path to an optional authentication
                                             file. Use an authentication file to accept signed and
                                             encrypted data.</span>
                                     </td>
 
                                 </tr>
 
-                                <tr id="task_kgn_rcv_1s__d40502e4580">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d360377e535 ">Charset</td>
+                                <tr id="task_kgn_rcv_1s__d41778e4777">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d379402e435 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d360377e538 ">Character set of the data.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d379402e438 ">Character set of the data.</td>
 
                                 </tr>
 
@@ -442,9 +369,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d360377e624">Raw/Separated Data Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d379402e523">Raw/Separated Data Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d360377e627">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d379402e526">Description</th>
 
                                 </tr>
 
@@ -452,9 +379,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e624 ">Data Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e523 ">Data Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e627 ">Optional data separator to use to separate UDP packets to
+                                    <td class="entry" valign="top" width="70%" headers="d379402e526 ">Optional data separator to use to separate UDP packets to
                                         multiple values. Specify byte literals using Java unicode
                                         syntax, \u&lt;character code&gt;. <p class="p">For example, the default
                                             line feed character is expressed as follows:
@@ -464,32 +391,32 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e624 ">Raw Data Mode</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e523 ">Raw Data Mode</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e627 ">Type of raw data to process: binary or string
+                                    <td class="entry" valign="top" width="70%" headers="d379402e526 ">Type of raw data to process: binary or string
                                         data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e624 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e523 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e627 ">Charset used by string data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d379402e526 ">Charset used by string data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e624 ">Output Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e523 ">Output Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e627 ">Optional output field for the raw data. When not used,
+                                    <td class="entry" valign="top" width="70%" headers="d379402e526 ">Optional output field for the raw data. When not used,
                                         the origin writes the raw data to the root field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e624 ">Multiple Values Behavior</td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e523 ">Multiple Values Behavior</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e627 ">
+                                    <td class="entry" valign="top" width="70%" headers="d379402e526 ">
                                         <div class="p">Action to take when the data in the data separator
                                             generates multiple values from a UDP packet:<ul class="ul" id="task_kgn_rcv_1s__ul_tpr_53k_t1b">
                                                 <li class="li">First Value Only - Returns one record with the
@@ -518,16 +445,16 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For NetFlow 9 data, on the <span class="ph uicontrol">NetFlow 9</span> tab, configure the
                     following properties:</span>
-                <div class="itemgroup info" id="task_kgn_rcv_1s__d40502e4612">When processing earlier versions of NetFlow data, these
+                <div class="itemgroup info" id="task_kgn_rcv_1s__d41778e4809">When processing earlier versions of NetFlow data, these
                     properties are ignored. 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d40502e4614" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d41778e4811" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d360377e725">Netflow 9 Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d379402e625">Netflow 9 Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d360377e728">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d379402e628">Description</th>
 
                                 </tr>
 
@@ -535,12 +462,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e725 "><span class="ph" id="task_kgn_rcv_1s__d40502e4639">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
-                                                <img class="image" id="task_kgn_rcv_1s__d40502e4643" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></span></td>
+                                    <td class="entry" valign="top" width="30%" headers="d379402e625 "><span class="ph" id="task_kgn_rcv_1s__d41778e4836">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
+                                                <img class="image" id="task_kgn_rcv_1s__d41778e4840" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e728 "><span class="ph" id="task_kgn_rcv_1s__d40502e4646">Determines the type of
+                                    <td class="entry" valign="top" width="70%" headers="d379402e628 "><span class="ph" id="task_kgn_rcv_1s__d41778e4843">Determines the type of
                                             values to include in the record. Select one of the
-                                            following options:</span><ul class="ul" id="task_kgn_rcv_1s__d40502e4648">
+                                            following options:</span><ul class="ul" id="task_kgn_rcv_1s__d41778e4845">
                                             <li class="li">Raw Only</li>
 
                                             <li class="li">Interpreted Only</li>
@@ -553,26 +480,26 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e725 "><span class="ph" id="task_kgn_rcv_1s__d40502e4664">Max Templates in
+                                    <td class="entry" valign="top" width="30%" headers="d379402e625 "><span class="ph" id="task_kgn_rcv_1s__d41778e4861">Max Templates in
                                             Cache</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e728 "><span class="ph" id="task_kgn_rcv_1s__d40502e4668">The maximum number of
+                                    <td class="entry" valign="top" width="70%" headers="d379402e628 "><span class="ph" id="task_kgn_rcv_1s__d41778e4865">The maximum number of
                                             templates to store in the template cache. For more
-                                            information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_kgn_rcv_1s__d40502e4673">Default is -1
+                                            information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_kgn_rcv_1s__d41778e4870">Default is -1
                                                 for an unlimited cache size.</span></p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d360377e725 "><span class="ph" id="task_kgn_rcv_1s__d40502e4680">Template Cache
+                                    <td class="entry" valign="top" width="30%" headers="d379402e625 "><span class="ph" id="task_kgn_rcv_1s__d41778e4877">Template Cache
                                             Timeout (ms)</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d360377e728 "><span class="ph" id="task_kgn_rcv_1s__d40502e4684">The maximum number
+                                    <td class="entry" valign="top" width="70%" headers="d379402e628 "><span class="ph" id="task_kgn_rcv_1s__d41778e4881">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
-                                            the cache.  For more information about templates, see
-                                                <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_kgn_rcv_1s__d40502e4689">Default is -1 for caching templates
+                                            the cache. For more information about templates, see
+                                                <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_kgn_rcv_1s__d41778e4886">Default is -1 for caching templates
                                                 indefinitely.</span></p>
 </td>
 
