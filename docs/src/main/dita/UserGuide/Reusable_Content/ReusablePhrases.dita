@@ -1416,6 +1416,9 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <ul id="Multithread-OriginsList">
+                        <li><xref href="../Origins/AmazonSQS.dita#concept_xsh_knm_5bb">Amazon SQS
+                                    Consumer</xref> - Reads data from queues in Amazon Simple Queue
+                              Services (SQS).</li>
                         <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">Azure
                                     Event Hub Consumer</xref> - Reads data from Microsoft Azure
                               Event Hub.</li>
@@ -3475,6 +3478,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   <li>JDBC Lookup processor</li>
                   <li>JDBC Tee processor</li>
                   <li>JDBC Producer destination</li>
+                  <li>JMS Producer destination</li>
                   <li>JDBC Query executor</li>
             </ul>
             <draft-comment author="alisontaylor">Use this for any location in the help that mentions

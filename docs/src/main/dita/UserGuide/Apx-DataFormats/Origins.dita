@@ -77,6 +77,29 @@
                 /></entry>
             </row>
             <row>
+              <entry>Amazon SQS Consumer</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vt2_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ap4_r5m_wbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wt2_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_xt2_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_yt2_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zt2_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_a52_q5m_wbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_b52_q5m_wbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_d52_q5m_wbb"
+                /></entry>
+            </row>
+            <row>
               <entry>Azure Event Hub Consumer</entry>
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qwy_qlf_bbb"
@@ -399,28 +422,6 @@
               <entry/>
             </row>
             <row>
-              <entry>MapR Streams Consumer</entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rp1_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rpc_2gc_kv"
-                /></entry>
-              <entry/>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tqd_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_bx2_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tgg_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_gkh_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_jl3_2gc_kv"
-                /></entry>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_knj_2gc_kv"
-                /></entry>
-              <entry/>
-              <entry/>
-            </row>
-            <row>
               <entry>MapR Multitopic Streams Consumer</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mbn_szj_mbb"
                 /></entry>
@@ -442,6 +443,28 @@
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lhn_szj_mbb"
                 /></entry>
+            </row>
+            <row>
+              <entry>MapR Streams Consumer</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rp1_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rpc_2gc_kv"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tqd_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_bx2_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tgg_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_gkh_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_jl3_2gc_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_knj_2gc_kv"
+                /></entry>
+              <entry/>
+              <entry/>
             </row>
             <row>
               <entry>MongoDB</entry>

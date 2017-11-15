@@ -36,13 +36,18 @@
                 <li>HTTP Client origin, processor, and destination</li>
                 <li>HTTP Server origin</li>
                 <li>HTTP to Kafka origin</li>
+                <li>Kafka Consumer origin and Kafka Producer destination, Kafka version 0.9.0.0 or
+                    later</li>
+                <li>Kafka Multitopic Consumer origin</li>
                 <li>MongoDB Oplog origin</li>
+                <li>MongoDB origin and destination</li>
                 <li>MQTT Subscriber origin and MQTT Producer destination</li>
                 <li>OPC UA Client origin</li>
                 <li>SDC RPC origin and SDC RPC destination</li>
                 <li>SDC RPC to Kafka origin</li>
                 <li>Spark executor</li>
                 <li>TCP Server origin</li>
+                <li>UDP to Kafka origin, Kafka version 0.9.0.0 or later</li>
                 <li>WebSocket Client origin and destination</li>
                 <li>WebSocket Server origin </li>
                 <li>Pipeline error handling, when writing error records to another pipeline</li>

@@ -131,6 +131,16 @@
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 />.<p>Default is 60,000.</p></entry>
                     </row>
+                    <row>
+                        <entry>dpm.remote.deployment.id</entry>
+                        <entry>For provisioned <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />s, the ID of the deployment that provisioned the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />.<p>For manually administered <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />s, the value is blank.</p><p>Do not change this value.</p></entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
