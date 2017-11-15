@@ -107,6 +107,18 @@
                                         id="image_wsz_k2v_2z"/></xref></entry>
                         </row>
                         <row>
+                            <entry>JDBC Multitable Consumer origin</entry>
+                            <entry>Includes table and data type information in record header
+                                attributes. <xref
+                                    href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita#concept_xrx_11y_4y">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_ezd_l2v_2z"/></xref><p>Includes event header
+                                    attributes when generating events. <xref
+                                        href="../Origins/MultitableJDBCConsumer-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_x43_5q1_j1b"/></xref></p></entry>
+                        </row>
+                        <row>
                             <entry>JDBC Query Consumer origin</entry>
                             <entry>Can be configured to include table and data type information in
                                 record header attributes. <xref
@@ -122,18 +134,6 @@
                                         href="../Origins/JDBCConsumer-EventRecord.dita">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_wl5_tq1_j1b"/></xref></p></entry>
-                        </row>
-                        <row>
-                            <entry>JDBC Multitable Consumer origin</entry>
-                            <entry>Includes table and data type information in record header
-                                attributes. <xref
-                                    href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita#concept_xrx_11y_4y">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ezd_l2v_2z"/></xref><p>Includes event header
-                                    attributes when generating events. <xref
-                                        href="../Origins/MultitableJDBCConsumer-EventRecord.dita">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_x43_5q1_j1b"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>Kafka Consumer origin</entry>
@@ -190,33 +190,23 @@
                                         id="image_orv_l2v_2z"/></xref></entry>
                         </row>
                         <row>
+                            <entry>Oracle CDC Client origin</entry>
+                            <entry>Includes CRUD and CDC information in record header attributes.
+                                    <xref
+                                    href="../Origins/OracleCDC-CDCOpHeaderAtt.dita#concept_x4h_m42_5y">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_p2g_ltm_wbb"/></xref><p>Includes event header
+                                    attributes when generating events. <xref
+                                        href="../Origins/OracleCDC-EventRecords.dita#concept_cbz_sz1_vy">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_q2g_ltm_wbb"/></xref></p></entry>
+                        </row>
+                        <row>
                             <entry>RabbitMQ Consumer origin</entry>
                             <entry>Includes RabbitMQ attributes in record header attributes. <xref
                                     href="../Origins/RabbitMQ-HeaderAttributes.dita">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_gy5_dvs_y1b"/></xref></entry>
-                        </row>
-                        <row>
-                            <entry>SFTP/FTP Client origin</entry>
-                            <entry>Includes <ph
-                                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"
-                                    > in record header attributes.</ph>  in record header
-                                attributes. <xref
-                                    href="../Origins/SFTP-RecordHeaderAtts.dita#concept_tlj_3g1_2z">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ocq_zjb_j1b"/></xref></entry>
-                        </row>
-                        <row>
-                            <entry>Oracle CDC Client origin</entry>
-                            <entry>Includes CRUD and CDC information in record header attributes.
-                                    <xref
-                                    href="../Origins/OracleCDC-CDCOpHeaderAtt.dita#concept_x4h_m42_5y"
-                                        > <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ep2_xcv_2z"/></xref><p>Includes event header
-                                    attributes when generating events. <xref
-                                        href="../Origins/OracleCDC-EventRecords.dita#concept_cbz_sz1_vy">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_asz_wcv_2z"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>Salesforce origin</entry>
@@ -233,6 +223,16 @@
                                         href="../Origins/Salesforce-EventRecord.dita">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_pw4_vq1_j1b"/></xref></p></entry>
+                        </row>
+                        <row>
+                            <entry>SFTP/FTP Client origin</entry>
+                            <entry>Includes <ph
+                                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"
+                                    > in record header attributes.</ph>  in record header
+                                attributes. <xref
+                                    href="../Origins/SFTP-RecordHeaderAtts.dita#concept_tlj_3g1_2z">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_ocq_zjb_j1b"/></xref></entry>
                         </row>
                         <row>
                             <entry>SQL Server CDC Client origin</entry>

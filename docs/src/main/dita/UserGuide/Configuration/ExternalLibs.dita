@@ -51,6 +51,11 @@
           />.</li>
         <li>You can install external Java libraries to call external Java code from the scripting
           processors: Groovy, Java, and Jython Evaluator.</li>
+        <li>You can install the DataStax Enterprise (DSE) Java driver to configure the Cassandra
+          destination to use DSE username and password authentication or Kerberos authentication. </li>
+        <li>Before you use the Google Bigtable destination, install the BoringSSL library.</li>
+        <li>Before you use the JMS Producer destination, install the JMS drivers for the
+          implementation that you are using.  </li>
         <li>You can install the Impala JDBC driver under the stage library selected for the
           executor. For more information, see <xref
             href="../Executors/HiveQuery-InstallImpalaDriver.dita#concept_rfq_xk4_nbb"/>.</li>

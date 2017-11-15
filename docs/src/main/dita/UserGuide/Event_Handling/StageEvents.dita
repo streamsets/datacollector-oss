@@ -101,6 +101,18 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>JDBC Multitable Consumer origin</entry>
+                            <entry>
+                                <ul>
+                                    <li>Completes processing the data returned by the queries for
+                                        all tables.</li>
+                                </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/MultiTableJDBCConsumer-EventGen.dita">Event
+                                        Generation for the JDBC Multitable Consumer origin</xref>. </p>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>JDBC Query Consumer origin</entry>
                             <entry>
                                 <ul id="ul_fsn_ct5_lz">
@@ -111,18 +123,6 @@
                                 <p>For more information, see <xref
                                         href="../Origins/JDBCConsumer-EventGen.dita">Event
                                         Generation for the JDBC Query Consumer origin</xref>. </p>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>JDBC Multitable Consumer origin</entry>
-                            <entry>
-                                <ul>
-                                    <li>Completes processing the data returned by the queries for
-                                        all tables.</li>
-                                </ul>
-                                <p>For more information, see <xref
-                                        href="../Origins/MultiTableJDBCConsumer-EventGen.dita">Event
-                                        Generation for the JDBC Multitable Consumer origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
