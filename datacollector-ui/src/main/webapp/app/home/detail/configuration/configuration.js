@@ -19,7 +19,6 @@
 
 angular
   .module('dataCollectorApp.home')
-
   .controller('ConfigurationController', function (
     $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService
   ) {
@@ -48,7 +47,7 @@ angular
       }
 
       return _.filter((issues || []), function(issue) {
-        return (issue.configName === configDefinition.name && issue.serviceName == serviceName);
+        return (issue.configName === configDefinition.name && issue.serviceName === serviceName);
       });
     };
 

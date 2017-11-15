@@ -1384,7 +1384,7 @@ angular
       if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
         ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.pipelineId === selectedObject.info.pipelineId) ||
           (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
-        //Previous selection remain same
+        // Previous selection remain same
         return;
       }
 
@@ -1430,7 +1430,7 @@ angular
         // Crate list of services where each item have both the definition and actual configuration values
         $scope.detailPaneServices = [];
         _.each($scope.detailPaneConfig.services, function(serviceConfig) {
-          let service = {};
+          var service = {};
           service.definition = pipelineService.getServiceDefinition(serviceConfig.service);
           service.config = serviceConfig;
           $scope.detailPaneServices.push(service);
@@ -1455,7 +1455,7 @@ angular
         }
 
       } else if (type === pipelineConstant.PIPELINE){
-        //Pipeline Configuration
+        // Pipeline Configuration
         $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;

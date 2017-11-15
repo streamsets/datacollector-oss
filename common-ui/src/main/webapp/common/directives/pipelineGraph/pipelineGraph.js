@@ -397,9 +397,9 @@ angular.module('pipelineGraphDirectives', [])
       state.shiftNodeDrag = false;
       d3node.classed(consts.connectClass, false);
 
-      var mouseDownNode = state.mouseDownNode,
-        mouseDownNodeLane = state.mouseDownNodeLane,
-        mouseDownNodeEventLane = state.mouseDownNodeEventLane;
+      var mouseDownNode = state.mouseDownNode;
+      var mouseDownNodeLane = state.mouseDownNodeLane;
+      var mouseDownNodeEventLane = state.mouseDownNodeEventLane;
 
       if (!mouseDownNode) {
         return;
