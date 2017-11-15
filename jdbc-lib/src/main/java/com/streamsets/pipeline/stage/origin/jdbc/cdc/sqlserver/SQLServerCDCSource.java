@@ -416,6 +416,7 @@ public class SQLServerCDCSource extends BasePushSource {
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.batchTableStrategy = ctTableJdbcConfigBean.batchTableStrategy;
     tableJdbcConfigBean.quoteChar = QuoteChar.NONE;
+    tableJdbcConfigBean.timeZoneID = "UTC";
 
     return tableJdbcConfigBean;
   }
