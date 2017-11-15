@@ -283,6 +283,7 @@
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
                         <li>TCP Server</li>
+                        <li>UDP Multithreaded Source</li>
                         <li>UDP Source</li>
                         <li>WebSocket Client</li>
                         <li>WebSocket Server</li>

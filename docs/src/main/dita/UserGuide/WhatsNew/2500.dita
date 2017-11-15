@@ -205,7 +205,7 @@
                             application ID in request headers. </li>
                         <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"
                                 >JDBC Multitable Consumer origin enhancements</xref> - The origin
-                            now performs parallel processing and can generate mulitithreaded
+                            now performs parallel processing and can generate multithreaded
                             pipelines. The origin can generate events when it completes processing
                             all available data. <p>You can also configure the quote character to use
                                 around table, schema, and column names in the query. And you can
@@ -220,7 +220,7 @@
                                 pipeline.</p></li>
                         <li><xref href="../Origins/KConsumer.dita#concept_msz_wnr_5q">Kinesis
                                 Consumer origin enhancement</xref> - The origin now performs
-                            parallel processing and can generate mulitithreaded pipelines. </li>
+                            parallel processing and can generate multithreaded pipelines. </li>
                         <li><xref href="../Origins/MongoDB-Credentials.dita#concept_gzz_kdr_tz"
                                 >MongoDB origin</xref> and <xref
                                 href="../Origins/MongoDBOplog-Credentials.dita#concept_ovt_vpt_tz"

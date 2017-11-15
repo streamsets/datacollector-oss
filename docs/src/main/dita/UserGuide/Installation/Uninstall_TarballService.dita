@@ -38,7 +38,7 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />:</cmd>
                 <choices id="choices_hwp_k2c_rx">
-                    <choice>To use the command line, use the requred command for your operating
+                    <choice>To use the command line, use the required command for your operating
                             system.<p>For <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
                             />, use: <codeph>service sdc stop</codeph></p><p>For <ph
