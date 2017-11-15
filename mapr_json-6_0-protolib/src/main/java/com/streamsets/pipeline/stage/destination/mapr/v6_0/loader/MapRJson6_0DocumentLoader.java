@@ -125,13 +125,13 @@ public class MapRJson6_0DocumentLoader extends MapRJsonDocumentLoader {
     } catch (OjaiException ex) {
       if(createTable) {
         try {
-          MapRDB.createTable(tableName);
+          theStores.put(tableName, MapRDB.createTable(tableName));
         } catch (DBException ex2) {
           throw new MapRJsonDocumentLoaderException("Encountered error creating table " + tableName, ex2);
         }
       } else {
         throw new MapRJsonDocumentLoaderException(
-            "MapR DB table " + tableName + "does not exist, and not configured to create", ex);
+            "MapR DB table " + tableName + " does not exist, and not configured to create", ex);
       }
     }
   }
