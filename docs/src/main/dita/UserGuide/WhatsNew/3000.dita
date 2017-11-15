@@ -302,6 +302,18 @@
                     </dd>
                 </dlentry>
                 <dlentry>
+                    <dt>Cloudera Navigator </dt>
+                    <dd>Cloudera Navigator integration is now released as part of the StreamSets
+                        Commercial Subscription. The beta version included in earlier releases is no
+                        longer available with Data Collector. For information about the StreamSets
+                        Commercial Subscription, <xref href="https://streamsets.com/contact-us/"
+                            format="html" scope="external">contact us</xref>.<p dir="ltr">For
+                            information about upgrading a version of Data Collector with Cloudera
+                            Navigator integration enabled, see <xref
+                                href="../Upgrade/PostUpgrade-ClouderaNav.dita#concept_wnp_scs_wbb"
+                                >Disable Cloudera Navigator Integration</xref>.</p></dd>
+                </dlentry>
+                <dlentry>
                     <dt>Credential Stores</dt>
                     <dd>
                         <ul id="ul_o1b_mgl_wbb">
