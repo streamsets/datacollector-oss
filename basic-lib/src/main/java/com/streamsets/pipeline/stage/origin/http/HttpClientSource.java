@@ -440,7 +440,7 @@ public class HttpClientSource extends BaseSource {
           retryCount = 0;
         }
         lastStatus = status;
-      } catch (ProcessingException e) {
+      } catch (Exception e) {
         LOG.debug("Request failed after {} ms", System.currentTimeMillis() - startTime);
         final Throwable cause = e.getCause();
         if (cause != null && (cause instanceof TimeoutException || cause instanceof SocketTimeoutException)) {
