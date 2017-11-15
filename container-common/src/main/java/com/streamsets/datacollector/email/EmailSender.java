@@ -27,20 +27,22 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 public class EmailSender {
-  public static final String MAIL_CONFIGS_PREFIX = "mail.";
-
-  public static final String EMAIL_SMTP_USER = "xmail.username";
-  public static final String EMAIL_SMTP_PASS = "xmail.password";
-  public static final String EMAIL_SMTP_FROM = "xmail.from.address";
+  private static final String MAIL_CONFIGS_PREFIX = "mail.";
+  private static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
+  private static final String MAIL_TRANSPORT_PROTOCOL_DEFAULT = "smtp";
+  private static final String EMAIL_SMTP_USER = "xmail.username";
+  private static final String EMAIL_SMTP_PASS = "xmail.password";
+  private static final String EMAIL_SMTP_FROM = "xmail.from.address";
 
   private final Properties javaMailProps;
+  private final String protocol;
+  private final String host;
   private final String user;
   private final String password;
   private final String from;
@@ -50,11 +52,9 @@ public class EmailSender {
   @Inject
   public EmailSender(Configuration conf) {
     javaMailProps = createJavaMailSessionProperties(conf.getSubSetConfiguration(MAIL_CONFIGS_PREFIX));
-    String protocol = javaMailProps.getProperty("mail.transport.protocol", "smtp");
-    if (!protocol.equals("smtp") && !protocol.equals("smtps")) {
-
-    }
-    auth = Boolean.parseBoolean(javaMailProps.getProperty("mail." + protocol + ".auth"));
+    protocol = javaMailProps.getProperty(MAIL_TRANSPORT_PROTOCOL, MAIL_TRANSPORT_PROTOCOL_DEFAULT);
+    host = javaMailProps.getProperty(MAIL_CONFIGS_PREFIX + protocol + ".host");
+    auth = Boolean.parseBoolean(javaMailProps.getProperty(MAIL_CONFIGS_PREFIX + protocol + ".auth"));
     user = conf.get(EMAIL_SMTP_USER, "");
     password = conf.get(EMAIL_SMTP_PASS, "").trim();
     from = conf.get(EMAIL_SMTP_FROM, "sdc@localhost");
@@ -117,7 +117,10 @@ public class EmailSender {
       message.addRecipients(Message.RecipientType.TO, toAddrs.toArray(new InternetAddress[toAddrs.size()]));
       message.setSubject(subject);
       message.setContent(body, "text/html; charset=UTF-8");
-      Transport.send(message);
+      Transport transport = session.getTransport(protocol);
+      transport.connect(host, user, password);
+      transport.sendMessage(message, message.getAllRecipients());
+      transport.close();
     } catch (Exception ex) {
       session = null;
       throw new EmailException(ex);
