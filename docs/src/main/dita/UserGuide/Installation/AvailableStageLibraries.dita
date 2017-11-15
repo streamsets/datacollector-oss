@@ -100,8 +100,9 @@
                             <entry>streamsets-datacollector-aws-lib </entry>
                             <entry>For Amazon Web Services 1.11.<p>Includes:<ul id="ul_lvd_frq_rw">
                                         <li>Amazon S3 origin</li>
-                                        <li>Amazon S3 destination</li>
+                                        <li>Amazon SQS Consumer origin</li>
                                         <li>Kinesis Consumer origin</li>
+                                        <li>Amazon S3 destination</li>
                                         <li>Kinesis Firehose destination</li>
                                         <li>Kinesis Producer destination</li>
                                         <li>Amazon S3 executor</li>
@@ -642,8 +643,11 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>
-                            <entry>For MongoDB 3.0.<p>Includes the MongoDB and MongoDB Oplog
-                                    origins, and the MongoDB destination.</p></entry>
+                            <entry>For MongoDB 3.0.<p>Includes:<ul id="ul_jwm_bln_wbb">
+                                        <li>MongoDB origin</li>
+                                        <li>MongoDB Oplog origin</li>
+                                        <li>MongoDB destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mysql-binlog-lib</entry>
