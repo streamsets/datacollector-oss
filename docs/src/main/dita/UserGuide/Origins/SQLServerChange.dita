@@ -26,8 +26,6 @@
         <p>Use the SQL Server Change Tracking origin to generate records from change tracking
             tables. To read data from Microsoft SQL Server change data capture (CDC) tables, use the
                 <xref href="SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server CDC Client
-                origin</xref> or the <xref
-                href="JDBCConsumer-CDCMSSQLOverview.dita#concept_tyd_gbf_5y">JDBC Query Consumer
                 origin</xref>. For more information about the differences between change tracking
             and CDC data, see the <xref
                 href="https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/track-data-changes-sql-server"

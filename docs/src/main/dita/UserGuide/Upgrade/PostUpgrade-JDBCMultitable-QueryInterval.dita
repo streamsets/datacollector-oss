@@ -22,16 +22,15 @@
             format and unit of time, ${10 * SECONDS}, has the new Queries per Second property
             calculated and defined as follows:
             <codeblock>Queries per Second = Number of Threads / Query Interval (in seconds)</codeblock>For
-            example, say the origin uses 3 threads and Query Interval is configured for ${15 *
+            example, say the origin uses three threads and Query Interval is configured for ${15 *
             SECONDS}. Then, the upgraded origin sets Queries per Seconds to 3 divided by 15, which
-            is .2. This means the origin will run a maximum of 2 queries every 10 seconds. </p>
+            is .2. This means the origin will run a maximum of two queries every 10 seconds. </p>
         <p>The upgrade would occur the same way if Query Interval were set to 15. </p>
         <p>Pipelines with a Query Interval configured to use other units of time, such as ${.1
             *MINUTES}, or configured with a different expression format, such as ${SECONDS * 5}, are
-            upgraded to use the default for Queries per Second, which is .1. This means the pipeline
-            will run a maximum of one query per second. The fact that these types of expressions are
-            not automatically upgraded correctly to “Queries per Second” is noted in the Data
-            Collector log.</p>
+            upgraded to use the default for Queries per Second, which is 10. This means the pipeline
+            will run a maximum of 10 queries per second. The fact that these expressions are not
+            upgraded correctly is noted in the Data Collector log.</p>
         <p>If necessary, update the Queries per Second property as needed after the upgrade. </p>
  </conbody>
 </concept>

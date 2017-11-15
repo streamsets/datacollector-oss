@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_wnp_scs_wbb">
+ <title>Disable Cloudera Navigator Integration</title>
+ <conbody>
+  <p>With version 3.0.0.0, the beta version of Cloudera Navigator integration is no longer available
+            with Data Collector. </p>
+        <p>Cloudera Navigator integration is now released as part of the StreamSets Commercial
+            Subscription. For information about the StreamSets Commercial Subscription, <xref
+                href="https://streamsets.com/contact-us/" format="html" scope="external">contact
+                us</xref>.</p>
+        <p>When upgrading from a previous version with Cloudera Navigator integration enabled, do
+            not include the Cloudera Navigator properties when you configure the 3.0.0.0 <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, sdc.properties. The properties to omit are: <ul id="ul_lrx_xcs_wbb">
+                <li>lineage.publishers</li>
+                <li>lineage.publisher.navigator.def</li>
+                <li>All other properties with the lineage.publisher.navigator prefix</li>
+            </ul></p>
+ </conbody>
+</concept>
