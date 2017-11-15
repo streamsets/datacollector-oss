@@ -71,6 +71,8 @@
 
                         <li class="li">TCP Server</li>
 
+                        <li class="li">UDP Multithreaded Source</li>
+
                         <li class="li">UDP Source</li>
 
                         <li class="li">WebSocket Client</li>
@@ -121,7 +123,10 @@ The core installation includes all processors <span class="ph">except the Groovy
     <h2 class="title topictitle2">Installing the Core RPM Package</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">To install the core version of <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">You can install the <span class="ph">Data
+                  Collector</span> RPM
+        package and start it as a service on CentOS or Red Hat Enterprise Linux. To install the core
+        version of <span class="ph">Data
                   Collector</span>,
         download the RPM package. After you perform the core installation and launch, install
         individual stage libraries as needed. </p>
@@ -146,15 +151,26 @@ The core installation includes all processors <span class="ph">except the Groovy
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
-                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                  Collector</span> RPM package for your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
+                <ul class="ul choices" id="task_ijj_cvr_kv__choices_s4c_cnt_5bb">
+                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>,
+                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el6-rpms.tgz</pre>
+</li>
+
+                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>,
+                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el7-rpms.tgz</pre>
+</li>
+
+                </ul>
+
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to extract the file to the desired location:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-all-&lt;operating_system&gt;-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span>, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span> on CentOS 7, use the following
+                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-el7-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -173,11 +189,16 @@ The core installation includes all processors <span class="ph">except the Groovy
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To start <span class="ph">Data
-                  Collector</span> as a service, use the following command:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">service sdc start</pre>
+                  Collector</span> as a service, use the required command for your operating system:</span>
+                <ul class="ul choices" id="task_ijj_cvr_kv__choices_t32_52t_5bb">
+                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, use:<pre class="pre codeblock">service sdc start</pre>
+</li>
 
-                </div>
+                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, use:<pre class="pre codeblock">systemctl start sdc</pre>
+</li>
+
+                </ul>
+
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd" id="task_ijj_cvr_kv__AccessDC">To access the <span class="ph">Data Collector</span> UI, enter the following URL
@@ -192,7 +213,7 @@ The core installation includes all processors <span class="ph">except the Groovy
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="AddtionalStageLibs.html#concept_fb2_qmn_bz" title="Install additional stage libraries to use stages that are not included in the core installation of Data Collector. This is an optional step, but generally you'll want to install additional libraries to process data after completing a core installation.">Install Additional Stage Libraries</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="AddtionalStageLibs.html#concept_fb2_qmn_bz" title="Install Additional Stage Libraries">Install Additional Stage Libraries</a></div>
 </div>
 </div>
 </div>
@@ -210,9 +231,10 @@ The core installation includes all processors <span class="ph">except the Groovy
                 core installation tarball from the StreamSets website, and then use one of the
                 following installation methods to install the core <span class="ph">Data
                   Collector</span>:<ul class="ul" id="task_eyy_qbn_s5__ul_uzc_vbn_s5">
-                    <li class="li">Install and launch manually. For details, see <a class="xref" href="Installing_the_DC.html#task_bt1_zcp_kq" title="To install the full Data Collector and start it manually, download the full Data Collector tarball.">Full Installation and Launch (Manual Start)</a>.</li>
+                    <li class="li">Install and launch manually. For details, see <a class="xref" href="Installing_the_DC.html#task_bt1_zcp_kq" title="You can install the full Data Collector tarball and start it manually on all supported operating systems.">Full Installation and Launch (Manual Start)</a>.</li>
 
-                    <li class="li">Install and launch as a service. For details, see <a class="xref" href="FullInstall_ServiceStart.html#task_pnf_344_1r" title="This procedure walks through setting the default directories and the default system user and group used to start Data Collector as a service.">Installing from the Tarball</a>. </li>
+                    <li class="li">Install and launch as a service. For details, see <a class="xref" href="FullInstall_ServiceStart.html#task_pnf_344_1r" title="You can install the Data Collector tarball and start it as a service for supported operating systems that use the SysV init system - including CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04 LTS.">Installing from the Tarball for Systems Using SysV Init</a> or
+                            <a class="xref" href="FullInstall_ServiceStart.html#task_kdc_vht_5bb" title="You can install the Data Collector tarball and start it as a service for supported operating systems that use the systemd init system - including CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04 LTS.">Installing from the Tarball for Systems Using Systemd Init</a>. </li>
 
                 </ul>
 </div>
@@ -222,7 +244,7 @@ The core installation includes all processors <span class="ph">except the Groovy
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="AddtionalStageLibs.html#concept_fb2_qmn_bz" title="Install additional stage libraries to use stages that are not included in the core installation of Data Collector. This is an optional step, but generally you'll want to install additional libraries to process data after completing a core installation.">Install Additional Stage Libraries</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="AddtionalStageLibs.html#concept_fb2_qmn_bz" title="Install Additional Stage Libraries">Install Additional Stage Libraries</a></div>
 </div>
 </div>
 </div>

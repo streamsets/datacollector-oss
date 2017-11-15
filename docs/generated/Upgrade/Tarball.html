@@ -50,7 +50,7 @@
 
             <p class="p"><a class="xref" href="Tarball.html#concept_bwg_r1h_1z" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the configuration, data, and resource directories. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="Tarball.html#concept_bfv_jyl_5v" title="The instructions that you use to install the new version depend on whether you start Data Collector manually or as a service.">Step 3. Install the New Version</a></p>
+            <p class="p"><a class="xref" href="Tarball.html#concept_bfv_jyl_5v" title="The instructions that you use to install the new version depend on whether you start Data Collector manually or as a service and on your operating system.">Step 3. Install the New Version</a></p>
 
             <p class="p"><a class="xref" href="Tarball.html#task_wzl_hst_xv" title="Update the environment configuration file so that the new version of Data Collector uses a new configuration directory but the same working data, log, and resource directories as the previous version.">Step 4. Update the Environment Configuration File</a></p>
 
@@ -125,7 +125,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -134,7 +134,7 @@
 
  <p class="shortdesc">The instructions that you use to install the new version depend on whether you start <span class="ph">Data
                   Collector</span>
-        manually or as a service.</p>
+        manually or as a service and on your operating system.</p>
 
 <div class="topic task nested2" id="task_lxz_qyl_5v">
     <h3 class="title topictitle3">Installing from the Tarball (Manual Start)</h3>
@@ -167,12 +167,17 @@
 
 </div>
 <div class="topic task nested2" id="task_hsl_ccm_5v">
-    <h3 class="title topictitle3">Installing from the Tarball (Service Start)</h3>
+    <h3 class="title topictitle3">Installing from the Tarball for Systems Using SysV (Service Start)</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">Install the new version of the tarball. Installing the full <span class="ph">Data
-                  Collector</span> as a
-        service requires sudo privileges on the root directory. </p>
+    <div class="body taskbody"><p class="shortdesc">Operating systems that use the SysV init system include <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>. </p>
+
+        <div class="section context" id="task_hsl_ccm_5v__context_a5l_jvw_5bb">
+            <p class="p">Install the new version of the tarball. Installing the full <span class="ph">Data
+                  Collector</span> as a service requires root privileges.  </p>
+
+        </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the full or core <span class="ph">Data
@@ -213,6 +218,85 @@ chown sdc:sdc /etc/init.d/sdc</pre>
     </div>
 
 </div>
+<div class="topic task nested2" id="task_xld_dvw_5bb">
+    <h3 class="title topictitle3">Installing from the Tarball for Systems Using Systemd (Service Start)</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Operating systems that use the systemd init system include <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>. </p>
+
+        <div class="section context">
+            <p class="p">Install the new version of the tarball. Installing the full <span class="ph">Data
+                  Collector</span> as a service requires root privileges. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the full or core <span class="ph">Data
+                  Collector</span> tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Extract the tarball to a different directory than the previous version.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command from the directory where you extracted the tarball to
+                    copy <samp class="ph codeph">systemd/sdc.service</samp> to the
+                        <samp class="ph codeph">/etc/systemd/system</samp> directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp systemd/sdc.service /etc/systemd/system/sdc.service</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the <samp class="ph systemoutput">/etc/systemd/system/sdc.service</samp> file to
+                    modify the environment variables as follows:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_xld_dvw_5bb__ul_bw4_zvw_5bb">
+                        <li class="li">User and Group - Same system user and group used by the previous
+                            version.</li>
+
+                        <li class="li">SDC_CONF - New location outside of the base <span class="ph">Data
+                  Collector</span> runtime directory and unique from the previous renamed directory. For
+                            example, if you renamed the previous configuration directory to
+                                <samp class="ph codeph">/etc/sdc2700</samp>, use the value
+                                <samp class="ph codeph">/etc/sdc</samp>.</li>
+
+                        <li class="li">SDC_HOME - Base <span class="ph">Data
+                  Collector</span> runtime directory for the new version.</li>
+
+                        <li class="li">SDC_LOG - Same directory used by the previous version.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command from the directory where you extracted the tarball to
+                    copy <samp class="ph codeph">systemd/sdc.socket</samp> to the
+                        <samp class="ph codeph">/etc/systemd/system</samp> directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp systemd/sdc.socket /etc/systemd/system/sdc.socket</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the <samp class="ph systemoutput">/etc/systemd/system/sdc.socket</samp> file to
+                    modify the <span class="ph">Data
+                  Collector</span> port number to match the previous version. The port must match the one
+                    defined in <samp class="ph codeph">sdc.properties</samp>. Default is 18630.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to reload the systemd manager configuration:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">systemctl daemon-reload</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 </div>
 <div class="topic task nested1" id="task_wzl_hst_xv">
     <h2 class="title topictitle2">Step 4. Update the Environment Configuration File</h2>
@@ -244,10 +328,13 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                 <div class="itemgroup info">
                     <ul class="ul" id="task_wzl_hst_xv__ul_amx_q35_xv">
                         <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data
-                  Collector</span> manually from the command line.</li>
+                  Collector</span> manually from the command line or when you start Data Collector as a
+                            service on <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>. </li>
 
                         <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data
-                  Collector</span> as a service.</li>
+                  Collector</span> as a service on <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>.</li>
 
                     </ul>
 
@@ -262,9 +349,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d461096e550">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d483277e716">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d461096e553">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d483277e719">Value</th>
 
                                 </tr>
 
@@ -272,9 +359,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d461096e550 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d483277e716 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d461096e553 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d483277e719 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2700</samp>,
@@ -283,23 +370,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d461096e550 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d483277e716 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d461096e553 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d461096e550 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d461096e553 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d483277e719 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d461096e550 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d483277e716 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d461096e553 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d483277e719 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d483277e716 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d483277e719 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -359,7 +446,7 @@ chown sdc:sdc /etc/init.d/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -497,17 +584,13 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                 <dt class="dt dlterm">To start <span class="ph">Data
                   Collector</span> as a service</dt>
 
-                <dd class="dd">Use the following command:<pre class="pre">service sdc start  </pre>
-</dd>
-
-                <dd class="dd">To add the <span class="ph">Data Collector</span> service to the system startup, use the
-                    required command for your operating system:<ul class="ul" id="concept_uct_wfr_5v__ul_m3d_2gr_yx">
-                        <li class="li">For CentOS, use the following
-                            command:<pre class="pre codeblock">chkconfig --add sdc</pre>
+                <dd class="dd">Use the required command for your operating system:<ul class="ul" id="concept_uct_wfr_5v__ul_ozx_tbv_5bb">
+                        <li class="li">For <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, use:<pre class="pre codeblock">service sdc start</pre>
 </li>
 
-                        <li class="li">For Ubuntu, use the following
-                            command:<pre class="pre codeblock">update-rc.d sdc defaults 97 03</pre>
+                        <li class="li">For <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, use:<pre class="pre codeblock">systemctl start sdc</pre>
 </li>
 
                     </ul>

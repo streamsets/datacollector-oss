@@ -86,19 +86,92 @@
             </dl>
 </div>
 
-        <p class="p">The following image displays how the edge and <span class="ph">Data
-                  Collector</span>
-            pipelines work together to process data from an edge device: </p>
-
-        <p class="p"><img class="image" id="concept_d4h_kkq_4bb__image_oly_crq_4bb" src="../Graphics/EdgePipelines.png" /></p>
-
-        <div class="note tip"><span class="tiptitle">Tip:</span> To use edge pipelines, you design and run multiple pipelines that interact
-            together. You can use <span class="ph">DPM</span> to
+        <div class="note tip"><span class="tiptitle">Tip:</span> To use edge pipelines, you design and run multiple pipelines
+            that interact together. You can use <span class="ph">DPM</span> to
             map multiple dataflows running across multiple instances of <span class="ph">Data
                   Collector</span>
             and <span class="ph">SDCe</span> in a single visual topology. For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Dataflow Performance Manager (DPMTM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization.">Meet Dataflow Performance Manager</a>. </div>
 
  </div>
+
+</div>
+<div class="topic concept nested1" id="concept_tb2_cyf_5bb">
+ <h2 class="title topictitle2">Example: IoT Preventative Maintenance</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Let's say that you have a factory with a network of machine tools. Sensors are installed
+        on each machine that measure the temperature, relative humidity, and pressure of the
+        machine. You need to continuously monitor this sensor data, and shut down any machine that
+        exceeds the allowed limits. </p>
+
+        <p class="p">You design one set of pipelines to collect and enrich the sensor data, and then write the
+            data to HDFS where a third-party application analyzes and evaluates the data. You design
+            another set of pipelines to read the results from the third-party application and shut
+            down the machine tool if needed.</p>
+
+        <div class="p">The following pipelines work together to perform the preventative maintenance on the machines:<dl class="dl">
+                
+                    <dt class="dt dlterm">Edge sending pipeline</dt>
+
+                    <dd class="dd">The edge sending pipeline runs on the <span class="ph">SDCe</span> installed on each machine tool. It includes a Directory origin that reads
+                        the sensor measurements written to log files on the machine. The pipeline
+                        performs minimal processing - using a Stream Selector to discard out of
+                        range readings and an Expression Evaluator to convert the sensor units of
+                        measurement. The pipeline includes an MQTT Publisher destination that sends
+                        the data to a topic named "sensorReadings" on the MQTT broker. Each pipeline
+                        running on each machine sends the data to the same topic. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector receiving pipeline</dt>
+
+                    <dd class="dd">The <span class="ph">Data
+                  Collector</span> receiving pipeline runs on <span class="ph">Data
+                  Collector</span> installed on a server. It includes an MQTT Subscriber origin that reads
+                        the sensor measurements from the "sensorReadings" topic on the MQTT broker
+                        that all edge sending pipelines publish data to. The pipeline uses a Redis
+                        Lookup processor to look up the sensor location by the sensorID field. It
+                        then writes the enriched data to HDFS.</dd>
+
+                    <dd class="dd">A third-party application analyzes the data written to HDFS. The application
+                        determines if sensor measurements have exceeded the allowed limits and then
+                        sends an HTTP post request to an HTTP endpoint to shut down the
+                        machine.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector pipeline</dt>
+
+                    <dd class="dd">To read the requests from the third-party application, another <span class="ph">Data
+                  Collector</span> pipeline runs on the same <span class="ph">Data
+                  Collector</span>. It includes an HTTP Server origin that listens for HTTP post requests on
+                        the HTTP endpoint used by the third-party application. The pipeline uses the
+                        MQTT Publisher destination to write the data to a topic on the MQTT broker.
+                        The destination uses the <samp class="ph codeph">${record:attribute('sensorID')}</samp>
+                        function to define the topic name by the sensorID field.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Edge receiving pipeline</dt>
+
+                    <dd class="dd">To allow the automatic shutdown of the edge devices, each <span class="ph">SDCe</span> installed on each machine tool also runs an edge receiving pipeline. The
+                        edge pipeline includes an MQTT Subscriber origin that listens to the sensor
+                        ID topic written to by the <span class="ph">Data
+                  Collector</span> pipeline. The edge pipeline uses an HTTP Client destination to send the
+                        POST request to an HTTP resource URL, instructing the machine to shut itself
+                        down.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">The following image displays how the edge and <span class="ph">Data
+                  Collector</span>
+            pipelines work together to perform IoT preventative maintenance: </p>
+
+        <p class="p"><img class="image" id="concept_tb2_cyf_5bb__image_oly_crq_4bb" src="../Graphics/EdgePipelines.png" /></p>
+
+    </div>
 
 </div>
 <div class="topic concept nested1" id="concept_yxr_b5q_4bb">
@@ -170,9 +243,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e340">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e423">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e343">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e426">Supported Stages</th>
 
                         </tr>
 
@@ -180,9 +253,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_lrs_4rs_4bb">
                                     <li class="li">Dev Random Record Source</li>
 
@@ -207,9 +280,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_mrs_4rs_4bb">
                                     <li class="li">Delay</li>
 
@@ -230,9 +303,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_nrs_4rs_4bb">
                                     <li class="li">CoAP Client</li>
 
@@ -251,9 +324,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e340 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e343 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">None</td>
 
                         </tr>
 
@@ -318,9 +391,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e525">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e608">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e528">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e611">Supported Stages</th>
 
                         </tr>
 
@@ -328,9 +401,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_npd_drs_4bb">
                                     <li class="li">Dev Random Record Source </li>
 
@@ -349,9 +422,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_opd_drs_4bb">
                                     <li class="li">Delay</li>
 
@@ -372,9 +445,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_ppd_drs_4bb">
                                     <li class="li">CoAP Client</li>
 
@@ -393,9 +466,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e525 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e528 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">None</td>
 
                         </tr>
 
@@ -553,9 +626,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e870">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e954">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e873">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e957">Supported Stages</th>
 
                         </tr>
 
@@ -563,9 +636,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">
                                 <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
                                     <li class="li">CoAP Server</li>
 
@@ -582,23 +655,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Destinations</td>
-
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e870 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e873 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
 
                         </tr>
 
@@ -664,10 +737,10 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="ph uicontrol">Error Records</span> tab, select
-                        <span class="ph uicontrol">Discard</span> or <span class="ph uicontrol">Write to File</span> for
-                    the error record handling.</span>
-                <div class="itemgroup info">If writing the error records to file, click the <span class="ph uicontrol">Error Records -
-                        Write to File</span> tab and configure the required properties.</div>
+                        <span class="ph uicontrol">Discard</span>, <span class="ph uicontrol">Write to File</span>, or
+                        <span class="ph uicontrol">Write to MQTT</span> for the error record handling.</span>
+                <div class="itemgroup info">If writing the error records to file or MQTT, click the appropriate error
+                    records tab and configure the required properties.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Configure the remaining pipeline properties as needed.</span>
@@ -723,7 +796,7 @@
                 <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
                     edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
 
                 </div>
             </li>
@@ -831,7 +904,7 @@
                 <span class="ph cmd">From the <span class="ph">Data
                   Collector</span>
                     <span class="ph uicontrol">Home</span> page, select the edge pipelines that you want to run
-                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d30437e72" src="../Reusable_Content/Reusable_Topics/../../Graphics/icon_MonMore.png" height="13" width="18" />),
+                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d31442e72" src="../Reusable_Content/Reusable_Topics/../../Graphics/icon_MonMore.png" height="13" width="18" />),
                     and then click <span class="ph uicontrol">Download Edge Executable</span>.</span>
             </li>
 <li class="li step stepexpand">
@@ -855,7 +928,7 @@
                 <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
                     edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
 
                 </div>
             </li>
@@ -880,7 +953,7 @@
                 <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
                     edge device, typically <samp class="ph codeph">/opt/local</samp>:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-edge-&lt;version&gt;-&lt;os&gt;-&lt;architecture&gt;.tgz</pre>
 
                 </div>
             </li>
@@ -932,9 +1005,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e1634">General Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e1718">General Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e1637">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e1721">Description</th>
 
                         </tr>
 
@@ -942,18 +1015,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1634 ">max-batch-size</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1718 ">max-batch-size</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1637 ">Maximum number of records included in a batch when the pipeline
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1721 ">Maximum number of records included in a batch when the pipeline
                                     runs.<p class="p">Default is 1000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1634 ">bind-address</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1718 ">bind-address</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1637 ">Address that <span class="ph">SDCe</span> binds to - localhost and the defined port number.<p class="p">Default port
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1721 ">Address that <span class="ph">SDCe</span> binds to - localhost and the defined port number.<p class="p">Default port
                                     number is 18633.</p>
 </td>
 
@@ -976,9 +1049,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d161998e1701">DPM Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e1785">DPM Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d161998e1704">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e1788">Description</th>
 
                         </tr>
 
@@ -986,17 +1059,17 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">enabled</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">enabled</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Specifies whether the <span class="ph">SDCe</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Specifies whether the <span class="ph">SDCe</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">base-url</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">base-url</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Base URL to access <span class="ph">DPM</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Base URL to access <span class="ph">DPM</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -1010,16 +1083,16 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">app-auth-token</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">app-auth-token</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Authentication token for this <span class="ph">SDCe</span> instance when enabled to work with <span class="ph">DPM</span>. </td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Authentication token for this <span class="ph">SDCe</span> instance when enabled to work with <span class="ph">DPM</span>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">job-labels</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">job-labels</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Labels to assign to this <span class="ph">SDCe</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Labels to assign to this <span class="ph">SDCe</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
                                 labels. <p class="p">Default is "all", which you can use to run a job on all
                                     registered instances of <span class="ph">SDCe</span>. </p>
 </td>
@@ -1027,25 +1100,25 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">events-recipient</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">events-recipient</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">SDCe</span> sends events. <p class="p">Do not change this value.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">SDCe</span> sends events. <p class="p">Do not change this value.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">ping-frequency</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">ping-frequency</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Frequency in milliseconds that <span class="ph">SDCe</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 6,000.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Frequency in milliseconds that <span class="ph">SDCe</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 6,000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d161998e1701 ">status-events-interval</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">status-events-interval</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d161998e1704 ">Frequency in milliseconds that <span class="ph">SDCe</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Frequency in milliseconds that <span class="ph">SDCe</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are
                                 running on this <span class="ph">SDCe</span>.<p class="p">Default is 60,000.</p>
 </td>
 
@@ -1073,6 +1146,11 @@
         <div class="p">To start <span class="ph">SDCe</span>
             with the debug log level enabled for troubleshooting, run the following
             command:<pre class="pre codeblock">bin/edge -debug</pre>
+</div>
+
+        <div class="p">To start <span class="ph">SDCe</span>
+            and send the log to the console, run the following
+            command:<pre class="pre codeblock">bin/edge -logToConsole</pre>
 </div>
 
         <div class="p">To start <span class="ph">SDCe</span>
@@ -1113,15 +1191,63 @@
         installed on the edge device. </p>
 
         <div class="section context">
-            <p class="p">
-                
-            </p>
+            <div class="note note"><span class="notetitle">Note:</span> We recognize that this export process should be easier -  it will be improved in a
+                future release.</div>
 
         </div>
 
-        <div class="li step p">
-                <span class="ph cmd"></span><br />
-            </div>
+        <ol class="ol steps"><li class="li step stepexpand" id="task_rzb_zgm_pbb__step1">
+                <span class="ph cmd">Open the edge pipeline displayed in the pipeline canvas.</span>
+            </li>
+<li class="li step stepexpand" id="task_rzb_zgm_pbb__step2">
+                <span class="ph cmd">From the <span class="ph uicontrol">Properties</span> panel, click the
+                        <span class="ph uicontrol">More</span> icon (<img class="image" id="task_rzb_zgm_pbb__image_n3g_rz5_xt" src="../Graphics/icon_MonMore.png" height="15" width="20" />) to view the pipeline configuration REST
+                    response data:</span>
+                <div class="itemgroup info"><img class="image" id="task_rzb_zgm_pbb__image_iwd_trc_vbb" src="../Graphics/EdgePipelineExportRESTResponse.png" height="154" width="203" /><p class="p">The browser displays the pipeline configuration
+                        in JSON format.</p>
+</div>
+            </li>
+<li class="li step stepexpand" id="task_rzb_zgm_pbb__step3">
+                <span class="ph cmd">In the browser, copy the complete contents of the pipeline configuration and
+                    save it to a text file named <samp class="ph codeph">pipeline.json</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the address bar of the browser, type <samp class="ph codeph">?get=info</samp> after the
+                    pipeline ID.</span>
+                <div class="itemgroup info">For
+                        example:<pre class="pre codeblock">https://localhost:18630/rest/v1/pipeline/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5<strong class="ph b">?get=info</strong></pre>
+<p class="p">The
+                        browser displays the pipeline information in JSON format.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the browser, copy the complete contents of the pipeline information and save
+                    it to a text file named <samp class="ph codeph">info.json</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the edge device where <span class="ph">SDCe</span> is installed, create a folder named with the pipeline ID in the following
+                    directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">&lt;SDCe_home&gt;/data/pipelines</pre>
+
+                    <div class="p">For
+                        example:<pre class="pre codeblock">&lt;SDCe_home&gt;/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Copy the <samp class="ph codeph">pipeline.json</samp> and <samp class="ph codeph">info.json</samp> files
+                    that you created for the pipeline into this folder.</span>
+                <div class="itemgroup info"><p class="p">Now you can start and manage the pipeline on <span class="ph">SDCe</span> as described in <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDCe</a>.</p>
+
+                    <p class="p">If you modify the same pipeline in <span class="ph">Data
+                  Collector</span>, view the pipeline configuration REST response data and then copy the
+                        updated data into the existing <samp class="ph codeph">pipeline.json</samp> in the <span class="ph">SDCe</span> installation. You do not need to update the <samp class="ph codeph">info.json</samp>
+                        file after you originally create it in the pipeline folder.</p>
+</div>
+            </li>
+</ol>
 
     </div>
 
@@ -1181,8 +1307,12 @@
                 command:<pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
 </div>
 
-            <div class="p">To manage running pipelines - including stopping, resetting the offset, and viewing
-                the pipeline status and metrics - use the following
+            <div class="p">To list all edge pipelines deployed to <span class="ph">SDCe</span>, use the following
+                command:<pre class="pre codeblock">curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipelines</pre>
+</div>
+
+            <div class="p">To manage running edge pipelines - including stopping, resetting the offset, and
+                viewing the pipeline status and metrics - use the following
                 commands:<pre class="pre codeblock">curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/status
 curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/stop
 curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/resetOffset

@@ -75,7 +75,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d39852e2079">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d41243e2106">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 
@@ -129,6 +129,10 @@
     <div class="body conbody">
         <div class="p">You can use the following origins
             to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_djp_zvk_tz">
+                        <li class="li"><a class="xref" href="../Origins/AmazonSQS.html#concept_xsh_knm_5bb" title="When Data Collector reads data from an Amazon SQS Consumer origin, it must pass credentials to Amazon Simple Queue Services.">Amazon SQS
+                                    Consumer</a> - Reads data from queues in Amazon Simple Queue
+                              Services (SQS).</li>
+
                         <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure
                                     Event Hub Consumer</a> - Reads data from Microsoft Azure
                               Event Hub.</li>
@@ -164,7 +168,7 @@
                                     CDC</a> - Reads changed MapR DB data that has been written to
                               MapR Streams.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Streams Multitopic Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Streams Multitopic Consumer</a> - Reads data from
+                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server
@@ -178,6 +182,10 @@
                         <li class="li"><a class="xref" href="../Origins/TCPServer.html#concept_ppm_xb1_4z">TCP
                                     Server</a> - Listens at the specified ports and processes
                               incoming data over TCP/IP connections.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP
+                                    Multithreaded Source</a> - Reads messages from one or more
+                              UDP ports. </li>
 
                         <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a> - Listens on a WebSocket endpoint and
                               processes the contents of all authorized WebSocket requests. </li>
@@ -358,6 +366,10 @@
             <ul class="ul" id="concept_sfp_1nd_py__ul_igl_q4d_py">
                 <li class="li">Use multithreaded origins to create a multithreaded pipeline. You can use the
                     following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_llv_cwk_tz">
+                        <li class="li"><a class="xref" href="../Origins/AmazonSQS.html#concept_xsh_knm_5bb" title="When Data Collector reads data from an Amazon SQS Consumer origin, it must pass credentials to Amazon Simple Queue Services.">Amazon SQS
+                                    Consumer</a> - Reads data from queues in Amazon Simple Queue
+                              Services (SQS).</li>
+
                         <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure
                                     Event Hub Consumer</a> - Reads data from Microsoft Azure
                               Event Hub.</li>
@@ -393,7 +405,7 @@
                                     CDC</a> - Reads changed MapR DB data that has been written to
                               MapR Streams.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Streams Multitopic Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Streams Multitopic Consumer</a> - Reads data from
+                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server
@@ -407,6 +419,10 @@
                         <li class="li"><a class="xref" href="../Origins/TCPServer.html#concept_ppm_xb1_4z">TCP
                                     Server</a> - Listens at the specified ports and processes
                               incoming data over TCP/IP connections.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP
+                                    Multithreaded Source</a> - Reads messages from one or more
+                              UDP ports. </li>
 
                         <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a> - Listens on a WebSocket endpoint and
                               processes the contents of all authorized WebSocket requests. </li>

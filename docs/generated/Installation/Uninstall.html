@@ -103,8 +103,11 @@
                 <span class="ph cmd">Use one of the following methods to shut down <span class="ph">Data
                   Collector</span>:</span>
                 <ul class="ul choices" id="task_rnf_3cb_qy__choices_hwp_k2c_rx">
-                    <li class="li choice">To use the command line, use the following
-                        command:<pre class="pre codeblock">service sdc stop</pre>
+                    <li class="li choice">To use the command line, use the required command for your operating
+                            system.<p class="p">For <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, use: <samp class="ph codeph">service sdc stop</samp></p>
+<p class="p">For <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, use: <samp class="ph codeph">systemctl stop sdc</samp></p>
 </li>
 
                     <li class="li choice">To use the <span class="ph">Data
@@ -117,9 +120,9 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Remove the <span class="ph">Data
                   Collector</span> directories.</span>
-                <div class="itemgroup info">For example, if you used the default directories, run the following command to
-                    remove the
-                    directories:<pre class="pre codeblock">rm -rf /etc/init.d/sdc  /etc/sdc /var/log/sdc /var/lib/sdc /var/lib/sdc-resources</pre>
+                <div class="itemgroup info">For example, if you used the default directories on Red Hat Enterprise Linux
+                    6, run the following command to remove the directories:
+                    <pre class="pre codeblock">rm -rf /etc/init.d/sdc  /etc/sdc /var/log/sdc /var/lib/sdc /var/lib/sdc-resources</pre>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -154,8 +157,11 @@
                 <span class="ph cmd">Use one of the following methods to shut down <span class="ph">Data
                   Collector</span>:</span>
                 <ul class="ul choices" id="task_k4s_mjc_qy__choices_hwp_k2c_rx">
-                    <li class="li choice">To use the command line, use the following
-                        command:<pre class="pre codeblock">service sdc stop</pre>
+                    <li class="li choice">To use the command line, use the requred command for your operating
+                            system.<p class="p">For <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, use: <samp class="ph codeph">service sdc stop</samp></p>
+<p class="p">For <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, use: <samp class="ph codeph">systemctl stop sdc</samp></p>
 </li>
 
                     <li class="li choice">To use the <span class="ph">Data

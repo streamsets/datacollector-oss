@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 2.7.2.0 includes the following new features: Origins New Kafka Multitopic Consumer origin - A new origin that reads messages from multiple Kafka topics. Creates multiple threads ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 3.0.0.0 includes the following new features: Installation Java requirement - Data Collector now supports both Oracle Java 8 and OpenJDK 8. RPM packages - StreamSets now provides ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -39,6 +39,532 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_cjx_y4k_wbb">
+ <h2 class="title topictitle2">What's New in 3.0.0.0</h2>
+
+ <div class="body conbody">
+  <div class="p"><span class="ph">Data
+                  Collector</span>
+            version 3.0.0.0 includes the following new features:<dl class="dl">
+                
+                    <dt class="dt dlterm">Installation</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_dxx_z5k_wbb">
+                            <li class="li"><a class="xref" href="../Installation/InstallationAndConfig.html#concept_vzg_n2p_kq" title="Install Data Collector on a machine that meets the following minimum requirements. To run pipelines in cluster execution mode, each node in the cluster must meet the minimum requirements.">Java requirement</a> - Data Collector now supports both
+                                Oracle Java 8 and OpenJDK 8.</li>
+
+                            <li class="li"><a class="xref" href="../Installation/FullInstall_ServiceStart.html#task_th5_1yj_dx" title="You can install the Data Collector RPM package and start it as a service on CentOS or Red Hat Enterprise Linux.">RPM packages</a> - StreamSets now provides the following
+                                Data Collector RPM packages:<ul class="ul" id="concept_cjx_y4k_wbb__ul_k13_cvk_wbb">
+                                    <li class="li">EL6 - Use to install Data Collector on CentOS 6, Red Hat
+                                        Enterprise Linux 6, or Ubuntu 14.04 LTS.</li>
+
+                                    <li class="li">EL7 - Use to install Data Collector on CentOS 7, Red Hat
+                                        Enterprise Linux 7, or Ubuntu 16.04 LTS.</li>
+
+                                </ul>
+<p class="p">Previously, StreamSets provided a single RPM package used to
+                                    install Data Collector on any of these operating
+                                systems.</p>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Edge Pipelines</dt>
+
+                    <dd class="dd">You can now design and run <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#concept_d4h_kkq_4bb" title="An edge pipeline is a pipeline that runs on an edge device with limited resources. Use edge pipelines to read data from the edge device or to receive data from another pipeline and then act on that data to control the edge device.">edge
+                            pipelines</a> to read data from or send data to an edge device. Edge
+                        pipelines are bidirectional. They can send edge data to other Data Collector
+                        pipelines for further processing. Or, they can receive data from other
+                        pipelines and then act on that data to control the edge device. </dd>
+
+                    <dd class="dd">Edge pipelines run in edge execution mode on a Data Collector Edge (SDCe).
+                        SDCe is a lightweight agent without a UI that runs pipelines on edge
+                        devices. Install SDCe on each edge device where you want to run edge
+                        pipelines. </dd>
+
+                    <dd class="dd">You design edge pipelines in Data Collector, export the edge pipelines, and
+                        then use commands to run the edge pipelines on an SDCe installed on an edge
+                        device. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Origins</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_xdj_qvk_wbb">
+                            <li class="li"><a class="xref" href="../Origins/AmazonSQS.html#concept_xsh_knm_5bb" title="When Data Collector reads data from an Amazon SQS Consumer origin, it must pass credentials to Amazon Simple Queue Services.">New
+                                    Amazon SQS Consumer origin</a> - An origin that reads
+                                messages from Amazon Simple Queue Service (SQS). Can create multiple
+                                threads to enable parallel processing in a multithreaded
+                                pipeline.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/GCS.html#concept_iyd_wql_nbb">New Google
+                                    Cloud Storage origin</a> - An origin that reads fully written
+                                objects in Google Cloud Storage. </li>
+
+                            <li class="li"><a class="xref" href="../Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">New MapR
+                                    DB CDC origin</a> - An origin that reads changed MapR DB data
+                                that has been written to MapR Streams. Can create multiple threads
+                                to enable parallel processing in a multithreaded pipeline.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">New MapR Multitopic Streams Consumer origin</a> - An origin
+                                that reads messages from multiple MapR Streams topics. It can create
+                                multiple threads to enable parallel processing in a multithreaded
+                                pipeline.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/UDPMulti.html#concept_wng_g5f_5bb">New UDP
+                                    Multithreaded Source origin</a> - The origin listens for UDP
+                                messages on one or more ports and queues incoming packets on an
+                                intermediate queue for processing. It can create multiple threads to
+                                enable parallel processing in a multithreaded pipeline.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">New
+                                    WebSocket Client origin</a> - An origin that reads data from
+                                a WebSocket server endpoint.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/WindowsLog.html#concept_agf_5jv_sbb" title="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log.">New
+                                    Windows Event Log origin</a> - An origin that reads data from
+                                Microsoft Windows event logs. You can use this origin only in
+                                pipelines configured for edge execution mode.</li>
+
+                            <li class="li">Amazon S3 origin enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_gxg_dbl_wbb">
+                                    <li class="li">The origin now produces <a class="xref" href="../Origins/AmazonS3.html#concept_vtn_ty4_jbb">no-more-data events</a> and includes a new socket
+                                        timeout property.</li>
+
+                                    <li class="li">You can now specify the number of times the origin retries a
+                                        query. The default is three.</li>
+
+                                </ul>
+</li>
+
+                            <li class="li">Directory origin enhancement - The origin can now <a class="xref" href="../Origins/Directory.html#concept_pcl_nwn_qbb">use multiple threads</a> to perform parallel processing of
+                                files.</li>
+
+                            <li class="li">JDBC Multitable Consumer origin enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_ij2_lbl_wbb">
+                                    <li class="li">The origin can now use <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xwr_bhm_nbb">non-incremental processing</a> for tables with no
+                                        primary key or offset column. </li>
+
+                                    <li class="li">You can now specify a query to be executed after
+                                        establishing a connection to the database, before performing
+                                        other tasks. This can be used, for example, to modify
+                                        session attributes. </li>
+
+                                    <li class="li">A new Queries Per Second property determines how many
+                                        queries can be run every second. <p class="p">This property replaces
+                                            the Query Interval property. For information about
+                                            possible upgrade impact, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_hky_ljl_wbb">JDBC Multitable Consumer Query Interval
+                                                Change</a>.</p>
+</li>
+
+                                </ul>
+</li>
+
+                            <li class="li">JDBC Query Consumer origin enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_hzy_tbl_wbb">
+                                    <li class="li">You can now specify a query to be executed after
+                                        establishing a connection to the database, before performing
+                                        other tasks. This can be used, for example, to modify
+                                        session attributes.</li>
+
+                                    <li class="li">The Microsoft SQL Server CDC functionality in the JDBC Query
+                                        Consumer origin is now deprecated and will be removed from
+                                        the origin in a future release. For upgrade information, see
+                                            <a class="xref" href="../Upgrade/PostUpgrade.html#concept_ys3_bjl_wbb">Update JDBC Query Consumer Pipelines used for SQL
+                                            Server CDC Data</a>.</li>
+
+                                </ul>
+</li>
+
+                            <li class="li">Kafka Multitopic Consumer origin enhancement - The origin is now
+                                available in the following stage libraries, in addition to the
+                                Apache Kafka 0.10 stage library:<ul class="ul" id="concept_cjx_y4k_wbb__ul_emj_ccl_wbb">
+                                    <li dir="ltr" class="li">
+                                        <p dir="ltr" class="p">Apache Kafka 0.9</p>
+
+                                    </li>
+
+                                    <li dir="ltr" class="li">
+                                        <p dir="ltr" class="p">CDH Kafka 2.0 (0.9.0) and 2.1 (0.9.0)</p>
+
+                                    </li>
+
+                                    <li dir="ltr" class="li">
+                                        <p class="p">HDP 2.5 and 2.6</p>
+
+                                    </li>
+
+                                </ul>
+</li>
+
+                            <li class="li">Kinesis Consumer origin enhancement - You can now specify the number
+                                of times the origin retries a query. The default is three.</li>
+
+                            <li class="li">Oracle CDC Client origin enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_wbj_fcl_wbb">
+                                    <li class="li">When using <a class="xref" href="../Origins/OracleCDC.html#concept_zrc_pyj_dx">SCNs for the initial change</a>, the origin now
+                                        treats the specified SCN as a starting point rather than
+                                        looking for an exact match.</li>
+
+                                    <li class="li">The origin now passes <a class="xref" href="../Origins/OracleCDC.html#concept_gwp_d4n_n1b">raw data</a> to the pipeline as a byte array.</li>
+
+                                    <li class="li">The origin can now include unparsed strings from the parsed
+                                        SQL query for <a class="xref" href="../Origins/OracleCDC.html#concept_gwp_d4n_n1b">unsupported data types</a> in records.</li>
+
+                                    <li class="li">The origin now uses <a class="xref" href="../Origins/OracleCDC.html#concept_yqk_3hn_n1b">local buffering</a> instead of Oracle LogMiner
+                                        buffering by default. Upgraded pipelines require no changes.
+                                    </li>
+
+                                </ul>
+</li>
+
+                            <li class="li">SQL Server CDC Client origin enhancements - You can now perform the
+                                following tasks with the SQL Server CDC Client origin:<ul class="ul" id="concept_cjx_y4k_wbb__ul_et1_pcl_wbb">
+                                    <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_nxm_1lp_qbb">Process CDC tables</a> that appear after the
+                                        pipeline starts.</li>
+
+                                    <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_avq_s2q_qbb">Check for schema changes and generate events</a>
+                                        when they are found.</li>
+
+                                    <li class="li">
+                                        <p dir="ltr" class="p">In addition, a new Capture Instance Name
+                                            property replaces the Schema and Table Name Pattern
+                                            properties from earlier releases.</p>
+
+                                        <p dir="ltr" class="p">You can simply use the schema name and table
+                                            name pattern for the capture instance name. Or, you can
+                                            specify the schema name and a capture instance name
+                                            pattern, which allows you to specify specific CDC tables
+                                            to process when you have multiple CDC tables for a
+                                            single data table.</p>
+
+                                        <p dir="ltr" class="p">Upgraded pipelines require no changes.</p>
+
+                                    </li>
+
+                                </ul>
+</li>
+
+                            <li class="li">UDP Source origin enhancement - The Enable Multithreading property
+                                that enabled using multiple epoll receiver threads is now named Use
+                                Native Transports (epoll).</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Processors</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_qfc_3fl_wbb">
+                            <li class="li">New Aggregator processor - A processor that aggregates data that
+                                arrives within a window of time.</li>
+
+                            <li class="li"><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">New Delay
+                                    processor</a> - A processor that can delay processing a batch
+                                of records for a specified amount of time.</li>
+
+                            <li class="li">Field Converter processor enhancement - You can now convert strings
+                                to the Zoned Datetime data type, and vice versa. You can also
+                                specify the format to use. </li>
+
+                            <li class="li">Hive Metadata processor enhancement - You can now configure
+                                additional JDBC configuration properties to pass to the JDBC
+                                driver.</li>
+
+                            <li class="li">HTTP Client processor enhancement - The Rate Limit now defines the
+                                maximum number of requests to make per millisecond. Previously, it
+                                defined the maximum number of requests per second.</li>
+
+                            <li class="li">JDBC Lookup and JDBC Tee processor enhancements - You can now
+                                specify a query to be executed after establishing a connection to
+                                the database, before performing other tasks. This can be used, for
+                                example, to modify session attributes. </li>
+
+                            <li class="li">Kudu Lookup processor enhancement - The Cache Kudu Table property is
+                                now named Enable Table Caching. The Maximum Entries to Cache Table
+                                Objects property is now named Maximum Table Entries to Cache. </li>
+
+                            <li class="li">Salesforce Lookup processor enhancement - You can use a new Retrieve
+                                lookup mode to look up data for a batch of records instead of
+                                record-by-record.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Destinations</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_rv3_nfl_wbb">
+                            <li class="li"><a class="xref" href="../Destinations/GCS.html#concept_p4n_jrl_nbb">New Google
+                                    Cloud Storage destination</a> - A new destination that writes
+                                data to objects in Google Cloud Storage. The destination can
+                                generate events for use as dataflow triggers.</li>
+
+                            <li class="li"><a class="xref" href="../Destinations/KineticaDB.html#concept_hxh_5xg_qbb">New
+                                    KineticaDB destination</a> - A new destination that writes
+                                data to a Kinetica table. </li>
+
+                            <li class="li">Hive Metastore destination enhancement - You can now configure
+                                additional JDBC configuration properties to pass to the JDBC
+                                driver.</li>
+
+                            <li class="li">HTTP Client destination enhancement - You can now use the HTTP
+                                Client destination to write Avro, Delimited, and Protobuf data in
+                                addition to the previous data formats. </li>
+
+                            <li class="li">JDBC Producer destination enhancement - You can now specify a query
+                                to be executed after establishing a connection to the database,
+                                before performing other tasks. This can be used, for example, to
+                                modify session attributes. </li>
+
+                            <li class="li"><a class="xref" href="../Destinations/Kudu.html#task_c4x_tmh_4v">Kudu destination enhancement</a> - If the destination
+                                receives a change data capture log from the following source
+                                systems, you now must specify the source system in the Change Log
+                                Format property so that the destination can determine the format of
+                                the log: Microsoft SQL Server, Oracle CDC Client, MySQL Binary Log,
+                                or MongoDB Oplog. </li>
+
+                            <li class="li">MapR DB JSON destination enhancement - The destination now supports
+                                writing to MapR DB based on the CRUD operation in record header
+                                attributes.</li>
+
+                            <li class="li">MongoDB destination enhancements - With this release, the Upsert
+                                operation is no longer supported by the destination. Instead, the
+                                destination includes the following enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_xfc_xfl_wbb">
+                                    <li class="li">Support for the <a class="xref" href="../Destinations/MongoDB.html#concept_bkc_m24_4v">Replace and Update operations</a>. </li>
+
+                                    <li class="li">Support for an <a class="xref" href="../Destinations/MongoDB.html#concept_syh_s1l_tbb">Upsert flag</a> that, when enabled, is used with
+                                        both the Replace and Update operations. </li>
+
+                                </ul>
+<p class="p">For information about upgrading existing upsert pipelines,
+                                    see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_ncs_5jl_wbb">Update MongoDB Destination Upsert Pipelines</a>.
+                                </p>
+</li>
+
+                            <li class="li">Redis destination enhancement - The destination now supports writing
+                                data using CRUD operations stored in record header attributes. </li>
+
+                            <li class="li">Salesforce destination enhancement - When using the Salesforce Bulk
+                                API to update, insert, or upsert data, you can now use a colon (:)
+                                or period (.) as a field separator when defining the Salesforce
+                                field to map the Data Collector field to. For example,
+                                    <samp class="ph codeph">Parent__r:External_Id__c</samp> or
+                                    <samp class="ph codeph">Parent__r.External_Id__c</samp> are both valid
+                                Salesforce fields. </li>
+
+                            <li class="li">Wave Analytics destination rename - With this release, the Wave
+                                Analytics destination is now named the <a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Einstein Analytics destination</a>, following the recent
+                                Salesforce rebranding. All of the properties and functionality of
+                                the destination remain the same. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Executor</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_if5_jgl_wbb">
+                            <li class="li">Hive Query executor enhancement - You can now configure additional
+                                JDBC configuration properties to pass to the JDBC driver. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Credential Stores</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_o1b_mgl_wbb">
+                            <li class="li"><a class="xref" href="../Configuration/CredentialStores.html#concept_v21_nvd_fbb" title="By default, a full Data Collector installation includes the CyberArk credential store stage library. The core installation does not include the library.Use the credential:get() or credential:getWithOptions() function in pipeline stage properties to retrieve credential values from CyberArk.">CyberArk</a> - Data Collector now provides a credential
+                                store implementation for CyberArk Application Identity Manager. You
+                                can define the credentials required by external systems - user names
+                                or passwords - in CyberArk. Then you use credential expression
+                                language functions in JDBC stage properties to retrieve those
+                                values, instead of directly entering credential values in stage
+                                properties. </li>
+
+                            <li class="li"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">Supported stages</a> - You can now use the credential
+                                functions in all stages that require you to enter sensitive
+                                information. Previously, you could only use the credential functions
+                                in JDBC stages. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector Configuration</dt>
+
+                    <dd class="dd">By default when Data Collector restarts, it automatically restarts all
+                        pipelines that were running before Data Collector shut down. You can now
+                        disable the automatic restart of pipelines by enabling the
+                            <samp class="ph codeph">runner.boot.pipeline.restart</samp> property in the
+                            <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Dataflow Performance Manager</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_p2b_4hl_wbb">
+                            <li class="li"><a class="xref" href="../DPM/AggregatedStatistics.html#concept_qh5_v5t_mbb" title="When you write statistics to MapR Streams, Data Collector effectively adds a MapR Streams Producer destination to the pipeline that you are configuring. DPM automatically generates and runs a system pipeline for the job. The system pipeline reads the statistics from MapR Streams, and then aggregates and sends the statistics to DPM.">Aggregated statistics</a> - When working with DPM, you can
+                                now configure a pipeline to write aggregated statistics to MapR
+                                Streams. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Formats</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_sp4_rhl_wbb">
+                            <li class="li"><a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_thl_nnr_hbb">New NetFlow 9 support</a> - Data Collector now supports
+                                processing NetFlow 9 template-based messages. Stages that previously
+                                processed NetFlow 5 data can now process NetFlow 9 data as well. </li>
+
+                            <li class="li">Datagram data format enhancement - The Datagram Data Format property
+                                is now named the Datagram Packet Format. </li>
+
+                            <li class="li">Delimited data format enhancement - Data Collector can now process
+                                data using the Postgres CSV and Postgres Text delimited format
+                                types. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Expression Language</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_ppq_whl_wbb">
+                            <li class="li">New field-path syntax - You can use a powerful new field-path syntax
+                                in certain stages to specify the fields that you want to use in an
+                                expression. </li>
+
+                            <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">New string functions</a> - The release includes the
+                                following new functions:<ul class="ul" id="concept_cjx_y4k_wbb__ul_uss_whl_wbb">
+                                        <li class="li">str:isNullOrEmpty() - Returns true or false based on
+                                            whether a string is null or is the empty string.</li>
+
+                                        <li class="li">str:splitKV() - Splits key-value pairs in a string into
+                                            a map of string values.</li>
+
+                                    
+                                </ul>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Stage Libraries</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_qhq_c3l_wbb">
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">New stage libraries</a> - This release includes the
+                                following new stage libraries:<ul class="ul" id="concept_cjx_y4k_wbb__ul_rcr_23l_wbb">
+                                    <li class="li">Apache Kafka 1.0 </li>
+
+                                    <li class="li">Apache Kafka 0.11 </li>
+
+                                    <li class="li">Apache Kudu 1.5 </li>
+
+                                    <li class="li">Cloudera CDH 5.13 </li>
+
+                                    <li class="li">Cloudera Kafka 3.0.0 (0.11.0) </li>
+
+                                    <li class="li">Hortonworks 2.6.1, including Hive 1.2 </li>
+
+                                    <li class="li">Hortonworks 2.6.2, including Hive 1.2 and 2.0 </li>
+
+                                    <li class="li">MapR version 6.0 (MEP 4)</li>
+
+                                    <li class="li">MapR Spark 2.1 (MEP 3) </li>
+
+                                </ul>
+</li>
+
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fw3_zt3_tbb">Legacy stage libraries</a> - Stage libraries that are more
+                                than two years old are no longer included with Data Collector.
+                                Though not recommended, you can still download and install the older
+                                stage libraries as custom stage libraries. <p class="p">If you have pipelines
+                                    that use these legacy stage libraries, you will need to update
+                                    the pipelines to use a more current stage library or install the
+                                    legacy stage library manually, For moe information see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_wnl_zk4_5bb">Update Pipelines using Legacy Stage
+                                Libraries</a>.</p>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Miscellaneous</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_cjx_y4k_wbb__ul_fw1_s3l_wbb">
+                            <li class="li">New data type - Data Collector now supports the Zoned Datetime data
+                                type.</li>
+
+                            <li class="li">New Data Collector metrics - JVM metrics have been renamed Data
+                                Collector Metrics and now include general Data Collector metrics in
+                                addition to JVM metrics. The JVM Metrics menu item has also been
+                                renamed SDC Metrics.</li>
+
+                            <li class="li">Pipeline error records - You can now write error records to Google
+                                Pub/Sub, Google Cloud Storage, or an MQTT broker.</li>
+
+                            <li class="li">Snapshot enhancements:<ul class="ul" id="concept_cjx_y4k_wbb__ul_cv5_53l_wbb">
+                                    <li class="li">You can now configure the pipeline to take a snapshot of
+                                        data if the pipeline fails due to a data-related
+                                        exception.</li>
+
+                                    <li class="li">You can now download snapshots through the UI and the REST
+                                        API.</li>
+
+                                </ul>
+</li>
+
+                            <li class="li">Time zone enhancement - Time zones have been organized and updated
+                                to use JDK 8 names. This should make it easier to select time zones
+                                in stage properties. In the rare case that your pipeline uses a
+                                format not supported by JDK 8, edit the pipeline to select a
+                                compatible time zone.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_rrq_v3k_kbb">
  <h2 class="title topictitle2">What's New in 2.7.2.0</h2>
 
@@ -69,7 +595,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_rrq_v3k_kbb__ul_crw_frk_kbb">
-                            <li class="li"><a class="xref" href="../Destinations/BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination streams data into Google BigQuery.">New
+                            <li class="li"><a class="xref" href="../Destinations/BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination maps fields from records to BigQuery columns in existing tables based on matching names and compatible data types. If needed, the destination converts Data Collector data types to BigQuery data types.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">New
                                     Google BigQuery destination</a> - A new destination that
                                 streams data into Google BigQuery.</li>
 
@@ -137,7 +663,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1575069032">
+<div class="topic concept nested1" id="unique_411599203">
     <h2 class="title topictitle2">What's New in 2.7.1.0</h2>
 
     <div class="body conbody">
@@ -147,7 +673,7 @@
                 
                     <dt class="dt dlterm">Stage Libraries</dt>
 
-                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1575069032__ul_s1w_cvr_1bb">
+                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_411599203__ul_s1w_cvr_1bb">
                             <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Jython 2.7.1</a></li>
 
                         </ul>
@@ -158,7 +684,7 @@
                     <dt class="dt dlterm">Origins</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1575069032__ul_gr5_hvr_1bb">
+                        <ul class="ul" id="unique_411599203__ul_gr5_hvr_1bb">
                             <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">New
                                     Azure Event Hub Consumer origin</a> - A multithreaded origin
                                 that reads data from Microsoft Azure Event Hub.</li>
@@ -176,7 +702,7 @@
                     <dt class="dt dlterm">Processors</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1575069032__ul_rh5_3vr_1bb">
+                        <ul class="ul" id="unique_411599203__ul_rh5_3vr_1bb">
                             <li class="li"><a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">New Schema Generator processor</a> - A processor that
                                 generates a schema for each record and writes the schema to a record
                                 header attribute. </li>
@@ -190,7 +716,7 @@
                     <dt class="dt dlterm">Destinations</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1575069032__ul_s22_lvr_1bb">
+                        <ul class="ul" id="unique_411599203__ul_s22_lvr_1bb">
                             <li class="li"><a class="xref" href="../Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">New Azure Event Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure Event Hub.</li>
 
@@ -208,7 +734,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1259163804">
+<div class="topic concept nested1" id="unique_300623502">
  <h2 class="title topictitle2">What's New in 2.7.0.0</h2>
 
  <div class="body conbody">
@@ -223,7 +749,7 @@
                 <dd class="dd"><span class="ph">Data
                   Collector</span> now has a <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
                         store</a> API that integrates with the following credential store
-                        systems:<ul class="ul" id="unique_1259163804__ul_vgr_3cz_w1b">
+                        systems:<ul class="ul" id="unique_300623502__ul_vgr_3cz_w1b">
                         <li class="li">Java keystore</li>
 
                         <li class="li">Hashicorp Vault</li>
@@ -241,7 +767,7 @@
                 </dd>
 
                 <dd class="dd">
-                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_1259163804__ul_ezm_4cz_w1b">
+                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_300623502__ul_ezm_4cz_w1b">
                             <li class="li">JDBC Multitable Consumer origin</li>
 
                             <li class="li">JDBC Query Consumer origin</li>
@@ -286,7 +812,7 @@
                 <dt class="dt dlterm">Stage Libraries</dt>
 
                 <dd class="dd">
-                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_1259163804__ul_cxp_d2z_w1b">
+                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_300623502__ul_cxp_d2z_w1b">
                             <li class="li">Apache Kudu version 1.4.0</li>
 
                             <li class="li">Cloudera CDH version 5.12 distribution of Hadoop</li>
@@ -310,7 +836,7 @@
                 <dt class="dt dlterm">Data Collector Configuration</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_hc5_q2z_w1b">
+                    <ul class="ul" id="unique_300623502__ul_hc5_q2z_w1b">
                         <li class="li"><a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Access  Hashicorp Vault secrets</a> - The Data Collector Vault
                             integration now relies on Vault's App Role authentication backend.
                             Previously, Data Collector relied on Vault's App ID authentication
@@ -347,7 +873,7 @@
                 <dt class="dt dlterm">Dataflow Triggers</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_fg2_gfz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_fg2_gfz_w1b">
                         <li class="li"><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline events</a> - The event framework now generates pipeline
                             lifecycle events when the pipeline stops and starts. You can pass each
                             pipeline event to an executor or to another pipeline for more complex
@@ -363,7 +889,7 @@
                 <dt class="dt dlterm">Origins</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_tpp_sfz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_tpp_sfz_w1b">
                         <li class="li"><a class="xref" href="../Origins/BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">New Google
                                 BigQuery origin</a> - An origin that executes a query job and
                             reads the result from Google BigQuery.</li>
@@ -409,7 +935,7 @@
                             configure the behavior for the origin when it encounters data of an
                             unknown data type.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_1259163804__ul_gnl_rhz_w1b">
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_300623502__ul_gnl_rhz_w1b">
                                 <li class="li">You can now use the origin to perform multithreaded processing
                                     of partitions within a table. Use partition processing to handle
                                     even larger volumes of data. This enhancement also includes new
@@ -426,7 +952,7 @@
 </li>
 
                         <li class="li"><a class="xref" href="../Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC
-                                Client origin enhancements</a>:<ul class="ul" id="unique_1259163804__ul_ych_yhz_w1b">
+                                Client origin enhancements</a>:<ul class="ul" id="unique_300623502__ul_ych_yhz_w1b">
                                 <li class="li">The origin can now buffer data locally rather than utilizing
                                     Oracle LogMiner buffers.</li>
 
@@ -475,7 +1001,7 @@
                 <dt class="dt dlterm">Processors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_py4_vmz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_py4_vmz_w1b">
                         <li class="li"><a class="xref" href="../Processors/DataParser.html#concept_xw3_4xk_r1b">New Data
                                 Parser processor</a> - Use the new processor to extract NetFlow
                             or syslog messages as well as other supported data formats that are
@@ -501,15 +1027,15 @@
                 <dt class="dt dlterm">Destinations</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_wdl_lnz_w1b">
-                        <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" title="The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub topic.">New Google Pub/Sub Publisher destination</a> - A destination
+                    <ul class="ul" id="unique_300623502__ul_wdl_lnz_w1b">
+                        <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">New Google Pub/Sub Publisher destination</a> - A destination
                             that publishes messages to Google Pub/Sub.</li>
 
                         <li class="li"><a class="xref" href="../Destinations/JMSProducer.html#concept_sfz_ww5_n1b" title="Before you use the JMS Producer, install the JMS drivers for the implementation that you are using.">New
                                 JMS Producer destination</a> - A destination that writes data to
                             JMS.</li>
 
-                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_1259163804__ul_ls3_d4z_w1b">
+                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_300623502__ul_ls3_d4z_w1b">
                                 <li class="li">You can now use expressions in the <a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket property</a> for the Amazon S3 destination. This
                                     enables you to write records dynamically based expression
                                     evaluation.</li>
@@ -555,7 +1081,7 @@
                 <dt class="dt dlterm">Executors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_gqx_fpz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_gqx_fpz_w1b">
                         <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">New Amazon
                                 S3 executor</a> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
@@ -573,7 +1099,7 @@
                 <dt class="dt dlterm">Dataflow Performance Manager</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_dwx_lpz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_dwx_lpz_w1b">
                         <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_c4x_vff_p1b">Revert changes to published pipelines</a> - If you update a
                             published pipeline but decide not to publish the updates to <span class="ph">DPM</span> as a new version, you can revert the changes made to the pipeline
                             configuration.</li>
@@ -587,8 +1113,8 @@
                 <dt class="dt dlterm">Pipelines</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_ngb_qpz_w1b">
-                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_1259163804__ul_rq1_tpz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_ngb_qpz_w1b">
+                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_300623502__ul_rq1_tpz_w1b">
                                 <li class="li">Use the new Error Record Policy to specify the version of the
                                     record to include in error records. </li>
 
@@ -613,14 +1139,14 @@
                 <dt class="dt dlterm">Data Formats</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_btq_yqz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_btq_yqz_w1b">
                         <li class="li"><a class="xref" href="../Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing
                                 XML</a> - You can now use the Google Pub/Sub Publisher, JMS
                             Producer, and Kafka Producer destinations to write XML documents to
                             destination systems. Note the record structure requirement before you
                             use this data format. </li>
 
-                        <li class="li">Avro:<ul class="ul" id="unique_1259163804__ul_k4b_yrz_w1b">
+                        <li class="li">Avro:<ul class="ul" id="unique_300623502__ul_k4b_yrz_w1b">
                                 <li class="li">Origins now write the Avro schema to an avroSchema record header
                                     attribute.</li>
 
@@ -645,7 +1171,7 @@
                 <dt class="dt dlterm">Cluster Pipelines</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_1259163804__ul_b14_nsz_w1b">
+                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_300623502__ul_b14_nsz_w1b">
                             <li class="li">Use a new Worker Count property to limit the number of worker nodes
                                 used in Cluster Yarn Streaming pipelines. By default, a Data
                                 Collector worker is spawned for each partition in the topic. </li>
@@ -663,7 +1189,7 @@
                 <dt class="dt dlterm">Expression Language</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_1259163804__ul_abf_qsz_w1b">
+                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_300623502__ul_abf_qsz_w1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential:get()</a> - Returns credential values from a
                                 credential store.</li>
 
@@ -688,7 +1214,7 @@
 
                 <dd class="dd">
                     <div class="p">
-                        <ul class="ul" id="unique_1259163804__ul_k5c_rg4_z1b">
+                        <ul class="ul" id="unique_300623502__ul_k5c_rg4_z1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">str:indexOf()</a> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
 
@@ -703,7 +1229,7 @@
                 <dt class="dt dlterm">Miscellaneous</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1259163804__ul_y2k_htz_w1b">
+                    <ul class="ul" id="unique_300623502__ul_y2k_htz_w1b">
                         <li class="li"><a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Global bulk edit mode</a> - In any property where you would
                             previously click an Add icon to add additional configurations, you can
                             now switch to bulk edit mode to enter a list of configurations in JSON
@@ -1326,7 +1852,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 perform for each record. You can also configure the destination to
                                 use a proxy to connect to Salesforce. </li>
 
-                            <li class="li"><a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data.">Wave Analytics destination</a> - You can now configure the
+                            <li class="li"><a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Wave Analytics destination</a> - You can now configure the
                                 authentication endpoint and the API version that the destination
                                 uses to connect to Salesforce Wave Analytics. You can also configure
                                 the destination to use a proxy to connect to Salesforce.</li>
@@ -1377,7 +1903,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             application ID in request headers. </li>
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a> - The origin
-                            now performs parallel processing and can generate mulitithreaded
+                            now performs parallel processing and can generate multithreaded
                             pipelines. The origin can generate events when it completes processing
                             all available data. <p class="p">You can also configure the quote character to use
                                 around table, schema, and column names in the query. And you can
@@ -1396,7 +1922,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                         <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kinesis
                                 Consumer origin enhancement</a> - The origin now performs
-                            parallel processing and can generate mulitithreaded pipelines. </li>
+                            parallel processing and can generate multithreaded pipelines. </li>
 
                         <li class="li"><a class="xref" href="../Origins/MongoDB.html#concept_gzz_kdr_tz">MongoDB origin</a> and <a class="xref" href="../Origins/MongoDBOplog.html#concept_ovt_vpt_tz">MongoDB Oplog origin</a> enhancements - The origins can now use
                             LDAP authentication in addition to username/password authentication to
@@ -1951,7 +2477,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#concept_dmr_df5_5y" title="You can configure each registered Data Collector to use an authenticated HTTP or HTTPS proxy server for outbound requests made to DPM. Define the proxy properties in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.">Proxy
+                                <p class="p"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#concept_dmr_df5_5y" title="You can configure each registered Data Collector to use an authenticated HTTP or HTTPS proxy server for outbound requests made to DPM. Define the proxy properties in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file located in the $SDC_DIST/libexec directory.">Proxy
                                         configuration for outbound requests</a> - You can now
                                     configure Data Collector to use an authenticated HTTP proxy for
                                     outbound requests to Dataflow Performance Manager (DPM).</p>
@@ -2643,7 +3169,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             <li class="li">New <a class="xref" href="../Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store destination</a> - Writes data to
                                 Microsoft Azure Data Lake Store. </li>
 
-                            <li class="li">New <a class="xref" href="../Destinations/Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination writes data to Google Cloud Bigtable.">Google Bigtable destination</a> - Writes data to Google
+                            <li class="li">New <a class="xref" href="../Destinations/Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination requires the BoringSSL library. You must download and install the external library so that the Google Bigtable destination can access it.Configure the Google Application Default Credentials that the Google Bigtable destination uses to connect to Google Cloud Bigtable. Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key. When you map record fields to Google Cloud Bigtable columns, you specify whether the Cloud Bigtable storage type is text or binary. The destination converts the data types of the record fields to the Cloud Bigtable storage types. When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">Google Bigtable destination</a> - Writes data to Google
                                 Cloud Bigtable. </li>
 
                             <li class="li">New <a class="xref" href="../Destinations/Salesforce.html#concept_rlb_rt3_rx" title="The Salesforce destination writes data to Salesforce objects.">Salesforce destination</a> - Writes data to Salesforce. New

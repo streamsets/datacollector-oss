@@ -97,7 +97,7 @@
                 <dd class="dd">To verify that a <span class="ph">Data
                   Collector</span> has the statistics stage library installed, click the Package Manager icon
                         (<img class="image" id="concept_w11_n1q_rx__image_hgv_t1q_rx" src="../Graphics/icon_PackageManager.png" height="13" width="16" />) to display the list of installed stage libraries.
-                    If the statistics library is not installed, <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz" title="Install additional stage libraries to use stages that are not included in the core installation of Data Collector. This is an optional step, but generally you'll want to install additional libraries to process data after completing a core installation.">install
+                    If the statistics library is not installed, <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">install
                         the library</a> before registering the <span class="ph">Data
                   Collector</span>.</dd>
 
@@ -148,6 +148,11 @@
                   Collector</span> UI.</p>
 
         <div class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> For a <span class="ph">Data
+                  Collector</span> installation with Cloudera Manager, you must <a class="xref" href="RegisterSDCwithDPM.html#task_oxx_y5m_xw" title="If you installed Data Collector through Cloudera Manager, you must use Cloudera Manager to register the Data Collector with DPM.">use Cloudera Manager to
+                    register</a> the <span class="ph">Data
+                  Collector</span>. </div>
+
             <p class="p">
                 
             </p>
@@ -172,9 +177,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d60143e359">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d61569e378">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d60143e362">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d61569e381">Description</th>
 
                                 </tr>
 
@@ -182,9 +187,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e359 "><span class="ph">DPM</span> Base URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e378 "><span class="ph">DPM</span> Base URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e362 ">Enter the appropriate URL:<ul class="ul" id="task_a4y_v1g_xw__d9877e4487">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e381 ">Enter the appropriate URL:<ul class="ul" id="task_a4y_v1g_xw__d9870e4486">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -198,9 +203,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e359 ">User ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e378 ">User ID</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e362 ">Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e381 ">Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -209,16 +214,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e359 ">User Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e378 ">User Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e362 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e381 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e359 ">Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e378 ">Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e362 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e381 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -299,6 +304,12 @@
                   Collector</span> must
         be running before you can use the command line interface.</p>
 
+        <div class="note note"><span class="notetitle">Note:</span> For a <span class="ph">Data
+                  Collector</span>
+            installation with Cloudera Manager, you must <a class="xref" href="RegisterSDCwithDPM.html#task_oxx_y5m_xw" title="If you installed Data Collector through Cloudera Manager, you must use Cloudera Manager to register the Data Collector with DPM.">use Cloudera Manager to
+                register</a> the <span class="ph">Data
+                  Collector</span>. </div>
+
         <p class="p">Start <span class="ph">Data
                   Collector</span>,
             and then use the system enableDPM command to register the <span class="ph">Data
@@ -326,9 +337,9 @@ system enableDPM \
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d60143e652">Basic Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d61569e696">Basic Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d60143e655">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d61569e699">Description</th>
 
                     </tr>
 
@@ -336,10 +347,10 @@ system enableDPM \
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e652 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e696 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e655 ">Required. URL of the <span class="ph">Data
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e699 ">Required. URL of the <span class="ph">Data
                   Collector</span>.<p class="p">The default URL is
                                     <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
@@ -347,11 +358,11 @@ system enableDPM \
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e652 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e696 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e655 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c2n_5kd_j1b">
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e699 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -377,9 +388,9 @@ system enableDPM \
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d60143e735">Enable DPM Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d61569e779">Enable DPM Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d60143e738">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d61569e782">Description</th>
 
                         </tr>
 
@@ -387,9 +398,9 @@ system enableDPM \
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e735 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e779 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e738 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c6n_9jk_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e782 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c6n_9jk_j1b">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -403,9 +414,9 @@ system enableDPM \
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e735 ">--dpmUser &lt;dpmUserID&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e779 ">--dpmUser &lt;dpmUserID&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e738 ">Required. Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e782 ">Required. Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -414,16 +425,16 @@ system enableDPM \
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e735 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e779 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e738 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e782 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e735 ">--labels &lt;labels&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e779 ">--labels &lt;labels&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e738 ">Optional. Assign a label to this <span class="ph">Data
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e782 ">Optional. Assign a label to this <span class="ph">Data
                   Collector</span>. You can enter multiple labels separated by commas. Labels that
                                 you assign here are defined in the <span class="ph">DPM</span> configuration file, <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To
                                 remove these labels after you register the <span class="ph">Data
@@ -496,9 +507,9 @@ For example, the following command registers a <span class="ph">Data
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d60143e971">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d61569e1015">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d60143e974">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d61569e1018">Description</th>
 
                                 </tr>
 
@@ -506,16 +517,16 @@ For example, the following command registers a <span class="ph">Data
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e971 ">Enable <span class="ph">DPM</span></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e1015 ">Enable <span class="ph">DPM</span></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e974 ">Select to enable <span class="ph">DPM</span>.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e1018 ">Select to enable <span class="ph">DPM</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e971 "><span class="ph">DPM</span> URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e1015 "><span class="ph">DPM</span> URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e974 ">Enter the appropriate URL:<ul class="ul" id="task_oxx_y5m_xw__d9877e4487">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e1018 ">Enter the appropriate URL:<ul class="ul" id="task_oxx_y5m_xw__d9870e4486">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -529,9 +540,9 @@ For example, the following command registers a <span class="ph">Data
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e971 "><span class="ph">DPM</span> User ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e1015 "><span class="ph">DPM</span> User ID</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e974 ">Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e1018 ">Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -540,16 +551,16 @@ For example, the following command registers a <span class="ph">Data
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e971 "><span class="ph">DPM</span> Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e1015 "><span class="ph">DPM</span> Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e974 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e1018 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60143e971 "><span class="ph">DPM</span> Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d61569e1015 "><span class="ph">DPM</span> Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60143e974 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d61569e1018 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -636,13 +647,10 @@ Default is "all", which you can use to run a job
         an authenticated HTTP or HTTPS proxy server for outbound requests made to <span class="ph">DPM</span>. Define
         the proxy properties in the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
                   Collector</span>
-        environment configuration file. </p>
+        environment configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory. </p>
 
         
-        <p class="p">If you start Data Collector as a service, set the environment
-                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
-                  If you start Data Collector manually, set the variable in the
-                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+        <p class="p">Modify the <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation type.</p>
 
         <p class="p">Add the following Java options to the SDC_JAVA_OPTS
             environment variable:</p>
@@ -683,7 +691,7 @@ Default is "all", which you can use to run a job
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>

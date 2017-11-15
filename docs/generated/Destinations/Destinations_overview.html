@@ -62,16 +62,22 @@
         <li class="li"><a class="xref" href="Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document.">Elasticsearch</a> - Writes data to
           an Elasticsearch cluster.</li>
 
+        <li class="li"><a class="xref" href="WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Einstein Analytics</a> - Writes
+          data to Salesforce Einstein Analytics.</li>
+
         <li class="li"><a class="xref" href="Flume.html#concept_pzn_hl4_yr" title="The Flume destination writes data to a Flume source. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to hosts based on client configuration properties.">Flume</a> - Writes data to a Flume
           source.</li>
 
-        <li class="li"><a class="xref" href="BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination streams data into Google BigQuery.">Google BigQuery</a> - Streams data
+        <li class="li"><a class="xref" href="BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination maps fields from records to BigQuery columns in existing tables based on matching names and compatible data types. If needed, the destination converts Data Collector data types to BigQuery data types.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google BigQuery</a> - Streams data
           into Google BigQuery.</li>
 
-        <li class="li"><a class="xref" href="Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination writes data to Google Cloud Bigtable.">Google Bigtable</a> - Writes data to
+        <li class="li"><a class="xref" href="Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination requires the BoringSSL library. You must download and install the external library so that the Google Bigtable destination can access it.Configure the Google Application Default Credentials that the Google Bigtable destination uses to connect to Google Cloud Bigtable. Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key. When you map record fields to Google Cloud Bigtable columns, you specify whether the Cloud Bigtable storage type is text or binary. The destination converts the data types of the record fields to the Cloud Bigtable storage types. When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">Google Bigtable</a> - Writes data to
           Google Cloud Bigtable.</li>
 
-        <li class="li"><a class="xref" href="PubSubPublisher.html#concept_qsj_hk1_v1b" title="The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub topic.">Google Pub/Sub Publisher</a> -
+        <li class="li"><a class="xref" href="GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a> - Writes data to
+          Google Cloud Storage.</li>
+
+        <li class="li"><a class="xref" href="PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google Pub/Sub Publisher</a> -
           Publishes messages to Google Pub/Sub.</li>
 
         <li class="li"><a class="xref" href="HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a> - Writes data
@@ -148,9 +154,6 @@
 
         <li class="li"><a class="xref" href="Trash.html#concept_htf_ydj_wq" title="The Trash destination discards records. Use the Trash destination as a visual representation of records discarded from the pipeline. Or, you might use the Trash destination during development as a temporary placeholder.">Trash</a> - Removes records from the
           pipeline.</li>
-
-        <li class="li"><a class="xref" href="WaveAnalytics.html#concept_hlx_r53_rx" title="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data.">Wave Analytics</a> - Writes data
-          to Salesforce Wave Analytics.</li>
 
         <li class="li"><a class="xref" href="WebSocketClient.html#concept_l4d_mjn_lz" title="The WebSocket Client destination writes data to a WebSocket endpoint. Use the destination to send data to a WebSocket resource URL.">WebSocket Client</a> - Writes
           data to a WebSocket endpoint.</li>

@@ -289,9 +289,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d33419e491">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d34747e491">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d33419e494">Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d34747e494">Requirement</th>
 
                             </tr>
 
@@ -299,16 +299,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e491 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34747e491 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e494 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34747e494 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e491 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34747e491 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e494 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34747e494 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -349,41 +349,42 @@
                   Collector</span> on a Spark and YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8681">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8684">For example, say SDC_USER is defined as
-                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
-                    might use the following commands to create the directory and configure the
-                    necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2653e8689">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9275">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9280">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2653e9285">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2653e8732">If necessary, specify the location of the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2653e9327">If necessary, specify the location of the
                     spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8735"><span class="ph">Data
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9330"><span class="ph">Data
                   Collector</span> assumes that the spark-submit script used to submit job requests to Spark
                     Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8741">If the script is not in this directory, use
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9336">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8744">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9339">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8747"><span class="ph" id="task_hhk_bfv_cy__d2653e8748">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9342"><span class="ph" id="task_hhk_bfv_cy__d2653e9343">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2653e8752">=/usr/bin/spark2-submit</span></pre>
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2653e9347">=/usr/bin/spark2-submit</span></pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e8756">
-                    <div class="note note" id="task_hhk_bfv_cy__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2653e9351">
+                    <div class="note note" id="task_hhk_bfv_cy__d2653e9353"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -427,7 +428,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2653e9401"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -481,11 +482,13 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> on a Spark and Mesos gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To enable checkpoint metadata storage, grant $SDC_USER write permission on
-                        <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
+                    environment variable write permission on
+                    <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
                 <div class="itemgroup info">For example, say $SDC_USER is defined as <span class="ph filepath">sdc</span>. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
@@ -512,7 +515,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d2653e9353"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -555,9 +558,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d33419e964">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d34747e990">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d33419e967">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d34747e993">Requirement</th>
 
                         </tr>
 
@@ -565,16 +568,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e964 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d34747e990 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e967 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d34747e993 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d33419e964 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d34747e990 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d33419e967 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d34747e993 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -608,15 +611,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> on a YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Grant the user defined in the SDC_USER environment variable write permission on
+                <span class="ph cmd">Grant the user defined in the user environment variable write permission on
                         <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info">For example, say SDC_USER is defined as
-                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
-                    might use the following commands to create the directory and configure the
-                    necessary write
+                <div class="itemgroup info">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
                     permissions:<pre class="pre codeblock" id="task_n2l_z45_lx__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
@@ -669,7 +673,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2653e9401"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -718,17 +722,18 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> on a Spark and YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8681">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e8684">For example, say SDC_USER is defined as
-                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
-                    might use the following commands to create the directory and configure the
-                    necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2653e8689">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e9275">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2653e9280">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2653e9285">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
@@ -751,7 +756,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2653e8758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d2653e9353"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -799,7 +804,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2653e9401"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -852,15 +857,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> on a YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Grant the user defined in the SDC_USER environment variable write permission on
+                <span class="ph cmd">Grant the user defined in the user environment variable write permission on
                         <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info">The SDC_USER environment variable defines the system
-                    user used to run Data Collector as a service. The variable is defined in the
-                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info">For example, say SDC_USER is defined as
-                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
-                    might use the following commands to create the directory and configure the
-                    necessary write
+                <div class="itemgroup info">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
                     permissions:<pre class="pre codeblock" id="task_akz_w5b_ws__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
@@ -913,7 +919,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2653e8805"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2653e9401"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>

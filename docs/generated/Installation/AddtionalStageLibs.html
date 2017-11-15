@@ -2,8 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Install Additional Stage Libraries" /><meta name="abstract" content="Install additional stage libraries to use stages that are not included in the core installation of Data Collector. This is an optional step, but generally you'll want to install additional libraries to process data after completing a core installation." /><meta name="description" content="Install additional stage libraries to use stages that are not included in the core installation of Data Collector. This is an optional step, but generally you'll want to install additional libraries to process data after completing a core installation." /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fb2_qmn_bz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Install Additional Stage Libraries</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Install additional stage libraries to use stages that are not included in the core installation of Data Collector . This is an optional step, but generally you'll want to install additional stage ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Install Additional Stage Libraries" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fb2_qmn_bz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Install Additional Stage Libraries</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -30,12 +29,13 @@
 <div class="nested0" id="concept_fb2_qmn_bz">
  <h1 class="title topictitle1">Install Additional Stage Libraries</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">Install additional stage libraries to use stages that are not included in the core
-        installation of <span class="ph">Data
-                  Collector</span>. This
-        is an optional step, but generally you'll want to install additional libraries to process
-        data after completing a core installation.</p>
+ <div class="body conbody">
+        <p class="p">Install additional stage libraries to use stages that are not included in the core
+            installation of <span class="ph">Data
+                  Collector</span>.
+            This is an optional step, but generally you'll want to install additional stage
+            libraries to process data after completing a core installation. When necessary, you can
+            also install legacy stage libraries.</p>
 
         <div class="note important"><span class="importanttitle">Important:</span> You must perform additional steps to install the MapR stage libraries, as described in
                 <a class="xref" href="MapR-Prerequisites.html#concept_jgs_qpg_2v" title="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR. Data Collector does not display MapR origins and destinations in the stage library nor the MapR Streams statistics aggregator in the pipeline properties until you perform these prerequisites.">MapR Prerequisites</a>.</div>
@@ -282,9 +282,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d201196e410">Stage Library Name</th>
+                            <th class="entry" valign="top" width="50%" id="d207485e409">Stage Library Name</th>
 
-                            <th class="entry" valign="top" width="50%" id="d201196e413">Included Stages </th>
+                            <th class="entry" valign="top" width="50%" id="d207485e412">Included Stages </th>
 
                         </tr>
 
@@ -292,49 +292,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_hfn_3yp_vw">
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_jfg_jyp_vw">
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kafka version 0.9.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kafka version 0.9.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -354,9 +314,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kafka version 0.10.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kafka version 0.10.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -376,68 +336,96 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kudu_1_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kafka_0_11-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kudu version 1.0.x. <p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kafka version 0.11.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_bzj_2zv_sbb">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">Kafka Multitopic Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kafka_1_0-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kafka version 1.0.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ql4_l2j_tbb">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">Kafka Multitopic Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kudu_1_3-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kudu version 1.3.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kudu_1_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kudu_1_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kudu version 1.1.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kudu version 1.4.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kudu_1_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-kudu_1_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kudu version 1.2.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kudu version 1.5.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kudu_1_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kudu version 1.3.x.<p class="p">Includes the Kudu Lookup processor and
-                                    Kudu destination.</p>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-kudu_1_4-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kudu version 1.4.x.<p class="p">Includes the Kudu Lookup processor and
-                                    Kudu destination.</p>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Apache Solr version 6.1.<p class="p">Includes the Solr
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Apache Solr version 6.1.<p class="p">Includes the Solr
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-aws-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-aws-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Amazon Web Services 1.11.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Amazon Web Services 1.11.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
                                         <li class="li">Amazon S3 origin</li>
 
-                                        <li class="li">Amazon S3 destination</li>
+                                        <li class="li">Amazon SQS Consumer origin</li>
 
                                         <li class="li">Kinesis Consumer origin</li>
+
+                                        <li class="li">Amazon S3 destination</li>
 
                                         <li class="li">Kinesis Firehose destination</li>
 
@@ -452,9 +440,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-azure-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-azure-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Microsoft Azure.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_cjf_frr_1bb">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Microsoft Azure.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_cjf_frr_1bb">
                                         <li class="li">Azure Event Hub Consumer origin</li>
 
                                         <li class="li">Azure Data Lake Store destination</li>
@@ -470,9 +458,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-basic-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-basic-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">Installs automatically with the core installation.<div class="p">Includes the
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">Installs automatically with the core installation.<div class="p">Includes the
                                     following origins:<ul class="ul" id="concept_evs_xkm_s5__ul_kkp_bqh_cw">
                         <li class="li">CoAP Server</li>
 
@@ -493,6 +481,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         <li class="li">SFTP/FTP Client</li>
 
                         <li class="li">TCP Server</li>
+
+                        <li class="li">UDP Multithreaded Source</li>
 
                         <li class="li">UDP Source</li>
 
@@ -537,214 +527,27 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-bigtable-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-bigtable-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Google Cloud Bigtable.<p class="p">Includes the Google Bigtable
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Google Cloud Bigtable.<p class="p">Includes the Google Bigtable
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cassandra_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cassandra_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_2-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_8-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera CDH version 5.2 distribution of Hadoop. </p>
-
-                                <p class="p">Includes:</p>
-
-                                <ul class="ul" id="concept_evs_xkm_s5__ul_kqw_ghh_cw">
-                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
-
-                                    <li class="li">HBase Lookup processor</li>
-
-                                    <li class="li">Flume destination </li>
-
-                                    <li class="li">Hadoop FS destination </li>
-
-                                    <li class="li">HBase destination </li>
-
-                                    <li class="li">Solr destination</li>
-
-                                    <li class="li">HDFS File Metadata executor</li>
-
-                                    <li class="li">MapReduce executor</li>
-
-                                </ul>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_3-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera CDH version 5.3 distribution of Hadoop. </p>
-
-                                <p class="p">Includes:</p>
-
-                                <ul class="ul" id="concept_evs_xkm_s5__ul_mdq_ghh_cw">
-                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
-
-                                    <li class="li">HBase Lookup processor</li>
-
-                                    <li class="li">Flume destination </li>
-
-                                    <li class="li">Hadoop FS destination </li>
-
-                                    <li class="li">HBase destination </li>
-
-                                    <li class="li">Solr destination</li>
-
-                                    <li class="li">HDFS File Metadata executor</li>
-
-                                    <li class="li">MapReduce executor</li>
-
-                                </ul>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_4-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera CDH version 5.4 distribution of Hadoop. </p>
-
-                                <p class="p">Includes:</p>
-
-                                <ul class="ul" id="concept_evs_xkm_s5__ul_xqj_ghh_cw">
-                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
-
-                                    <li class="li">HBase Lookup processor</li>
-
-                                    <li class="li">Hive Metadata processor</li>
-
-                                    <li class="li">Spark Evaluator processor</li>
-
-                                    <li class="li">Flume destination </li>
-
-                                    <li class="li">Hadoop FS destination </li>
-
-                                    <li class="li">HBase destination </li>
-
-                                    <li class="li">Hive Metastore destination</li>
-
-                                    <li class="li">Hive Streaming destination</li>
-
-                                    <li class="li">Solr destination</li>
-
-                                    <li class="li">HDFS File Metadata executor</li>
-
-                                    <li class="li">Hive Query executor</li>
-
-                                    <li class="li">MapReduce executor</li>
-
-                                </ul>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_5-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera CDH version 5.5 distribution of Hadoop. </p>
-
-                                <p class="p">Includes:</p>
-
-                                <ul class="ul" id="concept_evs_xkm_s5__ul_dp2_ghh_cw">
-                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
-
-                                    <li class="li">HBase Lookup processor</li>
-
-                                    <li class="li">Hive Metadata processor</li>
-
-                                    <li class="li">Spark Evaluator processor</li>
-
-                                    <li class="li">Flume destination </li>
-
-                                    <li class="li">Hadoop FS destination </li>
-
-                                    <li class="li">HBase destination </li>
-
-                                    <li class="li">Hive Metastore destination</li>
-
-                                    <li class="li">Hive Streaming destination</li>
-
-                                    <li class="li">Solr destination</li>
-
-                                    <li class="li">HDFS File Metadata executor</li>
-
-                                    <li class="li">Hive Query executor</li>
-
-                                    <li class="li">MapReduce executor</li>
-
-                                </ul>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_7-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera CDH version 5.7 distribution of Hadoop. </p>
-
-                                <p class="p">Includes:</p>
-
-                                <ul class="ul" id="concept_evs_xkm_s5__ul_oxh_kfh_cw">
-                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
-
-                                    <li class="li">HBase Lookup processor</li>
-
-                                    <li class="li">Hive Metadata processor</li>
-
-                                    <li class="li">Spark Evaluator processor</li>
-
-                                    <li class="li">Flume destination </li>
-
-                                    <li class="li">Hadoop FS destination </li>
-
-                                    <li class="li">HBase destination </li>
-
-                                    <li class="li">Hive Metastore destination</li>
-
-                                    <li class="li">Hive Streaming destination</li>
-
-                                    <li class="li">Solr destination</li>
-
-                                    <li class="li">HDFS File Metadata executor</li>
-
-                                    <li class="li">Hive Query executor</li>
-
-                                    <li class="li">MapReduce executor</li>
-
-                                    <li class="li">Spark executor</li>
-
-                                </ul>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_8-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera CDH version 5.8 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -785,9 +588,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_9-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera CDH version 5.9 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -828,9 +631,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_10-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_10-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera CDH version 5.10 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -871,9 +674,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_11-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_11-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera CDH version 5.11 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -914,9 +717,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_12-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_12-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera CDH version 5.12 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -957,59 +760,56 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_13-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka
-                                    1.2.</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
+                                <p class="p">For the Cloudera CDH version 5.13 distribution of Hadoop. </p>
 
-                                <p class="p">Includes the Kafka Consumer origin for cluster mode pipelines.
-                                </p>
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_evs_xkm_s5__ul_nc5_31w_sbb">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Hive Metadata processor</li>
+
+                                    <li class="li">Kudu Lookup processor</li>
+
+                                    <li class="li">Spark Evaluator processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Hive Metastore destination</li>
+
+                                    <li class="li">Hive Streaming destination</li>
+
+                                    <li class="li">Kudu destination</li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">Hive Query executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                    <li class="li">Spark executor</li>
+
+                                </ul>
 
                             </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka 1.3. </p>
-
-                                <p class="p">Includes the Kafka Consumer origin for cluster mode pipelines.
-                                </p>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
-                                <p class="p">For the Cloudera version 5.5 distribution of Apache Kafka 1.3. </p>
-
-                                <p class="p">Includes the Kafka Consumer origin for cluster mode
-                                    pipelines.</p>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 "><p class="p">For the Cloudera version 5.7 distribution of Apache Kafka
-                                    2.0.</p>
-Includes the Kafka Consumer origin for cluster mode
-                                pipelines.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera version 5.8 distribution of Apache Kafka 2.0. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -1020,9 +820,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera version 5.9 distribution of Apache Kafka 2.0. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -1033,9 +833,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_10-cluster-cdh_kafka_2_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_10-cluster-cdh_kafka_2_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera version 5.10 distribution of Apache Kafka 2.1. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -1046,9 +846,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera version 5.11 distribution of Apache Kafka 2.1. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -1059,9 +859,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_5_12-cluster-cdh_kafka_2_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_5_12-cluster-cdh_kafka_2_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For the Cloudera version 5.12 distribution of Apache Kafka 2.1. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -1072,51 +872,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
-                                    <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_pt3_nyp_vw">
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
-                                    <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_w1y_nyp_vw">
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_kjf_ntg_qw">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -1137,9 +895,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_kafka_2_1-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_kafka_2_1-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_scl_wym_pz">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -1160,9 +918,32 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cdh_spark_2_1_r1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_kafka_3_0-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Cloudera distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uv5_lbh_c1b">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Cloudera distribution of Apache Kafka 3.0.0
+                                    (0.11.0).<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_jtg_xzv_sbb">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">Kafka Multitopic Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cdh_spark_2_1_r1-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Cloudera distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uv5_lbh_c1b">
                                         <li class="li">Spark Evaluator processor</li>
 
                                         <li class="li">Spark executor</li>
@@ -1174,30 +955,34 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-cyberark-credentialstore-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-cyberark-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the CyberArk credential store system.</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the CyberArk credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-elasticsearch_5-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-elasticsearch_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Elasticsearch 1.x, 2.x, and 5.x.<p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Elasticsearch 1.x, 2.x, and 5.x.<p class="p">Includes the Elasticsearch
                                     origin and destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-google-cloud-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-google-cloud-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Google Cloud.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_dzd_5rq_v1b">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Google Cloud.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_dzd_5rq_v1b">
                                         <li class="li">Google BigQuery origin</li>
+
+                                        <li class="li">Google Cloud Storage origin</li>
 
                                         <li class="li">Google Pub/Sub Subscriber origin</li>
 
                                         <li class="li">Google BigQuery destination</li>
+
+                                        <li class="li">Google Cloud Storage destination</li>
 
                                         <li class="li">Google Pub/Sub Publisher destination</li>
 
@@ -1208,110 +993,18 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-groovy_2_4-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-groovy_2_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Groovy version 2.4. <p class="p">Includes the Groovy Evaluator
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Groovy version 2.4. <p class="p">Includes the Groovy Evaluator
                                     processor.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-hdp_2_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_4-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
-                                        <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_j4w_kqm_s5">
-                                        <li class="li">
-                                            <p class="p">Hadoop FS origin for cluster mode pipelines</p>
-
-                                        </li>
-
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">HBase Lookup processor</li>
-
-                                        <li class="li">Hive Metadata processor</li>
-
-                                        <li class="li">Flume destination </li>
-
-                                        <li class="li">Hadoop FS destination </li>
-
-                                        <li class="li">HBase destination </li>
-
-                                        <li class="li">Hive Metastore destination</li>
-
-                                        <li class="li">Hive Streaming destination</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                        <li class="li">HDFS File Metadata executor</li>
-
-                                        <li class="li">Hive Query executor</li>
-
-                                        <li class="li">MapReduce executor</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-hdp_2_3-lib </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
-                                        <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_nwd_jhh_cw">
-                                        <li class="li">
-                                            <p class="p">Hadoop FS origin for cluster mode pipelines</p>
-
-                                        </li>
-
-                                        <li class="li">HTTP to Kafka origin</li>
-
-                                        <li class="li">Kafka Consumer origin</li>
-
-                                        <li class="li">SDC RPC to Kafka origin</li>
-
-                                        <li class="li">UDP to Kafka origin</li>
-
-                                        <li class="li">HBase Lookup processor</li>
-
-                                        <li class="li">Hive Metadata processor</li>
-
-                                        <li class="li">Flume destination </li>
-
-                                        <li class="li">Hadoop FS destination </li>
-
-                                        <li class="li">HBase destination </li>
-
-                                        <li class="li">Hive Metastore destination</li>
-
-                                        <li class="li">Hive Streaming destination</li>
-
-                                        <li class="li">Kafka Producer destination</li>
-
-                                        <li class="li">HDFS File Metadata executor</li>
-
-                                        <li class="li">Hive Query executor</li>
-
-                                        <li class="li">MapReduce executor</li>
-
-                                    </ul>
-</div>
-</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-hdp_2_4-lib </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uh3_lhh_cw">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1329,23 +1022,15 @@ Includes the Kafka Consumer origin for cluster mode
 
                                         <li class="li">HBase Lookup processor</li>
 
-                                        <li class="li">Hive Metadata processor</li>
-
                                         <li class="li">Flume destination </li>
 
                                         <li class="li">Hadoop FS destination </li>
 
                                         <li class="li">HBase destination </li>
 
-                                        <li class="li">Hive Metastore destination</li>
-
-                                        <li class="li">Hive Streaming destination</li>
-
                                         <li class="li">Kafka Producer destination</li>
 
                                         <li class="li">HDFS Metadata executor</li>
-
-                                        <li class="li">Hive Query executor</li>
 
                                         <li class="li">MapReduce executor</li>
 
@@ -1356,9 +1041,28 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-hdp_2_5-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_4-hive1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hortonworks version 2.5.x distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.4.x distribution of Apache Hive
+                                version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_qv2_sk5_5bb">
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_5-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.5.x distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jcc_kjv_cy">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1380,8 +1084,6 @@ Includes the Kafka Consumer origin for cluster mode
 
                                         <li class="li">Hive Metadata processor</li>
 
-                                        <li class="li">Flume destination </li>
-
                                         <li class="li">Hadoop FS destination </li>
 
                                         <li class="li">HBase destination </li>
@@ -1405,9 +1107,18 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-hdp_2_6-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_5-flume-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hortonworks version 2.6.x distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.5.x distribution of Apache
+                                    Flume.<p class="p">Includes the Flume destination.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_6-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.6.x distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_pz4_nhd_wz">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1427,23 +1138,15 @@ Includes the Kafka Consumer origin for cluster mode
 
                                         <li class="li">HBase Lookup processor</li>
 
-                                        <li class="li">Hive Metadata processor</li>
-
                                         <li class="li">Flume destination </li>
 
                                         <li class="li">Hadoop FS destination </li>
 
                                         <li class="li">HBase destination </li>
 
-                                        <li class="li">Hive Metastore destination</li>
-
-                                        <li class="li">Hive Streaming destination</li>
-
                                         <li class="li">Kafka Producer destination</li>
 
                                         <li class="li">HDFS Metadata executor</li>
-
-                                        <li class="li">Hive Query executor</li>
 
                                         <li class="li">MapReduce executor</li>
 
@@ -1454,18 +1157,84 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-influxdb-0_9-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_6-flume-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.6.x distribution of Apache
+                                    Flume.<p class="p">Includes the Flume destination.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_6-hive2-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.6.x distribution of Apache Hive
+                                version 2.1. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_tw3_nx5_5bb">
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_6_1-hive1-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.6.1 distribution of Apache Hive
+                                version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ehb_tx5_5bb">
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-hdp_2_6_2-hive1-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hortonworks version 2.6.2 distribution of Apache Hive
+                                version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_nvw_wx5_5bb">
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-influxdb-0_9-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-jdbc-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-jdbc-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For JDBC access to databases.</p>
 
                                 <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_apd_qbj_jx">
@@ -1495,43 +1264,43 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-jks-credentialstore-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-jks-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Java keystore credential store system.</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Java keystore credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-jms-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-jms-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Java Messaging Services (JMS).<p class="p">Includes the JMS Consumer
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Java Messaging Services (JMS).<p class="p">Includes the JMS Consumer
                                     origin and JMS Producer destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-jython_2_7-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-jython_2_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Jython version 2.7.x. <p class="p">Includes the Jython Evaluator
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Jython version 2.7.x. <p class="p">Includes the Jython Evaluator
                                     processor.</p>
 </td>
 
                         </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-kinetica_6_0-lib</td>
+   <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-kinetica_6_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Kinetica 6.0.<p class="p">Includes the KineticaDB
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Kinetica 6.0.<p class="p">Includes the KineticaDB
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mapr_5_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_5_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MapR version 5.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_f3l_b4w_2bb">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MapR version 5.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_f3l_b4w_2bb">
                                         <li class="li">MapR FS destination</li>
 
                                         <li class="li">MapR FS File Metadata executor</li>
@@ -1543,9 +1312,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mapr_5_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_5_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MapR version 5.1.<p class="p">Includes:</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MapR version 5.1.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_egx_c3h_cw">
                                         <li class="li">MapR DB JSON origin</li>
@@ -1583,19 +1352,19 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mapr_5_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_5_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MapR version 5.2.<p class="p">Includes:</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MapR version 5.2.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_rwr_fzf_nx">
                                         <li class="li">MapR DB JSON origin</li>
 
                                         <li class="li">MapR FS origin for cluster mode pipelines</li>
 
+                                        <li class="li">MapR Multitopic Streams Consumer origin</li>
+
                                         <li class="li">MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
-
-                                        <li class="li">MapR Streams Multitopic Consumer</li>
 
                                         <li class="li">HBase Lookup processor</li>
 
@@ -1627,9 +1396,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mapr_6_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_6_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MapR version 6.0.<p class="p">Includes:</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MapR version 6.0.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_njh_b5m_pbb">
                                         <li class="li">MapR DB CDC origin</li>
@@ -1638,24 +1407,7 @@ Includes the Kafka Consumer origin for cluster mode
 
                                         <li class="li">MapR FS origin for cluster mode pipelines</li>
 
-                                        <li class="li">MapR Streams Consumer origin for standalone and cluster
-                                            mode pipelines</li>
-
-                                        <li class="li">MapR Streams Multitopic Consumer origin</li>
-
-                                        <li class="li">HBase Lookup processor</li>
-
-                                        <li class="li">Hive Metadata processor</li>
-
-                                        <li class="li">Spark Evaluator processor</li>
-
-                                        <li class="li">HBase destination</li>
-
-                                        <li class="li">Hive Metastore destination</li>
-
-                                        <li class="li">Hive Streaming destination using the MapR library</li>
-
-                                        <li class="li">MapR Streams Producer destination</li>
+                                        <li class="li">MapR Multitopic Streams Consumer origin</li>
 
                                         <li class="li">MapR DB destination</li>
 
@@ -1673,9 +1425,31 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_6_0-mep4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the MapR distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ayp_qbh_c1b">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
+                                <ul class="ul" id="concept_evs_xkm_s5__ul_nbk_zy5_5bb">
+                                    <li class="li">MapR Streams Consumer origin for standalone and cluster mode
+                                        pipelines</li>
+
+                                    <li class="li">Hive Metadata processor</li>
+
+                                    <li class="li">Spark Evaluator processor</li>
+
+                                    <li class="li">Hive Metastore destination</li>
+
+                                    <li class="li">Hive Streaming destination using the MapR library</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the MapR distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ayp_qbh_c1b">
                                         <li class="li">Spark Evaluator processor</li>
 
                                         <li class="li">Spark executor</li>
@@ -1687,44 +1461,51 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mongodb_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mongodb_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MongoDB 3.0.<p class="p">Includes the MongoDB and MongoDB Oplog
-                                    origins, and the MongoDB destination.</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MongoDB 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jwm_bln_wbb">
+                                        <li class="li">MongoDB origin</li>
+
+                                        <li class="li">MongoDB Oplog origin</li>
+
+                                        <li class="li">MongoDB destination</li>
+
+                                    </ul>
+</div>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-mysql-binlog-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-mysql-binlog-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For MySQL binary logs.<p class="p">Includes the MySQL Binary Log
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For MySQL binary logs.<p class="p">Includes the MySQL Binary Log
                                     origin.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-omniture-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-omniture-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Omniture.<p class="p">Includes the Omniture origin.</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Omniture.<p class="p">Includes the Omniture origin.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-rabbitmq-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-rabbitmq-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer
                                     origin and RabbitMQ Producer destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-redis-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-redis-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Redis versions 2.8 and 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_oyy_2kx_cy">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Redis versions 2.8 and 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_oyy_2kx_cy">
                                         <li class="li">Redis Consumer origin</li>
 
                                         <li class="li">Redis Lookup processor</li>
@@ -1738,9 +1519,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-salesforce-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-salesforce-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <p class="p">For Salesforce. </p>
 
                                 <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_sbt_gkx_cy">
@@ -1750,7 +1531,7 @@ Includes the Kafka Consumer origin for cluster mode
 
                                         <li class="li">Salesforce destination</li>
 
-                                        <li class="li">Wave Analytics destination</li>
+                                        <li class="li">Einstein Analytics destination</li>
 
                                     </ul>
 </div>
@@ -1760,9 +1541,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-stats-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-stats-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">
                                 <span class="ph">Dataflow Performance Manager</span> (<span class="ph">DPM</span>) requires that the statistics stage library be installed on each
                                 registered <span class="ph">Data
                   Collector</span>. </td>
@@ -1770,16 +1551,541 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-vault-credentialstore-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-vault-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For the Hashicorp Vault credential store system.</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For the Hashicorp Vault credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d201196e410 ">streamsets-datacollector-windows-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d207485e409 ">streamsets-datacollector-windows-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d201196e413 ">For Windows.<p class="p">Includes the Windows Event Log origin.</p>
+                            <td class="entry" valign="top" width="50%" headers="d207485e412 ">For Windows.<p class="p">Includes the Windows Event Log origin.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_fw3_zt3_tbb">
+ <h2 class="title topictitle2">Legacy Stage Libraries</h2>
+
+ <div class="body conbody">
+  <p class="p">Legacy stage libraries
+            are older stage libraries that have been removed from <span class="ph">Data
+                  Collector</span>.
+            Though we strongly advise using the stage libraries provided with <span class="ph">Data
+                  Collector</span>,
+            and upgrading related systems, you can continue to use these legacy libraries when
+            necessary.</p>
+
+        <p class="p">For steps for upgrading pipelines that use legacy libraries to current stage libraries,
+            see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_wnl_zk4_5bb">Update Pipelines using Legacy Stage Libraries</a>.</p>
+
+        <p class="p">To use a legacy library:</p>
+
+        <div class="p">
+            <ol class="ol" id="concept_fw3_zt3_tbb__ol_q2d_4f5_5bb">
+                <li class="li"> To download a legacy library, go to the <a class="xref" href="https://archives.streamsets.com/index.html" target="_blank">StreamSets archives page</a> and navigate to the release
+                    that you are using. Click the "Legacy" link and download the legacy libraries
+                    that you want to use. </li>
+
+                <li class="li">Install and manage the legacy libraries as you would custom stage libraries. For
+                    more information, see <a class="xref" href="../Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a>.</li>
+
+            </ol>
+
+        </div>
+
+        <div class="p">The following table lists the legacy stage libraries:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fw3_zt3_tbb__table_itj_nw3_tbb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="50%" id="d207485e2260">Legacy Stage Library</th>
+
+                            <th class="entry" valign="top" width="50%" id="d207485e2263">Included Stages </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_hfn_3yp_vw">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_jfg_jyp_vw">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-apache-kudu_1_0-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For Kudu version 1.0.x. <p class="p">Includes the Kudu Lookup processor and
+                                    Kudu destination.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-apache-kudu_1_1-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For Kudu version 1.1.x.<p class="p">Includes the Kudu Lookup processor and
+                                    Kudu destination.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-apache-kudu_1_2-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For Kudu version 1.2.x.<p class="p">Includes the Kudu Lookup processor and
+                                    Kudu destination.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_2-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera CDH version 5.2 distribution of Hadoop. </p>
+
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_fw3_zt3_tbb__ul_kqw_ghh_cw">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_3-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera CDH version 5.3 distribution of Hadoop. </p>
+
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_fw3_zt3_tbb__ul_mdq_ghh_cw">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_4-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera CDH version 5.4 distribution of Hadoop. </p>
+
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_fw3_zt3_tbb__ul_xqj_ghh_cw">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Hive Metadata processor</li>
+
+                                    <li class="li">Spark Evaluator processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Hive Metastore destination</li>
+
+                                    <li class="li">Hive Streaming destination</li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">Hive Query executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_5-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera CDH version 5.5 distribution of Hadoop. </p>
+
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_fw3_zt3_tbb__ul_dp2_ghh_cw">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Hive Metadata processor</li>
+
+                                    <li class="li">Spark Evaluator processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Hive Metastore destination</li>
+
+                                    <li class="li">Hive Streaming destination</li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">Hive Query executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_7-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera CDH version 5.7 distribution of Hadoop. </p>
+
+                                <p class="p">Includes:</p>
+
+                                <ul class="ul" id="concept_fw3_zt3_tbb__ul_oxh_kfh_cw">
+                                    <li class="li">Hadoop FS origin for cluster mode pipelines </li>
+
+                                    <li class="li">HBase Lookup processor</li>
+
+                                    <li class="li">Hive Metadata processor</li>
+
+                                    <li class="li">Spark Evaluator processor</li>
+
+                                    <li class="li">Flume destination </li>
+
+                                    <li class="li">Hadoop FS destination </li>
+
+                                    <li class="li">HBase destination </li>
+
+                                    <li class="li">Hive Metastore destination</li>
+
+                                    <li class="li">Hive Streaming destination</li>
+
+                                    <li class="li">Solr destination</li>
+
+                                    <li class="li">HDFS File Metadata executor</li>
+
+                                    <li class="li">Hive Query executor</li>
+
+                                    <li class="li">MapReduce executor</li>
+
+                                    <li class="li">Spark executor</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka
+                                    1.2.</p>
+
+                                <p class="p">Includes the Kafka Consumer origin for cluster mode pipelines.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka 1.3. </p>
+
+                                <p class="p">Includes the Kafka Consumer origin for cluster mode pipelines.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">
+                                <p class="p">For the Cloudera version 5.5 distribution of Apache Kafka 1.3. </p>
+
+                                <p class="p">Includes the Kafka Consumer origin for cluster mode
+                                    pipelines.</p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 "><p class="p">For the Cloudera version 5.7 distribution of Apache Kafka
+                                    2.0.</p>
+Includes the Kafka Consumer origin for cluster mode
+                                pipelines.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
+                                    <div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_pt3_nyp_vw">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
+                                    <div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_w1y_nyp_vw">
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-hdp_2_2-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
+                                        <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_j4w_kqm_s5">
+                                        <li class="li">
+                                            <p class="p">Hadoop FS origin for cluster mode pipelines</p>
+
+                                        </li>
+
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">HBase Lookup processor</li>
+
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Flume destination </li>
+
+                                        <li class="li">Hadoop FS destination </li>
+
+                                        <li class="li">HBase destination </li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                        <li class="li">HDFS File Metadata executor</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                        <li class="li">MapReduce executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-hdp_2_3-lib </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
+                                        <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_nwd_jhh_cw">
+                                        <li class="li">
+                                            <p class="p">Hadoop FS origin for cluster mode pipelines</p>
+
+                                        </li>
+
+                                        <li class="li">HTTP to Kafka origin</li>
+
+                                        <li class="li">Kafka Consumer origin</li>
+
+                                        <li class="li">SDC RPC to Kafka origin</li>
+
+                                        <li class="li">UDP to Kafka origin</li>
+
+                                        <li class="li">HBase Lookup processor</li>
+
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Flume destination </li>
+
+                                        <li class="li">Hadoop FS destination </li>
+
+                                        <li class="li">HBase destination </li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Kafka Producer destination</li>
+
+                                        <li class="li">HDFS File Metadata executor</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                        <li class="li">MapReduce executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-hdp_2_3-hive1-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">The Hortonworks version 2.3.x distribution of Apache Hive 1.x.
+                                        <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_nfx_3z3_tbb">
+                                        <li class="li">Hive Metadata processor</li>
+
+                                        <li class="li">Hive Metastore destination</li>
+
+                                        <li class="li">Hive Streaming destination</li>
+
+                                        <li class="li">Hive Query executor</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d207485e2260 ">streamsets-datacollector-mapr_5_0-lib</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d207485e2263 ">For MapR version 5.0.<div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_f3l_b4w_2bb">
+                                        <li class="li">MapR FS destination</li>
+
+                                        <li class="li">MapR FS File Metadata executor</li>
+
+                                    </ul>
+</div>
 </td>
 
                         </tr>
