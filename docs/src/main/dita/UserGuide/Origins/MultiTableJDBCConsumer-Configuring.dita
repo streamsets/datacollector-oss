@@ -88,9 +88,11 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
-                                    <entry/>
+                                <row>
+                                    <entry>Queries per Second</entry>
+                                    <entry>Maximum number of queries to run in a second across all
+                                        partitions and tables. Use 0 for no limit.<p>Default is 10.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Number of Threads <xref

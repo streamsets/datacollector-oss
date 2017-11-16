@@ -39,9 +39,10 @@
         <note>To configure your own SQL query to read database data from a single table or from a
             join of tables, use the <xref href="JDBCConsumer.dita#concept_qhf_hjr_bs"/>
             origin.</note>
-        <p>When you configure the origin, you specify connection information, a query interval, and
-            custom JDBC configuration properties to determine how the origin connects to the
-            database. You also configure the number of threads to use.</p>
+        <p>When you configure the origin, you specify connection information and custom JDBC
+            configuration properties to determine how the origin connects to the database. You also
+            configure the number of threads to use and the maximum number of queries to run per
+            second.</p>
         <p>When you define the table configuration for the groups of tables that you want to
             process, you can optionally override the default key column and specify the initial
             offset to use. You can enable non-incremental processing for tables without key or
