@@ -19,7 +19,7 @@
   <p>With version 3.0.0.0, the Query Interval property is replaced by the new Queries per Second
             property.</p>
         <p>Upgraded pipelines with the Query Interval specified using a constant or the default
-            format and unit of time, ${10 * SECONDS}, has the new Queries per Second property
+            format and unit of time, ${10 * SECONDS}, have the new Queries per Second property
             calculated and defined as follows:
             <codeblock>Queries per Second = Number of Threads / Query Interval (in seconds)</codeblock>For
             example, say the origin uses three threads and Query Interval is configured for ${15 *

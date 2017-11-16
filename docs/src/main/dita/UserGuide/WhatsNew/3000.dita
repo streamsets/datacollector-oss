@@ -111,7 +111,9 @@
                                         establishing a connection to the database, before performing
                                         other tasks. This can be used, for example, to modify
                                         session attributes. </li>
-                                    <li>A new Queries Per Second property determines how many
+                                    <li>A new <xref
+                                            href="../Origins/MultiTableJDBCConsumer-Configuring.dita#task_kst_m4w_4y"
+                                            >Queries Per Second property</xref> determines how many
                                         queries can be run every second. <p>This property replaces
                                             the Query Interval property. For information about
                                             possible upgrade impact, see <xref
