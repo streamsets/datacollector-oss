@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!--l
   Copyright 2017 StreamSets Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -130,9 +130,30 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3DataFormat">
-                                    <entry/>
+                                <row>
+                                    <entry>Data Format <xref href="GCS-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"
+                                        /></xref></entry>
+                                    <entry>Data format for source files. Use one of the following
+                                            formats:<ul id="ul_y1t_wql_5q">
+                                            <li>Avro</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Log</li>
+                                            <li>Protobuf</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_wjh_ycl_br"
+                                                  placement="inline"/></xref></li>
+                                            <li>Text</li>
+                                            <li>Whole File <xref
+                                                  href="../Data_Formats/WholeFile.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_igx_zzm_zw"/></xref></li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -162,9 +183,6 @@
             </step>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-WholeFile-Checksum">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
                 <cmd/>
             </step>
             <step>

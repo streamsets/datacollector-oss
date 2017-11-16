@@ -206,8 +206,7 @@
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ndk_nwp_v1b"
                 /></entry>
               <entry/>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_odk_nwp_v1b"
-                /></entry>
+              <entry/>
             </row>
             <row>
               <entry>Google Pub/Sub Subscriber</entry>

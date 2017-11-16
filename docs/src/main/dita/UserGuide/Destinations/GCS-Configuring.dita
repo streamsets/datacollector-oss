@@ -87,7 +87,7 @@
                             <tbody>
                                 <row>
                                     <entry>Data Format <xref
-                                            href="../Destinations/AmazonS3-DataFormat.dita">
+                                            href="GCS-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ivq_1fj_vx"/>
                                         </xref></entry>
@@ -107,7 +107,6 @@
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" placement="inline"
                                                   id="image_lvq_1fj_vx"/></xref></li>
-                                            <li>XML</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -165,10 +164,6 @@
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-WriteXML-messages">
-                <cmd/>
             </step>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-GCS-Credentials">
