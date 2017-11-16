@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
 import java.util.List;
 
-public class ForceLookupConfigBean extends ForceConfigBean {
+public class ForceLookupConfigBean extends ForceInputConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -126,28 +126,4 @@ public class ForceLookupConfigBean extends ForceConfigBean {
 
   @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cacheConfig = new CacheConfig();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Create Salesforce Attributes",
-      description = "Generate field attributes that provide additional details about source data, such as the original data type",
-      defaultValue = "true",
-      displayPosition = 110,
-      group = "ADVANCED"
-  )
-  public boolean createSalesforceNsHeaders = true;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Salesforce Attribute Prefix",
-      description = "Prefix for the field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
-      defaultValue = "salesforce.",
-      displayPosition = 120,
-      group = "ADVANCED",
-      dependsOn = "createSalesforceNsHeaders",
-      triggeredByValue = "true"
-  )
-  public String salesforceNsHeaderPrefix = "salesforce.";
 }

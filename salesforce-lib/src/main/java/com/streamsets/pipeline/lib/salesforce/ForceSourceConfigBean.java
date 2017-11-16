@@ -23,7 +23,7 @@ import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
-public class ForceSourceConfigBean extends ForceConfigBean {
+public class ForceSourceConfigBean extends ForceInputConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
@@ -156,36 +156,13 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       defaultValue = "",
       label = "Push Topic",
       description = "Push Topic name, for example AccountUpdates. The Push Topic must be defined in your Salesforce environment.",
-      displayPosition = 120,
-      dependsOn = "subscribeToStreaming",
-      triggeredByValue = "true",
+      displayPosition = 125,
+      dependencies = {
+          @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
+      },
       group = "SUBSCRIBE"
   )
   public String pushTopic;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Create Salesforce Attributes",
-      description = "Generates record header and field attributes that provide additional details about source data, such as the source object and original data type.",
-      defaultValue = "true",
-      displayPosition = 130,
-      group = "ADVANCED"
-  )
-  public boolean createSalesforceNsHeaders = true;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Salesforce Attribute Prefix",
-      description = "Prefix for the header and field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
-      defaultValue = "salesforce.",
-      displayPosition = 140,
-      group = "ADVANCED",
-      dependsOn = "createSalesforceNsHeaders",
-      triggeredByValue = "true"
-  )
-  public String salesforceNsHeaderPrefix = "salesforce.";
 
   @ConfigDefBean(groups = {"FORCE", "QUERY", "SUBSCRIBE", "ADVANCED"})
   public BasicConfig basicConfig = new BasicConfig();

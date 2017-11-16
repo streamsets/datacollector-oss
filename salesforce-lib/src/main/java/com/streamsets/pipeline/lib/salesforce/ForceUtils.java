@@ -15,24 +15,17 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
-import com.google.common.collect.ListMultimap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BulkConnection;
-import com.sforce.soap.partner.DescribeSObjectResult;
-import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
-import com.sforce.ws.bind.XmlObject;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -41,62 +34,10 @@ import org.slf4j.LoggerFactory;
 import soql.SOQLLexer;
 import soql.SOQLParser;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ForceUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
-
-  private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
-  public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
-  public static final int METADATA_DEPTH = 5;
-  private static final int MAX_METADATA_TYPES = 100;
-  private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
-  private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-  private static TimeZone TZ = TimeZone.getTimeZone("GMT");
-  private static List<String> BOOLEAN_TYPES = Arrays.asList("boolean", "checkbox");
-  private static List<String> STRING_TYPES = Arrays.asList(
-      "combobox",
-      "email",
-      "encryptedstring",
-      "id",
-      "multipicklist",
-      "phone",
-      "picklist",
-      "reference",
-      "string",
-      "textarea",
-      "time",
-      "url"
-  );
-  private static List<String> DECIMAL_TYPES = Arrays.asList(
-      "currency",
-      "double",
-      "percent"
-  );
-  private static List<String> INT_TYPES = Collections.singletonList("int");
-  private static List<String> BINARY_TYPES = Collections.singletonList("base64");
-  private static List<String> BYTE_TYPES = Collections.singletonList("byte");
-  private static List<String> DATETIME_TYPES = Collections.singletonList("datetime");
-  private static List<String> DATE_TYPES = Collections.singletonList("date");
-
-  static {
-    DATETIME_FORMAT.setTimeZone(TZ);
-    DATE_FORMAT.setTimeZone(TZ);
-  }
 
   public static String getExceptionCode(Throwable th) {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionCode().name() : "";
@@ -157,218 +98,6 @@ public class ForceUtils {
     return new BulkConnection(config);
   }
 
-  public static Field createField(Object val, com.sforce.soap.partner.Field sfdcField) throws StageException {
-    return createField(val, DataType.USE_SALESFORCE_TYPE, sfdcField);
-  }
-
-  public static Field createField(Object val, DataType userSpecifiedType, com.sforce.soap.partner.Field sfdcField) throws StageException {
-    String sfdcType = sfdcField.getType().toString();
-    if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
-      return Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), val);
-    } else {
-      if(val instanceof Map) {
-        // Fields like Fiscal on Opportunity show up as Maps from Streaming API
-        try {
-          return JsonUtil.jsonToField(val);
-        } catch (IOException e) {
-          throw new StageException(Errors.FORCE_04, "Error parsing data", e);
-        }
-      } else if (BOOLEAN_TYPES.contains(sfdcType)) {
-        return Field.create(Field.Type.BOOLEAN, val);
-      } else if (BYTE_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.BYTE, val);
-      } else if (INT_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.INTEGER, val);
-      } else if (DECIMAL_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.DECIMAL, val);
-      } else if (STRING_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.STRING, val);
-      } else if (BINARY_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.BYTE_ARRAY, val);
-      } else if (DATETIME_TYPES.contains(sfdcType)) {
-        if (val != null && !(val instanceof String)) {
-          throw new StageException(
-              Errors.FORCE_04,
-              "Unexpected type: " + val.getClass().getName()
-          );
-        }
-        String strVal = (String)val;
-        try {
-          return Field.createDatetime((strVal != null) ? DATETIME_FORMAT.parse(strVal) : null);
-        } catch (ParseException e) {
-          throw new StageException(Errors.FORCE_04, "Error parsing date", e);
-        }
-      } else if (DATE_TYPES.contains(sfdcType)) {
-        if (val != null && !(val instanceof String)) {
-          throw new StageException(
-              Errors.FORCE_04,
-              "Unexpected type: " + val.getClass().getName()
-          );
-        }
-        String strVal = (String)val;
-        try {
-          return Field.createDatetime((strVal != null) ? DATE_FORMAT.parse(strVal) : null);
-        } catch (ParseException e) {
-          throw new StageException(Errors.FORCE_04, "Error parsing date", e);
-        }
-      } else {
-        throw new StageException(
-            Errors.FORCE_04,
-            "Unexpected type: " + sfdcType
-        );
-      }
-    }
-  }
-
-  public static LinkedHashMap<String, Field> addFields(
-      XmlObject parent,
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
-      boolean createSalesforceNsHeaders,
-      String salesforceNsHeaderPrefix
-  ) throws StageException {
-      return addFields(parent, metadataMap, createSalesforceNsHeaders, salesforceNsHeaderPrefix, null);
-  }
-
-  public static LinkedHashMap<String, Field> addFields(
-      XmlObject parent,
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
-      boolean createSalesforceNsHeaders,
-      String salesforceNsHeaderPrefix,
-      Map<String, DataType> columnsToTypes
-  ) throws StageException {
-    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-
-    Iterator<XmlObject> iter = parent.getChildren();
-    String type = null;
-    while (iter.hasNext()) {
-      XmlObject obj = iter.next();
-
-      String key = obj.getName().getLocalPart();
-      if ("type".equals(key)) {
-        // Housekeeping field
-        type = obj.getValue().toString().toLowerCase();
-        continue;
-      }
-
-      if (obj.hasChildren()) {
-        map.put(key, Field.createListMap(addFields(obj, metadataMap, createSalesforceNsHeaders, salesforceNsHeaderPrefix, columnsToTypes)));
-      } else {
-        Object val = obj.getValue();
-        if ("Id".equalsIgnoreCase(key) && null == val) {
-          // Get a null Id if you don't include it in the SELECT
-          continue;
-        }
-        if (type == null) {
-          throw new StageException(
-              Errors.FORCE_04,
-              "No type information for " + obj.getName().getLocalPart() +
-                  ". Specify component fields of compound fields, e.g. Location__Latitude__s or BillingStreet"
-          );
-        }
-        com.sforce.soap.partner.Field sfdcField = metadataMap.get(type).get(key.toLowerCase());
-        Field field = null;
-        if (sfdcField == null) {
-          // null relationship
-          field = Field.createListMap(new LinkedHashMap<>());
-        } else {
-          DataType dataType = (columnsToTypes != null) ? columnsToTypes.get(key.toLowerCase()) : null;
-          field = ForceUtils.createField(val, (dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType), sfdcField);
-        }
-        if (createSalesforceNsHeaders) {
-          ForceUtils.setHeadersOnField(field, sfdcField, salesforceNsHeaderPrefix);
-        }
-        map.put(key, field);
-      }
-    }
-
-    return map;
-  }
-
-  public static void setHeadersOnField(Field field, com.sforce.soap.partner.Field sfdcField, String salesforceNsHeaderPrefix) {
-    Map<String, String> headerMap = getHeadersForField(sfdcField, salesforceNsHeaderPrefix);
-    for (String key : headerMap.keySet()) {
-      field.setAttribute(key, headerMap.get(key));
-    }
-  }
-
-  public static Map<String, String> getHeadersForField(com.sforce.soap.partner.Field sfdcField,
-      String salesforceNsHeaderPrefix) {
-    Map<String, String> attributeMap = new HashMap<>();
-
-    if (sfdcField == null) {
-      return attributeMap;
-    }
-    String type = sfdcField.getType().toString();
-    attributeMap.put(salesforceNsHeaderPrefix + "salesforceType", type);
-    if (STRING_TYPES.contains(type)) {
-      attributeMap.put(salesforceNsHeaderPrefix + "length", Integer.toString(sfdcField.getLength()));
-    } else if (DECIMAL_TYPES.contains(type) ||
-        "currency".equals(type) ||
-        "percent".equals(type)) {
-      attributeMap.put(salesforceNsHeaderPrefix + "precision", Integer.toString(sfdcField.getPrecision()));
-      attributeMap.put(salesforceNsHeaderPrefix + "scale", Integer.toString(sfdcField.getScale()));
-    } else if (INT_TYPES.contains(type)) {
-      attributeMap.put(salesforceNsHeaderPrefix + "digits", Integer.toString(sfdcField.getDigits()));
-    }
-
-    return attributeMap;
-  }
-
-  // Recurse through the tree of referenced types, building a metadata query for each level
-  // Salesforce constrains the depth of the tree to 5, so we don't need to worry about
-  // infinite recursion
-  public static void getAllReferences(
-      PartnerConnection partnerConnection,
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
-      String[] allTypes,
-      int depth
-  ) throws ConnectionException {
-    if (depth == 0) {
-      return;
-    }
-
-    List<String> next = new ArrayList<>();
-
-    for (int typeIndex = 0; typeIndex < allTypes.length; typeIndex += MAX_METADATA_TYPES) {
-      int copyTo = Math.min(typeIndex + MAX_METADATA_TYPES, allTypes.length);
-      String[] types = Arrays.copyOfRange(allTypes, typeIndex, copyTo);
-
-      for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
-        Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
-        com.sforce.soap.partner.Field[] fields = result.getFields();
-        for (int i = 0; i < fields.length; i++) {
-          com.sforce.soap.partner.Field field = fields[i];
-          fieldMap.put(field.getName().toLowerCase(), field);
-        }
-
-        metadataMap.put(result.getName().toLowerCase(), fieldMap);
-
-        Set<String> sobjectNames = metadataMap.keySet();
-        for (com.sforce.soap.partner.Field field : fieldMap.values()) {
-          for (String ref : field.getReferenceTo()) {
-            ref = ref.toLowerCase();
-            if (!sobjectNames.contains(ref) && !next.contains(ref)) {
-              next.add(ref);
-            }
-          }
-        }
-      }
-    }
-
-    if (next.size() > 0) {
-      getAllReferences(partnerConnection, metadataMap, next.toArray(new String[0]), depth - 1);
-    }
-  }
-
-  public static Map<String, Map<String, com.sforce.soap.partner.Field>> getMetadataMap(
-      PartnerConnection partnerConnection,
-      String sobjectType
-  ) throws ConnectionException {
-    Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap = new LinkedHashMap<>();
-    getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType}, METADATA_DEPTH);
-    return metadataMap;
-  }
-
   public static String getSobjectTypeFromQuery(String query) throws StageException {
     try {
       SOQLLexer lexer = new SOQLLexer(new ANTLRInputStream(query));
@@ -382,39 +111,6 @@ public class ForceUtils {
       LOG.error(Errors.FORCE_27.getMessage(), query, e);
       throw new StageException(Errors.FORCE_27, query, e);
     }
-  }
-
-  public static String expandWildcard(
-      String query,
-      String sobjectType,
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap
-  ) {
-    Matcher m = ForceUtils.WILDCARD_SELECT_PATTERN.matcher(query.toUpperCase());
-    if (m.matches()) {
-      // Query is SELECT * FROM... - substitute in list of field names
-      query = query.replaceFirst("\\*", expandWildcard(sobjectType, metadataMap));
-    }
-    return query;
-  }
-
-  public static String expandWildcard(
-      String sobjectType,
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap
-  ) {
-    StringBuilder fieldsString = new StringBuilder();
-    for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
-      String typeName = field.getType().name();
-      if ("address".equals(typeName) || "location".equals(typeName)) {
-        // Skip compound fields of address or geolocation type since they are returned
-        // with null values by the SOAP API and not supported at all by the Bulk API
-        continue;
-      }
-      if (fieldsString.length() > 0){
-        fieldsString.append(',');
-      }
-      fieldsString.append(field.getName());
-    }
-    return fieldsString.toString();
   }
 
   public static int getOperationFromRecord(Record record,
@@ -453,5 +149,4 @@ public class ForceUtils {
     }
     return opCode;
   }
-
 }

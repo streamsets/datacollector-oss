@@ -49,6 +49,7 @@ public class ForceStreamConsumer {
   private static final Logger LOG = LoggerFactory.getLogger(ForceStreamConsumer.class);
   private static final String REPLAY_ID_EXPIRED = "400::The replayId \\{\\d+} you provided was invalid.  "
       + "Please provide a valid ID, -2 to replay all events, or -1 to replay only new events.";
+  private static final String TOPIC_PATH = "/topic/";
   private final BlockingQueue<Message> messageQueue;
 
   // The long poll duration.
@@ -76,7 +77,7 @@ public class ForceStreamConsumer {
     this.conf = conf;
     this.messageQueue = messageQueue;
     this.connection = connection;
-    this.bayeuxChannel = "/topic/" + conf.pushTopic;
+    this.bayeuxChannel = TOPIC_PATH + conf.pushTopic;
     String streamingEndpointPrefix = conf.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
     this.streamingEndpointPath = streamingEndpointPrefix + conf.apiVersion;
   }

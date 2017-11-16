@@ -58,11 +58,8 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
       if (records.length > 0) {
         // TODO - handle multiple records (SDC-4739)
 
-        return ForceUtils.addFields(
+        return processor.recordCreator.addFields(
             records[0],
-            processor.metadataMap,
-            processor.conf.createSalesforceNsHeaders,
-            processor.conf.salesforceNsHeaderPrefix,
             processor.columnsToTypes);
       } else {
         // Salesforce returns no row. Use default values.
