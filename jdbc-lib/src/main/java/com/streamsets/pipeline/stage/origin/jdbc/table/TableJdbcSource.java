@@ -66,6 +66,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -132,7 +133,7 @@ public class TableJdbcSource extends BasePushSource {
                   new TableJdbcELEvalContext(context, context.createELVars()),
                   tableJdbcConfigBean.quoteChar
 
-          );
+              );
 
           allTableContexts.putAll(tableContexts);
           for (String qualifiedTableName : tableContexts.keySet()) {
@@ -431,7 +432,6 @@ public class TableJdbcSource extends BasePushSource {
   @Override
   public void destroy() {
     shutdownExecutorIfNeeded();
-    executorService = null;
     //Invalidate all the thread cache so that all statements/result sets are properly closed.
     toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);
     //Closes all connections
@@ -444,6 +444,11 @@ public class TableJdbcSource extends BasePushSource {
       if (!executor.isTerminated()) {
         LOG.info("Shutting down executor service");
         executor.shutdown();
+        try {
+          executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+          LOG.warn("Shutdown interrupted");
+        }
       }
     });
   }
