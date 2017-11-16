@@ -81,7 +81,8 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
         MSQueryUtil.CDC_END_LSN,
         MSQueryUtil.CDC_SEQVAL,
         MSQueryUtil.CDC_OPERATION,
-        MSQueryUtil.CDC_UPDATE_MASK
+        MSQueryUtil.CDC_UPDATE_MASK,
+        MSQueryUtil.CDC_COMMAND_ID
     );
   }
 
