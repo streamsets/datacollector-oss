@@ -191,8 +191,7 @@
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_c1b_5cq_v1b"
                 /></entry>
               <entry/>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pn5_vcq_v1b"
-                /></entry>
+              <entry/>
             </row>
             <row>
               <entry>Google Pub/Sub Publisher</entry>
