@@ -45,9 +45,12 @@ import com.streamsets.pipeline.lib.salesforce.ForceRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
+import com.streamsets.pipeline.lib.salesforce.PlatformEventRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.PushTopicRecordCreator;
+import com.streamsets.pipeline.lib.salesforce.ReplayOption;
 import com.streamsets.pipeline.lib.salesforce.SoapRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.SobjectRecordCreator;
+import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cometd.bayeux.Message;
@@ -149,6 +152,15 @@ public class ForceSource extends BaseSource {
       );
     }
 
+    if (conf.queryExistingData && conf.subscriptionType == SubscriptionType.PLATFORM_EVENT) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "queryExistingData", Errors.FORCE_00,
+              "You cannot both query existing data and subscribe to a Platform Event!"
+          )
+      );
+    }
+
     if (conf.queryExistingData) {
       final String formattedOffsetColumn = Pattern.quote(conf.offsetColumn.toUpperCase());
       Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
@@ -196,38 +208,40 @@ public class ForceSource extends BaseSource {
     }
 
     if (issues.isEmpty() && conf.subscribeToStreaming) {
-      String query = "SELECT Id, Query FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
+      if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
+        String query = "SELECT Id, Query FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
 
-      QueryResult qr = null;
-      try {
-        qr = partnerConnection.query(query);
+        QueryResult qr = null;
+        try {
+          qr = partnerConnection.query(query);
 
-        if (qr.getSize() != 1) {
+          if (qr.getSize() != 1) {
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.SUBSCRIBE.name(), ForceConfigBean.CONF_PREFIX + "pushTopic", Errors.FORCE_00,
+                    "Can't find Push Topic '" + conf.pushTopic +"'"
+                )
+            );
+          } else if (null == sobjectType) {
+            String soqlQuery = (String)qr.getRecords()[0].getField("Query");
+            try {
+              sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
+              LOG.info("Found sobject type {}", sobjectType);
+            } catch (StageException e) {
+              issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
+                  ForceConfigBean.CONF_PREFIX + "pushTopic",
+                  Errors.FORCE_00,
+                  "Badly formed SOQL Query: " + soqlQuery
+              ));
+            }
+          }
+        } catch (ConnectionException e) {
           issues.add(
               getContext().createConfigIssue(
-                  Groups.SUBSCRIBE.name(), ForceConfigBean.CONF_PREFIX + "pushTopic", Errors.FORCE_00,
-                  "Can't find Push Topic '" + conf.pushTopic +"'"
+                  Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "authEndpoint", Errors.FORCE_00, e
               )
           );
-        } else if (null == sobjectType) {
-          String soqlQuery = (String)qr.getRecords()[0].getField("Query");
-          try {
-            sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
-            LOG.info("Found sobject type {}", sobjectType);
-          } catch (StageException e) {
-            issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
-                ForceConfigBean.CONF_PREFIX + "pushTopic",
-                Errors.FORCE_00,
-                "Badly formed SOQL Query: " + soqlQuery
-            ));
-          }
         }
-      } catch (ConnectionException e) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "authEndpoint", Errors.FORCE_00, e
-            )
-        );
       }
 
       messageQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
@@ -259,7 +273,11 @@ public class ForceSource extends BaseSource {
         return new SoapRecordCreator(getContext(), conf, sobjectType);
       }
     } else if (conf.subscribeToStreaming) {
-      return new PushTopicRecordCreator(getContext(), conf, sobjectType);
+      if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
+        return new PushTopicRecordCreator(getContext(), conf, sobjectType);
+      } else {
+        return new PlatformEventRecordCreator(getContext(), conf.platformEvent);
+      }
     }
 
     return null;
@@ -659,6 +677,25 @@ public class ForceSource extends BaseSource {
     //     }
     //   }
     // }
+
+    // Platform Event Message has the form
+    //  {
+    //    "data": {
+    //      "schema": "dffQ2QLzDNHqwB8_sHMxdA",
+    //      "payload": {
+    //        "CreatedDate": "2017-04-09T18:31:40Z",
+    //        "CreatedById": "005D0000001cSZs",
+    //        "Printer_Model__c": "XZO-5",
+    //        "Serial_Number__c": "12345",
+    //        "Ink_Percentage__c": 0.2
+    //      },
+    //      "event": {
+    //        "replayId": 2
+    //      }
+    //    },
+    //    "channel": "/event/Low_Ink__e"
+    //  }
+
     LOG.info("Processing message: {}", msgJson);
 
     Object json = OBJECT_MAPPER.readValue(msgJson, Object.class);
@@ -667,7 +704,9 @@ public class ForceSource extends BaseSource {
     Map<String, Object> event = (Map<String, Object>) data.get("event");
     Map<String, Object> sobject = (Map<String, Object>) data.get("sobject");
 
-    final String sourceId = event.get("createdDate") + "::" + sobject.get("Id");
+    final String sourceId = (conf.subscriptionType == SubscriptionType.PUSH_TOPIC)
+      ? event.get("createdDate") + "::" + sobject.get("Id")
+      : event.get("replayId").toString();
 
     Record rec = recordCreator.createRecord(sourceId, Pair.of(partnerConnection, data));
 
@@ -681,7 +720,12 @@ public class ForceSource extends BaseSource {
     if (getContext().isPreview()) {
       nextSourceOffset = READ_EVENTS_FROM_START;
     } else if (null == lastSourceOffset) {
-      nextSourceOffset = READ_EVENTS_FROM_NOW;
+      if (conf.subscriptionType == SubscriptionType.PLATFORM_EVENT &&
+          conf.replayOption == ReplayOption.ALL_EVENTS) {
+        nextSourceOffset = READ_EVENTS_FROM_START;
+      } else {
+        nextSourceOffset = READ_EVENTS_FROM_NOW;
+      }
     } else {
       nextSourceOffset = lastSourceOffset;
     }

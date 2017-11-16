@@ -19,6 +19,7 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSession;
@@ -50,6 +51,7 @@ public class ForceStreamConsumer {
   private static final String REPLAY_ID_EXPIRED = "400::The replayId \\{\\d+} you provided was invalid.  "
       + "Please provide a valid ID, -2 to replay all events, or -1 to replay only new events.";
   private static final String TOPIC_PATH = "/topic/";
+  private static final String EVENT_PATH = "/event/";
   private final BlockingQueue<Message> messageQueue;
 
   // The long poll duration.
@@ -77,7 +79,9 @@ public class ForceStreamConsumer {
     this.conf = conf;
     this.messageQueue = messageQueue;
     this.connection = connection;
-    this.bayeuxChannel = TOPIC_PATH + conf.pushTopic;
+    this.bayeuxChannel = (conf.subscriptionType == SubscriptionType.PUSH_TOPIC)
+      ? TOPIC_PATH + conf.pushTopic
+      : EVENT_PATH + conf.platformEvent;
     String streamingEndpointPrefix = conf.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
     this.streamingEndpointPath = streamingEndpointPrefix + conf.apiVersion;
   }

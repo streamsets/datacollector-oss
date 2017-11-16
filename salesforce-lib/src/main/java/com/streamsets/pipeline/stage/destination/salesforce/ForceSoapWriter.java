@@ -213,10 +213,10 @@ public class ForceSoapWriter extends ForceWriter {
   ) throws StageException {
     Iterator<Record> batchIterator = records.iterator();
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
-    Map<Integer, List<SObject>> sRecordsByOp = new HashMap<>();
 
     // Iterate through entire batch
     while (batchIterator.hasNext()) {
+      Map<Integer, List<SObject>> sRecordsByOp = new HashMap<>();
       Map<SObject, Record> recordMap = new HashMap<>();
 
       // Can only create 200 records per call
