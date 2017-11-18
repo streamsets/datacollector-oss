@@ -62,6 +62,7 @@
       "creating": "Creating...",
       "createdBy": "Created By",
       "createdOn": "Created On",
+      "dataCollectorLabels": "Labels for this Data Collector",
       "delete": "Delete",
       "deleting": "Deleting...",
       "deleteStage": "Delete Stage",
