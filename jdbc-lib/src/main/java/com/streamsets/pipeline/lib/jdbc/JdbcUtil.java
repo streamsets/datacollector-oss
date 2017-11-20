@@ -570,7 +570,12 @@ public class JdbcUtil {
               case STOP_PIPELINE:
                 throw new StageException(JdbcErrors.JDBC_37, md.getColumnType(columnIndex), md.getColumnLabel(columnIndex));
               case CONVERT_TO_STRING:
-                field = Field.create(Field.Type.STRING, rs.getObject(columnIndex).toString());
+                Object value = rs.getObject(columnIndex);
+                if(value != null) {
+                  field = Field.create(Field.Type.STRING, rs.getObject(columnIndex).toString());
+                } else {
+                  field = Field.create(Field.Type.STRING, null);
+                }
                 break;
               default:
                 throw new IllegalStateException("Unknown action: " + unknownTypeAction);

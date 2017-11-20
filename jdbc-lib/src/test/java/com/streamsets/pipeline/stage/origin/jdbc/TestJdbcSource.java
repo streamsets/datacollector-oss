@@ -145,6 +145,7 @@ public class TestJdbcSource {
       statement.addBatch("CREATE ALIAS STOREDPROC FOR \"" + TestJdbcSource.class.getCanonicalName() + ".simpleResultSet\"");
       statement.addBatch("INSERT INTO TEST.TEST_UUID VALUES  (1, '80d00b8a-ffa3-45c2-93ba-d4278408552f')");
       statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (1, 'POINT (30 10)')");
+      statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (2, null)");
       statement.executeBatch();
     }
   }
@@ -1374,15 +1375,20 @@ public class TestJdbcSource {
 
       // First batch should read all 4 records
       output = runner.runProduce(null, 10);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
-      Record record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
 
+      Record record = output.getRecords().get("lane").get(0);
       Assert.assertTrue(record.has("/P_ID"));
       Assert.assertTrue(record.has("/GEO"));
-
       Assert.assertEquals(1, record.get("/P_ID").getValueAsLong());
       Assert.assertEquals("POINT (30 10)", record.get("/GEO").getValueAsString());
 
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertTrue(record.has("/P_ID"));
+      Assert.assertTrue(record.has("/GEO"));
+      Assert.assertEquals(2, record.get("/P_ID").getValueAsLong());
+      Assert.assertEquals(Field.Type.STRING, record.get("/GEO").getType());
+      Assert.assertEquals(null, record.get("/GEO").getValue());
     } finally {
       runner.runDestroy();
     }
