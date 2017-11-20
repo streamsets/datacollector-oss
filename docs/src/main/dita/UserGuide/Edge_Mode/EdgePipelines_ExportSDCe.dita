@@ -16,7 +16,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_rzb_zgm_pbb">
-    <title>Export Pipelines to SDCe</title>
+    <title>Export Pipelines to SDC Edge</title>
     <shortdesc>When you first get started with <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>, the
         easiest way to deploy pipelines to <ph
@@ -70,9 +70,9 @@
                     /> is installed, create a folder named with the pipeline ID in the following
                     directory:</cmd>
                 <info>
-                    <codeblock>&lt;SDCe_home>/data/pipelines</codeblock>
+                    <codeblock>&lt;SDCEdge_home>/data/pipelines</codeblock>
                     <p>For
-                        example:<codeblock>&lt;SDCe_home>/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</codeblock></p>
+                        example:<codeblock>&lt;SDCEdge_home>/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</codeblock></p>
                 </info>
             </step>
             <step>

@@ -16,10 +16,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tyz_mwl_pbb">
-    <title>Shutting Down SDCe</title>
+    <title>Shutting Down SDC Edge</title>
     <conbody>
         <p><indexterm>Data Collector Edge<indexterm>shutting
-                    down</indexterm></indexterm><indexterm>SDCe<indexterm>shutting
+                down</indexterm></indexterm><indexterm>SDC Edge<indexterm>shutting
                 down</indexterm></indexterm>To shut down <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>,
             type <uicontrol>Ctrl+C</uicontrol> in the command prompt. <draft-comment

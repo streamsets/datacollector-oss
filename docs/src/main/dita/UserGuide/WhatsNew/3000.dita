@@ -48,13 +48,20 @@
                         pipelines are bidirectional. They can send edge data to other Data Collector
                         pipelines for further processing. Or, they can receive data from other
                         pipelines and then act on that data to control the edge device. </dd>
-                    <dd>Edge pipelines run in edge execution mode on a Data Collector Edge (SDCe).
-                        SDCe is a lightweight agent without a UI that runs pipelines on edge
-                        devices. Install SDCe on each edge device where you want to run edge
-                        pipelines. </dd>
+                    <dd>Edge pipelines run in edge execution mode on <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"
+                        /> Data Collector Edge (<ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                        />). <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                        /> is a lightweight agent without a UI that runs pipelines on edge devices.
+                        Install <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                        /> on each edge device where you want to run edge pipelines. </dd>
                     <dd>You design edge pipelines in Data Collector, export the edge pipelines, and
-                        then use commands to run the edge pipelines on an SDCe installed on an edge
-                        device. </dd>
+                        then use commands to run the edge pipelines on an <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+                        /> installed on an edge device. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Origins</dt>

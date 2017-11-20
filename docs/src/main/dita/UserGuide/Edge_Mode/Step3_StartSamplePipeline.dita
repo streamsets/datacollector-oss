@@ -16,7 +16,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_vpd_rzf_pbb">
-    <title>Step 3. Start SDCe and the Edge Pipeline</title>
+    <title>Step 3. Start SDC Edge and the Edge Pipeline</title>
     <shortdesc>Run a single command to start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> and a
         sample edge pipeline at the same time. You can then run additional commands to start
@@ -51,7 +51,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                     /> is already running, use the following command:</cmd>
                 <info>
-                    <codeblock>curl -X POST http://&lt;SDCe_hostname>:18633/rest/v1/pipeline/&lt;sample_pipeline_name>/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary -runtimeParameters='{"&lt;parameter_name1>":"&lt;parameter_value1>","&lt;parameter_name2":"&lt;parameter_value2>"}'</codeblock>
+                    <codeblock>curl -X POST http://&lt;SDCEdge_hostname>:18633/rest/v1/pipeline/&lt;sample_pipeline_name>/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary -runtimeParameters='{"&lt;parameter_name1>":"&lt;parameter_value1>","&lt;parameter_name2":"&lt;parameter_value2>"}'</codeblock>
                 </info>
             </step>
         </steps>

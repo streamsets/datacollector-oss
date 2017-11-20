@@ -16,7 +16,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_kgv_q5h_qbb">
-    <title>Download a Designed Pipeline with the SDCe Executable</title>
+    <title>Download a Designed Pipeline with the SDC Edge Executable</title>
     <shortdesc>From the edge pipeline canvas, you can download the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
         executable along with the edge pipeline open in the canvas. Download and install the edge
