@@ -29,6 +29,7 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>
                 (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             />). You run edge pipelines in edge execution mode on <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
                 (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
             />). <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"

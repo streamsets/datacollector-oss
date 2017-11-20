@@ -16,14 +16,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qhp_1th_pbb">
- <title>Install SDCe</title>
+ <title>Install SDC Edge</title>
     <shortdesc>Download and install <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> on
         each edge device where you want to run edge pipelines. </shortdesc>
  <conbody>
-  <p><indexterm>Data Collector
-                    Edge<indexterm>installing</indexterm></indexterm><indexterm>SDCe<indexterm>installing</indexterm></indexterm>Install
-                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
+  <p><indexterm>Data Collector Edge<indexterm>installing</indexterm></indexterm><indexterm>SDC
+                    Edge<indexterm>installing</indexterm></indexterm>Install <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
                 (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
             />) in one of the following ways:<ul id="ul_s1g_ptk_pbb">
                 <li>Use <ph

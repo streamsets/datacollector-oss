@@ -23,12 +23,18 @@
         <p><indexterm>Windows Event Log
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Windows
                     Event Log</indexterm></indexterm>Use the Windows Event Log origin only in
-            pipelines configured for edge execution mode. Run the pipeline on a Data Collector Edge
-            (SDCe) installed on the Windows machine.</p>
+            pipelines configured for edge execution mode. Run the pipeline on <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/>
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
+                (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+            />) installed on the Windows machine.</p>
         <p>For example, you might use the Windows Event Log origin in an edge pipeline to read logs
-            from a web or application farm of Windows servers. You install SDCe on each Windows
-            machine that you want to read the logs from, and run the edge pipeline on each SDCe
-            installation. You design the edge pipeline to pass the log data to a Data Collector
+            from a web or application farm of Windows servers. You install <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> on
+            each Windows machine that you want to read the logs from, and run the edge pipeline on
+            each <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
+            /> installation. You design the edge pipeline to pass the log data to a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             receiving pipeline that runs on <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/>
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
@@ -43,10 +49,9 @@
         <p>When the pipeline stops, the Windows Event Log origin notes where it stops reading. When
             the pipeline starts again, the origin continues processing from where it stopped by
             default. You can reset the origin to process all requested files.</p>
-        <draft-comment author="alisontaylor">
-            <p>For more information about installing SDCe, designing edge pipelines, and running and
-                maintaining edge pipelines, see . ***add cross ref when check in edge pipelines
-                doc***</p>
-        </draft-comment>
+        <p>For more information about installing <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>,
+            designing edge pipelines, and running and maintaining edge pipelines, see <xref
+                href="../Edge_Mode/EdgePipelines_title.dita#concept_fyf_gkq_4bb"/>.</p>
     </conbody>
 </concept>

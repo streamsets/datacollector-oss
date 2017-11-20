@@ -16,7 +16,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_rg3_fyf_pbb">
-    <title>Step 2. Download and Install SDCe</title>
+    <title>Step 2. Download and Install SDC Edge</title>
     <shortdesc>Download and install <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> on
         each edge device where you want to run edge pipelines. All sample edge pipelines are

@@ -16,11 +16,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zfb_lwl_pbb">
- <title>Starting SDCe</title>
+ <title>Starting SDC Edge</title>
  <conbody>
-        <p><indexterm>Data Collector
-                    Edge<indexterm>starting</indexterm></indexterm><indexterm>SDCe<indexterm>starting</indexterm></indexterm>To
-            start <ph
+        <p><indexterm>Data Collector Edge<indexterm>starting</indexterm></indexterm><indexterm>SDC
+                    Edge<indexterm>starting</indexterm></indexterm>To start <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>,
             run the following command from the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>

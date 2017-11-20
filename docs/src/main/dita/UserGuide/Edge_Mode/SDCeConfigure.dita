@@ -16,19 +16,19 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hbv_3wl_pbb">
- <title>Configuring SDCe</title>
+ <title>Configuring SDC Edge</title>
  <shortdesc>You can customize <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> by
         editing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
-        configuration file, <codeph>&lt;SDCe_home>/etc/edge.conf</codeph>.</shortdesc>
+        configuration file, <codeph>&lt;SDCEdge_home>/etc/edge.conf</codeph>.</shortdesc>
  <conbody>
   <p><indexterm>Data Collector Edge<indexterm>configuration
                 file</indexterm></indexterm><indexterm>Data Collector
-                    Edge<indexterm>customizing</indexterm></indexterm><indexterm>SDCe<indexterm>configuration
-                    file</indexterm></indexterm><indexterm>SDCe<indexterm>customizing</indexterm></indexterm>Use
-            a text editor to edit the configuration file. To enable the changes, shut down and then
-            restart <ph
+                    Edge<indexterm>customizing</indexterm></indexterm><indexterm>SDC
+                    Edge<indexterm>configuration file</indexterm></indexterm><indexterm>SDC
+                    Edge<indexterm>customizing</indexterm></indexterm>Use a text editor to edit the
+            configuration file. To enable the changes, shut down and then restart <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                 />.<draft-comment author="alisontaylor">text is same as in the Edge Data Collectors
                 chapter in DPM User Guide. Make sure changes are made in both
