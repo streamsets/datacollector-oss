@@ -430,6 +430,11 @@
                                         href="../Upgrade/PostUpgrade-LegacyLibraries.dita#concept_wnl_zk4_5bb"
                                         >Update Pipelines using Legacy Stage
                                 Libraries</xref>.</p></li>
+                            <li><xref
+                                    href="../Installation/CoreInstall_Overview.dita#concept_vvw_p3m_s5"
+                                    >Statistics stage library enhancement</xref> - The statistics
+                                stage library is now included in the core Data Collector
+                                installation. </li>
                         </ul>
                     </dd>
                 </dlentry>

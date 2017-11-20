@@ -31,16 +31,19 @@
                     /> requires that the statistics stage library be installed on each registered
                         <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. DPM requires the library to run system pipelines on the <ph
+                    />. <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> requires the library to run system pipelines on the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. By default, the full  installation includes the statistics stage library.
-                    The core installation does not include the statistics stage library.</dd>
+                    />. By default, both the core and full <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> installations include the statistics stage library.</dd>
                 <dd>To verify that a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> has the statistics stage library installed, click the Package Manager icon
                         (<image href="../Graphics/icon_PackageManager.png" scale="70"
                         id="image_hgv_t1q_rx"/>) to display the list of installed stage libraries.
-                    If the statistics library is not installed, <xref
+                    If the statistics library was uninstalled, <xref
                         href="../Installation/AddtionalStageLibs.dita#concept_fb2_qmn_bz">install
                         the library</xref> before registering the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
