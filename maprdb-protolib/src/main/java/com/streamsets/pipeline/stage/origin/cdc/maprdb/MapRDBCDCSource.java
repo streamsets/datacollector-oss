@@ -20,8 +20,12 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -63,12 +67,12 @@ public class MapRDBCDCSource extends BasePushSource {
   private static final String MAPR_SERVER_TIMESTAMP = "mapr.server.timestamp";
 
   private MapRDBCDCBeanConfig conf;
+  private ErrorRecordHandler errorRecordHandler;
   private AtomicBoolean shutdownCalled = new AtomicBoolean(false);
   private int batchSize;
 
   private MapRDBCDCKafkaConsumerFactory consumerFactory;
   private ExecutorService executor;
-
 
   public MapRDBCDCSource(MapRDBCDCBeanConfig conf, MapRDBCDCKafkaConsumerFactory consumerFactory) {
     this.conf = conf;
@@ -122,6 +126,9 @@ public class MapRDBCDCSource extends BasePushSource {
           messagesProcessed += messages.count();
           LOG.info("MapRDBCDC thread {} finished processing {} messages", threadID, messages.count());
         }
+      } catch (OnRecordErrorException re) {
+        LOG.debug("Encountered record error ");
+        errorRecordHandler.onError(re);
       } catch (Exception e) {
         LOG.error("Encountered error in MapRDBCDC thread {} during read {}", threadID, e);
         handleException(MaprDBCDCErrors.MAPRDB_03, e.getMessage(), e);
@@ -161,7 +168,10 @@ public class MapRDBCDCSource extends BasePushSource {
               record.set(Field.create(fields));
             }
 
-            record.set("/_id", Field.create(changeRecord.getId().getString()));
+            // set _id field based on type
+            setId(record, changeRecord.getId());
+
+            // set operation type. if fieldpath is set, it's an update. otherwise insert
             if (fieldPath == null || fieldPath.equals("")) {
               recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE,
                   String.valueOf(MaprDBCDCOperationType.INSERT.code)
@@ -186,7 +196,7 @@ public class MapRDBCDCSource extends BasePushSource {
 
           HashMap<String, Field> root = new HashMap<>();
           record.set(Field.create(root));
-          record.set("/_id", Field.create(changeRecord.getId().getString()));
+          setId(record, changeRecord.getId());
 
           recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE,
               String.valueOf(MaprDBCDCOperationType.DELETE.code)
@@ -202,6 +212,16 @@ public class MapRDBCDCSource extends BasePushSource {
       return topic + "::" + partition + "::" + offset;
     }
 
+    private void setId(Record record, Value id) throws StageException {
+      if(id.getType() == Value.Type.STRING) {
+        record.set("/_id", Field.create(id.getString()));
+      } else if(id.getType() == Value.Type.BINARY) {
+        record.set("/_id", Field.create(id.getBinary().array()));
+      } else {
+        throw new OnRecordErrorException(record, MaprDBCDCErrors.MAPRDB_04, id.getType().name());
+      }
+    }
+
     private void handleException(MaprDBCDCErrors error, Object... args) throws StageException {
       // all threads should halt when an error is encountered
       shutdown();
@@ -212,6 +232,8 @@ public class MapRDBCDCSource extends BasePushSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext(), (ToErrorContext) getContext());
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
 

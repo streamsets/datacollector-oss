@@ -20,7 +20,9 @@ import com.streamsets.pipeline.api.ErrorCode;
 public enum MaprDBCDCErrors implements ErrorCode {
   MAPRDB_01("Unexpected change data reader flow"),
   MAPRDB_02("Unknown field type {}"),
-  MAPRDB_03("Poll loop failed: {}");
+  MAPRDB_03("Poll loop failed: {}"),
+  MAPRDB_04("Unsupported change record ID type {}. Expected STRING or BINARY"),
+  ;
 
   private final String msg;
 

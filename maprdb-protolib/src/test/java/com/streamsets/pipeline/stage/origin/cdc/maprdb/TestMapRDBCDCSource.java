@@ -381,8 +381,14 @@ public class TestMapRDBCDCSource {
       long now = Instant.now().toEpochMilli();
 
       Value idVal = Mockito.mock(Value.class);
-      Mockito.when(idVal.getString()).thenReturn(String.valueOf(i));
-      Mockito.when(idVal.getType()).thenReturn(Value.Type.STRING);
+      if(i%2 == 0) {
+        Mockito.when(idVal.getString()).thenReturn(String.valueOf(i));
+        Mockito.when(idVal.getType()).thenReturn(Value.Type.STRING);
+      } else {
+        ByteBuffer bbuf = ByteBuffer.allocate(8);
+        Mockito.when(idVal.getBinary()).thenReturn(bbuf.putInt(i));
+        Mockito.when(idVal.getType()).thenReturn(Value.Type.BINARY);
+      }
 
       ChangeDataRecord cdr = Mockito.mock(ChangeDataRecord.class);
       Mockito.when(cdr.getId()).thenReturn(idVal);
