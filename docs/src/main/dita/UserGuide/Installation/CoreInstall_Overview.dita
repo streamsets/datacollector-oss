@@ -31,17 +31,26 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             you can download the RPM package or the core tarball.</p>
         <p>The core installation includes <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            development stages, most processors, and the origins and destinations in the basic stage
-            library, such as Directory and Local FS. You then use the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            and the following stage libraries:<ul id="ul_mgy_mbd_ybb">
+                <li>Basic stage library</li>
+                <li>Development stage library</li>
+                <li>Statistics stage library</li>
+                <li>Windows stage library</li>
+            </ul></p>
+        <p>You then use the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
             or the command line interface to install additional stage libraries. </p>
-        <p>The core installation includes the following origins:<draft-comment author="Loretta"
-                >Check this list with each release</draft-comment><ul
+        <p>The core installation includes all development stages and the following
+                origins:<draft-comment author="Loretta">Check this list with each
+                release</draft-comment></p><ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicOrigins"
                 id="ul_h4k_sdk_3w">
                 <li/>
-            </ul>The core installation includes all processors <ph
+            </ul><ul id="ul_q5c_lcd_ybb">
+                <li>Windows Event Log</li>
+            </ul>
+           <p>The core installation includes all processors <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CoreNotProcessor"
             /></p>
         

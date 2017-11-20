@@ -685,15 +685,14 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>
-                            <entry>
-                                <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                                /> (<ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                />) requires that the statistics stage library be installed on each
-                                registered <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />. </entry>
+                            <entry> Installs automatically with the core installation. <p><ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                    /> (<ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                    />) requires that the statistics stage library be installed on
+                                    each registered <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />. </p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-vault-credentialstore-lib</entry>
@@ -701,7 +700,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-windows-lib</entry>
-                            <entry>For Windows.<p>Includes the Windows Event Log origin.</p></entry>
+                            <entry>Installs automatically with the core installation. <p>For
+                                    Windows. Includes the Windows Event Log origin.</p></entry>
                         </row>
                     </tbody>
                 </tgroup>
