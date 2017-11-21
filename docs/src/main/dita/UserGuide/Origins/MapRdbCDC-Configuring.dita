@@ -27,7 +27,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>MapR CDC</wintitle> tab, configure the following
+                <cmd>On the <wintitle>MapR DB CDC</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xsd_zl3_qbb">
@@ -49,10 +49,14 @@
                                 </row>
                                 <row>
                                     <entry>Topic List</entry>
-                                    <entry>The topics to read. Use the following
-                                            format:<codeblock>&lt;path to stream>:&lt;topic></codeblock><p>Click
-                                                <uicontrol>Add</uicontrol> to add additional topics.
-                                        </p></entry>
+                                    <entry>The topics to read. <p>On the left side, enter the stream
+                                            name and topic, as follows:
+                                            </p><codeblock>/&lt;stream_name>:&lt;topic></codeblock><p>For
+                                            example, /data/sales:changelog</p>On the right side,
+                                        enter the name of the table as
+                                            follows:<codeblock>/&lt;table></codeblock><p>For
+                                            example: /west</p><p>Click <uicontrol>Add</uicontrol> to
+                                            add additional topics. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Number of Threads</entry>
@@ -70,17 +74,19 @@
                                 </row>
                                 <row>
                                     <entry>MapR Streams Configuration <xref
-                                        href="MapRdbCDC-AdditionalProps.dita">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_uht_pm4_2v"/></xref>
-                                    </entry><entry>Additional configuration properties to use. Using <xref
+                                            href="MapRdbCDC-AdditionalProps.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_uht_pm4_2v"/></xref>
+                                    </entry>
+                                    <entry>Additional configuration properties to use. Using <xref
                                             href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
                                             >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to add properties.<p>Use
                                             the property names and values as expected by MapR
                                             Streams.</p><p>You can use MapR Streams properties and
                                             the set of Kafka properties supported by MapR Streams.
-                                        </p></entry></row>
+                                        </p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
