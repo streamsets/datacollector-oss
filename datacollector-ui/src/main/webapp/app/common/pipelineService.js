@@ -141,7 +141,7 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns true if DPM Statistics library installed otherwise false
+     * Returns true if SCH Statistics library installed otherwise false
      */
     this.isDPMStatisticsLibraryInstalled = function() {
       var statsLibraryDefn = _.find(self.stageDefinitions, function (stage) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Controller for Disable DPM Modal Dialog.
+ * Controller for Disable SCH Modal Dialog.
  */
 
 angular

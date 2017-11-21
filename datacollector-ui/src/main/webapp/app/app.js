@@ -182,7 +182,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the DPM Information Dialog
+       * Open the SCH Information Dialog
        */
       onDPMButtonClick: function() {
         $modalStack.dismissAll();
@@ -195,7 +195,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the Enable DPM Modal Dialog
+       * Open the Enable SCH Modal Dialog
        */
       onEnableDPMClick: function() {
         if (configuration.isManagedByClouderaManager()) {
@@ -222,7 +222,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the Disable DPM Modal Dialog
+       * Open the Disable SCH Modal Dialog
        */
       onDisableDPMClick: function() {
         if (configuration.isManagedByClouderaManager()) {

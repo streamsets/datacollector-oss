@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.enableDPM.headerLabel">Enable DPM</h3>
+    <h3 class="modal-title" translate="home.enableDPM.headerLabel">Enable SCH</h3>
   </div>
   <div class="modal-body">
 
@@ -18,7 +18,7 @@
       </ul>
 
       <div class="form-group">
-        <label class="control-label" translate="home.enableDPM.dpmBaseURL">DPM URL</label>
+        <label class="control-label" translate="home.enableDPM.dpmBaseURL">SCH URL</label>
         <input type="text"
                autocomplete="new-password"
                ng-disabled="isEnableInProgress"
@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label" translate="home.enableDPM.dpmUserName">DPM User Name</label>
+        <label class="control-label" translate="home.enableDPM.dpmUserName">SCH User Name</label>
         <input type="text"
                autocomplete="new-password"
                ng-disabled="isEnableInProgress"
@@ -45,7 +45,7 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label" translate="home.enableDPM.dpmUserPassword">DPM User Password</label>
+        <label class="control-label" translate="home.enableDPM.dpmUserPassword">SCH User Password</label>
         <input type="password"
                autocomplete="new-password"
                ng-disabled="isEnableInProgress"
@@ -84,7 +84,7 @@
         </li>
 
         <li>
-          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> to create a DPM user account for each Data Collector user account.</span>
+          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> to create a SCH user account for each Data Collector user account.</span>
         </li>
 
         <li>
@@ -114,14 +114,14 @@
             translate="home.enableDPM.installStatistics">Install Statistics Library</button>
 
     <button type="submit" class="btn btn-primary" ng-if="!isEnableInProgress && !dpmEnabled"
-            translate="home.enableDPM.headerLabel">Enable DPM</button>
+            translate="home.enableDPM.headerLabel">Enable SCH</button>
 
     <button class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
-            translate="home.enableDPM.isEnableInProgress">Enabling DPM...</button>
+            translate="home.enableDPM.isEnableInProgress">Enabling SCH...</button>
 
     <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
             ng-click="onCreateDPMUsersClick()"
-            class="btn btn-primary" translate="home.createDPMUsers.title">Create DPM Users</button>
+            class="btn btn-primary" translate="home.createDPMUsers.title">Create SCH Users</button>
 
     <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
             ng-click="restart()"

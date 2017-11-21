@@ -86,10 +86,10 @@
              ng-class="{'show-name-column': header.showNameColumn}">
 
           <span class="system-pipeline-label"
-                ng-if="isSystemPipeline(pipeline)">DPM system</span>
+                ng-if="isSystemPipeline(pipeline)">SCH system</span>
 
           <span class="system-pipeline-label"
-                ng-if="isDpmControlledPipeline(pipeline)">DPM</span>
+                ng-if="isDpmControlledPipeline(pipeline)">SCH</span>
 
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.title || '--'}}</span></a>
 
