@@ -53,7 +53,7 @@
          also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
 
      <p class="p">You can also configure the executor to generate events for
-                  another event stream. <span class="ph" id="concept_wgj_slk_fx__d33295e1913">For more information about dataflow
+                  another event stream. <span class="ph" id="concept_wgj_slk_fx__d33389e1913">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
         <p class="p">For a case study about using the HDFS File Metadata executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_d1q_xl4_lx">Case Study: Output File Management</a>.</p>
@@ -363,9 +363,9 @@ You can alternatively use the following
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d179875e494">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d180013e494">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d179875e497">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d180013e497">Description</th>
 
                         </tr>
 
@@ -373,9 +373,9 @@ You can alternatively use the following
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d179875e494 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d180013e494 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d179875e497 ">Event type. Uses the following event type:<ul class="ul" id="concept_omr_3tk_rx__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d180013e497 ">Event type. Uses the following event type:<ul class="ul" id="concept_omr_3tk_rx__ul_m12_mgp_qx">
                                     <li class="li">file-changed - Generated when the executor changes file
                                         metadata, including file name, location, permissions or
                                         ACLs.</li>
@@ -392,16 +392,16 @@ You can alternatively use the following
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e494 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d180013e494 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d179875e497 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d180013e497 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e494 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d180013e494 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_omr_3tk_rx__d33384e2087" valign="top" width="70%" headers="d179875e497 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_omr_3tk_rx__d33478e2087" valign="top" width="70%" headers="d180013e497 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -427,9 +427,9 @@ You can alternatively use the following
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d179875e573">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d180013e573">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d179875e576">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d180013e576">Description</th>
 
                                         </tr>
 
@@ -437,17 +437,17 @@ You can alternatively use the following
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e573 ">filepath</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e573 ">filepath</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e576 ">Most recent path and name of the changed file.
+                                            <td class="entry" valign="top" width="70%" headers="d180013e576 ">Most recent path and name of the changed file.
                                             </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e573 ">filename</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e573 ">filename</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e576 ">Most recent name of the changed file.</td>
+                                            <td class="entry" valign="top" width="70%" headers="d180013e576 ">Most recent name of the changed file.</td>
 
                                         </tr>
 
@@ -474,9 +474,9 @@ You can alternatively use the following
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d179875e630">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d180013e630">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d179875e633">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d180013e633">Description</th>
 
                                         </tr>
 
@@ -484,16 +484,16 @@ You can alternatively use the following
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e630 ">filepath</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e630 ">filepath</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e633 ">Location where the file was created.</td>
+                                            <td class="entry" valign="top" width="70%" headers="d180013e633 ">Location where the file was created.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e630 ">filename</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e630 ">filename</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e633 ">Name of the file.</td>
+                                            <td class="entry" valign="top" width="70%" headers="d180013e633 ">Name of the file.</td>
 
                                         </tr>
 
@@ -522,9 +522,9 @@ You can alternatively use the following
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d179875e689">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d180013e689">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d179875e692">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d180013e692">Description</th>
 
                                         </tr>
 
@@ -532,18 +532,18 @@ You can alternatively use the following
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e689 ">filepath</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e689 ">filepath</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e692 ">Location of the directory that was removed, or
+                                            <td class="entry" valign="top" width="70%" headers="d180013e692 ">Location of the directory that was removed, or
                                                 the directory where the removed file was
                                                 located.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d179875e689 ">filename</td>
+                                            <td class="entry" valign="top" width="30%" headers="d180013e689 ">filename</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d179875e692 ">Name of the file that was removed, when
+                                            <td class="entry" valign="top" width="70%" headers="d180013e692 ">Name of the file that was removed, when
                                                 applicable.</td>
 
                                         </tr>
@@ -696,9 +696,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e956">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e956">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e959">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e959">Description</th>
 
                                 </tr>
 
@@ -706,41 +706,41 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e956 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d180013e956 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d179875e959 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e956 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d179875e959 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d180013e959 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e956 ">Stage Library</td>
+       <td class="entry" valign="top" width="30%" headers="d180013e956 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d179875e959 ">Library version that you want to use. </td>
+       <td class="entry" valign="top" width="70%" headers="d180013e959 ">Optional description.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e956 ">Produce Events <a class="xref" href="HDFSMetadata.html#concept_vhl_mfj_rx">
+       <td class="entry" valign="top" width="30%" headers="d180013e956 ">Stage Library</td>
+
+       <td class="entry" valign="top" width="70%" headers="d180013e959 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e956 ">Produce Events <a class="xref" href="HDFSMetadata.html#concept_vhl_mfj_rx">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e959 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d180013e959 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_m3v_5lk_fx__d33384e1956" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_m3v_5lk_fx__d33478e1956" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e956 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_m3v_5lk_fx__d33384e1965" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d180013e956 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_m3v_5lk_fx__d33478e1965" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d179875e959 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d180013e959 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -749,10 +749,10 @@ You can alternatively use the following
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d179875e956 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_m3v_5lk_fx__d33384e1982" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d180013e956 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_m3v_5lk_fx__d33478e1982" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d179875e959 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d180013e959 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -777,9 +777,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e1073">HDFS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e1073">HDFS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e1076">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e1076">Description</th>
 
                                 </tr>
 
@@ -787,12 +787,12 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1073 ">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1073 ">
                                         <p class="p">Hadoop FS URI </p>
 
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1076 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1076 ">
                                         <div class="p">URI to use to access files:<ul class="ul" id="task_m3v_5lk_fx__ul_py3_ngs_rx">
                                                 <li class="li">
                                                   <p class="p">To access files in HDFS, enter the HDFS URI to
@@ -812,13 +812,13 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1073 ">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1073 ">
                                         <p class="p">HDFS User <a class="xref" href="HDFSMetadata.html#concept_krb_g2f_pz">
                                                 <img class="image" id="task_m3v_5lk_fx__image_ugp_4xk_pz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
 
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1076 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1076 ">
                                         <p class="p">The HDFS user to use to create empty files or change file
                                             metadata in the external system. When you use this
                                             property, make sure the external system is configured
@@ -836,13 +836,13 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1073 ">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1073 ">
                                         <p class="p">Kerberos Authentication <a class="xref" href="HDFSMetadata.html#concept_wjp_3hs_rx">
                                                 <img class="image" id="task_m3v_5lk_fx__image_kqm_3fj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
 
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1076 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1076 ">
                                         <p class="p">Uses Kerberos credentials to connect to the external
                                             system. </p>
 
@@ -855,13 +855,13 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1073 ">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1073 ">
                                         <p class="p">Hadoop FS Configuration Directory <a class="xref" href="HDFSMetadata.html#concept_egg_c3s_rx">
                                                 <img class="image" id="task_m3v_5lk_fx__image_gtq_n3s_rx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
 
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1076 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1076 ">
                                         <p class="p">Location of the HDFS configuration files. </p>
 
                                         <p class="p">For a Cloudera Manager installation, enter hadoop-conf.
@@ -889,9 +889,9 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1073 ">Hadoop FS Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1073 ">Hadoop FS Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1076 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1076 ">
                                         <p class="p">Additional HDFS properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -919,9 +919,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e1254">Task Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e1254">Task Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e1257">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e1257">Description</th>
 
                                 </tr>
 
@@ -929,9 +929,9 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1254 ">Task</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1254 ">Task</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1257 ">Determines the type of task that the executor performs.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1257 ">Determines the type of task that the executor performs.
                                         You can  create an empty file, change file metadata, or
                                         remove a file or directory.<p class="p">To do more than one type of
                                             task, add additional executors to the
@@ -956,9 +956,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e1299">Task Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e1299">Task Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e1302">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e1302">Description</th>
 
                                 </tr>
 
@@ -966,9 +966,9 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">File Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">File Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">Expression that represents the full path to the file that
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">Expression that represents the full path to the file that
                                         you want to create.<div class="p">By default, the property uses
                                                 <samp class="ph codeph">${record:value('/filepath')}</samp>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
                         default expression. The default expression is more appropriate for changing
@@ -979,58 +979,58 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">Set Ownership <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">Set Ownership <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_ddr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">Select to specify a file owner or group. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">Select to specify a file owner or group. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">New Owner</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">New Owner</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">The user name to become the new owner of the file.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">The user name to become the new owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">New Group</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">New Group</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">The group to become the new group owner of the file.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">The group to become the new group owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">Set Permissions <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">Set Permissions <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_edr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">Select to set file permissions in an octal or symbolic
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">Select to set file permissions in an octal or symbolic
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">New Permissions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">New Permissions</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">File permissions in octal or symbolic format.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">File permissions in octal or symbolic format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">Set ACLs <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">Set ACLs <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_fdr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">Select to define access control list (ACL) permissions.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">Select to define access control list (ACL) permissions.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1299 ">New ACLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1299 ">New ACLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1302 ">Define ACLs for the owner, group, and other. You can
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1302 ">Define ACLs for the owner, group, and other. You can
                                         optionally define other user and group permissions. For
                                         details, see <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
 
@@ -1052,9 +1052,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e1429">Task Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e1429">Task Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e1432">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e1432">Description</th>
 
                                 </tr>
 
@@ -1062,10 +1062,10 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">File Path <a class="xref" href="HDFSMetadata.html#concept_fmb_rbj_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">File Path <a class="xref" href="HDFSMetadata.html#concept_fmb_rbj_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_er2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Expression that represents the full path to the file.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Expression that represents the full path to the file.
                                             <p class="p">By default, the property uses
                                             ${record:value('/filepath')}, which processes data in
                                             the filepath field. The Hadoop FS and Local FS
@@ -1082,86 +1082,86 @@ You can alternatively use the following
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">Move File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">Move File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Select to move the file.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New Location</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">New location for the file. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Select to move the file.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">Rename</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Select to rename the file.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New Name</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">New name for the file. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">New location for the file. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">Change Ownership <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">Rename</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Select to rename the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">New name for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">Change Ownership <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_fr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Select to change the file owner or group. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Select to change the file owner or group. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New Owner</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New Owner</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">The user name to become the new owner of the file.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">The user name to become the new owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New Group</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New Group</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">The group to become the new group owner of the file.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">The group to become the new group owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">Set Permissions <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">Set Permissions <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_gr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Select to set file permissions in an octal or symbolic
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Select to set file permissions in an octal or symbolic
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New Permissions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New Permissions</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">File permissions in octal or symbolic format.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">File permissions in octal or symbolic format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">Set ACLs <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">Set ACLs <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">
                                             <img class="image" id="task_m3v_5lk_fx__image_hr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Select to define access control list (ACL) permissions.
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Select to define access control list (ACL) permissions.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1429 ">New ACLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1429 ">New ACLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1432 ">Define ACLs for the owner, group, and other. You can
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1432 ">Define ACLs for the owner, group, and other. You can
                                         optionally define other user and group permissions. For
                                         details, see <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
 
@@ -1183,9 +1183,9 @@ You can alternatively use the following
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d179875e1600">Task Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180013e1600">Task Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d179875e1603">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180013e1603">Description</th>
 
                                 </tr>
 
@@ -1193,9 +1193,9 @@ You can alternatively use the following
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d179875e1600 ">File Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180013e1600 ">File Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d179875e1603 ">Expression that represents the full path to the file or
+                                    <td class="entry" valign="top" width="70%" headers="d180013e1603 ">Expression that represents the full path to the file or
                                         directory that you want to remove. <p class="p">The executor removes
                                             directories recursively, removing all subdirectories as
                                             well. Use with caution. For more information, see <a class="xref" href="HDFSMetadata.html#concept_yf2_hc4_x1b">Removing a File or Directory</a>.</p>

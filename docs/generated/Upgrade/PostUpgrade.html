@@ -72,6 +72,33 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_wnp_scs_wbb">
+ <h2 class="title topictitle2">Disable Cloudera Navigator Integration</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the beta version of Cloudera Navigator integration is no longer available
+            with Data Collector. </p>
+
+        <p class="p">Cloudera Navigator integration is now released as part of the StreamSets Commercial
+            Subscription. For information about the StreamSets Commercial Subscription, <a class="xref" href="https://streamsets.com/contact-us/" target="_blank">contact
+                us</a>.</p>
+
+        <div class="p">When upgrading from a previous version with Cloudera Navigator integration enabled, do
+            not include the Cloudera Navigator properties when you configure the 3.0.0.0 <span class="ph">Data
+                  Collector</span>
+            configuration file, sdc.properties. The properties to omit are: <ul class="ul" id="concept_wnp_scs_wbb__ul_lrx_xcs_wbb">
+                <li class="li">lineage.publishers</li>
+
+                <li class="li">lineage.publisher.navigator.def</li>
+
+                <li class="li">All other properties with the lineage.publisher.navigator prefix</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_hky_ljl_wbb">
  <h2 class="title topictitle2">JDBC Multitable Consumer Query Interval Change</h2>
 
@@ -80,22 +107,21 @@
             property.</p>
 
         <div class="p">Upgraded pipelines with the Query Interval specified using a constant or the default
-            format and unit of time, ${10 * SECONDS}, has the new Queries per Second property
+            format and unit of time, ${10 * SECONDS}, have the new Queries per Second property
             calculated and defined as follows:
             <pre class="pre codeblock">Queries per Second = Number of Threads / Query Interval (in seconds)</pre>
 For
-            example, say the origin uses 3 threads and Query Interval is configured for ${15 *
+            example, say the origin uses three threads and Query Interval is configured for ${15 *
             SECONDS}. Then, the upgraded origin sets Queries per Seconds to 3 divided by 15, which
-            is .2. This means the origin will run a maximum of 2 queries every 10 seconds. </div>
+            is .2. This means the origin will run a maximum of two queries every 10 seconds. </div>
 
         <p class="p">The upgrade would occur the same way if Query Interval were set to 15. </p>
 
         <p class="p">Pipelines with a Query Interval configured to use other units of time, such as ${.1
             *MINUTES}, or configured with a different expression format, such as ${SECONDS * 5}, are
-            upgraded to use the default for Queries per Second, which is .1. This means the pipeline
-            will run a maximum of one query per second. The fact that these types of expressions are
-            not automatically upgraded correctly to “Queries per Second” is noted in the Data
-            Collector log.</p>
+            upgraded to use the default for Queries per Second, which is 10. This means the pipeline
+            will run a maximum of 10 queries per second. The fact that these expressions are not
+            upgraded correctly is noted in the Data Collector log.</p>
 
         <p class="p">If necessary, update the Queries per Second property as needed after the upgrade. </p>
 

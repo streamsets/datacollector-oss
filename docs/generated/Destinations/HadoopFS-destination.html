@@ -288,7 +288,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                   processing the files.</p>
 
         <div class="p">Output files might remain idle for too long for the following
-                  reasons: <ul class="ul" id="concept_qjs_dw3_tv__d15901e3855">
+                  reasons: <ul class="ul" id="concept_qjs_dw3_tv__d15921e3855">
                         <li class="li">You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -409,7 +409,7 @@ Where
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_lww_3b3_kr__d15901e2910">
+                                    <ul class="ul" id="concept_lww_3b3_kr__d15921e2910">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -460,7 +460,7 @@ Where
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d15901e3062">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d15921e3062">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -654,24 +654,24 @@ Though the host name for the
                   </span></p>
 
         <div class="p">Hadoop FS events can be used in any logical way. For example: <ul class="ul" id="concept_bvb_rxj_px__ul_sww_spb_rx">
-                        <li class="li" id="concept_bvb_rxj_px__d15901e1967">With the HDFS File Metadata executor to move
+                        <li class="li" id="concept_bvb_rxj_px__d15921e1967">With the HDFS File Metadata executor to move
                               or change permissions on closed files. <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_d1q_xl4_lx">Case Study: Output File Management</a>.</p>
 </li>
 
-                        <li class="li" id="concept_bvb_rxj_px__d15901e1974">With the Hive Query executor to run Hive or
+                        <li class="li" id="concept_bvb_rxj_px__d15921e1974">With the Hive Query executor to run Hive or
                               Impala queries after closing output files. <p class="p">For an example, see
                                           <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</p>
 </li>
 
-                        <li class="li" id="concept_bvb_rxj_px__d15901e1981">With the MapReduce executor to convert
+                        <li class="li" id="concept_bvb_rxj_px__d15921e1981">With the MapReduce executor to convert
                               completed Avro files to Parquet. <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_jkm_rnz_kx">Case Study: Parquet Conversion</a>.</p>
 </li>
 
-                        <li class="li" id="concept_bvb_rxj_px__d15901e1988">With the Email executor to send a custom email
+                        <li class="li" id="concept_bvb_rxj_px__d15921e1988">With the Email executor to send a custom email
                               after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
 </li>
 
-                        <li class="li" id="concept_bvb_rxj_px__d15901e1995">With a destination to store event information.
+                        <li class="li" id="concept_bvb_rxj_px__d15921e1995">With a destination to store event information.
                                     <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
 </li>
 
@@ -698,9 +698,9 @@ Though the host name for the
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d106571e958">Record Header Attribute</th>
+       <th class="entry" valign="top" width="30%" id="d106369e958">Record Header Attribute</th>
 
-       <th class="entry" valign="top" width="70%" id="d106571e961">Description</th>
+       <th class="entry" valign="top" width="70%" id="d106369e961">Description</th>
 
       </tr>
 
@@ -708,9 +708,9 @@ Though the host name for the
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" id="concept_dmx_1ln_qx__d15973e2058" valign="top" width="30%" headers="d106571e958 ">sdc.event.type</td>
+       <td class="entry" id="concept_dmx_1ln_qx__d15993e2058" valign="top" width="30%" headers="d106369e958 ">sdc.event.type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e961 ">Event type. Uses one of the following types:<ul class="ul" id="concept_dmx_1ln_qx__d15973e2063">
+       <td class="entry" valign="top" width="70%" headers="d106369e961 ">Event type. Uses one of the following types:<ul class="ul" id="concept_dmx_1ln_qx__d15993e2063">
          <li class="li">file-closed - Generated when the destination closes a file.</li>
 
          <li class="li">wholeFileProcessed - Generated when the destination completes streaming a whole
@@ -721,17 +721,17 @@ Though the host name for the
 
       </tr>
 
-      <tr id="concept_dmx_1ln_qx__d15973e2073">
-       <td class="entry" valign="top" width="30%" headers="d106571e958 ">sdc.event.version</td>
+      <tr id="concept_dmx_1ln_qx__d15993e2073">
+       <td class="entry" valign="top" width="30%" headers="d106369e958 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e961 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d106369e961 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
-      <tr id="concept_dmx_1ln_qx__d15973e2082">
-       <td class="entry" valign="top" width="30%" headers="d106571e958 ">sdc.event.creation_timestamp</td>
+      <tr id="concept_dmx_1ln_qx__d15993e2082">
+       <td class="entry" valign="top" width="30%" headers="d106369e958 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_dmx_1ln_qx__d15973e2087" valign="top" width="70%" headers="d106571e961 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_dmx_1ln_qx__d15993e2087" valign="top" width="70%" headers="d106369e961 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -754,14 +754,14 @@ Though the host name for the
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">file-closed</samp> and include the following
                                           fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dmx_1ln_qx__d15901e4182" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dmx_1ln_qx__d15921e4182" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
                                                   <tr>
-                                                  <th class="entry" valign="top" width="30%" id="d106571e1039">Field</th>
+                                                  <th class="entry" valign="top" width="30%" id="d106369e1039">Field</th>
 
-                                                  <th class="entry" valign="top" width="70%" id="d106571e1042">Description</th>
+                                                  <th class="entry" valign="top" width="70%" id="d106369e1042">Description</th>
 
                                                   </tr>
 
@@ -769,23 +769,23 @@ Though the host name for the
 
                                                 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1039 ">filepath</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1039 ">filepath</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1042 ">Absolute path to the closed file. </td>
-
-                                                  </tr>
-
-                                                  <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1039 ">filename</td>
-
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1042 ">File name of the closed file.</td>
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1042 ">Absolute path to the closed file. </td>
 
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1039 ">length</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1039 ">filename</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1042 ">Size of the closed file in bytes.</td>
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1042 ">File name of the closed file.</td>
+
+                                                  </tr>
+
+                                                  <tr>
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1039 ">length</td>
+
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1042 ">Size of the closed file in bytes.</td>
 
                                                   </tr>
 
@@ -804,14 +804,14 @@ Though the host name for the
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">wholeFileProcessed</samp> and have the
                                     following fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dmx_1ln_qx__d15901e4248" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dmx_1ln_qx__d15921e4248" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
                                                   <tr>
-                                                  <th class="entry" valign="top" width="30%" id="d106571e1105">Field</th>
+                                                  <th class="entry" valign="top" width="30%" id="d106369e1105">Field</th>
 
-                                                  <th class="entry" valign="top" width="70%" id="d106571e1108">Description</th>
+                                                  <th class="entry" valign="top" width="70%" id="d106369e1108">Description</th>
 
                                                   </tr>
 
@@ -819,11 +819,11 @@ Though the host name for the
 
                                                 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1105 ">sourceFileInfo</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1105 ">sourceFileInfo</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1108 ">A map of attributes about the original
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1108 ">A map of attributes about the original
                                                   whole file that was processed. The attributes
-                                                  include:<ul class="ul" id="concept_dmx_1ln_qx__d15901e4277">
+                                                  include:<ul class="ul" id="concept_dmx_1ln_qx__d15921e4277">
                                                   <li class="li">size - Size of the whole file in bytes. </li>
 
                                                   </ul>
@@ -835,11 +835,11 @@ Though the host name for the
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1105 ">targetFileInfo</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1105 ">targetFileInfo</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1108 ">A map of attributes about the whole file
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1108 ">A map of attributes about the whole file
                                                   written to the destination. The attributes
-                                                  include:<ul class="ul" id="concept_dmx_1ln_qx__d15901e4293">
+                                                  include:<ul class="ul" id="concept_dmx_1ln_qx__d15921e4293">
                                                   <li class="li">path - An absolute path the processed whole
                                                   file.</li>
 
@@ -848,10 +848,10 @@ Though the host name for the
 
                                                   </tr>
 
-                                                  <tr id="concept_dmx_1ln_qx__d15901e4300">
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1105 ">checksum</td>
+                                                  <tr id="concept_dmx_1ln_qx__d15921e4300">
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1105 ">checksum</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1108 ">Checksum generated for the written file.
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1108 ">Checksum generated for the written file.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -859,10 +859,10 @@ Though the host name for the
 
                                                   </tr>
 
-                                                  <tr id="concept_dmx_1ln_qx__d15901e4311">
-                                                  <td class="entry" valign="top" width="30%" headers="d106571e1105 ">checksumAlgorithm</td>
+                                                  <tr id="concept_dmx_1ln_qx__d15921e4311">
+                                                  <td class="entry" valign="top" width="30%" headers="d106369e1105 ">checksumAlgorithm</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d106571e1108 ">Algorithm used to generate the checksum.
+                                                  <td class="entry" valign="top" width="70%" headers="d106369e1108 ">Algorithm used to generate the checksum.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -926,7 +926,7 @@ Though the host name for the
                         <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>. </p>
 
     <p class="p">Note that the destination <span class="ph">uses a different user account to
-                        connect to HDFS. <span class="ph" id="concept_u4h_lwt_ls__d15901e3469">By default, <span class="ph">Data
+                        connect to HDFS. <span class="ph" id="concept_u4h_lwt_ls__d15921e3469">By default, <span class="ph">Data
                   Collector</span> uses the user account who started it to connect to external
                               systems. When using Kerberos, <span class="ph">Data
                   Collector</span> uses the Kerberos principal.</span>
@@ -1017,9 +1017,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e1421">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e1421">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e1424">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e1424">Description</th>
 
                                 </tr>
 
@@ -1027,41 +1027,41 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Stage Library</td>
+       <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Library version that you want to use. </td>
+       <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Optional description.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Produce Events <a class="xref" href="HadoopFS-destination.html#concept_bvb_rxj_px">
+       <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Stage Library</td>
+
+       <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Produce Events <a class="xref" href="HadoopFS-destination.html#concept_bvb_rxj_px">
                                             <img class="image" id="task_m2m_skm_zq__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_m2m_skm_zq__d15973e1956" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_m2m_skm_zq__d15993e1956" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_m2m_skm_zq__d15973e1965" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_m2m_skm_zq__d15993e1965" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -1070,10 +1070,10 @@ Though the host name for the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e1421 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_m2m_skm_zq__d15973e1982" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d106369e1421 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_m2m_skm_zq__d15993e1982" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e1424 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d106369e1424 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -1093,14 +1093,14 @@ Though the host name for the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e5671" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e5671" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e1538">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e1538">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e1541">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e1541">Description</th>
 
                                 </tr>
 
@@ -1108,41 +1108,41 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e5726" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e5726" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Generates event records when events occur. Use for event
                                         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e5732" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_m2m_skm_zq__d16131e5732" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e5741" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e5741" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -1154,10 +1154,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e5758" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e5758" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -1168,10 +1168,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1538 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e5775" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1538 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e5775" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1541 ">Error record handling for the stage: <ul class="ul" id="task_m2m_skm_zq__d16111e5779">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1541 ">Error record handling for the stage: <ul class="ul" id="task_m2m_skm_zq__d16131e5779">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1201,9 +1201,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d106571e1679">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d106369e1679">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d106571e1682">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d106369e1682">Description</th>
 
                                 </tr>
 
@@ -1211,17 +1211,17 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106571e1679 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106369e1679 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106571e1682 ">HDFS URI.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106369e1682 ">HDFS URI.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106571e1679 ">HDFS User <a class="xref" href="HadoopFS-destination.html#concept_u4h_lwt_ls">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106369e1679 ">HDFS User <a class="xref" href="HadoopFS-destination.html#concept_u4h_lwt_ls">
                                             <img class="image" id="task_m2m_skm_zq__image_byg_yqg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106571e1682 ">The HDFS user to use to write to HDFS. When using this
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106369e1682 ">The HDFS user to use to write to HDFS. When using this
                                         property, make sure HDFS is configured appropriately.<p class="p">When
                                             not configured, the pipeline uses the currently logged
                                             in <span class="ph">Data
@@ -1234,10 +1234,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106571e1679 ">Kerberos Authentication <a class="xref" href="HadoopFS-destination.html#concept_xy5_4tm_vs">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106369e1679 ">Kerberos Authentication <a class="xref" href="HadoopFS-destination.html#concept_xy5_4tm_vs">
                                             <img class="image" id="task_m2m_skm_zq__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106571e1682 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106369e1682 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file,
@@ -1248,10 +1248,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106571e1679 ">Hadoop FS Configuration Directory <a class="xref" href="HadoopFS-destination.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106369e1679 ">Hadoop FS Configuration Directory <a class="xref" href="HadoopFS-destination.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_m2m_skm_zq__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106571e1682 ">Location of the HDFS configuration files.<p class="p">For a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106369e1682 ">Location of the HDFS configuration files.<p class="p">For a
                                             Cloudera Manager installation, enter
                                                 <samp class="ph codeph">hadoop-conf</samp>. For all other
                                             installations, use a directory or symlink within the <span class="ph">Data
@@ -1272,9 +1272,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106571e1679 ">Hadoop FS Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d106369e1679 ">Hadoop FS Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106571e1682 ">Additional HDFS properties to use. <p class="p">To add properties,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d106369e1682 ">Additional HDFS properties to use. <p class="p">To add properties,
                                             click <span class="ph uicontrol">Add</span> and define the property
                                             name and value. Use the property names and values as
                                             expected by HDFS.</p>
@@ -1299,9 +1299,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e1825">Output Files Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e1825">Output Files Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e1828">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e1828">Description</th>
 
                                 </tr>
 
@@ -1309,9 +1309,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">File Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">File Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Output file type:<ul class="ul" id="task_m2m_skm_zq__d16111e7278">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Output file type:<ul class="ul" id="task_m2m_skm_zq__d16131e7278">
                                             <li class="li">Text files</li>
 
                                             <li class="li">Sequence files</li>
@@ -1325,9 +1325,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p class="p">Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
                                             to sdc-&lt;<span class="ph">Data
@@ -1341,9 +1341,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">File Suffix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">File Suffix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Suffix to use for output files, such as txt or json. When
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Suffix to use for output files, such as txt or json. When
                                         used, the destination adds a period and the configured
                                         suffix as follows: &lt;filename&gt;.&lt;suffix&gt;.<p class="p">You can
                                             include periods within the suffix, but do not start the
@@ -1356,21 +1356,21 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e7368" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e7368" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Indicates that the target directory is defined in record
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Indicates that the target directory is defined in record
                                         headers. Use only when the targetDirectory header attribute
                                         is defined for all records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e7381" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e7381" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" id="task_m2m_skm_zq__d16111e7383" valign="top" width="70%" headers="d106571e1828 ">Template for creating output
+                                    <td class="entry" id="task_m2m_skm_zq__d16131e7383" valign="top" width="70%" headers="d106369e1828 ">Template for creating output
                                         directories. You can use constants, field values, and
                                         datetime variables. <p class="p">Output directories are created based
                                             on the smallest datetime variable in the
@@ -1380,21 +1380,21 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Time zone for the destination system. Used to resolve
                                         datetimes in the directory template and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Time Basis <a class="xref" href="HadoopFS-destination.html#concept_gkz_smd_br">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e7404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Time Basis <a class="xref" href="HadoopFS-destination.html#concept_gkz_smd_br">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e7404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" id="task_m2m_skm_zq__d16111e7406" valign="top" width="70%" headers="d106571e1828 ">Time basis to use for creating
+                                    <td class="entry" id="task_m2m_skm_zq__d16131e7406" valign="top" width="70%" headers="d106369e1828 ">Time basis to use for creating
                                         output directories and writing records to the directories.
-                                        Use one of the following expressions:<ul class="ul" id="task_m2m_skm_zq__d16111e7408">
+                                        Use one of the following expressions:<ul class="ul" id="task_m2m_skm_zq__d16131e7408">
                                             <li class="li">${time:now()} - Uses the processing time as the time
                                                 basis. </li>
 
@@ -1408,9 +1408,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Max Records in a File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Max Records in a File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Maximum number of records to be written to an output
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p class="p">Use 0
                                             to opt out of this property. </p>
 <p class="p">Not available when
@@ -1420,9 +1420,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Maximum size of an output file. Additional records are
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Maximum size of an output file. Additional records are
                                         written to a new file. <p class="p">Use 0 to opt out of this property.
                                             </p>
 <p class="p">Not available when using the whole file data
@@ -1432,11 +1432,11 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Idle Timeout (secs) <a class="xref" href="HadoopFS-destination.html#concept_qjs_dw3_tv">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Idle Timeout (secs) <a class="xref" href="HadoopFS-destination.html#concept_qjs_dw3_tv">
                                             <img class="image" id="task_m2m_skm_zq__image_br5_fgs_7r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Maximum time that an output file
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Maximum time that an output file
                                         can remain idle. After no records are written to a file for
                                         this amount of time, the destination closes the file. Enter
                                         a time in seconds or use the <samp class="ph codeph">MINUTES</samp> or
@@ -1451,9 +1451,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Compression type for output files:<ul class="ul" id="task_m2m_skm_zq__d16111e7452">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Compression type for output files:<ul class="ul" id="task_m2m_skm_zq__d16131e7452">
                                             <li class="li">None </li>
 
                                             <li class="li">gzip</li>
@@ -1478,18 +1478,18 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Compression Codec Class</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Compression Codec Class</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Full class name of the other compression codec that you
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Full class name of the other compression codec that you
                                         want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Sequence File Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Sequence File Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Record key for creating sequence files. Use one of the
-                                        following options:<ul class="ul" id="task_m2m_skm_zq__d16111e7496">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Record key for creating sequence files. Use one of the
+                                        following options:<ul class="ul" id="task_m2m_skm_zq__d16131e7496">
                                             <li class="li">${record:value(&lt;field path&gt;)}</li>
 
                                             <li class="li">${uuid()}</li>
@@ -1500,10 +1500,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Compression Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Compression Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Compression type for sequence files when using a
-                                        compression codec:<ul class="ul" id="task_m2m_skm_zq__d16111e7513">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Compression type for sequence files when using a
+                                        compression codec:<ul class="ul" id="task_m2m_skm_zq__d16131e7513">
                                             <li class="li">Block Compression</li>
 
                                             <li class="li">Record Compression</li>
@@ -1514,11 +1514,11 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Use Roll Attribute <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Use Roll Attribute <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
                                             <img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Checks the record header for the roll header attribute
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Checks the record header for the roll header attribute
                                         and closes the current file when the roll attribute exists.
                                             <p class="p">Can be used with Max Records in a File and Max File
                                             Size to close files.</p>
@@ -1527,18 +1527,18 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Roll Attribute Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Roll Attribute Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Name of the roll header attribute.<p class="p">Default is
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Name of the roll header attribute.<p class="p">Default is
                                         roll.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Validate HDFS Permissions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Validate HDFS Permissions</td>
 
-                                    <td class="entry" id="task_m2m_skm_zq__d16111e7555" valign="top" width="70%" headers="d106571e1828 ">When you start the
+                                    <td class="entry" id="task_m2m_skm_zq__d16131e7555" valign="top" width="70%" headers="d106369e1828 ">When you start the
                                         pipeline, the destination tries writing to the configured
                                         directory template to validate permissions. The pipeline
                                         does not start if validation fails.<div class="note note"><span class="notetitle">Note:</span> Do not use this
@@ -1549,10 +1549,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e1825 ">Skip File Recovery <a class="xref" href="HadoopFS-destination.html#concept_uv2_vfb_vy">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e1825 ">Skip File Recovery <a class="xref" href="HadoopFS-destination.html#concept_uv2_vfb_vy">
                                             <img class="image" id="task_m2m_skm_zq__image_br4_fgs_2r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e1828 ">Determines whether the
+                                    <td class="entry" valign="top" width="70%" headers="d106369e1828 ">Determines whether the
                                         destination performs file recovery after an unexpected stop
                                         of the pipeline. </td>
 
@@ -1574,17 +1574,17 @@ Though the host name for the
                         record time limit to one second.</div>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e8441" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e8441" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2204">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e8457" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <th class="entry" valign="top" width="30%" id="d106369e2204">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e8457" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a>
                                     </th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2213">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2213">Description</th>
 
                                 </tr>
 
@@ -1592,9 +1592,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2204 ">Late Record Time Limit (secs)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2204 ">Late Record Time Limit (secs)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2213 ">Time limit for output directories to accept data. <p class="p">You
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2213 ">Time limit for output directories to accept data. <p class="p">You
                                             can enter a time in seconds, or use the expression to
                                             enter a time in hours. You can also use MINUTES in the
                                             default expression to define the time in minutes.
@@ -1604,9 +1604,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2204 ">Late Record Handling</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2204 ">Late Record Handling</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2213 ">Determines how to handle late records:<ul class="ul" id="task_m2m_skm_zq__d16111e8486">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2213 ">Determines how to handle late records:<ul class="ul" id="task_m2m_skm_zq__d16131e8486">
                                             <li class="li">Send to error - Sends the record to the stage for
                                                 error handling. </li>
 
@@ -1619,10 +1619,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2204 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e8502" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2204 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e8502" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2213 ">Template for creating late record directories. You can
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2213 ">Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.
                                             <p class="p">Output directories are created based on the smallest
                                             datetime variable in the template.</p>
@@ -1647,9 +1647,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2291">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2291">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2294">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2294">Description</th>
 
                                 </tr>
 
@@ -1657,12 +1657,12 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2291 ">Data Format <a class="xref" href="HadoopFS-destination.html#concept_lww_3b3_kr">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2291 ">Data Format <a class="xref" href="HadoopFS-destination.html#concept_lww_3b3_kr">
                                             <img class="image" id="task_m2m_skm_zq__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2294 ">Format of data to be written.
-                                        Use one of the following options:<ul class="ul" id="task_m2m_skm_zq__d16111e7298">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2294 ">Format of data to be written.
+                                        Use one of the following options:<ul class="ul" id="task_m2m_skm_zq__d16131e7298">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -1676,7 +1676,7 @@ Though the host name for the
                                             <li class="li">Text</li>
 
                                             <li class="li">Whole File <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">
-                                                  <img class="image" id="task_m2m_skm_zq__d16111e7323" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_m2m_skm_zq__d16131e7323" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                         </ul>
 </td>
@@ -1695,14 +1695,14 @@ Though the host name for the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e5987" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e5987" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2370">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2370">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2373">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2373">Description</th>
 
                                 </tr>
 
@@ -1710,10 +1710,10 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_m2m_skm_zq__d16111e6016">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_m2m_skm_zq__d16131e6016">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1721,7 +1721,7 @@ Though the host name for the
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_m2m_skm_zq__d16111e6025" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_m2m_skm_zq__d16131e6025" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -1734,9 +1734,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -1745,17 +1745,17 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -1765,10 +1765,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_m2m_skm_zq__d16111e6075">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_m2m_skm_zq__d16131e6075">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1781,9 +1781,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -1795,17 +1795,17 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2370 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2370 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2373 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2373 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1824,14 +1824,14 @@ Though the host name for the
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e6483" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e6483" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2519">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2519">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2522">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2522">Description</th>
 
                                 </tr>
 
@@ -1839,9 +1839,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2519 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2519 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2522 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2522 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -1857,14 +1857,14 @@ Though the host name for the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e6540" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e6540" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2565">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2565">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2568">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2568">Description</th>
 
                                 </tr>
 
@@ -1872,9 +1872,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Format for delimited data:<ul class="ul" id="task_m2m_skm_zq__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Format for delimited data:<ul class="ul" id="task_m2m_skm_zq__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1898,16 +1898,16 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1915,9 +1915,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1926,9 +1926,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1943,9 +1943,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1954,9 +1954,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1965,9 +1965,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e2565 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d106369e2565 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e2568 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d106369e2568 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1983,14 +1983,14 @@ Though the host name for the
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e6680" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e6680" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2726">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2726">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2729">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2729">Description</th>
 
                                 </tr>
 
@@ -1998,9 +1998,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2726 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2726 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2729 ">Determines how JSON data is written:<ul class="ul" id="task_m2m_skm_zq__d16111e6709">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2729 ">Determines how JSON data is written:<ul class="ul" id="task_m2m_skm_zq__d16131e6709">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -2015,9 +2015,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e2726 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d106369e2726 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e2729 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d106369e2729 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -2033,14 +2033,14 @@ Though the host name for the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e6752" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e6752" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2789">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2789">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2792">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2792">Description</th>
 
                                 </tr>
 
@@ -2048,9 +2048,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2789 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2789 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2792 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2792 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
@@ -2061,9 +2061,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2789 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2789 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2792 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2792 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -2084,14 +2084,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e6926" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e6926" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2906">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2906">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2909">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2909">Description</th>
 
                                 </tr>
 
@@ -2099,17 +2099,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2906 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2906 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2909 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2909 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2906 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2906 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2909 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2909 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -2118,9 +2118,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2906 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2906 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2909 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2909 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
@@ -2129,9 +2129,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d106571e2906 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d106369e2906 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d106571e2909 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d106369e2909 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -2147,24 +2147,24 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16111e7012" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d16131e7012" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d106571e2983">Whole File Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106369e2983">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d106571e2986">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106369e2986">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_m2m_skm_zq__d16111e7034">
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2983 ">File Name Expression</td>
+                                <tr id="task_m2m_skm_zq__d16131e7034">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2983 ">File Name Expression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2986 ">
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2986 ">
                                         <p class="p">Expression to use for the file names. </p>
 
                                         <p class="p">For tips on how to name files based on input file names,
@@ -2174,11 +2174,11 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_m2m_skm_zq__d16111e7051">
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2983 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e7057" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_m2m_skm_zq__d16131e7051">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2983 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e7057" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2986 ">Expression that defines the access permissions for output
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2986 ">Expression that defines the access permissions for output
                                         files. Expressions should evaluate to a symbolic or
                                         numeric/octal representation of the permissions you want to
                                         use. <p class="p">By default, with no specified expression, files use
@@ -2192,12 +2192,12 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_m2m_skm_zq__d16111e7069">
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2983 ">File Exists</td>
+                                <tr id="task_m2m_skm_zq__d16131e7069">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2983 ">File Exists</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2986 ">Action to take when a file of the same name already
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2986 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_m2m_skm_zq__d16111e7076">
+                                            options:<ul class="ul" id="task_m2m_skm_zq__d16131e7076">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -2208,21 +2208,21 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_m2m_skm_zq__d16111e7086">
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2983 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
-                                            <img class="image" id="task_m2m_skm_zq__d16111e7092" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_m2m_skm_zq__d16131e7086">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2983 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
+                                            <img class="image" id="task_m2m_skm_zq__d16131e7092" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2986 ">Includes checksum information in whole file event
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2986 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event
                                             records. </p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_m2m_skm_zq__d16111e7100">
-                                    <td class="entry" valign="top" width="30%" headers="d106571e2983 ">Checksum Algorithm</td>
+                                <tr id="task_m2m_skm_zq__d16131e7100">
+                                    <td class="entry" valign="top" width="30%" headers="d106369e2983 ">Checksum Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d106571e2986 ">Algorithm to generate the checksum.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106369e2986 ">Algorithm to generate the checksum.</td>
 
                                 </tr>
 

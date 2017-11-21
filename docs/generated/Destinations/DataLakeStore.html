@@ -526,7 +526,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                   processing the files.</p>
 
         <div class="p">Output files might remain idle for too long for the following
-                  reasons: <ul class="ul" id="concept_c2p_wzh_4z__d15901e3855">
+                  reasons: <ul class="ul" id="concept_c2p_wzh_4z__d15921e3855">
                         <li class="li">You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -608,9 +608,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" id="concept_kwq_m54_vz__d15973e2058" valign="top" width="30%" headers="d85039e945 ">sdc.event.type</td>
+       <td class="entry" id="concept_kwq_m54_vz__d15993e2058" valign="top" width="30%" headers="d85039e945 ">sdc.event.type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d85039e948 ">Event type. Uses one of the following types:<ul class="ul" id="concept_kwq_m54_vz__d15973e2063">
+       <td class="entry" valign="top" width="70%" headers="d85039e948 ">Event type. Uses one of the following types:<ul class="ul" id="concept_kwq_m54_vz__d15993e2063">
          <li class="li">file-closed - Generated when the destination closes a file.</li>
 
          <li class="li">wholeFileProcessed - Generated when the destination completes streaming a whole
@@ -621,17 +621,17 @@ ${YY()}_${MM()}_${DD()}</pre>
 
       </tr>
 
-      <tr id="concept_kwq_m54_vz__d15973e2073">
+      <tr id="concept_kwq_m54_vz__d15993e2073">
        <td class="entry" valign="top" width="30%" headers="d85039e945 ">sdc.event.version</td>
 
        <td class="entry" valign="top" width="70%" headers="d85039e948 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
-      <tr id="concept_kwq_m54_vz__d15973e2082">
+      <tr id="concept_kwq_m54_vz__d15993e2082">
        <td class="entry" valign="top" width="30%" headers="d85039e945 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_kwq_m54_vz__d15973e2087" valign="top" width="70%" headers="d85039e948 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_kwq_m54_vz__d15993e2087" valign="top" width="70%" headers="d85039e948 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -654,7 +654,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">file-closed</samp> and include the following
                                           fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d15901e4182" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d15921e4182" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
@@ -704,7 +704,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">wholeFileProcessed</samp> and have the
                                     following fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d15901e4248" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d15921e4248" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
@@ -723,7 +723,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                                   <td class="entry" valign="top" width="70%" headers="d85039e1095 ">A map of attributes about the original
                                                   whole file that was processed. The attributes
-                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d15901e4277">
+                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d15921e4277">
                                                   <li class="li">size - Size of the whole file in bytes. </li>
 
                                                   </ul>
@@ -739,7 +739,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                                   <td class="entry" valign="top" width="70%" headers="d85039e1095 ">A map of attributes about the whole file
                                                   written to the destination. The attributes
-                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d15901e4293">
+                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d15921e4293">
                                                   <li class="li">path - An absolute path the processed whole
                                                   file.</li>
 
@@ -748,7 +748,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                                   </tr>
 
-                                                  <tr id="concept_kwq_m54_vz__d15901e4300">
+                                                  <tr id="concept_kwq_m54_vz__d15921e4300">
                                                   <td class="entry" valign="top" width="30%" headers="d85039e1092 ">checksum</td>
 
                                                   <td class="entry" valign="top" width="70%" headers="d85039e1095 ">Checksum generated for the written file.
@@ -759,7 +759,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                                   </tr>
 
-                                                  <tr id="concept_kwq_m54_vz__d15901e4311">
+                                                  <tr id="concept_kwq_m54_vz__d15921e4311">
                                                   <td class="entry" valign="top" width="30%" headers="d85039e1092 ">checksumAlgorithm</td>
 
                                                   <td class="entry" valign="top" width="70%" headers="d85039e1095 ">Algorithm used to generate the checksum.
@@ -799,7 +799,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_wsz_qj4_zx__d15901e2910">
+                                    <ul class="ul" id="concept_wsz_qj4_zx__d15921e2910">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -850,7 +850,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d15901e3062">
+                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d15921e3062">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -929,7 +929,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e5671" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e5671" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -966,17 +966,17 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1362 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e5726" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e5726" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1365 ">Generates event records when events occur. Use for event
                                         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e5732" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e5732" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1362 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e5741" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e5741" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1365 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
@@ -991,7 +991,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1362 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e5758" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e5758" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1365 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
@@ -1005,9 +1005,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1362 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e5775" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e5775" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85039e1365 ">Error record handling for the stage: <ul class="ul" id="task_jfl_nf4_zx__d16111e5779">
+                                    <td class="entry" valign="top" width="70%" headers="d85039e1365 ">Error record handling for the stage: <ul class="ul" id="task_jfl_nf4_zx__d16131e5779">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1149,7 +1149,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1613 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e7368" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e7368" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1616 ">Indicates that the target directory is defined in record
@@ -1185,7 +1185,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1616 ">Time basis to use for creating
                                         output directories and writing records to the directories.
-                                        Use one of the following expressions:<ul class="ul" id="task_jfl_nf4_zx__d16111e7408">
+                                        Use one of the following expressions:<ul class="ul" id="task_jfl_nf4_zx__d16131e7408">
                                             <li class="li">${time:now()} - Uses the processing time as the time
                                                 basis. </li>
 
@@ -1341,7 +1341,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e5987" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e5987" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1359,7 +1359,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1950 ">Avro Schema Location</td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1953 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d16111e6016">
+                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d16131e6016">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1367,7 +1367,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_jfl_nf4_zx__d16111e6025" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_jfl_nf4_zx__d16131e6025" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -1414,7 +1414,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                     <td class="entry" valign="top" width="30%" headers="d85039e1950 ">Look Up Schema By</td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e1953 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d16111e6075">
+                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d16131e6075">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1470,7 +1470,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e6483" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e6483" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1503,7 +1503,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e6540" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e6540" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1629,7 +1629,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e6680" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e6680" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1646,7 +1646,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e2307 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85039e2310 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d16111e6709">
+                                    <td class="entry" valign="top" width="70%" headers="d85039e2310 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d16131e6709">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1679,7 +1679,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e6752" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e6752" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1730,7 +1730,7 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16111e6926" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d16131e6926" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -1822,7 +1822,7 @@ Use a message type defined in the
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e2563 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e7057" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e7057" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e2566 ">Expression that defines the access permissions for output
                                         files. Expressions should evaluate to a symbolic or
@@ -1843,7 +1843,7 @@ Use a message type defined in the
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e2566 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_jfl_nf4_zx__d16111e7076">
+                                            options:<ul class="ul" id="task_jfl_nf4_zx__d16131e7076">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -1856,7 +1856,7 @@ Use a message type defined in the
 
                                 <tr>
                                     <td class="entry" valign="top" width="30%" headers="d85039e2563 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
-                                            <img class="image" id="task_jfl_nf4_zx__d16111e7092" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_jfl_nf4_zx__d16131e7092" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d85039e2566 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event

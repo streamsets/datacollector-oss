@@ -35,13 +35,15 @@
         Windows machine. The origin generates a record for each event in the log. </p>
 
         <p class="p">Use the Windows Event Log origin only in
-            pipelines configured for edge execution mode. Run the pipeline on a Data Collector Edge
-            (SDCe) installed on the Windows machine.</p>
+            pipelines configured for edge execution mode. Run the pipeline on <span class="ph">StreamSets</span>
+            <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDC Edge</span>) installed on the Windows machine.</p>
 
         <p class="p">For example, you might use the Windows Event Log origin in an edge pipeline to read logs
-            from a web or application farm of Windows servers. You install SDCe on each Windows
-            machine that you want to read the logs from, and run the edge pipeline on each SDCe
-            installation. You design the edge pipeline to pass the log data to a Data Collector
+            from a web or application farm of Windows servers. You install <span class="ph">SDC Edge</span> on
+            each Windows machine that you want to read the logs from, and run the edge pipeline on
+            each <span class="ph">SDC Edge</span> installation. You design the edge pipeline to pass the log data to a <span class="ph">Data
+                  Collector</span>
             receiving pipeline that runs on <span class="ph">StreamSets</span>
             <span class="ph">Data
                   Collector</span>.
@@ -59,7 +61,9 @@
             the pipeline starts again, the origin continues processing from where it stopped by
             default. You can reset the origin to process all requested files.</p>
 
-        
+        <p class="p">For more information about installing <span class="ph">SDC Edge</span>,
+            designing edge pipelines, and running and maintaining edge pipelines, see <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="An edge pipeline is a pipeline that runs on an edge device with limited resources. Use edge pipelines to read data from the edge device or to receive data from another pipeline and then act on that data to control the edge device.Let's say that you have a factory with a network of machine tools. Sensors are installed on each machine that measure the temperature, relative humidity, and pressure of the machine. You need to continuously monitor this sensor data, and shut down any machine that exceeds the allowed limits. Install Data Collector Edge (SDC Edge) on each edge device where you want to run edge pipelines.An edge sending pipeline uses an origin specific to the edge device to read local data residing on the device. The pipeline can perform minimal processing on the data before sending the data to a Data Collector receiving pipeline. An edge receiving pipeline listens for data sent by another pipeline running on Data Collector or on SDC Edge and then acts on that data to control the edge device. Edge pipelines run on SDC Edge which is a lightweight agent without a UI. As a result, some features available for standalone pipelines are not available for edge pipelines at this time. We will provide support for some of these features in edge pipelines in a future release.Data Collector receiving pipelines run in the standalone execution mode. You design and run receiving pipelines in Data Collector.Data Collector Edge (SDC Edge) includes several sample pipelines that make it easy to get started. You simply create the appropriate Data Collector receiving pipeline, download and install SDC Edge on the edge device, and then run the sample edge pipeline.Edge sending pipelines work in tandem with Data Collector pipelines. So after choosing the sample edge pipeline that you want to use, create and start the corresponding Data Collector receiving pipeline. The Data Collector receiving pipeline must start before the edge sending pipeline.Download and install SDC Edge on each edge device where you want to run edge pipelines. All sample edge pipelines are included in each SDC Edge installation.Run a single command to start SDC Edge and a sample edge pipeline at the same time. You can then run additional commands to start additional pipelines and to manage running pipelines after SDC Edge is running. Download and install SDC Edge on each edge device where you want to run edge pipelines. Use Data Collector to download the SDC Edge executable along with your designed edge pipelines. The downloaded tarball includes the SDC Edge executable, the sample edge pipelines, and your selected edge pipelines. You can download the SDC Edge executable from the StreamSets website. The downloaded tarball includes the SDC Edge executable and the sample edge pipelines.You can run an SDC Edge container from the StreamSets Data Collector Edge Docker image. The image includes the SDC Edge executable and the sample edge pipelines.Administering Data Collector Edge (SDC Edge) involves configuring, starting, and shutting down the agent.You can customize SDC Edge by editing the SDC Edge configuration file, &lt;SDCEdge_home&gt;/etc/edge.conf.When you first get started with SDC Edge, the easiest way to deploy pipelines to SDC Edge is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDC Edge is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDC Edge installed on the edge device.">Edge Pipelines</a>.</p>
+
     </div>
 
 <div class="related-links"></div>
@@ -78,14 +82,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__d41778e361" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__d41872e361" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d395814e107">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d395384e268">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d395814e110">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d395384e271">Description</th>
 
                                 </tr>
 
@@ -93,24 +97,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395814e107 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395384e268 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395814e110 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395814e107 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395814e110 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395384e271 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395814e107 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_lmc_yjv_sbb__d41778e407" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395384e268 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395814e110 ">Error record handling for the stage: <ul class="ul" id="task_lmc_yjv_sbb__d41778e411">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395384e271 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d395384e268 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_lmc_yjv_sbb__d41872e407" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d395384e271 ">Error record handling for the stage: <ul class="ul" id="task_lmc_yjv_sbb__d41872e411">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -140,9 +144,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d395814e186">Windows Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d395384e347">Windows Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d395814e189">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d395384e350">Description</th>
 
                                 </tr>
 
@@ -150,9 +154,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d395814e186 ">Log Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d395384e347 ">Log Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d395814e189 ">Name of the Windows log to read from:<ul class="ul" id="task_lmc_yjv_sbb__ul_awt_xwv_sbb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d395384e350 ">Name of the Windows log to read from:<ul class="ul" id="task_lmc_yjv_sbb__ul_awt_xwv_sbb">
                                             <li class="li">Application</li>
 
                                             <li class="li">System</li>
@@ -165,9 +169,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d395814e186 ">Read Mode</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d395384e347 ">Read Mode</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d395814e189 ">Determines how the origin reads the log:<ul class="ul" id="task_lmc_yjv_sbb__ul_vnv_1xv_sbb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d395384e350 ">Determines how the origin reads the log:<ul class="ul" id="task_lmc_yjv_sbb__ul_vnv_1xv_sbb">
                                             <li class="li">All - Read all events in the log.</li>
 
                                             <li class="li">New - Read only new events in the log that occur
