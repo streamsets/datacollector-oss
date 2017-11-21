@@ -171,6 +171,28 @@ public class LogDataParserFactory extends DataParserFactory {
             getMaxStackTraceLines(), createGrok(Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat),
             ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME)),
             "Log4j Log Format", currentLineBuilderPool, previousLineBuilderPool);
+        case CEF:
+          return new CEFParser(
+              context,
+              id,
+              reader,
+              offset,
+              maxObjectLen,
+              retainOriginalText,
+              currentLineBuilderPool,
+              previousLineBuilderPool
+          );
+        case LEEF:
+          return new LEEFParser(
+              context,
+              id,
+              reader,
+              offset,
+              maxObjectLen,
+              retainOriginalText,
+              currentLineBuilderPool,
+              previousLineBuilderPool
+          );
         default:
           return null;
       }
