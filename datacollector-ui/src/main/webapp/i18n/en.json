@@ -12,8 +12,8 @@
       },
       "admin": {
         "configuration": "Configuration",
-        "enableDPM": "Enable DPM",
-        "disableDPM": "Disable DPM",
+        "enableDPM": "Enable SCH",
+        "disableDPM": "Disable SCH",
         "jvmMetrics": "SDC Metrics",
         "logs": "Logs",
         "main": "Administration",
@@ -23,7 +23,7 @@
         "usersAndGroups": "Users & Groups"
       },
       "clusterManager": "Cluster Manager",
-      "dpm": "Dataflow Performance Manager",
+      "dpm": "StreamSets Control Hub",
       "help": {
         "about": "About",
         "askStreamSets": "Ask StreamSets",
@@ -40,8 +40,8 @@
         "supportBundle": "Support Bundle"
       },
       "home": "Home",
-      "dpmEnabled": "Dataflow Performance Manager Enabled - ",
-      "dpmDisconnectedMode": "Disconnected Mode. Dataflow Performance Manager Enabled - ",
+      "dpmEnabled": "StreamSets Control Hub Enabled - ",
+      "dpmDisconnectedMode": "Disconnected Mode. StreamSets Control Hub Enabled - ",
       "packageManager": "Package Manager",
       "toggleNavigation": "Toggle navigation"
     },
@@ -88,7 +88,7 @@
       "execute": "Execute",
       "executor": "Executor",
       "export": "Export",
-      "exportWithLibraryDefinitions": "Export for DPM",
+      "exportWithLibraryDefinitions": "Export for SCH",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "fieldHeader": "Field Header",
@@ -225,22 +225,22 @@
   "home": {
     "ago": "ago",
     "createDPMUsers": {
-      "title": "Create DPM Groups & Users"
+      "title": "Create SCH Groups & Users"
     },
     "enableDPM": {
-      "alreadyEnabledMsg": "DPM is already enabled",
+      "alreadyEnabledMsg": "SCH is already enabled",
       "contactMessage": "Contact <a href=\"mailto:enteprise@streamsets.com\" target=\"_top\">enteprise@streamsets.com</a> for a StreamSets Enterprise account",
-      "dpmBaseURL": "DPM Base URL",
-      "dpmBaseURLPlaceholder": "Enter DPM Base URL",
-      "dpmUserName": "DPM User ID",
-      "dpmUserNamePlaceholder": "Enter DPM User ID",
-      "dpmUserPassword": "DPM User Password",
-      "dpmUserPasswordPlaceholder": "Enter DPM User Password",
-      "headerLabel": "Enable DPM",
+      "dpmBaseURL": "SCH Base URL",
+      "dpmBaseURLPlaceholder": "Enter SCH Base URL",
+      "dpmUserName": "SCH User ID",
+      "dpmUserNamePlaceholder": "Enter SCH User ID",
+      "dpmUserPassword": "SCH User Password",
+      "dpmUserPasswordPlaceholder": "Enter SCH User Password",
+      "headerLabel": "Enable SCH",
       "installStatistics": "Install Statistics Library",
-      "installStatsLibraryMessage": "Important: DPM requires that the statistics stage library be installed on each registered Data Collector. DPM requires the library to run system pipelines on the Data Collector.",
-      "isEnableInProgress": "Enabling DPM...",
-      "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the Cloudera Manager to enable Data Collector to work with DPM. <a href=\"https://streamsets.com/documentation/datacollector/latest/help//index.html#DPM/RegisterSDCwithDPM.html\" target=\"_blank\">Learn More...</a>",
+      "installStatsLibraryMessage": "Important: SCH requires that the statistics stage library be installed on each registered Data Collector. SCH requires the library to run system pipelines on the Data Collector.",
+      "isEnableInProgress": "Enabling SCH...",
+      "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the Cloudera Manager to enable Data Collector to work with SCH. <a href=\"https://streamsets.com/documentation/datacollector/latest/help//index.html#SCH/RegisterSDCwithDPM.html\" target=\"_blank\">Learn More...</a>",
       "restartMessage": "Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: service sdc restart",
       "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'."
     },
@@ -259,11 +259,11 @@
       "retryingInSeconds": "Retrying in {{retryCountDown}} seconds..."
     },
     "disableDPM": {
-      "headerLabel": "Disable DPM",
-      "isDisableInProgress": "Disabling DPM...",
-      "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the DPM console to disable DPM.",
-      "confirmationMessage": "Are you sure you want to disable DPM?",
-      "successMessage": "Successfully disabled DPM by updating file'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+      "headerLabel": "Disable SCH",
+      "isDisableInProgress": "Disabling SCH...",
+      "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the SCH console to disable SCH.",
+      "confirmationMessage": "Are you sure you want to disable SCH?",
+      "successMessage": "Successfully disabled SCH by updating file'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
     },
     "downloadRemotePipeline": "Download Published Pipeline",
     "downloadRemote": {
@@ -276,8 +276,8 @@
       "version": "Version"
     },
     "dpmInfo": {
-      "enableDPM": "Enable DPM",
-      "headerLabel": "Dataflow Performance Manager",
+      "enableDPM": "Enable SCH",
+      "headerLabel": "StreamSets Control Hub",
       "learnMore": "Learn More"
     },
     "remotePipeline": "Published Pipeline",
@@ -331,7 +331,7 @@
       "processors": "Processors",
       "refreshPreview": "Refresh Preview",
       "refreshSnapshot": "Refresh Snapshot",
-      "remoteOptions": "DPM Options",
+      "remoteOptions": "SCH Options",
       "retryPipeline": "Retrying to start Pipeline in ",
       "revertChanges": "Revert Changes",
       "selectorProcessors": "Selectors",
@@ -634,7 +634,7 @@
       "sourcePlaceholder":"Select Origin...",
       "system:allPipelines" : "All Pipelines",
       "system:publishedPipelines": "Published Pipelines",
-      "system:dpmControlledPipelines": "DPM Controlled Pipelines",
+      "system:dpmControlledPipelines": "SCH Controlled Pipelines",
       "system:localPipelines": "Local Pipelines",
       "system:runningPipelines": "Running Pipelines",
       "system:nonRunningPipelines": "Non Running Pipelines",
@@ -657,7 +657,7 @@
     "publish": {
       "headerLabel" : "Publish Pipeline",
       "listHeaderLabel": "Publish Pipelines",
-      "pipelineRepository": "DPM Pipeline Repository"
+      "pipelineRepository": "SCH Pipeline Repository"
     },
     "resetOffset": {
       "title": "Reset Origin",

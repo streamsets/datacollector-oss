@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.disableDPM.headerLabel">Enable DPM</h3>
+    <h3 class="modal-title" translate="home.disableDPM.headerLabel">Enable SCH</h3>
   </div>
   <div class="modal-body">
 
@@ -32,7 +32,7 @@
             translate="global.form.yes">Yes</button>
 
     <button type="submit" class="btn btn-primary" ng-if="isDisableInProgress && !dpmDisabled" disabled
-            translate="home.disableDPM.isDisableInProgress">Disabling DPM...</button>
+            translate="home.disableDPM.isDisableInProgress">Disabling SCH...</button>
 
     <button ng-if="!isDisableInProgress && dpmDisabled && !isRestartInProgress"
             ng-click="restart()"

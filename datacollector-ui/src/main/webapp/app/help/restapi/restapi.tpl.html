@@ -34,9 +34,9 @@
     </div>
 
     <div class="alert alert-info" ng-if="!fetching">
-      Sample script for calling SDC REST API when DPM is enabled:
+      Sample script for calling SDC REST API when SCH is enabled:
       <pre>
-# login to DPM security app
+# login to SCH security app
 curl -X POST -d '{"userName":"DPMUserID", "password": "DPMUserPassword"}' https://cloud.streamsets.com/security/public-rest/v1/authentication/login --header "Content-Type:application/json" --header "X-Requested-By:SDC" -c cookie.txt
 
 # generate auth token from security app

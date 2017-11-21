@@ -94,7 +94,7 @@
              class="dpm-icon"
              ng-class="{'disconnected-mode': common.disconnectedMode}">
             <i class="fa fa-cloud fa-lg"></i>
-            <span>DPM</span>
+            <span>SCH</span>
           </a>
         </li>
 
@@ -106,7 +106,7 @@
              tooltip-popup-delay="500"
              class="dpm-icon">
             <i class="fa fa-cloud fa-lg"></i>
-            <span>DPM</span>
+            <span>SCH</span>
           </a>
         </li>
 
@@ -138,7 +138,7 @@
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
             <i class="fa fa-cloud fa-lg dpm-color"></i>
-            <span>DPM</span>
+            <span>SCH</span>
           </a>
         </li>
 
@@ -237,14 +237,14 @@
             <li ng-if="isAuthorized([userRoles.admin]) && !common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onEnableDPMClick()">
                 <i class="fa fa-file-text"></i>
-                <span translate="global.menu.admin.enableDPM">Enable DPM</span>
+                <span translate="global.menu.admin.enableDPM">Enable SCH</span>
               </a>
             </li>
 
             <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onDisableDPMClick()">
                 <i class="fa fa-file-text"></i>
-                <span translate="global.menu.admin.disableDPM">Disable DPM</span>
+                <span translate="global.menu.admin.disableDPM">Disable SCH</span>
               </a>
             </li>
 

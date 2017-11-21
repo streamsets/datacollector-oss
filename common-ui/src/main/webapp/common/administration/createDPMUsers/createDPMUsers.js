@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Controller for Creating DPM Users Modal Dialog.
+ * Controller for Creating SCH Users Modal Dialog.
  */
 
 angular

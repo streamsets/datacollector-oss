@@ -87,7 +87,7 @@ angular
                   }
                 );
             } else {
-              $scope.common.errors = ['No pipeline found in DPM Pipeline Repository with pipeline ID: ' +
+              $scope.common.errors = ['No pipeline found in SCH Pipeline Repository with pipeline ID: ' +
               $scope.dpmPipelineId];
               $scope.operationInProgress = false;
             }

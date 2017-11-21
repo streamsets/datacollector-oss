@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Controller for DPM Info Modal Dialog.
+ * Controller for SCH Info Modal Dialog.
  */
 
 angular
