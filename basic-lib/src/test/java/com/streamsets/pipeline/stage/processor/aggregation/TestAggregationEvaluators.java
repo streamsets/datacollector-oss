@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -138,13 +139,8 @@ public class TestAggregationEvaluators {
         new ProcessorRunner.Builder(AggregationDProcessor.class, processor).addOutputLane("a").build();
     Processor.Context context = (Processor.Context) runner.getContext();
     processor.config.init(context);
+    processor.config.aggregatorConfigs = getAggregationConfigs();
 
-    AggregatorConfig agggregatorConfig = new AggregatorConfig();
-    agggregatorConfig.enabled = true;
-    agggregatorConfig.aggregationTitle = "title";
-    agggregatorConfig.aggregationFunction = AggregationFunction.COUNT;
-    agggregatorConfig.aggregationExpression = "1";
-    processor.config.aggregatorConfigs = ImmutableList.of(agggregatorConfig);
     BlockingQueue<EventRecord> queue = new ArrayBlockingQueue<>(10);
     AggregationEvaluators evaluators = new AggregationEvaluators(context, processor.config, queue);
     evaluators.init();
@@ -154,21 +150,26 @@ public class TestAggregationEvaluators {
     Record record = RecordCreator.create();
     evaluators.evaluate(record);
 
-    Assert.assertEquals(1L, ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next());
+    Assert.assertEquals(
+        1L,
+        ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next()
+    );
 
     evaluators.closeWindow();
 
-    Assert.assertEquals(0L, ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next());
+    Assert.assertEquals(
+        0L,
+        ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next()
+    );
 
     Assert.assertEquals(1, queue.size());
 
     EventRecord event = queue.take();
 
-    Assert.assertEquals(WindowType.ROLLING + AggregationEvaluators.ALL_AGGREGATORS_EVENT, event.getHeader().getAttribute(
-
-
-        EventRecord.TYPE));
-
+    Assert.assertEquals(
+        WindowType.ROLLING + AggregationEvaluators.ALL_AGGREGATORS_EVENT,
+        event.getHeader().getAttribute(EventRecord.TYPE)
+    );
     evaluators.destroy();
   }
 
@@ -189,12 +190,8 @@ public class TestAggregationEvaluators {
     Processor.Context context = (Processor.Context) runner.getContext();
     processor.config.init(context);
 
-    AggregatorConfig agggregatorConfig = new AggregatorConfig();
-    agggregatorConfig.enabled = true;
-    agggregatorConfig.aggregationTitle = "title";
-    agggregatorConfig.aggregationFunction = AggregationFunction.COUNT;
-    agggregatorConfig.aggregationExpression = "1";
-    processor.config.aggregatorConfigs = ImmutableList.of(agggregatorConfig);
+    processor.config.aggregatorConfigs = getAggregationConfigs();
+
     BlockingQueue<EventRecord> queue = new ArrayBlockingQueue<>(10);
     AggregationEvaluators evaluators = new AggregationEvaluators(context, processor.config, queue);
     evaluators.init();
@@ -204,20 +201,49 @@ public class TestAggregationEvaluators {
     Record record = RecordCreator.create();
     evaluators.evaluate(record);
 
-    Assert.assertEquals(1L, ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next());
+    Assert.assertEquals(
+        1L,
+        ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next()
+    );
 
     evaluators.closeWindow();
 
-    Assert.assertEquals(0L, ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next());
+    Assert.assertEquals(
+        0L,
+        ((Map)((Map)evaluator.getMetric().getGaugeData().get(0)).get("value")).values().iterator().next()
+    );
 
-    Assert.assertEquals(1, queue.size());
+    // Make sure that 2 records are produced, 1 per each aggregation config
+    Assert.assertEquals(2, queue.size());
 
     EventRecord event = queue.take();
+    Assert.assertEquals(
+        WindowType.ROLLING + AggregationEvaluators.SINGLE_AGGREGATOR_EVENT,
+        event.getHeader().getAttribute(EventRecord.TYPE)
+    );
 
-    Assert.assertEquals(WindowType.ROLLING + AggregationEvaluators.SINGLE_AGGREGATOR_EVENT, event.getHeader().getAttribute(
-        EventRecord.TYPE));
-
+    event = queue.take();
+    Assert.assertEquals(
+        WindowType.ROLLING + AggregationEvaluators.SINGLE_AGGREGATOR_EVENT,
+        event.getHeader().getAttribute(EventRecord.TYPE)
+    );
     evaluators.destroy();
   }
 
+  public List<AggregatorConfig> getAggregationConfigs() {
+    AggregatorConfig aggregatorConfig1 = new AggregatorConfig();
+    aggregatorConfig1.aggregationName = "agg1";
+    aggregatorConfig1.enabled = true;
+    aggregatorConfig1.aggregationTitle = "title1";
+    aggregatorConfig1.aggregationFunction = AggregationFunction.COUNT;
+    aggregatorConfig1.aggregationExpression = "1";
+
+    AggregatorConfig aggregatorConfig2 = new AggregatorConfig();
+    aggregatorConfig2.aggregationName = "agg2";
+    aggregatorConfig2.enabled = true;
+    aggregatorConfig2.aggregationTitle = "title2";
+    aggregatorConfig2.aggregationFunction = AggregationFunction.COUNT;
+    aggregatorConfig2.aggregationExpression = "1";
+    return ImmutableList.of(aggregatorConfig1, aggregatorConfig2);
+  }
 }
