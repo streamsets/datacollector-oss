@@ -265,8 +265,9 @@
                                 the log: Microsoft SQL Server, Oracle CDC Client, MySQL Binary Log,
                                 or MongoDB Oplog. </li>
                             <li>MapR DB JSON destination enhancement - The destination now supports
-                                writing to MapR DB based on the CRUD operation in record header
-                                attributes.</li>
+                                writing to MapR DB based on the <xref
+                                    href="../Destinations/MapRDBJSON-CRUDOperation.dita#concept_ab4_gbb_xbb"
+                                    >CRUD operation in record header attributes</xref>.</li>
                             <li>MongoDB destination enhancements - With this release, the Upsert
                                 operation is no longer supported by the destination. Instead, the
                                 destination includes the following enhancements:<ul
@@ -284,7 +285,9 @@
                                         >Update MongoDB Destination Upsert Pipelines</xref>.
                                 </p></li>
                             <li>Redis destination enhancement - The destination now supports writing
-                                data using CRUD operations stored in record header attributes. </li>
+                                data using <xref
+                                    href="../Destinations/Redis-CRUDOperation.dita#concept_dz2_4xh_xbb"
+                                    >CRUD operations stored in record header attributes</xref>. </li>
                             <li>Salesforce destination enhancement - When using the Salesforce Bulk
                                 API to update, insert, or upsert data, you can now use a colon (:)
                                 or period (.) as a field separator when defining the Salesforce

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ab4_gbb_xbb">
+ <title>Define the CRUD Operation</title>
+    <conbody>
+        <p><indexterm>MapR DB JSON destination<indexterm>CRUD operation</indexterm></indexterm>You
+            can use CRUD operations to write to MapR DB JSON. To use CRUD operations, define the
+            CRUD operation record header attribute for each record earlier in the pipeline. Records
+            without the attribute defined are treated as Insert. </p>
+        <p>To use CRUD operations to write records, set the following CRUD operation record header attribute:<dl>
+                <dlentry>
+                    <dt>sdc.operation.type</dt>
+                    <dd>When defined, the MapR DB JSON destination uses the CRUD operation in the
+                        sdc.operation.type record header attribute when writing to MapR DB JSON
+                        tables. The destination supports the following values for the
+                        sdc.operation.type attribute: <ul id="ul_hg2_44y_ty">
+                            <li>1 for INSERT</li>
+                            <li>2 for DELETE</li>
+                            <li>3 for UPDATE</li>
+                        </ul></dd>
+                    <dd
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"
+                    />
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>

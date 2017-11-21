@@ -19,24 +19,25 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_i4h_2kj_dy">
  <title>MapR DB JSON</title>
- <shortdesc>The MapR DB JSON destination writes data as JSON documents to MapR DB JSON tables. The
-        destination converts each record into a JSON document and writes the document to the JSON
-        table that you specify.</shortdesc>
  <conbody>
   <p><indexterm>MapR DB JSON
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MapR
-                    DB JSON</indexterm></indexterm>MapR DB JSON tables are tables in which every row
-            is a JSON document. The JSON documents in a table do not need to have the same
-            structure. For example, a single JSON table can include any number of JSON documents
-            that share only some common fields.</p>
-        <note>To write text, binary data, or JSON strings to MapR DB binary tables, use the MapR DB
-            destination. For more information, see <xref href="MapRDB.dita#concept_vxg_w2z_yv"
-            />.</note>
+                    DB JSON</indexterm></indexterm>The MapR DB JSON destination writes data as JSON
+            documents to MapR DB JSON tables. The destination converts each record into a JSON
+            document and writes the document to the JSON table that you specify. To write text,
+            binary data, or JSON strings to MapR DB binary tables, use the <xref
+                href="MapRDB.dita#concept_vxg_w2z_yv">MapR DB destination</xref>. </p>
+        <p>MapR DB JSON tables are tables in which every row is a JSON document. The JSON documents
+            in a table do not need to have the same structure. For example, a single JSON table can
+            include any number of JSON documents that share only some common fields.</p>
+        <p>The MapR DB JSON destination can use CRUD operations defined in the sdc.operation.type
+            record header attribute to write data. When CRUD operations are not specified in a
+            record, the destination treats it like an Insert record. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
         <p>When you configure the MapR DB JSON destination, you specify the table name and whether
             the destination should create the table if it doesn't exist. You specify the row key for
-            the table. </p>
-        <p>You can also configure the destination to replace an existing JSON document if the
-            document already exists in the table.</p>
+            the table. And you configure the Insert API and Set API properties, which can affect how
+            the destination writes data to MapR DB JSON tables.</p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
  </conbody>
 </concept>

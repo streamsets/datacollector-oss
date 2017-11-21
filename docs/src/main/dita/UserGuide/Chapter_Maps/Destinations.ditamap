@@ -344,6 +344,10 @@
    <topicref href="../Destinations/MapRDBJSON-RowKey.dita">
     <topicref href="../Destinations/MapRDBJSON-RowKeyDataType.dita"/>
    </topicref>
+   <topicref href="../Destinations/MapRDBJSON-Writing.dita">
+    <topicref href="../Destinations/MapRDBJSON-CRUDOperation.dita"/>
+    <topicref href="../Destinations/MapRDBJSON-APIProperties.dita"/>
+   </topicref>
    <topicref href="../Destinations/MapRDBJSON-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/MapRFS.dita" chunk="to-content">
@@ -408,6 +412,7 @@
     <topicref href="../Destinations/Redis-BatchModeDataTypes.dita"/>
     <topicref href="../Destinations/Redis-DataFormat.dita"/>
    </topicref>
+   <topicref href="../Destinations/Redis-CRUDOperation.dita"/>
    <topicref href="../Destinations/Redis-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Salesforce.dita" chunk="to-content">
