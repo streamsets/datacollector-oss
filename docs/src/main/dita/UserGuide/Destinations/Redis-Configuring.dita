@@ -60,7 +60,12 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p9v_uq"/></xref></entry>
                                     <entry>Mode used to write to Redis:<ul id="ul_fmn_d5h_jw">
-                                            <li>Batch - Writes data to Redis key-value pairs.</li>
+                                            <li>Batch - Writes data to Redis key-value pairs. <p>In
+                                                  batch mode, you can use the <xref
+                                                  href="Redis-CRUDOperation.dita#concept_dz2_4xh_xbb"
+                                                  >CRUD operation header attribute</xref> to
+                                                  determine how the destination writes data to
+                                                  Redis.</p></li>
                                             <li>Publish - Publishes data as messages to a Redis
                                                 channel. </li>
                                         </ul><p>Default is Batch.</p></entry>

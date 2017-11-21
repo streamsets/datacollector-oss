@@ -23,7 +23,11 @@
  <conbody>
   <p><indexterm>destinations<indexterm>Redis</indexterm></indexterm><indexterm>Redis
                     destination<indexterm>overview</indexterm></indexterm>When you configure the
-            destination, you specify the mode that the destination uses to write data. You also
+            destination, you specify the mode that the destination uses to process records. You also
             specify properties to connect to Redis, including the URI of the Redis server. </p>
+        <p>In batch mode, the Redis destination can use CRUD operations defined in the
+            sdc.operation.type record header attribute to process data. When CRUD operations are not
+            specified in a record, the destination treats it like an Upsert record. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
  </conbody>
 </concept>

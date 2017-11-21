@@ -114,6 +114,22 @@
                                     />.</p></entry>
                         </row>
                         <row>
+                            <entry>MapR DB JSON</entry>
+                            <entry>
+                                <ul id="ul_wwt_l1b_xbb">
+                                    <li>INSERT</li>
+                                    <li>UPDATE</li>
+                                    <li>DELETE</li>
+                                </ul>
+                            </entry>
+                            <entry>Determines the operation to use based on:<ul id="ul_etm_dbb_xbb">
+                                    <li>sdc.operation.type record header attribute</li>
+                                    <li>Insert API and Set API properties in the stage</li>
+                                </ul><p>For more information, see <xref
+                                        href="../Destinations/MapRDBJSON-Writing.dita#concept_hy5_3nb_xbb"
+                                    />.</p></entry>
+                        </row>
+                        <row>
                             <entry>MongoDB destination</entry>
                             <entry>
                                 <ul id="ul_qkk_jcd_ty">
@@ -128,6 +144,22 @@
                                     <li>Upsert property in the stage</li>
                                 </ul><p>For more information, see <xref
                                         href="../Destinations/MongoDB-CRUDOperation.dita#concept_bkc_m24_4v"
+                                    />.</p></entry>
+                        </row>
+                        <row>
+                            <entry>Redis destination</entry>
+                            <entry>
+                                <ul id="ul_gkd_51d_ybb">
+                                    <li>INSERT</li>
+                                    <li>UPDATE</li>
+                                    <li>REPLACE</li>
+                                    <li>DELETE</li>
+                                </ul>
+                            </entry>
+                            <entry>Determines the operation to use based on: <ul id="ul_bbz_51d_ybb">
+                                    <li>sdc.operation.type record header attribute</li>
+                                </ul><p>For more information, see <xref
+                                        href="../Destinations/Redis-CRUDOperation.dita#concept_dz2_4xh_xbb"
                                     />.</p></entry>
                         </row>
                         <row>

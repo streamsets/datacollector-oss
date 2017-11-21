@@ -90,20 +90,37 @@
                                             Array.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Insert API</entry>
-                                    <entry>Determines the MapR insert API used to write the
-                                            document:<ul id="ul_ng1_2gq_4y">
-                                            <li>Use MapR InsertOrReplace API - Inserts the JSON
-                                                document into the table if it has a unique _id
-                                                value. If the _id of the document matches the _id of
-                                                a document already in the table, the destination
-                                                replaces the document that is in the table.</li>
-                                            <li>Use MapR Insert API - Inserts the JSON document into
-                                                the table if it has a unique _id value. If the _id
-                                                of the document matches the _id of a document
-                                                already in the table, the destination sends the
-                                                record to the stage for error handling.</li>
-                                        </ul></entry>
+                                    <entry>Insert API <xref href="MapRDBJSON-APIProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_c54_mch_xbb"
+                                        /></xref></entry>
+                                    <entry>Determines how the destination inserts data to the MapR
+                                        DB JSON table:<ul id="ul_ng1_2gq_4y">
+                                            <li>Use MapR InsertOrReplace API - Inserts the record
+                                                into the table if it has a unique row key. If the
+                                                destination finds a matching row key in the table,
+                                                it replaces the row.</li>
+                                            <li>Use MapR Insert API - Inserts the record into the
+                                                table if it has a unique row key. If the destination
+                                                finds a matching row key in the table, it sends the
+                                                record to error.</li>
+                                        </ul><p>Default is Use MapR InsertOrReplace API.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Set API <xref href="MapRDBJSON-APIProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_oc1_nch_xbb"
+                                        /></xref></entry>
+                                    <entry>Determines how the destination updates data in the MapR
+                                        DB JSON table:<ul id="ul_fkx_2dh_xbb">
+                                            <li>Use MapR SetOrReplace API - Performs an update for
+                                                all records marked as update, regardless of whether
+                                                the field data types do not match.</li>
+                                            <li>Use MapR Set API - Performs an update only when the
+                                                data types in the record and the corresponding row
+                                                match. When they do not match, the destination sends
+                                                the record to error.</li>
+                                        </ul><p>Default is Use MapR SetOrReplace API.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
