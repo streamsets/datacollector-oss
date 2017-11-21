@@ -31,14 +31,15 @@
         <p>When you configure the Salesforce Lookup processor, you define connection information
             that the processor uses to connect to Salesforce, including the Salesforce API
             version.</p>
-        <p>You configure the query to define the data to look up in Salesforce. If the processor
-            uses the SOAP API or uses the Bulk API version <ph
+        <p>You specify the lookup mode and related properties, and the output fields for return
+            values. You can optionally define a default value to use for fields with missing values.
+            You can also configure the processor to locally cache the lookup values to improve
+            performance. </p>
+        <p>When using the SOQL Query lookup mode, and either the SOAP API or the Bulk API version
+                <ph
                 conref="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ph_SalesforceAPIVersion"
             /> or later, you can configure the processor to retrieve deleted records from the
             Salesforce recycle bin.</p>
-        <p>and specify the output fields to write the lookup values to. You can optionally define a
-            default value to use for fields with missing values. You can also configure the
-            processor to locally cache the lookup values to improve performance. </p>
         <p>The processor generates Salesforce field attributes that provide additional information
             about each field. </p>
         <p>You can optionally use an HTTP proxy to connect to Salesforce.</p>

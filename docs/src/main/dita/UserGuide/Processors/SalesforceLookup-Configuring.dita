@@ -67,30 +67,76 @@
                                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"/>
                                     
                                 </row>
+                         
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Lookup</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qxc_4qd_ybb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Lookup Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Lookup Mode <xref href="SalesforceLookup-Mode.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_apf_y2k_ybb"
+                                        /></xref></entry>
+                                    <entry>Lookup mode to use: <ul id="ul_oyv_rqd_ybb">
+                                            <li>Retrieve - Use to perform a lookup for up to 2000
+                                                records at a time from the specified object, based
+                                                on the specified Id field. Use when possible to
+                                                improve pipeline performance. </li>
+                                            <li>SOQL Query - Use to perform a record-by-record
+                                                lookup based on a specified query. Can retrieve
+                                                deleted records and access data in related
+                                                objects.</li>
+                                        </ul><p>Default is SOQL Query.</p></entry>
+                                </row>
                                 <row>
                                     <entry>SOQL Query</entry>
                                     <entry>SOQL query to use to look up data in Salesforce. Use the
                                         following syntax for the
                                             query:<codeblock>SELECT &lt;field1 name>, &lt;field2 name> FROM &lt;object name> WHERE &lt;field3 name> &lt;operator> &lt;expression></codeblock><p>For
-                                            example, to use the account number field in the record
-                                            to look up the account name field in the Salesforce
-                                            Account object, use the following
-                                            query:<codeblock>SELECT Name FROM Account WHERE AccountNumber = '${record:value('/account_number')}'</codeblock></p><p>If
-                                            you specify <codeph>SELECT * FROM &lt;object></codeph>
-                                            in the SOQL query, the processor expands
-                                                <codeph>*</codeph> to all fields in the Salesforce
-                                            object that are accessible to the configured user. Note
-                                            that the processor adds components of compound fields to
-                                            the query, rather than adding the compound fields
-                                            themselves. For example, the origin adds BillingStreet,
-                                            BillingCity, etc., rather than adding BillingAddress.
-                                            Similarly, it adds Location__Latitude__s and
-                                            Location__Longitude__s rather than
-                                        Location__c.</p></entry>
+                                            more information, see <xref
+                                                href="SalesforceLookup-Mode.dita#concept_ow1_lj3_xbb"
+                                            />.</p><p>For SOQL Query mode only.</p></entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceIncludeDeleted">
-                                    <entry/>
+                                <row>
+                                    <entry>Include Deleted Records</entry>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ph-DeletedRecords1"
+                                                /><p><ph
+                                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ph-DeletedRecords2"
+                                            /></p><p>For SOQL Query mode only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Id Field</entry>
+                                    <entry>Field in the record containing the Salesforce record ID
+                                        to use for the lookup. <p>For Retrieve mode
+                                        only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Salesforce Fields</entry>
+                                    <entry>A comma-separated list of Salesforce fields to return.
+                                            <p>For Retrieve mode only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Object Type</entry>
+                                    <entry>The object type to use for the lookup. The object type
+                                        must be considered retrieveable by Salesforce. <p>For
+                                            Retrieve mode only.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Field Mappings</entry>
@@ -98,7 +144,7 @@
                                         Salesforce fields are written to <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> fields of the same name. <p>Enter the following:<ul
-                                                id="ul_jvy_5mm_xw">
+                                                id="ul_apq_dsd_ybb">
                                                 <li>Salesforce Field - Name of the Salesforce field
                                                   that contains the lookup value. Enter a field name
                                                   or enter an expression that defines the field

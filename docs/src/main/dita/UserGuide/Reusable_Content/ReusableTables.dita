@@ -1849,10 +1849,11 @@
      </row>
      <row id="SalesforceIncludeDeleted">
       <entry>Include Deleted Records</entry>
-      <entry>Determines whether the SOQL query also retrieves deleted records from the Salesforce
-       recycle bin. <p>The query can retrieve deleted records when the stage uses the Salesforce
-        SOAP API or the Bulk API version 39.0 or later. Earlier versions of the Bulk API do not
-        support retrieving deleted records.</p></entry>
+      <entry><ph id="ph-DeletedRecords1">Determines whether the SOQL query also retrieves deleted
+        records from the Salesforce recycle bin.</ph><p><ph id="ph-DeletedRecords2">The query can
+         retrieve deleted records when the stage uses the Salesforce SOAP API or the Bulk API
+         version 39.0 or later. Earlier versions of the Bulk API do not support retrieving deleted
+         records.</ph></p></entry>
      </row>
     </tbody>
    </tgroup>
