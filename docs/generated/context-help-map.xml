@@ -25,9 +25,9 @@
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_411599203"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_1257448973"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_300623502"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_2019246562"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -94,7 +94,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_137766642"/>
+               path="Installation/CMInstall-Overview.html#unique_215063337"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -324,6 +324,8 @@
                path="Upgrade/PostUpgrade.html#concept_zll_vn5_zw"/>
    <appContext helpID="concept_wnl_zk4_5bb"
                path="Upgrade/PostUpgrade.html#concept_wnl_zk4_5bb"/>
+   <appContext helpID="concept_wnp_scs_wbb"
+               path="Upgrade/PostUpgrade.html#concept_wnp_scs_wbb"/>
    <appContext helpID="concept_hky_ljl_wbb"
                path="Upgrade/PostUpgrade.html#concept_hky_ljl_wbb"/>
    <appContext helpID="concept_ys3_bjl_wbb"
@@ -1681,6 +1683,8 @@
                path="Processors/RedisLookup.html#task_gpv_npr_pv"/>
    <appContext helpID="concept_k23_3rk_yx"
                path="Processors/SalesforceLookup.html#concept_k23_3rk_yx"/>
+   <appContext helpID="concept_ow1_lj3_xbb"
+               path="Processors/SalesforceLookup.html#concept_ow1_lj3_xbb"/>
    <appContext helpID="concept_s1h_1mk_fy"
                path="Processors/SalesforceLookup.html#concept_s1h_1mk_fy"/>
    <appContext helpID="concept_nl4_3q2_kz"
@@ -2117,6 +2121,12 @@
                path="Destinations/MapRDBJSON.html#concept_mrg_nx3_4y"/>
    <appContext helpID="concept_etz_vd3_qy"
                path="Destinations/MapRDBJSON.html#concept_etz_vd3_qy"/>
+   <appContext helpID="concept_hy5_3nb_xbb"
+               path="Destinations/MapRDBJSON.html#concept_hy5_3nb_xbb"/>
+   <appContext helpID="concept_ab4_gbb_xbb"
+               path="Destinations/MapRDBJSON.html#concept_ab4_gbb_xbb"/>
+   <appContext helpID="concept_gd5_fwg_xbb"
+               path="Destinations/MapRDBJSON.html#concept_gd5_fwg_xbb"/>
    <appContext helpID="task_wq3_wkj_dy"
                path="Destinations/MapRDBJSON.html#task_wq3_wkj_dy"/>
    <appContext helpID="concept_spv_xlc_fv"
@@ -2191,6 +2201,8 @@
                path="Destinations/Redis.html#concept_ozv_24h_jw"/>
    <appContext helpID="concept_xl3_3ql_3w"
                path="Destinations/Redis.html#concept_xl3_3ql_3w"/>
+   <appContext helpID="concept_dz2_4xh_xbb"
+               path="Destinations/Redis.html#concept_dz2_4xh_xbb"/>
    <appContext helpID="task_mzk_lw2_gw" path="Destinations/Redis.html#task_mzk_lw2_gw"/>
    <appContext helpID="concept_rlb_rt3_rx"
                path="Destinations/Salesforce.html#concept_rlb_rt3_rx"/>
@@ -2921,7 +2933,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_1169749121"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_1026044761"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

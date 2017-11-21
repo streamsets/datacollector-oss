@@ -42,8 +42,8 @@
   <p class="p">You can design edge pipelines in <span class="ph">Data
                   Collector</span> or
                 <span class="ph">Dataflow Performance Manager</span>
-                (<span class="ph">DPM</span>). You run edge pipelines in edge execution mode on <span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDCe</span>). <span class="ph">SDCe</span> is a lightweight agent without a UI that runs pipelines on edge devices. Install <span class="ph">SDCe</span> on
+                (<span class="ph">DPM</span>). You run edge pipelines in edge execution mode on <span class="ph">StreamSets</span><span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDC Edge</span>). <span class="ph">SDC Edge</span> is a lightweight agent without a UI that runs pipelines on edge devices. Install <span class="ph">SDC Edge</span> on
             each edge device where you want to run edge pipelines. </p>
 
         <div class="p">Edge pipelines work in tandem with standalone execution mode pipelines running on <span class="ph">Data
@@ -54,7 +54,7 @@
                 
                     <dt class="dt dlterm">Edge sending pipeline</dt>
 
-                    <dd class="dd">An edge sending pipeline runs on <span class="ph">SDCe</span>. It <span class="ph">uses an origin specific to the edge device to read local
+                    <dd class="dd">An edge sending pipeline runs on <span class="ph">SDC Edge</span>. It <span class="ph">uses an origin specific to the edge device to read local
                     data residing on the device. The pipeline can perform minimal processing on the
                     data before sending the data to a <span class="ph">Data
                   Collector</span> receiving
@@ -76,10 +76,10 @@
                 
                     <dt class="dt dlterm">Edge receiving pipeline</dt>
 
-                    <dd class="dd">An edge receiving pipeline runs on <span class="ph">SDCe</span>. It <span class="ph">listens for data sent by another pipeline running on
+                    <dd class="dd">An edge receiving pipeline runs on <span class="ph">SDC Edge</span>. It <span class="ph">listens for data sent by another pipeline running on
                         <span class="ph">Data
                   Collector</span> or on
-                        <span class="ph">SDCe</span> and
+                        <span class="ph">SDC Edge</span> and
                     then acts on that data to control the edge device. </span></dd>
 
                 
@@ -90,7 +90,7 @@
             that interact together. You can use <span class="ph">DPM</span> to
             map multiple dataflows running across multiple instances of <span class="ph">Data
                   Collector</span>
-            and <span class="ph">SDCe</span> in a single visual topology. For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Dataflow Performance Manager (DPMTM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization.">Meet Dataflow Performance Manager</a>. </div>
+            and <span class="ph">SDC Edge</span> in a single visual topology. For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Dataflow Performance Manager (DPMTM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization.">Meet Dataflow Performance Manager</a>. </div>
 
  </div>
 
@@ -113,7 +113,7 @@
                 
                     <dt class="dt dlterm">Edge sending pipeline</dt>
 
-                    <dd class="dd">The edge sending pipeline runs on the <span class="ph">SDCe</span> installed on each machine tool. It includes a Directory origin that reads
+                    <dd class="dd">The edge sending pipeline runs on the <span class="ph">SDC Edge</span> installed on each machine tool. It includes a Directory origin that reads
                         the sensor measurements written to log files on the machine. The pipeline
                         performs minimal processing - using a Stream Selector to discard out of
                         range readings and an Expression Evaluator to convert the sensor units of
@@ -154,7 +154,7 @@
                 
                     <dt class="dt dlterm">Edge receiving pipeline</dt>
 
-                    <dd class="dd">To allow the automatic shutdown of the edge devices, each <span class="ph">SDCe</span> installed on each machine tool also runs an edge receiving pipeline. The
+                    <dd class="dd">To allow the automatic shutdown of the edge devices, each <span class="ph">SDC Edge</span> installed on each machine tool also runs an edge receiving pipeline. The
                         edge pipeline includes an MQTT Subscriber origin that listens to the sensor
                         ID topic written to by the <span class="ph">Data
                   Collector</span> pipeline. The edge pipeline uses an HTTP Client destination to send the
@@ -178,10 +178,10 @@
  <h2 class="title topictitle2">Supported Platforms</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Install <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>) on
+ <div class="body conbody"><p class="shortdesc">Install <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) on
         each edge device where you want to run edge pipelines.</p>
 
-  <div class="p"><span class="ph">SDCe</span> is
+  <div class="p"><span class="ph">SDC Edge</span> is
             supported on the following operating systems and architectures:<ul class="ul" id="concept_yxr_b5q_4bb__ul_otf_x5q_4bb">
                 <li class="li">Darwin AMD64</li>
 
@@ -214,7 +214,7 @@
 
         <p class="p">After designing the edge pipelines, you export the pipelines, and then use
             the command line to run the pipelines on <span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDCe</span>).</p>
+                (<span class="ph">SDC Edge</span>).</p>
 
         
         
@@ -233,7 +233,7 @@
 
   <p class="p">Optionally, you can
             also design an edge sending pipeline to monitor the data being processed and then send
-            data to an edge receiving pipeline running on the same <span class="ph">SDCe</span>.
+            data to an edge receiving pipeline running on the same <span class="ph">SDC Edge</span>.
             The edge receiving pipeline acts on the data to control the edge device.</p>
 
         <div class="p">Edge sending pipelines support a limited number of stages. The following table lists the
@@ -243,9 +243,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e423">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167909e425">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e426">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167909e428">Supported Stages</th>
 
                         </tr>
 
@@ -253,9 +253,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e425 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e428 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_lrs_4rs_4bb">
                                     <li class="li">Dev Random Record Source</li>
 
@@ -280,9 +280,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e425 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e428 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_mrs_4rs_4bb">
                                     <li class="li">Delay</li>
 
@@ -303,9 +303,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e425 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e428 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_nrs_4rs_4bb">
                                     <li class="li">CoAP Client</li>
 
@@ -324,9 +324,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e423 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e425 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e426 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e428 ">None</td>
 
                         </tr>
 
@@ -363,11 +363,11 @@
     <div class="body conbody"><p class="shortdesc">An edge receiving pipeline <span class="ph">listens for data sent by another pipeline running on
                         <span class="ph">Data
                   Collector</span> or on
-                        <span class="ph">SDCe</span> and
+                        <span class="ph">SDC Edge</span> and
                     then acts on that data to control the edge device. </span></p>
 
         <p class="p">Edge receiving
-            pipelines can listen for data sent by another edge pipeline running on the same <span class="ph">SDCe</span> or
+            pipelines can listen for data sent by another edge pipeline running on the same <span class="ph">SDC Edge</span> or
             by a <span class="ph">Data
                   Collector</span> receiving pipeline.</p>
 
@@ -391,9 +391,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e608">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167909e610">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e611">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167909e613">Supported Stages</th>
 
                         </tr>
 
@@ -401,9 +401,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e610 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e613 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_npd_drs_4bb">
                                     <li class="li">Dev Random Record Source </li>
 
@@ -422,9 +422,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e610 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e613 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_opd_drs_4bb">
                                     <li class="li">Delay</li>
 
@@ -445,9 +445,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e610 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e613 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_ppd_drs_4bb">
                                     <li class="li">CoAP Client</li>
 
@@ -466,9 +466,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e608 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e610 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e611 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e613 ">None</td>
 
                         </tr>
 
@@ -542,7 +542,7 @@
  <h3 class="title topictitle3">Edge Pipeline Limitations</h3>
 
     
- <div class="body conbody"><p class="shortdesc">Edge pipelines run on <span class="ph">SDCe</span> which
+ <div class="body conbody"><p class="shortdesc">Edge pipelines run on <span class="ph">SDC Edge</span> which
         is a lightweight agent without a UI. As a result, some features available for standalone
         pipelines are not available for edge pipelines at this time. We will provide support for
         some of these features in edge pipelines in a future release.</p>
@@ -566,7 +566,7 @@
 </li>
 
                 <li class="li">Edge pipelines can only write statistics to <span class="ph">DPM</span> directly. As a result, <span class="ph">DPM</span> cannot display aggregated statistics for a job run on multiple instances of
-                        <span class="ph">SDCe</span>. When you monitor the job, you can view the statistics for each remote
+                        <span class="ph">SDC Edge</span>. When you monitor the job, you can view the statistics for each remote
                     pipeline instance separately.</li>
 
             </ul>
@@ -597,7 +597,7 @@
         <p class="p">Optionally, you can also design the <span class="ph">Data
                   Collector</span>
             receiving pipeline to monitor the data being processed and then send data to an edge
-            receiving pipeline running on <span class="ph">SDCe</span>.
+            receiving pipeline running on <span class="ph">SDC Edge</span>.
             The edge receiving pipeline acts on the data to control the edge device.</p>
 
         <p class="p">The <span class="ph">Data
@@ -626,9 +626,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e954">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167909e956">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e957">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167909e959">Supported Stages</th>
 
                         </tr>
 
@@ -636,9 +636,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e956 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e959 ">
                                 <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
                                     <li class="li">CoAP Server</li>
 
@@ -655,23 +655,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e956 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Destinations</td>
-
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e959 ">Any</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e954 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e956 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e957 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e959 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e956 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e959 ">Any</td>
 
                         </tr>
 
@@ -689,11 +689,11 @@
 
  
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector Edge</span>
-            (<span class="ph">SDCe</span>)
+            (<span class="ph">SDC Edge</span>)
         includes several sample pipelines that make it easy to get started. You simply create the
         appropriate <span class="ph">Data
                   Collector</span>
-        receiving pipeline, download and install <span class="ph">SDCe</span> on the
+        receiving pipeline, download and install <span class="ph">SDC Edge</span> on the
         edge device, and then run the sample edge pipeline.</p>
 
   <p class="p">For a description of the available sample pipelines, see <a class="xref" href="https://github.com/streamsets/datacollector-edge" target="_blank">https://github.com/streamsets/datacollector-edge</a>. Note the data format that each stage in the sample pipeline
@@ -779,18 +779,18 @@
 
 </div>
 <div class="topic task nested2" id="task_rg3_fyf_pbb">
-    <h3 class="title topictitle3">Step 2. Download and Install SDCe</h3>
+    <h3 class="title topictitle3">Step 2. Download and Install SDC Edge</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">Download and install <span class="ph">SDCe</span> on
+    <div class="body taskbody"><p class="shortdesc">Download and install <span class="ph">SDC Edge</span> on
         each edge device where you want to run edge pipelines. All sample edge pipelines are
-        included in each <span class="ph">SDCe</span>
+        included in each <span class="ph">SDC Edge</span>
         installation.</p>
 
         <div class="section context"></div>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>) tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
@@ -806,16 +806,16 @@
 
 </div>
 <div class="topic task nested2" id="task_vpd_rzf_pbb">
-    <h3 class="title topictitle3">Step 3. Start SDCe and the Edge Pipeline</h3>
+    <h3 class="title topictitle3">Step 3. Start SDC Edge and the Edge Pipeline</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">Run a single command to start <span class="ph">SDCe</span> and a
+    <div class="body taskbody"><p class="shortdesc">Run a single command to start <span class="ph">SDC Edge</span> and a
         sample edge pipeline at the same time. You can then run additional commands to start
-        additional pipelines and to manage running pipelines after <span class="ph">SDCe</span> is
+        additional pipelines and to manage running pipelines after <span class="ph">SDC Edge</span> is
         running. </p>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">On the edge device, run the following command from the <span class="ph">SDCe</span> home directory to start <span class="ph">SDCe</span> and the sample pipeline:</span>
+                <span class="ph cmd">On the edge device, run the following command from the <span class="ph">SDC Edge</span> home directory to start <span class="ph">SDC Edge</span> and the sample pipeline:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">bin/edge -start=&lt;sample_pipeline_name&gt; -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;",
 "&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
@@ -834,9 +834,9 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To optionally run another sample pipeline when <span class="ph">SDCe</span> is already running, use the following command:</span>
+                <span class="ph cmd">To optionally run another sample pipeline when <span class="ph">SDC Edge</span> is already running, use the following command:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;sample_pipeline_name&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+                    <pre class="pre codeblock">curl -X POST http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;sample_pipeline_name&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
 
                 </div>
             </li>
@@ -847,26 +847,25 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_qhp_1th_pbb">
- <h2 class="title topictitle2">Install SDCe</h2>
+ <h2 class="title topictitle2">Install SDC Edge</h2>
 
     
- <div class="body conbody"><p class="shortdesc">Download and install <span class="ph">SDCe</span> on
+ <div class="body conbody"><p class="shortdesc">Download and install <span class="ph">SDC Edge</span> on
         each edge device where you want to run edge pipelines. </p>
 
-  <div class="p">Install
-                <span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDCe</span>) in one of the following ways:<ul class="ul" id="concept_qhp_1th_pbb__ul_s1g_ptk_pbb">
+  <div class="p">Install <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDC Edge</span>) in one of the following ways:<ul class="ul" id="concept_qhp_1th_pbb__ul_s1g_ptk_pbb">
                 <li class="li">Use <span class="ph">Data
-                  Collector</span> to download the <span class="ph">SDCe</span> executable along with your designed edge pipelines. <p class="p">The downloaded tarball
-                        includes the <span class="ph">SDCe</span> executable, the sample edge pipelines, and your selected edge pipelines.
+                  Collector</span> to download the <span class="ph">SDC Edge</span> executable along with your designed edge pipelines. <p class="p">The downloaded tarball
+                        includes the <span class="ph">SDC Edge</span> executable, the sample edge pipelines, and your selected edge pipelines.
                     </p>
 </li>
 
-                <li class="li">Download the <span class="ph">SDCe</span> executable from the StreamSets website.<p class="p">The downloaded tarball includes the
-                            <span class="ph">SDCe</span> executable and the sample edge pipelines.</p>
+                <li class="li">Download the <span class="ph">SDC Edge</span> executable from the StreamSets website.<p class="p">The downloaded tarball includes the
+                            <span class="ph">SDC Edge</span> executable and the sample edge pipelines.</p>
 </li>
 
-                <li class="li">Run an <span class="ph">SDCe</span> container from the Docker image.<p class="p">The image includes the <span class="ph">SDCe</span> executable and the sample edge pipelines.</p>
+                <li class="li">Run an <span class="ph">SDC Edge</span> container from the Docker image.<p class="p">The image includes the <span class="ph">SDC Edge</span> executable and the sample edge pipelines.</p>
 </li>
 
             </ul>
@@ -878,8 +877,8 @@
             your designed edge pipelines to an edge device. If you use another installation method,
             you'll need to export your edge pipelines from <span class="ph">Data
                   Collector</span>
-            and copy them to <span class="ph">SDCe</span>,
-            as described in <a class="xref" href="EdgePipelines_title.html#task_rzb_zgm_pbb" title="When you first get started with SDCe, the easiest way to deploy pipelines to SDCe is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDCe is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDCe installed on the edge device.">Export Pipelines to SDCe</a>.</div>
+            and copy them to <span class="ph">SDC Edge</span>,
+            as described in <a class="xref" href="EdgePipelines_title.html#task_rzb_zgm_pbb" title="When you first get started with SDC Edge, the easiest way to deploy pipelines to SDC Edge is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDC Edge is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDC Edge installed on the edge device.">Export Pipelines to SDC Edge</a>.</div>
 
  </div>
 
@@ -889,22 +888,22 @@
     
     <div class="body taskbody"><p class="shortdesc">Use <span class="ph">Data
                   Collector</span> to
-        download the <span class="ph">SDCe</span>
-        executable along with your designed edge pipelines. The downloaded tarball includes the <span class="ph">SDCe</span>
+        download the <span class="ph">SDC Edge</span>
+        executable along with your designed edge pipelines. The downloaded tarball includes the <span class="ph">SDC Edge</span>
         executable, the sample edge pipelines, and your selected edge pipelines. </p>
 
-        <div class="section context" id="task_p45_s5k_pbb__context_hhz_3lm_sbb"><p class="p">Selecting edge pipelines and downloading them with the <span class="ph">SDCe</span>
+        <div class="section context" id="task_p45_s5k_pbb__context_hhz_3lm_sbb"><p class="p">Selecting edge pipelines and downloading them with the <span class="ph">SDC Edge</span>
             executable is the simplest way to deploy your designed edge pipelines to an edge device.
             If you use another installation method, you'll need to export your edge pipelines from
                 <span class="ph">Data
-                  Collector</span> and copy them to <span class="ph">SDCe</span>.</p>
+                  Collector</span> and copy them to <span class="ph">SDC Edge</span>.</p>
 </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">From the <span class="ph">Data
                   Collector</span>
                     <span class="ph uicontrol">Home</span> page, select the edge pipelines that you want to run
-                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d31442e72" src="../Reusable_Content/Reusable_Topics/../../Graphics/icon_MonMore.png" height="13" width="18" />),
+                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d31536e72" src="../Reusable_Content/Reusable_Topics/../../Graphics/icon_MonMore.png" height="13" width="18" />),
                     and then click <span class="ph uicontrol">Download Edge Executable</span>.</span>
             </li>
 <li class="li step stepexpand">
@@ -915,7 +914,7 @@
                 <span class="ph cmd">Click <span class="ph uicontrol">Download</span>.</span>
                 <div class="itemgroup info"><span class="ph">Data
                   Collector</span> downloads
-                    a tarball to the local machine. The tarball includes the <span class="ph">SDCe</span> executable,
+                    a tarball to the local machine. The tarball includes the <span class="ph">SDC Edge</span> executable,
                     the sample edge pipelines, and the edge pipelines that you selected from the
                         <span class="ph uicontrol">Home</span> page.</div>
             </li>
@@ -941,13 +940,13 @@
     <h3 class="title topictitle3">Downloading from the StreamSets Website</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">You can download the <span class="ph">SDCe</span>
-        executable from the StreamSets website. The downloaded tarball includes the <span class="ph">SDCe</span>
+    <div class="body taskbody"><p class="shortdesc">You can download the <span class="ph">SDC Edge</span>
+        executable from the StreamSets website. The downloaded tarball includes the <span class="ph">SDC Edge</span>
         executable and the sample edge pipelines.</p>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Use the following URL to download the <span class="ph">SDCe</span> tarball from the StreamSets website to the edge device: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
-                <div class="itemgroup info">The downloaded tarball includes the <span class="ph">SDCe</span> executable and the sample edge pipelines.</div>
+                <span class="ph cmd">Use the following URL to download the <span class="ph">SDC Edge</span> tarball from the StreamSets website to the edge device: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                <div class="itemgroup info">The downloaded tarball includes the <span class="ph">SDC Edge</span> executable and the sample edge pipelines.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to extract the tarball to the desired location on the
@@ -966,12 +965,12 @@
  <h3 class="title topictitle3">Running from Docker</h3>
 
  
- <div class="body conbody"><p class="shortdesc">You can run an <span class="ph">SDCe</span>
+ <div class="body conbody"><p class="shortdesc">You can run an <span class="ph">SDC Edge</span>
         container from the StreamSets <span class="ph">Data Collector Edge</span> Docker
-        image. The image includes the <span class="ph">SDCe</span>
+        image. The image includes the <span class="ph">SDC Edge</span>
         executable and the sample edge pipelines.</p>
 
-        <div class="p">To run an <span class="ph">SDCe</span>
+        <div class="p">To run an <span class="ph">SDC Edge</span>
             container from the Docker image, use the following command in the Docker Quickstart
             Terminal:<pre class="pre codeblock">docker run --publish 18633:18633 --name edge --rm streamsets/datacollector-edge</pre>
 </div>
@@ -981,33 +980,32 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_ahx_zvl_pbb">
- <h2 class="title topictitle2">Administer SDCe</h2>
+ <h2 class="title topictitle2">Administer SDC Edge</h2>
 
- <p class="shortdesc">Administering <span class="ph">Data Collector Edge</span> (<span class="ph">SDCe</span>)
+ <p class="shortdesc">Administering <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>)
         involves configuring, starting, and shutting down the agent.</p>
 
 <div class="topic concept nested2" id="concept_hbv_3wl_pbb">
- <h3 class="title topictitle3">Configuring SDCe</h3>
+ <h3 class="title topictitle3">Configuring SDC Edge</h3>
 
  
- <div class="body conbody"><p class="shortdesc">You can customize <span class="ph">SDCe</span> by
-        editing the <span class="ph">SDCe</span>
-        configuration file, <samp class="ph codeph">&lt;SDCe_home&gt;/etc/edge.conf</samp>.</p>
+ <div class="body conbody"><p class="shortdesc">You can customize <span class="ph">SDC Edge</span> by
+        editing the <span class="ph">SDC Edge</span>
+        configuration file, <samp class="ph codeph">&lt;SDCEdge_home&gt;/etc/edge.conf</samp>.</p>
 
-  <p class="p">Use
-            a text editor to edit the configuration file. To enable the changes, shut down and then
-            restart <span class="ph">SDCe</span>.</p>
+  <p class="p">Use a text editor to edit the
+            configuration file. To enable the changes, shut down and then restart <span class="ph">SDC Edge</span>.</p>
 
-        <div class="p">The <span class="ph">SDCe</span>
+        <div class="p">The <span class="ph">SDC Edge</span>
             configuration file includes the following general properties:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_dkt_g1m_pbb" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e1718">General Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167909e1720">General Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e1721">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167909e1723">Description</th>
 
                         </tr>
 
@@ -1015,18 +1013,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1718 ">max-batch-size</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1720 ">max-batch-size</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1721 ">Maximum number of records included in a batch when the pipeline
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1723 ">Maximum number of records included in a batch when the pipeline
                                     runs.<p class="p">Default is 1000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1718 ">bind-address</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1720 ">bind-address</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1721 ">Address that <span class="ph">SDCe</span> binds to - localhost and the defined port number.<p class="p">Default port
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1723 ">Address that <span class="ph">SDC Edge</span> binds to - localhost and the defined port number.<p class="p">Default port
                                     number is 18633.</p>
 </td>
 
@@ -1038,8 +1036,8 @@
 </div>
 </div>
 
-        <p class="p">The <span class="ph">SDCe</span>
-            configuration file includes properties that define how <span class="ph">SDCe</span>
+        <p class="p">The <span class="ph">SDC Edge</span>
+            configuration file includes properties that define how <span class="ph">SDC Edge</span>
             works with <span class="ph">DPM</span>.</p>
 
         <div class="p">The configuration file includes the following <span class="ph">DPM</span>
@@ -1049,9 +1047,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d167775e1785">DPM Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d167909e1787">DPM Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d167775e1788">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d167909e1790">Description</th>
 
                         </tr>
 
@@ -1059,17 +1057,17 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">enabled</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">enabled</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Specifies whether the <span class="ph">SDCe</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">base-url</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">base-url</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Base URL to access <span class="ph">DPM</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Base URL to access <span class="ph">DPM</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">DPM</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -1083,43 +1081,43 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">app-auth-token</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">app-auth-token</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Authentication token for this <span class="ph">SDCe</span> instance when enabled to work with <span class="ph">DPM</span>. </td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Authentication token for this <span class="ph">SDC Edge</span> instance when enabled to work with <span class="ph">DPM</span>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">job-labels</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">job-labels</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Labels to assign to this <span class="ph">SDCe</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
                                 labels. <p class="p">Default is "all", which you can use to run a job on all
-                                    registered instances of <span class="ph">SDCe</span>. </p>
+                                    registered instances of <span class="ph">SDC Edge</span>. </p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">events-recipient</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">events-recipient</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">SDCe</span> sends events. <p class="p">Do not change this value.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">ping-frequency</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">ping-frequency</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Frequency in milliseconds that <span class="ph">SDCe</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 6,000.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 6,000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167775e1785 ">status-events-interval</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d167909e1787 ">status-events-interval</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167775e1788 ">Frequency in milliseconds that <span class="ph">SDCe</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are
-                                running on this <span class="ph">SDCe</span>.<p class="p">Default is 60,000.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d167909e1790 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are
+                                running on this <span class="ph">SDC Edge</span>.<p class="p">Default is 60,000.</p>
 </td>
 
                         </tr>
@@ -1134,41 +1132,40 @@
 
 </div>
 <div class="topic concept nested2" id="concept_zfb_lwl_pbb">
- <h3 class="title topictitle3">Starting SDCe</h3>
+ <h3 class="title topictitle3">Starting SDC Edge</h3>
 
  <div class="body conbody">
-        <div class="p">To
-            start <span class="ph">SDCe</span>,
-            run the following command from the <span class="ph">SDCe</span>
+        <div class="p">To start <span class="ph">SDC Edge</span>,
+            run the following command from the <span class="ph">SDC Edge</span>
             home directory:<pre class="pre codeblock">bin/edge</pre>
 </div>
 
-        <div class="p">To start <span class="ph">SDCe</span>
+        <div class="p">To start <span class="ph">SDC Edge</span>
             with the debug log level enabled for troubleshooting, run the following
             command:<pre class="pre codeblock">bin/edge -debug</pre>
 </div>
 
-        <div class="p">To start <span class="ph">SDCe</span>
+        <div class="p">To start <span class="ph">SDC Edge</span>
             and send the log to the console, run the following
             command:<pre class="pre codeblock">bin/edge -logToConsole</pre>
 </div>
 
-        <div class="p">To start <span class="ph">SDCe</span>
-            and an edge pipeline at the same time, run the following command from the <span class="ph">SDCe</span>
+        <div class="p">To start <span class="ph">SDC Edge</span>
+            and an edge pipeline at the same time, run the following command from the <span class="ph">SDC Edge</span>
             home directory:<pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
 </div>
 
-        <p class="p">To start <span class="ph">SDCe</span>
-            and an edge pipeline that uses parameters, see <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDCe</a>.</p>
+        <p class="p">To start <span class="ph">SDC Edge</span>
+            and an edge pipeline that uses parameters, see <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDC Edge</a>.</p>
 
     </div>
 
 </div>
 <div class="topic concept nested2" id="concept_tyz_mwl_pbb">
-    <h3 class="title topictitle3">Shutting Down SDCe</h3>
+    <h3 class="title topictitle3">Shutting Down SDC Edge</h3>
 
     <div class="body conbody">
-        <p class="p">To shut down <span class="ph">SDCe</span>,
+        <p class="p">To shut down <span class="ph">SDC Edge</span>,
             type <span class="ph uicontrol">Ctrl+C</span> in the command prompt. </p>
 
     </div>
@@ -1176,18 +1173,18 @@
 </div>
 </div>
 <div class="topic task nested1" id="task_rzb_zgm_pbb">
-    <h2 class="title topictitle2">Export Pipelines to SDCe</h2>
+    <h2 class="title topictitle2">Export Pipelines to SDC Edge</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">When you first get started with <span class="ph">SDCe</span>, the
-        easiest way to deploy pipelines to <span class="ph">SDCe</span> is to
+    <div class="body taskbody"><p class="shortdesc">When you first get started with <span class="ph">SDC Edge</span>, the
+        easiest way to deploy pipelines to <span class="ph">SDC Edge</span> is to
         use <span class="ph">Data
                   Collector</span> to
         download the <span class="ph">Data Collector Edge</span>
-        executable along with your designed edge pipelines. After <span class="ph">SDCe</span> is
+        executable along with your designed edge pipelines. After <span class="ph">SDC Edge</span> is
         installed, you'll need to export new and updated edge pipelines from <span class="ph">Data
                   Collector</span> and
-        move them to <span class="ph">SDCe</span>
+        move them to <span class="ph">SDC Edge</span>
         installed on the edge device. </p>
 
         <div class="section context">
@@ -1225,13 +1222,13 @@
                     it to a text file named <samp class="ph codeph">info.json</samp>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the edge device where <span class="ph">SDCe</span> is installed, create a folder named with the pipeline ID in the following
+                <span class="ph cmd">On the edge device where <span class="ph">SDC Edge</span> is installed, create a folder named with the pipeline ID in the following
                     directory:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">&lt;SDCe_home&gt;/data/pipelines</pre>
+                    <pre class="pre codeblock">&lt;SDCEdge_home&gt;/data/pipelines</pre>
 
                     <div class="p">For
-                        example:<pre class="pre codeblock">&lt;SDCe_home&gt;/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</pre>
+                        example:<pre class="pre codeblock">&lt;SDCEdge_home&gt;/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</pre>
 </div>
 
                 </div>
@@ -1239,11 +1236,11 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Copy the <samp class="ph codeph">pipeline.json</samp> and <samp class="ph codeph">info.json</samp> files
                     that you created for the pipeline into this folder.</span>
-                <div class="itemgroup info"><p class="p">Now you can start and manage the pipeline on <span class="ph">SDCe</span> as described in <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDCe</a>.</p>
+                <div class="itemgroup info"><p class="p">Now you can start and manage the pipeline on <span class="ph">SDC Edge</span> as described in <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDC Edge</a>.</p>
 
                     <p class="p">If you modify the same pipeline in <span class="ph">Data
                   Collector</span>, view the pipeline configuration REST response data and then copy the
-                        updated data into the existing <samp class="ph codeph">pipeline.json</samp> in the <span class="ph">SDCe</span> installation. You do not need to update the <samp class="ph codeph">info.json</samp>
+                        updated data into the existing <samp class="ph codeph">pipeline.json</samp> in the <span class="ph">SDC Edge</span> installation. You do not need to update the <samp class="ph codeph">info.json</samp>
                         file after you originally create it in the pipeline folder.</p>
 </div>
             </li>
@@ -1253,12 +1250,12 @@
 
 </div>
 <div class="topic concept nested1" id="concept_rk3_2hm_pbb">
- <h2 class="title topictitle2">Manage Pipelines on SDCe</h2>
+ <h2 class="title topictitle2">Manage Pipelines on SDC Edge</h2>
 
  <div class="body conbody">
         <p class="p">Use the command line
             and REST API to manage edge pipelines on <span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDCe</span>) - including starting, stopping, resetting the offset, and viewing the pipeline
+                (<span class="ph">SDC Edge</span>) - including starting, stopping, resetting the offset, and viewing the pipeline
             status and metrics.</p>
 
   <div class="p">
@@ -1270,15 +1267,15 @@
 
         <div class="section" id="concept_rk3_2hm_pbb__section_w3m_qwm_pbb"><h3 class="title sectiontitle">Starting a Pipeline at Start Up</h3>
             
-            <div class="p">You can start an edge pipeline at the same time that you start <span class="ph">SDCe</span>. <div class="note important"><span class="importanttitle">Important:</span> Be sure to start the receiving pipelines before starting
+            <div class="p">You can start an edge pipeline at the same time that you start <span class="ph">SDC Edge</span>. <div class="note important"><span class="importanttitle">Important:</span> Be sure to start the receiving pipelines before starting
                     the sending pipelines.</div>
 </div>
 
-            <p class="p">On the edge device, run the following command from the <span class="ph">SDCe</span> home directory:</p>
+            <p class="p">On the edge device, run the following command from the <span class="ph">SDC Edge</span> home directory:</p>
 
             <pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
 
-            <div class="p">For example, use the following command to start <span class="ph">SDCe</span> and an edge pipeline with the specified
+            <div class="p">For example, use the following command to start <span class="ph">SDC Edge</span> and an edge pipeline with the specified
                 ID:<pre class="pre codeblock">bin/edge -start=FileTailToHTTP74f418f8-c7d3-4d0c-8788-b6474f7160e0</pre>
 </div>
 
@@ -1296,27 +1293,27 @@
 
         <div class="section" id="concept_rk3_2hm_pbb__section_rxk_swm_pbb"><h3 class="title sectiontitle">Managing Pipelines After Start Up</h3>
             
-            <div class="p">After <span class="ph">SDCe</span> is started, use the following command to start another edge
-                pipeline:<pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start</pre>
+            <div class="p">After <span class="ph">SDC Edge</span> is started, use the following command to start another edge
+                pipeline:<pre class="pre codeblock">curl -X POST http://&lt;SDCEdge_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start</pre>
 </div>
 
-            <div class="p">For example, use the following command to start a pipeline on a running <span class="ph">SDCe</span>:<pre class="pre codeblock">curl -X POST http://localhost:18633/rest/v1/pipeline/fileTailControl74f418f8-cl2f5-4r7k-8790-b9854h1450e8/start</pre>
+            <div class="p">For example, use the following command to start a pipeline on a running <span class="ph">SDC Edge</span>:<pre class="pre codeblock">curl -X POST http://localhost:18633/rest/v1/pipeline/fileTailControl74f418f8-cl2f5-4r7k-8790-b9854h1450e8/start</pre>
 </div>
 
             <div class="p">If the edge pipeline uses parameters, use the following
-                command:<pre class="pre codeblock">curl -X POST http://&lt;SDCe_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+                command:<pre class="pre codeblock">curl -X POST http://&lt;SDCEdge_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
 </div>
 
-            <div class="p">To list all edge pipelines deployed to <span class="ph">SDCe</span>, use the following
-                command:<pre class="pre codeblock">curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipelines</pre>
+            <div class="p">To list all edge pipelines deployed to <span class="ph">SDC Edge</span>, use the following
+                command:<pre class="pre codeblock">curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipelines</pre>
 </div>
 
             <div class="p">To manage running edge pipelines - including stopping, resetting the offset, and
                 viewing the pipeline status and metrics - use the following
-                commands:<pre class="pre codeblock">curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/status
-curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/stop
-curl -X POST http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/resetOffset
-curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/metrics</pre>
+                commands:<pre class="pre codeblock">curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/status
+curl -X POST http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/stop
+curl -X POST http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/resetOffset
+curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/metrics</pre>
 </div>
 
         </div>
@@ -1325,20 +1322,20 @@ curl -X GET http://&lt;SDCe_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&g
 
 </div>
 <div class="topic task nested1" id="task_hnx_h1k_rbb">
-    <h2 class="title topictitle2">Uninstalling SDCe</h2>
+    <h2 class="title topictitle2">Uninstalling SDC Edge</h2>
 
     <div class="body taskbody">
         <div class="section context" id="task_hnx_h1k_rbb__context_k11_j1k_rbb">
-            <p class="p">To uninstall <span class="ph">SDCe</span>, shut down <span class="ph">SDCe</span> and then remove the <span class="ph">SDCe</span> home directory.</p>
+            <p class="p">To uninstall <span class="ph">SDC Edge</span>, shut down <span class="ph">SDC Edge</span> and then remove the <span class="ph">SDC Edge</span> home directory.</p>
 
         </div>
 
         <ol class="ol steps" id="task_hnx_h1k_rbb__steps_l11_j1k_rbb"><li class="li step">
-                <span class="ph cmd">To shut down <span class="ph">SDCe</span> running on the edge device, type <span class="ph uicontrol">Ctrl+C</span> in the command
+                <span class="ph cmd">To shut down <span class="ph">SDC Edge</span> running on the edge device, type <span class="ph uicontrol">Ctrl+C</span> in the command
                     prompt. </span>
             </li>
 <li class="li step">
-                <span class="ph cmd">Remove the <span class="ph">SDCe</span> home directory from the edge device.</span>
+                <span class="ph cmd">Remove the <span class="ph">SDC Edge</span> home directory from the edge device.</span>
             </li>
 </ol>
 

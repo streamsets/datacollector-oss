@@ -124,7 +124,7 @@
         <li class="li"><a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB</a> - Writes data as text, binary
           data, or JSON strings to MapR DB binary tables.</li>
 
-        <li class="li"><a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="The MapR DB JSON destination writes data as JSON documents to MapR DB JSON tables. The destination converts each record into a JSON document and writes the document to the JSON table that you specify.">MapR DB JSON</a> - Writes data as JSON documents to
+        <li class="li"><a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">MapR DB JSON</a> - Writes data as JSON documents to
           MapR DB JSON tables.</li>
 
         <li class="li"><a class="xref" href="MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR FS</a> - Writes data to MapR

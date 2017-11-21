@@ -40,7 +40,6 @@
         <p class="p">Use the SQL Server Change Tracking origin to generate records from change tracking
             tables. To read data from Microsoft SQL Server change data capture (CDC) tables, use the
                 <a class="xref" href="SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC Client
-                origin</a> or the <a class="xref" href="JDBCConsumer.html#concept_tyd_gbf_5y">JDBC Query Consumer
                 origin</a>. For more information about the differences between change tracking
             and CDC data, see the <a class="xref" href="https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/track-data-changes-sql-server" target="_blank">Microsoft SQL Server documentation</a>. </p>
 
@@ -209,7 +208,7 @@
                         create the first set of batches from the table. The database caches the
                         remaining rows in a result set in the database for the same thread to access
                         again, and then the thread switches to the next available table. A table is
-                        available in the following situations:<ul class="ul" id="concept_qms_jns_r1b__d68856e48">
+                        available in the following situations:<ul class="ul" id="concept_qms_jns_r1b__d68826e48">
                             <li class="li">The table does not have an open result set cache. In this case, the
                                 thread runs an initial SQL query to create the first batch, caching
                                 the remaining rows in a result set in the database.</li>
@@ -419,9 +418,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d366817e517">Header Attribute Name</th>
+                            <th class="entry" valign="top" width="40%" id="d366385e513">Header Attribute Name</th>
 
-                            <th class="entry" valign="top" width="60%" id="d366817e520">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d366385e516">Description</th>
 
                         </tr>
 
@@ -429,9 +428,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">sdc.operation.type</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">sdc.operation.type</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">
                                 <div class="p">The origin uses the following values to represent the operation
                                     type: <ul class="ul" id="concept_pc4_xts_r1b__ul_qnr_xmz_t1b">
                                         <li class="li">1 for INSERT</li>
@@ -448,9 +447,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.tables</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.tables</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides a comma-separated list of source
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides a comma-separated list of source
                                 tables for the fields in the record.<div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers
                                     provide this information.</div>
 <p class="p"><span class="ph">Oracle uses all caps for schema, table, and column names by
@@ -461,33 +460,33 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides the original SQL data type for each
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides the original SQL data type for each
                                 field in the record.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides the original precision for all
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides the original precision for all
                                 numeric and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides the original scale for all numeric
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides the original scale for all numeric
                                 and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.SYS_CHANGE_COLUMNS</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.SYS_CHANGE_COLUMNS</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Lists the columns that have changed since the last
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Lists the columns that have changed since the last
                                     sync.<p class="p">Returns NULL when column change tracking is not enabled,
                                     when the operation is insert or delete, or when all non-primary
                                     key columns were updated at once.</p>
@@ -496,24 +495,24 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.SYS_CHANGE_CONTEXT</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.SYS_CHANGE_CONTEXT</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides change context information when available.</td>
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides change context information when available.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.SYS_CHANGE_CREATION_VERSION</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.SYS_CHANGE_CREATION_VERSION</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides the version number associated with the last insert
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides the version number associated with the last insert
                                 operation.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.SYS_CHANGE_OPERATION</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.SYS_CHANGE_OPERATION</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Indicates the type of change that occurred:<ul class="ul" id="concept_pc4_xts_r1b__ul_ml1_v5z_r1b">
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Indicates the type of change that occurred:<ul class="ul" id="concept_pc4_xts_r1b__ul_ml1_v5z_r1b">
                                     <li class="li">I for insert</li>
 
                                     <li class="li">D for delete</li>
@@ -526,9 +525,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d366817e517 ">jdbc.SYS_CHANGE_VERSION</td>
+                            <td class="entry" valign="top" width="40%" headers="d366385e513 ">jdbc.SYS_CHANGE_VERSION</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d366817e520 ">Provides the version number of the most recent change to the
+                            <td class="entry" valign="top" width="60%" headers="d366385e516 ">Provides the version number of the most recent change to the
                                 row.</td>
 
                         </tr>
@@ -636,9 +635,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d366817e809">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d366385e805">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d366817e812">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d366385e808">Description</th>
 
                         </tr>
 
@@ -646,9 +645,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d366817e809 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d366385e805 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d366817e812 ">Event type. Uses the following type:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
+                            <td class="entry" valign="top" width="70%" headers="d366385e808 ">Event type. Uses the following type:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
                                     <li class="li" id="concept_ckx_z3v_s1b__noMoreData-bullet">no-more-data - Generated when the
                                         origin completes processing all data in the specified change
                                         tables.</li>
@@ -659,16 +658,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e809 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e805 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e812 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d366385e808 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e809 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e805 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_ckx_z3v_s1b__d41575e2087" valign="top" width="70%" headers="d366817e812 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_ckx_z3v_s1b__d41669e2087" valign="top" width="70%" headers="d366385e808 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -702,9 +701,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e899">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d366385e895">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e902">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e898">Description</th>
 
                                 </tr>
 
@@ -712,34 +711,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e899 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e895 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e902 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e899 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d366817e902 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d366385e898 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e899 ">Produce Events <a class="xref" href="SQLServerChange.html#concept_byp_dgv_s1b">
+       <td class="entry" valign="top" width="30%" headers="d366385e895 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d366385e898 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e895 ">Produce Events <a class="xref" href="SQLServerChange.html#concept_byp_dgv_s1b">
                                             <img class="image" id="task_vsh_22s_r1b__image_a4b_nbc_x1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e902 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d366385e898 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_vsh_22s_r1b__d41575e795" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_vsh_22s_r1b__d41669e795" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e899 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_vsh_22s_r1b__d41575e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d366385e895 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_vsh_22s_r1b__d41669e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e902 ">Error record handling for the stage: <ul class="ul" id="task_vsh_22s_r1b__d41575e808">
+       <td class="entry" valign="top" width="70%" headers="d366385e898 ">Error record handling for the stage: <ul class="ul" id="task_vsh_22s_r1b__d41669e808">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -767,9 +766,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e995">JDBC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d366385e991">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e998">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e994">Description</th>
 
                                 </tr>
 
@@ -777,9 +776,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">
                                         <p class="p">Connection string to use to connect to the database. </p>
 
                                     </td>
@@ -787,26 +786,26 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Use Credentials</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Query Interval</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Query Interval</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
         You can use SECONDS, MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
         </p>
 </td>
 
       </tr>
  <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Include the Latest Data in the Record</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Include the Latest Data in the Record</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">Includes the current version of the data in the record,
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">Includes the current version of the data in the record,
                                         when available. <p class="p">When disabled, the origin includes only
                                             the change tracking table information in the record. For
                                             more information, see <a class="xref" href="SQLServerChange.html#concept_yqg_sts_r1b">Generated Record</a>.</p>
@@ -816,10 +815,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Number of Threads <a class="xref" href="SQLServerChange.html#concept_ofh_gns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Number of Threads <a class="xref" href="SQLServerChange.html#concept_ofh_gns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">Number of threads the origin generates and uses for
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">Number of threads the origin generates and uses for
         multithreaded processing.<p class="p">Configure the Maximum Pool Size property on the Advanced tab to
          be equal to or greater than this value.</p>
 </td>
@@ -828,10 +827,10 @@
 
                                
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Per Batch Strategy <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Per Batch Strategy <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">Strategy to create each batch of data:<ul class="ul" id="task_vsh_22s_r1b__d41575e2321">
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">Strategy to create each batch of data:<ul class="ul" id="task_vsh_22s_r1b__d41669e2321">
          <li class="li">Switch Tables - Each thread creates a set of batches from one table, and then switches
           to the next available table to create the next set of batches. Define the Result Set Cache
           Size and the Batches from Result Set properties when you configure a switch tables
@@ -846,17 +845,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Batches from Result Set <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Batches from Result Set <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">Number of batches to create from the result set. After a
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">Number of batches to create from the result set. After a
         thread creates this number of batches, the database closes the result set and then another
         thread can read from the same table.<p class="p">Use a positive integer to set a limit on the number
          of batches created from the result set. Use -1 to opt out of this property.</p>
@@ -868,10 +867,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Result Set Cache Size <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Result Set Cache Size <a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b"><img class="image" id="task_vsh_22s_r1b__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 ">Number of result sets to cache in the database. Use a
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 ">Number of result sets to cache in the database. Use a
         positive integer to set a limit on the number of cached result sets. Use -1 to opt out of
         this property.<p class="p">By default, the origin caches an unlimited number of result
         sets.</p>
@@ -880,17 +879,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Max Clob Size (characters)</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Max Clob Size (characters)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Maximum number of characters to be read in a Clob field. Larger data is
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Max Blob Size (bytes)</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Max Blob Size (bytes)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">
         <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
        </td>
@@ -898,9 +897,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Number of Retries on SQL Error</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Number of Retries on SQL Error</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Number of times a thread tries to read a batch of data after receiving an SQL error.
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Number of times a thread tries to read a batch of data after receiving an SQL error.
         After a thread retries this number of times, the thread handles the error based on the error
         handling configured for the origin.<p class="p">Use to handle transient network or connection issues
          that prevent a thread from reading a batch of data.</p>
@@ -910,9 +909,9 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e995 ">Fetch Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e991 ">Fetch Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e998 "><span class="ph">Maximum number of rows to fetch and store in memory on the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d366385e994 "><span class="ph">Maximum number of rows to fetch and store in memory on the <span class="ph">Data
                   Collector</span> machine.
          The size cannot be zero.</span><p class="p"><span class="ph">Default is 1,000.</span></p>
 </td>
@@ -920,9 +919,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e995 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e991 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e998 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="70%" headers="d366385e994 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -947,10 +946,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e1231">Change Tracking Property <a class="xref" href="SQLServerChange.html#concept_sx3_d11_s1b"><img class="image" id="task_vsh_22s_r1b__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <th class="entry" valign="top" width="30%" id="d366385e1227">Change Tracking Property <a class="xref" href="SQLServerChange.html#concept_sx3_d11_s1b"><img class="image" id="task_vsh_22s_r1b__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e1238">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e1234">Description</th>
 
                                 </tr>
 
@@ -958,22 +957,22 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1231 ">Schema Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1227 ">Schema Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1238 ">Name of the schema to use for this table
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1234 ">Name of the schema to use for this table
                                         configuration.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1231 ">Table Name Pattern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1227 ">Table Name Pattern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1238 ">
-                                        <p class="p" id="task_vsh_22s_r1b__d41778e3453">Pattern of the table names to read
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1234 ">
+                                        <p class="p" id="task_vsh_22s_r1b__d41872e3453">Pattern of the table names to read
                                             for this table configuration. Use the SQL LIKE syntax to
                                             define the pattern. </p>
 
-                                        <p class="p" id="task_vsh_22s_r1b__d41778e3456">Default is the percentage wildcard
+                                        <p class="p" id="task_vsh_22s_r1b__d41872e3456">Default is the percentage wildcard
                                             (%) which matches all tables in the schema.</p>
 
                                     </td>
@@ -981,9 +980,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1231 ">Table Exclusion Pattern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1227 ">Table Exclusion Pattern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1238 ">Pattern of the table names
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1234 ">Pattern of the table names
                                         to exclude from being read for this table configuration. Use
                                         a Java-based regular expression, or regex, to define the
                                             pattern.<p class="p">Leave empty if you do not need to exclude any
@@ -993,9 +992,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1231 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1227 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1238 ">Offset value to use for this table configuration when the
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1234 ">Offset value to use for this table configuration when the
                                         pipeline starts. When processing an offset, the origin
                                         starts with the first value greater than the specified
                                             offset.<p class="p">Use -1 to opt out of an initial offset. With
@@ -1019,14 +1018,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d41778e3547" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d41872e3547" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e1318">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d366385e1314">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e1321">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e1317">Description</th>
 
                                 </tr>
 
@@ -1034,16 +1033,16 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1318 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1314 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1321 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1317 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_vsh_22s_r1b__d41778e3578">
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1318 ">Password</td>
+                                <tr id="task_vsh_22s_r1b__d41872e3578">
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1314 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1321 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1317 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
 </td>
 
@@ -1062,14 +1061,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d41778e3604" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d41872e3604" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e1394">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d366385e1390">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e1397">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e1393">Description</th>
 
                                 </tr>
 
@@ -1077,17 +1076,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1394 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1390 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1397 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1393 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1394 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1390 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1397 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1393 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1109,9 +1108,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d366817e1450">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d366385e1446">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d366817e1453">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d366385e1449">Description</th>
 
                                 </tr>
 
@@ -1119,27 +1118,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Maximum Pool Size</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Maximum Pool Size</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">The maximum number of connections to create. Must be equal to or greater than the
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">The maximum number of connections to create. Must be equal to or greater than the
         value of the Number of Threads property.<p class="p">Default is 1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -1148,9 +1147,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -1160,9 +1159,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1172,30 +1171,30 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Auto Commit</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
         the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+       <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
          transaction isolation level set for the database. You can override the database default by
          setting the level to any of the following:</p>
-<ul class="ul" id="task_vsh_22s_r1b__d41575e2673">
+<ul class="ul" id="task_vsh_22s_r1b__d41669e2673">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -1210,10 +1209,10 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d366817e1450 ">Initial Table Order Strategy <a class="xref" href="SQLServerChange.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_vsh_22s_r1b__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d366385e1446 ">Initial Table Order Strategy <a class="xref" href="SQLServerChange.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_vsh_22s_r1b__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d366817e1453 ">Initial order used to read the tables:<ul class="ul" id="task_vsh_22s_r1b__ul_d5f_kcd_t1b">
+                                    <td class="entry" valign="top" width="70%" headers="d366385e1449 ">Initial order used to read the tables:<ul class="ul" id="task_vsh_22s_r1b__ul_d5f_kcd_t1b">
                                             <li class="li">None - Reads the tables in the order that they are listed in
           the database.</li>
 
