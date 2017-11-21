@@ -41,38 +41,27 @@ public class BulkRecordCreator extends SobjectRecordCreator {
     Record record = context.createRecord(sourceId);
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for (int i = 0; i < resultHeader.size(); i++) {
-      String fieldName = resultHeader.get(i);
+      String fieldPath = resultHeader.get(i);
 
       // Walk the dotted list of subfields
-      String[] parts = fieldName.split("\\.");
+      String[] parts = fieldPath.split("\\.");
 
       // Process any chain of relationships
       String parent = sobjectType;
       for (int j = 0; j < parts.length - 1; j++) {
-        com.sforce.soap.partner.Field sfdcField = null;
-        Map<String, com.sforce.soap.partner.Field> fieldMap = metadataCache.get(parent);
-
-        // Metadata map is indexed by field name, but it's the relationship name in the data
-        for (Map.Entry<String, com.sforce.soap.partner.Field> entry : fieldMap.entrySet()) {
-          if (entry.getValue().getRelationshipName() != null) {
-            if (entry.getValue().getRelationshipName().equalsIgnoreCase(parts[j])) {
-              sfdcField = entry.getValue();
-              break;
-            }
-          }
-        }
-
+        com.sforce.soap.partner.Field sfdcField = metadataCache.get(parent).relationshipToField.get(parts[j].toLowerCase());
         parent = sfdcField.getReferenceTo()[0].toLowerCase();
       }
+      String fieldName = parts[parts.length - 1];
 
       // Now process the actual field itself
-      com.sforce.soap.partner.Field sfdcField = metadataCache.get(parent).get(parts[parts.length - 1].toLowerCase());
+      com.sforce.soap.partner.Field sfdcField = metadataCache.get(parent).nameToField.get(fieldName.toLowerCase());
 
       Field field = createField(row.get(i), sfdcField);
       if (conf.createSalesforceNsHeaders) {
-        setHeadersOnField(field, metadataCache.get(sobjectType).get(fieldName.toLowerCase()));
+        setHeadersOnField(field, metadataCache.get(parent).nameToField.get(fieldName.toLowerCase()));
       }
-      map.put(fieldName, field);
+      map.put(fieldPath, field);
     }
     record.set(Field.createListMap(map));
     record.getHeader().setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);

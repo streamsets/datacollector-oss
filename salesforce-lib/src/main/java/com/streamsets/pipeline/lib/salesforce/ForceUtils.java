@@ -29,11 +29,15 @@ import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soql.SOQLLexer;
 import soql.SOQLParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ForceUtils {
@@ -100,17 +104,21 @@ public class ForceUtils {
 
   public static String getSobjectTypeFromQuery(String query) throws StageException {
     try {
-      SOQLLexer lexer = new SOQLLexer(new ANTLRInputStream(query));
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      SOQLParser parser = new SOQLParser(tokens);
-      parser.setErrorHandler(new BailErrorStrategy());
-      SOQLParser.StatementContext statementContext = parser.statement();
+      SOQLParser.StatementContext statementContext = getStatementContext(query);
 
-      return statementContext.objectList().objectType(0).IDENTIFIER().get(0).toString().toLowerCase();
+      return statementContext.objectList().getText().toLowerCase();
     } catch (Exception e) {
       LOG.error(Errors.FORCE_27.getMessage(), query, e);
       throw new StageException(Errors.FORCE_27, query, e);
     }
+  }
+
+  public static SOQLParser.StatementContext getStatementContext(String query) {
+    SOQLLexer lexer = new SOQLLexer(new ANTLRInputStream(query));
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    SOQLParser parser = new SOQLParser(tokens);
+    parser.setErrorHandler(new BailErrorStrategy());
+    return parser.statement();
   }
 
   public static int getOperationFromRecord(Record record,

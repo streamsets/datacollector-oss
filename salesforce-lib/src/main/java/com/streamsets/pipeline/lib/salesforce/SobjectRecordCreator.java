@@ -22,6 +22,10 @@ import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import soql.SOQLParser;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -31,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +44,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
+  private static final Logger LOG = LoggerFactory.getLogger(SobjectRecordCreator.class);
+
   private static final int MAX_METADATA_TYPES = 100;
   private static final String UNEXPECTED_TYPE = "Unexpected type: ";
 
@@ -83,8 +90,20 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   final String sobjectType;
   protected final ForceInputConfigBean conf;
 
-  Map<String, Map<String, Field>> metadataCache = new LinkedHashMap<>();
+  Map<String, ObjectMetadata> metadataCache;
   final Stage.Context context;
+
+  class ObjectMetadata {
+    Map<String, Field> nameToField;
+    Map<String, Field> relationshipToField;
+
+    ObjectMetadata(
+        Map<String, Field> fieldMap, Map<String, Field> relationshipMap
+    ) {
+      this.nameToField = fieldMap;
+      this.relationshipToField = relationshipMap;
+    }
+  }
 
   SobjectRecordCreator(Stage.Context context, ForceInputConfigBean conf, String sobjectType) {
     datetimeFormat.setTimeZone(TZ);
@@ -100,24 +119,92 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     this.metadataCache = recordCreator.metadataCache;
   }
 
-  @Override
-  public void buildMetadataCache(PartnerConnection partnerConnection) throws StageException {
+  public boolean metadataCacheExists() {
+    return metadataCache != null;
+  }
+
+  public void clearMetadataCache() {
+    metadataCache = null;
+  }
+
+  public void buildMetadataCacheFromQuery(PartnerConnection partnerConnection, String query) throws StageException {
+    LOG.debug("Getting metadata for sobjectType {} - query is {}", sobjectType, query);
+
+    // We make a list of reference paths that are in the query
+    // Each path is a list of (SObjectName, FieldName) pairs
+    List<List<Pair<String, String>>> references = new LinkedList<>();
+
     metadataCache = new LinkedHashMap<>();
 
+    if (query != null) {
+      SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(query);
+
+      for (SOQLParser.FieldListContext flc : statementContext.fieldList()) {
+        for (SOQLParser.FieldElementContext fec : flc.fieldElement()) {
+          String fieldName = fec.getText();
+          String[] pathElements = fieldName.split("\\.");
+          // Handle references
+          extractReferences(references, pathElements);
+        }
+      }
+    }
+
     try {
-      getAllReferences(partnerConnection, metadataCache, new String[]{sobjectType}, METADATA_DEPTH);
+      getAllReferences(partnerConnection, metadataCache, references, new String[]{sobjectType}, METADATA_DEPTH);
     } catch (ConnectionException e) {
       throw new StageException(Errors.FORCE_21, sobjectType, e);
     }
   }
 
-  // Recurse through the tree of referenced types, building a metadata query for each level
+  public void buildMetadataCacheFromFieldList(PartnerConnection partnerConnection, String fieldList) throws StageException {
+    LOG.debug("Getting metadata for sobjectType {} - field list is {}", sobjectType, fieldList);
+
+    // We make a list of reference paths that are in the query
+    // Each path is a list of (SObjectName, FieldName) pairs
+    List<List<Pair<String, String>>> references = new LinkedList<>();
+
+    metadataCache = new LinkedHashMap<>();
+
+    for (String fieldName : fieldList.split("\\s*,\\s*")) {
+      String[] pathElements = fieldName.split("\\.");
+      // Handle references
+      extractReferences(references, pathElements);
+    }
+
+    try {
+      getAllReferences(partnerConnection, metadataCache, references, new String[]{sobjectType}, METADATA_DEPTH);
+    } catch (ConnectionException e) {
+      throw new StageException(Errors.FORCE_21, sobjectType, e);
+    }
+  }
+
+  private void extractReferences(List<List<Pair<String, String>>> references, String[] pathElements) {
+    if (pathElements.length > 1) {
+      // LinkedList since we'll be removing elements from the path as we get their metadata
+      List<Pair<String, String>> path = new LinkedList<>();
+      // Last element in the list is the field itself; we don't need it
+      for (int i = 0; i < pathElements.length - 1; i++) {
+        path.add(Pair.of(path.isEmpty() ? sobjectType.toLowerCase() : null, pathElements[i].toLowerCase()));
+      }
+      references.add(path);
+    }
+  }
+
+  public void buildMetadataCache(PartnerConnection partnerConnection) throws StageException {
+    buildMetadataCacheFromQuery(partnerConnection, null);
+  }
+
+    // Recurse through the tree of referenced types, building a metadata query for each level
   // Salesforce constrains the depth of the tree to 5, so we don't need to worry about
   // infinite recursion
   private void getAllReferences(
-      PartnerConnection partnerConnection, Map<String, Map<String, Field>> metadataMap, String[] allTypes, int depth
+      PartnerConnection partnerConnection,
+      Map<String, ObjectMetadata> metadataMap,
+      List<List<Pair<String, String>>> references,
+      String[] allTypes,
+      int depth
   ) throws ConnectionException {
-    if (depth == 0) {
+    if (depth < 0) {
       return;
     }
 
@@ -128,44 +215,55 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       String[] types = Arrays.copyOfRange(allTypes, typeIndex, copyTo);
 
       for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
-        Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
-        for (com.sforce.soap.partner.Field field : result.getFields()) {
+        Map<String, Field> fieldMap = new LinkedHashMap<>();
+        Map<String, Field> relationshipMap = new LinkedHashMap<>();
+        for (Field field : result.getFields()) {
           fieldMap.put(field.getName().toLowerCase(), field);
+          String relationshipName = field.getRelationshipName();
+          if (relationshipName != null) {
+            relationshipMap.put(relationshipName.toLowerCase(), field);
+          }
         }
+        metadataMap.put(result.getName().toLowerCase(), new ObjectMetadata(fieldMap, relationshipMap));
+      }
 
-        metadataMap.put(result.getName().toLowerCase(), fieldMap);
-
-        Set<String> sobjectNames = metadataMap.keySet();
-        for (com.sforce.soap.partner.Field field : fieldMap.values()) {
+      for (List<Pair<String, String>> path : references) {
+        // Top field name in the path should be in the metadata now
+        if (!path.isEmpty()) {
+          Pair<String, String> top = path.get(0);
+          Field field = metadataMap.get(top.getLeft()).relationshipToField.get(top.getRight());
+          Set<String> sobjectNames = metadataMap.keySet();
           for (String ref : field.getReferenceTo()) {
             ref = ref.toLowerCase();
             if (!sobjectNames.contains(ref) && !next.contains(ref)) {
               next.add(ref);
             }
+            if (path.size() > 1) {
+              path.set(1, Pair.of(ref, path.get(1).getRight()));
+            }
           }
+          path.remove(0);
         }
       }
     }
 
     if (!next.isEmpty()) {
-      getAllReferences(partnerConnection, metadataMap, next.toArray(new String[0]), depth - 1);
+      getAllReferences(partnerConnection, metadataMap, references, next.toArray(new String[0]), depth - 1);
     }
   }
 
-  @Override
-  public String expandWildcard(String query) {
+  public boolean queryHasWildcard(String query) {
     Matcher m = WILDCARD_SELECT_PATTERN.matcher(query.toUpperCase());
-    if (m.matches()) {
-      // Query is SELECT * FROM... - substitute in list of field names
-      query = query.replaceFirst("\\*", expandWildcard());
-    }
-    return query;
+    return m.matches();
   }
 
-  @Override
+  public String expandWildcard(String query) {
+    return query.replaceFirst("\\*", expandWildcard());
+  }
+
   public String expandWildcard() {
     StringBuilder fieldsString = new StringBuilder();
-    for (com.sforce.soap.partner.Field field : metadataCache.get(sobjectType.toLowerCase()).values()) {
+    for (Field field : metadataCache.get(sobjectType.toLowerCase()).nameToField.values()) {
       String typeName = field.getType().name();
       if ("address".equals(typeName) || "location".equals(typeName)) {
         // Skip compound fields of address or geolocation type since they are returned
@@ -177,10 +275,11 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       }
       fieldsString.append(field.getName());
     }
+
     return fieldsString.toString();
   }
 
-  com.streamsets.pipeline.api.Field createField(Object val, com.sforce.soap.partner.Field sfdcField) throws
+  com.streamsets.pipeline.api.Field createField(Object val, Field sfdcField) throws
       StageException {
     return createField(val, DataType.USE_SALESFORCE_TYPE, sfdcField);
   }
@@ -188,7 +287,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   com.streamsets.pipeline.api.Field createField(
       Object val,
       DataType userSpecifiedType,
-      com.sforce.soap.partner.Field sfdcField
+      Field sfdcField
   ) throws StageException {
     String sfdcType = sfdcField.getType().toString();
     if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
@@ -248,14 +347,14 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     }
   }
 
-  void setHeadersOnField(com.streamsets.pipeline.api.Field field, com.sforce.soap.partner.Field sfdcField) {
+  void setHeadersOnField(com.streamsets.pipeline.api.Field field, Field sfdcField) {
     Map<String, String> headerMap = getHeadersForField(sfdcField);
     for (Map.Entry<String, String> entry : headerMap.entrySet()) {
       field.setAttribute(entry.getKey(), entry.getValue());
     }
   }
 
-  private Map<String, String> getHeadersForField(com.sforce.soap.partner.Field sfdcField) {
+  private Map<String, String> getHeadersForField(Field sfdcField) {
     Map<String, String> attributeMap = new HashMap<>();
 
     if (sfdcField == null) {

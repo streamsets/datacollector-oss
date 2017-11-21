@@ -248,17 +248,7 @@ public class ForceSource extends BaseSource {
     }
 
     if (issues.isEmpty()) {
-      try {
-        recordCreator = buildRecordCreator();
-        recordCreator.buildMetadataCache(partnerConnection);
-      } catch (StageException e) {
-        LOG.error("Exception getting metadata map: {}", e);
-        issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-            ForceConfigBean.CONF_PREFIX + "soqlQuery",
-            Errors.FORCE_21,
-            sobjectType
-        ));
-      }
+      recordCreator = buildRecordCreator();
     }
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
@@ -323,12 +313,20 @@ public class ForceSource extends BaseSource {
 
   private String prepareQuery(String query, String lastSourceOffset) throws StageException {
     final String offset = (null == lastSourceOffset) ? conf.initialOffset : lastSourceOffset;
+    SobjectRecordCreator sobjectRecordCreator = (SobjectRecordCreator)recordCreator;
 
-    recordCreator.buildMetadataCache(partnerConnection);
+    String expandedQuery;
+    if (sobjectRecordCreator.queryHasWildcard(query)) {
+      // Can't follow relationships on a wildcard query, so build the cache from the object type
+      sobjectRecordCreator.buildMetadataCache(partnerConnection);
+      expandedQuery = sobjectRecordCreator.expandWildcard(query);
+    } else {
+      // Use the query in building the cache
+      expandedQuery = query;
+      sobjectRecordCreator.buildMetadataCacheFromQuery(partnerConnection, query);
+    }
 
-    query = recordCreator.expandWildcard(query);
-
-    return query.replaceAll("\\$\\{offset\\}", offset);
+    return expandedQuery.replaceAll("\\$\\{offset\\}", offset);
   }
 
   /** {@inheritDoc} */
@@ -553,7 +551,7 @@ public class ForceSource extends BaseSource {
     return item;
   }
 
-  public String soapProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  private String soapProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
 
     String nextSourceOffset = (null == lastSourceOffset) ? RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
 

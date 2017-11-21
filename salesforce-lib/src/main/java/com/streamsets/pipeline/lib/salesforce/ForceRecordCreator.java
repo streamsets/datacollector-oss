@@ -20,11 +20,5 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 
 public interface ForceRecordCreator {
-  void buildMetadataCache(PartnerConnection partnerConnection) throws StageException;
-
   Record createRecord(String sourceId, Object source) throws StageException;
-
-  String expandWildcard(String query);
-
-  String expandWildcard();
 }

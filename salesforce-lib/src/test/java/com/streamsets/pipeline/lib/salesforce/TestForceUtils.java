@@ -283,7 +283,7 @@ public class TestForceUtils {
           "WHERE IsClosed = false AND Probability > 60", "Opportunity"},
       {"SELECT COUNT()\n" +
           "FROM Contact, Contact.Account\n" +
-          "WHERE Account.Name = 'MyriadPubs'", "Contact"},
+          "WHERE Account.Name = 'MyriadPubs'", "Contact,Contact.Account"},
       {"SELECT COUNT(Id), COUNT(CampaignId)\n" +
           "FROM Opportunity", "Opportunity"},
       {"SELECT LeadSource, COUNT(Name)\n" +

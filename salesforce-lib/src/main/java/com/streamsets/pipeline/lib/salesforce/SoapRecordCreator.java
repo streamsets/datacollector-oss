@@ -75,7 +75,7 @@ public class SoapRecordCreator extends SobjectRecordCreator {
                   ". Specify component fields of compound fields, e.g. Location__Latitude__s or BillingStreet"
           );
         }
-        com.sforce.soap.partner.Field sfdcField = metadataCache.get(type).get(key.toLowerCase());
+        com.sforce.soap.partner.Field sfdcField = metadataCache.get(type).nameToField.get(key.toLowerCase());
         Field field;
         if (sfdcField == null) {
           // null relationship

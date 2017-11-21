@@ -39,25 +39,7 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
     this.platformEventName = platformEventName;
   }
 
-  @Override
-  public void buildMetadataCache(PartnerConnection partnerConnection) throws StageException {
-    String soapEndpoint = partnerConnection.getConfig().getServiceEndpoint();
-    String restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
-
-    String path = "/services/data/v41.0/sobjects/" + platformEventName + "/eventSchema";
-    try {
-      String json = Request.Get(restEndpoint + path).addHeader(
-          "Authorization",
-          "OAuth " + partnerConnection.getConfig().getSessionId()
-      ).execute().returnContent().asString();
-
-      schema = new Schema.Parser().parse(json);
-    } catch (IOException e) {
-      throw new StageException(Errors.FORCE_21, platformEventName, e);
-    }
-  }
-
-  public Schema getSchemaMetadata(PartnerConnection partnerConnection, String schemaId) throws StageException {
+  private Schema getSchemaMetadata(PartnerConnection partnerConnection, String schemaId) throws StageException {
     String soapEndpoint = partnerConnection.getConfig().getServiceEndpoint();
     String restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
 
@@ -83,7 +65,7 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
 
     // Get new schema if necessary
     String schemaId = (String)data.get("schema");
-    if (!schemaId.equals(schema.getProp("uuid"))) {
+    if (schema == null || !schemaId.equals(schema.getProp("uuid"))) {
       schema = getSchemaMetadata(partnerConnection, schemaId);
     }
 
@@ -144,15 +126,5 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
         );
       }
     }
-  }
-
-  @Override
-  public String expandWildcard(String query) {
-    return null;
-  }
-
-  @Override
-  public String expandWildcard() {
-    return null;
   }
 }
