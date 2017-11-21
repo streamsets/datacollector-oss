@@ -230,9 +230,12 @@
                             <li>Kudu Lookup processor enhancement - The Cache Kudu Table property is
                                 now named Enable Table Caching. The Maximum Entries to Cache Table
                                 Objects property is now named Maximum Table Entries to Cache. </li>
-                            <li>Salesforce Lookup processor enhancement - You can use a new Retrieve
-                                lookup mode to look up data for a batch of records instead of
-                                record-by-record.</li>
+                            <li>Salesforce Lookup processor enhancement - You can use a new <xref
+                                    href="../Processors/SalesforceLookup-Mode.dita#concept_ow1_lj3_xbb"
+                                    >Retrieve lookup mode</xref> to look up data for a set of
+                                records instead of record-by-record. The mode provided in previous
+                                releases is now named SOQL Query. Upgraded pipelines require no
+                                changes. </li>
                         </ul>
                     </dd>
                 </dlentry>
