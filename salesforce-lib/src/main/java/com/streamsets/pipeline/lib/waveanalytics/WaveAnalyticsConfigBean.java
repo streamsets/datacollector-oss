@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.waveanalytics;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 
 public class WaveAnalyticsConfigBean extends ForceConfigBean {
@@ -38,6 +39,29 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       group = "FORCE"
   )
   public String edgemartContainer;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Append timestamp to alias",
+      description = "Enable this to append a timestamp to the Edgemart Alias. This will avoid datasets overwriting each other.",
+      displayPosition = 52,
+      group = "FORCE"
+  )
+  public boolean appendTimestamp = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "OVERWRITE",
+      label = "Operation",
+      description = "Indicates which operation to use when you’re loading data into the dataset.",
+      displayPosition = 57,
+      group = "FORCE"
+  )
+  @ValueChooserModel(OperationChooserValues.class)
+  public Operation operation = Operation.OVERWRITE;
 
   @ConfigDef(
       required = true,

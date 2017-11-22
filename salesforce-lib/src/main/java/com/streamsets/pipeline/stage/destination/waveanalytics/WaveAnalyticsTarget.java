@@ -106,14 +106,17 @@ public class WaveAnalyticsTarget extends BaseTarget {
   }
 
   private void openDataset() throws ConnectionException, StageException {
-    datasetName = conf.edgemartAliasPrefix + "_" + System.currentTimeMillis();
+    datasetName = conf.edgemartAliasPrefix;
+    if (conf.appendTimestamp) {
+      datasetName += "_" + System.currentTimeMillis();
+    }
 
     SObject sobj = new SObject();
     sobj.setType("InsightsExternalData");
     sobj.setField("Format", "Csv");
     sobj.setField("EdgemartAlias", datasetName);
     sobj.setField("MetadataJson", conf.metadataJson.getBytes(StandardCharsets.UTF_8));
-    sobj.setField("Operation", "Overwrite");
+    sobj.setField("Operation", conf.operation.getLabel());
     sobj.setField("Action", "None");
     if (!StringUtils.isEmpty(conf.edgemartContainer)) {
       sobj.setField("EdgemartContainer", conf.edgemartContainer);
