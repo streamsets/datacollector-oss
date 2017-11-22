@@ -730,7 +730,11 @@ public class ForceSource extends BaseSource {
 
     if (recordCreator instanceof SobjectRecordCreator) {
       // Switch out recordCreator
-      recordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
+      PushTopicRecordCreator pushTopicRecordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
+      if (!pushTopicRecordCreator.metadataCacheExists()) {
+        pushTopicRecordCreator.buildMetadataCache(partnerConnection);
+      }
+      recordCreator = pushTopicRecordCreator;
     }
 
     if (forceConsumer == null) {
@@ -762,18 +766,34 @@ public class ForceSource extends BaseSource {
       return nextSourceOffset;
     }
 
-    List<Message> messages = new ArrayList<>(maxBatchSize);
-    messageQueue.drainTo(messages, maxBatchSize);
+    // Loop if we're in preview mode - we'll get killed after the preview timeout if no data arrives
+    boolean done = false;
+    while (!done) {
+      List<Message> messages = new ArrayList<>(maxBatchSize);
+      messageQueue.drainTo(messages, maxBatchSize);
 
-    for (Message message : messages) {
-      try {
-        if (message.getChannel().startsWith(META)) {
-          processMetaMessage(message, nextSourceOffset);
-        } else {
-          nextSourceOffset = processDataMessage(message, batchMaker);
+      for (Message message : messages) {
+        try {
+          if (message.getChannel().startsWith(META)) {
+            // Handshake, subscription messages
+            processMetaMessage(message, nextSourceOffset);
+          } else {
+            // Yay - actual data messages
+            nextSourceOffset = processDataMessage(message, batchMaker);
+            done = true;
+          }
+        } catch (IOException e) {
+          throw new StageException(Errors.FORCE_02, e);
         }
-      } catch (IOException e) {
-        throw new StageException(Errors.FORCE_02, e);
+      }
+      if (!done && getContext().isPreview()) {
+        // In preview - give data messages a chance to arrive
+        if (!ThreadUtil.sleep(1000)) {
+          // Interrupted!
+          done = true;
+        }
+      } else {
+        done = true;
       }
     }
 
