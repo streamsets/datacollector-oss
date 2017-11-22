@@ -22,13 +22,22 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
       label = "Edgemart Alias",
       description = "The alias of a dataset, which must be unique across an organization.",
       displayPosition = 50,
       group = "FORCE"
   )
   public String edgemartAliasPrefix;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Edgemart Container",
+      description = "The name of the app that contains the dataset. If omitted, then the user's private app is used.",
+      displayPosition = 55,
+      group = "FORCE"
+  )
+  public String edgemartContainer;
 
   @ConfigDef(
       required = true,
@@ -81,7 +90,6 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "",
       label = "Metadata JSON",
       description = "Metadata in JSON format, which describes the structure of the uploaded file.",
       displayPosition = 100,

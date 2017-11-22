@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 import com.streamsets.pipeline.lib.waveanalytics.Errors;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Request;
@@ -114,6 +115,9 @@ public class WaveAnalyticsTarget extends BaseTarget {
     sobj.setField("MetadataJson", conf.metadataJson.getBytes(StandardCharsets.UTF_8));
     sobj.setField("Operation", "Overwrite");
     sobj.setField("Action", "None");
+    if (!StringUtils.isEmpty(conf.edgemartContainer)) {
+      sobj.setField("EdgemartContainer", conf.edgemartContainer);
+    }
 
     SaveResult[] results = connection.create(new SObject[]{sobj});
     for (SaveResult sv : results) {
