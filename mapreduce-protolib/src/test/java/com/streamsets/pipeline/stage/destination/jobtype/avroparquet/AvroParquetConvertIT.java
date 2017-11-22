@@ -241,4 +241,26 @@ public class AvroParquetConvertIT extends BaseAvroParquetConvertIT {
     validateParquetFile(new Path(getOutputDir(), "input.parquet"), data);
   }
 
+  @Test
+  public void testFailIfMissingOutputDir() throws Exception {
+    AvroParquetConfig conf = new AvroParquetConfig();
+    conf.inputFile = "";
+    conf.outputDirectory = getOutputDir();
+    conf.overwriteTmpFile = false;
+
+    MapReduceExecutor executor = generateExecutor(conf, Collections.emptyMap());
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(Collections.emptyMap()));
+
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+    runner.runDestroy();
+  }
+
 }
