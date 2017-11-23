@@ -44,6 +44,16 @@ and
 
 `mvn clean install -DskipTests`
 
+Also you need to have datacollector-edge to be installed into your local maven repository.
+
+- First get the latest version of the datacollector-edge from Github
+
+ `git clone https://github.com/streamsets/datacollector-edge.git`
+
+- Gradle is used in this project as a build tool, so in order to install it to your local maven repository execute:
+
+  `./gradlew clean release`
+
 Follow these instructions to build the Data Collector :
 
 - Get the latest code from Github
