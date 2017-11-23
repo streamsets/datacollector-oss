@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +58,13 @@ public class ClasspathValidator {
     return this;
   }
 
-   public ClasspathValidator withURLs(List<URL> urls) {
+  public ClasspathValidator withURLs(List<URL> urls) {
     this.urls.addAll(urls);
+    return this;
+  }
+
+  public ClasspathValidator withURLs(URL ...urls) {
+    this.urls.addAll(Arrays.asList(urls));
     return this;
   }
 

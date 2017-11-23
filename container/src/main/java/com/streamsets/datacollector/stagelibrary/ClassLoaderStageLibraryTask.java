@@ -23,6 +23,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.classpath.ClasspathValidator;
+import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -46,6 +48,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -87,6 +90,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private static final String CONFIG_LIBRARY_ALIAS_PREFIX = "library.alias.";
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
+
+  private static final String CONFIG_CP_VALIDATION = "stagelibs.classpath.validation.enable";
+  private static final boolean DEFAULT_CP_VALIDATION = false;
+
+  private static final String CONFIG_CP_VALIDATION_RESULT = "stagelibs.classpath.validation.terminate";
+  private static final boolean DEFAULT_CP_VALIDATION_RESULT = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
@@ -196,6 +205,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     if (!stageClassLoaders.isEmpty()) {
       resolveClassLoaderMethods(stageClassLoaders.get(0));
     }
+
+    if(configuration.get(CONFIG_CP_VALIDATION, DEFAULT_CP_VALIDATION)) {
+      validateStageClasspaths();
+    }
+
+    // Load all stages and other objects from the libraries
     json = ObjectMapperFactory.get();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
@@ -252,6 +267,34 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     poolConfig.setBlockWhenExhausted(false);
     poolConfig.setMaxWaitMillis(0);
     privateClassLoaderPool = new GenericKeyedObjectPool<>(new ClassLoaderFactory(stageClassLoaders), poolConfig);
+  }
+
+  private void validateStageClasspaths() {
+    // Firstly validate the stage classpaths for duplicate dependencies
+    Set<String> corruptedClasspathStages = new HashSet<>();
+    for (ClassLoader cl : stageClassLoaders) {
+      if (cl instanceof SDCClassLoader) {
+        SDCClassLoader sdcCl = (SDCClassLoader) cl;
+
+        ClasspathValidatorResult validationResult = ClasspathValidator.newValidator(sdcCl.getName())
+          .withURLs(sdcCl.getURLs())
+          .validate();
+
+        if (!validationResult.isValid()) {
+          validationResult.logDetails();
+          corruptedClasspathStages.add(sdcCl.getName());
+        }
+      }
+    }
+
+    if (!corruptedClasspathStages.isEmpty()) {
+      LOG.error("The following stages have invalid classpath: {}", StringUtils.join(corruptedClasspathStages, ", "));
+
+      boolean canTerminate = configuration.get(CONFIG_CP_VALIDATION_RESULT, DEFAULT_CP_VALIDATION_RESULT);
+      if (canTerminate) {
+        throw new RuntimeException("Invalid classpath detected for " + corruptedClasspathStages.size() + " stage libraries: " + StringUtils.join(corruptedClasspathStages, ", "));
+      }
+    }
   }
 
   // Go over all stages and validate that we can satisfy all the service dependencies. It's a runtime error

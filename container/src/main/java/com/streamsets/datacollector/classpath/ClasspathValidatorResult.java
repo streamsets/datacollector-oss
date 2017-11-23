@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.classpath;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,37 @@ public class ClasspathValidatorResult {
    */
   public boolean isValid() {
     return unparseablePaths.isEmpty() && versionCollisions.isEmpty();
+  }
+
+  /**
+   * Generate small report into log.
+   */
+  public void logDetails() {
+    if(isValid()) {
+      return;
+    }
+
+    LOG.error("Validation results for {}", name);
+
+    if(!unparseablePaths.isEmpty()) {
+      LOG.error("Can't parse the following artifacts:");
+      for(String path : unparseablePaths) {
+        LOG.error("  {}", path);
+      }
+    }
+
+    if(!versionCollisions.isEmpty()) {
+      LOG.error("Detected colliding dependency versions:");
+      for(Map.Entry<String, Map<String, List<Dependency>>> entry : versionCollisions.entrySet()) {
+        LOG.error("  Dependency {} have versions: {}", entry.getKey(), StringUtils.join(entry.getValue().keySet(), ", "));
+        for(Map.Entry<String, List<Dependency>> versionEntry : entry.getValue().entrySet()) {
+          LOG.error("    Version: {}", versionEntry.getKey());
+          for(Dependency dependency: versionEntry.getValue()) {
+            LOG.error("      {}", dependency.getSourceName());
+          }
+        }
+      }
+    }
   }
 
   private ClasspathValidatorResult(
