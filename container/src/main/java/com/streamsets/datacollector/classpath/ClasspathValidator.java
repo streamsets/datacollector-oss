@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.classpath;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,12 @@ public class ClasspathValidator {
     for(Map.Entry<String, Map<String, List<Dependency>>> entry: dependecies.entrySet()) {
       // Ideal the inner map with versions should have only one item, otherwise that is most likely a problem
       if(entry.getValue().size() > 1) {
+        if(CollisionWhitelist.isWhitelisted(entry.getKey(), entry.getValue())) {
+          LOG.debug("Whitelisted dependency {} on versions {}", entry.getKey(), StringUtils.join(entry.getValue().keySet(), ","));
+          continue;
+        }
+
+        // No exceptions were applied, hence this is truly a collision
         resultBuilder.addVersionCollision(entry.getKey(), entry.getValue());
       }
     }

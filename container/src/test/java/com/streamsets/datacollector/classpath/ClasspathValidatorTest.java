@@ -30,7 +30,20 @@ public class ClasspathValidatorTest {
   @Test
   public void testSimpleValid() throws Exception {
     ClasspathValidatorResult result = ClasspathValidator.newValidator("test")
-      .withURL(new URL("file:///test-0.1.jar"))
+      .withURL(new URL("file:///girish-0.1.jar"))
+      .withURL(new URL("file:///arvind-0.1.jar"))
+      .validate();
+
+    assertTrue(result.isValid());
+    assertEquals(0, result.getUnparseablePaths().size());
+    assertEquals(0, result.getVersionCollisons().size());
+  }
+
+  @Test
+  public void testExclusionForAllowedMajoRversion() throws Exception {
+    ClasspathValidatorResult result = ClasspathValidator.newValidator("test")
+      .withURL(new URL("file:///netty-3.4.9.jar"))
+      .withURL(new URL("file:///netty-4.9.1.jar"))
       .validate();
 
     assertTrue(result.isValid());
