@@ -91,6 +91,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String CONFIG_LIBRARY_ALIAS_PREFIX = "library.alias.";
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
 
+  private static final String PROPERTIES_CP_WHITELIST = "data-collector-classpath-whitelist.properties";
+
   private static final String CONFIG_CP_VALIDATION = "stagelibs.classpath.validation.enable";
   private static final boolean DEFAULT_CP_VALIDATION = false;
 
@@ -278,7 +280,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
         ClasspathValidatorResult validationResult = ClasspathValidator.newValidator(sdcCl.getName())
           .withURLs(sdcCl.getURLs())
-          .validate();
+          .validate(loadClasspathWhitelist(cl));
 
         if (!validationResult.isValid()) {
           validationResult.logDetails();
@@ -319,6 +321,21 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   protected void stopTask() {
     privateClassLoaderPool.close();
     super.stopTask();
+  }
+
+  Properties loadClasspathWhitelist(ClassLoader cl) {
+   try (InputStream is = cl.getResourceAsStream(PROPERTIES_CP_WHITELIST)) {
+      if (is != null) {
+        Properties props = new Properties();
+        props.load(is);
+        return props;
+      }
+   } catch (IOException e) {
+     // Fail over to null, the resources simply doesn't exists or something - since it's optional file, it's fully
+     // legal to get here.
+   }
+
+    return null;
   }
 
   String getPropertyFromLibraryProperties(ClassLoader cl, String property, String defaultValue) throws IOException {

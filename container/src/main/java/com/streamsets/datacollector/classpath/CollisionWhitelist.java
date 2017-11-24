@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.classpath;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.util.Collections;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 public class CollisionWhitelist {
@@ -39,18 +41,41 @@ public class CollisionWhitelist {
     WHITELIST_RULES.put("jackson", new JacksonWhitelist());
   }
 
+  /**
+   * Return true if this dependency and given set of versions is whitelisted.
+   *
+   * This class have several rules for whitelisting - some of them are harcoded (known whitelist for all libraries),
+   * whereas the optional Properties argument allows specific exceptions for this particular classpath.
+   *
+   * @param name Name of the dependency
+   * @param specificWhitelist Properties file with exceptions
+   * @param dependencies Version -> List of full dependencies
+   * @return
+   */
   public static boolean isWhitelisted(
     String name,
+    Properties specificWhitelist,
     Map<String, List<Dependency>> dependencies
   ) {
-    WhitelistRule rule = WHITELIST_RULES.get(name);
-
-    // This dependency doesn't have special rule, hence it's not whitelisted
-    if(rule == null) {
-      return false;
+    if(specificWhitelist != null && specificWhitelist.containsKey(name)) {
+      return versionsMatch(specificWhitelist.getProperty(name), dependencies.keySet());
     }
 
-    return rule.isWhitelisted(dependencies);
+    // Otherwise try hardcoded rules:
+    WhitelistRule rule = WHITELIST_RULES.get(name);
+    return rule != null && rule.isWhitelisted(dependencies);
+  }
+
+  /**
+   * Compare expected versions with given versions to see if they are the same or not.
+   *
+   * @param expectedVersions Versions that are expected (and thus whitelisted)
+   * @param versions Versions that were detected on the classpath.
+   * @return True if and only if those two "sets" equals
+   */
+  private static boolean versionsMatch(String expectedVersions, Set<String> versions) {
+    Set<String> expectedSet = Sets.newHashSet(expectedVersions.split(","));
+    return Sets.symmetricDifference(expectedSet, versions).isEmpty();
   }
 
   /**

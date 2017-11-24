@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Classpath validator - validates that single classpath does not have conflicting dependencies. This validation is
@@ -70,6 +71,10 @@ public class ClasspathValidator {
   }
 
   public ClasspathValidatorResult validate() {
+    return validate(null);
+  }
+
+  public ClasspathValidatorResult validate(Properties explicitWhitelist) {
     LOG.debug("Validating classpath for {}", name);
     ClasspathValidatorResult.Builder resultBuilder = new ClasspathValidatorResult.Builder(name);
     // Name of dependency -> Version(s) of the dependency -> Individual dependencies
@@ -97,7 +102,7 @@ public class ClasspathValidator {
     for(Map.Entry<String, Map<String, List<Dependency>>> entry: dependecies.entrySet()) {
       // Ideal the inner map with versions should have only one item, otherwise that is most likely a problem
       if(entry.getValue().size() > 1) {
-        if(CollisionWhitelist.isWhitelisted(entry.getKey(), entry.getValue())) {
+        if(CollisionWhitelist.isWhitelisted(entry.getKey(), explicitWhitelist, entry.getValue())) {
           LOG.debug("Whitelisted dependency {} on versions {}", entry.getKey(), StringUtils.join(entry.getValue().keySet(), ","));
           continue;
         }
