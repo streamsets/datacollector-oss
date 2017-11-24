@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.classpath;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.util.Collections;
@@ -33,8 +32,10 @@ public class CollisionWhitelist {
   static {
     WHITELIST_RULES = new HashMap<>();
     // Simple major version duplicate rules
-    WHITELIST_RULES.put("netty", new AllowedMajorVersionsWhitelist("3", "4"));
     WHITELIST_RULES.put("jetty", new AllowedMajorVersionsWhitelist("6", "9"));
+    WHITELIST_RULES.put("jersey", new AllowedMajorVersionsWhitelist("1", "2"));
+    WHITELIST_RULES.put("netty", new AllowedMajorVersionsWhitelist("3", "4"));
+    WHITELIST_RULES.put("metrics", new AllowedMajorVersionsWhitelist("2", "3"));
     WHITELIST_RULES.put("htrace", new AllowedMajorVersionsWhitelist("2", "3"));
 
     // Special rules for more complicated projects
