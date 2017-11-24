@@ -29,6 +29,12 @@ public class CollisionWhitelistTest {
   private final static Dependency NETTY_3_5_3 = new Dependency("netty", "3.5.3");
   private final static Dependency NETTY_4_8_0 = new Dependency("netty", "4.8.0");
 
+  private final static Dependency JACKSON_1_9_13 = new Dependency("jackson", "1.9.13");
+  private final static Dependency JACKSON_2_8_0_ANN = new Dependency("jackson-annotations-2.8.0.jar", "jackson", "2.8.0");
+  private final static Dependency JACKSON_2_8_0 = new Dependency("jackson-xc-2.8.0.jar", "jackson", "2.8.0");
+  private final static Dependency JACKSON_2_8_9 = new Dependency("jackson-xc-2.8.9.jar", "jackson", "2.8.9");
+  private final static Dependency JACKSON_2_3_5 = new Dependency("jackson-xc-2.3.5.jar", "jackson", "2.3.5");
+
   @Test
   public void testNetty() {
     // Two different major versions should be whitelisted
@@ -54,6 +60,46 @@ public class CollisionWhitelistTest {
       "3.1.2", ImmutableList.of(NETTY_3_1_2),
       "3.5.3", ImmutableList.of(NETTY_3_5_3),
       "4.8.0", ImmutableList.of(NETTY_4_8_0)
+    )));
+  }
+
+  @Test
+  public void testJackson() {
+    // Normal, but unusual state
+    assertTrue(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9)
+    )));
+
+    // Another normal "major" state - 1.x and 2.x can be on the classpath at the same time
+    assertTrue(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "1.9.13", ImmutableList.of(JACKSON_1_9_13),
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9)
+    )));
+
+    // Correct Jackson weirdness - 2.8.9 anything depends on 2.8.0 annotations
+    assertTrue(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "2.8.0", ImmutableList.of(JACKSON_2_8_0_ANN),
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9)
+    )));
+
+    // Incorrect - only ANN can be 2.8.0 and rest on a different dot-dot version
+    assertFalse(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "2.8.0", ImmutableList.of(JACKSON_2_8_0),
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9)
+    )));
+
+    // Correct Jackson weirdness - can also merge multiple major versions ...
+    assertTrue(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "1.3..0", ImmutableList.of(JACKSON_1_9_13),
+      "2.8.0", ImmutableList.of(JACKSON_2_8_0_ANN),
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9)
+    )));
+
+    // 2.8.0 for API is allowed only, all other versions must match
+    assertFalse(CollisionWhitelist.isWhitelisted("jackson", ImmutableMap.of(
+      "2.8.0", ImmutableList.of(JACKSON_2_8_0_ANN),
+      "2.8.9", ImmutableList.of(JACKSON_2_8_9),
+      "2.3.5", ImmutableList.of(JACKSON_2_3_5)
     )));
   }
 }

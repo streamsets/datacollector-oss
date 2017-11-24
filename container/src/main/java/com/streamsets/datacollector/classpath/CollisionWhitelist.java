@@ -20,6 +20,7 @@ import com.google.common.collect.Sets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,9 +32,11 @@ public class CollisionWhitelist {
     WHITELIST_RULES = new HashMap<>();
     // Simple major version duplicate rules
     WHITELIST_RULES.put("netty", new AllowedMajorVersionsWhitelist("3", "4"));
-    WHITELIST_RULES.put("jetty", new AllowedMajorVersionsWhitelist("3", "9"));
+    WHITELIST_RULES.put("jetty", new AllowedMajorVersionsWhitelist("6", "9"));
     WHITELIST_RULES.put("htrace", new AllowedMajorVersionsWhitelist("2", "3"));
-    WHITELIST_RULES.put("jackson", new AllowedMajorVersionsWhitelist("1", "2"));
+
+    // Special rules for more complicated projects
+    WHITELIST_RULES.put("jackson", new JacksonWhitelist());
   }
 
   public static boolean isWhitelisted(
@@ -69,15 +72,24 @@ public class CollisionWhitelist {
       Collections.addAll(this.allowedMajors, allowedMajors);
     }
 
-    protected Map<String, Set<String>> distributePerMajor(Set<String> versions) {
-      Map<String, Set<String>> distribution = new HashMap<>();
-      versions.forEach(v -> distribution.computeIfAbsent(v.substring(0, 1), x -> new HashSet<>()).add(v));
+    protected Map<String, Map<String, List<Dependency>>> distributePerMajor(Map<String, List<Dependency>> versions) {
+      Map<String, Map<String, List<Dependency>>> distribution = new HashMap<>();
+      versions.forEach((k, v) ->
+        distribution
+          .computeIfAbsent(k.substring(0, 1), x -> new HashMap<>())
+          .computeIfAbsent(k, x -> new LinkedList<>())
+          .addAll(v)
+      );
       return distribution;
+    }
+
+    protected boolean isMajorWhitelisted(String major, Map<String, List<Dependency>> versions) {
+      return versions.size() == 1;
     }
 
     @Override
     public boolean isWhitelisted(Map<String, List<Dependency>> dependencies) {
-      Map<String, Set<String>> majorDistribution = distributePerMajor(dependencies.keySet());
+      Map<String, Map<String, List<Dependency>>> majorDistribution = distributePerMajor(dependencies);
 
       // If there are more majors that those allowed in our configuration, then we know for sure that this is not valid
       if(!Sets.difference(majorDistribution.keySet(), allowedMajors).isEmpty()) {
@@ -85,13 +97,63 @@ public class CollisionWhitelist {
       }
 
       // Otherwise we need to make sure that each version have exactly one minor
-      for(Set<String> fullVersion : majorDistribution.values()) {
-        if(fullVersion.size() != 1) {
+      for(Map.Entry<String, Map<String, List<Dependency>>> entry: majorDistribution.entrySet()) {
+        if(!isMajorWhitelisted(entry.getKey(), entry.getValue())) {
           return false;
         }
       }
 
       // Otherwise all is alright
+      return true;
+    }
+  }
+
+  /**
+   * Special rule for Jackson as it's kind of compound rule - it allows duplicates on major versions (1 and 2) and then
+   * within 2, it's allowed to have jackson-annotations-2.8.0.jar while other jackson jars are 2.8.3.
+   */
+  private static class JacksonWhitelist extends AllowedMajorVersionsWhitelist implements WhitelistRule {
+
+    public JacksonWhitelist() {
+      super("1", "2");
+    }
+
+    @Override
+    protected boolean isMajorWhitelisted(String major, Map<String, List<Dependency>> versions) {
+      if (super.isMajorWhitelisted(major, versions)) {
+        return true;
+      }
+
+      // Special detection code for major version "2"
+      return major.equals("2") && validateMajor2(versions);
+    }
+
+    private boolean validateMajor2(Map<String, List<Dependency>> versions) {
+      if(versions.size() != 2) {
+        return false;
+      }
+
+      // Find "jackson-annotation" version prefix (2.7 , 2.8, ...)
+      String versionPrefix = null;
+      for(Map.Entry<String, List<Dependency>> entry : versions.entrySet()) {
+        if(entry.getKey().endsWith(".0") && entry.getValue().size() == 1 && entry.getValue().get(0).getSourceName().contains("jackson-annotations")) {
+          versionPrefix = entry.getKey().replaceAll("\\.[^.]*$", "");
+          break;
+        }
+      }
+
+      // If we haven't found the prefix, we can't whitelist
+      if(versionPrefix == null) {
+        return false;
+      }
+
+      // Both the versions must start with the same prefix (2.7, 2.8, ...)
+      for(String version : versions.keySet()) {
+        if(!version.startsWith(versionPrefix)) {
+          return false;
+        }
+      }
+
       return true;
     }
   }
