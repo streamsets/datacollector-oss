@@ -760,8 +760,8 @@ angular.module('dataCollectorApp.common')
        * @param pipelineEnvelope
        * @param overwrite
        */
-      importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGeneratePipelineId=true';
+      importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite, autoGeneratePipelineId) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGeneratePipelineId=' + !!autoGeneratePipelineId;
         if (overwrite) {
           url += '&overwrite=' + overwrite;
         }

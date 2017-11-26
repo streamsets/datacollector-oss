@@ -57,7 +57,7 @@ angular
                       pipelineRules: JSON.parse(orgRemotePipeline.currentRules.rulesDefinition)
                     };
 
-                    api.pipelineAgent.importPipelineConfig(pipelineInfo.pipelineId, pipelineEnvelope, true)
+                    api.pipelineAgent.importPipelineConfig(pipelineInfo.pipelineId, pipelineEnvelope, true, false)
                       .then(
                         function(res) {
                           $scope.updatedPipelineConfig = res.data.pipelineConfig;

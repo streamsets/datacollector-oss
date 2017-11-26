@@ -53,9 +53,20 @@ angular
 
               api.pipelineAgent.importPipelineConfig(remotePipeline.name, pipelineEnvelope, $scope.overwrite)
                 .then(
-                  function() {
-                    $scope.downloading[remotePipeline.commitId] = false;
-                    $scope.downloaded[remotePipeline.commitId] = true;
+                  function(res) {
+                    var newMetadata = res.data.pipelineConfig.metadata;
+                    newMetadata['lastConfigId'] = res.data.pipelineConfig.uuid;
+                    newMetadata['lastRulesId'] = res.data.pipelineRules.uuid;
+                    api.pipelineAgent.savePipelineMetadata(res.data.pipelineConfig.pipelineId, newMetadata)
+                      .then(
+                        function(res) {
+                          $scope.downloading[remotePipeline.commitId] = false;
+                          $scope.downloaded[remotePipeline.commitId] = true;                        },
+                        function(res) {
+                          $scope.common.errors = [res.data];
+                          $scope.downloading[remotePipeline.commitId] = false;
+                        }
+                      );
                   },
                   function(res) {
                     $scope.common.errors = [res.data];
