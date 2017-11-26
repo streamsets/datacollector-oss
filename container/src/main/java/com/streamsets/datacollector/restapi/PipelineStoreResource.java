@@ -1025,12 +1025,12 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
-      @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName,
+      @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineException, URISyntaxException {
     RestAPIUtils.injectPipelineInMDC("*");
-    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGenerateName, pipelineEnvelope, draft);
+    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGeneratePipelineId, pipelineEnvelope, draft);
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
   }
@@ -1039,7 +1039,7 @@ public class PipelineStoreResource {
       String name,
       String rev,
       boolean overwrite,
-      boolean autoGenerateName,
+      boolean autoGeneratePipelineId,
       PipelineEnvelopeJson pipelineEnvelope,
       boolean draft
   ) throws PipelineException {
@@ -1061,13 +1061,13 @@ public class PipelineStoreResource {
       if (store.hasPipeline(name)) {
         newPipelineConfig = store.load(name, rev);
       } else {
-        if (autoGenerateName) {
+        if (autoGeneratePipelineId) {
           name = UUID.randomUUID().toString();
         }
         newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
       }
     } else {
-      if (autoGenerateName) {
+      if (autoGeneratePipelineId) {
         name = UUID.randomUUID().toString();
       }
       newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
@@ -1078,6 +1078,7 @@ public class PipelineStoreResource {
       ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
 
       pipelineConfig.setUuid(newPipelineConfig.getUuid());
+      pipelineConfig.setPipelineId(newPipelineConfig.getPipelineId());
       pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
     }
 
