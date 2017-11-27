@@ -308,14 +308,8 @@
                 <require>jre &gt;= 1.8</require>
                 <require>bash</require>
                 <require>which</require>
+                <require>redhat-release = 6</require>
               </requires>
-              <!-- prevent installation on wrong distribution since rpm-maven-plugin doesn't include {?dist} macro -->
-              <conflicts>
-                <conflict>centos-release &lt; 6</conflict>
-                <conflict>redhat-release &lt; 6</conflict>
-                <conflict>centos-release &gt; 6</conflict>
-                <conflict>redhat-release &gt; 6</conflict>
-              </conflicts>
               <defineStatements>
                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
                 <defineStatement>service_user ${sdc.user}</defineStatement>
