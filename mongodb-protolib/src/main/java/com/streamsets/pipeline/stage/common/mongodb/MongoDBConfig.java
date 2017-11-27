@@ -122,6 +122,18 @@ public class MongoDBConfig {
   )
   public CredentialValue password;
 
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      label = "Authentication Source",
+      description = "For delegated authentication, specify alternate database name. Leave blank for normal authentication",
+      required = false,
+      dependsOn = "authenticationType",
+      triggeredByValue = "USER_PASS",
+      group = "CREDENTIALS",
+      displayPosition = 65
+  )
+  public String authSource = "";
+
   // Advanced configs
 
   @ConfigDef(
@@ -511,9 +523,10 @@ public class MongoDBConfig {
   private List<MongoCredential> createCredentials() throws StageException {
     MongoCredential credential = null;
     List<MongoCredential> credentials = new ArrayList<>(1);
+    String authdb = (authSource.isEmpty() ? database : authSource);
     switch (authenticationType) {
       case USER_PASS:
-        credential = MongoCredential.createCredential(username.get(), database, password.get().toCharArray());
+        credential = MongoCredential.createCredential(username.get(), authdb, password.get().toCharArray());
         break;
       case LDAP:
         credential = MongoCredential.createCredential(username.get(), "$external", password.get().toCharArray());
