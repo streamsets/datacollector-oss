@@ -47,7 +47,11 @@
                                 </row>
                                 <row>
                                     <entry>MAPR_VERSION</entry>
-                                    <entry>MapR version: 5.0.0, 5.1.0, or 5.2.0.</entry>
+                                    <entry>MapR version: 5.0.0, 5.1.0, 5.2.0, or 6.0.0.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/row-MEPVersion">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -55,11 +59,12 @@
                         variable:<codeblock>export &lt;environment variable>=&lt;value></codeblock>For
                         example, use the following commands if you used the default home and
                         configuration directories for an RPM installation, the default MapR home
-                        directory, and MapR version
-                        5.2.0:<codeblock>export SDC_HOME=/opt/streamsets-datacollector
+                        directory, MapR 6.0.0, and MEP
+                        4.0:<codeblock>export SDC_HOME=/opt/streamsets-datacollector
 export SDC_CONF=/etc/sdc
 export MAPR_HOME=/opt/mapr
-export MAPR_VERSION=5.2.0</codeblock></p></li>
+export MAPR_VERSION=6.0.0
+export MAPR_MEP_VERSION=4</codeblock></p></li>
                 <li
                     conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/SetUpCommand"/>
                 <li

@@ -42,7 +42,7 @@
   streamsets-datacollector-mapr_5_2-lib</codeblock></p></li>
                 <li
                     conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
-                <li>Run the <codeph>setup-mapr </codeph>command, as described in <xref
+                <li>Run the <codeph>setup-mapr</codeph> command, as described in <xref
                         href="../Installation/MapR-PrerequisitesStep2.dita#concept_pvx_wxp_xz"
                         />.<p>The command modifies configuration files and creates the required
                         symbolic links. You can run the command in interactive or non-interactive

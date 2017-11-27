@@ -43,17 +43,22 @@
                                 conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/row_SDC_CONF">
                                 <entry/>
                             </row>
+                            <row
+                                conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/row-MEPVersion">
+                                <entry/>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table><p>Use the following command to set an environment
                     variable:<codeblock>export &lt;environment variable>=&lt;value></codeblock></p>For
                 example, use the following commands if you used the default home and configuration
-                directories for an RPM
-                installation:<codeblock>export SDC_HOME=/opt/streamsets-datacollector
-export SDC_CONF=/etc/sdc</codeblock></li>
+                directories for an RPM installation, and use MEP
+                4.0:<codeblock>export SDC_HOME=/opt/streamsets-datacollector
+export SDC_CONF=/etc/sdc
+export MAPR_MEP_VERSION=4</codeblock></li>
             <li
                 conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/SetUpCommand"/>
-            <li>When prompted, enter 5.0.0, 5.1.0, or 5.2.0 for the MapR version.</li>
+            <li>When prompted, enter 5.0.0, 5.1.0, 5.2.0, or 6.0.0 for the MapR version.</li>
             <li id="MapR_absolutepath">When prompted, enter the absolute path to the MapR home
                 directory, usually <codeph>/opt/mapr</codeph>.</li>
             <li
