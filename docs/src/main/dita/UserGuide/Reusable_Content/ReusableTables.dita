@@ -2439,6 +2439,11 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
     </thead>
     <tbody>
      <row>
+      <entry>credentialStore.vault.def</entry>
+      <entry>Required. Defines the implementation of the Vault credential store. <p>Do not change
+        the default value.</p></entry>
+     </row>
+     <row>
       <entry>credentialStore.vault.config.pathKey.separator</entry>
       <entry>Optional. Separator to use for the path and key values in the credential name argument
        used by the <xref href="../Expression_Language/CredentialFunctions.dita#concept_yvc_3qs_r1b"

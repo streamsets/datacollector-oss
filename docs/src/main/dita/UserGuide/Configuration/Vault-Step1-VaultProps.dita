@@ -35,9 +35,10 @@
                 <dd>The <codeph>credential-stores.properties</codeph> file contains the remaining
                     Vault properties. The Vault server URL, Role ID, and Secret ID are required
                     properties. Configure other properties as needed.<note>The
-                            <codeph>credentialStore.vault.config.pathKey.separator</codeph> property
-                        is not used by the Vault functions. You can ignore this
-                    property.</note></dd>
+                            <codeph>credentialStore.vault.def</codeph> and
+                            <codeph>credentialStore.vault.config.pathKey.separator</codeph>
+                        properties are not used by the Vault functions. You can ignore these
+                        properties.</note></dd>
                 <dd>Configure the following properties in the file:<table frame="all" rowsep="1"
                         colsep="1" id="table_tdn_zkx_v1b">
                         <tgroup cols="2">
