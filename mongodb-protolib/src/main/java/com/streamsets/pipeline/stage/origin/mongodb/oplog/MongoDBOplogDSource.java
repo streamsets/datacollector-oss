@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.origin.mongodb.MongoDBDSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Origins/MongoDBOplog.html#task_qj5_drw_4y",
+    upgrader = MongoDBOplogSourceUpgrader.class,
     resetOffset = true
 )
 @GenerateResourceBundle
