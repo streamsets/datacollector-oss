@@ -23,9 +23,8 @@
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
             use Vault functions to access information, a.k.a. <term>secrets</term>, stored in
             Hashicorp Vault. However, the Vault functions are now deprecated and will be removed in
-            a future release. For pipelines that include JDBC stages, we recommend using the
-            credential functions available with the Vault <xref
-                href="CredentialStores.dita#concept_bt1_bpj_r1b">credential store</xref>
+            a future release. We recommend using the credential functions available with the Vault
+                <xref href="CredentialStores.dita#concept_bt1_bpj_r1b">credential store</xref>
             integration.</p>
         <p>You can use Vault secrets in place of username and password properties, similar
             properties such as AWS access key IDs and secret access keys, and in HTTP headers and
