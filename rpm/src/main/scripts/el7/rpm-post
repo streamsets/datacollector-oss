@@ -20,4 +20,7 @@
 #
 
 mkdir -p /var/log/sdc
+mkdir -p /var/lib/sdc
+chown %{service_user}:%{service_group} /var/log/sdc
+chown %{service_user}:%{service_group} /var/lib/sdc
 systemctl daemon-reload
