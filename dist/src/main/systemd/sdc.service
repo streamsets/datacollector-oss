@@ -29,5 +29,6 @@ LimitNOFILE=32768
 Environment=SDC_CONF=/etc/sdc
 Environment=SDC_HOME=/opt/streamsets-datacollector
 Environment=SDC_LOG=/var/log/sdc
+Environment=SDC_DATA=/var/lib/sdc
 ExecStart=/opt/streamsets-datacollector/bin/streamsets dc -verbose
 TimeoutSec=60
