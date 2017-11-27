@@ -622,16 +622,15 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_6_0-mep4-lib</entry>
-                            <entry>
-                                <ul id="ul_nbk_zy5_5bb">
+                            <entry>For MapR 6.0, MapR Ecosystem Pack (MEP) version 4.
+                                    <p>Includes:</p><ul id="ul_nbk_zy5_5bb">
                                     <li>MapR Streams Consumer origin for standalone and cluster mode
                                         pipelines</li>
                                     <li>Hive Metadata processor</li>
                                     <li>Spark Evaluator processor</li>
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination using the MapR library</li>
-                                </ul>
-                            </entry>
+                                </ul></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</entry>

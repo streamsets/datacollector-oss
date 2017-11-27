@@ -25,7 +25,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         machine to connect to MapR. <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
-        not display MapR origins and destinations in the stage library nor the MapR Streams
+        not display MapR origins and destinations in stage library lists nor the MapR Streams
         statistics aggregator in the pipeline properties until you perform these
         prerequisites.</shortdesc>
  <conbody>

@@ -269,8 +269,9 @@
                                 or MongoDB Oplog. </li>
                             <li>MapR DB JSON destination enhancement - The destination now supports
                                 writing to MapR DB based on the <xref
-                                    href="../Destinations/MapRDBJSON-CRUDOperation.dita#concept_ab4_gbb_xbb"
-                                    >CRUD operation in record header attributes</xref>.</li>
+                                    href="../Destinations/MapRDBJSON-Writing.dita#concept_hy5_3nb_xbb"
+                                    >CRUD operation in record header attributes and the Insert API
+                                    and Set API properties</xref>.</li>
                             <li>MongoDB destination enhancements - With this release, the Upsert
                                 operation is no longer supported by the destination. Instead, the
                                 destination includes the following enhancements:<ul
@@ -287,8 +288,8 @@
                                         href="../Upgrade/PostUpgrade-MongoDBdest-Upsert.dita#concept_ncs_5jl_wbb"
                                         >Update MongoDB Destination Upsert Pipelines</xref>.
                                 </p></li>
-                            <li>Redis destination enhancement - The destination now supports writing
-                                data using <xref
+                            <li>Redis destination enhancement - The destination now supports
+                                processing data using <xref
                                     href="../Destinations/Redis-CRUDOperation.dita#concept_dz2_4xh_xbb"
                                     >CRUD operations stored in record header attributes</xref>. </li>
                             <li>Salesforce destination enhancement - When using the Salesforce Bulk

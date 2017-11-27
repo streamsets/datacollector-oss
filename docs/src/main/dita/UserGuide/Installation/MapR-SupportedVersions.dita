@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_n4q_lgj_ybb">
+ <title>Supported Versions</title>
+ <conbody>
+  <p><indexterm>MapR<indexterm>supported versions</indexterm></indexterm>This release supports the
+            following MapR and MapR Ecosystem Pack (MEP) versions:<table frame="all" rowsep="1"
+                colsep="1" id="table_asm_f3k_ybb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Supported MapR Version</entry>
+                            <entry>Supported MEP Version</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>MapR 5.0.0 and 5.1.0</entry>
+                            <entry>N/A</entry>
+                        </row>
+                        <row>
+                            <entry>MapR 5.2.0</entry>
+                            <entry>MEP 1.x<p>For the Spark Evaluator processor, also MEP
+                                3.0</p></entry>
+                        </row>
+                        <row>
+                            <entry>MapR 6.0.0</entry>
+                            <entry>MEP 4.0</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+ </conbody>
+</concept>

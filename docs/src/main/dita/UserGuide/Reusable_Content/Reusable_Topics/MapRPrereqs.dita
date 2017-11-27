@@ -25,14 +25,17 @@
                 and Working with Upgraded MapR System in Upgrade chapter</draft-comment>
             <ol id="ol_kpy_jjc_yy">
                 <li id="MapR_loginAuth">If the MapR cluster uses username/password login
-                    authentication, uncomment the following line in the <ph
+                    authentication, uncomment the SDC_JAVA_OPTS environment variable line in the <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
-                    configuration file located in the <codeph>$SDC_DIST/libexec</codeph> directory:
-                        <codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</codeblock><p>Modify
-                        the <xref
-                            href="../../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                            >environment configuration file</xref> used by your installation
-                        type.</p></li>
+                    variable file.<p><ph
+                            conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                        provides two environment configuration files:<ul
+                            conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/ul-SDCenvfiles"
+                            id="ul_n4l_dfc_1cb">
+                            <li/>
+                        </ul></p><p>The SDC_JAVA_OPTS line in the environment variable file appears
+                        as
+                    follows:</p><codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</codeblock></li>
             </ol>
         </p>
         <draft-comment author="alisontaylor">These rows and steps used in the MapR Prereqs in
@@ -63,14 +66,24 @@
                         <entry><ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                             configuration directory.</entry>
                     </row>
+                    <row id="row-MEPVersion">
+                        <entry>MAPR_MEP_VERSION</entry>
+                        <entry>Required for MEP 4.0. <p>Use this environment variable to use both of
+                                the MapR 6.0 and the MapR 6.0 MEP 4 stage libraries, or to use just
+                                the MapR 6.0 MEP 4 stage library. </p><p>This variable is not
+                                required when using just the MapR 6.0 stage library.</p><p>Do not
+                                set this environment variable for MapR versions earlier than 6.0.
+                            </p></entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
-        <ol id="ol_llv_tfv_xz">
+        <ol>
             <li id="SetUpCommand">Use the following command to set up
                 MapR:<codeblock>$SDC_HOME/bin/streamsets setup-mapr</codeblock></li>
-            <li id="Restart">Restart <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
-                verify that the MapR origins and destinations appear in the stage library.</li>
+            <li id="Restart">Restart <ph
+                    conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and verify that
+                MapR stages appear in stage library lists.</li>
         </ol>
     </conbody>
 </concept>

@@ -49,6 +49,27 @@
             <p><ph id="ph_LinuxEL7">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
                   LTS</ph></p>
             <p><ph id="ph_LinuxEL7_RPM">CentOS 7 or Red Hat Enterprise Linux 7</ph></p>
+            <p>
+                  <draft-comment author="Loretta" >Used in Configuring the SDC
+                        Environment and in MapR Prereq > Install Client Libraries</draft-comment>
+            </p>
+            <p>
+                  <ul id="ul-SDCenvfiles">
+                        <li><codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> - Used when you start <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> manually from the command line or when you start Data Collector as
+                              a service on operating systems that use the systemd init system -
+                              including <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
+                              />. </li>
+                        <li><codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> - Used when you start <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> as a service on operating systems that use the SysV init system -
+                              including <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
+                              />.</li>
+                  </ul>
+            </p>
             <draft-comment author="Loretta">
                   <p>For SDC/DPM xrefs to Configuring SDC.</p>
             </draft-comment>

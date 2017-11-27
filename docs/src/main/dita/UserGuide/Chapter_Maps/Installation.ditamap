@@ -78,6 +78,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Installation/MapR-SupportedVersions.dita"/>
    <topicref href="../Installation/MapR-PrerequisitesStep1.dita"/>
    <topicref href="../Installation/MapR-PrerequisitesStep2.dita">
     <topicref href="../Installation/MapR-PrerequisitesStep2Interactive.dita"/>

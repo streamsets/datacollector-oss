@@ -42,8 +42,8 @@
                                 versions 5.0.0 or 5.1.0, you can download the files for your
                                 operating system here:
                                 <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock>For
-                                MapR version 5.2.0, you can download the files for your operating
-                                system here:
+                                MapR versions 5.2.0 or 6.0.0, you can download the files for your
+                                operating system here:
                                 <codeblock><xref href="http://package.mapr.com/releases/MEP/" format="html" scope="external"/>MEP-&lt;version>/</codeblock></p></li>
                     </ul></p></li>
             <li
