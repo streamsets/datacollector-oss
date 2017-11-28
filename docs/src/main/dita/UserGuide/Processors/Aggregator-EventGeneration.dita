@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ppy_b42_wbb">
+ <title>Event Generation</title>
+ <conbody>
+        <p><indexterm>Aggregator processor<indexterm>event
+                generation</indexterm></indexterm><indexterm>the event
+                    framework<indexterm>Aggregator processor event
+                generation</indexterm></indexterm>The Aggregator processor can generate events that
+            contain the results of the aggregations. The processor can generate events that include
+            the results of all aggregations. It can also generate events for the results of each
+            individual aggregation.</p>
+        <p>The Aggregator processor events can be used in any logical way. For example: <ul>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"/>
+                <li>With <xref href="../Alerts/DataAlerts.dita#concept_tpm_rsk_zq"> a data
+                        alert</xref> to send notifications.<p>You can configure data alerts on the
+                        event stream to notify upon reaching specified thresholds.</p></li>
+            </ul><ul>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"
+                />
+            </ul><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
+ </conbody>
+</concept>

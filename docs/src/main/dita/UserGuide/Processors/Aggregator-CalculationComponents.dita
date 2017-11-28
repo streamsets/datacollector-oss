@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_scl_5rf_wbb">
+ <title>Calculation Components</title>
+ <conbody>
+  <p><indexterm>calculation components<indexterm>Aggregator
+                processor</indexterm></indexterm><indexterm>Aggregator
+                    processor<indexterm>calculation components</indexterm></indexterm>You can use
+            the following components to configure the calculations to perform:<dl>
+                <dlentry>
+                    <dt>Aggregate function and expression</dt>
+                    <dd>When you select the <xref
+                            href="Aggregator-Functions.dita#concept_bvw_d2f_wbb">aggregate
+                            function</xref> to use, you typically also configure an aggregate
+                        expression. All aggregate functions except the COUNT function require an
+                        expression. </dd>
+                    <dd>For example, to determine the total sales for all transaction data in the
+                        time window, you can set the aggregate function to SUM (double) and use the
+                        following expression:<codeblock>${record:value('/total')}</codeblock></dd>
+                    <dd>This expression performs a SUM of the total field for all records in the
+                        time window.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Filter</dt>
+                    <dd>Configure a filter to limit the records used in calculations. A filter is an
+                        expression that evaluates to a boolean value. Records that evaluate to true
+                        are included in the aggregation.</dd>
+                    <dd>For example, the following filter ensures processing only credit card
+                        transactions with a known credit card
+                        type:<codeblock>${record:value('/transaction_type')=="credit" AND record:value('/cc_type')!="unknown"}</codeblock>With
+                        this filter in place, the Aggregator excludes cash purchases and unknown
+                        credit card types.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Group by expression</dt>
+                    <dd>A group by expression is an expression used to group data before performing
+                        calculations. Use a group by expression to add an additional dimension to
+                        the results. </dd>
+                    <dd>The example above produces a single sum for all credit card transactions
+                        where the credit card type is known. To break that number down by credit
+                        card types, you can use the following group by
+                        expression:<codeblock>${record:value('/cc_type')}</codeblock></dd>
+                    <dd>This expression groups the data by the different values in the cc_type
+                        field, such as Visa or Mastercard, before performing the aggregation.</dd>
+                </dlentry>
+            </dl></p>
+        <p>For additional examples and information on how the aggregation results display in Monitor
+            mode, see <xref href="Aggregator-Monitoring.dita#concept_qxw_k42_wbb"/>.</p>
+ </conbody>
+</concept>

@@ -23,6 +23,20 @@
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
   </topicref>
+  <topicref href="../Processors/Aggregator.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Aggregator-WindowType.dita">
+    <topicref href="../Processors/Aggregator-RollingWindow.dita"/>
+    <topicref href="../Processors/Aggregator-SlidingWindow.dita"/>
+   </topicref>
+   <topicref href="../Processors/Aggregator-CalculationComponents.dita"/>
+   <topicref href="../Processors/Aggregator-Functions.dita"/>
+   <topicref href="../Processors/Aggregator-EventGeneration.dita">
+    <topicref href="../Processors/Aggregator-EventRecords.dita"/>
+   </topicref>
+   <topicref href="../Processors/Aggregator-Monitoring.dita"/>
+   <topicref href="../Processors/Aggregator-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Base64Decoder.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Base64Decoder-Configuring.dita"/>

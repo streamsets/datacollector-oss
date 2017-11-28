@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_abn_qyd_wbb">
+ <title>Window Type, Time Windows, and Information Display</title>
+ <conbody>
+        <p><indexterm>Aggregator processor<indexterm>window type, time windows, and information
+                    display</indexterm></indexterm>The aggregation window type determines the window
+            of time that the Aggregator processor uses to calculate aggregations. It also determines
+            how the processor generates charts and events.</p>
+        <p>The time window is the period of time to use for the specified window type. Time window
+            behavior is specific to the window type that you select. </p>
+        <p>For example, when you configure a rolling window type with a one hour time window, the
+            processor performs aggregations every hour on the hour using the records that passed
+            through the processor during each hour. </p>
+        <p>Conceptually, you might say that with a rolling window, records are static within the
+            window where they occur. When records become part of a particular time window, they
+            remain there. And once the calculations for a time window are complete, they remain
+            static as well. </p>
+        <p>In contrast, when you select a one hour time window for a sliding window type, the
+            aggregations are always based on the records that passed through the processor in the
+            past hour, providing an update of the calculations at regular intervals. </p>
+        <p>Conceptually, the sliding window is locked into the current time, and records slide
+            through the window. Records that have moved past the window are no longer part of
+            sliding window calculations.</p>
+    </conbody>
+</concept>

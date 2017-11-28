@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qxw_k42_wbb">
+ <title>Monitoring Aggregations</title>
+ <conbody>
+  <p><indexterm>Aggregator processor<indexterm>monitoring aggregations</indexterm></indexterm>In
+            addition to standard stage statistics, the Aggregator processor provides aggregation
+            charts that you can monitor when you run the pipeline. The processor generates one chart
+            for every aggregation, using the specified title for the chart name. </p>
+        <p>The contents and display of the charts depend on the aggregation and stage properties.
+            For example, when using a group by expression, the chart displays a bar for each group. </p>
+        <p>When using a sliding window, charts display the date and time that the chart was last
+            updated. </p>
+        <p>When using a rolling window, charts contain the results for multiple time windows based
+            on the Number of Time Windows to Remember property. Charts display the date and time
+            that the time window closes. The most recent time window can be in progress, displaying
+            the latest details as the processor continues to aggregate data within the time
+            window.</p>
+        <p>For example, say you have an Aggregator processor using a rolling window and a 30 second
+            time window. It is configured to remember three time windows and uses the following
+            aggregation to perform a sum of all sales, using a filter to exclude returns:</p>
+        <p><image href="../Graphics/Aggregator-Sum.png" id="image_pmc_hh1_xbb" scale="70"/></p>
+        <p>The processor generates the following "total sales" chart:</p>
+        <p><image href="../Graphics/Aggregator-SumChart.png" id="image_iwm_zf1_xbb" scale="60"/></p>
+        <p>Notice, the aggregate function, SUM (double), displays on the left side of the chart and
+            the end of each time window displays under each bar. You can see that the interval
+            between the time windows is 30 seconds, as configured in the stage. </p>
+        <p>The results for the third time window seem low, but this is because the time window is
+            still active -- the calculations are ongoing and the results are updated until the time
+            window closes. Like other <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            charts and graphs, when you hover over a particular section, relevant details display.
+            In this case, the "value" is the sum of the sales that occurred in the time window.</p>
+        <p>In the same Aggregator processor, you might use the following aggregation configuration
+            to determine the count of sales and returns. The group by expression enables counting
+            each transaction type:</p>
+        <p><image href="../Graphics/Aggregator-Count-Group.png" id="image_kt5_f31_xbb" scale="70"
+            /></p>
+        <p>In the resulting "transaction types" chart, the COUNT function displays on the left, and
+            separate bars represent the return and sale groups:</p>
+        <p><image href="../Graphics/Aggregator-CountChart-GroupBy.png" id="image_acp_4m1_xbb"
+                scale="50"/></p>
+        <p>To view Aggregator charts and statistics, view the pipeline in Monitor mode, and then
+            select the Aggregator processor.</p>
+ </conbody>
+</concept>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_h5b_bf2_wbb">
+ <title>Rolling Windows</title>
+ <conbody>
+  <p><indexterm>Aggregator processor<indexterm>rolling window, time window, and
+                results</indexterm></indexterm>When using a rolling window, the Aggregator processor
+            performs the aggregations on the set of records that pass through the processor within
+            specific time windows. Use a rolling window to generate periodic historic analysis of
+            the data passing through the pipeline.</p>
+        <p>With a rolling window, the time windows are incremented based on the hour, rather than on
+            the start time of the pipeline. </p>
+        <p>For example, when you select a fifteen minute time window, the aggregations are
+            calculated every fifteen minutes, starting on the hour. So if you start the pipeline at
+            8:09, the first aggregation occurs at 8:15, and the following aggregations at 8:30,
+            8:45, 9:00, and so on. In fact, if you start the pipeline anywhere between 8:01 and
+            8:14, the aggregations start at 8:15 and continue every 15 minutes. </p>
+        <p>For rolling windows, the processor creates the charts in Monitor mode based on the time
+            window and the Number of Time Windows to Remember. For example, if you set the property
+            to 4, and use a 15 minute time window, then the resulting charts display four 15 minute
+            time windows.</p>
+        <p>The processor also creates events with the results of the calculations based on the time
+            window. So with a 15 minute time window, it generates events every 15 minutes, based on
+            the hour. </p>
+        <p>Note that the calculations from the first event can include less than a full time-window
+            of records, for reasons described above. Similarly the last event, generated when the
+            pipeline stops, can include calculations with less than a full time-window of
+            records.</p>
+ </conbody>
+</concept>
