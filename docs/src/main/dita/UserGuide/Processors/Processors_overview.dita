@@ -26,6 +26,9 @@
     <p>You can use different processors based on the execution mode of the pipeline. </p>
     <p>In standalone or cluster pipelines, you can use the following processors:<ul
         id="ul_mxz_jxm_jq">
+        <li><xref href="Aggregator.dita#concept_ofb_svm_5bb">Aggregator</xref> - Performs
+          aggregations and displays the results in Monitor mode and writes the results to events
+          when enabled. This processor does not update the records being evaluated.</li>
         <li><xref href="Base64Decoder.dita#concept_ujj_spy_kv">Base64 Field Decoder</xref> - Decodes
           Base64 encoded data to binary data.</li>
         <li><xref href="Base64Encoder.dita#concept_wtr_mpy_kv">Base64 Field Encoder</xref> - Encodes

@@ -209,8 +209,10 @@
                     <dt>Processors</dt>
                     <dd>
                         <ul id="ul_qfc_3fl_wbb">
-                            <li>New Aggregator processor - A processor that aggregates data that
-                                arrives within a window of time.</li>
+                            <li><xref href="../Processors/Aggregator.dita#concept_ofb_svm_5bb">New
+                                    Aggregator processor</xref> - A processor that aggregates data
+                                within a window of time. Displays the results in Monitor mode and
+                                can write the results to events. </li>
                             <li><xref href="../Processors/Delay.dita#concept_ez5_pvf_wbb">New Delay
                                     processor</xref> - A processor that can delay processing a batch
                                 of records for a specified amount of time.</li>

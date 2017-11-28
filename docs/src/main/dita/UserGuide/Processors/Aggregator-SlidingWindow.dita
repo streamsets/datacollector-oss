@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qtg_ff2_wbb">
+ <title>Sliding Windows</title>
+ <conbody>
+  <p><indexterm>Aggregator processor<indexterm>sliding window type, time window, and
+                    results</indexterm></indexterm>When using a sliding window type, the Aggregation
+            processor performs the aggregations on the latest set of records within the specified
+            time window. With a sliding window, the time window is always relative to the current
+            time.</p>
+        <p>Rather than capturing the history of the calculations as with a rolling window, the
+            sliding window provides updates to the current set of aggregations. Use a sliding window
+            to provide real time information about the data passing through the processor.</p>
+        <p>For example, say you configure a sliding window with a 30 second time window. When you
+            run the pipeline, the processor displays a single chart with information from the
+            records that passed through the processor in the last 30 seconds. And it updates the
+            single chart regularly. </p>
+        <p>In Monitor mode, the calculations and resulting charts are updated every few seconds for
+            all time window intervals. The charts indicate the time that it was last updated. </p>
+        <p>When generating events, the processor generates events at regular intervals based on the
+            specified time window, beginning as soon as the pipeline starts. </p>
+        <p>For example, for a sliding window type with a time window of one hour, the processor
+            generates events every minute. So if you start the pipeline at 9:08, the processor
+            generates events with the results of the calculations starting at 9:09, then 9:10, 9:11,
+            etc. </p>
+        <p>Note that the results of the first hour of calculations contain less data than the
+            specified one hour time window. At 10:08, the processor provides the results of the
+            first one hour time window. At 10:09, the processor includes all of the latest records
+            for the last hour in the calculations, dropping the records that had arrived between
+            9:08 and 9:09 since they have fallen out of the time window.</p>
+        <p>The following table describes how often event records are generated for each sliding time
+                window:<table frame="all" rowsep="1" colsep="1" id="table_apg_mk2_wbb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="1.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Sliding Time Window</entry>
+                            <entry>Event Generation Occurs... </entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>1 minute</entry>
+                            <entry>Every 5 seconds from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>5 minutes</entry>
+                            <entry>Every 5 seconds from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>10 minutes</entry>
+                            <entry>Every 10 seconds from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>30 minute</entry>
+                            <entry>Every 30 seconds from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>1 hour</entry>
+                            <entry>Every 1 minute from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>6 hours</entry>
+                            <entry>Every 5 minutes from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>12 hours</entry>
+                            <entry>Every 10 minutes from the start of the pipeline</entry>
+                        </row>
+                        <row>
+                            <entry>24 hours</entry>
+                            <entry>Every 20 minutes from the start of the pipeline</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+ </conbody>
+</concept>

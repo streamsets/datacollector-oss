@@ -196,8 +196,10 @@
             <draft-comment author="alisontaylor">The following codeblock is used in all launching
                   SDC topics</draft-comment>
             <codeblock id="SDCBaseURL">http://&lt;hostname>:18630/</codeblock>
-            <p><draft-comment author="alisontaylor">The following p is used in the registering and
-                  unregistering from DPM topics.</draft-comment></p>
+            <p>
+                  <draft-comment author="alisontaylor">The following p is used in the registering
+                        and unregistering from DPM topics.</draft-comment>
+            </p>
             <p id="p-DPMUserNameFormat">
                   <codeblock>&lt;ID>@&lt;organization ID></codeblock>
             </p>
@@ -729,15 +731,14 @@
                                           conref="#concept_vhs_5tz_xp/UDP-syslog" id="ul_fj2_3q4_4x">
                                           <li/>
                                     </ul></dd>
-                        
-                              <dd><ph conref="#concept_vhs_5tz_xp/ph-NetFlowInfo"/></dd></dlentry>
+                              <dd><ph conref="#concept_vhs_5tz_xp/ph-NetFlowInfo"/></dd>
+                        </dlentry>
                   </dl>
             </p>
-            
-                  <draft-comment author="Loretta"> - from Directory. DLEntries are conrefed by all
-                        origins except HTTP Client. <note> Content for JSON, Text, and HTML copied
-                              to HTTP Client and altered. When making changes here, check there as
-                              well.</note></draft-comment>
+            <draft-comment author="Loretta"> - from Directory. DLEntries are conrefed by all origins
+                  except HTTP Client. <note> Content for JSON, Text, and HTML copied to HTTP Client
+                        and altered. When making changes here, check there as
+                  well.</note></draft-comment>
             <p>
                   <dl id="ORIGIN-DFormats">
                         <dlentry id="OriginDF-DELIM">
@@ -767,9 +768,9 @@
                               <dd>When using a header line, you can allow processing records with
                                     additional columns. The additional columns are named using a
                                     custom prefix and integers in sequential increasing order, such
-                                    as  _extra_1, _extra_2. When you disallow additional columns
-                                    when using a header line, records that include additional
-                                    columns are sent to error.</dd>
+                                    as _extra_1, _extra_2. When you disallow additional columns when
+                                    using a header line, records that include additional columns are
+                                    sent to error.</dd>
                               <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
@@ -802,9 +803,9 @@
                               <dd>When using a header line, you can allow processing records with
                                     additional columns. The additional columns are named using a
                                     custom prefix and integers in sequential increasing order, such
-                                    as  _extra_1, _extra_2. When you disallow additional columns
-                                    when using a header line, records that include additional
-                                    columns are sent to error.</dd>
+                                    as _extra_1, _extra_2. When you disallow additional columns when
+                                    using a header line, records that include additional columns are
+                                    sent to error.</dd>
                               <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
@@ -879,8 +880,7 @@
                                     message based on the stage error handling property and continues
                                     reading the next message. </dd>
                               <dd>For information about generating the descriptor file, see <xref
-                                          href="../Data_Formats/Protobuf-Prerequisites.dita"
-                                    />.</dd>
+                                          href="../Data_Formats/Protobuf-Prerequisites.dita"/>.</dd>
                         </dlentry>
                   </dl>
             </p>
@@ -1244,14 +1244,14 @@ web-0011.log</codeblock></dd>
             </p>
             <draft-comment author="alisontaylor"><uicontrol>TIP-CompareWebSocketOrigins</uicontrol>
                   used in both WebSocket origin overviews</draft-comment>
-           <p>
-            <note type="tip" id="Tip-CompareWebSocketOrigins"><ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                  /> provides two WebSocket origins to address different needs. For a quick
-                  comparison chart to help you choose the right one, see <xref
-                        href="../Origins/Origins-WebSocketComparison.dita#concept_wz5_jqm_gbb"
-                  />.</note>
-           </p>
+            <p>
+                  <note type="tip" id="Tip-CompareWebSocketOrigins"><ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> provides two WebSocket origins to address different needs. For a quick
+                        comparison chart to help you choose the right one, see <xref
+                              href="../Origins/Origins-WebSocketComparison.dita#concept_wz5_jqm_gbb"
+                        />.</note>
+            </p>
             <p>
                   <draft-comment author="Loretta">Avro-HeaderAttribute - Used in Record Header
                         Attribute type topics for origins with the topic (that process Avro
@@ -1360,7 +1360,7 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <draft-comment author="Loretta">Used by most origins that generate no-more-data in
-                        the Event Generation topic.  Including S3, Directory, JDBC multitable, SQL
+                        the Event Generation topic. Including S3, Directory, JDBC multitable, SQL
                         Server origins. But Salesforce and JDBC Query have their own
                         versions.</draft-comment>
             </p>
@@ -1396,8 +1396,9 @@ web-0011.log</codeblock></dd>
                                     />.</p>
                         </li>
                   </ul></p>
-            <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
-            /></p>
+            <p><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+                  /></p>
             <p/>
             <draft-comment author="Loretta">Event Record topics for JDBC Multitable and
                   Salesforce.</draft-comment>
@@ -1542,7 +1543,8 @@ web-0011.log</codeblock></dd>
                         the pipeline.</ph></p>
             <p>
                   <draft-comment author="Loretta">JDBC Consumer, Producer, and Query executor use
-                        the following <uicontrol>ph-JDBCdriver</uicontrol> and SDCDPM_ExtLib </draft-comment>
+                        the following <uicontrol>ph-JDBCdriver</uicontrol> and SDCDPM_ExtLib
+                  </draft-comment>
             </p>
             <p><ph id="ph-JDBCdriver">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </ph></p>
@@ -1673,6 +1675,18 @@ web-0011.log</codeblock></dd>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Aggregator processor</draft-comment>
+            </p>
+            <p id="AggregateFunctions">You can use the following aggregate functions:<ul
+                        id="ul_cwn_cff_wbb">
+                        <li>Avg (Integer or Double)</li>
+                        <li>Count (Integer only)</li>
+                        <li>Min (Integer or Double)</li>
+                        <li>Max (Integer or Double)</li>
+                        <li>StdDev (Integer or Double)</li>
+                        <li>Sum (Integer or Double)</li>
+                  </ul></p>
             <p>
                   <draft-comment author="Loretta">Parquet doc - used by HM processor > record header
                         attributes, and Hive Drift > Parquet Processing – the ph is used by the
@@ -1845,26 +1859,28 @@ web-0011.log</codeblock></dd>
                               following methods: </dd>
                         <dd>
                               <ul id="ul_th2_3lr_mx">
-                                    <li id="li_getFieldNull"><codeph>getFieldNull(Record, 'field path')</codeph> - Method
-                                          that checks if a field is assigned a constant such as
-                                          NULL_INTEGER or NULL_STRING.</li>
-                                    <li id="li_createRecord"><codeph>createRecord(String, 'recordId')</codeph> - Method
-                                          that creates a new record with the specified fields and
-                                          values. The recordId uniquely identifies the record. It
-                                          should include enough information to track down the record
-                                          source.</li>
-                                    <li id="li_createMap"><codeph>createMap(boolean listMap)</codeph> - Method that
-                                          creates a map for use as a field in a record. Pass true to
-                                          create a list-map field, or false to create a map
-                                          field.</li>
-                                    <li id="li_createEvent"><codeph>createEvent(String type, int version)</codeph> -
-                                          Method that creates a new event record with the specified
-                                          event type and version. Be sure to enable event generation
-                                          in the stage before implementing event methods. </li>
-                                    <li id="li_toEvent"><codeph>toEvent(Record)</codeph> - Method that sends an
-                                          event record to the Event output stream. Be sure to enable
-                                          event generation in the stage before implementing event
-                                          methods. </li>
+                                    <li id="li_getFieldNull"><codeph>getFieldNull(Record, 'field
+                                                path')</codeph> - Method that checks if a field is
+                                          assigned a constant such as NULL_INTEGER or
+                                          NULL_STRING.</li>
+                                    <li id="li_createRecord"><codeph>createRecord(String,
+                                                'recordId')</codeph> - Method that creates a new
+                                          record with the specified fields and values. The recordId
+                                          uniquely identifies the record. It should include enough
+                                          information to track down the record source.</li>
+                                    <li id="li_createMap"><codeph>createMap(boolean
+                                                listMap)</codeph> - Method that creates a map for
+                                          use as a field in a record. Pass true to create a list-map
+                                          field, or false to create a map field.</li>
+                                    <li id="li_createEvent"><codeph>createEvent(String type, int
+                                                version)</codeph> - Method that creates a new event
+                                          record with the specified event type and version. Be sure
+                                          to enable event generation in the stage before
+                                          implementing event methods. </li>
+                                    <li id="li_toEvent"><codeph>toEvent(Record)</codeph> - Method
+                                          that sends an event record to the Event output stream. Be
+                                          sure to enable event generation in the stage before
+                                          implementing event methods. </li>
                                     <li id="li_pipelineParams"><codeph>pipelineParameters()</codeph>
                                           - Method that returns a map of all <xref
                                                 href="../Pipeline_Configuration/RuntimeParameters.dita#concept_rjh_ntz_qr"
@@ -1900,7 +1916,8 @@ input_stream.read()</codeblock></p>
                                           is used only by Flume. <b>AvroFile</b> used by Hadoop FS,
                                           Local and S3, and other file destinations.
                                                 <b>AvroKafka</b> used by Kafka. <b>AvroMess</b> used
-                                          by Kinesis Producer and other message destinations. </draft-comment>
+                                          by Kinesis Producer and other message destinations.
+                                    </draft-comment>
                               </dd>
                         </dlentry>
                   </dl>
@@ -2011,7 +2028,8 @@ input_stream.read()</codeblock></p>
                                                 message.</p></li>
                                     </ul>
                               </dd>
-                              <dd>You can compress data with an Avro-supported compression codec. </dd>
+                              <dd>You can compress data with an Avro-supported compression codec.
+                              </dd>
                         </dlentry>
                   </dl>
                   <draft-comment author="alisontaylor">Avro other message destinations. LC: removed
@@ -2147,8 +2165,7 @@ input_stream.read()</codeblock></p>
                               file and pass checksum information to the destination system in an
                               event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
-                              />.</dd>
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"/>.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-Basic">
                         <dt>Whole File</dt>
@@ -2163,8 +2180,7 @@ input_stream.read()</codeblock></p>
                               file and pass checksum information to the destination system in an
                               event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
-                              />.</dd>
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"/>.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-noEvent">
                         <dt>Whole File</dt>
@@ -2176,8 +2192,7 @@ input_stream.read()</codeblock></p>
                               destination system. You can specify an expression that defines access
                               permissions. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
-                              />.</dd>
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"/>.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-HDFS">
                         <dt>Whole File</dt>
@@ -2195,8 +2210,7 @@ input_stream.read()</codeblock></p>
                                     Type</wintitle> property to <uicontrol>Whole
                               File</uicontrol>.</dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
-                              />.</dd>
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"/>.</dd>
                   </dlentry>
             </dl>
             <p>
@@ -2239,8 +2253,8 @@ input_stream.read()</codeblock></p>
                         reused content - used in Avro &amp; Parquet implementation. </draft-comment>
             </p>
             <p><ph id="HD-BasicImp-ph">the origin of your choice, the Hive Metadata processor
-                        connected to the Hive Metastore destination to perform metadata updates,
-                        and to either the Hadoop FS or MapR FS destination to process data</ph></p>
+                        connected to the Hive Metastore destination to perform metadata updates, and
+                        to either the Hadoop FS or MapR FS destination to process data</ph></p>
             <p>As with Avro data, the <ph id="HD-DataStream-ph">Hive Metadata processor passes
                         records through the first output stream - the data stream. Connect the data
                         stream to the Hadoop FS or MapR FS destination to write data to the
@@ -2264,12 +2278,12 @@ input_stream.read()</codeblock></p>
                         to a table changes, like adding a couple new fields, the destination updates
                         the table so the record can be written to it.</ph></p>
             <p id="HD-CStudy-HDFS">To write data to Hive using record header attributes, you can use
-                  the Hadoop FS or MapR FS destinations. We'll use Hadoop FS destination.  </p>
+                  the Hadoop FS or MapR FS destinations. We'll use Hadoop FS destination. </p>
             <p id="HD-CStudy-HDFSuseatts">When you configure the destination, instead of configuring
                   a directory template, you configure the destination to use the directory in the
                   record header. Configure the destination to roll files when it sees a "roll"
                   attribute in the record header, and when configuring the Avro properties, indicate
-                  that the schema is in the record header.  </p>
+                  that the schema is in the record header. </p>
             <p id="HD-CStudy-HDFSprocessing-p"><ph id="HD-CStudy-HDFSprocessing-ph">With this
                         configuration, the destination uses the information in record header
                         attributes to write data to HDFS. It writes each record to the directory in
@@ -2958,13 +2972,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
                   additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
                   process MapR data. <ph conref="#concept_vhs_5tz_xp/SDCDPM_MapRPrereq"/></p>
-
             <draft-comment author="alisontaylor">MapRPrereq-Stats - Used in Write Statistics to MapR
                   Streams.</draft-comment>
             <p id="MapRPrereq-Stats">Before you can write statistics to MapR Streams, you must
                   perform additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/>
                   to process MapR data. <ph conref="#concept_vhs_5tz_xp/SDCDPM_MapRPrereq"/></p>
-
             <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive Streaming
                   destination for MapR library to make sure they configure SDC.</draft-comment>
             <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
@@ -3616,11 +3628,12 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                                   service account credential</xref> in the Google
                                                 Cloud Platform documentation.</p></li>
                                     <li>Store the generated credentials file on the <ph
-                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> machine. <p>As a best practice, store the file in the <ph
-                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
-                                    </p></li>
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                          /> machine. <p>As a best practice, store the file in the
+                                                  <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> resources directory,
+                                                  <codeph>$SDC_RESOURCES</codeph>. </p></li>
                                     <li>On the <uicontrol>Credentials</uicontrol> tab for the stage,
                                           select <uicontrol>Service Account Credentials
                                                 File</uicontrol> for the credentials provider and

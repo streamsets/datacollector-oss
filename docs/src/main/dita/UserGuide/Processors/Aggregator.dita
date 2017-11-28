@@ -17,8 +17,25 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ofb_svm_5bb">
  <title>Aggregator</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
- </conbody>
+        <p><indexterm>Aggregator
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Aggregator</indexterm></indexterm>The
+            Aggregator processor performs one or more aggregations within a window of time. The
+            Aggregator processor displays the results in Monitor mode and can write the results to
+            event records. The processor does not update records in the data stream.</p>
+        <p>You might use aggregation results with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data alerts to generate threshold notifications. Or, you might write the events to a
+            data store and use a third-party dashboard application to visualize the data.</p>
+        <p>When you configure the Aggregator, you specify the window type and time window to use.
+            This information determines how the processor displays data and generates events. You
+            also specify the time zone to use and the aggregations to perform. </p>
+        <p>When you configure an aggregation, you specify the aggregation name and display title and
+            the aggregation function to use. You can optionally define a filter expression to
+            process a subset of the data, and a group by expression to aggregate based on groups. </p>
+        <p>To write the aggregation results to events, enable event generation and specify the type
+            of event records to create. For general information about dataflow triggers and the
+            event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>. </p>
+    </conbody>
 </concept>

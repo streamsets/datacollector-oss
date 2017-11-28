@@ -209,9 +209,19 @@
                         </thead>
                         <tbody>
                             <row>
-                                <entry>Groovy Evaluator</entry>
+                                <entry>Aggregator</entry>
                                 <entry>
                                     <ul id="ul_qpx_jfc_yz">
+                                        <li>Email executor for notification when results pass
+                                            specified thresholds.</li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>Groovy Evaluator</entry>
+                                <entry>
+                                    <ul id="ul_exh_bcf_wbb">
                                         <li>Any logical executor. </li>
                                         <li>Any destination for event storage.</li>
                                     </ul>

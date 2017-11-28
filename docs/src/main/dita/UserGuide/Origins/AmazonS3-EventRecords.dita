@@ -34,8 +34,7 @@
                         <row>
                             <entry
                                 conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
-                            <entry>Event type. Uses one of the following types:<ul
-                                    id="ul_m12_mgp_qx">
+                            <entry>Event type. Uses the following event type:<ul id="ul_m12_mgp_qx">
                                     <li>no-more-data - Generated after the origin completes
                                         processing all available objects and the number of seconds
                                         configured for Batch Wait Time has elapsed.</li>

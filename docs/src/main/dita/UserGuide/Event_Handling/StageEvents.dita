@@ -177,6 +177,18 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Aggregator processor</entry>
+                            <entry>
+                                <ul id="ul_kvg_rp2_wbb">
+                                    <li>Performs aggregations, based on the configured window type
+                                        and time window.</li>
+                                </ul>
+                                <p>For more information, see <xref
+                                        href="../Processors/Aggregator-EventGeneration.dita">Event
+                                        Generation for the Aggregator processor</xref>. </p>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Groovy Evaluator processor</entry>
                             <entry>
                                 <ul id="ul_cj5_tnp_1y">
