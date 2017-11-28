@@ -42,32 +42,12 @@
                 /> as a service requires root privileges. </p>
         </prereq>
         <steps>
-            <step>
-                <cmd>Use the following URL to download the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> RPM package for your operating system from the StreamSets website: <xref
-                        href="https://streamsets.com/opensource" format="html" scope="external"
-                    />:</cmd>
-                <choices id="choices_dw4_xdt_5bb">
-                    <choice>For <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
-                        />,
-                        download:<codeblock>streamsets-datacollector-&lt;version>-all-el6-rpms.tgz</codeblock></choice>
-                    <choice>For <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
-                        />,
-                        download:<codeblock>streamsets-datacollector-&lt;version>-all-el7-rpms.tgz</codeblock></choice>
-                </choices>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RPMinstall-download">
+                <cmd/>
             </step>
-            <step>
-                <cmd>Use the following command to extract the file to the desired location:</cmd>
-                <info>
-                    <codeblock>tar xf streamsets-datacollector-&lt;version>-all-&lt;operating_system>-rpms.tgz</codeblock>
-                    <p>For example, to extract version <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
-                        /> on CentOS 7, use the following
-                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-all-el7-rpms.tgz</codeblock></p>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RPMinstall-extract">
+                <cmd/>
             </step>
             <step>
                 <cmd>Use the following command to install the full <ph
