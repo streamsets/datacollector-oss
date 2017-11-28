@@ -25,6 +25,38 @@
         <context/>
         <steps>
             <step>
+                <cmd>
+                    <draft-comment author="Loretta">Install RPM steps - used in Full Install > RPM,
+                        Core install > RPM, and first step used in Upgrade using RPM > Step
+                        3.</draft-comment>
+                </cmd>
+            </step>
+            <step id="RPMinstall-download">
+                <cmd>Use the following URL to download the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> RPM package for your operating system from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />:</cmd>
+                <choices id="choices_ywl_kjk_1cb">
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                        />, download the RPM EL6 package.</choice>
+                    <choice>For <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                        />, download the RPM EL7 package.</choice>
+                </choices>
+            </step>
+            <step id="RPMinstall-extract">
+                <cmd>Use the following command to extract the file to the desired location:</cmd>
+                <info>
+                    <codeblock>tar xf streamsets-datacollector-&lt;version>-&lt;operating_system>-all-rpms.tgz</codeblock>
+                    <p>For example, to extract version <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                        /> on CentOS 7, use the following
+                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-el7-all-rpms.tgz</codeblock></p>
+                </info>
+            </step>
+            <step>
                 <cmd id="PIPE_PROPS">
                     <draft-comment author="Loretta"><uicontrol>PIPELINE
                         PROPERTIES</uicontrol></draft-comment>
