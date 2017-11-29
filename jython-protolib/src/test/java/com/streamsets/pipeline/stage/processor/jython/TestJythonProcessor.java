@@ -444,7 +444,9 @@ public class TestJythonProcessor {
         ProcessingMode.RECORD,
         script
     );
-    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonProcessor.class, processor, RecordCreator.create());
+
+    Record record = RecordCreator.create();
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonProcessor.class, processor, record);
   }
 
   @Test

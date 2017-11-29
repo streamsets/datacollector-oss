@@ -57,6 +57,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private ErrorRecordHandler errorRecordHandler;
   private Err err;
   private SdcFunctions sdcFunc;
+  private List<ScriptRecord> records;
 
   protected ScriptEngine engine;
 
@@ -129,6 +130,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     this.script = script;
     this.initScript = initScript;
     this.destroyScript = destroyScript;
+    this.records = new ArrayList<>();
   }
 
   private ScriptObjectFactory getScriptObjectFactory() {
@@ -200,6 +202,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   @Override
   public void process(Batch batch, final SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
     Out out = scriptRecord -> singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
+    records.clear();
 
     switch (processingMode) {
       case RECORD:
@@ -214,7 +217,6 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   }
 
   private void runRecord(Batch batch, Out out) throws StageException {
-    List<ScriptRecord> records = new ArrayList<>();
     records.add(null);
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
@@ -225,7 +227,6 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   }
 
   private void runBatch(Batch batch, Out out) throws StageException {
-    List<ScriptRecord> records = new ArrayList<>();
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
@@ -282,4 +283,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     compiledScript.eval(bindings);
   }
 
+  public List<ScriptRecord> getScriptRecords() {
+    return records;
+  }
 }

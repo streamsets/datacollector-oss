@@ -313,6 +313,7 @@ public class TestGroovyProcessor {
   public void testRecordHeaderAttributes() throws Exception {
     String headerKey = "key1";
     String value = "value1";
+
     String script = "for (record in records) {\n" +
         "  record.attributes['" + headerKey + "'] = '" + value + "'\n" +
         "  output.write(record)\n" +
@@ -322,7 +323,9 @@ public class TestGroovyProcessor {
         ProcessingMode.RECORD,
         script
     );
-    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(GroovyProcessor.class, processor, RecordCreator.create());
+
+    Record record = RecordCreator.create();
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(GroovyProcessor.class, processor, record);
   }
 
   @Test

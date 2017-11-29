@@ -538,7 +538,9 @@ public class TestJavaScriptProcessor {
         ProcessingMode.RECORD,
         script
     );
-    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptProcessor.class, processor, RecordCreator.create());
+
+    Record record = RecordCreator.create();
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptProcessor.class, processor, record);
   }
 
   @Test

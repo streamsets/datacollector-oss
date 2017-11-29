@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.RecordHeaderCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -343,8 +344,6 @@ public class ScriptingProcessorTestUtil {
     }
     assertEquals(Field.Type.BOOLEAN, outRec.get("long_bool").getType());
   }
-
-
 
   public static <C extends Processor> void verifyStateObject(Class<C> clazz, Processor processor)
       throws StageException {
@@ -734,11 +733,49 @@ public class ScriptingProcessorTestUtil {
       Processor processor,
       Record record
   ) throws StageException {
+    // set all available record header attributes
+    final String stageCreator = "s1";
+    final String sourceId = "id1";
+    final String stagesPath = "/s1";
+    final String trackingId = "t1";
+    final String previousTrackingId = "t0";
+    final byte[] raw = null;
+    final String rawMimeType = "byte";
+    final String errorDataCollectorId = "e1";
+    final String errorPipelineName = "ep1";
+    final String errorStage = "es1";
+    final String errorStageName = "stageName";
+    final String errorCode = "ec";
+    final String errorMessage = "em";
+    final long errorTimestamp = System.currentTimeMillis();
+    final String errorStackTrace = "stack trace";
+    final Map<String, Object> map = new HashMap<>();
+    Map<String, Object> recordHeaderAttributes = RecordHeaderCreator.getRecordHeaderAvailableAttributes(
+        stageCreator,
+        sourceId,
+        stagesPath,
+        trackingId,
+        previousTrackingId,
+        raw,
+        rawMimeType,
+        errorDataCollectorId,
+        errorPipelineName,
+        errorStage,
+        errorStageName,
+        errorCode,
+        errorMessage,
+        errorTimestamp,
+        errorStackTrace,
+        map
+    );
+    record.getHeader().setAllAttributes(recordHeaderAttributes);
+
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
         .addOutputLane("lane")
         .build();
 
     runner.runInit();
+
     StageRunner.Output output;
     try {
       List<Record> input = Collections.singletonList(record);
@@ -748,11 +785,83 @@ public class ScriptingProcessorTestUtil {
     }
     List<Record> records = output.getRecords().get("lane");
     assertEquals(1, records.size());
+
     assertEquals(1, records.get(0).getHeader().getAttributeNames().size());
 
     final String key = "key1";
     final String value = "value1";
     assertEquals(value, records.get(0).getHeader().getAttribute(key));
+
+    AbstractScriptingProcessor abstractScriptingProcessor = (AbstractScriptingProcessor) processor;
+    List<ScriptRecord> scriptRecords = abstractScriptingProcessor.getScriptRecords();
+
+    assertEquals(1, scriptRecords.size());
+    ScriptRecord scriptRecord = scriptRecords.get(0);
+    java.lang.reflect.Field[] fields = scriptRecord.getClass().getFields();
+
+    Map<String, Object> recordHeader = records.get(0).getHeader().getAllAttributes();
+
+    compareRecordHeaders(recordHeader, fields);
+  }
+
+  /**
+   * Checking all the attributes are covered by script record header and all the attributes in script record header
+   * exists in record header.
+   */
+  private static void compareRecordHeaders(Map<String, Object> recordHeaders, java.lang.reflect.Field[] scriptRecordHeader) {
+    final String prefix = "_.";
+
+    List<String> keys = new ArrayList<>();
+    for (int index = 0; index < scriptRecordHeader.length; index++) {
+      String field = scriptRecordHeader[index].getName();
+
+      switch (field) {
+        case "errorDataCollectorId":
+          // the name of the script record header is followed by the method name getErrorDataCollectorId()
+          field = "dataCollectorId";
+          break;
+        case "errorPipelineName":
+          // the name of the script record header is followed by the method name getErrorPipelineName()
+          field = "pipelineName";
+          break;
+        case "sourceId":
+          // the name of the script record header is followed by the method name getSourceId()
+          field = "recordSourceId";
+          break;
+        case "attributes":
+        case "value":
+          // the above list is not covered in script record header
+          continue;
+        default:
+          //no -op
+      }
+
+      keys.add(field);
+      assertTrue("the following field name does not exist in recordHeader: " + field,
+          recordHeaders.containsKey(prefix + field));
+    }
+
+    for (Map.Entry<String, Object> entry : recordHeaders.entrySet()) {
+      switch(entry.getKey()) {
+        case "key1":
+          // ignore the key of the customer attribute
+        case prefix + "errorCode":
+        case prefix + "errorStage":
+        case prefix + "errorStageLabel":
+        case prefix + "errorTimestamp":
+        case prefix + "pipelineName":
+        case prefix + "sourceRecord":
+        case prefix + "stagePath":
+        case prefix + "trackingId":
+          // the above list of the header attributes are not covered in script record header
+          continue;
+        default:
+          // no-op
+      }
+
+      assertTrue("the following field name is not included in ScriptRecord: " + entry.getKey(),
+          keys.contains(entry.getKey().substring(prefix.length())));
+    }
   }
 
   public static <C extends Processor> void verifyInitDestroy(Class<C> clazz, Processor processor) throws Exception {
