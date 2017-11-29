@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.service.Service;
 
@@ -57,7 +58,7 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
     this.libraryDefinition = libraryDefinition;
     this.klass = klass;
     this.provides = provides;
-    this.classLoader = classLoader;
+    this.classLoader = Preconditions.checkNotNull(classLoader);
     this.version = version;
     this.label = label;
     this.description = description;
@@ -87,7 +88,7 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
     this.libraryDefinition = def.libraryDefinition;
     this.klass = def.klass;
     this.provides = def.provides;
-    this.classLoader = classLoader;
+    this.classLoader = Preconditions.checkNotNull(classLoader);
     this.version = def.version;
     this.label = def.label;
     this.description = def.description;

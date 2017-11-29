@@ -15,16 +15,134 @@
  */
 package com.streamsets.datacollector.util;
 
-import java.util.function.Supplier;
+import com.google.common.base.Throwables;
+import com.streamsets.pipeline.lib.util.ExceptionUtils;
+
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 public class LambdaUtil {
+
+  /**
+   * This is custom variant of supplier that adds support for exceptions.
+   */
+  public interface ExceptionSupplier<T> {
+    T get() throws Exception;
+  }
+
   /**
    * Runs a Supplier within the context of a specified ClassLoader.
    *
    * @param classLoader the ClassLoader to run the Supplier.
    * @param supplier the Supplier to run within the context of a specified ClassLoader.
    */
-  public static <T> T withClassLoader(ClassLoader classLoader, Supplier<T> supplier) {
+   public static <T> T withClassLoader(
+      ClassLoader classLoader,
+      ExceptionSupplier<T> supplier
+   ) {
+     try {
+       return withClassLoaderInternal(classLoader, supplier);
+     } catch (Exception e) {
+       Throwables.propagate(e);
+     }
+
+     return null;
+   }
+
+  /**
+   * Runs a Supplier within the context of a specified ClassLoader.
+   *
+   * @param classLoader the ClassLoader to run the Supplier.
+   * @param supplier the Supplier to run within the context of a specified ClassLoader.
+   */
+   public static <T, E1 extends Exception> T withClassLoader(
+      ClassLoader classLoader,
+      Class<E1> e1,
+      ExceptionSupplier<T> supplier
+   ) throws E1 {
+     try {
+       return withClassLoaderInternal(classLoader, supplier);
+     } catch (Exception e) {
+       Throwables.propagateIfPossible(e, e1);
+       Throwables.propagate(e);
+     }
+
+     return null;
+   }
+
+  /**
+   * Runs a Supplier within the context of a specified ClassLoader and in priviledged mode.
+   *
+   * @param classLoader the ClassLoader to run the Supplier.
+   * @param supplier the Supplier to run within the context of a specified ClassLoader.
+   */
+  public static <T> T privilegedWithClassLoader(
+      ClassLoader classLoader,
+      ExceptionSupplier<T> supplier
+  ) {
+    try {
+      return AccessController.doPrivileged((PrivilegedExceptionAction<T>) () -> withClassLoaderInternal(classLoader, supplier));
+    } catch (PrivilegedActionException e) {
+      Throwables.propagate(e);
+    }
+
+    return null;
+  }
+
+  /**
+   * Runs a Supplier within the context of a specified ClassLoader and in priviledged mode.
+   *
+   * @param classLoader the ClassLoader to run the Supplier.
+   * @param e1 Exception class that should be propagated as-is
+   * @param supplier the Supplier to run within the context of a specified ClassLoader.
+   */
+  public static <T, E1 extends Exception> T privilegedWithClassLoader(
+      ClassLoader classLoader,
+      Class<E1> e1,
+      ExceptionSupplier<T> supplier
+  ) throws E1 {
+    try {
+      return AccessController.doPrivileged((PrivilegedExceptionAction<T>) () -> withClassLoaderInternal(classLoader, supplier));
+    } catch (PrivilegedActionException e) {
+      Throwables.propagateIfPossible(e.getCause(), e1);
+      Throwables.propagate(e);
+    }
+
+    return null;
+  }
+
+  /**
+   * Runs a Supplier within the context of a specified ClassLoader and in priviledged mode.
+   *
+   * @param classLoader the ClassLoader to run the Supplier.
+   * @param e1 Exception class that should be propagated as-is
+   * @param e2 Exception class that should be propagated as-is
+   * @param supplier the Supplier to run within the context of a specified ClassLoader.
+   */
+  public static <T, E1 extends Exception, E2 extends Exception> T privilegedWithClassLoader(
+      ClassLoader classLoader,
+      Class<E1> e1,
+      Class<E2> e2,
+      ExceptionSupplier<T> supplier
+  ) throws E1, E2 {
+    try {
+      return AccessController.doPrivileged((PrivilegedExceptionAction<T>) () -> withClassLoaderInternal(classLoader, supplier));
+    } catch (PrivilegedActionException e) {
+      Throwables.propagateIfPossible(e.getCause(), e1, e2);
+      Throwables.propagate(e);
+    }
+
+    return null;
+  }
+
+  /**
+   * Internal version of the wrapping function that will simply propagate all exceptions up.
+   */
+  private static <T> T withClassLoaderInternal(
+      ClassLoader classLoader,
+      ExceptionSupplier<T> supplier
+  ) throws Exception {
     ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(classLoader);

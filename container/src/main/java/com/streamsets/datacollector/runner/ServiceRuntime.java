@@ -15,15 +15,44 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.ServiceBean;
+import com.streamsets.datacollector.runner.service.DataGeneratorServiceWrapper;
 import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.service.Service;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
 
-public class ServiceRuntime {
+/**
+ * This is general wrapper on top of Service implementation. This actual instance will be returned when Stage calls
+ * getContext().getService(Class) and hence it needs to implement all supported services. We return this wrapping
+ * object rather then Service instance itself because we need to wrap each method execution to change active class
+ * loader and execute the code in privileged mode to apply the proper permissions.
+ */
+public class ServiceRuntime implements DataFormatGeneratorService {
+
+  // Static list with all supported services
+  private static Set<Class> SUPPORTED_SERVICES = ImmutableSet.of(
+    DataFormatGeneratorService.class
+  );
+
+  /**
+   * Return true if and only given service interface is supported by this instance.
+   *
+   * @param serviceInterface Service interface
+   * @return True if given interface is supported by this runtime
+   */
+  private static boolean supports(Class serviceInterface) {
+    return SUPPORTED_SERVICES.contains(serviceInterface);
+  }
+
   private final PipelineBean pipelineBean;
   private final ServiceBean serviceBean;
   private Service.Context context;
@@ -41,16 +70,27 @@ public class ServiceRuntime {
   }
 
   public List<Issue> init() {
-    return LambdaUtil.withClassLoader(
+    return LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),
         () -> (List)serviceBean.getService().init(context)
     );
   }
 
   public void destroy() {
-    LambdaUtil.withClassLoader(
+    LambdaUtil.privilegedWithClassLoader(
       serviceBean.getDefinition().getStageClassLoader(),
       () -> { serviceBean.getService().destroy(); return null; }
+    );
+  }
+
+  @Override // From DataFormatGeneratorService
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
+    ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
+
+    return LambdaUtil.privilegedWithClassLoader(
+      cl,
+      IOException.class,
+      () -> new DataGeneratorServiceWrapper(cl, ((DataFormatGeneratorService)serviceBean.getService()).getGenerator(os))
     );
   }
 }

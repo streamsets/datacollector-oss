@@ -47,14 +47,11 @@ public class ClassloaderInContextCredentialStore implements CredentialStore {
 
   @Override
   public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
-    return LambdaUtil.withClassLoader(storeClassLoader,() -> {
-      try {
-        return store.get(group, name, credentialStoreOptions);
-      } catch (Exception ex) {
-        ExceptionUtils.throwUndeclared(ex);
-        return null;
-      }
-    });
+    return LambdaUtil.withClassLoader(
+      storeClassLoader,
+      StageException.class,
+      () -> store.get(group, name, credentialStoreOptions)
+    );
   }
 
   @Override

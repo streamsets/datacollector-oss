@@ -958,7 +958,7 @@ public class Pipeline {
         serviceBean.getDefinition().getClassName()
       ));
 
-      services.put(serviceBean.getDefinition().getKlass(), runtime);
+      services.put(serviceBean.getDefinition().getProvides(), runtime);
     }
 
     // Create StageRuntime itself
