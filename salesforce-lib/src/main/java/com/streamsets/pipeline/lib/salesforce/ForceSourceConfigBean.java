@@ -42,12 +42,52 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Use Bulk API",
       description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
           "otherwise, the Salesforce SOAP API will be used.",
-      displayPosition = 75,
+      displayPosition = 72,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
       group = "QUERY"
   )
   public boolean useBulkAPI;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use PK Chunking",
+      description = "Enables automatic primary key (PK) chunking for the bulk query job.",
+      displayPosition = 74,
+      dependsOn = "useBulkAPI",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public boolean usePKChunking;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "100000",
+      min = 1,
+      max = 250000,
+      label = "Chunk Size",
+      displayPosition = 76,
+      dependsOn = "usePKChunking",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public int chunkSize;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Start Id",
+      description = "Optional 15- or 18-character record ID to be used as the lower boundary for the first chunk. " +
+          "If omitted, all records matching the query will be retrieved.",
+      displayPosition = 78,
+      dependsOn = "usePKChunking",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public String startId;
 
   @ConfigDef(
       required = true,
@@ -72,8 +112,10 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
       defaultValue = "false",
       displayPosition = 82,
-      dependsOn = "queryExistingData",
-      triggeredByValue = "true",
+      dependencies = {
+          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
+          @Dependency(configName = "usePKChunking", triggeredByValues = "false")
+      },
       group = "QUERY"
   )
   public boolean queryAll = false;
@@ -119,8 +161,10 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "Initial value to insert for ${offset}." +
           " Subsequent queries will use the result of the Next Offset Query",
       displayPosition = 90,
-      dependsOn = "queryExistingData",
-      triggeredByValue = "true",
+      dependencies = {
+          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
+          @Dependency(configName = "usePKChunking", triggeredByValues = "false")
+      },
       group = "QUERY"
   )
   public String initialOffset;
@@ -132,8 +176,10 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Offset Field",
       description = "Field checked to track current offset.",
       displayPosition = 100,
-      dependsOn = "queryExistingData",
-      triggeredByValue = "true",
+      dependencies = {
+          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
+          @Dependency(configName = "usePKChunking", triggeredByValues = "false")
+      },
       group = "QUERY"
   )
   public String offsetColumn;

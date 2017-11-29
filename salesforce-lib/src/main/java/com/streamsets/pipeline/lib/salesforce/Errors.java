@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   FORCE_03("Batch failed: {}"),
   FORCE_04("Record read failed: {}"),
   FORCE_05("Get query result failed: {}"),
-  FORCE_06("Can't find offset column in result header: {}"),
+  FORCE_06("Can't find offset column '{}' in result header: {}"),
   FORCE_07("SOQL query must include '{}' in WHERE clause and in ORDER BY clause before other columns."),
   FORCE_08("Error querying SOAP API: {}"),
   FORCE_09("Streaming API Error: {}"),
@@ -51,7 +51,10 @@ public enum Errors implements ErrorCode {
   FORCE_27("Error parsing SOQL query {}"),
   FORCE_28("Error retrieving data: {}"),
   FORCE_29("Malformed ID: {}"),
-  FORCE_30("Invalid field name: {}")
+  FORCE_30("Invalid field name: {}"),
+  FORCE_31("SOQL query can't include ORDER BY clause when PK Chunking is enabled."),
+  FORCE_32("SOQL query can't use Id field in a WHERE clause when PK Chunking is enabled."),
+  FORCE_33("Can't repeat an incremental query when PK Chunking is enabled."),
   ;
   private final String msg;
 

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -44,8 +45,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-// Skip these tests until Mock Server supports metadata
-@Ignore
 public class TestSalesforceSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestSalesforceSource.class);
   private static final String username = "test@example.com";
@@ -56,11 +55,14 @@ public class TestSalesforceSource {
   private static final String initialOffset = "000000000000000";
   private static final String offsetColumn = "Id";
   private static final String query = "SELECT Id, Name FROM Account WHERE Id > '${offset}' ORDER BY Id";
+  private static final String SOQL_QUERY_MUST_INCLUDE = "SOQL query must include";
 
   private int port;
   private String authEndpoint;
   private MockSalesforceApiServer mockServer;
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Before
   public void setUp() throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sc = SSLContext.getInstance("TLS");
@@ -78,11 +80,15 @@ public class TestSalesforceSource {
     authEndpoint = "localhost:"+port;
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @After
   public void tearDown() {
     mockServer.stop();
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   private void testAPI(ForceSource origin, String secondOffset) throws Exception {
     SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
         .addOutputLane("lane")
@@ -109,6 +115,8 @@ public class TestSalesforceSource {
     }
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   private void addFourRowsBulk() {
     LinkedHashMap<String, String> record1 = new LinkedHashMap<>();
     record1.put("Name", "Pat");
@@ -128,6 +136,8 @@ public class TestSalesforceSource {
     mockServer.asyncApi().insert(initFourRecords);
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testBulkAPINoRepeat() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -139,6 +149,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), null);
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testBulkAPIFull() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -150,6 +162,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), "recordId:"+initialOffset);
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testBulkAPIIncremental() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -161,6 +175,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), "recordId:001000000000004");
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   private void addFourRowsSoap() {
     mockServer.sforceApi().query().returnResults()
         .withRow().withField("Id", "001000000000001").withField("Name", "Pat")
@@ -169,6 +185,8 @@ public class TestSalesforceSource {
         .withRow().withField("Id", "001000000000004").withField("Name", "Natty");
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testSoapAPINoRepeat() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -179,6 +197,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), null);
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testSoapAPIFull() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -189,6 +209,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), "recordId:"+initialOffset);
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testSoapAPIIncremental() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -199,6 +221,8 @@ public class TestSalesforceSource {
     testAPI(new ForceSource(conf), "recordId:001000000000004");
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testBadConnectionString() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -225,7 +249,22 @@ public class TestSalesforceSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains("SOQL query must include"));
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
+  }
+
+  @Test
+  public void testWrongWhereClause() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Name = 'foo' ORDER BY Id";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
   }
 
   @Test
@@ -243,7 +282,60 @@ public class TestSalesforceSource {
       LOG.info(issue.toString());
     }
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains("SOQL query must include"));
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
+  }
+
+  @Test
+  public void testWrongOrderByClause() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Id > '${offset}' ORDER BY Name";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
+  }
+
+  @Test
+  public void testMultipleOrderByFields() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Id > '${offset}' ORDER BY Id, Name";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(0, issues.size());
+  }
+
+  @Test
+  public void testMultipleOrderByFieldsWrongOrder() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Id > '${offset}' ORDER BY Name, Id";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
   }
 
   @Test
@@ -258,7 +350,65 @@ public class TestSalesforceSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains("SOQL query must include"));
+    assertTrue(issues.get(0).toString().contains(SOQL_QUERY_MUST_INCLUDE));
+  }
+
+  @Test
+  public void testPKChunkingOrderByClause() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.usePKChunking = true;
+    conf.soqlQuery = "SELECT Id, Name FROM Account ORDER BY Id";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(Errors.FORCE_31.getMessage()));
+  }
+
+  @Test
+  public void testPKChunkingWhereClause() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.usePKChunking = true;
+    conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Id > '${offset}'";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(Errors.FORCE_32.getMessage()));
+  }
+
+  @Test
+  public void testPKChunkingRepeatIncremental() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.usePKChunking = true;
+    conf.soqlQuery = "SELECT Id, Name FROM Account";
+    conf.repeatQuery = ForceRepeatQuery.INCREMENTAL;
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(Errors.FORCE_33.getMessage()));
   }
 
   @Test
@@ -277,6 +427,8 @@ public class TestSalesforceSource {
     assertTrue(issues.get(0).toString().contains("A configuration is invalid"));
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testEmptyResultSetBulk() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -303,6 +455,8 @@ public class TestSalesforceSource {
     }
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testStreaming() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
@@ -338,6 +492,8 @@ public class TestSalesforceSource {
     assertTrue(issues.get(0).toString().contains("A configuration is invalid"));
   }
 
+  // Skip until Mock Server supports metadata
+  @Ignore
   @Test
   public void testStreamingBadPushTopic() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
