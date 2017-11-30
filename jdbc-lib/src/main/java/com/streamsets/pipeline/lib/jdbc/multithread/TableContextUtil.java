@@ -68,6 +68,7 @@ public final class TableContextUtil {
   private static final String COLUMN_METADATA_COLUMN_TYPE = "DATA_TYPE";
   private static final Joiner COMMA_JOINER = Joiner.on(",");
   public static final String GENERIC_PARTITION_SIZE_GT_ZERO_MSG = "partition size must be greater than zero";
+  public static final String SQL_SERVER_CDC_TABLE_SUFFIX = "_CT";
 
   public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
 
@@ -625,7 +626,7 @@ public final class TableContextUtil {
         StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
 
-    final String tablePattern = tableConfigBean.capture_instance;
+    final String tablePattern = tableConfigBean.capture_instance + SQL_SERVER_CDC_TABLE_SUFFIX;
     final String cdcSchema = "cdc";
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, cdcSchema, tablePattern, false)) {
       while (rs.next()) {
