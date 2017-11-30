@@ -121,6 +121,17 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_202("Error while getting min valid version: {}"),
   JDBC_203("Error while fetch tables from metadata: {}"),
   JDBC_204("Hex '{}' cannot be converted into a byte array"),
+
+  JDBC_300("Record {} has unsupported root type {}"),
+  JDBC_301("Error: {}"),
+  JDBC_302("Unsupported Type: {}"),
+  JDBC_303("Type Mismatch for column '{}', Expected: {}, Actual: {}"),
+  JDBC_304("Can't calculate {} for field '{}' - attribute '{}' is '{}'"),
+  JDBC_305("Invalid value {} for {} in field {}, minimum: {}, maximum: {}"),
+  JDBC_306("Invalid value {} for scale in field {}, should be less than or equal to precision's value: {}"),
+  JDBC_307("Invalid decimal value {} in field {}: {} {} is more then expected {} "),
+  JDBC_308("Information {} missing or invalid in the metadata record: {}"),
+  JDBC_309("No schema writer for connection string '{}'"),
   ;
 
   private final String msg;

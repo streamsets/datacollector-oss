@@ -737,7 +737,7 @@ public class JdbcUtil {
     HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, false, false));
 
     // Can only validate schema if the user specified a single table.
-    if (!tableNameTemplate.contains(EL_PREFIX)) {
+    if (tableNameTemplate != null && !tableNameTemplate.contains(EL_PREFIX)) {
       try (
         Connection connection = dataSource.getConnection();
         ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableNameTemplate, caseSensitive);
