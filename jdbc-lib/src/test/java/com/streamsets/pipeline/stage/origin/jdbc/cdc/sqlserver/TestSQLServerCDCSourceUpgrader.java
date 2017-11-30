@@ -173,4 +173,42 @@ public class TestSQLServerCDCSourceUpgrader {
     UpgraderTestUtils.assertNoneExist(configs, queryIntervalField);
     UpgraderTestUtils.assertExists(configs, "commonSourceConfigBean.queriesPerSecond", "0.4");
   }
+
+  @Test
+  public void testUpgradeV3toV4() throws StageException {
+    List<Config> configs = new ArrayList<>();
+    List<Map<String, String>> oldTableConfigs = new ArrayList<>();
+
+    final String exclusion1 = "exception-%";
+    final String initalOffset1 = "0000";
+    final String captureInstance = "dbo_table1_CT";
+
+    Map<String, String> tableConfig1 = ImmutableMap.of(
+        TABLE_CAPTURE_INSTANCE_CONFIG, captureInstance,
+        TABLE_EXCLUSION_CONFIG, exclusion1,
+        TABLE_INITIALOFFSET_CONFIG, initalOffset1
+    );
+
+    oldTableConfigs.add(tableConfig1);
+
+    // table config changes from V2
+    configs.add(new Config(TABLECONFIG, oldTableConfigs));
+
+    Assert.assertEquals(1, configs.size());
+
+    SQLServerCDCSourceUpgrader sqlServerCDCSourceUpgrader = new SQLServerCDCSourceUpgrader();
+    sqlServerCDCSourceUpgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    Assert.assertEquals(1, configs.size());
+
+    Config tableConfigObj = UpgraderUtils.getConfigWithName(configs, SQLServerCDCSourceUpgrader.TABLECONFIG);
+    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>) tableConfigObj.getValue();
+    Assert.assertEquals(1, tableConfigs.size());
+
+    HashMap<String, String> tableConfig = tableConfigs.get(0);
+
+    Assert.assertEquals("dbo_table1", tableConfig.get(TABLE_CAPTURE_INSTANCE_CONFIG));
+    Assert.assertEquals(exclusion1, tableConfig.get(TABLE_EXCLUSION_CONFIG));
+    Assert.assertEquals(initalOffset1, tableConfig.get(TABLE_INITIALOFFSET_CONFIG));
+  }
 }

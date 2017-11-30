@@ -37,6 +37,7 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   private static final String TABLE_INITIALOFFSET_CONFIG = "initialOffset";
   private static final String TABLE_CAPTURE_INSTANCE_CONFIG = "capture_instance";
   private static final String TABLE_TIMEZONE_ID = "cdcTableJdbcConfigBean.timeZoneID";
+  private static final String SQL_SERVER_CDC_TABLE_NAME_SUFFIX = "_CT";
 
   @Override
   public List<Config> upgrade(
@@ -51,6 +52,12 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -127,5 +134,53 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
     final int numThreads = (int) numThreadsConfig.getValue();
 
     CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
+  }
+
+  private static void upgradeV3ToV4(List<Config> configs) {
+    // SDC-7990. in v3, the work around was adding "_CT" at the end of capture_instance.
+    // This is not anymore true, so removing "_CT" suffix is handled by upgrader
+    Config removeConfig = null;
+    Config addConfig = null;
+
+    for (Config config : configs) {
+      if (TABLECONFIG.equals(config.getName())) {
+        List<Map<String, String>> tableConfig = (List<Map<String, String>>) config.getValue();
+        ArrayList<Map<String, String>> newconfig = new ArrayList<>();
+
+        for (Map<String, String> tableConfig2 : tableConfig) {
+          String captureInstanceName = tableConfig2.get(TABLE_CAPTURE_INSTANCE_CONFIG);
+          String initialOffset = tableConfig2.get(TABLE_INITIALOFFSET_CONFIG);
+          String tableExclusion = tableConfig2.get(TABLE_EXCLUSION_CONFIG);
+
+          Map<String, String> newTableConfig = new HashMap<>();
+          if (captureInstanceName.endsWith(SQL_SERVER_CDC_TABLE_NAME_SUFFIX)) {
+            int lastIndex = captureInstanceName.lastIndexOf(SQL_SERVER_CDC_TABLE_NAME_SUFFIX);
+            String newCaptureInstanceName = captureInstanceName.substring(0, lastIndex);
+            newTableConfig.put(TABLE_CAPTURE_INSTANCE_CONFIG, newCaptureInstanceName);
+          } else {
+            newTableConfig.put(TABLE_CAPTURE_INSTANCE_CONFIG, captureInstanceName);
+          }
+
+          if (!Strings.isNullOrEmpty(initialOffset)) {
+            newTableConfig.put(TABLE_INITIALOFFSET_CONFIG, initialOffset);
+          }
+
+          if (!Strings.isNullOrEmpty(tableExclusion)) {
+            newTableConfig.put(TABLE_EXCLUSION_CONFIG, tableExclusion);
+          }
+
+          newconfig.add(newTableConfig);
+        }
+        removeConfig = config;
+        addConfig = new Config(TABLECONFIG, newconfig);
+
+        break;
+      }
+    }
+
+    if (removeConfig != null) {
+      configs.add(addConfig);
+      configs.remove(removeConfig);
+    }
   }
 }
