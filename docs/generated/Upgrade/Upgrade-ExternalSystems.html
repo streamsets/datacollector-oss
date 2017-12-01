@@ -146,16 +146,31 @@ To ensure that file permissions are set as expected, update all properties in
 </li>
 
                 <li class="li">If the MapR cluster uses username/password login
-                    authentication, uncomment the following line in the <span class="ph">Data
+                    authentication, uncomment the SDC_JAVA_OPTS environment variable line in the <span class="ph">Data
                   Collector</span> environment
-                    configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory:
-                        <pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</pre>
-<p class="p">Modify
-                        the <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation
-                        type.</p>
+                    variable file.<div class="p"><span class="ph">Data
+                  Collector</span>
+                        provides two environment configuration files:<ul class="ul" id="concept_spt_33c_yy__ul_n4l_dfc_1cb">
+                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data
+                  Collector</span> manually from the command line or when you start Data Collector as
+                              a service on operating systems that use the systemd init system -
+                              including <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>. </li>
+
+                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data
+                  Collector</span> as a service on operating systems that use the SysV init system -
+                              including <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>.</li>
+
+                  </ul>
+</div>
+<p class="p">The SDC_JAVA_OPTS line in the environment variable file appears
+                        as
+                    follows:</p>
+<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
 </li>
 
-                <li class="li">Run the <samp class="ph codeph">setup-mapr </samp>command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
+                <li class="li">Run the <samp class="ph codeph">setup-mapr</samp> command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
                         symbolic links. You can run the command in interactive or non-interactive
                         mode.</p>
 </li>
@@ -173,6 +188,30 @@ To ensure that file permissions are set as expected, update all properties in
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
 </body>
 </html>

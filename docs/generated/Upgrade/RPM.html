@@ -85,13 +85,19 @@
                 <span class="ph cmd">Use one of the following methods to shut down <span class="ph">Data
                   Collector</span>:</span>
                 <ul class="ul choices" id="task_zk4_tr5_xv__choices_hwp_k2c_rx">
-                    <li class="li choice">To use the command line for shutdown, use the following
-                        command:<pre class="pre codeblock">service sdc stop</pre>
+                    <li class="li choice">To use the command line for shutdown, use the required command for your
+                        operating system.<p class="p">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, use: <samp class="ph codeph">service sdc
+                        stop</samp></p>
+<p class="p">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, use: <samp class="ph codeph">systemctl stop
+                        sdc</samp></p>
 </li>
 
-                    <li class="li choice">To use the <span class="ph">Data
-                  Collector</span> UI for shutdown, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
-                            <span class="ph uicontrol">Yes</span>.</li>
+                    <li class="li choice">
+                        <p class="p">To use the <span class="ph">Data
+                  Collector</span> UI, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
+                        <span class="ph uicontrol">Yes</span>.</p>
+
+                    </li>
 
                 </ul>
 
@@ -153,14 +159,10 @@
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
                   Collector</span> RPM package for your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
-                <ul class="ul choices" id="task_ofc_2zl_5v__choices_dw4_xdt_5bb">
-                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>,
-                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el6-rpms.tgz</pre>
-</li>
+                <ul class="ul choices" id="task_ofc_2zl_5v__d92034e38">
+                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, download the RPM EL6 package.</li>
 
-                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>,
-                        download:<pre class="pre codeblock">streamsets-datacollector-&lt;version&gt;-all-el7-rpms.tgz</pre>
-</li>
+                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, download the RPM EL7 package.</li>
 
                 </ul>
 
@@ -169,10 +171,10 @@
                 <span class="ph cmd">Use the following command to extract the file to a different directory than the
                     previous version:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-all-&lt;operating_system&gt;-rpms.tgz</pre>
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-&lt;operating_system&gt;-all-rpms.tgz</pre>
 
                     <div class="p">For example, to extract version <span class="ph">3.0.0.0</span> on CentOS 7, use the following
-                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.0.0.0</span>-all-el7-rpms.tgz</pre>
+                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.0.0.0</span>-el7-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -398,6 +400,30 @@ For
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"></div>
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
 </body>
 </html>

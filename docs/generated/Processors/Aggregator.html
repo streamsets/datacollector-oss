@@ -1,0 +1,1085 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Aggregator processor performs one or more aggregations within a window of time. The Aggregator processor displays the results in Monitor mode and can write the results to event records. The ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Aggregator" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ofb_svm_5bb" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Aggregator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ofb_svm_5bb">
+ <h1 class="title topictitle1">Aggregator</h1>
+
+ <div class="body conbody">
+        <p class="p">The
+            Aggregator processor performs one or more aggregations within a window of time. The
+            Aggregator processor displays the results in Monitor mode and can write the results to
+            event records. The processor does not update records in the data stream.</p>
+
+        <p class="p">You might use aggregation results with <span class="ph">Data
+                  Collector</span>
+            data alerts to generate threshold notifications. Or, you might write the events to a
+            data store and use a third-party dashboard application to visualize the data.</p>
+
+        <p class="p">When you configure the Aggregator, you specify the window type and time window to use.
+            This information determines how the processor displays data and generates events. You
+            also specify the time zone to use and the aggregations to perform. </p>
+
+        <p class="p">When you configure an aggregation, you specify the aggregation name and display title and
+            the aggregation function to use. You can optionally define a filter expression to
+            process a subset of the data, and a group by expression to aggregate based on groups. </p>
+
+        <p class="p">To write the aggregation results to events, enable event generation and specify the type
+            of event records to create. For general information about dataflow triggers and the
+            event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_abn_qyd_wbb">
+ <h2 class="title topictitle2">Window Type, Time Windows, and Information Display</h2>
+
+ <div class="body conbody">
+        <p class="p">The aggregation window type determines the window
+            of time that the Aggregator processor uses to calculate aggregations. It also determines
+            how the processor generates charts and events.</p>
+
+        <p class="p">The time window is the period of time to use for the specified window type. Time window
+            behavior is specific to the window type that you select. </p>
+
+        <p class="p">For example, when you configure a rolling window type with a one hour time window, the
+            processor performs aggregations every hour on the hour using the records that passed
+            through the processor during each hour. </p>
+
+        <p class="p">Conceptually, you might say that with a rolling window, records are static within the
+            window where they occur. When records become part of a particular time window, they
+            remain there. And once the calculations for a time window are complete, they remain
+            static as well. </p>
+
+        <p class="p">In contrast, when you select a one hour time window for a sliding window type, the
+            aggregations are always based on the records that passed through the processor in the
+            past hour, providing an update of the calculations at regular intervals. </p>
+
+        <p class="p">Conceptually, the sliding window is locked into the current time, and records slide
+            through the window. Records that have moved past the window are no longer part of
+            sliding window calculations.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_h5b_bf2_wbb">
+ <h3 class="title topictitle3">Rolling Windows</h3>
+
+ <div class="body conbody">
+  <p class="p">When using a rolling window, the Aggregator processor
+            performs the aggregations on the set of records that pass through the processor within
+            specific time windows. Use a rolling window to generate periodic historic analysis of
+            the data passing through the pipeline.</p>
+
+        <p class="p">With a rolling window, the time windows are incremented based on the hour, rather than on
+            the start time of the pipeline. </p>
+
+        <p class="p">For example, when you select a fifteen minute time window, the aggregations are
+            calculated every fifteen minutes, starting on the hour. So if you start the pipeline at
+            8:09, the first aggregation occurs at 8:15, and the following aggregations at 8:30,
+            8:45, 9:00, and so on. In fact, if you start the pipeline anywhere between 8:01 and
+            8:14, the aggregations start at 8:15 and continue every 15 minutes. </p>
+
+        <p class="p">For rolling windows, the processor creates the charts in Monitor mode based on the time
+            window and the Number of Time Windows to Remember. For example, if you set the property
+            to 4, and use a 15 minute time window, then the resulting charts display four 15 minute
+            time windows.</p>
+
+        <p class="p">The processor also creates events with the results of the calculations based on the time
+            window. So with a 15 minute time window, it generates events every 15 minutes, based on
+            the hour. </p>
+
+        <p class="p">Note that the calculations from the first event can include less than a full time-window
+            of records, for reasons described above. Similarly the last event, generated when the
+            pipeline stops, can include calculations with less than a full time-window of
+            records.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_qtg_ff2_wbb">
+ <h3 class="title topictitle3">Sliding Windows</h3>
+
+ <div class="body conbody">
+  <p class="p">When using a sliding window type, the Aggregation
+            processor performs the aggregations on the latest set of records within the specified
+            time window. With a sliding window, the time window is always relative to the current
+            time.</p>
+
+        <p class="p">Rather than capturing the history of the calculations as with a rolling window, the
+            sliding window provides updates to the current set of aggregations. Use a sliding window
+            to provide real time information about the data passing through the processor.</p>
+
+        <p class="p">For example, say you configure a sliding window with a 30 second time window. When you
+            run the pipeline, the processor displays a single chart with information from the
+            records that passed through the processor in the last 30 seconds. And it updates the
+            single chart regularly. </p>
+
+        <p class="p">In Monitor mode, the calculations and resulting charts are updated every few seconds for
+            all time window intervals. The charts indicate the time that it was last updated. </p>
+
+        <p class="p">When generating events, the processor generates events at regular intervals based on the
+            specified time window, beginning as soon as the pipeline starts. </p>
+
+        <p class="p">For example, for a sliding window type with a time window of one hour, the processor
+            generates events every minute. So if you start the pipeline at 9:08, the processor
+            generates events with the results of the calculations starting at 9:09, then 9:10, 9:11,
+            etc. </p>
+
+        <p class="p">Note that the results of the first hour of calculations contain less data than the
+            specified one hour time window. At 10:08, the processor provides the results of the
+            first one hour time window. At 10:09, the processor includes all of the latest records
+            for the last hour in the calculations, dropping the records that had arrived between
+            9:08 and 9:09 since they have fallen out of the time window.</p>
+
+        <div class="p">The following table describes how often event records are generated for each sliding time
+                window:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qtg_ff2_wbb__table_apg_mk2_wbb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="50%" id="d419219e173">Sliding Time Window</th>
+
+                            <th class="entry" valign="top" width="50%" id="d419219e176">Event Generation Occurs... </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">1 minute</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 5 seconds from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">5 minutes</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 5 seconds from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">10 minutes</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 10 seconds from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">30 minute</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 30 seconds from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">1 hour</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 1 minute from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">6 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 5 minutes from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">12 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 10 minutes from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d419219e173 ">24 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d419219e176 ">Every 20 minutes from the start of the pipeline</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_scl_5rf_wbb">
+ <h2 class="title topictitle2">Calculation Components</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use
+            the following components to configure the calculations to perform:<dl class="dl">
+                
+                    <dt class="dt dlterm">Aggregate function and expression</dt>
+
+                    <dd class="dd">When you select the <a class="xref" href="Aggregator.html#concept_bvw_d2f_wbb">aggregate
+                            function</a> to use, you typically also configure an aggregate
+                        expression. All aggregate functions except the COUNT function require an
+                        expression. </dd>
+
+                    <dd class="dd">For example, to determine the total sales for all transaction data in the
+                        time window, you can set the aggregate function to SUM (double) and use the
+                        following expression:<pre class="pre codeblock">${record:value('/total')}</pre>
+</dd>
+
+                    <dd class="dd">This expression performs a SUM of the total field for all records in the
+                        time window.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Filter</dt>
+
+                    <dd class="dd">Configure a filter to limit the records used in calculations. A filter is an
+                        expression that evaluates to a boolean value. Records that evaluate to true
+                        are included in the aggregation.</dd>
+
+                    <dd class="dd">For example, the following filter ensures processing only credit card
+                        transactions with a known credit card
+                        type:<pre class="pre codeblock">${record:value('/transaction_type')=="credit" AND record:value('/cc_type')!="unknown"}</pre>
+With
+                        this filter in place, the Aggregator excludes cash purchases and unknown
+                        credit card types.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Group by expression</dt>
+
+                    <dd class="dd">A group by expression is an expression used to group data before performing
+                        calculations. Use a group by expression to add an additional dimension to
+                        the results. </dd>
+
+                    <dd class="dd">The example above produces a single sum for all credit card transactions
+                        where the credit card type is known. To break that number down by credit
+                        card types, you can use the following group by
+                        expression:<pre class="pre codeblock">${record:value('/cc_type')}</pre>
+</dd>
+
+                    <dd class="dd">This expression groups the data by the different values in the cc_type
+                        field, such as Visa or Mastercard, before performing the aggregation.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">For additional examples and information on how the aggregation results display in Monitor
+            mode, see <a class="xref" href="Aggregator.html#concept_qxw_k42_wbb">Monitoring Aggregations</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_bvw_d2f_wbb">
+ <h2 class="title topictitle2">Aggregate Functions</h2>
+
+ <div class="body conbody">
+  <p class="p">When you configure an aggregation, you select the aggregate function to use. When appropriate,
+            you can select the data type to use for the results of the aggregation. </p>
+
+        <div class="p">You can use the following aggregate functions:<ul class="ul" id="concept_bvw_d2f_wbb__d79952e2604">
+                        <li class="li">Avg (Integer or Double)</li>
+
+                        <li class="li">Count (Integer only)</li>
+
+                        <li class="li">Min (Integer or Double)</li>
+
+                        <li class="li">Max (Integer or Double)</li>
+
+                        <li class="li">StdDev (Integer or Double)</li>
+
+                        <li class="li">Sum (Integer or Double)</li>
+
+                  </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ppy_b42_wbb">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+ <div class="body conbody">
+        <p class="p">The Aggregator processor can generate events that
+            contain the results of the aggregations. The processor can generate events that include
+            the results of all aggregations. It can also generate events for the results of each
+            individual aggregation.</p>
+
+        <div class="p">The Aggregator processor events can be used in any logical way. For example: <ul class="ul">
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+                <li class="li">With <a class="xref" href="../Alerts/RulesAlerts_title.html#concept_tpm_rsk_zq" title="Data rules define the information that you want to see about the data that passes between stages. You can create data rules based on any link in the pipeline. You can also enable metrics and create alerts for data rules."> a data
+                        alert</a> to send notifications.<p class="p">You can configure data alerts on the
+                        event stream to notify upon reaching specified thresholds.</p>
+</li>
+
+            </ul>
+<ul class="ul">
+                <li class="li">With the Email executor to send a custom email
+                              after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
+</li>
+
+            </ul>
+<span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_bc4_c42_wbb">
+ <h3 class="title topictitle3">Event Records</h3>
+
+ <div class="body conbody">
+  <div class="p">Event records
+            generated by the Aggregator processor have the following event-related record header
+            attributes. Record header attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bc4_c42_wbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d419219e480">Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d419219e483">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419219e480 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419219e483 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_bc4_c42_wbb__ul_m12_mgp_qx">
+                                    <li class="li">SINGLE_AGGREGATOR_EVENT - Contains the results of a single
+                                        aggregation.</li>
+
+                                    <li class="li">ALL_AGGREGATORS_EVENT - Generated when the processor is
+                                        configured to create an event for all aggregations. Contains
+                                        the results from all configured aggregation.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d419219e480 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d419219e483 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d419219e480 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_bc4_c42_wbb__d80008e2087" valign="top" width="70%" headers="d419219e483 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p">The Aggregator processor can generate the following event records: </p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Single aggregation event</dt>
+
+                <dd class="dd">You can configure the Aggregator processor to create single aggregation events.
+                    Each event contains the results of a single aggregation. That is, when you
+                    configure the processor to generate single aggregation events, the processor
+                    produces a set of events each time the processor performs calculations. The
+                    frequency of event generation depends on the selected <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">window type and time
+                        window</a>. </dd>
+
+                <dd class="dd">For example, if you have a processor configured with three aggregations with a
+                    rolling time window of ten minutes and you enable single aggregation events, the
+                    Aggregator processor generates three single aggregation events every ten
+                    minutes.</dd>
+
+                <dd class="dd">The processor also generates the events when the pipeline stops, to provide the
+                    results of the final time window. This final event is most likely an incomplete
+                    time window which can produce unexpected aggregation results.</dd>
+
+                <dd class="dd">
+                    <p class="p">You can evaluate whether a time window is complete based on the difference
+                        between the time values for each event. </p>
+
+                    <p class="p">For example, say you expect the aggregations to occur every 30 seconds, and
+                        the times associated with the event records are: 1511295390, 1511295420, and
+                        1511295440. You can assess that the last event was for a 20 second time
+                        window instead of a 30 second time window and probably occurred because the
+                        pipeline stopped. </p>
+
+                </dd>
+
+                <dd class="dd">To generate single aggregation events, configure both of the following
+                        properties:<ul class="ul" id="concept_bc4_c42_wbb__ul_f4x_mhd_1cb">
+                        <li class="li">On the General tab, select Produce Events.</li>
+
+                        <li class="li">On the Events tab, select Per Aggregator Events.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">Single aggregation events have the sdc.event.type set to SINGLE_AGGREGATOR_EVENT
+                    and include the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bc4_c42_wbb__table_fcv_xx4_j1b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d419219e586">Event Record Field</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d419219e589">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e586 ">name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e589 ">The name of the aggregation as defined in the
+                                        stage.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e586 ">time</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e589 ">The epoch time when the calculations took place and the
+                                        event was generated. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e586 ">aggregatable</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e589 ">A map field that contains the information used to perform
+                                        the aggregation. When the aggregation does not include a
+                                        group by expression, the map includes the following fields:
+                                            <ul class="ul" id="concept_bc4_c42_wbb__ul_rc3_1cl_ybb">
+                                            <li class="li">name - The name of the aggregation, as defined in
+                                                the stage.</li>
+
+                                            <li class="li">type - The aggregation type, such as
+                                                LongAvgAggregatable for the Avg (Integer) aggregate
+                                                function.</li>
+
+                                            <li class="li">&lt;aggregation-related fields&gt; - Additional
+                                                information based on the aggregate function used in
+                                                the aggregation. </li>
+
+                                        </ul>
+<p class="p">When the aggregation includes a group by expression,
+                                            the aggregatable field lists each group. Each group
+                                            field includes the fields described above. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</dd>
+
+                <dd class="dd">The following table describes the additional fields that can be included in
+                    event records based on the aggregate function used in the aggregation:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bc4_c42_wbb__table_vv4_yfd_1cb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d419219e653">Aggregate Function</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d419219e656">Additional Fields</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Average</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_a4s_2gd_1cb">
+                                            <li class="li">count</li>
+
+                                            <li class="li">total</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Count</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_zmk_fgd_1cb">
+                                            <li class="li">count</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Max</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_uv4_cgd_1cb">
+                                            <li class="li">max</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Min</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_s2x_cgd_1cb">
+                                            <li class="li">min</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Stddev</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_omq_3gd_1cb">
+                                            <li class="li">total</li>
+
+                                            <li class="li">count</li>
+
+                                            <li class="li">totalSquare</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e653 ">Sum</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e656 ">
+                                        <ul class="ul" id="concept_bc4_c42_wbb__ul_r5n_ggd_1cb">
+                                            <li class="li">sum</li>
+
+                                            <li class="li">count</li>
+
+                                        </ul>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">All aggregation event</dt>
+
+                <dd class="dd">You can configure the Aggregator processor to create an all aggregation event
+                    that includes the results of all configured aggregations. The frequency of event
+                    generation depends on the selected <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">window type and time
+                        window</a>. </dd>
+
+                <dd class="dd">Single aggregation events have the sdc.event.type set to ALL_AGGREGATOR_EVENT
+                    and includes a list of aggregations. Each aggregation list item is a map field
+                    that includes the same fields as the single aggregation event, described
+                    above.</dd>
+
+                <dd class="dd">To generate an all aggregation event, configure both of the following
+                        properties:<ul class="ul" id="concept_bc4_c42_wbb__ul_ns2_thd_1cb">
+                        <li class="li">On the General tab, select Produce Events.</li>
+
+                        <li class="li">On the Events tab, select All Aggregators Events.</li>
+
+                    </ul>
+</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_qxw_k42_wbb">
+ <h2 class="title topictitle2">Monitoring Aggregations</h2>
+
+ <div class="body conbody">
+  <p class="p">In
+            addition to standard stage statistics, the Aggregator processor provides aggregation
+            charts that you can monitor when you run the pipeline. The processor generates one chart
+            for every aggregation, using the specified title for the chart name. </p>
+
+        <p class="p">The contents and display of the charts depend on the aggregation and stage properties.
+            For example, when using a group by expression, the chart displays a bar for each group. </p>
+
+        <p class="p">When using a sliding window, charts display the date and time that the chart was last
+            updated. </p>
+
+        <p class="p">When using a rolling window, charts contain the results for multiple time windows based
+            on the Number of Time Windows to Remember property. Charts display the date and time
+            that the time window closes. The most recent time window can be in progress, displaying
+            the latest details as the processor continues to aggregate data within the time
+            window.</p>
+
+        <p class="p">For example, say you have an Aggregator processor using a rolling window and a 30 second
+            time window. It is configured to remember three time windows and uses the following
+            aggregation to perform a sum of all sales, using a filter to exclude returns:</p>
+
+        <p class="p"><img class="image" id="concept_qxw_k42_wbb__image_pmc_hh1_xbb" src="../Graphics/Aggregator-Sum.png" height="296" width="415" /></p>
+
+        <p class="p">The processor generates the following "total sales" chart:</p>
+
+        <p class="p"><img class="image" id="concept_qxw_k42_wbb__image_iwm_zf1_xbb" src="../Graphics/Aggregator-SumChart.png" height="198" width="831" /></p>
+
+        <p class="p">Notice, the aggregate function, SUM (double), displays on the left side of the chart and
+            the end of each time window displays under each bar. You can see that the interval
+            between the time windows is 30 seconds, as configured in the stage. </p>
+
+        <p class="p">The results for the third time window seem low, but this is because the time window is
+            still active -- the calculations are ongoing and the results are updated until the time
+            window closes. Like other <span class="ph">Data
+                  Collector</span>
+            charts and graphs, when you hover over a particular section, relevant details display.
+            In this case, the "value" is the sum of the sales that occurred in the time window.</p>
+
+        <p class="p">In the same Aggregator processor, you might use the following aggregation configuration
+            to determine the count of sales and returns. The group by expression enables counting
+            each transaction type:</p>
+
+        <p class="p"><img class="image" id="concept_qxw_k42_wbb__image_kt5_f31_xbb" src="../Graphics/Aggregator-Count-Group.png" height="252" width="415" /></p>
+
+        <p class="p">In the resulting "transaction types" chart, the COUNT function displays on the left, and
+            separate bars represent the return and sale groups:</p>
+
+        <p class="p"><img class="image" id="concept_qxw_k42_wbb__image_acp_4m1_xbb" src="../Graphics/Aggregator-CountChart-GroupBy.png" height="161" width="691" /></p>
+
+        <p class="p">To view Aggregator charts and statistics, view the pipeline in Monitor mode, and then
+            select the Aggregator processor.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_bd3_vvm_5bb">
+    <h2 class="title topictitle2">Configuring an Aggregator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an Aggregator
+                processor to perform aggregations within a time window.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bd3_vvm_5bb__table_vvw_s1h_cy" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d419219e909">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d419219e912">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Generates event records when
+                                        events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+                                            <img class="image" id="task_bd3_vvm_5bb__d79886e5276" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_bd3_vvm_5bb__d79886e5285" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_bd3_vvm_5bb__d79886e5301" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e909 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_bd3_vvm_5bb__d79886e5319" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e912 ">Error record handling for the stage: <ul class="ul" id="task_bd3_vvm_5bb__d79886e5323">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Aggregations</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bd3_vvm_5bb__table_mkp_tff_wbb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d419219e1041">Aggregation Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d419219e1044">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Window Type <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_r2h_bhf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Window type to use:<ul class="ul" id="task_bd3_vvm_5bb__ul_dyq_yrf_wbb">
+                                            <li class="li">Rolling - Calculates aggregations at regular
+                                                intervals based on the hour.</li>
+
+                                            <li class="li">Sliding - Calculates aggregations based on the
+                                                latest interval of data.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Time Window <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_slv_2hf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Time window of records to include in the aggregations.
+                                                <p class="p"><a class="xref" href="Aggregator.html#concept_h5b_bf2_wbb">For rolling windows</a>, the time window also
+                                            determines when the processor updates charts in Monitor
+                                            mode and when the processor generates events.
+                                                </p>
+<p class="p"><a class="xref" href="Aggregator.html#concept_qtg_ff2_wbb">For sliding windows</a>, the time window
+                                            determines only the time window of records to include in
+                                            aggregations. Charts and events are generated
+                                            separately.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Time Zone</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Time zone to use to establish time windows. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Number of Time Windows to Remember <a class="xref" href="Aggregator.html#concept_qxw_k42_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_gyy_rtd_1cb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">The number of time windows to display in Monitor mode.
+                                        Used only with rolling windows.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Aggregations </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Aggregate calculations to perform. To configure
+                                        additional aggregations, click the
+                                            <span class="ph uicontrol">Add</span> icon.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Enabled</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Enables the aggregation. Clear this option to disable the
+                                        aggregation while retaining it for future use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Aggregation name. Specify a name for the aggregation that
+                                        is unique within the processor.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Aggregation Title</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Aggregation title. The title used for the chart generated
+                                        for the aggregation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Filter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Enables creating a filter expression.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Filter Predicate <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_wwm_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Filter condition to reduce the number of records included
+                                        in the calculation. <p class="p">Enter a boolean expression. Records
+                                            that evaluate to Yes are included in the
+                                            aggregation.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Aggregation Function <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_ly4_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">The aggregate function to use. <div class="p">You can use the following aggregate functions:<ul class="ul" id="task_bd3_vvm_5bb__d79952e2604">
+                        <li class="li">Avg (Integer or Double)</li>
+
+                        <li class="li">Count (Integer only)</li>
+
+                        <li class="li">Min (Integer or Double)</li>
+
+                        <li class="li">Max (Integer or Double)</li>
+
+                        <li class="li">StdDev (Integer or Double)</li>
+
+                        <li class="li">Sum (Integer or Double)</li>
+
+                  </ul>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Aggregation Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_bty_xrf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Expression for the selected aggregate function. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Group By </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Enables using a group by expression in calculations. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1041 ">Group By Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                            <img class="image" id="task_bd3_vvm_5bb__image_hqf_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1044 ">Expression for grouping records before performing the
+                                        calculations.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Events</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bd3_vvm_5bb__table_nmw_ytd_1cb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d419219e1280">Events Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d419219e1283">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1280 ">All Aggregators Event</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1283 ">Generates events that contain the results of all
+                                        configured aggregations each time the processor performs
+                                            calculations.<p class="p">For more information about when the
+                                            event records are generated, see <a class="xref" href="Aggregator.html#concept_bc4_c42_wbb">Event Records</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d419219e1280 ">Per Aggregator Events</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d419219e1283 ">Generates sets of events, one for each configured
+                                        aggregation, each time the processor performs
+                                            calculations.<p class="p">For more information about when the
+                                            event records are generated, see <a class="xref" href="Aggregator.html#concept_bc4_c42_wbb">Event Records</a>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
