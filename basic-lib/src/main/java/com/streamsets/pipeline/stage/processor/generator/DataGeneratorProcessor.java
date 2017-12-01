@@ -15,14 +15,18 @@
  */
 package com.streamsets.pipeline.stage.processor.generator;
 
-import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 
-import java.util.Iterator;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-public class DataGeneratorProcessor extends SingleLaneProcessor {
+public class DataGeneratorProcessor extends SingleLaneRecordProcessor {
 
   private final DataGeneratorConfig config;
 
@@ -31,11 +35,29 @@ public class DataGeneratorProcessor extends SingleLaneProcessor {
   }
 
   @Override
-  public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
-    // TODO(Once services are fully implemented, use them to serialize the batch)
-    Iterator<Record> records = batch.getRecords();
-    while(records.hasNext()) {
-      singleLaneBatchMaker.addRecord(records.next());
+  protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    try {
+      // Serialize record to byte array
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      DataGenerator generator = getContext().getService(DataFormatGeneratorService.class).getGenerator(outputStream);
+      generator.write(record);
+      generator.close();
+      byte[] output = outputStream.toByteArray();
+
+      // And update the resulting record
+      switch (config.outputType) {
+        case STRING:
+          record.set(config.targetField, Field.create(Field.Type.STRING, new String(output)));
+          break;
+        case BYTE_ARRAY:
+          record.set(config.targetField, Field.create(Field.Type.BYTE_ARRAY, output));
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown OutputType: " + config.outputType);
+      }
+      batchMaker.addRecord(record);
+    } catch (IOException e) {
+      throw new OnRecordErrorException(record, Errors.GENERATOR_001, e.toString(), e);
     }
   }
 }

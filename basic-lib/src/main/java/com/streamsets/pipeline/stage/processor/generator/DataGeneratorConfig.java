@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.generator;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class DataGeneratorConfig {
 
@@ -31,4 +32,16 @@ public class DataGeneratorConfig {
   )
   @FieldSelectorModel(singleValued = true)
   public String targetField;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "BYTE_ARRAY",
+    label = "Output Type",
+    description = "Output data type",
+    displayPosition = 20,
+    group = "GENERATOR"
+  )
+  @ValueChooserModel(OutputTypeChooserType.class)
+  public OutputType outputType;
 }
