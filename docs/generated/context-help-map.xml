@@ -25,9 +25,9 @@
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_1257448973"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_504897379"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_2019246562"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_33774784"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -94,13 +94,15 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_215063337"/>
+               path="Installation/CMInstall-Overview.html#unique_1295969368"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
                path="Installation/CMInstall-Overview.html#task_zn4_qrn_25"/>
    <appContext helpID="concept_jgs_qpg_2v"
                path="Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v"/>
+   <appContext helpID="concept_n4q_lgj_ybb"
+               path="Installation/MapR-Prerequisites.html#concept_n4q_lgj_ybb"/>
    <appContext helpID="concept_wcb_lxp_xz"
                path="Installation/MapR-Prerequisites.html#concept_wcb_lxp_xz"/>
    <appContext helpID="concept_pvx_wxp_xz"
@@ -322,6 +324,8 @@
    <appContext helpID="task_mdr_phr_5v" path="Upgrade/CMUpgrade.html#task_mdr_phr_5v"/>
    <appContext helpID="concept_zll_vn5_zw"
                path="Upgrade/PostUpgrade.html#concept_zll_vn5_zw"/>
+   <appContext helpID="concept_dzn_cdy_1cb"
+               path="Upgrade/PostUpgrade.html#concept_dzn_cdy_1cb"/>
    <appContext helpID="concept_wnl_zk4_5bb"
                path="Upgrade/PostUpgrade.html#concept_wnl_zk4_5bb"/>
    <appContext helpID="concept_wnp_scs_wbb"
@@ -1379,6 +1383,26 @@
    <appContext helpID="concept_yjl_nc5_jq" path="Processors/Processors_title.html"/>
    <appContext helpID="concept_hpr_twm_jq"
                path="Processors/Processors_overview.html#concept_hpr_twm_jq"/>
+   <appContext helpID="concept_ofb_svm_5bb"
+               path="Processors/Aggregator.html#concept_ofb_svm_5bb"/>
+   <appContext helpID="concept_abn_qyd_wbb"
+               path="Processors/Aggregator.html#concept_abn_qyd_wbb"/>
+   <appContext helpID="concept_h5b_bf2_wbb"
+               path="Processors/Aggregator.html#concept_h5b_bf2_wbb"/>
+   <appContext helpID="concept_qtg_ff2_wbb"
+               path="Processors/Aggregator.html#concept_qtg_ff2_wbb"/>
+   <appContext helpID="concept_scl_5rf_wbb"
+               path="Processors/Aggregator.html#concept_scl_5rf_wbb"/>
+   <appContext helpID="concept_bvw_d2f_wbb"
+               path="Processors/Aggregator.html#concept_bvw_d2f_wbb"/>
+   <appContext helpID="concept_ppy_b42_wbb"
+               path="Processors/Aggregator.html#concept_ppy_b42_wbb"/>
+   <appContext helpID="concept_bc4_c42_wbb"
+               path="Processors/Aggregator.html#concept_bc4_c42_wbb"/>
+   <appContext helpID="concept_qxw_k42_wbb"
+               path="Processors/Aggregator.html#concept_qxw_k42_wbb"/>
+   <appContext helpID="task_bd3_vvm_5bb"
+               path="Processors/Aggregator.html#task_bd3_vvm_5bb"/>
    <appContext helpID="concept_ujj_spy_kv"
                path="Processors/Base64Decoder.html#concept_ujj_spy_kv"/>
    <appContext helpID="task_pnn_5py_kv"
@@ -2933,7 +2957,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_1026044761"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_490975729"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
