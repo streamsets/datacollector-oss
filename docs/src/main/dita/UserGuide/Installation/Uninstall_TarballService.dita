@@ -35,22 +35,19 @@
         <steps>
             <step>
                 <cmd>Use one of the following methods to shut down <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />:</cmd>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />:</cmd>
                 <choices id="choices_hwp_k2c_rx">
                     <choice>To use the command line, use the required command for your operating
-                            system.<p>For <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL6"
-                            />, use: <codeph>service sdc stop</codeph></p><p>For <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph_LinuxEL7"
-                            />, use: <codeph>systemctl stop sdc</codeph></p></choice>
-                    <choice>To use the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> UI, click <menucascade>
-                            <uicontrol>Administration</uicontrol>
-                            <uicontrol> Shut Down</uicontrol>
-                        </menucascade>. When the confirmation dialog box appears, click
-                            <uicontrol>Yes</uicontrol>.</choice>
+                            system.<p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL6"
+                            conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL7"
+                        /></choice>
+                    <choice>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownUI"
+                        />
+                    </choice>
                 </choices>
             </step>
             <step>

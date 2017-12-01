@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dzn_cdy_1cb">
+ <title>Update DPM On-premises</title>
+ <shortdesc>If you use <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        on-premises and you upgrade registered <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to a
+        version higher than your current version of <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
+        must modify the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        version range within your <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        installation.</shortdesc>
+ <conbody>
+        <p>By default, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> can
+            work with registered <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            from version 2.1.0.0 to the current version of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
+            You can customize the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version range. For example, if you use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            on-premises version 2.7.2 and you upgrade registered <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            to version <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>, you
+            must configure the maximum <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version that can work with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
+            version <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+            />.</p>
+        <p>To modify the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version range:</p>
+  <p>
+            <ol id="ol_xbl_f2y_1cb">
+                <li>Log in to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> as the default system administrator - the admin@admin user account.</li>
+                <li>In the Navigation panel, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Data Collectors</uicontrol>
+                    </menucascade>.</li>
+                <li>Click the <uicontrol>Component Version Range</uicontrol> icon: <image
+                        href="../Graphics/icon_OrganizationConfig.png" scale="70"
+                        id="image_hd3_dfy_1cb"/>.</li>
+                <li>Enter <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                    /> as the maximum <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> version that can work with <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    />.</li>
+            </ol>
+        </p>
+ </conbody>
+</concept>

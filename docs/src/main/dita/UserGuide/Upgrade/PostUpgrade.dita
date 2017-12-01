@@ -20,6 +20,7 @@
 <concept id="concept_zll_vn5_zw">
  <title>Post Upgrade Tasks</title>
  <shortdesc>In some situations, you must complete tasks within <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> after
-        you upgrade.</shortdesc>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
+        your <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        on-premises installation after you upgrade.</shortdesc>
 </concept>
