@@ -28,9 +28,19 @@
             configuration file, environment configuration file, or user logins. <p>To use the
                 command line for shutdown when <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> is started as a service, use the following
-                command:</p><codeblock>service sdc stop </codeblock><p>To use the command line for
-                shutdown when <ph
+                /> is started as a service, use the required command for your operating system:<ul
+                    id="ul_lvc_d52_bcb">
+                    <li>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL6"
+                        />
+                    </li>
+                    <li>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL7"
+                        />
+                    </li>
+                </ul></p><p>To use the command line for shutdown when <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> is started manually, use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

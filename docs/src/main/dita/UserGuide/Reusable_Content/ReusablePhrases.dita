@@ -49,6 +49,25 @@
             <p><ph id="ph_LinuxEL7">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
                   LTS</ph></p>
             <p><ph id="ph_LinuxEL7_RPM">CentOS 7 or Red Hat Enterprise Linux 7</ph></p>
+            <draft-comment author="alisontaylor">SDC service shutdown instructions used in
+                  Uninstallation, Upgrade, and Shutdown task in Admin chapter. </draft-comment>
+            <p id="shutdownServiceLinuxEL6">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6"/>, use: <codeph>service sdc
+                        stop</codeph></p>
+            <p id="shutdownServiceLinuxEL7">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7"/>, use: <codeph>systemctl stop
+                        sdc</codeph></p>
+            <p id="shutdownServiceLinxuEL6_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"/>, use: <codeph>service sdc
+                        stop</codeph></p>
+            <p id="shutdownServiceLinxuEL7_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"/>, use: <codeph>systemctl stop
+                        sdc</codeph></p>
+            <draft-comment author="alisontaylor">SDC UI shutdown instructions used in
+                  Uninstallation, Upgrade, and Shutdown task in Admin chapter. </draft-comment>
+            <p id="shutdownUI">To use the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> UI, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol> Shut Down</uicontrol>
+                  </menucascade>. When the confirmation dialog box appears, click
+                        <uicontrol>Yes</uicontrol>.</p>
             <p>
                   <draft-comment author="Loretta" >Used in Configuring the SDC
                         Environment and in MapR Prereq > Install Client Libraries</draft-comment>

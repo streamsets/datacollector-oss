@@ -76,6 +76,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Upgrade/PostUpgrade-DPMOnPrem.dita"/>
    <topicref href="../Upgrade/PostUpgrade-LegacyLibraries.dita"/>
    <topicref href="../Upgrade/PostUpgrade-ClouderaNav.dita"/>
    <topicref href="../Upgrade/PostUpgrade-JDBCMultitable-QueryInterval.dita"/>

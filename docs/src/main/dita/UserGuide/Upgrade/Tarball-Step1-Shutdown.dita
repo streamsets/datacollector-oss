@@ -36,15 +36,16 @@
                 <choices id="choices_hwp_k2c_rx">
                     <choice>To use the command line for shutdown when <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> is started as a service, use the following
-                        command:<codeblock>service sdc stop</codeblock></choice>
-                    <choice>To use the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> UI for shutdown, click <menucascade>
-                            <uicontrol>Administration</uicontrol>
-                            <uicontrol> Shut Down</uicontrol>
-                        </menucascade>. When the confirmation dialog box appears, click
-                            <uicontrol>Yes</uicontrol>.</choice>
+                        /> is started as a service, use the required command for your operating
+                            system.<p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL6"
+                            conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownServiceLinuxEL7"
+                        /></choice>
+                    <choice>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/shutdownUI"
+                        />
+                    </choice>
                 </choices>
             </step>
         </steps>
