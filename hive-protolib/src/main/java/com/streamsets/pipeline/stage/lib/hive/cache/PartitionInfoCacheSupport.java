@@ -21,6 +21,7 @@ import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,8 @@ public class PartitionInfoCacheSupport
   }
 
   public static class PartitionValues {
+    // Key is partition column name
+    // Value is the action partition value
     LinkedHashMap<String, String> partitionValues;
 
     public PartitionValues(LinkedHashMap<String, String> partitionValues) {
@@ -70,6 +73,7 @@ public class PartitionInfoCacheSupport
   public static class PartitionInfo extends HMSCacheSupport.HMSCacheInfo<Map<PartitionValues, String>>{
     private final HiveQueryExecutor hiveQueryExecutor;
     private String qualifiedTableName;
+    private Set<PartitionValues> partitionsToBeRolled;
 
     public PartitionInfo(
         Map<PartitionValues, String> partitionInfo,
@@ -77,12 +81,21 @@ public class PartitionInfoCacheSupport
         final String qualfiedTableName
     ) {
       super(partitionInfo);
+      this.partitionsToBeRolled = new HashSet<>();
       this.hiveQueryExecutor = hiveQueryExecutor;
       this.qualifiedTableName = qualfiedTableName;
     }
 
     public Map<PartitionValues, String> getPartitions() {
       return state;
+    }
+
+    public void setAllPartitionsToBeRolled() {
+      this.partitionsToBeRolled.addAll(state.keySet());
+    }
+
+    public boolean shouldRoll(PartitionValues partition) {
+      return this.partitionsToBeRolled.remove(partition);
     }
 
     @Override

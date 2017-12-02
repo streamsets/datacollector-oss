@@ -718,6 +718,123 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     } catch (StageException e) {
       Assert.assertEquals("Error codes should match", Errors.HIVE_32, e.getErrorCode());
     }
+  }
 
+  @Test // SDC-5273
+  public void testDriftWithMultipleOpenPartitions() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .table("drift_open_partitions")
+         .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt", HiveType.STRING, "${record:value('/partition')}")
+                .build()
+        )
+        .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 1));
+    map.put("partition", Field.create(Field.Type.STRING, "1"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 2));
+    map.put("partition", Field.create(Field.Type.STRING, "2"));
+    record = RecordCreator.create("s", "s:2");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 3));
+    map.put("partition", Field.create(Field.Type.STRING, "3"));
+    record = RecordCreator.create("s", "s:3");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 4));
+    map.put("partition", Field.create(Field.Type.STRING, "1"));
+    map.put("new_column", Field.create(Field.Type.STRING, "4"));
+    record = RecordCreator.create("s", "s:4");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 5));
+    map.put("partition", Field.create(Field.Type.STRING, "2"));
+    map.put("new_column", Field.create(Field.Type.STRING, "5"));
+    record = RecordCreator.create("s", "s:5");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 6));
+    map.put("partition", Field.create(Field.Type.STRING, "3"));
+    map.put("new_column", Field.create(Field.Type.STRING, "6"));
+    record = RecordCreator.create("s", "s:6");
+    record.set(Field.create(map));
+    records.add(record);
+
+    processRecords(processor, hiveTarget, records);
+
+    // No error records should be generated
+    Assert.assertEquals(0, getErrorRecord(Stage.METADATA_PROCESSOR).size());
+    Assert.assertEquals(0, getErrorRecord(Stage.METASTORE_TARGET).size());
+    Assert.assertEquals(0, getErrorRecord(Stage.HDFS_TARGET).size());
+
+    assertQueryResult("select * from drift_open_partitions order by id", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+            ImmutablePair.of("drift_open_partitions.id", Types.INTEGER),
+            ImmutablePair.of("drift_open_partitions.partition", Types.VARCHAR),
+            ImmutablePair.of("drift_open_partitions.new_column", Types.VARCHAR),
+            ImmutablePair.of("drift_open_partitions.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(1, rs.getLong(1));
+        Assert.assertEquals("1", rs.getString(2));
+        Assert.assertEquals(null, rs.getString(3));
+        Assert.assertEquals("1", rs.getString(4));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(2, rs.getLong(1));
+        Assert.assertEquals("2", rs.getString(2));
+        Assert.assertEquals(null, rs.getString(3));
+        Assert.assertEquals("2", rs.getString(4));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(3, rs.getLong(1));
+        Assert.assertEquals("3", rs.getString(2));
+        Assert.assertEquals(null, rs.getString(3));
+        Assert.assertEquals("3", rs.getString(4));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(4, rs.getLong(1));
+        Assert.assertEquals("1", rs.getString(2));
+        Assert.assertEquals("4", rs.getString(3));
+        Assert.assertEquals("1", rs.getString(4));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(5, rs.getLong(1));
+        Assert.assertEquals("2", rs.getString(2));
+        Assert.assertEquals("5", rs.getString(3));
+        Assert.assertEquals("2", rs.getString(4));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(6, rs.getLong(1));
+        Assert.assertEquals("3", rs.getString(2));
+        Assert.assertEquals("6", rs.getString(3));
+        Assert.assertEquals("3", rs.getString(4));
+
+        Assert.assertFalse("Unexpected number of rows", rs.next());
+      }
+    });
   }
 }
