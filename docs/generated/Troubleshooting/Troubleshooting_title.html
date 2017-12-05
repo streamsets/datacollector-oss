@@ -524,7 +524,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_1754135012">
+<div class="topic concept nested2" id="unique_913971199">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -663,6 +663,46 @@ java.net.ConnectException: Connection refused]</pre>
             </dl>
 
         </div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_wms_z44_nbb">
+ <h2 class="title topictitle2">Executors</h2>
+
+ <div class="body conbody">
+  <p class="p">Use
+            the following tips for help with executors.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_njt_1p4_nbb">
+ <h3 class="title topictitle3">Hive Query</h3>
+
+ <div class="body conbody">
+  <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">When I enter the name of the Impala JDBC driver in the stage, I receive an
+                        error saying that the driver is not present in the class path:</dt>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">HIVE_15 - Hive JDBC Driver &lt;driver name&gt; not present in the class path.</pre>
+
+                    </dd>
+
+                
+            </dl>
+
+        </div>
+
+        <p class="p">To use an Impala JDBC driver with the Hive Query executor, the driver must be installed
+            as an external library. And it must be installed for the stage library that the Hive
+            Query executor uses. </p>
+
+        <p class="p">If you already installed the driver, verify that you have it installed for the correct
+            stage library. For more information, see <a class="xref" href="../Executors/HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a>.</p>
 
  </div>
 
