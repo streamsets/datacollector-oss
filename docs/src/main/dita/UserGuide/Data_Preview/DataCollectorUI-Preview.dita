@@ -46,7 +46,7 @@
               also display stage properties and preview configuration.</p>
           </stentry>
         </strow>
-        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-DPM"/>
+        <strow product="DPM" conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-DPM"/>
         <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Home"/>
         <strow
           conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-PackageManager"/>

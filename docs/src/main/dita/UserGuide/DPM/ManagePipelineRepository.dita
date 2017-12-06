@@ -20,10 +20,14 @@
 <concept id="concept_ung_wbs_bx">
  <title>Manage the Pipeline Repository</title>
  <shortdesc>As a data engineer - the person responsible for making sure that data flows smoothly
-        between systems - you use a development <ph
+        between systems - you develop the pipelines needed to implement the designed data
+        architecture.  You use <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or a
+        development <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        instance to develop the pipelines needed to implement the designed data architecture. When
-        the pipelines are complete, you publish the pipelines to the pipeline repository in <ph
+        instance to develop pipelines. When the pipelines are complete, you publish the pipelines to
+        the pipeline repository in <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
         <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make

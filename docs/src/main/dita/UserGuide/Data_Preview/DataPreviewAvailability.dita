@@ -20,13 +20,20 @@
 <concept id="concept_ksb_hjj_br">
  <title>Data Preview Availability</title>
  <shortdesc>You can preview complete and incomplete pipelines. The Data Preview icon becomes active
-  when data preview is available.</shortdesc>
+        when data preview is available.</shortdesc>
  <conbody>
   <p><indexterm>data preview<indexterm>availability</indexterm></indexterm>You can preview data
-   under the following conditions:<ul id="ul_flp_4jj_br">
-    <li>All stages in the pipeline are connected</li>
-    <li>All required properties are defined</li>
-   </ul></p>
+            under the following conditions:<ul id="ul_flp_4jj_br">
+                <li product="DPM">The <xref
+                        href="../Pipeline_Configuration/PipelineDesigner-Tips.dita#concept_yk2_zfz_1cb/authoringSDC"
+                        >authoring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /></xref> is an available registered <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</li>
+                <li>All stages in the pipeline are connected</li>
+                <li>All required properties are defined</li>
+            </ul></p>
   <p>
    <note outputclass="" type="tip">Stage configuration does not have to be accurate or complete to
     preview data. After you connect all stages, you can enable data preview by entering any valid
