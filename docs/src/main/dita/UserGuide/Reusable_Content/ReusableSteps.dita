@@ -68,10 +68,16 @@
                         Pipeline and the tutorial pipeline config topic.</draft-comment>
                 </cmd>
             </step>
+            <step>
+                <cmd>From the Pipeline Repository view, click the <uicontrol>Add</uicontrol>
+                    icon.</cmd>
+            </step>
             <step id="CreatePipeline1">
-                <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
-                    page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
-                <info>
+                <cmd><ph product="SDC">From the <wintitle>Home</wintitle> page or <wintitle>Getting
+                            Started</wintitle> page, click <uicontrol>Create New
+                            Pipeline</uicontrol>.</ph><ph product="DPM">From the Pipeline Repository
+                        view, click the <uicontrol>Add</uicontrol> icon.</ph></cmd>
+                <info product="SDC">
                     <note type="tip">To get to the <wintitle>Home</wintitle> page, click the Home
                         icon.</note>
                 </info>
@@ -87,6 +93,14 @@
                     <choice><ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/> -
                         Select to design an edge execution mode pipeline that runs on <ph
                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>.</choice>
+                </choices>
+            </step>
+            <step product="DPM" id="CreatePipeline-Templates">
+                <cmd>Then, specify how you want to develop the pipeline:</cmd>
+                <choices id="choices_ppt_2dh_bcb">
+                    <choice>Blank pipeline - Select to create a pipeline from scratch.</choice>
+                    <choice>Pipeline template - Select to use a template as a basis for the
+                        pipeline.</choice>
                 </choices>
             </step>
             <step id="CreatePipeline3">

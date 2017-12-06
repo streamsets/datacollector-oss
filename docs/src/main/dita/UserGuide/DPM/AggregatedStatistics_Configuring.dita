@@ -19,17 +19,15 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_lcd_ng5_xw">
     <title>Configuring a Pipeline to Write Statistics</title>
-    <shortdesc>You can configure a pipeline to write statistics after the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
-        been registered with <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-        />.</shortdesc>
+    <shortdesc>You can configure a pipeline to write statistics<ph product="SDC"> after the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            has been registered with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            /></ph>.</shortdesc>
     <taskbody>
         <steps>
             <step>
-                <cmd>Open the pipeline in <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. </cmd>
+                <cmd>Open the pipeline. </cmd>
             </step>
             <step>
                 <cmd>On the <uicontrol>Statistics</uicontrol> tab, select one of the following

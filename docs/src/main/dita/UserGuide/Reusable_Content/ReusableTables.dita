@@ -33,31 +33,31 @@
      <stentry>Name</stentry>
      <stentry>Description</stentry>
     </sthead>
-    <strow>
+    <strow id="row-PipelineCanvas">
      <stentry>1</stentry>
      <stentry>Pipeline canvas</stentry>
      <stentry>Displays the pipeline. Use to configure the pipeline data flow.</stentry>
     </strow>
-    <strow>
+    <strow id="row-CreationHelpBar">
      <stentry>2</stentry>
      <stentry>Pipeline Creation Help Bar</stentry>
      <stentry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar to
        connect a stage to an open node. You can also add a stage between linked stages by clicking
        the link. </p></stentry>
     </strow>
-    <strow>
+    <strow id="row-StageDropdown">
      <stentry>3</stentry>
      <stentry>Stage list</stentry>
      <stentry>Lists the stages in the pipeline. Use to select a stage to configure. You can also
       select the stage in the canvas.</stentry>
     </strow>
-    <strow>
+    <strow id="row-PropertiesPanel">
      <stentry>4</stentry>
      <stentry>Properties panel</stentry>
      <stentry>Displays the properties of the pipeline or selected stage when you configure a
       pipeline. </stentry>
     </strow>
-    <strow>
+    <strow id="row-StageLibrary">
      <stentry>5</stentry>
      <stentry>Stage library</stentry>
      <stentry>List of available stages. Use to add stages to the pipeline. You can drag a stage to a

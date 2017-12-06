@@ -25,6 +25,8 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Pipeline_Configuration/PipelineDesignerUI.dita" product="DPM"/>
+  <topicref href="../Pipeline_Configuration/PipelineDesigner-Tips.dita" product="DPM"/>
   <topicref href="../Pipeline_Configuration/Retry.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
