@@ -29,7 +29,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -59,6 +61,9 @@ public class TestRuntimeEL {
   private static File dataDir;
   private static File configDir;
   private static RuntimeInfo runtimeInfo;
+
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -126,44 +131,53 @@ public class TestRuntimeEL {
   }
 
   @Test
+  public void testLoadResourceRestrictedFailure() throws Exception {
+    exception.expect(IllegalArgumentException.class);
+
+    Path fooFile = Paths.get(resourcesDir.getPath(), "foo.txt");
+    Files.write(fooFile, "Hello\n".getBytes(StandardCharsets.UTF_8));
+    Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OTHERS_READ));
+
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+
+    try {
+      RuntimeEL.loadResourceRaw("foo.txt", true);
+    } finally {
+      Files.deleteIfExists(fooFile);
+    }
+  }
+
+  @Test
+  public void testLoadResourceRestrictedSuccess() throws Exception {
+    Path fooFile = Paths.get(resourcesDir.getPath(), "foo.txt");
+    Files.write(fooFile, "Hello\n".getBytes(StandardCharsets.UTF_8));
+    Files.setPosixFilePermissions(fooFile, ImmutableSet.of(
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_WRITE)
+    );
+
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+
+    try {
+      RuntimeEL.loadResourceRaw("foo.txt", true);
+    } finally {
+      Files.deleteIfExists(fooFile);
+    }
+  }
+
+  @Test
   public void testLoadResource() throws Exception {
     Path fooFile = Paths.get(resourcesDir.getPath(), "foo.txt");
     try {
-      Files.write(fooFile, "Hello".getBytes(StandardCharsets.UTF_8));
+      Files.write(fooFile, "Hello\n".getBytes(StandardCharsets.UTF_8));
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-      Assert.assertNull(RuntimeEL.loadResource("bar.txt", false));
-      Assert.assertNull(RuntimeEL.loadResource("bar.txt", true));
+      Assert.assertNull(RuntimeEL.loadResourceRaw("bar.txt", false));
+      Assert.assertNull(RuntimeEL.loadResourceRaw("bar.txt", true));
+      Assert.assertEquals("Hello\n", RuntimeEL.loadResourceRaw("foo.txt", false));
       Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", false));
-      try {
-        RuntimeEL.loadResource("foo.txt", true);
-        Assert.fail();
-      } catch (IllegalArgumentException ex) {
-        //nop
-      } catch (Exception ex) {
-        Assert.fail();
-      }
-      Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
-                                                             PosixFilePermission.OWNER_WRITE));
-      Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
 
-      try {
-        Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OTHERS_READ));
-        Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
-        Assert.fail();
-      } catch (IllegalArgumentException ex) {
-        //NOP
-      }
-
-      try {
-        Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OTHERS_WRITE));
-        Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
-        Assert.fail();
-      } catch (IllegalArgumentException ex) {
-        //NOP
-      }
     } finally {
-      Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
-                                                             PosixFilePermission.OWNER_WRITE));
+      Files.deleteIfExists(fooFile);
     }
   }
 

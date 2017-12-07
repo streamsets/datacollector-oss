@@ -73,27 +73,45 @@ public class RuntimeEL {
     return value;
   }
 
-  @ElFunction(prefix = "runtime", name = "loadResource",
+  @ElFunction(
+      prefix = "runtime", name = "loadResource",
       description = "Loads the contents of a file under the Data Collector resources directory. " +
                     "If restricted is set to 'true', the file must be readable only by its owner."
   )
-  public static String loadResource
-    (
+  public static String loadResource(
       @ElParam("fileName") String fileName,
-      @ElParam("restricted") boolean restricted) {
+      @ElParam("restricted") boolean restricted
+  ) {
+    String r = loadResourceRaw(fileName, restricted);
+    if (r != null) {
+      return r.trim();
+    }
+
+    return null;
+  }
+
+  @ElFunction(
+      prefix = "runtime",
+      name = "loadResourceRaw",
+      description = "Loads the contents of a file including any leading and trailing whitespace under the Data " +
+          "Collector resources directory. If restricted is set to 'true', the file must be readable only by its " +
+          "owner."
+  )
+  public static String loadResourceRaw(
+      @ElParam("fileName") String fileName,
+      @ElParam("restricted") boolean restricted
+  ) {
     String resource = null;
     try {
       if (fileName != null && !fileName.isEmpty()) {
         File file = new File(runtimeInfo.getResourcesDir(), fileName);
-        if (file.exists() && file.isFile()) {
-          if (restricted) {
-            Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
-            if (permissions.contains(PosixFilePermission.GROUP_READ) ||
-                permissions.contains(PosixFilePermission.OTHERS_READ) ||
-                permissions.contains(PosixFilePermission.GROUP_WRITE) ||
-                permissions.contains(PosixFilePermission.OTHERS_WRITE)) {
-              throw new IllegalArgumentException(Utils.format("File '{}' should be owner read/write only", file));
-            }
+        if (file.exists() && file.isFile() && restricted) {
+          Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
+          if (permissions.contains(PosixFilePermission.GROUP_READ) ||
+              permissions.contains(PosixFilePermission.OTHERS_READ) ||
+              permissions.contains(PosixFilePermission.GROUP_WRITE) ||
+              permissions.contains(PosixFilePermission.OTHERS_WRITE)) {
+            throw new IllegalArgumentException(Utils.format("File '{}' should be owner read/write only", file));
           }
         }
         byte[] bytes = Files.readAllBytes(file.toPath());
