@@ -180,6 +180,24 @@ public class TestTableJdbcSourceUpgrader {
     UpgraderTestUtils.assertExists(upgradedConfigs, "commonSourceConfigBean.queriesPerSecond", "0.2");
   }
 
+  @Test
+  // SDC-8014: if numThreads/queryInterval is non-terminating, we should not throw ArithmeticException
+  public void testUpgradeV4ToV5NonTerminating() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("tableJdbcConfigBean.numberOfThreads", 22));
+    final String queryIntervalField = "commonSourceConfigBean.queryInterval";
+    configs.add(new Config(queryIntervalField, "${7 * SECONDS}"));
+
+    TableJdbcSourceUpgrader upgrader = new TableJdbcSourceUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 4, 5, configs);
+
+    UpgraderTestUtils.assertNoneExist(upgradedConfigs, queryIntervalField);
+    UpgraderTestUtils.assertAllExist(upgradedConfigs, "commonSourceConfigBean.queriesPerSecond");
+    Assert.assertTrue(upgradedConfigs.stream()
+        .filter(config -> config.getName().equals("commonSourceConfigBean.queriesPerSecond"))
+        .allMatch(config -> ((String) config.getValue()).startsWith("3.14285")));
+  }
+
   private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {
     for (LinkedHashMap<String, Object> tableConfigMap : tableConfigMaps) {
       assertThat(tableConfigMap, hasEntry(

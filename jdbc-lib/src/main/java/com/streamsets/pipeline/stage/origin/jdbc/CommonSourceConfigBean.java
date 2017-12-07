@@ -20,9 +20,6 @@ import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -247,8 +244,10 @@ public final class CommonSourceConfigBean {
 
     if (intervalSeconds != null) {
       if (intervalSeconds > 0) {
-        queriesPerSecond = new BigDecimal(numThreads).divide(new BigDecimal(intervalSeconds));
-
+        // Force a double operation to not lose precision.
+        // Don't use BigDecimal#divide() to avoid hitting ArithmeticException if numThreads/intervalSeconds
+        // is non-terminating.
+        queriesPerSecond = BigDecimal.valueOf(((double) numThreads)/intervalSeconds);
         LOG.info(
             "Calculated a {} value of {} from {} of {} and numThreads of {}",
             queriesPerSecondField,

@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class TestCommonSourceConfigBean {
@@ -29,7 +30,7 @@ public class TestCommonSourceConfigBean {
   public void testRateLimitUpgradeCalculations() {
     // simple case; one query with sleep time of 1 with 1 thread
     BigDecimal val1 = CommonSourceConfigBean.getQueriesPerSecondFromInterval("1", 1, "", "");
-    assertThat(val1, equalTo(BigDecimal.ONE));
+    assertEquals(val1.doubleValue(), 1.0, 0.0);
 
     // two threads sleeping 5 seconds is 0.4 queries per second
     BigDecimal val2 = CommonSourceConfigBean.getQueriesPerSecondFromInterval(5, 2, "", "");
@@ -37,7 +38,7 @@ public class TestCommonSourceConfigBean {
 
     // fewer than 1 threads should be treated as 1
     BigDecimal val3 = CommonSourceConfigBean.getQueriesPerSecondFromInterval(1, 0, "", "");
-    assertThat(val3, equalTo(BigDecimal.ONE));
+    assertEquals(val3.doubleValue(), 1.0, 0.0);
 
     // an interval of 0 corresponds to 0 per second, which means unlimited
     BigDecimal val4 = CommonSourceConfigBean.getQueriesPerSecondFromInterval("${0 * SECONDS}", 4, "", "");
