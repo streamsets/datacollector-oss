@@ -15,19 +15,14 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSourceUpgrader;
-import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSourceUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TestSQLServerCTSourceUpgrader {
 
@@ -43,6 +38,9 @@ public class TestSQLServerCTSourceUpgrader {
     List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 1, 2, configs);
 
     UpgraderTestUtils.assertNoneExist(upgradedConfigs, queryIntervalField);
-    UpgraderTestUtils.assertExists(upgradedConfigs, "commonSourceConfigBean.queriesPerSecond", "2");
+    UpgraderTestUtils.assertAllExist(upgradedConfigs, "commonSourceConfigBean.queriesPerSecond");
+    Assert.assertTrue(upgradedConfigs.stream()
+        .filter(config -> config.getName().equals("commonSourceConfigBean.queriesPerSecond"))
+        .allMatch(config -> ((String) config.getValue()).startsWith("2.0")));
   }
 }
