@@ -214,7 +214,6 @@ public class SQLServerCTSourceTestBuilder {
     tableJdbcConfigBean.resultCacheSize = resultSetCacheSize;
     tableJdbcConfigBean.numberOfThreads = numberOfThreads;
     tableJdbcConfigBean.numberOfBatchesFromRs = numberOfBatchesFromResultset;
-    //tableJdbcConfigBean.quoteChar = quoteChar;
 
     CommonSourceConfigBean commonSourceConfigBean =  new CommonSourceConfigBean(
         queriesPerSecond,
@@ -228,7 +227,8 @@ public class SQLServerCTSourceTestBuilder {
     return new SQLServerCTSource(
         hikariPoolConfigBean,
         commonSourceConfigBean,
-        tableJdbcConfigBean
+        tableJdbcConfigBean,
+        null
     );
   }
 

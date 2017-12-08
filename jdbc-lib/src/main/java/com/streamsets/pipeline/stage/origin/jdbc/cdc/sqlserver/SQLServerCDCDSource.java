@@ -18,12 +18,13 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
     version = 4,
@@ -50,7 +51,18 @@ public class SQLServerCDCDSource extends DPushSource {
 
   @Override
   protected PushSource createPushSource() {
-    return new SQLServerCDCSource(hikariConf, commonSourceConfigBean, cdcTableJdbcConfigBean);
+    return new SQLServerCDCSource(hikariConf, commonSourceConfigBean, cdcTableJdbcConfigBean, convertToTableJdbcConfigBean(cdcTableJdbcConfigBean));
+  }
+
+  private TableJdbcConfigBean convertToTableJdbcConfigBean(CDCTableJdbcConfigBean cdcTableJdbcConfigBean) {
+    TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
+    tableJdbcConfigBean.batchTableStrategy = cdcTableJdbcConfigBean.batchTableStrategy;
+    tableJdbcConfigBean.quoteChar = QuoteChar.NONE;
+    tableJdbcConfigBean.timeZoneID = "UTC";
+    tableJdbcConfigBean.numberOfThreads = cdcTableJdbcConfigBean.numberOfThreads;
+    tableJdbcConfigBean.tableOrderStrategy = cdcTableJdbcConfigBean.tableOrderStrategy;
+
+    return tableJdbcConfigBean;
   }
 
 }

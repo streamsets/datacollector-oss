@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcRunnable;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.util.OffsetUtil;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
@@ -450,10 +451,20 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
         .tableConfigBeans(ImmutableList.of(tableConfigBean1, tableConfigBean2))
         .batchTableStrategy(BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE)
+        .tableOrderStrategy(TableOrderStrategy.ALPHABETICAL)
         .build();
 
     Map<String, String> offsets = new HashMap<>();
+
     List<Record> records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
+    Assert.assertEquals(5, records.size());
+    checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(0, 5), records);
+
+    records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
+    Assert.assertEquals(5, records.size());
+    checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(5, 10), records);
+
+    records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
     Assert.assertEquals(5, records.size());
     checkRecords(EXPECTED_TENNIS_STARS_RECORDS.subList(0, 5), records);
 
@@ -464,14 +475,6 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
     Assert.assertEquals(5, records.size());
     checkRecords(EXPECTED_TENNIS_STARS_RECORDS.subList(10, 15), records);
-
-    records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
-    Assert.assertEquals(5, records.size());
-    checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(0, 5), records);
-
-    records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 5);
-    Assert.assertEquals(5, records.size());
-    checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(5, 10), records);
   }
 
   @SuppressWarnings("unchecked")

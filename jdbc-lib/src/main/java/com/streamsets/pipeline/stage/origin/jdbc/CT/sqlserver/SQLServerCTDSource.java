@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
     version = 2,
@@ -54,7 +56,18 @@ public class SQLServerCTDSource extends DPushSource {
 
   @Override
   protected PushSource createPushSource() {
-    return new SQLServerCTSource(hikariConf, commonSourceConfigBean, ctTableJdbcConfigBean);
+    return new SQLServerCTSource(hikariConf, commonSourceConfigBean, ctTableJdbcConfigBean, convertToTableJdbcConfigBean(ctTableJdbcConfigBean));
+  }
+
+  private TableJdbcConfigBean convertToTableJdbcConfigBean(CTTableJdbcConfigBean ctTableJdbcConfigBean) {
+    TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
+    tableJdbcConfigBean.batchTableStrategy = ctTableJdbcConfigBean.batchTableStrategy;
+    tableJdbcConfigBean.timeZoneID = ctTableJdbcConfigBean.timeZoneID;
+    tableJdbcConfigBean.quoteChar = QuoteChar.NONE;
+    tableJdbcConfigBean.numberOfThreads = ctTableJdbcConfigBean.numberOfThreads;
+    tableJdbcConfigBean.tableOrderStrategy = ctTableJdbcConfigBean.tableOrderStrategy;
+
+    return tableJdbcConfigBean;
   }
 
 }

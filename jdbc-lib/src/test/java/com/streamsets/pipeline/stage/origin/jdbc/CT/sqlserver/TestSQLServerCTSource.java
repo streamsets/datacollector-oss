@@ -34,13 +34,7 @@ public class TestSQLServerCTSource {
     private static final String database = "TEST";
     private static final String JDBC_URL = "jdbc:sqlserver://localhost:1433" + database;
 
-    private void testWrongConfiguration(SQLServerCTSource tableJdbcSource, boolean isMockNeeded) throws Exception {
-      if (isMockNeeded) {
-        tableJdbcSource = Mockito.spy(tableJdbcSource);
-        Mockito.doNothing().when(tableJdbcSource).checkConnectionAndBootstrap(
-            Mockito.any(PushSource.Context.class), Mockito.anyListOf(Stage.ConfigIssue.class)
-        );
-      }
+    private void testWrongConfiguration(SQLServerCTSource tableJdbcSource) throws Exception {
       PushSourceRunner runner = new PushSourceRunner.Builder(SQLServerCTSource.class, tableJdbcSource)
           .addOutputLane("a").build();
       List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
@@ -52,7 +46,7 @@ public class TestSQLServerCTSource {
       SQLServerCTSource tableJdbcSource = new SQLServerCTSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
           .tableConfigBeans(Collections.emptyList())
           .build();
-      testWrongConfiguration(tableJdbcSource, true);
+      testWrongConfiguration(tableJdbcSource);
     }
 
     @Test
@@ -66,7 +60,7 @@ public class TestSQLServerCTSource {
               )
           )
           .build();
-      testWrongConfiguration(tableJdbcSource, false);
+      testWrongConfiguration(tableJdbcSource);
     }
 
     @Test
@@ -83,7 +77,7 @@ public class TestSQLServerCTSource {
           .numberOfThreads(3)
           .maximumPoolSize(2)
           .build();
-      testWrongConfiguration(tableJdbcSource, true);
+      testWrongConfiguration(tableJdbcSource);
     }
 
     @Test
@@ -100,6 +94,6 @@ public class TestSQLServerCTSource {
           .numberOfBatchesFromResultset(0)
           .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
           .build();
-      testWrongConfiguration(tableJdbcSource, true);
+      testWrongConfiguration(tableJdbcSource);
     }
   }

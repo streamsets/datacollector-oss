@@ -429,6 +429,23 @@ public final class OffsetQueryUtil {
     return offsetMap;
   }
 
+  public static void validateV1Offset(Map<String, TableContext> allTableContexts, Map<String, String> offsets) throws StageException {
+    //If the offset already does not contain the table (meaning it is the first start or a new table)
+    //We can skip validation
+    for (Map.Entry<String, String> tableAndOffsetEntry : offsets.entrySet()) {
+      TableContext tableContext = allTableContexts.get(tableAndOffsetEntry.getKey());
+      if (tableContext != null) { //When the table is removed from the configuration
+        try {
+          validateStoredAndSpecifiedOffset(tableContext, tableAndOffsetEntry.getValue());
+        } catch (StageException e) {
+          LOG.error("Error when validating stored offset with configuration", e);
+          //Throw the stage exception, we should not start the pipeline with this.
+          throw e;
+        }
+      }
+    }
+  }
+
   /**
    * Validates whether offset names match in the stored offset with respect to table configuration
    * @param tableContext {@link TableContext} for table
