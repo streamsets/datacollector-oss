@@ -52,6 +52,16 @@ public class CDCSourceConfigBean {
   public List<String> tables;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Exclude pattern",
+      description = "Regular expression which applies to both schema and table",
+      displayPosition = 20,
+      group = "CDC"
+  )
+  public String excludePattern;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\", \"SELECT_FOR_UPDATE\"]",
