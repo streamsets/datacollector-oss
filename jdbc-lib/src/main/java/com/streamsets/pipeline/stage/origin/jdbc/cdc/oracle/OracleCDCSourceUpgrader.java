@@ -21,7 +21,10 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OracleCDCSourceUpgrader implements StageUpgrader {
   @Override
@@ -47,7 +50,13 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 4:
-        return upgradeV4ToV5(configs);
+        configs = upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          return configs;
+        }
+        // fall through
+      case 5:
+        return upgradeV5ToV6(configs);
 
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -77,6 +86,48 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
 
   private static List<Config> upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.sendUnsupportedFields", false));
+    return configs;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static List<Config> upgradeV5ToV6(List<Config> configs) {
+    List<Config> configsToSave = configs.stream().filter(config ->
+        config.getName().equals("oracleCDCConfigBean.baseConfigBean.database") ||
+        config.getName().equals("oracleCDCConfigBean.baseConfigBean.tables") ||
+        config.getName().equals("oracleCDCConfigBean.baseConfigBean.excludePattern")
+    ).collect(Collectors.toList());
+
+    configs.removeAll(configsToSave);
+
+    String schema = null;
+    List<String> tables = null;
+    String excludePattern = null;
+
+    for (Config config : configsToSave) {
+      switch (config.getName()) {
+        case "oracleCDCConfigBean.baseConfigBean.database":
+          schema = (String) config.getValue();
+          break;
+        case "oracleCDCConfigBean.baseConfigBean.tables":
+          tables = (List<String>) config.getValue();
+          break;
+        case "oracleCDCConfigBean.baseConfigBean.excludePattern":
+          excludePattern = (String) config.getValue();
+          break;
+      }
+    }
+
+    List<LinkedHashMap<String, Object>> schemaTables = new ArrayList<>();
+
+    LinkedHashMap<String, Object> schemaTable = new LinkedHashMap<>();
+    schemaTable.put("schema", schema);
+    schemaTable.put("tables", tables);
+    schemaTable.put("excludePattern", excludePattern);
+
+    schemaTables.add(schemaTable);
+
+    configs.add(new Config("oracleCDCConfigBean.baseConfigBean.schemaTableConfigs", schemaTables));
+
     return configs;
   }
 }

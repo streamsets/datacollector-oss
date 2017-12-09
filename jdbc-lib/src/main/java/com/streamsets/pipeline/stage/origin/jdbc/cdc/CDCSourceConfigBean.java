@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 
 import java.util.List;
@@ -35,31 +36,13 @@ public class CDCSourceConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Schema Name",
-      displayPosition = 10,
-      group = "CDC"
-  )
-  public String database;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.LIST,
+      type = ConfigDef.Type.MODEL,
       label = "Tables",
-      displayPosition = 20,
+      description = "Tables to track",
       group = "CDC"
   )
-  public List<String> tables;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Exclude pattern",
-      description = "Regular expression which applies to both schema and table",
-      displayPosition = 20,
-      group = "CDC"
-  )
-  public String excludePattern;
+  @ListBeanModel
+  public List<SchemaTableConfigBean> schemaTableConfigs;
 
   @ConfigDef(
       required = true,

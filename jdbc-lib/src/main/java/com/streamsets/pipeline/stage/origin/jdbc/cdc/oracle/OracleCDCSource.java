@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
 import net.jcip.annotations.GuardedBy;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -924,7 +925,7 @@ public class OracleCDCSource extends BaseSource {
         connection.setAutoCommit(false);
       } catch (StageException | SQLException e) {
         LOG.error("Error while connecting to DB", e);
-        issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), CONNECTION_STR, JDBC_00, e.toString()));
+        issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, JDBC_00, e.toString()));
         return issues;
       }
     }
@@ -932,10 +933,7 @@ public class OracleCDCSource extends BaseSource {
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
 
     String container = configBean.pdb;
-    configBean.baseConfigBean.database =
-        configBean.baseConfigBean.caseSensitive ?
-            configBean.baseConfigBean.database.trim() :
-            configBean.baseConfigBean.database.trim().toUpperCase();
+
     List<SchemaAndTable> schemasAndTables;
 
     try {
@@ -943,8 +941,14 @@ public class OracleCDCSource extends BaseSource {
       alterSession();
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
-      issues.add(getContext().createConfigIssue(
-          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JDBC_00,
+              hikariConfigBean.connectionString
+          )
+      );
     }
     zoneId = ZoneId.of(configBean.dbTimeZone);
     dateTimeColumnHandler = new DateTimeColumnHandler(zoneId);
@@ -1002,23 +1006,21 @@ public class OracleCDCSource extends BaseSource {
         }
       }
 
-      Pattern p =
-          StringUtils.isEmpty(configBean.baseConfigBean.excludePattern)?
-              null : Pattern.compile(configBean.baseConfigBean.excludePattern);
       schemasAndTables = new ArrayList<>();
-      for (String table : configBean.baseConfigBean.tables) {
-        try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, configBean.baseConfigBean.database, table, false)) {
-          while (rs.next()) {
-            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
-            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-            if (p == null || (!p.matcher(tableName).matches() && !p.matcher(schemaName).matches())) {
-              if (StringUtils.isNotBlank(schemaName)) {
+      for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+        Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
+
+        for (String table : tables.tables) {
+          try (ResultSet rs =
+                   JdbcUtil.getTableMetadata(connection, null, tables.schema, table, true)) {
+            while (rs.next()) {
+              String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+              String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+              if (p == null || !p.matcher(tableName).matches()) {
                 schemaName = schemaName.trim();
-              }
-              if (StringUtils.isNotBlank(tableName)) {
                 tableName = tableName.trim();
+                schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
               }
-              schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
             }
           }
         }
@@ -1058,9 +1060,14 @@ public class OracleCDCSource extends BaseSource {
       commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
-      issues.add(getContext().createConfigIssue(
-          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database",
-          JDBC_00, configBean.baseConfigBean.database));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JDBC_00,
+              hikariConfigBean.connectionString
+          )
+      );
       return issues;
     }
 
@@ -1109,8 +1116,14 @@ public class OracleCDCSource extends BaseSource {
       initializeLogMnrStatements();
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
-      issues.add(getContext().createConfigIssue(
-          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JDBC_00,
+              hikariConfigBean.connectionString
+          )
+      );
     }
 
     if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
