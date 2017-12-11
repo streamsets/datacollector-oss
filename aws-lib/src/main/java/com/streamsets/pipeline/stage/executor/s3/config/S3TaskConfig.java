@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.Collections;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class S3TaskConfig {
     },
     group = "#0",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = { RecordEL.class },
+    elDefs = { RecordEL.class, TimeNowEL.class },
     displayPosition = 30
   )
   public String content;
@@ -74,7 +75,7 @@ public class S3TaskConfig {
     },
     group = "#0",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = { RecordEL.class },
+    elDefs = { RecordEL.class, TimeNowEL.class },
     displayPosition = 40
   )
   public Map<String, String> tags = Collections.emptyMap();
