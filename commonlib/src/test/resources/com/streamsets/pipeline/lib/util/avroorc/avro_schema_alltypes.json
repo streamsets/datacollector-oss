@@ -1,0 +1,92 @@
+{
+  "type": "record",
+  "name": "TopRecord",
+  "fields": [
+    {
+      "name": "intField",
+      "type": "int"
+    },
+    {
+      "name": "recordField",
+      "type": {
+        "type": "record",
+        "name": "NestedRecord",
+        "fields": [
+          {
+            "name": "nestedStringField",
+            "type": "string"
+          },
+          {
+            "name": "nestedFloatField",
+            "type": "float"
+          }
+        ]
+      }
+    },
+    {
+      "name": "dateField",
+      "type": {
+        "type": "int",
+        "logicalType": "date"
+      }
+    },
+    {
+      "name": "timeMillisField",
+      "type": {
+        "type": "int",
+        "logicalType": "time-millis"
+      }
+    },
+    {
+      "name": "timeMicrosField",
+      "type": {
+        "type": "long",
+        "logicalType": "time-micros"
+      }
+    },
+    {
+      "name": "timestampMillisField",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "timestampMicrosField",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-micros"
+      }
+    },
+    {
+      "name": "decimalNoScaleField",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 12
+      }
+    },
+    {
+      "name": "decimalField",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 16,
+        "scale": 4
+      }
+    },
+    {
+      "name": "unionField",
+      "type": [{"type": "fixed", "name": "fixedField", "size": 8}, {"type": "long"}]
+    },
+    {
+      "name": "mapField",
+      "type": {"type": "map", "values": "double"}
+    },
+    {
+      "name": "listField",
+      "type": {"type": "array", "items": "string"}
+    }
+
+  ]
+}

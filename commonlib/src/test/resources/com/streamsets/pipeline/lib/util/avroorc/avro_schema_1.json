@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "recordType1",
+  "namespace": "com.streamsets",
+  "fields": [
+    {
+      "name": "first",
+      "type": "int",
+      "default": -1
+    },
+    {
+      "name": "second",
+      "type": "string"
+    },
+    {
+      "name": "third",
+      "type": "double"
+    }
+  ]
+}

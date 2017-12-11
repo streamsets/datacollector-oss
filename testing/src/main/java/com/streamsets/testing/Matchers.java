@@ -22,6 +22,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Map;
 
 
@@ -45,11 +47,48 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> fieldWithValue(final float value) {
+    return new FieldMatcher(Field.Type.FLOAT, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsFloat();
+      }
+    };
+  }
+
+
   public static Matcher<Field> fieldWithValue(final long value) {
     return new FieldMatcher(Field.Type.LONG, value) {
       @Override
       protected Object getValueFromField(Field field) {
         return field.getValueAsLong();
+      }
+    };
+  }
+
+  public static Matcher<Field> fieldWithValue(final Date value) {
+    return new FieldMatcher(Field.Type.DATE, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsDate();
+      }
+    };
+  }
+
+  public static Matcher<Field> fieldWithValue(final ZonedDateTime value) {
+    return new FieldMatcher(Field.Type.ZONED_DATETIME, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsZonedDateTime();
+      }
+    };
+  }
+
+  public static Matcher<Field> fieldWithValue(final BigDecimal value) {
+    return new FieldMatcher(Field.Type.DECIMAL, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsDecimal();
       }
     };
   }
@@ -64,6 +103,10 @@ public class Matchers {
 
   public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final String value) {
     return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsString);
+  }
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final double value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsDouble);
   }
 
   public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final BigDecimal value) {
