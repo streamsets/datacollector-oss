@@ -369,6 +369,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
+    // Stop the origin even if it did not stopped on it's own
+    ((StageContext)originPipe.getStage().getContext()).setStop(true);
+
     // Firstly destroy the runner, to make sure that any potential run away thread from origin will be denied
     // further processing.
     if(runnerPool != null) {
