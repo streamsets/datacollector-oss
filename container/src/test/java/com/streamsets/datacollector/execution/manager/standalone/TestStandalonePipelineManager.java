@@ -33,6 +33,8 @@ import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -111,6 +113,11 @@ public class TestStandalonePipelineManager {
     public TestPipelineManagerModule(long expiry, long initialExpiryDelay) {
       this.initialExpiryDelay = initialExpiryDelay;
       this.expiry = expiry;
+    }
+
+    @Provides @Singleton
+    public BuildInfo provideBuildInfo() {
+      return new DataCollectorBuildInfo();
     }
 
     @Provides @Singleton
@@ -195,6 +202,11 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton @Named("managerExecutor")
     public SafeScheduledExecutorService provideManagerExecutor() {
       return new SafeScheduledExecutorService(10, "manager");
+    }
+
+    @Provides @Singleton @Named("supportBundleExecutor")
+    public SafeScheduledExecutorService provideSupportBundleExecutor() {
+      return new SafeScheduledExecutorService(1, "supportBundleExecutor");
     }
 
     @Provides @Singleton

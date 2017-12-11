@@ -395,9 +395,16 @@ public class TestProductionPipeline {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
     config.set("monitor.memory", true);
-    ProductionPipelineRunner runner =
-        new ProductionPipelineRunner(PIPELINE_NAME, REVISION, config, runtimeInfo, new MetricRegistry(), snapshotStore,
-            null);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(
+      PIPELINE_NAME,
+      REVISION,
+      null,
+      config,
+      runtimeInfo,
+      new MetricRegistry(),
+      snapshotStore,
+      null
+    );
     runner.setObserveRequests(productionObserveRequests);
     runner.setMemoryLimitConfiguration(memoryLimit);
     runner.setDeliveryGuarantee(deliveryGuarantee);

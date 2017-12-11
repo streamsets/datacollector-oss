@@ -76,7 +76,7 @@ public class TestFailedProdRun {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo,
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, null, conf, runtimeInfo,
       new MetricRegistry(), Mockito.mock(FileSnapshotStore.class), null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
@@ -137,7 +137,7 @@ public class TestFailedProdRun {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, null, conf, runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
       null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);

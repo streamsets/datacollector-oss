@@ -123,7 +123,7 @@ public class TestProdPipelineRunnable {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo, new MetricRegistry(), snapshotStore,
+      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", null, conf, runtimeInfo, new MetricRegistry(), snapshotStore,
         null);
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());

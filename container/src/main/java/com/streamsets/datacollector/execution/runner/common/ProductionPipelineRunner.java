@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -114,6 +115,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private DeliveryGuarantee deliveryGuarantee;
   private final String pipelineName;
   private final String revision;
+  private final SupportBundleManager supportBundleManager;
   private final List<ErrorListener> errorListeners;
 
   private SourcePipe originPipe;
@@ -177,6 +179,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   public ProductionPipelineRunner(
       @Named("name") String pipelineName,
       @Named("rev") String revision,
+      SupportBundleManager supportBundleManager,
       Configuration configuration,
       RuntimeInfo runtimeInfo,
       MetricRegistry metrics,
@@ -190,6 +193,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.snapshotStore = snapshotStore;
     this.pipelineName = pipelineName;
     this.revision = revision;
+    this.supportBundleManager = supportBundleManager;
     stageToErrorRecordsMap = new HashMap<>();
     stageToErrorMessagesMap = new HashMap<>();
     this.errorListeners = new ArrayList<>();
@@ -379,6 +383,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       LOG.error("Pipeline execution failed", throwable);
       sendPipelineErrorNotificationRequest(throwable);
       errorNotification(originPipe, pipes, throwable);
+
+      if(supportBundleManager != null) {
+        supportBundleManager.uploadNewBundleOnError();
+      }
+
       Throwables.propagateIfInstanceOf(throwable, StageException.class);
       Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
       Throwables.propagate(throwable);

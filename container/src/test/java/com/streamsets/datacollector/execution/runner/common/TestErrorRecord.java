@@ -185,6 +185,7 @@ public class TestErrorRecord {
     ProductionPipelineRunner runner = new ProductionPipelineRunner(
         TestUtil.MY_PIPELINE,
         "0",
+        null,
         new Configuration(),
         runtimeInfo,
         new MetricRegistry(),

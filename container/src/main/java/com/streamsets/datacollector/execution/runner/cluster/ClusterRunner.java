@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.cluster.ApplicationState;
@@ -121,6 +122,7 @@ public class ClusterRunner extends AbstractRunner {
   @Inject ResourceManager resourceManager;
   @Inject SlaveCallbackManager slaveCallbackManager;
   @Inject LineagePublisherTask lineagePublisherTask;
+  @Inject SupportBundleManager supportBundleManager;
 
   private final String name;
   private final String rev;
@@ -707,9 +709,16 @@ public class ClusterRunner extends AbstractRunner {
   private ProductionPipeline createProductionPipeline(String user, String name, String rev, Configuration configuration,
     PipelineConfiguration pipelineConfiguration) throws PipelineStoreException, PipelineRuntimeException,
     StageException {
-    ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, new MetricRegistry(),
-        null, null);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(
+      name,
+      rev,
+      supportBundleManager,
+      configuration,
+      runtimeInfo,
+      new MetricRegistry(),
+      null,
+      null
+    );
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);
     }

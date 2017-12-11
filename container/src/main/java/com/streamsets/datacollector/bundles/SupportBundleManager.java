@@ -65,6 +65,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -285,6 +286,25 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     } finally {
       // Close the client
       s3Client.shutdown();
+    }
+  }
+
+  /**
+   * Try to upload bundle as part of internal SDC error (for example failing pipeline).
+   */
+  public void uploadNewBundleOnError() {
+    boolean enabled = configuration.get(Constants.UPLOAD_ON_ERROR, Constants.DEFAULT_UPLOAD_ON_ERROR);
+    LOG.info("Upload bundle on error: {}", enabled);
+
+    // We won't upload the bundle unless it's explicitly allowed
+    if(!enabled) {
+      return;
+    }
+
+    try {
+      uploadNewBundle(Collections.emptyList());
+    } catch (IOException e) {
+      LOG.error("Failed to upload error bundle", e);
     }
   }
 

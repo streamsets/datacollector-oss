@@ -47,6 +47,9 @@ public final class Constants {
   public static final String UPLOAD_BUFFER_SIZE = "bundle.upload.buffer_size";
   public static final int DEFAULT_UPLOAD_BUFFER_SIZE = 5 * 1024 * 1024; // 5MB, amazon lower limit
 
+  public static final String UPLOAD_ON_ERROR = "bundle.upload.on_error";
+  public static final boolean DEFAULT_UPLOAD_ON_ERROR = false;
+
   // Log Generator
 
   /**

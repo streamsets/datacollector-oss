@@ -49,6 +49,8 @@ import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -487,6 +489,11 @@ public class TestUtil {
     }
 
     @Provides @Singleton
+    public BuildInfo provideBuildInfo() {
+      return new DataCollectorBuildInfo();
+    }
+
+    @Provides @Singleton
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(getClass().getClassLoader()));
@@ -526,7 +533,11 @@ public class TestUtil {
     @Provides @Named("managerExecutor") @Singleton
     public SafeScheduledExecutorService provideManagerExecutor() {
       return new SafeScheduledExecutorService(10, "manager");
+    }
 
+    @Provides @Named("supportBundleExecutor") @Singleton
+    public SafeScheduledExecutorService providSupportBundleExecutor() {
+      return new SafeScheduledExecutorService(1, "supportBundleExecutor");
     }
   }
 
@@ -551,7 +562,8 @@ public class TestUtil {
       TestRuntimeModule.class,
       TestPipelineStoreModuleNew.class,
       TestSnapshotStoreModule.class,
-      TestLineageModule.class
+      TestLineageModule.class,
+      TestExecutorModule.class
     })
   public static class TestPipelineProviderModule {
 
@@ -642,7 +654,7 @@ public class TestUtil {
                                                                     MetricRegistry metrics, SnapshotStore snapshotStore,
                                                                     ThreadHealthReporter threadHealthReporter,
                                                                     SourceOffsetTracker sourceOffsetTracker) {
-      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
+      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner(name, rev, null, configuration, runtimeInfo, metrics, snapshotStore,
         threadHealthReporter);
     }
 
