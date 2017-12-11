@@ -276,6 +276,7 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
 
       generator.writeEndArray();
       generator.writeEndObject();
+    } finally {
       writer.markEndOfFile();
     }
   }
