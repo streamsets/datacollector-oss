@@ -31,6 +31,7 @@ import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -319,6 +320,9 @@ public class PipelineConfigBean implements Stage {
     label = "Create Failure Snapshot",
     description = "When selected and the pipeline execution fails with unrecoverable exception, SDC will attempt to create" +
       "partial snapshot with records that have not been processed yet.",
+    dependencies = @Dependency(
+      configName = "executionMode", triggeredByValues = "STANDALONE"
+    ),
     displayPosition = 200
   )
   public boolean shouldCreateFailureSnapshot;
