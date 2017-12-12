@@ -36,6 +36,7 @@
       <outputDirectory>/</outputDirectory>
       <includes>
         <include>bin/**</include>
+        <include>edge-binaries/**</include>
         <include>etc/**</include>
         <include>libexec/**</include>
         <include>api-lib/**</include>
