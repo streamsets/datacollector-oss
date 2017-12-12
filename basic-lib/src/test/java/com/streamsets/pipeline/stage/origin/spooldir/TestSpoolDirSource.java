@@ -783,7 +783,7 @@ public class TestSpoolDirSource {
 
     final int numFiles = 10;
     for (int i = 0; i < numFiles; i++) {
-      FileOutputStream outputStream = new FileOutputStream(new File(f.getAbsolutePath(), "file-" + i + ".log"));
+      FileOutputStream outputStream = new FileOutputStream(new File(f.getAbsolutePath(), "-file-" + i + ".log"));
       // each file has 5 lines
       IOUtils.writeLines(ImmutableList.of("1", "2", "3", "4", "5"), "\n", outputStream);
       outputStream.close();
@@ -802,7 +802,7 @@ public class TestSpoolDirSource {
     conf.batchSize = 10;
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
-    conf.filePattern = "file-[0-9].log";
+    conf.filePattern = "*file-[0-9].log";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
@@ -841,7 +841,7 @@ public class TestSpoolDirSource {
 
       runner.waitOnProduce();
       Assert.assertTrue(batchCount.get() > 1);
-      TestOffsetUtil.compare("file-9.log::-1", runner.getOffsets());
+      TestOffsetUtil.compare("-file-9.log::-1", runner.getOffsets());
       Assert.assertEquals(50, records.size());
     } finally {
       runner.runDestroy();

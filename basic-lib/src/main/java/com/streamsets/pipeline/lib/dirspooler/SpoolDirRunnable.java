@@ -155,7 +155,7 @@ public class SpoolDirRunnable implements Runnable {
 
   private Offset produce(Offset lastSourceOffset, BatchContext batchContext) throws StageException {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
-    String file = lastSourceOffset.getFile();
+    String file = lastSourceOffset.getRawFile();
     String lastSourceFile = file;
     String fullPath = (file != null) ? spooler.getSpoolDir() + "/" + file : null;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
