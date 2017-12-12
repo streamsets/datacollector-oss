@@ -107,8 +107,8 @@
                 <stentry><image href="../Graphics/PDicon_More.png" id="image_p2l_vby_1cb" scale="70"
                     /></stentry>
                 <stentry>More icon</stentry>
-                <stentry>Provides additional actions to take. Use to delete or export the
-                    pipeline.</stentry>
+                <stentry>Provides additional actions to take. Use to delete or export the pipeline,
+                    or to update the stage libraries used in the pipeline.</stentry>
             </strow>
             <strow>
                 <stentry><image href="../Graphics/PDicon_Delete.png" id="image_app_y5y_1cb"

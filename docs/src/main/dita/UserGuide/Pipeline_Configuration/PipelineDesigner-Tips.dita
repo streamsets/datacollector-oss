@@ -104,6 +104,35 @@
                             scale="60"/>. The pipeline then enters Edit mode.</dd>
                 </dlentry>
                 <dlentry>
+                    <dt>Update Stage Libraries for the Pipeline</dt>
+                    <dd>When editing a pipeline, you can use the Update Stage Libraries dialog box
+                        to update the stage libraries for multiple stages in the pipeline. </dd>
+                    <dd>This allows you to update all necessary stage libraries at one time when you
+                        change the authoring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> for the pipeline. When preferred, you can also change stage libraries
+                        individually by editing each stage.</dd>
+                    <dd>The stage libraries that display for each stage depends on the authoring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> selected for the pipeline. For example, if the authoring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> has the MapR 5.0 and 5.1 stage libraries installed, then these are the
+                        stage libraries that display for a MapR FS destination or MapR FS File
+                        Metadata executor.</dd>
+                    <dd>To update multiple stage libraries at one time, click the More icon (<image
+                            href="../Graphics/PDicon_More.png" id="image_p2l_vby_1cb" scale="60"/>),
+                        then select Update Stage Libraries.</dd>
+                    <dd>The Update Stage Libraries dialog box displays the stage name and type for
+                        each stage in the pipeline. On the right is the corresponding list of stage
+                        libraries for the stage that are available on the authoring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. </dd>
+                    <dd>Update the stage libraries as needed, then click Update to save your
+                        changes. </dd>
+                    <dd><image href="../Graphics/UpdateStageLibraries.png" id="image_kbl_hxg_2cb"
+                            scale="50"/></dd>
+                </dlentry>
+                <dlentry>
                     <dt>Work with Versions</dt>
                     <dd>When you have multiple versions of a pipeline, <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"
