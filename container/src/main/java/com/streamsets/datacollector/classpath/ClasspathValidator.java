@@ -75,7 +75,7 @@ public class ClasspathValidator {
   }
 
   public ClasspathValidatorResult validate(Properties explicitWhitelist) {
-    LOG.debug("Validating classpath for {}", name);
+    LOG.trace("Validating classpath for {}", name);
     ClasspathValidatorResult.Builder resultBuilder = new ClasspathValidatorResult.Builder(name);
     // Name of dependency -> Version(s) of the dependency -> Individual dependencies
     Map<String, Map<String, List<Dependency>>> dependecies = new HashMap<>();
@@ -103,7 +103,7 @@ public class ClasspathValidator {
       // Ideal the inner map with versions should have only one item, otherwise that is most likely a problem
       if(entry.getValue().size() > 1) {
         if(CollisionWhitelist.isWhitelisted(entry.getKey(), explicitWhitelist, entry.getValue())) {
-          LOG.debug("Whitelisted dependency {} on versions {}", entry.getKey(), StringUtils.join(entry.getValue().keySet(), ","));
+          LOG.trace("Whitelisted dependency {} on versions {}", entry.getKey(), StringUtils.join(entry.getValue().keySet(), ","));
           continue;
         }
 

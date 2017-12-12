@@ -272,6 +272,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   private void validateStageClasspaths() {
+    LOG.info("Validating classpath of all stages");
+
     // Firstly validate the stage classpaths for duplicate dependencies
     Set<String> corruptedClasspathStages = new HashSet<>();
     for (ClassLoader cl : stageClassLoaders) {
@@ -289,7 +291,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
     }
 
-    if (!corruptedClasspathStages.isEmpty()) {
+    if (corruptedClasspathStages.isEmpty()) {
+      LOG.info("Classpath of all stages passed validation");
+    } else {
       LOG.error("The following stages have invalid classpath: {}", StringUtils.join(corruptedClasspathStages, ", "));
 
       boolean canTerminate = configuration.get(CONFIG_CP_VALIDATION_RESULT, DEFAULT_CP_VALIDATION_RESULT);
