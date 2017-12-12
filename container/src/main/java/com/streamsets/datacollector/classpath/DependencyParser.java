@@ -38,12 +38,12 @@ public class DependencyParser {
   /**
    * Classifiers that are not interesting.
    */
-  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded)?";
+  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded|-bin)?";
 
   /**
    * Various version suffixes that we support.
    */
-  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a";
+  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a|-cubrid";
 
   /**
    * Various supported version specifications
@@ -62,6 +62,8 @@ public class DependencyParser {
     "-([0-9.]+-mapr)",
     // Time based (like '3.0.0.v201112011016')
     "-([0-9.]+\\.v[0-9.]+)",
+    // PostgreSQL JDBC driver numbering scheme
+    "-([0-9.]+-[0-9]+)\\.jdbc[0-9]",
 
     // Most basic version specification
     "-([0-9.]+(" + VERSION_SUFFIXES + ")?)"
@@ -112,7 +114,15 @@ public class DependencyParser {
    */
   private static Map<String, Dependency> SPECIAL_CASES = new HashMap<>();
   static {
-    SPECIAL_CASES.put("jython.jar", new Dependency("jython.jar", "jython", ""));
+    // Jython
+    SPECIAL_CASES.put("jython.jar", new Dependency("jython", ""));
+    // Various JDBC drivers from vendors who don't follow usual maven scheme
+    SPECIAL_CASES.put("db2jcc4.jar", new Dependency("db2jcc4", ""));
+    SPECIAL_CASES.put("nzjdbc3.jar", new Dependency("nzjdbc3", ""));
+    SPECIAL_CASES.put("ojdbc6.jar", new Dependency("ojdbc6", ""));
+    SPECIAL_CASES.put("sqljdbc4.jar", new Dependency("sqljdbc4", ""));
+    SPECIAL_CASES.put("tdgssconfig.jar", new Dependency("tdgssconfig", ""));
+    SPECIAL_CASES.put("terajdbc4.jar", new Dependency("terajdbc4", ""));
   }
 
   /**
@@ -133,11 +143,9 @@ public class DependencyParser {
    * Generate dependency from a jar file name.
    */
   public static Optional<Dependency> parseJarName(String sourceName, String jarName) {
-    // First scan special cases
-    for(Map.Entry<String, Dependency> entry: SPECIAL_CASES.entrySet()) {
-      if(entry.getKey().equals(jarName)) {
-        return Optional.of(entry.getValue());
-      }
+    if(SPECIAL_CASES.containsKey(jarName)) {
+      Dependency specialCase = SPECIAL_CASES.get(jarName);
+      return Optional.of(new Dependency(sourceName, specialCase.getName(), specialCase.getVersion()));
     }
 
     // Go over all known patterns
