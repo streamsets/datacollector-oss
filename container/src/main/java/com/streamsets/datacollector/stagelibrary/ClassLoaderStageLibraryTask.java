@@ -94,7 +94,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String PROPERTIES_CP_WHITELIST = "data-collector-classpath-whitelist.properties";
 
   private static final String CONFIG_CP_VALIDATION = "stagelibs.classpath.validation.enable";
-  private static final boolean DEFAULT_CP_VALIDATION = false;
+  private static final boolean DEFAULT_CP_VALIDATION = true;
 
   private static final String CONFIG_CP_VALIDATION_RESULT = "stagelibs.classpath.validation.terminate";
   private static final boolean DEFAULT_CP_VALIDATION_RESULT = false;
