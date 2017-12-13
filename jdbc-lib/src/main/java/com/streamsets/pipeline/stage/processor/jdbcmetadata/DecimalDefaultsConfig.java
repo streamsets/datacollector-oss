@@ -23,7 +23,7 @@ public class DecimalDefaultsConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = HeaderAttributeConstants.ATTR_PRECISION,
-      label = "Decimal Scale Expression",
+      label = "Decimal Scale Attribute",
       description = "Name of the field attribute that stores precision for decimal fields.",
       displayPosition = 80,
       group = "JDBC"
@@ -34,7 +34,7 @@ public class DecimalDefaultsConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = HeaderAttributeConstants.ATTR_SCALE,
-      label = "Decimal Precision Expression",
+      label = "Decimal Precision Attribute",
       description = "Name of the field attribute that stores scale for decimal fields.",
       displayPosition = 90,
       group = "JDBC"
