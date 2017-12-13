@@ -69,6 +69,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,6 +81,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
   public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
@@ -276,18 +278,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     // Firstly validate the stage classpaths for duplicate dependencies
     Set<String> corruptedClasspathStages = new HashSet<>();
-    for (ClassLoader cl : stageClassLoaders) {
-      if (cl instanceof SDCClassLoader) {
-        SDCClassLoader sdcCl = (SDCClassLoader) cl;
-
-        ClasspathValidatorResult validationResult = ClasspathValidator.newValidator(sdcCl.getName())
-          .withURLs(sdcCl.getURLs())
-          .validate(loadClasspathWhitelist(cl));
-
-        if (!validationResult.isValid()) {
-          validationResult.logDetails();
-          corruptedClasspathStages.add(sdcCl.getName());
-        }
+    for(ClasspathValidatorResult result : validateStageLibClasspath()) {
+      if (!result.isValid()) {
+        result.logDetails();
+        corruptedClasspathStages.add(result.getName());
       }
     }
 
@@ -633,6 +627,25 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public Map<String, String> getStageNameAliases() {
     return stageNameAliases;
+  }
+
+  @Override
+  public List<ClasspathValidatorResult> validateStageLibClasspath() {
+    List<ClasspathValidatorResult> validators = new LinkedList<>();
+
+    for (ClassLoader cl : stageClassLoaders) {
+      if (cl instanceof SDCClassLoader) {
+        SDCClassLoader sdcCl = (SDCClassLoader) cl;
+
+        ClasspathValidatorResult validationResult = ClasspathValidator.newValidator(sdcCl.getName())
+          .withURLs(sdcCl.getURLs())
+          .validate(loadClasspathWhitelist(cl));
+
+        validators.add(validationResult);
+      }
+    }
+
+    return validators;
   }
 
   ClassLoader getStageClassLoader(PrivateClassLoaderDefinition stageDefinition) {

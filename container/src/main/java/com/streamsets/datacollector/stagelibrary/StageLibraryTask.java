@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.stagelibrary;
 
+import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
@@ -60,5 +61,7 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public Map<String, String> getLibraryNameAliases();
 
   public Map<String, String> getStageNameAliases();
+
+  public List<ClasspathValidatorResult> validateStageLibClasspath();
 
 }

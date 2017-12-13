@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -141,6 +142,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public Map<String, String> getStageNameAliases() {
     return library.getStageNameAliases();
+  }
+
+  @Override
+  public List<ClasspathValidatorResult> validateStageLibClasspath() {
+    return Collections.emptyList();
   }
 
   @Override

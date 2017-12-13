@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
@@ -708,6 +709,11 @@ public class MockStages {
     @Override
     public Map<String, String> getStageNameAliases() {
       return Collections.emptyMap();
+    }
+
+    @Override
+    public List<ClasspathValidatorResult> validateStageLibClasspath() {
+      return Collections.emptyList();
     }
 
     @Override

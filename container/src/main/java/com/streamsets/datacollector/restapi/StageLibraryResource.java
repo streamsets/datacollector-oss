@@ -17,6 +17,7 @@ package com.streamsets.datacollector.restapi;
 
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -490,4 +491,17 @@ public class StageLibraryResource {
     return Response.ok().build();
   }
 
+  @GET
+  @Path("/stageLibraries/classpathHealth")
+  @ApiOperation(
+    value = "Validate health of classpath of all loaded stages.",
+    response = Object.class,
+    authorizations = @Authorization(value = "basic")
+  )
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response classpathHealth() {
+    List<ClasspathValidatorResult> results = stageLibrary.validateStageLibClasspath();
+    return Response.ok().entity(results).build();
+  }
 }
