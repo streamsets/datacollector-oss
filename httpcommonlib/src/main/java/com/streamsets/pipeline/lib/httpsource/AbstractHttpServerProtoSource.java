@@ -68,6 +68,10 @@ public abstract class AbstractHttpServerProtoSource<R extends HttpReceiver, C ex
     if (server != null) {
       server.destroy();
     }
+
+    if (receiver != null) {
+      receiver.destroy();
+    }
     super.destroy();
   }
 
