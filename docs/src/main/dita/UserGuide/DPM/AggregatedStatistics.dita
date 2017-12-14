@@ -32,9 +32,9 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> or to
         another system.</shortdesc>
  <conbody>
-  <p><indexterm>DPM<indexterm>aggregated
+  <p><indexterm>Control Hub<indexterm>aggregated
                     statistics</indexterm></indexterm><indexterm>pipelines<indexterm>aggregated
-                    statistics for DPM</indexterm></indexterm><indexterm>aggregated
+                    statistics for Control Hub</indexterm></indexterm><indexterm>aggregated
                     statistics<indexterm>pipelines</indexterm></indexterm>When a job runs on a
             single <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,

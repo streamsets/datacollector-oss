@@ -80,9 +80,10 @@
                                         /></entry>
                                 </row>
                                 <row>
-                                    <entry>Execution Mode <xref href="../Cluster_Mode/ClusterPipelines.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_zfp_n5g_cs"/>
+                                    <entry>Execution Mode <xref
+                                            href="../Cluster_Mode/ClusterPipelines.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_zfp_n5g_cs"/>
                                         </xref></entry>
                                     <entry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
                                             <li>Standalone - A single <ph
@@ -170,10 +171,9 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Retry Pipeline on Error <xref
-                                            href="Retry.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_wms_qvz_2t"/>
+                                    <entry>Retry Pipeline on Error <xref href="Retry.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wms_qvz_2t"/>
                                         </xref></entry>
                                     <entry>Retries the pipeline upon error. </entry>
                                 </row>
@@ -185,8 +185,7 @@
                                         minutes.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Pipeline Memory <xref
-                                            href="PipelineMemory.dita"
+                                    <entry>Max Pipeline Memory <xref href="PipelineMemory.dita"
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_ldk_s5g_cs"/>
                                         </xref></entry>
@@ -221,11 +220,10 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Rate Limit (records / sec)
-                                        <xref
-                                            href="PipelineRateLimit.dita"
-                                            ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_lgk_s6g_cs"/>
+                                    <entry>Rate Limit (records / sec) <xref
+                                            href="PipelineRateLimit.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_lgk_s6g_cs"/>
                                         </xref></entry>
                                     <entry>Maximum number of records that the pipeline can read in a
                                         second. Use 0 or no value to set no rate limit.<p>Default is
@@ -421,7 +419,8 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCconnect">
                                     <entry/>
-                                </row><row
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCID">
                                     <entry/>
                                 </row>
@@ -433,7 +432,6 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-BackOffPeriod">
                                     <entry/>
                                 </row>
-                                
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ConTimeout">
                                     <entry/>
@@ -481,7 +479,7 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-CipherSuites-row">
                                     <entry/>
-                                </row>   
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -514,7 +512,8 @@
                 </info>
                 <info>If you enabled security, configure the following security property:</info>
                 <info
-                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticSHIELD-Info"/>
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticSHIELD-Info"
+                />
             </step>
             <step>
                 <cmd>When writing error records to file, click the <wintitle>Error Records - Write
@@ -592,10 +591,11 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-ProjectID">
                                     <entry/>
-                                </row>  <row
-                                   conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3Bucket">
-                                   <entry/>
-                               </row>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3Bucket">
+                                    <entry/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-GCS-CredProvider">
                                     <entry/>
@@ -749,7 +749,7 @@
                                 </row>
                                 <row>
                                     <entry>Secret Access Key <xref
-                                        href="../Destinations/KinProducer-AWSCredentials.dita">
+                                            href="../Destinations/KinProducer-AWSCredentials.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_v74_wcr_yv"/>
                                         </xref></entry>
@@ -796,7 +796,8 @@
                         - Write to MapR Streams</wintitle> tab and configure the following
                     properties:</cmd>
                 <info
-                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MapRStreams-Info"/>
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MapRStreams-Info"
+                />
             </step>
             <step>
                 <cmd>When using the cluster execution mode, click the <uicontrol>Cluster</uicontrol>
@@ -919,9 +920,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to work with <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                    /> (<ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />), you can configure the pipeline to aggregate statistics on the
+                    />, you can configure the pipeline to aggregate statistics on the
                         <uicontrol>Statistics</uicontrol> tab. </cmd>
                 <info>
                     <p>For information on configuring a pipeline to aggregate statistics for <ph

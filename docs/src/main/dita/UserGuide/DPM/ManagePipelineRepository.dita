@@ -21,17 +21,17 @@
  <title>Manage the Pipeline Repository</title>
  <shortdesc>As a data engineer - the person responsible for making sure that data flows smoothly
         between systems - you develop the pipelines needed to implement the designed data
-        architecture.  You use <ph
+        architecture. You use <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or a
         development <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        instance to develop pipelines. When the pipelines are complete, you publish the pipelines to
-        the pipeline repository in <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+        design pipelines. When the pipelines are complete, you publish the pipelines to the pipeline
+        repository in <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
-        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment><ph
+        <p><draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             provides release management of pipelines. A typical pipeline development cycle involves
             iterative changes to the pipeline. <ph

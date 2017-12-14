@@ -18,19 +18,21 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kc4_xyf_xw">
- <title>Register Data Collector with DPM</title>
- <shortdesc>You must register a <ph
+    <title>Register Data Collector with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
+    <shortdesc>You must register a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        work with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-        />. When you register a <ph
+        work with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>.
+        When you register a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         generates an authentication token that it uses to issue authenticated requests to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
         />.</shortdesc>
- <conbody>
-        <p><indexterm>Data Collector<indexterm>registering with
-                    DPM</indexterm></indexterm><indexterm>DPM<indexterm>registering Data
+    <conbody>
+        <p><indexterm>Data Collector<indexterm>registering with Control
+                Hub</indexterm></indexterm><indexterm>Control Hub<indexterm>registering Data
                     Collector</indexterm></indexterm>You can register a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             from the <ph
@@ -70,6 +72,5 @@
             users and groups. After registration, be sure to transfer permissions to the new <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             users and groups.</p>
-
- </conbody>
+    </conbody>
 </concept>

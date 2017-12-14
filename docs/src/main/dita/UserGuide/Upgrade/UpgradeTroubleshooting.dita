@@ -18,16 +18,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dgz_p45_gy">
- <title>Troubleshooting an Upgrade</title>
- <conbody>
-  <p><indexterm>upgrade<indexterm>troubleshooting</indexterm></indexterm>Use the following tips for
-            help with upgrades:</p>
+    <title>Troubleshooting an Upgrade</title>
+    <conbody>
+        <p><indexterm>upgrade<indexterm>troubleshooting</indexterm></indexterm>Use the following
+            tips for help with upgrades:</p>
         <dl>
             <dlentry>
                 <dt>After upgrading a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> that is registered with <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
                     />, the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> fails to start with the following error about a component ID:</dt>
@@ -58,7 +58,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> fails to start with the following error about the authentication token:</dt>
                 <dd>
-                    <codeblock>dpm.appAuthToken cannot be NULL or empty</codeblock>
+                    <codeblock>appAuthToken cannot be NULL or empty</codeblock>
                 </dd>
                 <dd>The upgraded <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -79,5 +79,5 @@
                     />. </dd>
             </dlentry>
         </dl>
- </conbody>
+    </conbody>
 </concept>

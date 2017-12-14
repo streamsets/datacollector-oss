@@ -22,9 +22,9 @@
  <conbody>
   <p><indexterm>aggregated statistics<indexterm>write to SDC
                 RPC</indexterm></indexterm><indexterm>write to SDC RPC<indexterm>aggregated
-                    statistics for DPM</indexterm></indexterm>Consider the following best practices
-            when you configure a pipeline to write statistics to an SDC RPC destination: <ul
-                id="ul_irc_szr_yy">
+                    statistics for Control Hub</indexterm></indexterm>Consider the following best
+            practices when you configure a pipeline to write statistics to an SDC RPC destination:
+                <ul id="ul_irc_szr_yy">
                 <li>To avoid mixing statistics from different jobs, use a unique SDC RPC ID for each
                     job. </li>
                 <li>Monitor the disk space where the Dev SDC RPC with Buffering origin in the system

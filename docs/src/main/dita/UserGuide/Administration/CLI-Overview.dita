@@ -18,15 +18,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ywx_d5x_pt">
- <title>Command Line Interface</title>
- <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  <title>Command Line Interface</title>
+  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     provides a command line interface that includes a basic <codeph>cli</codeph> command. Use the
     command to perform some of the same actions that you can complete from the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI. <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> must be
     running before you can use the <codeph>cli</codeph> command.</shortdesc>
- <conbody>
-  <p><indexterm>command line
+  <conbody>
+    <p><indexterm>command line
           interface<indexterm>overview</indexterm></indexterm><indexterm>administration<indexterm>command
           line</indexterm></indexterm><indexterm>command line
         interface<indexterm>using</indexterm></indexterm><indexterm>command line
@@ -61,7 +61,7 @@
               <li>enableDPM - Register the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 with <ph
-                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
                 />.</li>
               <li>disableDPM - Unregister the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -71,5 +71,5 @@
             </ul></dd>
         </dlentry>
       </dl></p>
- </conbody>
+  </conbody>
 </concept>

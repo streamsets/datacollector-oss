@@ -18,9 +18,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h2c_pfh_tq">
- <title>Glossary of Terms</title>
- <conbody>
-  <dl>
+  <title>Glossary of Terms</title>
+  <conbody>
+    <dl>
       <dlentry>
         <dt>batch</dt>
         <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>A set of
@@ -243,5 +243,5 @@
         <dd>A pipeline configured to run in the default standalone execution mode.</dd>
       </dlentry>
     </dl>
- </conbody>
+  </conbody>
 </concept>

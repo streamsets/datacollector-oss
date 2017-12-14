@@ -18,7 +18,8 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gfd_xsx_fz">
- <title>Not Registered with DPM</title>
+ <title>Not Registered with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
  <conbody>
   <p>The following table describes the options for the basic command when the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is

@@ -27,10 +27,12 @@
                   this</draft-comment>
             <p>Full, init cap version of the product name: <ph id="pName-long">Data
                   Collector</ph></p>
-            <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
-            <p>DPM short: <ph id="DPM-short">DPM</ph></p>
+            <p>DPM => SCH long only: <ph id="DPM-LongOnly">StreamSets Control Hub</ph></p>
+            <p>DPM => SCH short: <ph id="DPM-short">Control Hub</ph></p>
+            <p>SCH acro, as in (SCH) : <ph id="SCH_acro">SCH</ph></p>
             <p>Full, init cap version of the edge: <ph id="Edge-Long">Data Collector Edge</ph></p>
-            <p>Full, init cap version of the edge in plural form: <ph id="Edge-Long-Plural">Edge Data Collectors</ph></p>
+            <p>Full, init cap version of the edge in plural form: <ph id="Edge-Long-Plural">Edge
+                        Data Collectors</ph></p>
             <p>Shortened version of edge: <ph id="Edge-Short">SDC Edge</ph></p>
             <p>For DPM-only docs: <ph id="PDesigner">Pipeline Designer</ph>
             </p>
@@ -53,14 +55,14 @@
             <p><ph id="ph_LinuxEL7_RPM">CentOS 7 or Red Hat Enterprise Linux 7</ph></p>
             <draft-comment author="alisontaylor">SDC service shutdown instructions used in
                   Uninstallation, Upgrade, and Shutdown task in Admin chapter. </draft-comment>
-            <p id="shutdownServiceLinuxEL6">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6"/>, use: <codeph>service sdc
-                        stop</codeph></p>
-            <p id="shutdownServiceLinuxEL7">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7"/>, use: <codeph>systemctl stop
-                        sdc</codeph></p>
-            <p id="shutdownServiceLinxuEL6_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"/>, use: <codeph>service sdc
-                        stop</codeph></p>
-            <p id="shutdownServiceLinxuEL7_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"/>, use: <codeph>systemctl stop
-                        sdc</codeph></p>
+            <p id="shutdownServiceLinuxEL6">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6"/>, use:
+                        <codeph>service sdc stop</codeph></p>
+            <p id="shutdownServiceLinuxEL7">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7"/>, use:
+                        <codeph>systemctl stop sdc</codeph></p>
+            <p id="shutdownServiceLinxuEL6_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL6_RPM"
+                  />, use: <codeph>service sdc stop</codeph></p>
+            <p id="shutdownServiceLinxuEL7_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
+                  />, use: <codeph>systemctl stop sdc</codeph></p>
             <draft-comment author="alisontaylor">SDC UI shutdown instructions used in
                   Uninstallation, Upgrade, and Shutdown task in Admin chapter. </draft-comment>
             <p id="shutdownUI">To use the <ph
@@ -71,8 +73,8 @@
                   </menucascade>. When the confirmation dialog box appears, click
                         <uicontrol>Yes</uicontrol>.</p>
             <p>
-                  <draft-comment author="Loretta" >Used in Configuring the SDC
-                        Environment and in MapR Prereq > Install Client Libraries</draft-comment>
+                  <draft-comment author="Loretta">Used in Configuring the SDC Environment and in
+                        MapR Prereq > Install Client Libraries</draft-comment>
             </p>
             <p>
                   <ul id="ul-SDCenvfiles">

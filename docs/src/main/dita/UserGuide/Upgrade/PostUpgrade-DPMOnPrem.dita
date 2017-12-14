@@ -16,9 +16,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dzn_cdy_1cb">
- <title>Update DPM On-premises</title>
- <shortdesc>If you use <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+    <title>Update <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+        /> On-premises</title>
+    <shortdesc>If you use <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>
         on-premises and you upgrade registered <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to a
         version higher than your current version of <ph
@@ -28,7 +29,7 @@
         version range within your <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         installation.</shortdesc>
- <conbody>
+    <conbody>
         <p>By default, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> can
             work with registered <ph
@@ -52,7 +53,7 @@
         <p>To modify the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             version range:</p>
-  <p>
+        <p>
             <ol id="ol_xbl_f2y_1cb">
                 <li>Log in to <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
@@ -73,5 +74,5 @@
                     />.</li>
             </ol>
         </p>
- </conbody>
+    </conbody>
 </concept>

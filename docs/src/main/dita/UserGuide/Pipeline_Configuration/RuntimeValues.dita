@@ -18,15 +18,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h5b_kcr_kz">
- <title>Runtime Values</title>
- <shortdesc>Runtime values are values that you define outside of the pipeline and use for stage and
-        pipeline properties. You can change the values for each pipeline run without having to edit
-        the pipeline. </shortdesc>
- <conbody>
+    <title>Runtime Values</title>
+    <shortdesc>Runtime values are values that you define outside of the pipeline and use for stage
+        and pipeline properties. You can change the values for each pipeline run without having to
+        edit the pipeline. </shortdesc>
+    <conbody>
         <p>You can use runtime values for any pipeline property that allows the use of the
             expression language. You can, for example, use runtime values to represent batch sizes,
             timeouts, directories, and URI. You cannot use runtime values to represent fields.</p>
-  <p>You can use the following methods of passing runtime values to pipelines:</p>
+        <p>You can use the following methods of passing runtime values to pipelines:</p>
         <dl>
             <dlentry>
                 <dt>Runtime parameters</dt>
@@ -70,9 +70,9 @@
             </dlentry>
         </dl>
         <note>When configuring runtime values for pipelines run by <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>,
             all <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> that run the pipeline must have the values locally defined in the expected
             locations.</note>
- </conbody>
+    </conbody>
 </concept>

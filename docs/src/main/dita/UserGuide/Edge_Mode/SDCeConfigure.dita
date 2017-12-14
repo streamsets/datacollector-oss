@@ -31,7 +31,7 @@
             configuration file. To enable the changes, shut down and then restart <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                 />.<draft-comment author="alisontaylor">text is same as in the Edge Data Collectors
-                chapter in DPM User Guide. Make sure changes are made in both
+                chapter in Control Hub User Guide. Make sure changes are made in both
                 places.</draft-comment></p>
         <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
             configuration file includes the following general properties:<table frame="all"
@@ -75,7 +75,9 @@
                     <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                     <thead>
                         <row>
-                            <entry>DPM Property</entry>
+                            <entry><ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                /> Property</entry>
                             <entry>Description</entry>
                         </row>
                     </thead>

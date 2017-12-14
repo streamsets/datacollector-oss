@@ -18,11 +18,12 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_rxy_xqc_fx">
-    <title>Publishing Pipelines to DPM</title>
+    <title>Publishing Pipelines to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>publishing to
-                        DPM</indexterm></indexterm><indexterm>DPM<indexterm>publishing
+            <p><indexterm>pipelines<indexterm>publishing to Control
+                    Hub</indexterm></indexterm><indexterm>Control Hub<indexterm>publishing
                         pipelines</indexterm></indexterm>After you finish developing pipelines in
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -40,9 +41,9 @@
             <step>
                 <cmd>From the <uicontrol>Home</uicontrol> page, select pipelines in the list and
                     then click the <uicontrol>Publish Pipeline</uicontrol> icon <image
-                        href="../Graphics/icon_RemoteStore.png" scale="80" id="image_svp_msc_fx"/>.
-                    Or to publish a pipeline from the pipeline canvas, click the <uicontrol>DPM
-                        Options</uicontrol> icon <image href="../Graphics/icon_RemoteStore.png"
+                        href="../Graphics/icon_PublishPipeline.png" scale="80" id="image_svp_msc_fx"/>.
+                    Or to publish a pipeline from the pipeline canvas, click the <uicontrol>SCH
+                        Options</uicontrol> icon <image href="../Graphics/icon_SCHOptions.png"
                         id="image_lc3_kbf_2w" placement="inline" scale="70"/>, and then click
                         <uicontrol>Publish Pipeline</uicontrol>. </cmd>
                 <info>The <uicontrol>Publish Pipeline</uicontrol> dialog box appears.</info>

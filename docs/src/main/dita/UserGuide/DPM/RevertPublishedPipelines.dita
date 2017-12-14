@@ -25,8 +25,8 @@
         </context>
         <steps>
             <step>
-                <cmd>In the pipeline canvas, click the <uicontrol>DPM Options</uicontrol> icon
-                        <image href="../Graphics/icon_RemoteStore.png" id="image_lc3_kbf_2w"
+                <cmd>In the pipeline canvas, click the <uicontrol>SCH Options</uicontrol> icon
+                        <image href="../Graphics/icon_SCHOptions.png" id="image_lc3_kbf_2w"
                         placement="inline" scale="70"/>, and then click <uicontrol>Revert
                         Changes</uicontrol>.</cmd>
             </step>

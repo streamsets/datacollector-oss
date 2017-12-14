@@ -33,8 +33,8 @@
                 href="RegisterFromClouderaManager.dita#task_oxx_y5m_xw">use Cloudera Manager to
                 register</xref> the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </note>
-        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates both places.</draft-comment>Start <ph
+        <p><draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates both places.</draft-comment>Start <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             and then use the system enableDPM command to register the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </p>

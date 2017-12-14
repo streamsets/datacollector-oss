@@ -24,10 +24,10 @@
         accustomed to seeing for pipelines within <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
  <conbody>
-        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>As a data architect or as a DevOps
-            or site reliability engineer, you can measure the health of the topology and the
-            performance of all jobs and connecting systems included in the topology. <ph
+        <p><draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment>As a data architect or
+            as a DevOps or site reliability engineer, you can measure the health of the topology and
+            the performance of all jobs and connecting systems included in the topology. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             monitoring provides real-time statistics and error information about the running
             pipelines. </p>

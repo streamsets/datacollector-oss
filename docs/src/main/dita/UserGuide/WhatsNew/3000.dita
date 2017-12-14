@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cjx_y4k_wbb">
- <title>What's New in 3.0.0.0</title>
- <conbody>
-  <p><indexterm>what's new<indexterm>version 3.0.0.0</indexterm></indexterm><ph
+    <title>What's New in 3.0.0.0</title>
+    <conbody>
+        <p><indexterm>what's new<indexterm>version 3.0.0.0</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             version 3.0.0.0 includes the following new features:<dl>
                 <dlentry>
@@ -362,13 +362,42 @@
                             <codeph>$SDC_CONF/sdc.properties</codeph> file. </dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Dataflow Performance Manager</dt>
+                    <dt>Dataflow Performance Manager / <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                        /></dt>
                     <dd>
                         <ul id="ul_p2b_4hl_wbb">
+                            <li><ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                /> - With this release, we have created a new product called <xref
+                                    href="https://streamsets.com/products/sch" format="html"
+                                    scope="external"><ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                        /><sup>TM</sup> (<ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SCH_acro"
+                                    />)</xref> that includes a number of new cloud-based dataflow
+                                design, deployment, and scale-up features. Since this release is now
+                                our core service for controlling dataflows, we have renamed the
+                                StreamSets cloud experience from "Dataflow Performance Manager
+                                (DPM)" to "<ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                /> (<ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SCH_acro"
+                                    />)".<p>DPM now refers to the performance management functions
+                                    that reside in the cloud such as live metrics and data SLAs.
+                                    Customers who have purchased the StreamSets Enterprise Edition
+                                    will gain access to all SCH functionality and continue to have
+                                    access to all DPM functionality as before.</p><p>To understand
+                                    the end-to-end StreamSet Data Operations Platform and how the
+                                    products fit together, visit <xref
+                                        href="https://streamsets.com/products/" format="html"
+                                        scope="external">https://streamsets.com/products/</xref>.
+                                </p></li>
                             <li><xref href="../DPM/AggStatistics_MapR.dita#concept_qh5_v5t_mbb"
-                                    >Aggregated statistics</xref> - When working with DPM, you can
-                                now configure a pipeline to write aggregated statistics to MapR
-                                Streams. </li>
+                                    >Aggregated statistics</xref> - When working with <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                />, you can now configure a pipeline to write aggregated statistics
+                                to MapR Streams. </li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -400,11 +429,10 @@
                                     href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
                                     >New string functions</xref> - The release includes the
                                 following new functions:<ul id="ul_uss_whl_wbb">
-                                        <li>str:isNullOrEmpty() - Returns true or false based on
-                                            whether a string is null or is the empty string.</li>
-                                        <li>str:splitKV() - Splits key-value pairs in a string into
-                                            a map of string values.</li>
-                                    
+                                    <li>str:isNullOrEmpty() - Returns true or false based on whether
+                                        a string is null or is the empty string.</li>
+                                    <li>str:splitKV() - Splits key-value pairs in a string into a
+                                        map of string values.</li>
                                 </ul></li>
                         </ul>
                     </dd>
@@ -475,5 +503,5 @@
                     </dd>
                 </dlentry>
             </dl></p>
- </conbody>
+    </conbody>
 </concept>

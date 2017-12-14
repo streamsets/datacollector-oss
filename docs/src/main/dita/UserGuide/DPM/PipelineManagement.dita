@@ -18,14 +18,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_eq5_qjd_fx">
- <title>Pipeline Management with DPM</title>
- <shortdesc>After you register a <ph
+    <title>Pipeline Management with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
+    <shortdesc>After you register a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
-            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>,
         you can manage how the pipelines work with <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
         />.</shortdesc>
- <conbody>
+    <conbody>
         <p>You develop pipelines in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             and then publish or import them to <ph
@@ -43,19 +44,19 @@
         <p>Managing pipelines with <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             involves completing the following tasks:</p>
-            <ul>
+        <ul>
             <li>Understanding the different types of pipelines that can run on a registered <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />.</li>
-                <li>Publishing pipelines to <ph
+            <li>Publishing pipelines to <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                 />.</li>
-                <li>Viewing pipeline commit history, and optionally getting a previous pipeline
+            <li>Viewing pipeline commit history, and optionally getting a previous pipeline
                 version.</li>
             <li>Downloading published pipelines from <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                 />.</li>
-            </ul>
+        </ul>
         <p>If you have not registered a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             you can still develop pipelines in the <ph
@@ -63,6 +64,5 @@
             and then export the pipelines for use in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             />.</p>
-        
     </conbody>
 </concept>

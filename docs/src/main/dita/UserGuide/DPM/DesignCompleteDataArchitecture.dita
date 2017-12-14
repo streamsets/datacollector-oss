@@ -26,8 +26,8 @@
             Then, you work with your team to develop <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             pipelines that meet those dataflow needs.<draft-comment author="alisontaylor">text
-                copied from same topic in DPM User Guide. Make the same updates in both places.
-            </draft-comment></p>
+                copied from same topic in Control Hub User Guide. Make the same updates in both
+                places. </draft-comment></p>
         <p>For example, you need to create a 360-degree view of your customers by collecting all
             customer data captured in your organization’s social feeds, enterprise data warehouse,
             and website logs. You need to send all of the data to the Hadoop Distributed File System

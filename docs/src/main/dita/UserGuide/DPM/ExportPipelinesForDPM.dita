@@ -18,7 +18,8 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_emc_p42_fx">
-    <title>Exporting Pipelines for DPM</title>
+    <title>Exporting Pipelines for <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
     <shortdesc>If you develop pipelines in a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that
         is not registered with <ph
@@ -33,8 +34,8 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>exporting for DPM</indexterm></indexterm>You can
-                export a pipeline for use in <ph
+            <p><indexterm>pipelines<indexterm>exporting for Control Hub</indexterm></indexterm>You
+                can export a pipeline for use in <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
                 when the pipeline is valid. You can export a single pipeline or a set of pipelines
                 at one time.</p>
@@ -57,17 +58,17 @@
             <step>
                 <cmd>To export a single pipeline, from the <uicontrol>Home</uicontrol> page, select
                     the pipeline from the list, click the <uicontrol>More</uicontrol> icon, and then
-                    click <uicontrol>Export for DPM</uicontrol>.</cmd>
+                    click <uicontrol>Export for SCH</uicontrol>.</cmd>
                 <info>
                     <p>To export a set of pipelines, select multiple pipelines, click the
                             <uicontrol>More</uicontrol> icon, and then click <uicontrol>Export for
-                            DPM</uicontrol>.</p>
+                            SCH</uicontrol>.</p>
                 </info>
             </step>
             <step>
                 <cmd>Or, to export a pipeline in the pipeline canvas, click the
                         <uicontrol>More</uicontrol> icon for the pipeline and then click
-                        <uicontrol>Export for DPM</uicontrol>.</cmd>
+                        <uicontrol>Export for SCH</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

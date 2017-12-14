@@ -40,7 +40,7 @@
             each installed library. You can filter the stage libraries by type or you can search for
             a stage library in the list.</p>
         <p>For example, the following image displays three installed stage libraries:</p>
-        <p><image href="../Graphics/PackageManager.png" scale="70" id="image_gct_3vl_nx"/></p>
+        <p><image href="../Graphics/PackageManager.png" scale="65" id="image_gct_3vl_nx"/></p>
         <p>To install an additional stage library, click the <uicontrol>More</uicontrol> icon for
             the library, and then click <uicontrol>Install</uicontrol>. Or to install multiple stage
             libraries, select the libraries in the list and then click the
