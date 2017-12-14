@@ -58,10 +58,10 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     this.client = client;
     this.uniquePrefix = uniquePrefix;
     this.fileNameSuffix = fileNameSuffix;
-    this.uniqueId = uniqueId;
+    this.uniqueId = uniqueId.replaceAll(":", "-");
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.maxFileSize = maxFileSize;
-    this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
+    this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + this.uniqueId + getExtention();
     this.closedPaths = closedPaths;
   }
 
@@ -90,8 +90,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
 
   @Override
   public String getTempFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException {
-    String tmpFilePath = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
-    return dirPath + "/" + tmpFilePath;
+    return dirPath + "/" + tempFileName;
   }
 
   @Override
