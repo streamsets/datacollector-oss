@@ -125,8 +125,10 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
 
   private void handleError(RetryFunctionHandler retryFunctionHandler) throws IOException, StageException{
     int retry = 0;
+
     while (retry < MAX_RETRY) {
       try {
+        retry++;
         retryFunctionHandler.run();
         return;
       } catch (ADLException ex) {
@@ -149,7 +151,6 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
             LOG.debug("Thread {} obtained a renewed access token", threadId);
           } catch (IOException ex1) {
             LOG.error("Thread {} obtained a renewed access token failed retrying..", threadId);
-            retry++;
           }
         } else {
           throw ex;
