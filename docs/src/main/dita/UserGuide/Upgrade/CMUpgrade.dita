@@ -39,6 +39,8 @@
             <p><xref href="CM-Step3-InstallCSD.dita#task_rrx_m3v_xv"/></p>
             <p><xref href="CM-Step4-InstallParcel.dita#task_cgv_2jv_xv"/></p>
             <p><xref href="CM-Step5-ActivateParcel.dita#task_mdr_phr_5v"/></p>
+        <p><xref href="CM-Step6_SafetyValves.dita#concept_icd_wt4_2cb"/></p>
+        <p><xref href="CM-Step7-RestartService.dita#concept_kdx_llp_2cb"/></p>
         
         <note type="warning">You must perform the steps in this order, or <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
