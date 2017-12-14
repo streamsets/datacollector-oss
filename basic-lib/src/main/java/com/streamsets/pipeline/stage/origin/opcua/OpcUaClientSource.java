@@ -107,7 +107,7 @@ public class OpcUaClientSource implements PushSource {
   private OpcUaClient opcUaClient;
   private List<NodeId> nodeIds;
   private NodeId rootNodeId;
-  private boolean destroyed = false;
+  private volatile boolean destroyed = false;
   private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private Stopwatch stopwatch = null;
 
