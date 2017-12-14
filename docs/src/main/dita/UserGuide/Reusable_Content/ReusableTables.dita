@@ -67,11 +67,11 @@
     </strow>
     <strow id="icon-DPM">
      <stentry><image href="../Graphics/icon_DPM.png" scale="70" id="image_vk5_ryk_nx"/></stentry>
-     <stentry>Dataflow Performance Manager icon</stentry>
-     <stentry>Provides information about StreamSets <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (<ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>) and lets
-      you register this <ph
+     <stentry><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+      /> icon</stentry>
+     <stentry>Provides information about <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (SCH) and
+      lets you register this <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.</stentry>
     </strow>
@@ -126,7 +126,8 @@
      <stentry>Link to a <xref
        href="../Getting_Started/DataCollectorUI_Home-Pipelines.dita#concept_wc5_ysp_1w">pipeline
        list on the Home page</xref>. Use to view a list of available pipelines, perform pipeline
-      maintenance like starting or sharing a pipeline, and navigate to individual pipelines. </stentry>
+      maintenance like starting or sharing a pipeline, and navigate to individual pipelines.
+     </stentry>
     </strow>
     <strow>
      <stentry><image href="../Graphics/icon_ConfigMore.png" id="image_prb_4l3_ts"/></stentry>
@@ -658,7 +659,8 @@
        <entry>Data Format <xref href="../Origins/AmazonS3-DataFormat.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_w4w_q3p_ht"/>
         </xref></entry>
-       <entry id="entryDataFormats">Data format for source files. Use one of the following formats:<ul id="ul_y1t_wql_5q">
+       <entry id="entryDataFormats">Data format for source files. Use one of the following
+         formats:<ul id="ul_y1t_wql_5q">
          <li>Avro</li>
          <li>Delimited</li>
          <li>JSON</li>
@@ -842,7 +844,8 @@
      <row>
       <entry>Password</entry>
       <entry>Resource owner password.<p>Enter for the resource owner password credentials
-        grant.</p><note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
+        grant.</p><note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
+       /></entry>
      </row>
      <row>
       <entry>JWT Signing Algorithm</entry>
@@ -852,8 +855,8 @@
      <row>
       <entry>JWT Signing Key</entry>
       <entry>Base64 encoded key used to sign the JSON Web Token, if you selected a signing
-        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_JWTKey"/><p>Enter for
-        the JSON Web Tokens grant.</p></entry>
+        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_JWTKey"/><p>Enter
+        for the JSON Web Tokens grant.</p></entry>
      </row>
      <row>
       <entry>JWT Claims</entry>
@@ -1406,8 +1409,9 @@
         </ul></entry>
       </row>
       <row id="row-InitTableOrder">
-       <entry>Initial Table Order Strategy <xref href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"
-          ><image href="../Graphics/icon_moreInfo.png" scale="10" id="image_r5t_0kq_ds"/>
+       <entry>Initial Table Order Strategy <xref
+         href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"><image
+          href="../Graphics/icon_moreInfo.png" scale="10" id="image_r5t_0kq_ds"/>
         </xref></entry>
        <entry id="entry-InitTableOrder">Initial order used to read the tables:<ul id="ul_opw_1jf_py">
          <li id="li-InitialOrder-None">None - Reads the tables in the order that they are listed in
@@ -1501,14 +1505,12 @@
      <row id="row-Mode">
       <entry>Mode</entry>
       <entry>Mode used to perform the lookups:<ul id="ul_t11_3fs_zv">
-       <li>Per Batch - Performs a bulk lookup of all keys in a
-        batch. The processor performs a single lookup for
-        each batch.</li>
-       <li>Per Key in Each Record - Performs individual lookups
-        of each key in each record. If you configure
-        multiple key expressions, the processor performs
-        multiple lookups for each record.</li>
-      </ul><p>Default is Per Batch.</p></entry>
+        <li>Per Batch - Performs a bulk lookup of all keys in a batch. The processor performs a
+         single lookup for each batch.</li>
+        <li>Per Key in Each Record - Performs individual lookups of each key in each record. If you
+         configure multiple key expressions, the processor performs multiple lookups for each
+         record.</li>
+       </ul><p>Default is Per Batch.</p></entry>
      </row>
      <row>
       <entry>Enable Local Caching </entry>
@@ -1517,33 +1519,28 @@
      </row>
      <row id="row-MaxEntriesCache">
       <entry>Maximum Entries to Cache</entry>
-      <entry>Maximum number of key-value pairs to cache. When the
-       maximum number is reached, the processor evicts the oldest
-       key-value pairs from the cache. <p>Default is -1, which
-        means unlimited.</p></entry>
+      <entry>Maximum number of key-value pairs to cache. When the maximum number is reached, the
+       processor evicts the oldest key-value pairs from the cache. <p>Default is -1, which means
+        unlimited.</p></entry>
      </row>
      <row id="row-EvictionPolicy">
       <entry>Eviction Policy Type</entry>
-      <entry>Policy used to evict key-value pairs from the local cache
-       when the expiration time has passed:<ul id="ul_jql_yns_zv">
-        <li>Expire After Last Access - Measures the expiration
-         time since the key-value pair was last accessed by a
-         read or a write.</li>
-        <li>Expire After Last Write - Measures the expiration
-         time since the key-value pair was created, or since
-         the value was last replaced.</li>
+      <entry>Policy used to evict key-value pairs from the local cache when the expiration time has
+        passed:<ul id="ul_jql_yns_zv">
+        <li>Expire After Last Access - Measures the expiration time since the key-value pair was
+         last accessed by a read or a write.</li>
+        <li>Expire After Last Write - Measures the expiration time since the key-value pair was
+         created, or since the value was last replaced.</li>
        </ul></entry>
      </row>
      <row id="row-ExpirationTime">
       <entry>Expiration Time</entry>
-      <entry>Amount of time that a key-value pair can remain in the
-       local cache without being accessed or written to. <p>Default
-        is 1 second.</p></entry>
+      <entry>Amount of time that a key-value pair can remain in the local cache without being
+       accessed or written to. <p>Default is 1 second.</p></entry>
      </row>
      <row id="row-timeUnit">
       <entry>Time Unit</entry>
-      <entry>Unit of time for the expiration time. <p>Default is
-       seconds.</p></entry>
+      <entry>Unit of time for the expiration time. <p>Default is seconds.</p></entry>
      </row>
     </tbody>
    </tgroup>
@@ -1588,8 +1585,7 @@
      </row>
      <row id="row-JDBCtimeUnit">
       <entry>Time Unit</entry>
-      <entry>Unit of time for the expiration time. <p>Default is
-       seconds.</p></entry>
+      <entry>Unit of time for the expiration time. <p>Default is seconds.</p></entry>
      </row>
     </tbody>
    </tgroup>
@@ -1664,9 +1660,8 @@
       <entry>HBase Configuration</entry>
       <entry id="entry-HBaseConfig">
        <p>Additional HBase configuration properties to use. </p>
-       <p>To add properties, click <uicontrol>Add</uicontrol> and
-        define the property name and value. Use the property
-        names and values as expected by HBase. </p>
+       <p>To add properties, click <uicontrol>Add</uicontrol> and define the property name and
+        value. Use the property names and values as expected by HBase. </p>
       </entry>
      </row>
     </tbody>
@@ -1698,113 +1693,113 @@
   </table>
   <draft-comment author="alisontaylor">MongoDB origin and destination use all rows in this table.
    They use the description for the Enable SSL property</draft-comment>
-    <table frame="all" rowsep="1" colsep="1" id="table_xwz_jsd_3t">
-     <tgroup cols="2">
-      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-      <thead>
-       <row>
-        <entry>Advanced Property</entry>
-        <entry>Description</entry>
-       </row>
-      </thead>
-      <tbody>
-       <row id="MongoDB_Connections_row">
+  <table frame="all" rowsep="1" colsep="1" id="table_xwz_jsd_3t">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Advanced Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="MongoDB_Connections_row">
       <entry>Connections Per Host</entry>
       <entry>Maximum number of connections for each host.<p>Default is 100.</p></entry>
      </row>
-       <row id="MongoDB_MinConnections_row">
+     <row id="MongoDB_MinConnections_row">
       <entry>Min Connections Per Host</entry>
       <entry>Minimum number of connections for each host.<p>Default is 0.</p></entry>
      </row>
-       <row id="MongoDB_ConnectionTimeout_row">
+     <row id="MongoDB_ConnectionTimeout_row">
       <entry>Connection Timeout</entry>
       <entry>Maximum time in milliseconds to wait for a connection. <p>Default is
        10,000.</p></entry>
      </row>
-       <row id="MongoDB_MaxConnIdleTime_row">
+     <row id="MongoDB_MaxConnIdleTime_row">
       <entry>Max Connection Idle Time</entry>
       <entry>Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
        connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
         property.<p>Default is 0.</p></entry>
      </row>
-       <row id="MongoDB_MaxConnLifetime_row">
+     <row id="MongoDB_MaxConnLifetime_row">
       <entry>Max Connection Lifetime</entry>
       <entry>Maximum time in milliseconds that a pooled connection can be active. When a pooled
        connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
         property.<p>Default is 0.</p></entry>
      </row>
-       <row id="MongoDB_MaxWaitTime_row">
+     <row id="MongoDB_MaxWaitTime_row">
       <entry>Max Wait Time</entry>
       <entry>Maximum time in milliseconds that a thread can wait for a connection to become
        available. Use 0 to opt out of this property. Use a negative value to wait
         indefinitely.<p>Default is 120,000.</p></entry>
      </row>
-       <row id="MongoDB_ServerTimeout_row">
+     <row id="MongoDB_ServerTimeout_row">
       <entry>Server Selection Timeout</entry>
       <entry>Maximum time in milliseconds that <ph
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> waits for a server selection
        before throwing an exception. If you use 0, an exception is thrown immediately if no server
        is available. Use a negative value to wait indefinitely.<p>Default is 30,000.</p></entry>
      </row>
-       <row id="MongoDB_ThreadsAllowed_row">
+     <row id="MongoDB_ThreadsAllowed_row">
       <entry>Threads Allowed to Block for Connection Multiplier</entry>
       <entry>Multiplier that determines the maximum number of threads that can wait for a connection
        to become available from the pool. This number multiplied by the Connections Per Host value
        determines the maximum number of threads.<p>Default is 5.</p></entry>
      </row>
-       <row id="MongoDB_Heartbeat_row">
+     <row id="MongoDB_Heartbeat_row">
       <entry>Heartbeat Frequency</entry>
       <entry>The frequency in milliseconds at which <ph
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> attempts to determine the
        current state of each server in the cluster.<p>Default is 10,000.</p></entry>
      </row>
-       <row id="MongoDB_MinHeartbeat_row">
+     <row id="MongoDB_MinHeartbeat_row">
       <entry>Min Heartbeat Frequency</entry>
       <entry>Minimum heartbeat frequency in milliseconds. <ph
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> waits at least this long
        before checking the state of each server.<p>Default is 500.</p></entry>
      </row>
-       <row id="MongoDB_HeartbeatConn_row">
+     <row id="MongoDB_HeartbeatConn_row">
       <entry>Heartbeat Connection Timeout</entry>
       <entry>Maximum time in milliseconds to wait for a connection used for the cluster
         heartbeat.<p>Default is 20,000.</p></entry>
      </row>
-       <row id="MongoDB_HeartbeatSocket_row">
+     <row id="MongoDB_HeartbeatSocket_row">
       <entry>Heartbeat Socket Timeout</entry>
       <entry>Maximum time in milliseconds for a socket timeout for connections used for the cluster
         heartbeat.<p>Default is 20,000.</p></entry>
      </row>
-       <row id="MongoDB_LocalThreshold_row">
+     <row id="MongoDB_LocalThreshold_row">
       <entry>Local Threshold</entry>
       <entry>Local threshold in milliseconds. Requests are sent to a server whose ping time is less
        than or equal to the server with the fastest ping time plus the local threshold
         value.<p>Default is 15.</p></entry>
      </row>
-       <row id="MongoDB_Replica_row">
+     <row id="MongoDB_Replica_row">
       <entry>Required Replica Set Name</entry>
       <entry>Required replica set name to use for the cluster.</entry>
      </row>
-       <row id="MongoDB_Cursor_row">
+     <row id="MongoDB_Cursor_row">
       <entry>Cursor Finalizer Enabled</entry>
       <entry>Specifies whether to enable cursor finalizers.</entry>
      </row>
-       <row id="MongoDB_SocketKeepAlive_row">
+     <row id="MongoDB_SocketKeepAlive_row">
       <entry>Socket Keep Alive</entry>
       <entry>Specifies whether to enable socket keep alive. </entry>
      </row>
-       <row id="MongoDB_SocketTimeout_row">
+     <row id="MongoDB_SocketTimeout_row">
       <entry>Socket Timeout</entry>
       <entry>Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
         property.<p>Default is 0.</p></entry>
      </row>
-       <row id="MongoDB_SSLInvalid_row">
+     <row id="MongoDB_SSLInvalid_row">
       <entry>SSL Invalid Host Name Allowed</entry>
       <entry>Specifies whether invalid host names are allowed in SSL/TLS certificates.</entry>
      </row>
-      </tbody>
-     </tgroup>
-    </table>
+    </tbody>
+   </tgroup>
+  </table>
   <draft-comment author="alisontaylor">Salesforce origin, Salesforce Lookup processor, and
    Salesforce destination use the first three rows in this table, and use the description of the
    last row. Wave Analytics destination uses the first two rows in the table. Salesforce origin and
@@ -1823,12 +1818,13 @@
      <row id="SalesforceUser">
       <entry>Username</entry>
       <entry>Salesforce username in the following email format:
-       <codeph>&lt;text>@&lt;text>.com</codeph>. </entry>
+        <codeph>&lt;text>@&lt;text>.com</codeph>. </entry>
      </row>
      <row id="SalesforcePassword">
       <entry>Password</entry>
       <entry>Salesforce password. <note
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
+       /></entry>
      </row>
      <row id="SalesforceEndpoint">
       <entry>Auth Endpoint</entry>
@@ -1858,7 +1854,7 @@
     </tbody>
    </tgroup>
   </table>
-  <draft-comment author="alisontaylor">All  Salesforce stages use the rows in this
+  <draft-comment author="alisontaylor">All Salesforce stages use the rows in this
    table</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="Salesforce_Proxy">
    <tgroup cols="2">
@@ -2076,10 +2072,10 @@
        <p id="MapRDBJSON_Table1">If you do not include a path to the table, the stage assumes that
         the table exists in the user's home directory. For example, <codeph>/user/&lt;user
          name>/&lt;table name></codeph>.</p>
-       <p id="MapRDBJSON_Table2">You can include a path relative to the user's home directory or an absolute path when you
-        enter the table name. For tables in a default cluster, specify the absolute path as
-         <codeph>/&lt;table path></codeph>. For tables in a specific cluster, specify the absolute
-        path as <codeph>/mapr/&lt;cluster name>/&lt;table path></codeph>.</p>
+       <p id="MapRDBJSON_Table2">You can include a path relative to the user's home directory or an
+        absolute path when you enter the table name. For tables in a default cluster, specify the
+        absolute path as <codeph>/&lt;table path></codeph>. For tables in a specific cluster,
+        specify the absolute path as <codeph>/mapr/&lt;cluster name>/&lt;table path></codeph>.</p>
       </entry>
      </row>
     </tbody>
@@ -2087,8 +2083,7 @@
   </table>
   <draft-comment author="alisontaylor">The following table is used by the Salesforce origin and the
    Salesforce Lookup processor</draft-comment>
-  <table
-   frame="all" rowsep="1" colsep="1" id="table_SalesforceFieldAtts">
+  <table frame="all" rowsep="1" colsep="1" id="table_SalesforceFieldAtts">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -2101,13 +2096,12 @@
     <tbody>
      <row>
       <entry>&lt;Salesforce prefix>salesforceType</entry>
-      <entry id="entry_JDBCType">Provides the original Salesforce data type
-       for the field.</entry>
+      <entry id="entry_JDBCType">Provides the original Salesforce data type for the field.</entry>
      </row>
      <row>
       <entry>&lt;Salesforce prefix>length</entry>
-      <entry id="entry_JDBCprecision">Provides the original length for all
-       string and textarea fields. </entry>
+      <entry id="entry_JDBCprecision">Provides the original length for all string and textarea
+       fields. </entry>
      </row>
      <row>
       <entry>&lt;Salesforce prefix>precision</entry>
@@ -2115,13 +2109,11 @@
      </row>
      <row>
       <entry>&lt;Salesforce prefix>scale</entry>
-      <entry id="entry_JDBCscale">Provides the original scale for all double
-       fields. </entry>
+      <entry id="entry_JDBCscale">Provides the original scale for all double fields. </entry>
      </row>
      <row>
       <entry>&lt;Salesforce prefix>digits</entry>
-      <entry>Provides the maximum number of digits for all integer
-       fields.</entry>
+      <entry>Provides the maximum number of digits for all integer fields.</entry>
      </row>
     </tbody>
    </tgroup>
@@ -2142,18 +2134,18 @@
      <row id="row-InitScript">
       <entry>Init Script</entry>
       <entry>Optional initialization script to use in the processor.<p>Use to set up connections or
-       resources required by the processor. Runs once when the pipeline starts.</p></entry>
+        resources required by the processor. Runs once when the pipeline starts.</p></entry>
      </row>
-    <row id="row-Script">
-     <entry>Script</entry>
-     <entry>Main processing script to use in the processor.<p>Runs for each record or each batch of
-       data, based on the configured processing mode.</p></entry>
-    </row>
-    <row id="row-DestroyScript">
-     <entry>Destroy Script</entry>
-     <entry>Optional destroy script to use in the processor.<p>Use to close any connections or
-       resources required by the processor. Runs once when the pipeline stops.</p></entry>
-    </row>
+     <row id="row-Script">
+      <entry>Script</entry>
+      <entry>Main processing script to use in the processor.<p>Runs for each record or each batch of
+        data, based on the configured processing mode.</p></entry>
+     </row>
+     <row id="row-DestroyScript">
+      <entry>Destroy Script</entry>
+      <entry>Optional destroy script to use in the processor.<p>Use to close any connections or
+        resources required by the processor. Runs once when the pipeline stops.</p></entry>
+     </row>
     </tbody>
    </tgroup>
   </table>
@@ -2219,11 +2211,9 @@
     <tbody>
      <row id="row-MongoSingleMode">
       <entry>Enable Single Mode</entry>
-      <entry>Select to connect to a single MongoDB server or node. If
-       multiple nodes are defined in the connection string, the
-       origin connects only to the first node. <p>Use this option
-        with care. If the origin cannot connect or the
-        connection fails, the pipeline stops. </p></entry>
+      <entry>Select to connect to a single MongoDB server or node. If multiple nodes are defined in
+       the connection string, the origin connects only to the first node. <p>Use this option with
+        care. If the origin cannot connect or the connection fails, the pipeline stops. </p></entry>
      </row>
      <row id="row-MongoDatabase">
       <entry>Database</entry>
@@ -2235,57 +2225,45 @@
      </row>
      <row id="row-MongoCappedCollection">
       <entry>Capped Collection</entry>
-      <entry>The collection is capped. Clear this option to read an
-       uncapped collection.</entry>
+      <entry>The collection is capped. Clear this option to read an uncapped collection.</entry>
      </row>
      <row id="row-MongoInitialOffset">
       <entry>Initial Offset</entry>
-      <entry>Initial offset to use to begin reading. When using an
-       Object ID field as the offset field, enter a timestamp with
-       the following format: <codeph>YYYY-MM-DD hh:mm:ss</codeph>.
-       When using a string field, enter the string to
-       use.<p>Default is: 2015-01-01 00:00:00</p></entry>
+      <entry>Initial offset to use to begin reading. When using an Object ID field as the offset
+       field, enter a timestamp with the following format: <codeph>YYYY-MM-DD hh:mm:ss</codeph>.
+       When using a string field, enter the string to use.<p>Default is: 2015-01-01
+       00:00:00</p></entry>
      </row>
      <row id="row-MongoOffsetField">
       <entry>Offset Field Type</entry>
-      <entry>Data type of the offset field. Use Object ID for Object
-       ID fields. Use String for string offset fields. <p>Default
-        is Object ID.</p></entry>
+      <entry>Data type of the offset field. Use Object ID for Object ID fields. Use String for
+       string offset fields. <p>Default is Object ID.</p></entry>
      </row>
      <row id="row-MongoOffset">
-      <entry>Offset Field <xref
-       href="../Origins/MongoDB-OffsetField.dita">
-       <image href="../Graphics/icon_moreInfo.png" scale="10"
-        id="image_k2w_rsd_3t"/></xref>
+      <entry>Offset Field <xref href="../Origins/MongoDB-OffsetField.dita">
+        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_k2w_rsd_3t"/></xref>
       </entry>
-      <entry>Field to use to track reads. Default is the _id field.
-       <p>You can use a nested offset field, such as o._id, or
-        any Object ID field or any string field. Results are not
-        guaranteed for anything but the _id field.</p></entry>
+      <entry>Field to use to track reads. Default is the _id field. <p>You can use a nested offset
+        field, such as o._id, or any Object ID field or any string field. Results are not guaranteed
+        for anything but the _id field.</p></entry>
      </row>
      <row id="row-Mongo-BatchSize">
       <entry>Batch Size (records)</entry>
       <entry>Maximum number of records allowed in a batch.</entry>
      </row>
      <row id="row-MongoBatchWait">
-      <entry>Max Batch Wait Time <xref
-       href="../Origins/BatchSizeWaitTime.dita">
-       <image href="../Graphics/icon_moreInfo.png" scale="10"
-       /></xref>
+      <entry>Max Batch Wait Time <xref href="../Origins/BatchSizeWaitTime.dita">
+        <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref>
       </entry>
-      <entry id="entry-Mongo-BatchWaitTime">Amount of time the origin
-       will wait to fill a batch before sending an empty batch.
-      </entry>
+      <entry id="entry-Mongo-BatchWaitTime">Amount of time the origin will wait to fill a batch
+       before sending an empty batch. </entry>
      </row>
      <row id="row-MongoReadPreference">
-      <entry>Read Preference <xref
-       href="../Origins/MongoDB-ReadPreference.dita">
-       <image href="../Graphics/icon_moreInfo.png" scale="10"
-        id="image_o23_1rd_ww"/></xref>
+      <entry>Read Preference <xref href="../Origins/MongoDB-ReadPreference.dita">
+        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_o23_1rd_ww"/></xref>
       </entry>
-      <entry id="entry-Mongo-ReadPref">Determines how the origin reads
-       data from different members of the MongoDB replica
-       set.</entry>
+      <entry id="entry-Mongo-ReadPref">Determines how the origin reads data from different members
+       of the MongoDB replica set.</entry>
      </row>
     </tbody>
    </tgroup>
@@ -2305,8 +2283,7 @@
     <tbody>
      <row id="row-MongoAuthType">
       <entry>Authentication Type</entry>
-      <entry>Authentication used by the MongoDB server:
-       Username/Password or LDAP.</entry>
+      <entry>Authentication used by the MongoDB server: Username/Password or LDAP.</entry>
      </row>
      <row id="row-MongoUsername">
       <entry>Username</entry>
@@ -2363,8 +2340,8 @@
      <row>
       <entry>lineage.publishers</entry>
       <entry>Application to publish metadata to. Do not change the default value of
-       <codeph>navigator</codeph>.<p>Uncomment the property to enable metadata
-        publishing.</p></entry>
+        <codeph>navigator</codeph>.<p>Uncomment the property to enable metadata
+       publishing.</p></entry>
      </row>
      <row>
       <entry>lineage.publisher.navigator.def</entry>
@@ -2394,8 +2371,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
      <row id="row_NavNamespace">
       <entry>lineage.publisher.navigator.config.namespace</entry>
       <entry>Namespace that Cloudera Navigator uses to uniquely identify <ph
-       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties.<p>Default is
-        <codeph>sdc</codeph>.</p></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties.<p>Default is
+         <codeph>sdc</codeph>.</p></entry>
      </row>
      <row id="row_NavUserName">
       <entry>lineage.publisher.navigator.config.username</entry>
@@ -2418,8 +2395,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
      <row id="row_NavAutoCommit">
       <entry>lineage.publisher.navigator.config.autocommit</entry>
       <entry>Enables Cloudera Navigator to immediately process the published metadata.<p>Setting to
-       true can use a large number of resources on the Cloudera Navigator machine. Set to true only
-       in a development or test environment.</p><p>Default is false. </p></entry>
+        true can use a large number of resources on the Cloudera Navigator machine. Set to true only
+        in a development or test environment.</p><p>Default is false. </p></entry>
      </row>
     </tbody>
    </tgroup>
@@ -2470,7 +2447,7 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
           <codeph>credentialStore.vault.config.app.id</codeph> property for new
          installations.</note></p></entry>
      </row>
-      <row id="row_VaultSecretID">
+     <row id="row_VaultSecretID">
       <entry>credentialStore.vault.config.secret.id</entry>
       <entry>Required. Vault Secret ID that <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses to
@@ -2557,8 +2534,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
     </tbody>
    </tgroup>
   </table>
- <draft-comment author="alisontaylor">The following rows are used in Kudu Lookup processor and Kudu
-  destination</draft-comment>
+  <draft-comment author="alisontaylor">The following rows are used in Kudu Lookup processor and Kudu
+   destination</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_sqr_2qn_51b">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>

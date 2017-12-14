@@ -32,8 +32,9 @@
                     sytems</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/> is
             supported on the following operating systems and architectures:<draft-comment
-                author="alisontaylor">Same topic is in the DPM User Guide > Edge Data Collectors
-                chapter. Make same updates both places</draft-comment><ul id="ul_otf_x5q_4bb">
+                author="alisontaylor">Same topic is in the Control Hub User Guide > Edge Data
+                Collectors chapter. Make same updates both places</draft-comment><ul
+                id="ul_otf_x5q_4bb">
                 <li>Darwin AMD64</li>
                 <li>Linux AMD64 and ARM</li>
                 <li>Windows AMD64</li>

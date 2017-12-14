@@ -62,11 +62,9 @@
                 <dd>
                     <p><ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> now provides beta support for <xref
-                            href="../Configuration/PublishMetadata.dita#concept_q4y_4mt_p1b"
-                            >publishing metadata</xref> about running pipelines to Cloudera
-                        Navigator. You can then use Cloudera Navigator to explore the pipeline
-                        metadata, including viewing lineage diagrams of the metadata.</p>
+                        /> now provides beta support for publishing metadata about running pipelines
+                        to Cloudera Navigator. You can then use Cloudera Navigator to explore the
+                        pipeline metadata, including viewing lineage diagrams of the metadata.</p>
                 </dd>
                 <dd>Feel free to try out this feature in a development or test <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -331,9 +329,8 @@
                     <ul id="ul_dwx_lpz_w1b">
                         <li><xref href="../DPM/RevertPublishedPipelines.dita#task_c4x_vff_p1b"
                                 >Revert changes to published pipelines</xref> - If you update a
-                            published pipeline but decide not to publish the updates to <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                            /> as a new version, you can revert the changes made to the pipeline
+                            published pipeline but decide not to publish the updates to DPM as a new
+                            version, you can revert the changes made to the pipeline
                             configuration.</li>
                     </ul>
                 </dd>

@@ -27,9 +27,9 @@
         <context>
             <p><indexterm>pipelines<indexterm>commit
                     history</indexterm></indexterm><indexterm>commit
-                        history<indexterm>pipelines</indexterm></indexterm><indexterm>DPM<indexterm>pipeline
-                        commit history</indexterm></indexterm>If you edit and then publish an older
-                version, <ph
+                        history<indexterm>pipelines</indexterm></indexterm><indexterm>Control
+                        Hub<indexterm>pipeline commit history</indexterm></indexterm>If you edit and
+                then publish an older version, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
                 updates the minor version number rather than the major version number. For example,
                 you have a pipeline with three versions. You get version 2 of the pipeline, edit the
@@ -47,8 +47,8 @@
         </context>
         <steps>
             <step>
-                <cmd>In the pipeline canvas, click the <uicontrol>DPM Options</uicontrol> icon
-                        <image href="../Graphics/icon_RemoteStore.png" id="image_lc3_kbf_2w"
+                <cmd>In the pipeline canvas, click the <uicontrol>SCH Options</uicontrol> icon
+                        <image href="../Graphics/icon_SCHOptions.png" id="image_lc3_kbf_2w"
                         placement="inline" scale="80"/>, and then click <uicontrol>Commit
                         History</uicontrol>. </cmd>
                 <info>The <uicontrol>Pipeline Commit History</uicontrol> dialog box opens. For

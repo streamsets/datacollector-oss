@@ -18,7 +18,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_ydw_r42_fx">
-    <title>Downloading Published Pipelines from DPM</title>
+    <title>Downloading Published Pipelines</title>
     <taskbody>
         <context><indexterm>pipelines<indexterm>downloading
                 published</indexterm></indexterm><indexterm>published

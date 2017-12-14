@@ -46,9 +46,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to work with <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                    /> (<ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />), complete the following steps to update the configuration files used by <ph
+                    />, complete the following steps to update the configuration files used by <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                     />: </cmd>
                 <substeps id="substeps_zvl_qhj_2y">
@@ -63,8 +61,9 @@
                         <info>The previous version of the file includes the authentication token
                             that this <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> instance requires to issue authenticated requests to DPM. As a
-                            result, you'll need <ph
+                            /> instance requires to issue authenticated requests to <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                            />. As a result, you'll need <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> to use the previous version of the file.</info>
                     </substep>

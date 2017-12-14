@@ -24,7 +24,9 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             Home page to see how <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            displays local pipelines, published pipelines, and DPM controlled pipelines:</p>
+            displays local pipelines, published pipelines, and <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            controlled pipelines:</p>
         <p><image href="../Graphics/DPM_LocalDPMControlledPipelines.png" scale="50"
                 id="image_rtj_fvs_gx"/></p>
         <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

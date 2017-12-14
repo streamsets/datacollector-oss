@@ -18,16 +18,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_l45_qwf_xw">
- <title>Meet Dataflow Performance Manager</title>
- <shortdesc>StreamSets <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (<ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-            /><sup>TM</sup>) is a management console for data in motion. <ph
+    <title>Meet <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+        /></title>
+    <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+            /><sup>TM</sup> (SCH) is a management console for data in motion. <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> lets
-        you map, measure, and master complex dataflows within your organization. </shortdesc>
- <conbody>
-        <p><indexterm>DPM<indexterm>overview</indexterm></indexterm>Dataflow Performance
-                Manager<indexterm>overview</indexterm>With <ph
+        you map, measure, and master complex dataflows within your organization.</shortdesc>
+    <conbody>
+        <p><indexterm>StreamSets Control Hub<indexterm>overview</indexterm></indexterm>With <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
             you can map multiple dataflows in a single visual topology and track changes to the
             dataflows over time. You can view real-time statistics to measure dataflow performance
@@ -38,7 +37,10 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
             For example, a data architect typically creates a high-level design of how data needs to
             flow through multiple systems. A data engineer uses this high-level design to develop
-            individual pipelines in a development <ph
+            individual pipelines in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or
+            a development <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             The data engineer then publishes the finished pipelines to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>

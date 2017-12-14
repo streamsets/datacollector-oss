@@ -102,6 +102,10 @@
     <topicref href="../DPM/AggStatistics_KinesisAWSCredentials.dita"/>
     <topicref href="../DPM/AggStatistics_KinesisBestPractices.dita"/>
    </topicref>
+   <topicref href="../DPM/AggStatistics_MapR.dita">
+    <topicref href="../DPM/AggStatistics_MapRPartitionStrategy.dita"/>
+    <topicref href="../DPM/AggStatistics_MapRBestPractices.dita"/>
+   </topicref>
    <topicref href="../DPM/AggregatedStatistics_Configuring.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/SSL-TLS.dita" chunk="to-content">

@@ -35,8 +35,8 @@
         the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         disconnected mode.</shortdesc>
  <conbody>
-        <p><indexterm>disconnected
-                    mode<indexterm>DPM</indexterm></indexterm><indexterm>DPM<indexterm>disconnected
+        <p><indexterm>disconnected mode<indexterm>Control
+                Hub</indexterm></indexterm><indexterm>Control Hub<indexterm>disconnected
                     mode</indexterm></indexterm><indexterm>Data Collector<indexterm>disconnected
                     mode</indexterm></indexterm>In disconnected mode, you can still log into and use
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -59,6 +59,6 @@
             requires that you log in again with your <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             user account. After you log in, the following Disconnected Mode icon displays:</p>
-        <p><image href="../Graphics/SDC_DPMDisconnected.png" id="image_ztz_bkg_jx" scale="50"/></p>
+        <p><image href="../Graphics/SDC_DPMDisconnected.png" id="image_ztz_bkg_jx" scale="65"/></p>
     </conbody>
 </concept>

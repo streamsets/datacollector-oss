@@ -24,7 +24,7 @@
             run the following command from the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>
             home directory:<draft-comment author="alisontaylor">text is same as in the Edge Data
-                Collectors chapter in DPM User Guide. Make sure changes are made in both
+                Collectors chapter in Control Hub User Guide. Make sure changes are made in both
                 places.</draft-comment><codeblock>bin/edge</codeblock></p>
         <p>To start <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>

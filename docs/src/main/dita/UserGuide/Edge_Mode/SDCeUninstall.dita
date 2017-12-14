@@ -27,7 +27,7 @@
                 /> and then remove the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                 /> home directory.<draft-comment author="alisontaylor">text is same as in the SDC
-                    Edge chapter in DPM User Guide. Make sure changes are made in both
+                    Edge chapter in Control Hub User Guide. Make sure changes are made in both
                     places.</draft-comment></p>
         </context>
         <steps id="steps_l11_j1k_rbb">

@@ -27,8 +27,8 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>
+            <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment>
         </context>
         <steps>
             <step>
@@ -36,7 +36,7 @@
                     click <uicontrol>Configuration</uicontrol>.</cmd>
             </step>
             <step>
-                <cmd>Enter <userinput>DPM</userinput> in the search field to display the <ph
+                <cmd>Enter <userinput>SCH</userinput> in the search field to display the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                     /> configuration properties.</cmd>
             </step>
@@ -55,24 +55,19 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Enable <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /></entry>
+                                    <entry>Enable SCH</entry>
                                     <entry>Select to enable <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         />.</entry>
                                 </row>
                                 <row>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> URL</entry>
+                                    <entry>SCH URL</entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_DPMURL"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_DPMURL"
+                                    />
                                 </row>
                                 <row>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> User ID</entry>
+                                    <entry>SCH User ID</entry>
                                     <entry>Enter your <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         /> user ID using the following format:<p
@@ -80,17 +75,13 @@
                                         /></entry>
                                 </row>
                                 <row>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> Password</entry>
+                                    <entry>SCH Password</entry>
                                     <entry>Enter the password for your <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         /> user account.</entry>
                                 </row>
                                 <row>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> Labels</entry>
+                                    <entry>SCH Labels</entry>
                                     <entry>Assign a label to this <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. Labels that you assign here are defined in the <ph

@@ -16,19 +16,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d4h_kkq_4bb">
- <title>Edge Pipelines Overview</title>
- <shortdesc>An <i>edge pipeline</i> is a pipeline that runs on an edge device with limited
+    <title>Edge Pipelines Overview</title>
+    <shortdesc>An <i>edge pipeline</i> is a pipeline that runs on an edge device with limited
         resources. Use edge pipelines to read data from the edge device or to receive data from
         another pipeline and then act on that data to control the edge device.</shortdesc>
- <conbody>
-  <p><indexterm>edge
+    <conbody>
+        <p><indexterm>edge
                     pipelines<indexterm>overview</indexterm></indexterm><indexterm>pipelines<indexterm>edge
                     devices</indexterm></indexterm>You can design edge pipelines in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
                 <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>
-                (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-            />). You run edge pipelines in edge execution mode on <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>.
+            You run edge pipelines in edge execution mode on <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>
                 (<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
@@ -40,8 +39,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             Edge pipelines are bidirectional - they can both send data to other pipelines and
             receive data from other pipelines. To use edge pipelines, you'll work with the following
-            types of pipelines:<draft-comment author="alisontaylor">This text is also in DPM User
-                Guide > Edge Data Collectors Overview. Make same updates in both
+            types of pipelines:<draft-comment author="alisontaylor">This text is also in Control Hub
+                User Guide > Edge Data Collectors Overview. Make same updates in both
                 places.</draft-comment><dl>
                 <dlentry>
                     <dt>Edge sending pipeline</dt>
@@ -78,5 +77,5 @@
             and <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
             /> in a single visual topology. For more information, see <xref
                 href="../DPM/DPM.dita#concept_l45_qwf_xw"/>. </note>
- </conbody>
+    </conbody>
 </concept>

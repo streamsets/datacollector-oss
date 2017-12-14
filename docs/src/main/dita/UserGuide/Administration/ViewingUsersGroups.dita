@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lxg_qlr_my">
- <title>Viewing Users and Groups</title>
- <shortdesc>If you use file-based authentication, you can view all user accounts granted access to
-        this <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        instance, including the roles and groups assigned to each user.</shortdesc>
- <conbody>
+    <title>Viewing Users and Groups</title>
+    <shortdesc>If you use file-based authentication, you can view all user accounts granted access
+        to this <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /> instance, including the roles and groups assigned to each user.</shortdesc>
+    <conbody>
         <p><indexterm>users<indexterm>viewing</indexterm></indexterm><indexterm>groups<indexterm>viewing</indexterm></indexterm><indexterm>roles<indexterm>viewing</indexterm></indexterm>To
             view users and groups, click <menucascade>
                 <uicontrol>Administration</uicontrol>
@@ -39,8 +39,8 @@
             <note>If the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> is registered with <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-                and you click <menucascade>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                /> and you click <menucascade>
                     <uicontrol>Administration</uicontrol>
                     <uicontrol>Users and Groups</uicontrol>
                 </menucascade>, the <ph
@@ -51,7 +51,7 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                 />. Registered <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />s  use <ph
+                />s use <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
                 user authorization. For more information, see <xref
                     href="../DPM/RegisterSDCwithDPM.dita#concept_kc4_xyf_xw"/>.</note>

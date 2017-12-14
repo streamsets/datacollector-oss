@@ -37,9 +37,7 @@
                         <li>Discard - Discard the pipeline statistics. <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                             /> cannot display statistics and metrics for the job.</li>
-                        <li>Write to <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                            /> Directly - Write the pipeline statistics directly to <ph
+                        <li>Write to SCH Directly - Write the pipeline statistics directly to <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                             />. Use when the job runs on a single <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

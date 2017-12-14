@@ -18,10 +18,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_evs_xkm_s5">
- <title>Available Stage Libraries</title>
- <conbody>
-  <p>The following table describes the stages installed with each stage library:<table frame="all"
-                rowsep="1" colsep="1" id="table_kyr_blm_s5">
+    <title>Available Stage Libraries</title>
+    <conbody>
+        <p>The following table describes the stages installed with each stage library:<table
+                frame="all" rowsep="1" colsep="1" id="table_kyr_blm_s5">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
@@ -549,7 +549,7 @@
                             <entry>For Jython version 2.7.x. <p>Includes the Jython Evaluator
                                     processor.</p></entry>
                         </row>
-   <row>
+                        <row>
                             <entry>streamsets-datacollector-kinetica_6_0-lib</entry>
                             <entry>For Kinetica 6.0.<p>Includes the KineticaDB
                                 destination.</p></entry>
@@ -686,9 +686,7 @@
                             <entry>streamsets-datacollector-stats-lib</entry>
                             <entry> Installs automatically with the core installation. <p><ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                                    /> (<ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                    />) requires that the statistics stage library be installed on
+                                    /> requires that the statistics stage library be installed on
                                     each registered <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />. </p></entry>
@@ -705,5 +703,5 @@
                     </tbody>
                 </tgroup>
             </table></p>
- </conbody>
+    </conbody>
 </concept>

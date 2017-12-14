@@ -36,9 +36,7 @@
                 saves the files to your default downloads directory.</p>
             <p>To export pipelines for use in <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                /> (<ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                />), see <xref href="../DPM/ExportPipelinesForDPM.dita#task_emc_p42_fx"/>.</p>
+                />, see <xref href="../DPM/ExportPipelinesForDPM.dita#task_emc_p42_fx"/>.</p>
         </context>
         <steps id="steps_cns_ztr_5q">
             <step>

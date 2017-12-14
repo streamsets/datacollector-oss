@@ -21,15 +21,18 @@
  <title>Manage the Orchestration of Jobs</title>
  <shortdesc>In <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
         pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
-        engineers design pipelines on an authoring <ph
+        engineers design pipelines with the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or a
+        development <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
         DevOps or site reliability engineers run jobs on groups of execution <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />s.</shortdesc>
  <conbody>
         <p>
-            <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>
+            <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment>
         </p>
         <p>As a DevOps or site reliability engineer - the person responsible for ensuring that all
             services and systems are scalable and reliable - you register both authoring and

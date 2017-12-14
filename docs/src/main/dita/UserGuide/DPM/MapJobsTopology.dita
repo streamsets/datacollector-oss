@@ -24,9 +24,9 @@
         multiple intermediary pipelines, all of which work together to create a complete
         dataflow.</shortdesc>
  <conbody>
-        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>As a data architect, you create a
-            topology in <ph
+        <p><draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment>As a data architect,
+            you create a topology in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             map multiple related jobs into a single view. A topology provides interactive end-to-end
             views of data as it traverses multiple pipelines. You can add any number of jobs to a

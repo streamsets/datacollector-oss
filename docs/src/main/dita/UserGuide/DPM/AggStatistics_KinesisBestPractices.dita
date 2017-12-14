@@ -22,8 +22,8 @@
  <conbody>
   <p><indexterm>aggregated statistics<indexterm>Kinesis
                 Streams</indexterm></indexterm><indexterm>Kinesis Streams<indexterm>aggregated
-                    statistics for DPM</indexterm></indexterm>Consider the following best practices
-            when you configure a pipeline to write statistics to Amazon Kinesis Streams: </p>
+                    statistics for Control Hub</indexterm></indexterm>Consider the following best
+            practices when you configure a pipeline to write statistics to Amazon Kinesis Streams: </p>
         <ul id="ul_w44_3g5_xw">
             <li>To avoid mixing statistics from different jobs, use a unique stream name for each
                 job. </li>

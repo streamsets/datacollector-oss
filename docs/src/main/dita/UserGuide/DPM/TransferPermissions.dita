@@ -18,7 +18,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xzz_rnr_yy">
- <title>Transfer Permissions to DPM Users</title>
+ <title>Transfer Permissions to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        Users</title>
  <conbody>
         <p>After you register <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

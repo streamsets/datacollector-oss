@@ -18,15 +18,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_evb_3bs_bx">
- <title>Working with DPM</title>
- <shortdesc>Before you can work with <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
-        must have a <ph
+    <title>Working with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
+    <shortdesc>Before you can work with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>, you
+        must have an <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         organization and user account.</shortdesc>
- <conbody>
-  <p>To work with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-            />, you complete the following tasks within the <ph
+    <conbody>
+        <p>To work with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+            you complete the following tasks within the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             UI:</p>
         <ul id="ul_bkn_xxf_xw">
@@ -48,5 +50,5 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                 />.</li>
         </ul>
- </conbody>
+    </conbody>
 </concept>

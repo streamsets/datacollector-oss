@@ -23,8 +23,8 @@
         <p><indexterm>pipelines<indexterm>local</indexterm></indexterm><indexterm>pipelines<indexterm>published</indexterm></indexterm><indexterm>local
                     pipelines<indexterm>description</indexterm></indexterm><indexterm>published
                     pipelines<indexterm>description</indexterm></indexterm><indexterm>pipelines<indexterm>system</indexterm></indexterm><indexterm>system
-                    pipelines<indexterm>description</indexterm></indexterm><indexterm>pipelines<indexterm>DPM
-                    controlled</indexterm></indexterm><indexterm>DPM controlled
+                    pipelines<indexterm>description</indexterm></indexterm><indexterm>pipelines<indexterm>Control
+                    Hub controlled</indexterm></indexterm><indexterm>Control Hub controlled
                     pipelines<indexterm>description</indexterm></indexterm>After a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             has been registered with <ph
@@ -58,15 +58,23 @@
                         they are running and not running.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>DPM controlled pipelines</dt>
-                    <dd>DPM controlled pipelines are pipelines that are managed by <ph
+                    <dt><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> controlled pipelines</dt>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> controlled pipelines are pipelines that are managed by <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         /> and run remotely on registered <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         />s. <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> displays DPM controlled pipelines when they are running. </dd>
-                    <dd>DPM controlled pipelines include the following:<ul id="ul_llz_yth_hx">
+                        /> displays <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> controlled pipelines when they are running. </dd>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> controlled pipelines include the following:<ul id="ul_llz_yth_hx">
                             <li>Published pipelines run from <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                 /> jobs. <p>After you publish or import pipelines to <ph
@@ -119,8 +127,10 @@
         <note>A <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> administrator can use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            stop DPM controlled pipelines. Otherwise, you cannot modify or manage DPM controlled
-            pipelines in <ph
+            stop <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            /> controlled pipelines. Otherwise, you cannot modify or manage <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            controlled pipelines in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</note>
  </conbody>

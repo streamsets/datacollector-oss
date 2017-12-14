@@ -18,15 +18,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hrn_zz3_fx">
- <title>DPM Configuration</title>
- <shortdesc>You can customize how a <ph
+    <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        Configuration</title>
+    <shortdesc>You can customize how a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> works
-        with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> by
-        editing the <ph
+        with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>
+        by editing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         configuration file, dpm.properties.</shortdesc>
- <conbody>
-  <p>Use a text editor to edit the <ph
+    <conbody>
+        <p>Use a text editor to edit the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             configuration file, <systemoutput>$SDC_CONF/dpm.properties</systemoutput>. To enable the
             changes, restart <ph
@@ -57,8 +58,7 @@
                         <entry>dpm.base.url</entry>
                         <entry>Base URL to access <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                            />. Enter the appropriate URL:
-                            <ul
+                            />. Enter the appropriate URL: <ul
                                 conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ul_DPMURL"
                                 id="ul_c2n_5kd_j1b">
                                 <li/>
@@ -144,5 +144,5 @@
                 </tbody>
             </tgroup>
         </table>
- </conbody>
+    </conbody>
 </concept>

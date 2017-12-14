@@ -18,17 +18,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_r4v_fwf_nx">
- <title>Unregistering from the Command Line Interface</title>
- <shortdesc>You can unregister a <ph
+    <title>Unregistering from the Command Line Interface</title>
+    <shortdesc>You can unregister a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> from
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         using the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         command line interface. </shortdesc>
- <conbody>
+    <conbody>
         <p>
-            <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates both places.</draft-comment>
+            <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates both places.</draft-comment>
         </p>
         <p>Start the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
@@ -74,10 +74,10 @@ system disableDPM</codeblock></p>
                         <row>
                             <entry>-D &lt;dpmURL><p>or</p><p>--dpmURL &lt;dpmURL></p></entry>
                             <entry>Required. Enter the appropriate URL:<ul
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ul_DPMURL"
-                                id="ul_c2n_5kd_j1b">
-                                <li/>
-                            </ul></entry>
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ul_DPMURL"
+                                    id="ul_c2n_5kd_j1b">
+                                    <li/>
+                                </ul></entry>
                         </row>
                         <row>
                             <entry>-u &lt;sdcUser><p>or</p><p>--user &lt;sdcUser></p></entry>

@@ -18,7 +18,8 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_um3_gtx_fz">
- <title>Registered with DPM</title>
+ <title>Registered with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
  <conbody>
         <p>The following table describes the options for the basic command when the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
@@ -69,7 +70,9 @@
                         <row>
                             <entry>-p &lt;sdcPassword><p>or</p><p>--password
                                 &lt;sdcPassword></p></entry>
-                            <entry>Required. Enter the password for your DPM user account.</entry>
+                            <entry>Required. Enter the password for your <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                /> user account.</entry>
                         </row>
                         <row>
                             <entry>-D &lt;dpmURL> <p>or</p>--dpmURL &lt;dpmURL></entry>

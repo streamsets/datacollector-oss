@@ -18,17 +18,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ldb_sr5_cx">
- <title>Unregister Data Collector from DPM</title>
- <shortdesc>You can unregister a <ph
+    <title>Unregister Data Collector from <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/></title>
+    <shortdesc>You can unregister a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> from
-            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/>
         when you no longer want to use that <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         installation with <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
- <conbody>
-  <p><indexterm>Data Collector<indexterm>unregistering from
-                    DPM</indexterm></indexterm><indexterm>DPM<indexterm>unregistering Data
+    <conbody>
+        <p><indexterm>Data Collector<indexterm>unregistering from Control
+                Hub</indexterm></indexterm><indexterm>Control Hub<indexterm>unregistering Data
                     Collector</indexterm></indexterm>When you restart an unregistered <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             previously-configured <ph
@@ -56,5 +57,5 @@
             Cloudera Manager, see the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             online help.</p>
- </conbody>
+    </conbody>
 </concept>

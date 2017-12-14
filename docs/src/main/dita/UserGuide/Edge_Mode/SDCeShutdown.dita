@@ -23,7 +23,7 @@
                 down</indexterm></indexterm>To shut down <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"/>,
             type <uicontrol>Ctrl+C</uicontrol> in the command prompt. <draft-comment
-                author="alisontaylor">text is same as in the Edge Data Collectors chapter in DPM
-                User Guide. Make sure changes are made in both places.</draft-comment></p>
+                author="alisontaylor">text is same as in the Edge Data Collectors chapter in Control
+                Hub User Guide. Make sure changes are made in both places.</draft-comment></p>
     </conbody>
 </concept>

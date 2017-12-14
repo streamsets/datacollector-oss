@@ -43,18 +43,22 @@
   "valid" : true,
   "metadata" : {
     "labels" : [ ],
-    "dpm.pipeline.id" : "&lt;DPM pipeline ID>:&lt;organization name>",
+    "dpm.pipeline.id" : "&lt;Control Hub pipeline ID>:&lt;organization name>",
     "dpm.pipeline.version" : "&lt;published pipeline version>"
   }
 },</codeblock></dd>
                     <dd>For example, the following command lists all pipelines associated with the
                             <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> when it is not registered with DPM:
+                        /> when it is not registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:
                         <codeblock>bin/streamsets cli -U http://localhost:18630 store list</codeblock></dd>
                     <dd>The following command lists all pipelines associated with the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> when it is registered with DPM:
+                        /> when it is registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:
                         <codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com store list</codeblock></dd>
                 </dlentry>

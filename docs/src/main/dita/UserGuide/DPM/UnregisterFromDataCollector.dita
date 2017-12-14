@@ -28,8 +28,8 @@
     <taskbody>
         <context>
             <p>
-                <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide.
-                    Make the same updates in both places. </draft-comment>
+                <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                    Guide. Make the same updates in both places. </draft-comment>
             </p>
         </context>
         <steps>
@@ -45,9 +45,9 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />, click <menucascade>
                         <uicontrol>Administration</uicontrol>
-                        <uicontrol> Disable DPM</uicontrol>
+                        <uicontrol> Disable SCH</uicontrol>
                     </menucascade>.</cmd>
-                <info>The <uicontrol>Disable DPM Confirmation</uicontrol> dialog box appears.</info>
+                <info>The <uicontrol>Disable SCH</uicontrol> dialog box appears.</info>
             </step>
             <step>
                 <cmd>To disable <ph
@@ -64,12 +64,12 @@
                     <choice>If you started the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> manually from the command line, click <uicontrol>Restart Data
-                            Collector</uicontrol> in the <wintitle>Disable DPM</wintitle>
+                            Collector</uicontrol> in the <wintitle>Disable SCH</wintitle>
                         window.</choice>
                     <choice>If you started the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> as a service, you must use the command line for restart. Click
-                            <uicontrol>Cancel</uicontrol> in the <wintitle>Disable DPM</wintitle>
+                            <uicontrol>Cancel</uicontrol> in the <wintitle>Disable SCH</wintitle>
                         window, and then run the following command:
                         <codeblock>service sdc restart</codeblock></choice>
                 </choices>

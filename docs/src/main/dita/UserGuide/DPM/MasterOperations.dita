@@ -24,8 +24,8 @@
         requirements for availability and accuracy.</shortdesc>
  <conbody>
   <p>
-            <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>
+            <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                Guide. Make the same updates in both places. </draft-comment>
         </p>
         <p>In addition to measuring the health of a topology, you define data SLAs to define the
             expected thresholds of the data throughput rate or the error record rate. Data SLAs
@@ -39,12 +39,14 @@
             processing errors, you must immediately resolve those issues. You define and activate a
             data SLA that triggers an alert when a job in the topology encounters more than 100
             error records per second. </p>
-        <p>If the alert triggers, DPM notifies you with a red Notifications icon in the top toolbar:
-                <image href="../Graphics/icon_Notifications.png" scale="70" id="image_gk1_rfx_fz"/>.
-            You drill into the details of the data SLA to discover which threshold was reached and
-            to investigate the issues that need to be resolved. The triggered data SLA displays a
-            graph of the error record rate. The red line in the graph represents the defined
-            threshold, as follows:</p>
+        <p>If the alert triggers, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            notifies you with a red Notifications icon in the top toolbar: <image
+                href="../Graphics/icon_Notifications.png" scale="70" id="image_gk1_rfx_fz"/>. You
+            drill into the details of the data SLA to discover which threshold was reached and to
+            investigate the issues that need to be resolved. The triggered data SLA displays a graph
+            of the error record rate. The red line in the graph represents the defined threshold, as
+            follows:</p>
         <p><image href="../Graphics/DPM_MasterOperations.png" scale="55" id="image_q5c_y2c_fbb"
             /></p>
         <p>We've seen how you can use <ph

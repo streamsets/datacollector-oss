@@ -34,8 +34,8 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />. </note>
             <p>
-                <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide.
-                    Make the same updates in both places. </draft-comment>
+                <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
+                    Guide. Make the same updates in both places. </draft-comment>
             </p>
         </context>
         <steps>
@@ -49,11 +49,11 @@
             <step>
                 <cmd>Click <menucascade>
                         <uicontrol>Administration</uicontrol>
-                        <uicontrol> Enable DPM</uicontrol>
+                        <uicontrol> Enable SCH</uicontrol>
                     </menucascade>.</cmd>
             </step>
             <step>
-                <cmd>Enter the following information in the <wintitle>Enable DPM</wintitle>
+                <cmd>Enter the following information in the <wintitle>Enable SCH</wintitle>
                     window:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_sld_z4l_nw">
@@ -68,14 +68,13 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> Base URL</entry>
+                                    <entry>SCH Base URL</entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_DPMURL"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_DPMURL"
+                                    />
                                 </row>
                                 <row>
-                                    <entry>User ID</entry>
+                                    <entry>SCH User ID</entry>
                                     <entry>Enter your <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         /> user ID using the following format:<p
@@ -83,13 +82,15 @@
                                         /></entry>
                                 </row>
                                 <row>
-                                    <entry>User Password</entry>
+                                    <entry>SCH User Password</entry>
                                     <entry>Enter the password for your <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         /> user account.</entry>
                                 </row>
                                 <row>
-                                    <entry>Labels</entry>
+                                    <entry>Labels for this <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /></entry>
                                     <entry>Assign a label to this <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. Labels that you assign here are defined in the <ph
@@ -121,18 +122,18 @@
                 </info>
             </step>
             <step>
-                <cmd>Click <uicontrol>Enable DPM</uicontrol>.</cmd>
+                <cmd>Click <uicontrol>Enable SCH</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>If the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> uses file-based authentication, you can click <uicontrol>Create DPM Groups
+                    /> uses file-based authentication, you can click <uicontrol>Create SCH Groups
                         and Users</uicontrol> to create a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                     /> user account and group for each <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> user account and group.</cmd>
-                <info>The <uicontrol>Create DPM Groups and Users</uicontrol> window maps all
+                <info>The <uicontrol>Create SCH Groups and Users</uicontrol> window maps all
                     existing <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> user accounts and groups to <ph
@@ -155,12 +156,12 @@
                     <choice>If you started the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> manually from the command line, click <uicontrol>Restart Data
-                            Collector</uicontrol> in the <wintitle>Enable DPM</wintitle>
+                            Collector</uicontrol> in the <wintitle>Enable SCH</wintitle>
                         window.</choice>
                     <choice>If you started the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> as a service, you must use the command line for restart. Click
-                            <uicontrol>Cancel</uicontrol> in the <wintitle>Enable DPM</wintitle>
+                            <uicontrol>Cancel</uicontrol> in the <wintitle>Enable SCH</wintitle>
                         window, and then run the following command:
                         <codeblock>service sdc restart</codeblock></choice>
                 </choices>
