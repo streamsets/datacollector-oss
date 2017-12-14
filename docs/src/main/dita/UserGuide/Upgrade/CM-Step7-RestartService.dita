@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kdx_llp_2cb">
+ <title>Step 7. Restart the StreamSets Service</title>
+ <shortdesc>When you restart the StreamSets service, Cloudera Manager updates the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration properties for you. Cloudera Manager retains any customized values that you
+        added in the previous <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        version. It also adds any new properties included in the new <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        version. </shortdesc>
+ <conbody>
+  <p>To restart the StreamSets service, click <menucascade>
+                <uicontrol>Clusters</uicontrol>
+                <uicontrol>StreamSets</uicontrol>
+            </menucascade> and then click <menucascade>
+                <uicontrol>Actions</uicontrol>
+                <uicontrol>Start</uicontrol>
+            </menucascade>.</p>
+ </conbody>
+</concept>

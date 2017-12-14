@@ -71,6 +71,8 @@
    <topicref href="../Upgrade/CM-Step3-InstallCSD.dita"/>
    <topicref href="../Upgrade/CM-Step4-InstallParcel.dita"/>
    <topicref href="../Upgrade/CM-Step5-ActivateParcel.dita"/>
+   <topicref href="../Upgrade/CM-Step6_SafetyValves.dita"/>
+   <topicref href="../Upgrade/CM-Step7-RestartService.dita"/>
   </topicref>
   <topicref href="../Upgrade/PostUpgrade.dita" chunk="to-content">
    <topicmeta>

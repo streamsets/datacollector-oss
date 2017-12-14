@@ -67,23 +67,6 @@
                     Location selector, and then click <uicontrol>Activate</uicontrol> for the
                     parcel.</cmd>
             </step>
-            <step>
-                <cmd>To restart the StreamSets service, click <menucascade>
-                        <uicontrol>Clusters</uicontrol>
-                        <uicontrol>StreamSets</uicontrol>
-                    </menucascade> and then click <menucascade>
-                        <uicontrol>Actions</uicontrol>
-                        <uicontrol>Start</uicontrol>
-                    </menucascade>.</cmd>
-                <info> When you restart the StreamSets service, Cloudera Manager updates the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> configuration properties for you. Cloudera Manager retains any customized
-                    values that you added in the previous <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> version. It also adds any new properties included in the new <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> version. </info>
-            </step>
         </steps>
     </taskbody>
 </task>

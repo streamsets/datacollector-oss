@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_icd_wt4_2cb">
+ <title>Step 6. Verify Modified Safety Valves</title>
+ <shortdesc>When you upgrade, Cloudera Manager updates the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration properties for you. However, if you modified any of the <uicontrol>Advanced
+            Configuration Snippet (Safety Valve) properties</uicontrol> in Cloudera Manager for the
+        previous <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /> version, those values override any property settings in the new configuration files. </shortdesc>
+ <conbody>
+  <p>You must compare the new configuration files shipped with the parcel in
+                <codeph>/opt/cloudera/parcels/STREAMSETS</codeph> with your modified safety valves
+            and update the safety valves as needed to include any new properties.</p>
+        <p>For example, if you used the <uicontrol>Data Collector Advanced Configuration Snippet
+                (Safety Valve) for sdc.properties</uicontrol> to override the
+                <codeph>system.stagelibs.blacklist</codeph> property, you must add any new stage
+            libraries listed in the blacklist property in the new <codeph>sdc.properties</codeph>
+            file to the overridden property in the safety valve.</p>
+ </conbody>
+</concept>
