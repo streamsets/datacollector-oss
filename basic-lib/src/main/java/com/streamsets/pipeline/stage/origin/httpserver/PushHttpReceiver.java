@@ -28,18 +28,23 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class PushHttpReceiver implements HttpReceiver {
-  static final String MAXREQUEST_SYS_PROP =
-      "com.streamsets.httpserverpushsource.maxrequest.mb";
+  private static final String PATH_HEADER = "path";
+  private static final String QUERY_STRING_HEADER = "queryString";
+  static final String MAXREQUEST_SYS_PROP = "com.streamsets.httpserverpushsource.maxrequest.mb";
 
   private static int getMaxRequestSizeMBLimit() {
     return Integer.parseInt(System.getProperty(MAXREQUEST_SYS_PROP, "100"));
@@ -53,7 +58,7 @@ public class PushHttpReceiver implements HttpReceiver {
   private DataParserFactory parserFactory;
   private AtomicLong counter = new AtomicLong();
 
-  public PushHttpReceiver(HttpConfigs httpConfigs, int maxRequestSizeMB, DataParserFormatConfig dataParserFormatConfig) {
+  PushHttpReceiver(HttpConfigs httpConfigs, int maxRequestSizeMB, DataParserFormatConfig dataParserFormatConfig) {
     this.httpConfigs = httpConfigs;
     this.maxRequestSizeMB = maxRequestSizeMB;
     this.dataParserFormatConfig = dataParserFormatConfig;
@@ -123,13 +128,26 @@ public class PushHttpReceiver implements HttpReceiver {
     // Create new batch (we create it up front for metrics gathering purposes
     BatchContext batchContext = getContext().startBatch();
 
+    Map<String, String> customHeaderAttributes = new HashMap<>();
+    customHeaderAttributes.put(PATH_HEADER, StringUtils.stripToEmpty(req.getServletPath()));
+    customHeaderAttributes.put(QUERY_STRING_HEADER, StringUtils.stripToEmpty(req.getQueryString()));
+    Enumeration<String> headerNames = req.getHeaderNames();
+    if (headerNames != null) {
+      while (headerNames.hasMoreElements()) {
+        String headerName = headerNames.nextElement();
+        customHeaderAttributes.put(headerName, req.getHeader(headerName));
+      }
+    }
+
     // parse request into records
     List<Record> records = new ArrayList<>();
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     try (DataParser parser = getParserFactory().getParser(requestId, is, "0")) {
       Record record = parser.parse();
       while (record != null) {
-        records.add(record);
+        Record finalRecord = record;
+        customHeaderAttributes.forEach((key, value) -> finalRecord.getHeader().setAttribute(key, value));
+        records.add(finalRecord);
         record = parser.parse();
       }
     } catch (DataParserException ex) {

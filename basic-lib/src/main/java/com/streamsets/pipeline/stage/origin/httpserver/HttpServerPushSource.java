@@ -32,7 +32,7 @@ public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpRecei
 
   private final DataParserFormatConfig dataFormatConfig;
 
-  public HttpServerPushSource(
+  HttpServerPushSource(
       HttpConfigs httpConfigs,
       int maxRequestSizeMB,
       DataFormat dataFormat,

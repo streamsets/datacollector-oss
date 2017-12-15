@@ -73,12 +73,17 @@ public class TestHttpServerPushSource {
       connection.setUseCaches(false);
       connection.setDoOutput(true);
       connection.setRequestProperty(Constants.X_SDC_APPLICATION_ID_HEADER, "id");
+      connection.setRequestProperty("customHeader", "customHeaderValue");
       connection.getOutputStream().write("Hello".getBytes());
       Assert.assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
       runner.waitOnProduce();
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("Hello", records.get(0).get("/text").getValue());
-
+      Assert.assertEquals(
+          "id",
+          records.get(0).getHeader().getAttribute(Constants.X_SDC_APPLICATION_ID_HEADER)
+      );
+      Assert.assertEquals("customHeaderValue", records.get(0).getHeader().getAttribute("customHeader"));
 
       // passing App Id via query param should fail when appIdViaQueryParamAllowed is false
       String url = "http://localhost:" + httpConfigs.getPort() +
