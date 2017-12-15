@@ -140,6 +140,7 @@ public class DependencyParserExhaustiveTest {
       {"netty-all-4.0.42.Final.jar", new Dependency("netty", "4.0.42")},
       {"netty-transport-native-epoll-4.1.16.Final-linux-x86_64.jar", new Dependency("netty", "4.1.16")},
       {"netty-tcnative-boringssl-static-2.0.3.Final.jar", new Dependency("netty-tcnative-boringssl-static", "2.0.3")},
+      {"netty-tcnative-boringssl-static-1.1.33.Fork19.jar", new Dependency("netty-tcnative-boringssl-static", "1.1.33.Fork19")},
       {"nzjdbc3.jar", new Dependency("nzjdbc3", "")},
       {"ojdbc6.jar", new Dependency("ojdbc6", "")},
       {"parquet-avro-1.8.1.jar", new Dependency("parquet", "1.8.1")},
