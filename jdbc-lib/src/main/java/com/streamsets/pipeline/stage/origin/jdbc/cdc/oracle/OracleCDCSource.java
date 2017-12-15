@@ -224,7 +224,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM GV$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
+  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
@@ -1083,7 +1083,7 @@ public class OracleCDCSource extends BaseSource {
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
             ", SEQUENCE#, CSF, XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER " +
-            " FROM GV$LOGMNR_CONTENTS" +
+            " FROM V$LOGMNR_CONTENTS" +
             " WHERE ";
 
     final String tableCondition = getListOfSchemasAndTables(schemasAndTables);
