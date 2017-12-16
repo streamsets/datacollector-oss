@@ -28,6 +28,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
@@ -35,7 +37,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
@@ -75,13 +77,25 @@ public class JdbcLookupDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Multiple Values Behavior",
-      description = "How to handle multiple values ",
+      description = "How to handle multiple values",
       defaultValue = "FIRST_ONLY",
       displayPosition = 35,
       group = "JDBC"
   )
   @ValueChooserModel(JdbcLookupMultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Missing Values Behavior",
+      description = "How to handle missing values",
+      defaultValue = "PASS_RECORD_ON",
+      displayPosition = 37,
+      group = "JDBC"
+  )
+  @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
+  public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
 
   @ConfigDef(
       required = true,
@@ -115,6 +129,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       query,
       columnMappings,
       multipleValuesBehavior,
+      missingValuesBehavior,
       maxClobSize,
       maxBlobSize,
       hikariConfigBean,

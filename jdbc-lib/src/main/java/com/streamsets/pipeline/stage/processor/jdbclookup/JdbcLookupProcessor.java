@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
@@ -77,11 +78,13 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   private LoadingCache<String, List<Map<String, Field>>> cache;
   private CacheCleaner cacheCleaner;
+  private final MissingValuesBehavior missingValuesBehavior;
 
   public JdbcLookupProcessor(
       String query,
       List<JdbcFieldColumnMapping> columnMappings,
       MultipleValuesBehavior multipleValuesBehavior,
+      MissingValuesBehavior missingValuesBehavior,
       int maxClobSize,
       int maxBlobSize,
       HikariPoolConfigBean hikariConfigBean,
@@ -90,6 +93,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     this.query = query;
     this.columnMappings = columnMappings;
     this.multipleValuesBehavior = multipleValuesBehavior;
+    this.missingValuesBehavior = missingValuesBehavior;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
     this.hikariConfigBean = hikariConfigBean;
@@ -188,8 +192,17 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
       if (values.isEmpty()) {
         // No results
-        LOG.error(JdbcErrors.JDBC_04.getMessage(), preparedQuery);
-        errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_04, preparedQuery));
+        switch (missingValuesBehavior) {
+          case SEND_TO_ERROR:
+            LOG.error(JdbcErrors.JDBC_04.getMessage(), preparedQuery);
+            errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_04, preparedQuery));
+            break;
+          case PASS_RECORD_ON:
+            batchMaker.addRecord(record);
+            break;
+          default:
+            throw new IllegalStateException("Unknown missing value behavior: " + missingValuesBehavior);
+        }
       } else {
         switch (multipleValuesBehavior) {
           case FIRST_ONLY:

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import org.junit.After;
 import org.junit.Assert;
@@ -119,6 +120,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -145,6 +147,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -182,6 +185,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", mapQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -219,6 +223,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -264,6 +269,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -293,6 +299,52 @@ public class TestJdbcLookup {
   }
 
   @Test
+  public void testMultiRecordMissingRowNoError() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", listQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.PASS_RECORD_ON)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create("Adam"));
+    fields1.add(Field.create("Kunicki"));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    fields2.add(Field.create("Jon"));
+    fields2.add(Field.create("Natkins"));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    List<Field> fields3 = new ArrayList<>();
+    fields3.add(Field.create("Pat"));
+    fields3.add(Field.create("Patterson"));
+    record3.set(Field.create(fields3));
+
+    List<Record> records = ImmutableList.of(record1, record2, record3);
+    processorRunner.runInit();
+    processorRunner.runProcess(records);
+
+    List<Record> outputRecords = processorRunner.runProcess(records).getRecords().get("lane");
+
+    Assert.assertEquals(1, outputRecords.get(0).get("[2]").getValueAsInteger());
+    Assert.assertEquals(2, outputRecords.get(1).get("[2]").getValueAsInteger());
+    Assert.assertEquals(null, outputRecords.get(2).get("[2]"));
+  }
+
+  @Test
   public void testBadConnectionString() throws Exception {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
 
@@ -303,6 +355,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -323,6 +376,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -343,6 +397,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -386,6 +441,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", mapQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -431,6 +487,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -454,6 +511,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -493,6 +551,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -532,6 +591,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -556,6 +616,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -601,6 +662,7 @@ public class TestJdbcLookup {
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
         .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
