@@ -25,7 +25,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
+                <cmd>On the <uicontrol>Connection</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
@@ -67,9 +67,11 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Number of Threads  </entry> <entry>The number of threads the origin generates and uses for multithreaded processing. The origin
-                                        uses threads as defined by the Kafka partition assignment
-                                        strategy. For more information, see <xref
+                                    <entry>Number of Threads </entry>
+                                    <entry>The number of threads the origin generates and uses for
+                                        multithreaded processing. The origin uses threads as defined
+                                        by the Kafka partition assignment strategy. For more
+                                        information, see <xref
                                             href="KafkaMultiConsumer-MultithreadProcessing.dita#concept_ifs_wtm_3z"
                                         />.</entry>
                                 </row>
@@ -82,9 +84,10 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Kafka Configuration <xref
+                                    <entry>Configuration Properties <xref
                                             href="../Origins/KafkaMultiConsumer-AdditionalKProp.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref>
                                     </entry>
                                     <entry>
                                         <p
@@ -94,8 +97,8 @@
                                         <p id="p-KafkaConfig3">For information about enabling secure
                                             connections to Kafka, see <xref
                                                 href="../Origins/KafkaMultiConsumer-EnablingSecurity.dita"
-                                            />.</p></entry>
-                                                                           
+                                            />.</p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -118,7 +121,8 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="KafkaMultiConsumer-DataFormats.dita">
+                                    <entry>Data Format <xref
+                                            href="KafkaMultiConsumer-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bmy_h5q_ds"
                                         /></xref></entry>
