@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     icon="mongodb.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/MongoDB.html#task_mdf_2rs_ns",
     upgrader = MongoDBSourceUpgrader.class,
     resetOffset = true

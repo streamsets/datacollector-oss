@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
@@ -44,6 +45,9 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
   private ObjectId initialObjectId;
   private String initialId; // Used only when Offset Field is String type
+  private boolean EOSreached = false; //end of stream reached
+  private long recordsSinceLastNMREvent = 0;
+  private long errorRecordsSinceLastNMREvent = 0;
 
   public MongoDBSource(MongoSourceConfigBean configBean) {
     super(configBean);
@@ -111,6 +115,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
             long waitTime = Math.max(0, batchWaitTime - System.currentTimeMillis());
             LOG.trace("Sleeping for: {}", waitTime);
             ThreadUtil.sleep(waitTime);
+            conditionallyGenerateNoMoreDataEvent();
             return nextSourceOffset;
           }
           continue;
@@ -123,6 +128,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
             || (configBean.offsetType == OffsetFieldType.STRING && !(offsetFieldObject instanceof String))) {
           LOG.debug(Errors.MONGODB_05.getMessage(), doc.toString(), configBean.offsetType.getLabel());
           errorRecordHandler.onError(Errors.MONGODB_05, doc, configBean.offsetType.getLabel());
+          ++errorRecordsSinceLastNMREvent;
           continue;
         }
 
@@ -131,6 +137,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
           fields = MongoDBSourceUtil.createFieldFromDocument(doc);
         } catch (IOException e) {
           errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
+          ++errorRecordsSinceLastNMREvent;
           continue;
         }
 
@@ -149,10 +156,18 @@ public class MongoDBSource extends AbstractMongoDBSource {
         record.set(Field.create(fields));
         batchMaker.addRecord(record);
         ++numRecords;
+        ++recordsSinceLastNMREvent;
       }
     } catch (MongoClientException e) {
       throw new StageException(Errors.MONGODB_12, e.toString(), e);
     }
+
+    // if 2 cursors in a row have no data, we hit the end of the data stream
+    if(EOSreached) {
+      conditionallyGenerateNoMoreDataEvent();
+    }
+    EOSreached = nextSourceOffset.equals(lastSourceOffset);
+
     return nextSourceOffset;
   }
 
@@ -171,6 +186,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
     if (!doc.containsKey(keys[i])) {
       errorRecordHandler.onError(Errors.MONGODB_11, configBean.offsetField, doc.toString());
+      ++errorRecordsSinceLastNMREvent;
     }
 
     return parseSourceOffset((Document)doc.get(keys[i]), keys, i+1);
@@ -216,6 +232,17 @@ public class MongoDBSource extends AbstractMongoDBSource {
             .batchSize(maxBatchSize)
             .iterator();
       }
+    }
+  }
+
+  private void conditionallyGenerateNoMoreDataEvent() {
+    if(recordsSinceLastNMREvent != 0 || errorRecordsSinceLastNMREvent != 0) {
+      CommonEvents.NO_MORE_DATA.create(getContext())
+          .with("record-count", recordsSinceLastNMREvent)
+          .with("error-count", errorRecordsSinceLastNMREvent)
+          .createAndSend();
+      recordsSinceLastNMREvent = 0;
+      errorRecordsSinceLastNMREvent = 0;
     }
   }
 }

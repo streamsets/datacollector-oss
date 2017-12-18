@@ -19,6 +19,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -231,6 +232,7 @@ public class MongoDBSourceIT {
     parsedRecords = output.getRecords().get("lane");
     assertEquals(1, parsedRecords.size());
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
+    assertEquals("no-more-data", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
   }
 
   @Test
@@ -282,6 +284,7 @@ public class MongoDBSourceIT {
     parsedRecords = output.getRecords().get("lane");
     assertEquals(1, parsedRecords.size());
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
+    assertEquals("no-more-data", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
   }
 
   @Test
