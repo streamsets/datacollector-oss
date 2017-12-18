@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vcx_bnb_t5">
- <title>Enabling SSL</title>
- <conbody>
+    <title>Enabling SSL</title>
+    <conbody>
         <draft-comment author="Loretta">All the P's are used by Kafka Producer and P2 on are
-            conrefed by Kafka Consumer, SDC RPC to Kafka, and UDP to Kafka.  Step-KafkaSSL is used
-            in the Kafka-EnablingSSLandKerb.dita.</draft-comment>
+            conrefed by Kafka Consumer, SDC RPC to Kafka, and UDP to Kafka. Step-KafkaSSL is used in
+            the Kafka-EnablingSSLandKerb.dita.</draft-comment>
         <p id="P1"><indexterm>Kafka Producer destination<indexterm>enabling SSL/TLS
                     security</indexterm></indexterm>Perform the following steps to enable the Kafka
             Producer to use SSL/TLS to connect to <ph
@@ -37,7 +37,7 @@
                 <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
                     the <uicontrol>Stage Library</uicontrol> property to Apache Kafka 0.9.0.0 or a
                     later version.</li>
-                <li id="SSL-KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="SSL-KafkaTab">On the <wintitle>Connection</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> Kafka configuration property and
                     set it to <uicontrol>SSL</uicontrol>.</li>
                 <li id="step-KafkaSSLprops">Then, add the following SSL Kafka configuration

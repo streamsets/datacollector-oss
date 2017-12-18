@@ -18,8 +18,8 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d3x_v5k_55">
- <title>Enabling SSL and Kerberos</title>
- <conbody>
+    <title>Enabling SSL and Kerberos</title>
+    <conbody>
         <draft-comment author="Loretta">All the P's are used by Kafka Producer and P2 on are
             conrefed by Kafka Consumer, SDC RPC to Kafka, and UDP to Kafka. </draft-comment>
         <p id="P1"><indexterm>Kafka Producer destination<indexterm>enabling SSL/TLS and Kerberos
@@ -27,8 +27,8 @@
                     authentication<indexterm>using with Kafka Producer</indexterm></indexterm>You
             can enable Kafka Producer to use SSL/TLS and Kerberos to connect to <ph
                 conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.</p>
-        <p id="P2"><ph id="SSLTLS_Kerb-phOverview">To use SSL/TLS and Kerberos, combine the
-            required steps to enable each and set the security.protocol property as follows:</ph>
+        <p id="P2"><ph id="SSLTLS_Kerb-phOverview">To use SSL/TLS and Kerberos, combine the required
+                steps to enable each and set the security.protocol property as follows:</ph>
             <ol id="KAFKA-SSLandKerberos">
                 <li id="SSLTLS_Kerb_ConfigKafka">Make sure Kafka is configured to use SSL/TLS and
                     Kerberos (SASL) as described in the following Kafka documentation:<ul
@@ -41,12 +41,12 @@
                 <li conref="Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBsdcprops"/>
                 <li>On the <wintitle>General</wintitle> tab of the stage, set the Stage Library
                     property to Apache Kafka 0.9.0.0 or a later version.</li>
-                <li id="SSLTLS_Kerb_KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="SSLTLS_Kerb_KafkaTab">On the <wintitle>Connection</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> property and set it to
                         <uicontrol>SASL_SSL</uicontrol>.</li>
                 <li
                     conref="Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBservicename"/>
                 <li conref="Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/step-KafkaSSLprops"/>
             </ol></p>
- </conbody>
+    </conbody>
 </concept>

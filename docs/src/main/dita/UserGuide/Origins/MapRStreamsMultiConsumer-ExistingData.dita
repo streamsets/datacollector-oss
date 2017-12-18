@@ -18,17 +18,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hdc_fvn_sx">
- <title>Processing All Unread Data</title>
- <conbody>
-  <p><indexterm>MapR Multitopic Streams Consumer origin<indexterm>processing all unread
+    <title>Processing All Unread Data</title>
+    <conbody>
+        <p><indexterm>MapR Multitopic Streams Consumer origin<indexterm>processing all unread
                     data</indexterm></indexterm>You can configure the MapR Multitopic Streams
             Consumer origin to read all unread data in a topic. By default, the MapR Multitopic
             Streams Consumer origin reads only incoming data. </p>
         <p>To read all unread data in the topic, add the auto.offset.reset MapR Streams
             configuration property to the origin:<ol id="ol_n4r_rvn_sx">
-                <li>On the <wintitle>MapR Streams</wintitle> tab, click the
-                        <uicontrol>Add</uicontrol> icon to add a new MapR Streams configuration
-                        property.<p>You can use <xref
+                <li>On the <wintitle>Connection</wintitle> tab, click the <uicontrol>Add</uicontrol>
+                    icon to add a new MapR Streams configuration property.<p>You can use <xref
                             href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
                             >simple or bulk edit mode</xref> to add configuration
                     properties.</p></li>
@@ -39,5 +38,5 @@
         <p>For more information about auto.offset.reset, see the MapR Streams documentation. For
             more information about adding custom Kafka configuration properties, see <xref
                 href="MapRStreamsMultiConsumer-AdditionalProp.dita#concept_d5f_n2g_vq"/>.</p>
- </conbody>
+    </conbody>
 </concept>

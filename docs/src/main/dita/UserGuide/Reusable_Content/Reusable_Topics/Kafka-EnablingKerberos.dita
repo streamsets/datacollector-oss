@@ -18,14 +18,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_axt_5gf_55">
- <title>Enabling Kerberos (SASL)</title>
- <conbody>
+    <title>Enabling Kerberos (SASL)</title>
+    <conbody>
         <draft-comment author="Loretta">All the P's are used by Kafka Producer and P2 on are
             conrefed by Kafka Consumer, SDC RPC to Kafka, and UDP to Kafka.
                 <uicontrol>step-KafkaKerberos</uicontrol> and
                 <uicontrol>step-KafkaKERBservicename</uicontrol> are used in
             Kafka-EnablingSSLandKerb.dita.</draft-comment>
-  <p id="P1"><indexterm>Kafka Producer origin<indexterm>enabling Kerberos
+        <p id="P1"><indexterm>Kafka Producer origin<indexterm>enabling Kerberos
                 security</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using
                     with Kafka Producer</indexterm></indexterm>When you use Kerberos authentication,
                 <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
@@ -49,7 +49,7 @@
                     </ul></li>
                 <li>On the <wintitle>General</wintitle> tab of the stage, set the Stage Library
                     property to Apache Kafka 0.9.0.0 or a later version.</li>
-                <li id="Kerb-KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="Kerb-KafkaTab">On the <wintitle>Connection</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> Kafka configuration property, and
                     set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
                 <li id="step-KafkaKERBservicename">Then, add the
@@ -57,9 +57,8 @@
                     and set it to the Kerberos principal name that Kafka runs as. </li>
             </ol>
         </p>
-    
         <p id="P3-example">For example, the following Kafka properties enable connecting to Kafka
             0.0.9.0 with Kerberos:</p>
         <p id="P4-image"><image href="../../Graphics/Kafka-Kerberos.png" id="p" scale="70"/></p>
- </conbody>
+    </conbody>
 </concept>
