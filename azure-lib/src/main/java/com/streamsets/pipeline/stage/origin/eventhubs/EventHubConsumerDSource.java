@@ -28,7 +28,7 @@ import com.streamsets.pipeline.lib.eventhubs.Groups;
 
 @StageDef(
     version = 1,
-    label = "Azure Event Hub Consumer",
+    label = "Azure IoT/Event Hub Consumer",
     description = "Reads data from Azure Event Hub",
     icon = "event-hubs-multithreaded.png",
     execution = {ExecutionMode.STANDALONE},
