@@ -36,7 +36,7 @@ public class ClasspathValidatorTest {
 
     assertTrue(result.isValid());
     assertEquals(0, result.getUnparseablePaths().size());
-    assertEquals(0, result.getVersionCollisons().size());
+    assertEquals(0, result.getVersionCollisions().size());
   }
 
   @Test
@@ -48,7 +48,7 @@ public class ClasspathValidatorTest {
 
     assertTrue(result.isValid());
     assertEquals(0, result.getUnparseablePaths().size());
-    assertEquals(0, result.getVersionCollisons().size());
+    assertEquals(0, result.getVersionCollisions().size());
   }
 
   @Test
@@ -59,7 +59,7 @@ public class ClasspathValidatorTest {
 
     assertFalse(result.isValid());
     assertEquals(1, result.getUnparseablePaths().size());
-    assertEquals(0, result.getVersionCollisons().size());
+    assertEquals(0, result.getVersionCollisions().size());
 
     assertTrue(result.getUnparseablePaths().contains("file:/obviously-not-a-jar-name.txt"));
   }
@@ -73,10 +73,10 @@ public class ClasspathValidatorTest {
 
     assertFalse(result.isValid());
     assertEquals(0, result.getUnparseablePaths().size());
-    assertEquals(1, result.getVersionCollisons().size());
+    assertEquals(1, result.getVersionCollisions().size());
 
-    assertTrue(result.getVersionCollisons().containsKey("test"));
-    Map<String, List<Dependency>> collisions = result.getVersionCollisons().get("test");
+    assertTrue(result.getVersionCollisions().containsKey("test"));
+    Map<String, List<Dependency>> collisions = result.getVersionCollisions().get("test");
     assertEquals(2, collisions.size());
     assertTrue(collisions.containsKey("0.1"));
     assertTrue(collisions.containsKey("0.2"));

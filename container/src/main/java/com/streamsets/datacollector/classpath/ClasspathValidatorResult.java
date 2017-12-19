@@ -55,7 +55,7 @@ public class ClasspathValidatorResult {
    * The structure is Dependency name -> Version -> Dependency structure (paths and such).
    */
   final private Map<String, Map<String, List<Dependency>>> versionCollisions;
-  public Map<String, Map<String, List<Dependency>>> getVersionCollisons() {
+  public Map<String, Map<String, List<Dependency>>> getVersionCollisions() {
     return versionCollisions;
   }
 
