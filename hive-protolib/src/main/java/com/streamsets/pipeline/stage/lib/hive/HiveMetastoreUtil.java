@@ -120,8 +120,8 @@ public final class HiveMetastoreUtil {
   public static final String PARQUET_SERDE = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe";
 
 
-  private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+  private static final ThreadLocal<SimpleDateFormat> datetimeFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+  private static final ThreadLocal<SimpleDateFormat> timeFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("HH:mm:ss"));
 
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
@@ -662,10 +662,10 @@ public final class HiveMetastoreUtil {
           currField = Field.create(currField.getValueAsString());
           break;
         case DATETIME:
-          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : datetimeFormat.format(currField.getValueAsDate()));
+          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : datetimeFormat.get().format(currField.getValueAsDate()));
           break;
         case TIME:
-          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : timeFormat.format(currField.getValueAsTime()));
+          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : timeFormat.get().format(currField.getValueAsTime()));
           break;
         default:
           break;
