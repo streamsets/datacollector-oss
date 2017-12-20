@@ -21,11 +21,14 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TableJdbcSourceUpgrader implements StageUpgrader{
+  private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSourceUpgrader.class);
 
   @Override
   public List<Config> upgrade(
@@ -134,7 +137,31 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
           configs
       ));
     }
-    final int numThreads = (int) numThreadsConfig.getValue();
+
+    int numThreads;
+    final Object numThreadsObj = numThreadsConfig.getValue();
+    if (numThreadsObj instanceof String) {
+      // num threads is an EL expression, which we can't evaluate
+      // the fact that the user entered an expression here (instead of going with the default value of "1") strongly
+      // suggests there will be multiple, so go with 2
+      numThreads = 2;
+      LOG.info(
+          "Could not evaluate expression {} for numThreads; for the purpose of upgrading config to queriesPerSecond," +
+              " using a default value of {}",
+          numThreadsObj,
+          numThreads
+      );
+    } else if (numThreadsObj instanceof Integer) {
+      numThreads = (int) numThreadsObj;
+    } else {
+      numThreads = 1;
+      LOG.error(
+          "Unrecognized type - {} - for numThreads value; for the purpose of upgrading config to queriesPerSecond," +
+              " using a default value of {}",
+          numThreadsObj,
+          numThreads
+      );
+    }
 
     CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
   }
