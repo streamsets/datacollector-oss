@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Publishing Metadata to Cloudera Navigator (Beta)" /><meta name="abstract" content="If you use Cloudera Manager, you can configure Data Collector to publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera Navigator to explore the pipeline metadata, including viewing lineage diagrams of the metadata." /><meta name="description" content="If you use Cloudera Manager, you can configure Data Collector to publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera Navigator to explore the pipeline metadata, including viewing lineage diagrams of the metadata." /><meta name="DC.Relation" scheme="URI" content="../Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_q4y_4mt_p1b" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Publishing Metadata to Cloudera Navigator (Beta)</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Publishing Metadata to Cloudera Navigator" /><meta name="abstract" content="If you use Cloudera Manager, you can configure Data Collector to publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera Navigator to explore the pipeline metadata, including viewing lineage diagrams of the metadata." /><meta name="description" content="If you use Cloudera Manager, you can configure Data Collector to publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera Navigator to explore the pipeline metadata, including viewing lineage diagrams of the metadata." /><meta name="DC.Relation" scheme="URI" content="../Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_q4y_4mt_p1b" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Publishing Metadata to Cloudera Navigator</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -28,23 +28,20 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Configuration/Config_title.html" title="Configuration">Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_q4y_4mt_p1b">
- <h1 class="title topictitle1">Publishing Metadata to Cloudera Navigator (Beta)</h1>
+    <h1 class="title topictitle1">Publishing Metadata to Cloudera Navigator</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">If you use Cloudera Manager, you can configure <span class="ph">Data
+    
+    <div class="body conbody"><p class="shortdesc">If you use Cloudera Manager, you can configure <span class="ph">Data
                   Collector</span> to
         publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera
         Navigator to explore the pipeline metadata, including viewing lineage diagrams of the
-        metadata.</p>
+        metadata. </p>
 
-  
-            <div class="note note"><span class="notetitle">Note:</span> Feel free to try out this feature in a development or test <span class="ph">Data
-                  Collector</span>,
-            and send us your feedback. We are continuing to refine metadata publishing as we gather
-            input from the community and work with Cloudera.</div>
+        <p class="p">Cloudera Navigator integration is
+            available with a paid subscription. For details, <a class="xref" href="https://streamsets.com/contact-us/" target="_blank">contact
+                us</a>.</p>
 
-                    <p class="p">At this time, only some pipeline
-            stages support publishing metadata. <span class="ph">Data
+        <p class="p">At this time, only some pipeline stages support publishing metadata. <span class="ph">Data
                   Collector</span>
             publishes metadata for all supported stages in all running pipelines. If you have
             multiple <span class="ph">Data
@@ -52,22 +49,22 @@
             that run pipelines, configure each <span class="ph">Data
                   Collector</span> to
             publish metadata to the same Cloudera Navigator instance.</p>
-<p class="p"><span class="ph">Data
-                  Collector</span> uses
-            separate threads to publish metadata - so enabling metadata publishing has no effect on
-            the running pipeline threads. Every pipeline publishes metadata when the pipeline starts
-            and when it stops. Some origins and destinations publish metadata only once, typically
-            when they initialize. However, some stages publish metadata each time they create a new
-            object - for example, when the Hadoop FS or Local FS destination creates a new output
-            file. </p>
+
+        <p class="p"><span class="ph">Data
+                  Collector</span>
+            uses separate threads to publish metadata - so enabling metadata publishing has no
+            effect on the running pipeline threads. Every pipeline publishes metadata when the
+            pipeline starts and when it stops. Some origins and destinations publish metadata only
+            once, typically when they initialize. However, some stages publish metadata each time
+            they create a new object - for example, when the Hadoop FS or Local FS destination
+            creates a new output file. </p>
 
         <p class="p">When publishing metadata, <span class="ph">Data
                   Collector</span>
             makes an HTTPS request to Cloudera Navigator, using basic authentication. The data is
             sent in JSON format.</p>
 
-       
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_iz5_ptt_p1b">
@@ -247,9 +244,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="46.666666666666664%" id="d54093e337">Property</th>
+                                    <th class="entry" valign="top" width="46.666666666666664%" id="d54093e339">Property</th>
 
-                                    <th class="entry" valign="top" width="53.333333333333336%" id="d54093e340">Description</th>
+                                    <th class="entry" valign="top" width="53.333333333333336%" id="d54093e342">Description</th>
 
                                 </tr>
 
@@ -257,18 +254,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.application_url</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.application_url</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">URL to <span class="ph">Data
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">URL to <span class="ph">Data
                   Collector</span>. For
        example:<pre class="pre codeblock">http://&lt;hostname&gt;:18630/</pre>
 </td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.navigator_url</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.navigator_url</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">URL to the Cloudera Navigator UI. For example:<div class="p">
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">URL to the Cloudera Navigator UI. For example:<div class="p">
         <pre class="pre codeblock">http://&lt;Navigator Metadata Server host&gt;:&lt;port number&gt;/</pre>
 
        </div>
@@ -280,24 +277,24 @@
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.namespace</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.namespace</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">Namespace that Cloudera Navigator uses to uniquely identify <span class="ph">Data
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">Namespace that Cloudera Navigator uses to uniquely identify <span class="ph">Data
                   Collector</span> properties.<p class="p">Default is
          <samp class="ph codeph">sdc</samp>.</p>
 </td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.username</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.username</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">User name to connect to Cloudera Navigator. </td>
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">User name to connect to Cloudera Navigator. </td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.password</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.password</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">Password for the Cloudera Navigator account.<div class="p">Enter one of the following:<ul class="ul" id="task_e12_xyt_p1b__d4608e4639">
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">Password for the Cloudera Navigator account.<div class="p">Enter one of the following:<ul class="ul" id="task_e12_xyt_p1b__d4608e4639">
          <li class="li">Password value.</li>
 
          <li class="li">File that contains the password value. For increased security, store the password in a
@@ -314,12 +311,12 @@
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e337 ">lineage.publisher.navigator.config.autocommit</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d54093e339 ">lineage.publisher.navigator.config.autocommit</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e340 ">Enables Cloudera Navigator to immediately process the published metadata.<p class="p">Setting to
-        true can use a large number of resources on the Cloudera Navigator machine. Set to true only
-        in a development or test environment.</p>
-<p class="p">Default is false. </p>
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d54093e342 ">Enables Cloudera Navigator to immediately process the published metadata.<p class="p">Setting to
+        true can use a large number of resources on the Cloudera Navigator machine. </p>
+<p class="p">Default
+        is false. </p>
 </td>
 
      </tr>

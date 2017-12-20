@@ -16,40 +16,38 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_q4y_4mt_p1b">
- <title>Publishing Metadata to Cloudera Navigator (Beta)</title>
- <shortdesc>If you use Cloudera Manager, you can configure <ph
+    <title>Publishing Metadata to Cloudera Navigator</title>
+    <shortdesc>If you use Cloudera Manager, you can configure <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
         publish metadata about running pipelines to Cloudera Navigator. You can then use Cloudera
         Navigator to explore the pipeline metadata, including viewing lineage diagrams of the
-        metadata.</shortdesc>
- <conbody>
-  
-            <note>Feel free to try out this feature in a development or test <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            and send us your feedback. We are continuing to refine metadata publishing as we gather
-            input from the community and work with Cloudera.</note>
-                    <p><indexterm>Cloudera Navigator<indexterm>publishing
-                metadata</indexterm></indexterm><indexterm>pipelines<indexterm>publishing
+        metadata. </shortdesc>
+    <conbody>
+        <p><indexterm>Cloudera Navigator<indexterm>publishing
+                    metadata</indexterm></indexterm><indexterm>pipelines<indexterm>publishing
                     metadata</indexterm></indexterm><indexterm>metadata<indexterm>publishing to
-                    Cloudera Navigator</indexterm></indexterm>At this time, only some pipeline
-            stages support publishing metadata. <ph
+                    Cloudera Navigator</indexterm></indexterm>Cloudera Navigator integration is
+            available with a paid subscription. For details, <xref
+                href="https://streamsets.com/contact-us/" format="html" scope="external">contact
+                us</xref>.</p>
+        <p>At this time, only some pipeline stages support publishing metadata. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             publishes metadata for all supported stages in all running pipelines. If you have
             multiple <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
             that run pipelines, configure each <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            publish metadata to the same Cloudera Navigator instance.</p><p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-            separate threads to publish metadata - so enabling metadata publishing has no effect on
-            the running pipeline threads. Every pipeline publishes metadata when the pipeline starts
-            and when it stops. Some origins and destinations publish metadata only once, typically
-            when they initialize. However, some stages publish metadata each time they create a new
-            object - for example, when the Hadoop FS or Local FS destination creates a new output
-            file. </p>
+            publish metadata to the same Cloudera Navigator instance.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses separate threads to publish metadata - so enabling metadata publishing has no
+            effect on the running pipeline threads. Every pipeline publishes metadata when the
+            pipeline starts and when it stops. Some origins and destinations publish metadata only
+            once, typically when they initialize. However, some stages publish metadata each time
+            they create a new object - for example, when the Hadoop FS or Local FS destination
+            creates a new output file. </p>
         <p>When publishing metadata, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             makes an HTTPS request to Cloudera Navigator, using basic authentication. The data is
             sent in JSON format.</p>
-       
- </conbody>
+    </conbody>
 </concept>
