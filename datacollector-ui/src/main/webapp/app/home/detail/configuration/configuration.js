@@ -796,7 +796,7 @@ angular
         $scope.dFieldPaths = [];
         $scope.fieldPathsType = [];
 
-        if ($scope.detailPaneConfigDefn.producingEvents) {
+        if ($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.producingEvents) {
           $scope.producingEventsConfig.value =
             ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length > 0);
         }
