@@ -174,24 +174,35 @@ public class RandomDataGeneratorSource extends BasePushSource {
     ExecutorService executor = Executors.newFixedThreadPool(numThreads);
     List<Future<Runnable>> futures = new ArrayList<>(numThreads);
 
-    // Run all the threads
-    for(int i = 0; i < numThreads; i++) {
-      Future future = executor.submit(new GeneratorRunnable(i));
-      futures.add(future);
-    }
+    StageException propagateException = null;
 
-    // Wait for proper execution finish
-    for(Future<Runnable> f : futures) {
-      try {
-        f.get();
-      } catch (InterruptedException|ExecutionException e) {
-        LOG.error("Interrupted data generation thread", e);
+    try {
+      // Run all the threads
+      for (int i = 0; i < numThreads; i++) {
+        Future future = executor.submit(new GeneratorRunnable(i));
+        futures.add(future);
       }
+
+      // Wait for proper execution finish
+      for (Future<Runnable> f : futures) {
+        try {
+          f.get();
+        } catch (InterruptedException | ExecutionException e) {
+          LOG.error("Interrupted data generation thread", e);
+          if(propagateException == null) {
+            propagateException = new StageException(Errors.DEV_001, e.toString(), e);
+          }
+        }
+      }
+    } finally {
+      // Terminate executor that will also clear up threads that were created
+      LOG.info("Shutting down executor service");
+      executor.shutdownNow();
     }
 
-    // Terminate executor that will also clear up threads that were created
-    LOG.info("Shutting down executor service");
-    executor.shutdownNow();
+    if(propagateException != null) {
+      throw propagateException;
+    }
   }
 
   public class GeneratorRunnable implements Runnable {
