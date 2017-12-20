@@ -337,7 +337,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
   }
 
   public ZonedDateTime getRandomZonedDateTime() {
-    String zoneId = tzValues.get(randBetween(0, tzValues.size()));
+    String zoneId = tzValues.get(randBetween(0, tzValues.size() - 1));
     return ZonedDateTime.of(
         randBetween(1990, 2020),
         randBetween(1, 12),
