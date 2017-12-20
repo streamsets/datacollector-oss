@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.util;
 
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.data.DataFactory;
@@ -32,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -211,13 +211,13 @@ public class AvroSchemaHelper {
    */
   public Optional<Integer> detectSchemaId(byte[] data) {
     if (data.length < 5) {
-      return Optional.absent();
+      return Optional.empty();
     }
 
     ByteBuffer wrapped = ByteBuffer.wrap(data);
     // 5 == MAGIC_BYTE + ID_SIZE
     if (wrapped.get() != MAGIC_BYTE) {
-      return Optional.absent();
+      return Optional.empty();
     }
 
     return Optional.of(wrapped.getInt());
