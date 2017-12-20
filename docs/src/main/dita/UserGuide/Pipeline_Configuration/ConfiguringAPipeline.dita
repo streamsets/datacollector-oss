@@ -242,6 +242,12 @@
                                                 href="../Multithreaded_Pipelines/Tuning.dita#concept_fmg_pjd_mz"
                                             />.</p><p>Default is 0. </p></entry>
                                 </row>
+                                <row>
+                                    <entry>Create Failure Snapshot</entry>
+                                    <entry>Automatically creates a snapshot if the pipeline fails
+                                        because of data-related errors. Can be used to troubleshoot
+                                        the pipeline. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

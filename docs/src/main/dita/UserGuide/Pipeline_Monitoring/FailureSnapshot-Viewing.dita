@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kzw_zdw_2cb">
+    <title>Viewing a Failure Snapshot</title>
+    <shortdesc>After a standalone pipeline generates a failure snapshot, you can review the snapshot
+        to determine the cause of the error. </shortdesc>
+    <conbody>
+        <p><indexterm>failure snapshot<indexterm>viewing</indexterm></indexterm>To view a failure
+            snapshot, in the stopped pipeline, click the More icon, then select Snapshot. In the
+            Snapshots dialog box, find the failure snapshot and click View. </p>
+        <p>In the Snapshots dialog box, failure snapshots use the following naming convention:
+                <codeph>Failure at &lt;time of failure></codeph>. </p>
+        <p>When the failure snapshot displays, you can click through the stages. Stages that
+            encountered no errors will typically not display any data. The stage that contains data
+            should be the stage that encountered the errors. </p>
+        <p>For example, say a pipeline stops with the following error: </p>
+        <p>
+            <codeblock>com.streamsets.pipeline.api.StageException: SCRIPTING_06 - Script error while processing batch: 
+javax.script.ScriptException: &lt;error message></codeblock>
+        </p>
+        <p>You can click through the pipeline starting from the origin, looking for the problematic
+            stage and finding no data. But from the error message, you can tell that there was a
+            problem with a scripting processor. So you can look immediately at the scripting
+            processor. There, you find that the offending data enters the processor but does not
+            exit:</p>
+        <p><image href="../Graphics/FailureSnapshot.png" id="image_cyl_ktw_2cb" scale="60"/></p>
+        <p>You can then examine the data that caused the errors and edit the pipeline as needed.</p>
+    </conbody>
+</concept>

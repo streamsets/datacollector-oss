@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_yzh_fyw_2cb">
+    <title>Deleting a Snapshot</title>
+    <taskbody>
+        <context><indexterm>snapshots<indexterm>deleting</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            retains all snapshots for a pipeline by default. You can delete snapshots when they are
+            no longer needed. For example, after taking a snapshot on a production <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            you might download the snapshot for review on a development <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            then delete the snapshot from the production machine.<note>When you delete a snapshot,
+                the information is irrevocably removed. You cannot retrieve a deleted
+                snapshot.</note></context>
+        <steps id="steps_ydw_nyw_2cb">
+            <step>
+                <cmd>From the pipeline canvas of a running pipeline, click the
+                        <uicontrol>Snapshots</uicontrol> icon. Or, from the canvas of a stopped
+                    pipeline, click the <uicontrol>More icon</uicontrol> and then click
+                        <uicontrol>Snapshots</uicontrol>.</cmd>
+                <info>The Snapshots window displays all available snapshots for the pipeline.</info>
+            </step>
+            <step>
+                <cmd>In the <wintitle>Snapshots</wintitle> window, click
+                        <uicontrol>Delete</uicontrol> for the snapshot that you want to
+                    delete.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

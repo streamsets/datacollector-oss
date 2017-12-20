@@ -488,10 +488,13 @@
                             <li>Pipeline error records - You can now write error records to Google
                                 Pub/Sub, Google Cloud Storage, or an MQTT broker.</li>
                             <li>Snapshot enhancements:<ul id="ul_cv5_53l_wbb">
-                                    <li>You can now configure the pipeline to take a snapshot of
-                                        data if the pipeline fails due to a data-related
-                                        exception.</li>
-                                    <li>You can now download snapshots through the UI and the REST
+                                    <li>Standalone pipelines can now automatically take a <xref
+                                            href="../Pipeline_Monitoring/FailureSnapshot.dita#concept_vkf_xjf_ybb"
+                                            >failure snapshot</xref> when the pipeline fails due to
+                                        a data-related exception. </li>
+                                    <li>You can now <xref
+                                            href="../Pipeline_Monitoring/Snapshots-Downloading.dita#task_ut4_gvw_2cb"
+                                            >download snapshots through the UI</xref> and the REST
                                         API.</li>
                                 </ul></li>
                             <li>Time zone enhancement - Time zones have been organized and updated
