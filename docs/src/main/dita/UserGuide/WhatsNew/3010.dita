@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lgz_yp4_gcb">
+    <title>What's New in 3.0.1.0</title>
+    <conbody>
+        <p><indexterm>what's new<indexterm>version 3.0.1.0</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version 3.0.1.0 includes the following enhancements:<ul id="ul_fjz_1q4_gcb">
+                <li>SQL Server CDC origin enhancement - The SQL Server CDC origin now includes
+                    information from the SQL Server CDC __$command_id column in a record header
+                    attribute named jdbc. __$command_id.</li>
+                <li>HTTP Server origin enhancement - The HTTP Server origin now includes path and
+                    queryString record header attributes, as well as any other HTTP header
+                    attributes included in the request. </li>
+                <li>MongoDB origins enhancement - Both the MongoDB origin and the MongoDB Oplog
+                    origin now support the BSON data type for binary data. </li>
+            </ul></p>
+    </conbody>
+</concept>
