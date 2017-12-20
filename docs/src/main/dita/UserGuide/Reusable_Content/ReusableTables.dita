@@ -2395,8 +2395,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
      <row id="row_NavAutoCommit">
       <entry>lineage.publisher.navigator.config.autocommit</entry>
       <entry>Enables Cloudera Navigator to immediately process the published metadata.<p>Setting to
-        true can use a large number of resources on the Cloudera Navigator machine. Set to true only
-        in a development or test environment.</p><p>Default is false. </p></entry>
+        true can use a large number of resources on the Cloudera Navigator machine. </p><p>Default
+        is false. </p></entry>
      </row>
     </tbody>
    </tgroup>

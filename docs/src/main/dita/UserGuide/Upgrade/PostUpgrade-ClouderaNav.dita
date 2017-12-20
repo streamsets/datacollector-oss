@@ -14,21 +14,25 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wnp_scs_wbb">
- <title>Disable Cloudera Navigator Integration</title>
- <conbody>
-  <p>With version 3.0.0.0, the beta version of Cloudera Navigator integration is no longer available
-            with Data Collector. </p>
-        <p>Cloudera Navigator integration is now released as part of the StreamSets Commercial
-            Subscription. For information about the StreamSets Commercial Subscription, <xref
+    <title>Disable Cloudera Navigator Integration</title>
+    <conbody>
+        <p>With version 3.0.0.0, the beta version of Cloudera Navigator integration is no longer
+            available with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            Cloudera Navigator integration now requires a paid subscription. For more information
+            about purchasing Cloudera Navigator integration, <xref
                 href="https://streamsets.com/contact-us/" format="html" scope="external">contact
                 us</xref>.</p>
-        <p>When upgrading from a previous version with Cloudera Navigator integration enabled, do
-            not include the Cloudera Navigator properties when you configure the 3.0.0.0 <ph
+        <p>When upgrading from a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version with Cloudera Navigator integration enabled to version 3.0.0.0 without a paid
+            subscription, perform the following post-upgrade task:</p>
+        <p>Do not include the Cloudera Navigator properties when you configure the 3.0.0.0 <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, sdc.properties. The properties to omit are: <ul id="ul_lrx_xcs_wbb">
                 <li>lineage.publishers</li>
                 <li>lineage.publisher.navigator.def</li>
                 <li>All other properties with the lineage.publisher.navigator prefix</li>
             </ul></p>
- </conbody>
+    </conbody>
 </concept>
