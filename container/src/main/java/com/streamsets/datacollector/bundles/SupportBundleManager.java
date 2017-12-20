@@ -44,6 +44,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.cloudera.log4j.redactor.StringRedactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -593,28 +594,39 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
   private static class JsonGeneratorOutputStream extends OutputStream {
 
+    private final ArrayList<Byte> bytes;
     private final ZipOutputStream zipOutputStream;
     private final StringRedactor redactor;
 
     public JsonGeneratorOutputStream(ZipOutputStream stream, StringRedactor redactor) {
+      this.bytes = new ArrayList<>();
       this.zipOutputStream = stream;
       this.redactor = redactor;
     }
 
     @Override
     public void write(int b) throws IOException {
-      throw new IOException("Writing individual bytes is not supported.");
+      // Add the byte to the line
+      bytes.add((byte)b);
+
+      // If it's final line, write the data out
+      if(b == '\n') {
+        writeOut();
+      }
     }
 
-    @Override
-    public void write(byte b[], int off, int len) throws IOException {
-      String string = new String(b, off, len, Charset.defaultCharset());
+    private void writeOut() throws IOException {
+      byte[] byteLine = ArrayUtils.toPrimitive(bytes.toArray(new Byte[bytes.size()]));
+      String string = new String(byteLine, Charset.defaultCharset());
       zipOutputStream.write(redactor.redact(string).getBytes());
+
+      bytes.clear();
     }
 
     @Override
     public void close() throws IOException {
-      // Nothing, we don't want the underlying stream to be closed
+      // Write down remaining bytes, but do not close the underlying zip stream
+      writeOut();
     }
   }
 }
