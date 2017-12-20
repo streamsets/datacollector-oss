@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.lib.util;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.ID_SIZE;
 import static org.junit.Assert.assertEquals;
@@ -232,7 +232,7 @@ public class AvroSchemaHelperIT {
     out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
 
     AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
-    Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
+    java.util.Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
     assertTrue(schemaId.isPresent());
     assertEquals(12345, (int) schemaId.get());
   }
@@ -244,7 +244,7 @@ public class AvroSchemaHelperIT {
     out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
 
     AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
-    Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
+    java.util.Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
     assertFalse(schemaId.isPresent());
   }
 
@@ -254,8 +254,8 @@ public class AvroSchemaHelperIT {
     out.write(AvroSchemaHelper.MAGIC_BYTE);
 
     AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
-    Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
-    assertEquals(Optional.absent(), schemaId);
+    java.util.Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
+    assertEquals(Optional.empty(), schemaId);
   }
 
   private String getBody(String path) throws IOException {

@@ -15,7 +15,9 @@
  */
 package com.streamsets.pipeline.lib.parser.avro;
 
-import com.google.common.base.Optional;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
@@ -36,7 +38,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.ID_SIZE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.MAGIC_BYTE_SIZE;
@@ -74,7 +78,7 @@ public class AvroDataParserFactory extends DataParserFactory {
   private final OriginAvroSchemaSource schemaSource;
   private final AvroSchemaHelper schemaHelper;
   private Schema schema;
-  private int schemaId = -1;
+  LoadingCache<Integer, Schema> schemas;
 
   public AvroDataParserFactory(Settings settings) throws SchemaRegistryException {
     super(settings);
@@ -84,6 +88,15 @@ public class AvroDataParserFactory extends DataParserFactory {
 
     int schemaId = settings.getConfig(SCHEMA_ID_KEY);
     final String subject = settings.getConfig(SUBJECT_KEY);
+
+    schemas = CacheBuilder.newBuilder()
+      .maximumSize(100)
+      .build(new CacheLoader<Integer, Schema>() {
+        @Override
+        public Schema load(Integer schemaId) throws Exception {
+          return schemaHelper.loadFromRegistry(schemaId);
+        }
+      });
 
     switch (schemaSource) {
       // Load from the registry now if it was specified automatically,
@@ -132,20 +145,19 @@ public class AvroDataParserFactory extends DataParserFactory {
     if (schemaSource == OriginAvroSchemaSource.REGISTRY) {
       Optional<Integer> detectedSchemaId = schemaHelper.detectSchemaId(data);
       byte[] remaining;
+      Schema recordSchema = schema;
       try {
         if (detectedSchemaId.isPresent()) {
-          // Load the schema if it doesn't match the schema ID we have
-          if (detectedSchemaId.get() != schemaId) { // NOSONAR
-            schemaId = detectedSchemaId.get();
-            schema = schemaHelper.loadFromRegistry(schemaId);
-          }
+          // Load the schema for this id from cache
+          recordSchema = schemas.get(detectedSchemaId.get());
+
           // Strip the embedded ID
           remaining = Arrays.copyOfRange(data, MAGIC_BYTE_SIZE + ID_SIZE, data.length);
         } else {
           remaining = data;
         }
-        return new AvroMessageParser(getSettings().getContext(), schema, remaining, id, schemaSource);
-      } catch (SchemaRegistryException | IOException e) {
+        return new AvroMessageParser(getSettings().getContext(), recordSchema, remaining, id, schemaSource);
+      } catch (IOException | ExecutionException e) {
         throw new DataParserException(Errors.DATA_PARSER_03, e.toString(), e);
       }
     }
