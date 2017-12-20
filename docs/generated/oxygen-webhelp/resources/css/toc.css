@@ -1,9 +1,11 @@
 /*
 
 Oxygen WebHelp Plugin
-Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
+
+@import "fonts.css?buildId=@@WEBHELP_BUILD_NUMBER@@";
 
 /* Start RTL */
 html[dir="rtl"] .topic, html[dir="rtl"] .hasSubMenuOpened, html[dir="rtl"] .hasSubMenuClosed{
@@ -272,10 +274,7 @@ li{
 }
 
 #rightDiv{
-    clear: both;
-    position: relative;
     margin-top: 5px;
-    width: 98%;
     text-align: right;
 }
 
@@ -376,4 +375,93 @@ a.foundResult:hover{
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+/*
+ * Missing words.
+ */
+.searchresult .wh_missing_words {
+    color:#888888;
+}
+
+.searchresult .wh_missing_word {
+    text-decoration:line-through;
+}
+
+.searchresult .wh_missing_words {
+    margin-left: 0;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 3px;
+}
+
+/**
+ * Similar pages.
+ */
+.showSimilarPages {
+    display: inline-block;
+    margin: .3em 0 0 0;
+    cursor: pointer;
+    color:#346ec5;
+}
+
+.showSimilarPages:before{
+    font-family: 'Glyphicons Halflings';
+    content: "\e250";
+    display: inline-block;
+    font-size: .7em;
+    padding-right: .3em
+}
+.showSimilarPages.expanded:before{
+    content: "\e252";
+}
+.similarResult {
+    display:none;
+    margin: 0 0 0 1.5em;
+}
+
+/**
+* Search result item
+*/
+.searchItemAdditionalData {
+    display:flex;
+    justify-content:center;
+}
+
+#searchResults .missingAndSimilar {
+    flex-grow: 2;
+}
+
+/* Hide relative path for WH Classic */
+#searchResults .relativePath {
+    display:none;
+}
+
+/* Short description highlight. */
+#searchResults .search-shortdescription-highlight {
+    font-weight: bold;
+}
+
+#rightDiv {
+    align-self:flex-start;
+}
+
+/** 
+ * The list that displays search suggestions.
+ */
+.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+
+.search-autocomplete-proposal {
+    font-weight: bold;    
+    color: #2a599e;    
+}
+
+/* Search expression */
+.wh_search_expression {
+    font-weight: bold;
 }

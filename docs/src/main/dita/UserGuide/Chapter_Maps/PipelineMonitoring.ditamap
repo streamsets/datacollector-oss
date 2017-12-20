@@ -25,7 +25,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita" >
+  <topicref href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -35,26 +35,31 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/MonitoringErrors.dita">  
+  <topicref href="../Pipeline_Monitoring/MonitoringErrors.dita">
    <topicmeta>
-   <shortdesc/>
-  </topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Monitoring/Stage-RelatedErrors.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/Snapshots.dita"> 
+  <topicref href="../Pipeline_Monitoring/Snapshots.dita">
    <topicmeta>
-   <shortdesc/>
-  </topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Monitoring/FailureSnapshot.dita">
+    <topicref href="../Pipeline_Monitoring/FailureSnapshot-Viewing.dita"/>
+   </topicref>
    <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita">
     <topicmeta>
      <shortdesc/>
     </topicmeta>
    </topicref>
+   <topicref href="../Pipeline_Monitoring/Snapshots-Downloading.dita"/>
+   <topicref href="../Pipeline_Monitoring/Snapshots-Deleting.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita">   
+  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita">
    <topicmeta>
-   <shortdesc/>
-  </topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Monitoring/ViewingARunSummary.dita"/>
   </topicref>
  </topicref>
