@@ -32,6 +32,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
+    producesEvents = true,
     upgrader = RemoteDownloadSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
 )

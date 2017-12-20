@@ -1488,6 +1488,116 @@ public class TestRemoteDownloadSource {
 
 
   @Test
+  public void testEvents() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testEvents";
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    Path filePath1 = Paths.get(path + "/testEvents1.txt");
+    Path filePath2 = Paths.get(path + "/testEvents2.txt");
+
+    byte[] sampleText = "This is sample text".getBytes();
+
+    java.nio.file.Files.write(filePath1, sampleText, StandardOpenOption.CREATE_NEW);
+    java.nio.file.Files.write(filePath2, sampleText, StandardOpenOption.CREATE_NEW);
+
+    setupSSHD(path, true);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.TEXT,
+            null,
+            false,
+            "*"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce("", 10);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      List<Record> eventRecords = runner.getEventRecords();
+      Record newFileEvent = eventRecords.get(0);
+      Record finishedFileEvent = eventRecords.get(1);
+
+      Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("/" + filePath1.getFileName().toString(), newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals("/" + filePath1.getFileName().toString(), finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
+
+      runner.getEventRecords().clear();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      eventRecords = runner.getEventRecords();
+      newFileEvent = eventRecords.get(0);
+      finishedFileEvent = eventRecords.get(1);
+
+      Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("/" + filePath2.getFileName().toString(), newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals("/" + filePath2.getFileName().toString(), finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
+
+      runner.getEventRecords().clear();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      Record noMoreDataEventRecord = runner.getEventRecords().get(0);
+      Assert.assertEquals("no-more-data", noMoreDataEventRecord.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals(2, noMoreDataEventRecord.get("/record-count").getValueAsLong());
+      Assert.assertEquals(2, noMoreDataEventRecord.get("/file-count").getValueAsLong());
+
+      runner.getEventRecords().clear();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+      Assert.assertEquals(0, runner.getEventRecords().size());
+
+      Path filePath3 = Paths.get(path + "/testEvents3.txt");
+      java.nio.file.Files.write(filePath3, sampleText, StandardOpenOption.CREATE_NEW);
+
+      runner.getEventRecords().clear();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      eventRecords = runner.getEventRecords();
+      newFileEvent = eventRecords.get(0);
+      finishedFileEvent = eventRecords.get(1);
+      Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals("/" + filePath3.getFileName().toString(), newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals("/" + filePath3.getFileName().toString(), finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
+
+      runner.getEventRecords().clear();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      noMoreDataEventRecord = runner.getEventRecords().get(0);
+      Assert.assertEquals("no-more-data", noMoreDataEventRecord.getHeader().getAttribute("sdc.event.type"));
+      Assert.assertEquals(3, noMoreDataEventRecord.get("/record-count").getValueAsLong());
+      Assert.assertEquals(3, noMoreDataEventRecord.get("/file-count").getValueAsLong());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+  @Test
   public void testMockReset() throws Exception {
     path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testMockReset";
 

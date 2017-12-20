@@ -105,6 +105,13 @@ public class RemoteDownloadSource extends BaseSource {
   private ELEval rateLimitElEval;
   private ELVars rateLimitElVars;
 
+  //By default true so, between pipeline restarts we can always trigger event.
+  private boolean canTriggerNoMoreDataEvent = true;
+  private long noMoreDataRecordCount = 0;
+  private long noMoreDataErrorCount = 0;
+  private long noMoreDataFileCount = 0;
+  private long perFileRecordCount = 0;
+  private long perFileErrorCount = 0;
 
   private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
     @Override
@@ -355,10 +362,17 @@ public class RemoteDownloadSource extends BaseSource {
         nextOpt = getNextFile();
         if (nextOpt.isPresent()) {
           next = nextOpt.get();
+          noMoreDataFileCount++;
           // When starting up, reset to offset 0 of the file picked up for read only if:
           // -- we are starting up for the very first time, hence current offset is null
           // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
           if (currentOffset == null || !currentOffset.fileName.equals(next.filename)) {
+            perFileRecordCount = 0;
+            perFileErrorCount = 0;
+
+            LOG.debug("Sending New File Event. File: {}", next.filename);
+            RemoteDownloadSourceEvents.NEW_FILE.create(getContext()).with("filepath", next.filename).createAndSend();
+
             currentOffset = new Offset(next.remoteObject.getName().getPath(),
                 next.remoteObject.getContent().getLastModifiedTime(), ZERO);
           }
@@ -384,11 +398,26 @@ public class RemoteDownloadSource extends BaseSource {
             parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
           } else {
             currentStream = next.remoteObject.getContent().getInputStream();
-            LOG.info("Started reading file: " + next.filename);
+            LOG.info("Started reading file: {}", next.filename);
             parser = conf.dataFormatConfig.getParserFactory().getParser(
                 currentOffset.offsetStr, currentStream, currentOffset.offset);
           }
         } else {
+          //Only if we saw data after last trigger/after a pipeline restart, we will trigger no more data event
+          if (canTriggerNoMoreDataEvent) {
+            LOG.debug(
+                "Sending No More Data event. Files:{}.Records:{}, Errors:{}",
+                noMoreDataFileCount,
+                noMoreDataRecordCount,
+                noMoreDataErrorCount
+            );
+            RemoteDownloadSourceEvents.NO_MORE_DATA.create(getContext())
+                .with("record-count", noMoreDataRecordCount)
+                .with("error-count", noMoreDataErrorCount)
+                .with("file-count", noMoreDataFileCount)
+                .createAndSend();
+            canTriggerNoMoreDataEvent = false;
+          }
           if (currentOffset == null) {
             return offset;
           } else {
@@ -424,11 +453,14 @@ public class RemoteDownloadSource extends BaseSource {
               FilenameUtils.getName(remoteFile.filename)
           );
           record.getHeader().setAttribute(
-            HeaderAttributeConstants.LAST_MODIFIED_TIME,
-            String.valueOf(remoteFile.lastModified)
+              HeaderAttributeConstants.LAST_MODIFIED_TIME,
+              String.valueOf(remoteFile.lastModified)
           );
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
+          perFileRecordCount++;
+          noMoreDataRecordCount++;
+          canTriggerNoMoreDataEvent = true;
           offset = parser.getOffset();
         } else {
           try {
@@ -436,6 +468,17 @@ public class RemoteDownloadSource extends BaseSource {
             if (currentStream != null) {
               currentStream.close();
             }
+            LOG.debug(
+                "Sending Finished File Event for {}.Records:{}, Errors:{}",
+                next.filename,
+                perFileRecordCount,
+                perFileErrorCount
+            );
+            RemoteDownloadSourceEvents.FINISHED_FILE.create(getContext())
+                .with("filepath", next.filename)
+                .with("record-count", perFileRecordCount)
+                .with("error-count", perFileErrorCount)
+                .createAndSend();
           } finally {
             parser = null;
             currentStream = null;
@@ -450,8 +493,14 @@ public class RemoteDownloadSource extends BaseSource {
         // Propagate partially parsed record to error stream
         Record record = ex.getUnparsedRecord();
         errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
+        perFileErrorCount++;
+        noMoreDataErrorCount++;
+        //Even though we had an error in the data, we still saw some data
+        canTriggerNoMoreDataEvent = true;
       } catch (ObjectLengthException ex) {
         errorRecordHandler.onError(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
+        //Even though we couldn't process data from the file, we still saw some data
+        canTriggerNoMoreDataEvent = true;
       }
     }
     return offset;
