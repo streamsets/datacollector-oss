@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.kinesis;
 
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -23,10 +24,12 @@ import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.LEASE_TABLE_BEAN;
 
 public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
 
@@ -65,10 +68,21 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
         }
         // fall through
       case 5:
-        return upgradeV5toV6(configs);
+        configs = upgradeV5toV6(configs);
+        if (toVersion == 6) {
+          break;
+        }
+        // fall through
+      case 6:
+        return upgradeV6toV7(configs);
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
+    return configs;
+  }
+
+  private List<Config> upgradeV6toV7(List<Config> configs) {
+    configs.add(new Config(Joiner.on(".").join(KINESIS_CONFIG_BEAN, LEASE_TABLE_BEAN, "tags"), Collections.emptyMap()));
     return configs;
   }
 

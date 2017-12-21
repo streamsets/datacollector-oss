@@ -38,7 +38,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 @GenerateResourceBundle
 public class KinesisDSource extends DPushSource {
 
-  @ConfigDefBean(groups = {"KINESIS", "ADVANCED"})
+  @ConfigDefBean(groups = {"KINESIS", "LEASE_TABLE", "ADVANCED"})
   public KinesisConsumerConfigBean kinesisConfig;
 
   @Override

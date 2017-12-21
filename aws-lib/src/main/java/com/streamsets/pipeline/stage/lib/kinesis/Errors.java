@@ -34,6 +34,9 @@ public enum Errors implements ErrorCode {
   KINESIS_10("Error fetching preview data: '{}'"),
   KINESIS_11("Unable to delete DynamoDB table '{}'. Please verify that you have sufficient privileges"),
   KINESIS_12("Can't resolve credentials: {}"),
+  KINESIS_13("Lease table '{}' already exists"),
+  KINESIS_14("Provisioned throughput capacity exceeded when creating lease table '{}'"),
+  KINESIS_15("Error while creating lease table: '{}'"),
   ;
   private final String msg;
 

@@ -118,4 +118,7 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
       max = Integer.MAX_VALUE
   )
   public int maxRecordProcessors;
+
+  @ConfigDefBean(groups = "LEASE_TABLE")
+  public LeaseTableConfig leaseTable = new LeaseTableConfig();
 }

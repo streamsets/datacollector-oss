@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDef;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  KINESIS("Kinesis"),
-  LEASE_TABLE("Lease Table"),
-  ADVANCED("Advanced"),
-  DATA_FORMAT("Data Format"),
-  ;
+import java.util.HashMap;
+import java.util.Map;
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
+public class LeaseTableConfig {
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Tags",
+      description = "Tags to apply to the lease table in DynamoDB",
+      displayPosition = 10,
+      group = "#0"
+  )
+  public Map<String, String> tags = new HashMap<>();
 }

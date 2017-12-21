@@ -51,6 +51,7 @@ public class KinesisUtil {
   public static final int KB = 1024; // KiB
   public static final int ONE_MB = 1024 * KB; // MiB
   public static final String KINESIS_CONFIG_BEAN = "kinesisConfig";
+  public static final String LEASE_TABLE_BEAN = "leaseTable";
 
   private KinesisUtil() {}
 

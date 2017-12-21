@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -26,15 +27,26 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.services.dynamodbv2.model.LimitExceededException;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.model.ResourceInUseException;
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
+import com.amazonaws.services.dynamodbv2.model.TableStatus;
+import com.amazonaws.services.dynamodbv2.model.Tag;
+import com.amazonaws.services.dynamodbv2.model.TagResourceRequest;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
+import com.amazonaws.services.kinesis.leases.impl.KinesisClientLeaseSerializer;
 import com.amazonaws.services.kinesis.metrics.interfaces.IMetricsFactory;
 import com.amazonaws.services.kinesis.model.GetShardIteratorRequest;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -53,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -66,12 +79,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
+import static org.awaitility.Awaitility.await;
 
 public class KinesisSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisSource.class);
+  private static final long DEFAULT_INITIAL_LEASE_TABLE_READ_CAPACITY = 10L;
+  private static final long DEFAULT_INITIAL_LEASE_TABLE_WRITE_CAPACITY = 10L;
   private static final String KINESIS_DATA_FORMAT_CONFIG_PREFIX = "kinesisConfig.dataFormatConfig.";
   private final KinesisConsumerConfigBean conf;
   private final BlockingQueue<Throwable> error = new SynchronousQueue<>();
@@ -285,6 +302,8 @@ public class KinesisSource extends BasePushSource {
     }
 
     resetOffsets(lastOffsets);
+    createLeaseTableIfNotExists();
+
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
     IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(
         getContext(),
@@ -321,6 +340,73 @@ public class KinesisSource extends BasePushSource {
     }
   }
 
+  private void createLeaseTableIfNotExists() throws StageException {
+    // Lease table doesn't need creation
+    if (leaseTableExists()) {
+      return;
+    }
+
+    DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
+    KinesisClientLeaseSerializer leaseSerializer = new KinesisClientLeaseSerializer();
+    CreateTableRequest createTableRequest = new CreateTableRequest()
+        .withTableName(conf.applicationName)
+        .withKeySchema(leaseSerializer.getKeySchema())
+        .withAttributeDefinitions(leaseSerializer.getAttributeDefinitions())
+        .withProvisionedThroughput(new ProvisionedThroughput().withReadCapacityUnits(
+            DEFAULT_INITIAL_LEASE_TABLE_READ_CAPACITY)
+            .withWriteCapacityUnits(DEFAULT_INITIAL_LEASE_TABLE_WRITE_CAPACITY));
+
+    try {
+      Table leaseTable = dynamoDB.createTable(createTableRequest);
+      LOG.debug("Waiting up to 2 minutes for table creation and readiness");
+      await().atMost(2, TimeUnit.MINUTES).until(this::leaseTableExists);
+      Collection<Tag> tags = conf.leaseTable.tags.entrySet()
+          .stream()
+          .map(e -> new Tag().withKey(e.getKey()).withValue(e.getValue())).collect(Collectors.toSet());
+
+      if (!tags.isEmpty()) {
+        TagResourceRequest tagRequest = new TagResourceRequest().withTags(tags).withResourceArn(leaseTable.getDescription().getTableArn());
+
+        if (LOG.isInfoEnabled()) {
+          LOG.info(
+              "Tagging lease table {} with tags: '{}'",
+              conf.applicationName,
+              Joiner.on(",").withKeyValueSeparator("=").join(conf.leaseTable.tags)
+          );
+        }
+        dynamoDBClient.tagResource(tagRequest);
+      }
+    } catch (ResourceInUseException e) {
+      // We're not expecting any lease table to exist since we've already checked for its existence.
+      // In this case some other process may have created the table and we weren't expecting it.
+      LOG.error(Errors.KINESIS_13.getMessage(), conf.applicationName);
+      throw new StageException(Errors.KINESIS_13, conf.applicationName);
+    } catch (LimitExceededException e) {
+      LOG.error(Errors.KINESIS_14.getMessage(), conf.applicationName, e);
+      throw new StageException(Errors.KINESIS_14, conf.applicationName, e);
+    } catch (AmazonClientException e) {
+      LOG.error(Errors.KINESIS_15.getMessage(), e.toString(), e);
+      throw new StageException(Errors.KINESIS_15, e.toString(), e);
+    }
+
+  }
+
+  private boolean leaseTableExists() {
+      DescribeTableRequest request = new DescribeTableRequest();
+      request.setTableName(conf.applicationName);
+      DescribeTableResult result;
+      try {
+        result = dynamoDBClient.describeTable(request);
+      } catch (ResourceNotFoundException e) {
+        LOG.debug("Lease table '{}' does not exist", conf.applicationName);
+        return false;
+      }
+
+      TableStatus tableStatus = TableStatus.fromValue(result.getTable().getTableStatus());
+      LOG.debug("Lease table exists and is in '{}' state", tableStatus);
+      return tableStatus == TableStatus.ACTIVE;
+  }
+
   private void resetOffsets(Map<String, String> lastOffsets) throws StageException {
     if (lastOffsets.isEmpty() && !resetOffsetAttempted.getAndSet(true)) {
       DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
@@ -350,7 +436,7 @@ public class KinesisSource extends BasePushSource {
       return true;
     } catch (ResourceNotFoundException e) {
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Table'{}' did not exist.", tableName, e);
+        LOG.debug("Table '{}' did not exist.", tableName, e);
       }
       return false;
     }
