@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -84,7 +85,7 @@ public class MultiKafkaRawSourcePreviewer implements RawSourcePreviewer {
     props.put("bootstrap.servers", brokerHost + ":" + brokerPort);
     props.put("group.id", MULTI_KAFKA_GROUP_NAME);
     props.put("enable.auto.commit", "false");
-    props.put("auto.offset.reset", "earliest");
+    props.put(KafkaConstants.AUTO_OFFSET_RESET_CONFIG, KafkaConstants.AUTO_OFFSET_RESET_PREVIEW_VALUE);
     props.put("key.deserializer", KAFKA_STRING_DESERIALIZER);
     props.put("value.deserializer", KAFKA_STRING_DESERIALIZER);
     ByteArrayOutputStream baos;
