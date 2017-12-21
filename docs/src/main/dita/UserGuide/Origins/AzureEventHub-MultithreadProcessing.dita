@@ -20,11 +20,12 @@
 <concept id="concept_ldf_chp_qy">
  <title>Multithreaded Processing</title>
  <conbody>
-        <p><indexterm>Azure Event Hub Consumer origin<indexterm>multithreaded
-                processing</indexterm></indexterm><indexterm>Max Threads<indexterm>Azure Event Hub
-                    Consumer</indexterm></indexterm>The Azure Event Hub Consumer origin performs
-            parallel processing and enables the creation of a multithreaded pipeline. </p>
-        <p>The Azure Event Hub Consumer origin uses multiple concurrent threads to read from an
+        <p><indexterm>Azure IoT/Event Hub Consumer origin<indexterm>multithreaded
+                    processing</indexterm></indexterm><indexterm>Max Threads<indexterm>Azure
+                    IoT/Event Hub Consumer</indexterm></indexterm>The Azure IoT/Event Hub Consumer
+            origin performs parallel processing and enables the creation of a multithreaded
+            pipeline. </p>
+        <p>The Azure IoT/Event Hub Consumer origin uses multiple concurrent threads to read from an
             event hub based on the Max Threads property. When you start the pipeline, the origin
             creates the number of threads specified in the Max Threads property. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-origin"

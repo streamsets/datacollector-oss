@@ -21,14 +21,20 @@
         <p><indexterm>what's new<indexterm>version 3.0.1.0</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             version 3.0.1.0 includes the following enhancements:<ul id="ul_fjz_1q4_gcb">
-                <li>SQL Server CDC origin enhancement - The SQL Server CDC origin now includes
-                    information from the SQL Server CDC __$command_id column in a record header
-                    attribute named jdbc. __$command_id.</li>
+                <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">Azure IoT/Event
+                        Hub Consumer origin enhancement</xref> - The Azure Event Hub Consumer origin
+                    has been renamed to the Azure IoT/Event Hub Consumer origin.</li>
                 <li>HTTP Server origin enhancement - The HTTP Server origin now includes path and
                     queryString record header attributes, as well as any other HTTP header
                     attributes included in the request. </li>
                 <li>MongoDB origins enhancement - Both the MongoDB origin and the MongoDB Oplog
-                    origin now support the BSON data type for binary data. </li>
+                    origin now support delegated authentication and the BSON data type for binary
+                    data. </li>
+                <li>SQL Server CDC origin enhancement - The SQL Server CDC origin now includes
+                    information from the SQL Server CDC __$command_id column in a record header
+                    attribute named jdbc. __$command_id.</li>
+                <li>Mongo DB destination enhancement - The MongoDB destination now supports delegated
+                    authentication.</li>
             </ul></p>
     </conbody>
 </concept>

@@ -16,12 +16,12 @@
 <concept id="concept_zbd_tsf_bbb">
  <title>Resetting the Origin in Event Hub</title>
  <conbody>
-        <p><indexterm>Azure Event Hub Consumer origin<indexterm>resetting the origin in Event
+        <p><indexterm>Azure IoT/Event Hub Consumer origin<indexterm>resetting the origin in Event
                     Hub</indexterm></indexterm><indexterm>resetting the origin<indexterm>for the
-                    Azure Event Hub Consumer origin</indexterm></indexterm>You cannot use <ph
+                    Azure IoT/Event Hub Consumer origin</indexterm></indexterm>You cannot use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            reset the origin for Azure Event Hub Consumer pipelines because the offset is stored in
-            Azure Event Hub. </p>
+            reset the origin for Azure IoT/Event Hub Consumer pipelines because the offset is stored
+            in Azure Event Hub. </p>
         <p>To reset the origin in Microsoft Azure Event Hub:<ol id="ol_b1k_zfx_cbb">
                 <li>In the Microsoft Azure portal, navigate to the storage account. </li>
                 <li>To delete the offset information stored for the pipeline, delete the container

@@ -29,7 +29,7 @@
           Amazon S3.</li>
         <li><xref href="AmazonSQS.dita#concept_xsh_knm_5bb">Amazon SQS Consumer</xref> - Reads data
           from queues in Amazon Simple Queue Services (SQS). </li>
-        <li><xref href="AzureEventHub.dita#concept_c1z_15q_1bb">Azure Event Hub Consumer</xref> -
+        <li><xref href="AzureEventHub.dita#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</xref> -
           Reads data from Microsoft Azure Event Hub. Creates multiple threads to enable parallel
           processing in a multithreaded pipeline.</li>
         <li><xref href="CoAPServer.dita#concept_wfy_ghn_sz">CoAP Server</xref> - Listens on a CoAP

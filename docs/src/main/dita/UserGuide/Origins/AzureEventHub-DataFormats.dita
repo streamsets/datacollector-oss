@@ -16,11 +16,11 @@
 <concept id="concept_zpk_wsx_1bb">
     <title>Data Formats</title>
     <conbody>
-        <p><indexterm>Azure Event Hub Consumer origin<indexterm>data
-                formats</indexterm></indexterm><indexterm>data formats<indexterm>Azure Event Hub
-                    Consumer origin</indexterm></indexterm>The Azure Event Hub Consumer origin reads
-            data from Microsoft Azure Event Hub based on the data format that you select. You can
-            use the following data formats: <dl>
+        <p><indexterm>Azure IoT/Event Hub Consumer origin<indexterm>data
+                formats</indexterm></indexterm><indexterm>data formats<indexterm>Azure IoT/Event Hub
+                    Consumer origin</indexterm></indexterm>The Azure IoT/Event Hub Consumer origin
+            reads data from Microsoft Azure Event Hub based on the data format that you select. You
+            can use the following data formats: <dl>
                 <dlentry
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-Binary">
                     <dt/>
