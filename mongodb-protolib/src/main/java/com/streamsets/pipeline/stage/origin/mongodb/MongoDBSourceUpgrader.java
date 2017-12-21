@@ -142,6 +142,6 @@ public class MongoDBSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV3toV4(List<Config> configs) {
-    configs.add(new Config(MongoDBConfig.CONFIG_PREFIX + "authSource", ""));
+    configs.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "authSource", ""));
   }
 }
