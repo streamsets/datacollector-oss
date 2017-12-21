@@ -14,10 +14,10 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_t14_c5q_1bb">
-    <title>Configuring an Azure Event Hub Consumer</title>
+    <title>Configuring an Azure IoT/Event Hub Consumer</title>
     <taskbody>
-        <context><indexterm>Azure Event Hub Consumer
-                origin<indexterm>configuring</indexterm></indexterm>Configure an Azure Event Hub
+        <context><indexterm>Azure IoT/Event Hub Consumer
+                origin<indexterm>configuring</indexterm></indexterm>Configure an Azure IoT/Event Hub
             Consumer origin to write data to Microsoft Azure Event Hub. Be sure to complete the
             necessary prerequisites before you configure the origin.</context>
         <steps>

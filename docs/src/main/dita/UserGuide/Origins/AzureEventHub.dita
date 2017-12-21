@@ -14,16 +14,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_c1z_15q_1bb">
- <title>Azure Event Hub Consumer</title>
+ <title>Azure IoT/Event Hub Consumer</title>
  <conbody>
-        <p><indexterm>Azure Event Hub Consumer
+        <p><indexterm>Azure IoT/Event Hub Consumer
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Azure
-                    Event Hub Consumer</indexterm></indexterm>The Azure Event Hub Consumer origin
-            reads data from Microsoft Azure Event Hub. The origin can use multiple threads to enable
-            parallel processing of data from a single Azure event hub.</p>
-        <p>Before you use the Azure Event Hub Consumer origin, make sure you have the required
+                    IoT/Event Hub Consumer</indexterm></indexterm>The Azure IoT/Event Hub Consumer
+            origin reads data from Microsoft Azure Event Hub. The origin can use multiple threads to
+            enable parallel processing of data from a single Azure event hub.</p>
+        <p>Before you use the Azure IoT/Event Hub Consumer origin, make sure you have the required
             Microsoft Azure storage account and container.</p>
-        <p>When you configure the Azure Event Hub Consumer, <ph
+        <p>When you configure the Azure IoT/Event Hub Consumer, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AEHub-config"/>
             You specify the consumer group to use and an event processor prefix that the origin uses
             when communicating with Azure Event Hub.</p>

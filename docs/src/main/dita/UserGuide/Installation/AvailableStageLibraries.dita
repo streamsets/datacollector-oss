@@ -111,7 +111,7 @@
                         <row>
                             <entry>streamsets-datacollector-azure-lib</entry>
                             <entry>For Microsoft Azure.<p>Includes:<ul id="ul_cjf_frr_1bb">
-                                        <li>Azure Event Hub Consumer origin</li>
+                                        <li>Azure IoT/Event Hub Consumer origin</li>
                                         <li>Azure Data Lake Store destination</li>
                                         <li>Azure Event Hub Producer destination</li>
                                         <li>Azure IoT Hub Producer destination</li>

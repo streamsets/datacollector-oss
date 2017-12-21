@@ -16,19 +16,19 @@
 <concept id="concept_byn_5rf_bbb">
  <title>Storage Account and Container Prerequisite</title>
  <conbody>
-  <p><indexterm>Azure Event Hub Consumer
+  <p><indexterm>Azure IoT/Event Hub Consumer
                     origin<indexterm>prerequisites</indexterm></indexterm><indexterm>prerequisites<indexterm>Azure
-                    Event Hub Consumer origin</indexterm></indexterm>Before you use the Azure Event
-            Hub Consumer origin, you need a Microsoft Azure storage account and at least one
-            container. </p>
+                    IoT/Event Hub Consumer origin</indexterm></indexterm>Before you use the Azure
+            IoT/Event Hub Consumer origin, you need a Microsoft Azure storage account and at least
+            one container. </p>
         <p>The origin stores offsets in a storage account container, so to ensure the integrity of
             offset information, you must use a different container for each pipeline that includes
-            an Azure Event Hub Consumer origin.</p>
-        <p>For example, say you use the Azure Event Hub Consumer as the origin for an IoT pipeline
-            and a Transactions pipeline. To keep the offset data for these pipelines separate, you
-            need to use two different storage account containers. They can be in the same storage
-            account or in different storage accounts. When you configure the origins, you specify
-            the storage account and container to use.</p>
+            an Azure IoT/Event Hub Consumer origin.</p>
+        <p>For example, say you use the Azure IoT/Event Hub Consumer as the origin for an IoT
+            pipeline and a Transactions pipeline. To keep the offset data for these pipelines
+            separate, you need to use two different storage account containers. They can be in the
+            same storage account or in different storage accounts. When you configure the origins,
+            you specify the storage account and container to use.</p>
         <p>To create a new container for the pipeline:<ol id="ol_rf4_wbg_bbb">
                 <li>Log into the Microsoft Azure portal: <xref href="https://portal.azure.com"
                         format="html" scope="external">https://portal.azure.com</xref></li>

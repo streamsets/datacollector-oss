@@ -1466,7 +1466,7 @@ web-0011.log</codeblock></dd>
                                     Consumer</xref> - Reads data from queues in Amazon Simple Queue
                               Services (SQS).</li>
                         <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">Azure
-                                    Event Hub Consumer</xref> - Reads data from Microsoft Azure
+                              IoT/Event Hub Consumer</xref> - Reads data from Microsoft Azure
                               Event Hub.</li>
                         <li><xref href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz">CoAP
                                     Server</xref> - Listens on a CoAP endpoint and processes the
