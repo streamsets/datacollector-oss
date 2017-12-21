@@ -57,6 +57,8 @@
 
   <span ng-if="error && error.ISSUES && error.ISSUES.length" ng-bind-html="error.ISSUES[0].message"></span>
 
-  <span ng-if="error && !error.RemoteException && !error.pipelineIssues && !error.ISSUES" ng-bind-html="error"></span>
+  <span ng-if="error && error.EXCEPTION" ng-bind-html="error.EXCEPTION.rawMessage"></span>
+
+  <span ng-if="error && !error.RemoteException && !error.pipelineIssues && !error.ISSUES && !error.EXCEPTION" ng-bind-html="error"></span>
 
 </div>
