@@ -44,6 +44,8 @@
         <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
         <spark.version>1.6.0-cdh5.13.1</spark.version>
         <thrift.version>0.9.3</thrift.version>
+        <jackson.version>2.2.3</jackson.version>
+        <netty.version>4.0.29.Final</netty.version>
     </properties>
 
     <repositories>
@@ -125,6 +127,12 @@
             <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -192,6 +200,12 @@
             <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
             <scope>provided</scope>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -599,6 +613,12 @@
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
