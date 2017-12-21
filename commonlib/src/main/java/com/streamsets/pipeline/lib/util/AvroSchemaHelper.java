@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.lib.util;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.data.DataFactory;
@@ -32,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -72,6 +75,8 @@ public class AvroSchemaHelper {
 
   private final SchemaRegistryClient registryClient;
 
+  private final Cache<String, Integer> schemaIdCache;
+
   /**
    * AvroSchemaHelper constructor. DataFactory settings should be passed in for parsing.
    * @param settings DataFactory settings.
@@ -91,6 +96,11 @@ public class AvroSchemaHelper {
     } else {
       registryClient = null;
     }
+
+    // Small cache to avoid going to Schema repository all the time
+    schemaIdCache = CacheBuilder.newBuilder()
+      .maximumSize(100)
+      .build();
   }
 
   /**
@@ -139,8 +149,8 @@ public class AvroSchemaHelper {
    */
   public int registerSchema(Schema schema, String subject) throws SchemaRegistryException {
     try {
-      return registryClient.register(subject, schema);
-    } catch (IOException | RestClientException e) {
+      return schemaIdCache.get(subject + schema.hashCode(), () -> registryClient.register(subject, schema));
+    } catch (ExecutionException  e) {
       throw new SchemaRegistryException(e);
     }
   }

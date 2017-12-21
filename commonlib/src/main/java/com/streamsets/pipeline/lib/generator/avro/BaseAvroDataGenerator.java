@@ -18,7 +18,9 @@ package com.streamsets.pipeline.lib.generator.avro;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.util.AvroSchemaHelper;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
+import com.streamsets.pipeline.lib.util.SchemaRegistryException;
 import org.apache.avro.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,12 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
   abstract protected void initializeWriter() throws IOException;
 
   /**
+   * Hook that will be called once initialize() is successfully done
+   */
+  protected void postInitialize() throws IOException {
+  }
+
+  /**
    * Write the given record out.
    */
   abstract protected void writeRecord(Record record) throws IOException, DataGeneratorException;
@@ -65,7 +73,7 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
   /**
    * If true, then each record must have header avroSchema describing the schema.
    */
-  private boolean schemaInHeader;
+  protected boolean schemaInHeader;
 
   /**
    * Hashcode of the schema that was used to initialize the writer if getting schema from header
@@ -78,9 +86,24 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
   protected Schema schema;
 
   /**
+   * Confluent Avro Schema Repository id (if used).
+   */
+  protected int schemaId;
+
+  /**
    * Map for default values from the avro schema.
    */
   protected Map<String, Object> defaultValueMap;
+
+  /**
+   * Subject of the schema.
+   */
+  protected final String schemaSubject;
+
+  /**
+   * Avro Schema helper object to work with schema repository.
+   */
+  protected final AvroSchemaHelper schemaHelper;
 
   /**
    * State of the generator
@@ -92,16 +115,40 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
   }
   private State state;
 
-  public BaseAvroDataGenerator(boolean schemaInHeader, Schema schema, Map<String, Object> defaultValueMap) throws IOException {
+  public BaseAvroDataGenerator(
+      boolean schemaInHeader,
+      Schema schema,
+      Map<String, Object> defaultValueMap,
+      AvroSchemaHelper schemaHelper,
+      String schemaSubject,
+      int schemaId
+  ) throws IOException {
     this.state = State.CREATED;
     this.schemaInHeader = schemaInHeader;
     this.schema = schema;
     this.defaultValueMap = defaultValueMap;
+    this.schemaSubject = schemaSubject;
+    this.schemaHelper = schemaHelper;
+    this.schemaId = schemaId;
   }
 
   protected void initialize() throws IOException {
     initializeWriter();
+
+    // Schema registration is delayed with using it in header until this point
+    if(schemaInHeader && schemaHelper != null && schemaHelper.hasRegistryClient()) {
+      try {
+        schemaId = schemaHelper.registerSchema(schema, schemaSubject);
+      } catch (SchemaRegistryException e) {
+        throw new IOException("Can't initialize writer: " + e.toString(), e);
+      }
+    }
+
+    // Switch state to opened
     state = State.OPENED;
+
+    // And run post initialize hook
+    postInitialize();
   }
 
   private void initializeSchemaFromRecord(Record record) throws IOException, DataGeneratorException {

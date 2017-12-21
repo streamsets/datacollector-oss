@@ -150,7 +150,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
-      AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
+      AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>()),
+      null,
+      null,
+      0
     );
     Record record = createRecord();
     gen.write(record);
@@ -176,7 +179,10 @@ public class TestAvroDataGenerator {
         baos,
         codecName,
         SCHEMA,
-        AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
+        AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>()),
+        null,
+        null,
+        0
     );
     Record record = createRecord();
     gen.write(record);
@@ -218,7 +224,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
-      AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
+      AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>()),
+      null,
+      null,
+      0
     );
     Record record = createRecord();
     gen.write(record);
@@ -234,7 +243,10 @@ public class TestAvroDataGenerator {
         baos,
         COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        null,
+        null,
+        0
     );
     Record record = createRecord();
     gen.close();
@@ -249,7 +261,10 @@ public class TestAvroDataGenerator {
         baos,
         COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        null,
+        null,
+        0
     );
     gen.close();
     gen.flush();
@@ -267,7 +282,11 @@ public class TestAvroDataGenerator {
         baos,
         COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
-        AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
+        AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>()),
+        null,
+        null,
+        0
+
     );
     dataGenerator.write(r);
     dataGenerator.flush();
@@ -293,7 +312,10 @@ public class TestAvroDataGenerator {
         baos,
         COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        null,
+        null,
+        0
     );
     gen.write(record);
     gen.close();
@@ -415,7 +437,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       null,
-      null
+      null,
+      null,
+      null,
+      0
     );
     Record record = createRecord();
     record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, AVRO_SCHEMA);
@@ -441,7 +466,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       null,
-      null
+      null,
+      null,
+      null,
+      0
     );
 
     Map<String, Field> rootField = new HashMap<>();
@@ -471,7 +499,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       null,
-      null
+      null,
+      null,
+      null,
+      0
     );
     Record record = createRecord();
     gen.write(record);
@@ -486,7 +517,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       null,
-      null
+      null,
+      null,
+      null,
+      0
     );
     Record record = createRecord();
 
@@ -519,7 +553,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       DECIMAL_SCHEMA,
-      new HashMap<String, Object>()
+      new HashMap<String, Object>(),
+      null,
+      null,
+      0
     );
     gen.write(record);
     gen.close();
@@ -548,7 +585,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       DATE_SCHEMA,
-      new HashMap<String, Object>()
+      new HashMap<String, Object>(),
+      null,
+      null,
+      0
     );
     gen.write(record);
     gen.close();
@@ -585,7 +625,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
-      new HashMap<String, Object>()
+      new HashMap<String, Object>(),
+      null,
+      null,
+      0
     );
     gen.write(record);
     gen.close();
@@ -624,7 +667,10 @@ public class TestAvroDataGenerator {
       baos,
       COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
-      new HashMap<String, Object>()
+      new HashMap<String, Object>(),
+      null,
+      null,
+      0
     );
 
     try {
