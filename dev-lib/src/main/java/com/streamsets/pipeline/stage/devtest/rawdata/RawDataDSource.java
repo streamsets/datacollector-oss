@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
     version = 2,
     label = "Dev Raw Data Source",
     description = "Add Raw data to the source.",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon = "dev.png",
     upgrader = RawDataSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
