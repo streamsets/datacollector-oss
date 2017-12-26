@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.parser.delimited;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DelimitedCharDataParser extends AbstractDataParser {
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final String readerId;
   private final OverrunCsvParser parser;
   private final DelimitedDataParserSettings settings;
@@ -47,7 +48,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private boolean eof;
 
   public DelimitedCharDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       OverrunReader reader,
       long readerOffset,

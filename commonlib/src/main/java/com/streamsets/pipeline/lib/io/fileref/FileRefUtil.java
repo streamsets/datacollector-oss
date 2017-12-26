@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -113,7 +114,7 @@ public final class FileRefUtil {
    * @param context the {@link com.streamsets.pipeline.api.Stage.Context} of this stage
    */
   @SuppressWarnings("unchecked")
-  public static void initMetricsIfNeeded(Stage.Context context) {
+  public static void initMetricsIfNeeded(ProtoConfigurableEntity.Context context) {
     Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
     if(gauge == null) {
       gauge = context.createGauge(FileRefUtil.GAUGE_NAME, Comparator.comparing(GAUGE_MAP_ORDERING::get));
@@ -199,7 +200,7 @@ public final class FileRefUtil {
 
   @SuppressWarnings("unchecked")
   public static  <T extends AutoCloseable> T getReadableStream(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       FileRef fileRef,
       Class<T> streamClass,
       boolean includeChecksumInTheEvents,

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.apache.commons.lang.StringUtils;
@@ -28,7 +29,7 @@ public class LEEFParser extends ExtendedFormatParser {
   private static final char LEEF_DEFAULT_SEP = '\t';
 
   public LEEFParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       OverrunReader reader,
       long readerOffset,

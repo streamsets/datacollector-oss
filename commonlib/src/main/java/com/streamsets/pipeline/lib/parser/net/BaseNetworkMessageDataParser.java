@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.net;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -36,7 +37,7 @@ import java.util.ListIterator;
 
 public abstract class BaseNetworkMessageDataParser<MT extends MessageToRecord> implements DataParser {
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final String readerId;
   private final int maxObjectLen;
   private final Long readerOffset;
@@ -50,7 +51,7 @@ public abstract class BaseNetworkMessageDataParser<MT extends MessageToRecord> i
   private int messageCount;
 
   protected BaseNetworkMessageDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       InputStream inputStream,
       Long readerOffset,
@@ -69,7 +70,7 @@ public abstract class BaseNetworkMessageDataParser<MT extends MessageToRecord> i
   }
 
   protected BaseNetworkMessageDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       CountingReader reader,
       Long readerOffset,
@@ -88,7 +89,7 @@ public abstract class BaseNetworkMessageDataParser<MT extends MessageToRecord> i
   }
 
   protected BaseNetworkMessageDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       CountingInputStream inputStream,
       CountingReader reader,

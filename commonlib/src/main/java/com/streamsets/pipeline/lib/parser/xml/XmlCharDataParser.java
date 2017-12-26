@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.parser.xml;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunException;
@@ -43,25 +44,58 @@ public class XmlCharDataParser extends AbstractDataParser {
 
   public static final String RECORD_ATTRIBUTE_NAMESPACE_PREFIX = "xmlns:";
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final String readerId;
   private final int maxObjectLen;
   private final OverrunStreamingXmlParser parser;
   private final boolean includeXpath;
   private long readerOffset;
 
-  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      String recordElement, int maxObjectLen) throws IOException {
-    this(context, readerId, reader, readerOffset, recordElement, false, null, maxObjectLen, true);
-  }
-
-  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      String recordElement, boolean includeXpath, int maxObjectLen) throws IOException {
-    this(context, readerId, reader, readerOffset, recordElement, includeXpath, null, maxObjectLen, true);
+  public XmlCharDataParser(
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      String recordElement,
+      int maxObjectLen
+  ) throws IOException {
+    this(
+        context,
+        readerId,
+        reader,
+        readerOffset,
+        recordElement,
+        false,
+        null,
+        maxObjectLen,
+        true
+    );
   }
 
   public XmlCharDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      String recordElement,
+      boolean includeXpath,
+      int maxObjectLen
+  ) throws IOException {
+    this(
+        context,
+        readerId,
+        reader,
+        readerOffset,
+        recordElement,
+        includeXpath,
+        null,
+        maxObjectLen,
+        true
+    );
+  }
+
+  public XmlCharDataParser(
+      ProtoConfigurableEntity.Context context,
       String readerId,
       OverrunReader reader,
       long readerOffset,

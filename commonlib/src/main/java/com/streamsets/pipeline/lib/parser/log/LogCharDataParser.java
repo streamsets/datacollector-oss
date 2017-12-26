@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -39,7 +40,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
   static final String TEXT_FIELD_NAME = "originalLine";
   static final String TRUNCATED_FIELD_NAME = "truncated";
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final String readerId;
   private final OverrunReader reader;
   private final int maxObjectLen;
@@ -53,15 +54,16 @@ public abstract class LogCharDataParser extends AbstractDataParser {
   private final GenericObjectPool<StringBuilder> currentLineBuilderPool;
   private final GenericObjectPool<StringBuilder> previousLineBuilderPool;
 
-  public LogCharDataParser(Stage.Context context,
-                           String readerId,
-                           OverrunReader reader,
-                           long readerOffset,
-                           int maxObjectLen,
-                           boolean retainOriginalText,
-                           int maxStackTraceLines,
-                           GenericObjectPool<StringBuilder> currentLineBuilderPool,
-                           GenericObjectPool<StringBuilder> previousLineBuilderPool
+  public LogCharDataParser(
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      int maxObjectLen,
+      boolean retainOriginalText,
+      int maxStackTraceLines,
+      GenericObjectPool<StringBuilder> currentLineBuilderPool,
+      GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
     this.context = context;
     this.readerId = readerId;

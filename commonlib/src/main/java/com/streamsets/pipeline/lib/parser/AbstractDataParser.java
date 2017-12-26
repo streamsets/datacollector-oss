@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser;
 
 public abstract class AbstractDataParser implements DataParser {
+  // TODO: Seems that Context would be better here?
 
   protected boolean truncated;
 

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.net.netflow;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.net.BaseNetworkMessageDataParser;
@@ -28,7 +29,7 @@ public class NetflowDataParser extends BaseNetworkMessageDataParser<BaseNetflowM
   private final NetflowCommonDecoder netflowDecoder;
 
   public NetflowDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       InputStream inputStream,
       Long readerOffset,

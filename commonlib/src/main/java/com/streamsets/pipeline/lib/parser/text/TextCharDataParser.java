@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.text;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -38,7 +39,7 @@ public class TextCharDataParser extends AbstractDataParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(TextCharDataParser.class);
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final String readerId;
   private final boolean collapseAllLines;
   private final AbstractOverrunDelimitedReader reader;
@@ -53,18 +54,18 @@ public class TextCharDataParser extends AbstractDataParser {
   private boolean eof;
 
   public TextCharDataParser(
-      Stage.Context context,
-        String readerId,
-        boolean collapseAllLines,
-        boolean useCustomDelimiter,
-        String customDelimiter,
-        boolean includeCustomDelimiterInText,
-        OverrunReader reader,
-        long readerOffset,
-        int maxObjectLen,
-        String fieldTextName,
-        String fieldTruncatedName,
-        GenericObjectPool<StringBuilder> stringBuilderPool
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      boolean collapseAllLines,
+      boolean useCustomDelimiter,
+      String customDelimiter,
+      boolean includeCustomDelimiterInText,
+      OverrunReader reader,
+      long readerOffset,
+      int maxObjectLen,
+      String fieldTextName,
+      String fieldTruncatedName,
+      GenericObjectPool<StringBuilder> stringBuilderPool
   ) throws IOException {
     this.context = context;
     this.readerId = readerId;

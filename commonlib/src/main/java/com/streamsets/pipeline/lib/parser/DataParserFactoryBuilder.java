@@ -15,13 +15,14 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.data.DataFactoryBuilder;
 
 public class DataParserFactoryBuilder extends
     DataFactoryBuilder<DataParserFactoryBuilder, DataParserFactory, DataParserFormat> {
 
-  public DataParserFactoryBuilder(Stage.Context context, DataParserFormat format) {
+  public DataParserFactoryBuilder(ProtoConfigurableEntity.Context context, DataParserFormat format) {
     super(context, format);
   }
 

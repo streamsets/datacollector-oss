@@ -66,11 +66,7 @@ public class SeparatedDataParser extends AbstractParser {
     buf.getBytes(0, data);
 
     for (byte[] chunk : split(data, separatorBytes)) {
-      final Record record = context.createRecord(String.format(
-          "%s_SeparatedDataParser_%d",
-          context.getStageInfo().getInstanceName(),
-          recordId++)
-      );
+      final Record record = context.createRecord(String.format("SeparatedDataParser_%d", recordId++));
 
       record.set(Field.create(Collections.emptyMap()));
       switch (rawDataMode) {

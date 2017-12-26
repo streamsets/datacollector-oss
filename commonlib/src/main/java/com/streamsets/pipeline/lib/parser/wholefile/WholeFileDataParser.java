@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.wholefile;
 
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -28,7 +29,7 @@ import java.util.Map;
 public class WholeFileDataParser extends AbstractDataParser {
   private static final String OFFSET_MINUS_ONE = "-1";
   private static final String OFFSET_ZERO = "0";
-  private Stage.Context context;
+  private ProtoConfigurableEntity.Context context;
   private String id;
   private FileRef fileRef;
   private Map<String, Object> metadata;
@@ -36,7 +37,7 @@ public class WholeFileDataParser extends AbstractDataParser {
   private boolean isClosed;
 
   WholeFileDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String id,
       Map<String, Object> metadata,
       FileRef fileRef

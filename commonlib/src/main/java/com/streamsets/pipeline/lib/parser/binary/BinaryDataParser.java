@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.parser.binary;
 
 import com.google.common.io.ByteStreams;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
@@ -27,7 +28,7 @@ import java.io.InputStream;
 
 public class BinaryDataParser extends AbstractDataParser {
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final InputStream is;
   private final String id;
   private final int maxDataLength;
@@ -35,7 +36,7 @@ public class BinaryDataParser extends AbstractDataParser {
   private boolean closed;
   private long offset;
 
-  public BinaryDataParser(Stage.Context context, InputStream is, String id, int maxDataLength) {
+  public BinaryDataParser(ProtoConfigurableEntity.Context context, InputStream is, String id, int maxDataLength) {
     this.context = context;
     this.is = is;
     this.id = id;

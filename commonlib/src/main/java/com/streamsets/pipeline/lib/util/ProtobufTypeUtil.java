@@ -21,6 +21,7 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.UnknownFieldSet;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -86,7 +87,7 @@ public class ProtobufTypeUtil {
    * @throws StageException
    */
   public static Descriptors.Descriptor getDescriptor(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String protoDescriptorFile,
       String messageType,
       Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,

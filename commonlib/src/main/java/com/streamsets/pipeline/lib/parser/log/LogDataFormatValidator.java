@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.log;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -92,7 +93,7 @@ public class LogDataFormatValidator {
       .setMode(logMode);
   }
 
-  public void validateLogFormatConfig(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  public void validateLogFormatConfig(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     if (logMaxObjectLen == 0 || logMaxObjectLen < -1) {
       issues.add(
           context.createConfigIssue(
@@ -125,7 +126,7 @@ public class LogDataFormatValidator {
   }
 
   private void validateApacheCustomLogFormat(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
@@ -157,7 +158,7 @@ public class LogDataFormatValidator {
   }
 
   private void validateLog4jCustomLogFormat(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
@@ -191,7 +192,7 @@ public class LogDataFormatValidator {
   }
 
   private void validateRegExFormat(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
@@ -229,7 +230,7 @@ public class LogDataFormatValidator {
   }
 
   private void validateGrokPattern(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {

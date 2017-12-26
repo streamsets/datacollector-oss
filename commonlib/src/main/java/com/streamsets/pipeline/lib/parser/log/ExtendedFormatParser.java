@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -38,7 +39,7 @@ public abstract class ExtendedFormatParser extends LogCharDataParser {
   private final ExtendedFormatType formatType;
 
   public ExtendedFormatParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       OverrunReader reader,
       long readerOffset,

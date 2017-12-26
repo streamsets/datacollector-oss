@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.DataFormatConstants;
@@ -1036,7 +1037,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   @Override
   public boolean init(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String stageGroup,
       String configPrefix,
@@ -1054,7 +1055,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   }
 
   public boolean init(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String stageGroup,
       String configPrefix,
@@ -1073,7 +1074,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   }
 
   public boolean init(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String stageGroup,
       String configPrefix,
@@ -1092,7 +1093,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   }
 
   public boolean init(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String stageGroup,
       String configPrefix,
@@ -1188,7 +1189,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     return valid;
   }
 
-  private boolean validateJson(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private boolean validateJson(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     if (jsonMaxObjectLen < 1) {
       issues.add(
@@ -1203,7 +1204,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     return valid;
   }
 
-  private boolean validateText(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private boolean validateText(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     if (textMaxLineLen < 1) {
       issues.add(
@@ -1228,7 +1229,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     return valid;
   }
 
-  private boolean validateDelimited(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private boolean validateDelimited(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     if (csvMaxObjectLen < 1) {
       issues.add(
@@ -1243,7 +1244,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     return valid;
   }
 
-  private boolean validateXml(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private boolean validateXml(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     if (xmlMaxObjectLen < 1) {
       issues.add(
@@ -1273,7 +1274,10 @@ public class DataParserFormatConfig implements DataFormatConfig {
   }
 
   private boolean validateWholeFile(
-      Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+      ProtoConfigurableEntity.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     boolean valid = true;
     if (wholeFileMaxObjectLen < 1) {
       issues.add(
@@ -1288,7 +1292,11 @@ public class DataParserFormatConfig implements DataFormatConfig {
     return valid;
   }
 
-  private void validateProtobuf(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private void validateProtobuf(
+      ProtoConfigurableEntity.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
       issues.add(
           context.createConfigIssue(
@@ -1321,7 +1329,11 @@ public class DataParserFormatConfig implements DataFormatConfig {
     }
   }
 
-  private void validateLogFormat(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  private void validateLogFormat(
+      ProtoConfigurableEntity.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     logDataFormatValidator = new LogDataFormatValidator(
         logMode,
         logMaxObjectLen,
@@ -1340,7 +1352,11 @@ public class DataParserFormatConfig implements DataFormatConfig {
     logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
   }
 
-  void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  void checkCollectdParserConfigs(
+      ProtoConfigurableEntity.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     if (null != typesDbPath && !typesDbPath.isEmpty()) {
       File typesDbFile = new File(typesDbPath);
       if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
@@ -1368,7 +1384,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   }
 
   private boolean validateDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String stageGroup,
       String configPrefix,
@@ -1579,7 +1595,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public void checkForInvalidAvroSchemaLookupMode(
       DataFormat dataFormat,
       String configBeanPrefix,
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       List<Stage.ConfigIssue> issues
   ) {
     if (dataFormat != DataFormat.AVRO) {

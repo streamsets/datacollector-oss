@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -31,17 +32,18 @@ public class GrokParser extends LogCharDataParser {
   private final Grok compiledPattern;
   private final String formatName;
 
-  public GrokParser(Stage.Context context,
-                    String readerId,
-                    OverrunReader reader,
-                    long readerOffset,
-                    int maxObjectLen,
-                    boolean retainOriginalText,
-                    int maxStackTraceLines,
-                    Grok compiledPattern,
-                    String formatName,
-                    GenericObjectPool<StringBuilder> currentLineBuilderPool,
-                    GenericObjectPool<StringBuilder> previousLineBuilderPool
+  public GrokParser(
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      int maxObjectLen,
+      boolean retainOriginalText,
+      int maxStackTraceLines,
+      Grok compiledPattern,
+      String formatName,
+      GenericObjectPool<StringBuilder> currentLineBuilderPool,
+      GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines, currentLineBuilderPool, previousLineBuilderPool);
     this.compiledPattern = compiledPattern;

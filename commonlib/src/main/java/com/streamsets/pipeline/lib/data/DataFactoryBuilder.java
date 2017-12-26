@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.lib.data;
 
-import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.Compression;
@@ -28,7 +28,7 @@ import java.util.Set;
 
 public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFactory, F extends DataFormat<DF>> {
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final F format;
   private final Set<Class<? extends Enum>> expectedModes;
   private final Map<Class<? extends Enum>, Enum> modes;
@@ -41,7 +41,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   private String filePatternInArchive = DataFormatConstants.FILE_PATTERN_IN_ARCHIVE;
   private int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
 
-  public DataFactoryBuilder(Stage.Context context, F format) {
+  public DataFactoryBuilder(ProtoConfigurableEntity.Context context, F format) {
     this.context = Utils.checkNotNull(context, "context");
     this.format = Utils.checkNotNull(format, "format");
     modes = new HashMap<>();

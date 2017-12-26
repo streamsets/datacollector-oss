@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.data;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.Compression;
 
@@ -25,7 +26,7 @@ import java.util.Map;
 public abstract class DataFactory {
 
   public static class Settings {
-    private final Stage.Context context;
+    private final ProtoConfigurableEntity.Context context;
     private final DataFormat format;
     private final Compression compression;
     private final String filePatternInArchive;
@@ -37,9 +38,19 @@ public abstract class DataFactory {
     private final int overRunLimit;
     private final int stringBuilderPoolSize;
 
-    Settings(Stage.Context context, DataFormat format, Compression compression, String filePatternInArchive,
-             Charset charset, int maxRecordLen, Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs,
-             int overRunLimit, boolean removeCtrlChars, int stringBuilderPoolSize) {
+    Settings(
+        ProtoConfigurableEntity.Context context,
+        DataFormat format,
+        Compression compression,
+        String filePatternInArchive,
+        Charset charset,
+        int maxRecordLen,
+        Map<Class<? extends Enum>, Enum> modes,
+        Map<String, Object> configs,
+        int overRunLimit,
+        boolean removeCtrlChars,
+        int stringBuilderPoolSize
+    ) {
       this.context = context;
       this.format = format;
       this.compression = compression;
@@ -53,7 +64,7 @@ public abstract class DataFactory {
       this.stringBuilderPoolSize = stringBuilderPoolSize;
     }
 
-    public Stage.Context getContext() {
+    public ProtoConfigurableEntity.Context getContext() {
       return context;
     }
 

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.net.netflow;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -97,7 +98,7 @@ public class NetflowDataParserFactory extends DataParserFactory {
   }
 
   public static void validateConfigs(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       List<Stage.ConfigIssue> issues,
       String group,
       String configPrefix,
@@ -117,7 +118,7 @@ public class NetflowDataParserFactory extends DataParserFactory {
   }
 
   public static void validateConfigs(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       List<Stage.ConfigIssue> issues,
       String group,
       String configPrefix,

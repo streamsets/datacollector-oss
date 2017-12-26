@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.common;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public interface DataFormatConfig {
 
   boolean init(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       DataFormat dataFormat,
       String groupName,
       String configPrefix,

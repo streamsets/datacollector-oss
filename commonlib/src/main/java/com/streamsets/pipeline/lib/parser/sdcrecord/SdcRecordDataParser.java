@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
@@ -30,9 +31,9 @@ public class SdcRecordDataParser extends AbstractDataParser {
 
   private final RecordReader recordReader;
   private boolean eof;
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
 
-  public SdcRecordDataParser(Stage.Context context, InputStream inputStream, long readerOffset, int maxObjectLen)
+  public SdcRecordDataParser(ProtoConfigurableEntity.Context context, InputStream inputStream, long readerOffset, int maxObjectLen)
       throws IOException {
     this.context = context;
     recordReader = ((ContextExtensions)context).createRecordReader(inputStream, readerOffset, maxObjectLen);

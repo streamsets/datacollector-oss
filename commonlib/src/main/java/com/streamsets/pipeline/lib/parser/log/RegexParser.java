@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -32,16 +33,17 @@ public class RegexParser extends LogCharDataParser {
   private final Pattern pattern;
   private final Map<String, Integer> fieldToGroupMap;
 
-  public RegexParser(Stage.Context context,
-                     String readerId,
-                     OverrunReader reader,
-                     long readerOffset,
-                     int maxObjectLen,
-                     boolean retainOriginalText,
-                     Pattern pattern,
-                     Map<String, Integer> fieldToGroupMap,
-                     GenericObjectPool<StringBuilder> currentLineBuilderPool,
-                     GenericObjectPool<StringBuilder> previousLineBuilderPool
+  public RegexParser(
+      ProtoConfigurableEntity.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      int maxObjectLen,
+      boolean retainOriginalText,
+      Pattern pattern,
+      Map<String, Integer> fieldToGroupMap,
+      GenericObjectPool<StringBuilder> currentLineBuilderPool,
+      GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1, currentLineBuilderPool, previousLineBuilderPool);
     this.fieldToGroupMap = fieldToGroupMap;

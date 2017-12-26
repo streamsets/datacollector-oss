@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.parser.protobuf;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.ExtensionRegistry;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunInputStream;
@@ -35,7 +36,7 @@ public class ProtobufDataParser extends AbstractDataParser {
   private static final String OFFSET_SEPARATOR = "::";
 
   private boolean eof;
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final DynamicMessage.Builder builder;
   private final OverrunInputStream inputStream;
   private final String messageId;
@@ -47,7 +48,7 @@ public class ProtobufDataParser extends AbstractDataParser {
   private final boolean isDelimited;
 
   public ProtobufDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String messageId,
       Descriptors.Descriptor descriptor,
       Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,

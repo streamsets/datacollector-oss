@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.parser.log;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.LogMode;
@@ -90,7 +91,7 @@ public class LogDataParserFactory extends DataParserFactory {
   public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of(LogMode.class);
 
 
-  private final Stage.Context context;
+  private final ProtoConfigurableEntity.Context context;
   private final int maxObjectLen;
   private final LogMode logMode;
   private final boolean retainOriginalText;

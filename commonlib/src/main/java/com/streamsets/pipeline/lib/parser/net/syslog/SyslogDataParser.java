@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.net.syslog;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.ext.io.CountingReader;
@@ -28,7 +29,7 @@ public class SyslogDataParser extends BaseNetworkMessageDataParser {
   private final SyslogDecoder syslogDecoder;
 
   public SyslogDataParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       String readerId,
       CountingReader reader,
       long readerOffset,

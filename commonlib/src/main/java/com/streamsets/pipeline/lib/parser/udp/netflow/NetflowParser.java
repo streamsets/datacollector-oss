@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.parser.udp.netflow;
 
 import com.google.common.cache.Cache;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -51,7 +52,7 @@ public class NetflowParser extends AbstractParser {
   private final Cache<FlowSetTemplateCacheKey, FlowSetTemplate> flowSetTemplateCache;
 
   public NetflowParser(
-      Stage.Context context,
+      ProtoConfigurableEntity.Context context,
       OutputValuesMode outputValuesMode,
       int maxTemplateCacheSize,
       int templateCacheTimeoutMs

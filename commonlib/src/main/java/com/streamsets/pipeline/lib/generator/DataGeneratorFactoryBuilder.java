@@ -15,13 +15,13 @@
  */
 package com.streamsets.pipeline.lib.generator;
 
-import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.lib.data.DataFactoryBuilder;
 
 public class DataGeneratorFactoryBuilder extends
   DataFactoryBuilder<DataGeneratorFactoryBuilder, DataGeneratorFactory, DataGeneratorFormat> {
 
-  public DataGeneratorFactoryBuilder(Stage.Context context, DataGeneratorFormat format) {
+  public DataGeneratorFactoryBuilder(ProtoConfigurableEntity.Context context, DataGeneratorFormat format) {
     super(context, format);
   }
 
