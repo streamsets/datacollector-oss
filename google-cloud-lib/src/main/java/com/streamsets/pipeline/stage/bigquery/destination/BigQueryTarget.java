@@ -64,9 +64,13 @@ public class BigQueryTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(BigQueryTarget.class);
   private static final Joiner COMMA_JOINER = Joiner.on(",");
 
-  static final SimpleDateFormat DATE_FORMAT = createSimpleDateFormat("yyyy-MM-dd");
-  static final SimpleDateFormat TIME_FORMAT = createSimpleDateFormat("HH:mm:ss.SSSSSS");
-  static final SimpleDateFormat DATE_TIME_FORMAT = createSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+  static final String YYYY_MM_DD = "yyyy-MM-dd";
+  static final String HH_MM_SS_SSSSSS = "HH:mm:ss.SSSSSS";
+  static final String YYYY_MM_DD_T_HH_MM_SS_SSSSSS = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+
+  private final SimpleDateFormat dateFormat;
+  private final SimpleDateFormat timeFormat;
+  private final SimpleDateFormat dateTimeFormat;
 
   private final BigQueryTargetConfig conf;
 
@@ -78,9 +82,12 @@ public class BigQueryTarget extends BaseTarget {
 
   BigQueryTarget(BigQueryTargetConfig conf) {
     this.conf = conf;
+    this.dateFormat = createSimpleDateFormat(YYYY_MM_DD);
+    this.timeFormat  = createSimpleDateFormat(HH_MM_SS_SSSSSS);
+    this.dateTimeFormat = createSimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS_SSSSSS);
   }
 
-  private static SimpleDateFormat createSimpleDateFormat(String pattern) {
+  static SimpleDateFormat createSimpleDateFormat(String pattern) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     return simpleDateFormat;
@@ -304,11 +311,11 @@ public class BigQueryTarget extends BaseTarget {
                 )
             );
       case DATE:
-        return DATE_FORMAT.format(field.getValueAsDate());
+        return dateFormat.format(field.getValueAsDate());
       case TIME:
-        return TIME_FORMAT.format(field.getValueAsTime());
+        return timeFormat.format(field.getValueAsTime());
       case DATETIME:
-        return DATE_TIME_FORMAT.format(field.getValueAsDatetime());
+        return dateTimeFormat.format(field.getValueAsDatetime());
       case BYTE_ARRAY:
         return Base64.getEncoder().encodeToString(field.getValueAsByteArray());
       case DECIMAL:
