@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.service.Service;
 
 public class ServiceContext implements Service.Context {
@@ -32,6 +33,21 @@ public class ServiceContext implements Service.Context {
   ) {
     this.stageName = stageName;
     this.serviceName = serviceName;
+  }
+
+  @Override
+  public String getResourcesDirectory() {
+    return null;
+  }
+
+  @Override
+  public Record createRecord(String recordSourceId) {
+    return null;
+  }
+
+  @Override
+  public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
+    return null;
   }
 
   private static class ConfigIssueImpl extends Issue implements ConfigIssue {
