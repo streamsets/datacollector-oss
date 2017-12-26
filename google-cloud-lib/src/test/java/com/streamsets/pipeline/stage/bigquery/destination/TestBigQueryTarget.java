@@ -51,6 +51,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -63,10 +64,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_FORMAT;
-import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_TIME_FORMAT;
-import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.TIME_FORMAT;
 
 
 @RunWith(PowerMockRunner.class)
@@ -82,6 +79,10 @@ import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.
 public class TestBigQueryTarget {
 
   private BigQuery bigQuery = PowerMockito.mock(BigQuery.class);
+
+  private static final SimpleDateFormat DATE_FORMAT = BigQueryTarget.createSimpleDateFormat(BigQueryTarget.YYYY_MM_DD);
+  private static final SimpleDateFormat TIME_FORMAT  = BigQueryTarget.createSimpleDateFormat(BigQueryTarget.HH_MM_SS_SSSSSS);
+  private static final SimpleDateFormat  DATE_TIME_FORMAT = BigQueryTarget.createSimpleDateFormat(BigQueryTarget.YYYY_MM_DD_T_HH_MM_SS_SSSSSS);
 
   @Before
   public void setup() {
