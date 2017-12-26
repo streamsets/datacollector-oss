@@ -84,7 +84,7 @@
     <stats-lib>stats-lib</stats-lib>
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
     <windows-lib>windows-lib</windows-lib>
-
+    <rootProject>true</rootProject>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -315,6 +315,7 @@
             <exclude>common-ui/src/main/webapp/common/directives/**</exclude>
 
           </excludes>
+          <goal>run</goal>
         </configuration>
       </plugin>
     </plugins>
@@ -370,38 +371,33 @@
         <activeByDefault>true</activeByDefault>
         <property>
           <name>!skipRat</name>
+
         </property>
       </activation>
       <build>
         <plugins>
-          <!-- Run apache-rat as part of every build, at root level only -->
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version>
+            <inherited>false</inherited>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
             <executions>
               <execution>
-                <id>rat-report</id>
-                <phase>initialize</phase>
+                <id>rat-check</id>
+                <phase>generate-sources</phase>
                 <goals>
-                  <goal>run</goal>
+                  <goal>exec</goal>
                 </goals>
-                <configuration>
-                  <target>
-                    <echo file="${project.build.directory}/apache-rat.sh">#!/bin/bash
-                      if [ "${project.artifactId}" == "streamsets-datacollector" ];
-                      then
-                      mvn apache-rat:check -N
-                      exit $?
-                      fi
-                    </echo>
-                    <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                      <arg line="${project.build.directory}/apache-rat.sh"/>
-                    </exec>
-                  </target>
-                </configuration>
               </execution>
             </executions>
+            <configuration>
+              <executable>mvn</executable>
+              <workingDirectory>${basedir}</workingDirectory>
+              <arguments>
+                <argument>apache-rat:check</argument>
+                <argument>-N</argument>
+              </arguments>
+            </configuration>
           </plugin>
         </plugins>
       </build>
