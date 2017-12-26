@@ -15,66 +15,16 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.google.common.base.Preconditions;
-import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.ConfigIssue;
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.service.Service;
 
-public class ServiceContext implements Service.Context {
-
-  private final String stageName;
-  private final String serviceName;
+public class ServiceContext extends ProtoContext implements Service.Context {
 
   public ServiceContext(
       String stageName,
-      String serviceName
+      String serviceName,
+      String resourceDir
   ) {
-    this.stageName = stageName;
-    this.serviceName = serviceName;
-  }
-
-  @Override
-  public String getResourcesDirectory() {
-    return null;
-  }
-
-  @Override
-  public Record createRecord(String recordSourceId) {
-    return null;
-  }
-
-  @Override
-  public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
-    return null;
-  }
-
-  private static class ConfigIssueImpl extends Issue implements ConfigIssue {
-    public ConfigIssueImpl(
-        String stageName,
-        String serviceName,
-        String configGroup,
-        String configName,
-        ErrorCode errorCode,
-        Object... args
-    ) {
-      super(stageName, serviceName, configGroup, configName, errorCode, args);
-    }
-  }
-
-  private static final Object[] NULL_ONE_ARG = {null};
-
-  @Override
-  public ConfigIssue createConfigIssue(
-    String configGroup,
-    String configName,
-    ErrorCode errorCode,
-    Object... args
-  ) {
-    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
-    args = (args != null) ? args.clone() : NULL_ONE_ARG;
-    return new ConfigIssueImpl(stageName, serviceName, configGroup, configName, errorCode, args);
+    super(stageName, serviceName, resourceDir);
   }
 
 }

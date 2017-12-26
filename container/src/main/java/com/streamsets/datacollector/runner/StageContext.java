@@ -91,7 +91,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StageContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
+public class StageContext extends ProtoContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
 
   private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
   private static final String STAGE_CONF_PREFIX = "stage.conf_";
@@ -117,7 +117,6 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
   private final DeliveryGuarantee deliveryGuarantee;
-  private final String resourcesDir;
   private final String sdcId;
   private final String pipelineId;
   private final String pipelineTitle;
@@ -150,6 +149,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       LineagePublisherDelegator lineagePublisherDelegator,
       RuntimeInfo runtimeInfo
   ) {
+    super("x", null, resourcesDir);
     this.pipelineId = "myPipeline";
     this.pipelineTitle = "My Pipeline";
     this.sdcId = "mySDC";
@@ -191,7 +191,6 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
-    this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
     reportErrorDelegate = errorSink;
     this.sharedRunnerMap = new ConcurrentHashMap<>();
@@ -229,6 +228,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       LineagePublisherDelegator lineagePublisherDelegator,
       Map<Class, ServiceRuntime> services
   ) {
+    super(stageRuntime.getInfo().getInstanceName(), null, runtimeInfo.getResourcesDir());
     this.pipelineId = pipelineId;
     this.pipelineTitle = pipelineTitle;
     this.rev = rev;
@@ -247,7 +247,6 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
     this.runtimeInfo = runtimeInfo;
-    this.resourcesDir = runtimeInfo.getResourcesDir();
     this.sdcId = runtimeInfo.getId();
     this.emailSender = emailSender;
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
@@ -314,25 +313,6 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public DeliveryGuarantee getDeliveryGuarantee() {
     return deliveryGuarantee;
-  }
-
-  private static class ConfigIssueImpl extends Issue implements ConfigIssue {
-
-    public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
-        Object... args) {
-      super(instanceName, null, configGroup, configName, errorCode, args);
-    }
-
-  }
-
-  private static final Object[] NULL_ONE_ARG = {null};
-
-  @Override
-  public ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
-                                       Object... args) {
-    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
-    args = (args != null) ? args.clone() : NULL_ONE_ARG;
-    return new ConfigIssueImpl(stageInfo.getInstanceName(), configGroup, configName, errorCode, args);
   }
 
   @Override
@@ -584,26 +564,9 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     return outputLanes;
   }
 
-  //Stage.Context
-  @Override
-  public Record createRecord(String recordSourceId) {
-    return new RecordImpl(stageInfo.getInstanceName(), recordSourceId, null, null);
-  }
-
-  //Stage.Context
-  @Override
-  public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
-    return new RecordImpl(stageInfo.getInstanceName(), recordSourceId, raw, rawMime);
-  }
-
   @Override
   public long getLastBatchTime() {
     return lastBatchTime;
-  }
-
-  @Override
-  public String getResourcesDirectory() {
-    return resourcesDir;
   }
 
   @Override
