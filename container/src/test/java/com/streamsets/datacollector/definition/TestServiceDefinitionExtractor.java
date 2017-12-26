@@ -19,6 +19,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.ServiceDef;

@@ -18,6 +18,7 @@ package com.streamsets.service.generator;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseService;
 import com.streamsets.pipeline.api.service.ServiceDef;

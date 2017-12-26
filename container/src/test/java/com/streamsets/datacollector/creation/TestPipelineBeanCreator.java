@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ListBeanModel;

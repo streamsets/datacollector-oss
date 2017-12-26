@@ -45,6 +45,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
@@ -315,7 +316,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     return deliveryGuarantee;
   }
 
-  private static class ConfigIssueImpl extends Issue implements Stage.ConfigIssue {
+  private static class ConfigIssueImpl extends Issue implements ConfigIssue {
 
     public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
         Object... args) {
@@ -327,8 +328,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private static final Object[] NULL_ONE_ARG = {null};
 
   @Override
-  public Stage.ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
-      Object... args) {
+  public ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
+                                       Object... args) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(stageInfo.getInstanceName(), configGroup, configName, errorCode, args);

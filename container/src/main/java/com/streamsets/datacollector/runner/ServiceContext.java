@@ -17,6 +17,7 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.service.Service;
 
@@ -33,7 +34,7 @@ public class ServiceContext implements Service.Context {
     this.serviceName = serviceName;
   }
 
-  private static class ConfigIssueImpl extends Issue implements Service.ConfigIssue {
+  private static class ConfigIssueImpl extends Issue implements ConfigIssue {
     public ConfigIssueImpl(
         String stageName,
         String serviceName,
@@ -49,7 +50,7 @@ public class ServiceContext implements Service.Context {
   private static final Object[] NULL_ONE_ARG = {null};
 
   @Override
-  public Service.ConfigIssue createConfigIssue(
+  public ConfigIssue createConfigIssue(
     String configGroup,
     String configName,
     ErrorCode errorCode,
