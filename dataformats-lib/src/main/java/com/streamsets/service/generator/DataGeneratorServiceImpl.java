@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @ServiceDef(
@@ -61,17 +62,19 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
   @Override
   public List<ConfigIssue> init() {
     LOG.debug("Initializing dataformat service.");
-    /* TODO: We need to first abstract some of the common interfaces up
-    return dataGeneratorFormatConfig.init(
-      context,
+
+    // Intentionally erasing the generic type as the init() method current works with Stage.ConfigIssue. This will
+    // be changed once we convert all stages to use the service concept.
+    List issues = new LinkedList();
+    dataGeneratorFormatConfig.init(
+      getContext(),
       dataFormat,
       "DATA_FORMAT",
       "dataGeneratorFormatConfig.",
-      new LinkedList<>()
+      issues
     );
-    */
 
-    return Collections.emptyList();
+    return issues;
   }
 
   @Override
