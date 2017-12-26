@@ -38,6 +38,7 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
@@ -45,7 +46,7 @@ public class SyslogDecoder extends ByteToMessageDecoder {
 
   private static final Pattern TWO_SPACES = Pattern.compile("  ");
   private static final DateTimeFormatter rfc3164Format =
-      DateTimeFormatter.ofPattern("MMM d HH:mm:ss");
+      DateTimeFormatter.ofPattern("MMM d HH:mm:ss", Locale.US);
 
   public static final String RFC5424_TS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
   private static final int RFC3164_LEN = 15;
@@ -62,7 +63,7 @@ public class SyslogDecoder extends ByteToMessageDecoder {
   public SyslogDecoder(Charset charset, Clock clock) {
     this.charset = charset;
     this.clock = clock;
-    timestampCache = buildTimestampCache(DateTimeFormatter.ofPattern(RFC5424_TS_PATTERN));
+    timestampCache = buildTimestampCache(DateTimeFormatter.ofPattern(RFC5424_TS_PATTERN, Locale.US));
   }
 
   public static LoadingCache<String, Long> buildTimestampCache(DateTimeFormatter timeParser) {

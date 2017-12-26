@@ -25,6 +25,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SyslogBaseTestClass {
@@ -36,7 +37,7 @@ public class SyslogBaseTestClass {
   }
 
   private final LoadingCache<String, Long> rfc5424TsCache = SyslogDecoder.buildTimestampCache(
-      DateTimeFormatter.ofPattern(SyslogDecoder.RFC5424_TS_PATTERN)
+      DateTimeFormatter.ofPattern(SyslogDecoder.RFC5424_TS_PATTERN, Locale.US)
   );
 
   protected Clock getSystemClock() {

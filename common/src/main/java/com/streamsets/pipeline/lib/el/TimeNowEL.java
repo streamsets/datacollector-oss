@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class TimeNowEL {
@@ -139,7 +140,7 @@ public class TimeNowEL {
       LOG.error(Utils.format("Invalid parameter - Date Format is null/empty"));
       return null;
     }
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
     return simpleDateFormat.parse(dateTimeString);
   }
 

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TestDatagramParser {
 
@@ -57,7 +58,7 @@ public class TestDatagramParser {
 
   @BeforeClass
   public static void setUp() {
-    String RFC3162_formatter = new SimpleDateFormat ("MMM dd HH:mm:ss").format(timestamp);
+    String RFC3162_formatter = new SimpleDateFormat ("MMM dd HH:mm:ss", Locale.US).format(timestamp);
     DateTime datetime = new DateTime(timestamp.getTime());
     String RFC5424_formatter = datetime.toDateTimeISO().toString();
 

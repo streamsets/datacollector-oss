@@ -27,6 +27,7 @@ import org.mockito.Mockito;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TestTimeNewEL {
 
@@ -156,7 +157,7 @@ public class TestTimeNewEL {
     );
 
     checkExtractDateFromString(
-        new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss.SSS Z").parse("2017/May/01 20:15:30.915 PDT"),
+        new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss.SSS Z", Locale.US).parse("2017/May/01 20:15:30.915 PDT"),
         "2017-05-01 20:15:30.915 PDT",
         "yyyy-MM-dd HH:mm:ss.SSS Z"
     );
