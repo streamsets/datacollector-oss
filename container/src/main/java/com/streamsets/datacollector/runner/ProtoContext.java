@@ -22,15 +22,26 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.el.ELEvaluator;
+import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +51,8 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
 
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
 
+  private final Map<String, Class<?>[]> configToElDefMap;
+  private final Map<String, Object> constants;
   protected final MetricRegistry metrics;
   protected final String pipelineId;
   protected final String rev;
@@ -48,6 +61,8 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
   protected final String resourcesDir;
 
   protected ProtoContext(
+      Map<String, Class<?>[]> configToElDefMap,
+      Map<String, Object> constants,
       MetricRegistry metrics,
       String pipelineId,
       String rev,
@@ -55,12 +70,30 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
       String serviceInstanceName,
       String resourcesDir
   ) {
+    this.configToElDefMap = configToElDefMap;
+    this.constants = constants;
     this.metrics = metrics;
     this.pipelineId = pipelineId;
     this.rev = rev;
     this.stageInstanceName = stageInstanceName;
     this.serviceInstanceName = serviceInstanceName;
     this.resourcesDir = resourcesDir;
+  }
+
+  protected static Map<String, Class<?>[]> getConfigToElDefMap(List<ConfigDefinition> configs) {
+    Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
+    for(ConfigDefinition configDefinition : configs) {
+      configToElDefMap.put(configDefinition.getFieldName(),
+        ElUtil.getElDefClassArray(configDefinition.getElDefs()));
+      if(configDefinition.getModel() != null && configDefinition.getModel().getConfigDefinitions() != null) {
+        for(ConfigDefinition configDef : configDefinition.getModel().getConfigDefinitions()) {
+          configToElDefMap.put(configDef.getFieldName(),
+            ElUtil.getElDefClassArray(configDef.getElDefs()));
+        }
+      }
+    }
+
+    return configToElDefMap;
   }
 
   private static class ConfigIssueImpl extends Issue implements ConfigIssue {
@@ -92,6 +125,11 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
   @Override
   public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
     return new RecordImpl(stageInstanceName, recordSourceId, raw, rawMime);
+  }
+
+  @Override
+  public Map<String, Object> getPipelineConstants() {
+    return constants;
   }
 
   @Override
@@ -163,6 +201,37 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
   @Override
   public Gauge<Map<String, Object>> getGauge(String name) {
     return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
+  // ELContext
+
+  @Override
+  public void parseEL(String el) throws ELEvalException {
+    ELEvaluator.parseEL(el);
+  }
+
+  @Override
+  public ELVars createELVars() {
+    return new ELVariables(constants);
+  }
+
+  @Override
+  public ELEval createELEval(String configName) {
+    return createELEval(configName, configToElDefMap.get(configName));
+  }
+
+  @Override
+  public ELEval createELEval(String configName, Class<?>... elDefClasses) {
+    List<Class> classes = new ArrayList<>();
+    Class[] configClasses = configToElDefMap.get(configName);
+    if (configClasses != null) {
+      Collections.addAll(classes, configClasses);
+    }
+    if (elDefClasses != null) {
+      Collections.addAll(classes, elDefClasses);
+    }
+    // assert non of the EL functions is implicit only
+    return new ELEvaluator(configName, true, constants, classes.toArray(new Class[classes.size()]));
   }
 
 }

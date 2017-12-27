@@ -16,19 +16,28 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.service.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServiceContext extends ProtoContext implements Service.Context {
 
   public ServiceContext(
+      Map<String, Object> constants,
       MetricRegistry metrics,
       String pipelineId,
       String rev,
       String stageName,
+      ServiceRuntime serviceRuntime,
       String serviceName,
       String resourceDir
   ) {
     super(
+      getConfigToElDefMap(serviceRuntime.getServiceBean().getDefinition().getConfigDefinitions()),
+      constants,
       metrics,
       pipelineId,
       rev,

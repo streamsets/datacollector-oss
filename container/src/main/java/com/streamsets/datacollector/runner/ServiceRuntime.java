@@ -65,6 +65,10 @@ public class ServiceRuntime implements DataFormatGeneratorService {
     this.serviceBean = serviceBean;
   }
 
+  public ServiceBean getServiceBean() {
+    return serviceBean;
+  }
+
   public void setContext(Service.Context context) {
     this.context = context;
   }

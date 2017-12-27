@@ -15,25 +15,17 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.Histogram;
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.StageType;
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
@@ -43,9 +35,7 @@ import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchContext;
-import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
@@ -58,9 +48,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonObjectReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
@@ -85,7 +72,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,8 +96,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private ErrorSink errorSink;
   private EventSink eventSink;
   private long lastBatchTime;
-  private final Map<String, Class<?>[]> configToElDefMap;
-  private final Map<String, Object> constants;
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
   private final DeliveryGuarantee deliveryGuarantee;
@@ -146,6 +130,8 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       RuntimeInfo runtimeInfo
   ) {
     super(
+      configToElDefMap,
+      Collections.unmodifiableMap(constants),
       new MetricRegistry(),
       "myPipeline",
       "0",
@@ -186,8 +172,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
     eventSink = new EventSink();
-    this. configToElDefMap = configToElDefMap;
-    this.constants = Collections.unmodifiableMap(constants);
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
@@ -229,6 +213,8 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       Map<Class, ServiceRuntime> services
   ) {
     super(
+      getConfigToElDefMap(stageRuntime.getDefinition().getConfigDefinitions()),
+      stageRuntime.getConstants(),
       metrics,
       pipelineId,
       rev,
@@ -245,8 +231,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.stageInfo = stageRuntime.getInfo();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
     onRecordError = stageRuntime.getOnRecordError();
-    this.configToElDefMap = getConfigToElDefMap(stageRuntime);
-    this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
@@ -261,22 +245,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
     this.services = services;
-  }
-
-  private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
-    Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
-    for(ConfigDefinition configDefinition : stageRuntime.getDefinition().getConfigDefinitions()) {
-      configToElDefMap.put(configDefinition.getFieldName(),
-        ElUtil.getElDefClassArray(configDefinition.getElDefs()));
-      if(configDefinition.getModel() != null && configDefinition.getModel().getConfigDefinitions() != null) {
-        for(ConfigDefinition configDef : configDefinition.getModel().getConfigDefinitions()) {
-          configToElDefMap.put(configDef.getFieldName(),
-            ElUtil.getElDefClassArray(configDef.getElDefs()));
-        }
-      }
-    }
-    return configToElDefMap;
-
   }
 
   @Override
@@ -377,11 +345,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   @Override
   public String getConfig(String configName) {
     return configuration.get(STAGE_CONF_PREFIX + configName, null);
-  }
-
-  @Override
-  public Map<String, Object> getPipelineConstants() {
-    return constants;
   }
 
   @Override
@@ -648,36 +611,4 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   public String toString() {
     return Utils.format("StageContext[instance='{}']", stageInfo.getInstanceName());
   }
-
-  //ElProvider interface implementation
-
-  @Override
-  public void parseEL(String el) throws ELEvalException {
-    ELEvaluator.parseEL(el);
-  }
-
-  @Override
-  public ELVars createELVars() {
-    return new ELVariables(constants);
-  }
-
-  @Override
-  public ELEval createELEval(String configName) {
-    return createELEval(configName, configToElDefMap.get(configName));
-  }
-
-  @Override
-  public ELEval createELEval(String configName, Class<?>... elDefClasses) {
-    List<Class> classes = new ArrayList<>();
-    Class[] configClasses = configToElDefMap.get(configName);
-    if (configClasses != null) {
-      Collections.addAll(classes, configClasses);
-    }
-    if (elDefClasses != null) {
-      Collections.addAll(classes, elDefClasses);
-    }
-    // assert non of the EL functions is implicit only
-    return new ELEvaluator(configName, true, constants, classes.toArray(new Class[classes.size()]));
-  }
-
 }
