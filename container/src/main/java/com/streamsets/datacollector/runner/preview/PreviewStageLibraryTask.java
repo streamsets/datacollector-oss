@@ -100,27 +100,27 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
 
   @Override
   public List<LineagePublisherDefinition> getLineagePublisherDefinitions() {
-    return Collections.emptyList();
+    return library.getLineagePublisherDefinitions();
   }
 
   @Override
   public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
-    return null;
+    return this.library.getLineagePublisherDefinition(library, name);
   }
 
   @Override
   public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
-    return Collections.emptyList();
+    return library.getCredentialStoreDefinitions();
   }
 
   @Override
   public List<ServiceDefinition> getServiceDefinitions() {
-    return Collections.emptyList();
+    return library.getServiceDefinitions();
   }
 
   @Override
   public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
-    return null;
+    return library.getServiceDefinition(serviceInterface, forExecution);
   }
 
   @Override
@@ -146,7 +146,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
 
   @Override
   public List<ClasspathValidatorResult> validateStageLibClasspath() {
-    return Collections.emptyList();
+    return library.validateStageLibClasspath();
   }
 
   @Override

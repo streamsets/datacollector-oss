@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.apache.commons.lang3.StringUtils;
@@ -575,6 +576,7 @@ public abstract class PipelineBeanCreator {
       Map<String, Object> pipelineConstants,
       List<Issue> errors
   ) {
+    Utils.checkNotNull(serviceDef, "ServiceDefinition can't be null.");
     Service service;
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {
