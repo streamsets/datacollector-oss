@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
@@ -75,7 +76,7 @@ public abstract class AbstractFileRef extends FileRef {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends AutoCloseable> T createInputStream(Stage.Context context, Class<T> streamClassType) throws IOException {
+  public <T extends AutoCloseable> T createInputStream(ProtoConfigurableEntity.Context context, Class<T> streamClassType) throws IOException {
     Utils.checkArgument(
         supportedStreamClasses.contains(streamClassType),
         Utils.format("Stream class {} not supported for {}.", streamClassType, this.getClass().getName())

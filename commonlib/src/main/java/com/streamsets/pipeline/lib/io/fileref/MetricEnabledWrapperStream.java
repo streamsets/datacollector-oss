@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
 
 
   @SuppressWarnings("unchecked")
-  MetricEnabledWrapperStream(String id, long fileSize, Stage.Context context, T stream) {
+  MetricEnabledWrapperStream(String id, long fileSize, ProtoConfigurableEntity.Context context, T stream) {
     super(stream);
     this.fileSize = fileSize;
     dataThroughputMeterForCurrentStream = new Meter();
