@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.json.JsonMapperImpl;
@@ -38,14 +39,17 @@ import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public abstract class StageRunner<S extends Stage> extends ProtoRunner {
@@ -77,6 +81,15 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
   private int getVersion(Class<? extends Stage> klass) {
     StageDef def = getStageDefinition(klass);
     return (def != null) ? def.version() : -1;
+  }
+
+  private Set<Class> getDeclaredServices(Class<? extends Stage> klass) {
+    StageDef def = getStageDefinition(klass);
+    Set<Class> declaredServices = new HashSet<>();
+    for(ServiceDependency service : def.services()) {
+      declaredServices.add(service.service());
+    }
+    return declaredServices;
   }
 
   @SuppressWarnings("unchecked")
@@ -146,7 +159,7 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
       throw new RuntimeException(ex);
     }
     String name = getName(stage.getClass());
-    int version = getVersion(stage.getClass());
+    int version = getVersion(stageClass);
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
     Map<String, Class<?>[]> configToElDefMap;
@@ -164,6 +177,15 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
     Map<Class, Object> serviceMap = new HashMap<>();
     for(ServiceRunner serviceRunner : services) {
       serviceMap.put(serviceRunner.getServiceClass(), serviceRunner.getService());
+    }
+
+    // Validate that we have all the services that are needed for the stage proper execution
+    Set<Class> declaredServices = getDeclaredServices(stageClass);
+    Set<Class> givenServices = serviceMap.keySet();
+    Set<Class> missingServices = Sets.difference(declaredServices, givenServices);
+    Set<Class> extraServices = Sets.difference(givenServices, declaredServices);
+    if(!missingServices.isEmpty() || !extraServices.isEmpty()) {
+      throw new RuntimeException(Utils.format("Services mismatch - missing ({}), extra({})", missingServices, extraServices));
     }
 
     // Create StageContext instance
