@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.sampling;
 
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.Sampler;
@@ -35,14 +36,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class RecordSampler implements Sampler {
 
-  private final Stage.Context stageContext;
+  private final ProtoConfigurableEntity.Context stageContext;
   private List<Integer> populationSet;
   private final boolean isOrigin;
   private final int sampleSize;
   private int recordCounter;
   private Set<Integer> sampleSet;
 
-  public RecordSampler(Stage.Context stageContext, boolean isOrigin, int sampleSize, int populationSize) {
+  public RecordSampler(ProtoConfigurableEntity.Context stageContext, boolean isOrigin, int sampleSize, int populationSize) {
     this.stageContext = stageContext;
     this.isOrigin = isOrigin;
     this.sampleSize = sampleSize;

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.record.io;
 
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.RecordReader;
@@ -64,7 +65,7 @@ public class RecordWriterReaderFactory {
     return reader;
   }
 
-  public static RecordWriter createRecordWriter(Stage.Context context, OutputStream os) throws IOException {
+  public static RecordWriter createRecordWriter(ProtoConfigurableEntity.Context context, OutputStream os) throws IOException {
     ELVars constants = context.createELVars();
     RecordEncoding encoding = RecordEncoding.getEncoding((String) constants.getConstant(DATA_COLLECTOR_RECORD_FORMAT));
     return createRecordWriter(encoding, os);

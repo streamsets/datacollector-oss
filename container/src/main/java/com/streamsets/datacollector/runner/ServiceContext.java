@@ -17,6 +17,8 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.service.Service;
 
@@ -26,7 +28,9 @@ import java.util.Map;
 public class ServiceContext extends ProtoContext implements Service.Context {
 
   public ServiceContext(
+      Configuration configuration,
       Map<String, Object> constants,
+      EmailSender emailSender,
       MetricRegistry metrics,
       String pipelineId,
       String rev,
@@ -36,12 +40,15 @@ public class ServiceContext extends ProtoContext implements Service.Context {
       String resourceDir
   ) {
     super(
+      configuration,
       getConfigToElDefMap(serviceRuntime.getServiceBean().getDefinition().getConfigDefinitions()),
       constants,
+      emailSender,
       metrics,
       pipelineId,
       rev,
       stageName,
+      null,
       serviceName,
       resourceDir
     );

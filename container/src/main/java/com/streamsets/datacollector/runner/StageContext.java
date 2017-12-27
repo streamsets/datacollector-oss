@@ -18,10 +18,8 @@ package com.streamsets.datacollector.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.StageType;
-import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
@@ -29,12 +27,9 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
-import com.streamsets.datacollector.record.io.JsonWriterReaderFactory;
-import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -48,47 +43,23 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonObjectReader;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
-import com.streamsets.pipeline.api.ext.RecordReader;
-import com.streamsets.pipeline.api.ext.RecordWriter;
-import com.streamsets.pipeline.api.ext.Sampler;
-import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
-import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StageContext extends ProtoContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
-
-  private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
-  private static final String STAGE_CONF_PREFIX = "stage.conf_";
-  private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
-  private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
-
-  private final Configuration configuration;
+public class StageContext extends ProtoContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context {
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final Stage.UserContext userContext;
-  private final StageType stageType;
   private final boolean isPreview;
   private final Stage.Info stageInfo;
   private final List<String> outputLanes;
@@ -102,8 +73,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private final String sdcId;
   private final String pipelineTitle;
   private volatile boolean stop;
-  private final EmailSender emailSender;
-  private final Sampler sampler;
   private final Map<String, Object> sharedRunnerMap;
   private final long startTime;
   private final LineagePublisherDelegator lineagePublisherDelegator;
@@ -130,12 +99,15 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       RuntimeInfo runtimeInfo
   ) {
     super(
+      configuration,
       configToElDefMap,
       Collections.unmodifiableMap(constants),
+      emailSender,
       new MetricRegistry(),
       "myPipeline",
       "0",
       "x",
+      stageType,
       null,
       resourcesDir
     );
@@ -165,7 +137,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     };
     this.userContext = new UserContext("sdk-user");
     pipelineInfo = ImmutableList.of(stageInfo);
-    this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
     this.outputLanes = ImmutableList.copyOf(outputLanes);
@@ -175,14 +146,11 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
-    this.emailSender = emailSender;
     reportErrorDelegate = errorSink;
     this.sharedRunnerMap = new ConcurrentHashMap<>();
     this.runtimeInfo = runtimeInfo;
 
     // sample all records while testing
-    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
-    this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, 0, 0);
     this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
 
@@ -213,19 +181,21 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       Map<Class, ServiceRuntime> services
   ) {
     super(
+      configuration,
       getConfigToElDefMap(stageRuntime.getDefinition().getConfigDefinitions()),
       stageRuntime.getConstants(),
+      emailSender,
       metrics,
       pipelineId,
       rev,
       stageRuntime.getInfo().getInstanceName(),
+      stageType,
       null,
       runtimeInfo.getResourcesDir()
     );
     this.pipelineTitle = pipelineTitle;
     this.pipelineInfo = pipelineInfo;
     this.userContext = userContext;
-    this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
     this.stageInfo = stageRuntime.getInfo();
@@ -236,11 +206,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.deliveryGuarantee = deliveryGuarantee;
     this.runtimeInfo = runtimeInfo;
     this.sdcId = runtimeInfo.getId();
-    this.emailSender = emailSender;
-    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
-    int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
-    int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
-    this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
     this.sharedRunnerMap = sharedRunnerMap;
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
@@ -292,57 +257,7 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     return stageInfo;
   }
 
-  @Override
-  public RecordReader createRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen)
-      throws IOException {
-    return RecordWriterReaderFactory.createRecordReader(inputStream, initialPosition, maxObjectLen);
-  }
-
-  @Override
-  public RecordWriter createRecordWriter(OutputStream outputStream) throws IOException {
-    return RecordWriterReaderFactory.createRecordWriter(this, outputStream);
-  }
-
-  /* JSON Methods */
-  @Override
-  public JsonObjectReader createJsonObjectReader(
-      Reader reader, long initialPosition, Mode mode, Class<?> objectClass
-  ) throws IOException {
-    return JsonWriterReaderFactory.createObjectReader(reader, initialPosition, mode, objectClass);
-  }
-
-  @Override
-  public JsonObjectReader createJsonObjectReader(
-      Reader reader, long initialPosition, int maxObjectLen, Mode mode, Class<?> objectClass
-  ) throws IOException {
-    return JsonWriterReaderFactory.createObjectReader(reader, initialPosition, mode, objectClass, maxObjectLen);
-  }
-
-  @Override
-  public JsonRecordWriter createJsonRecordWriter(
-      Writer writer, Mode mode
-  ) throws IOException {
-    return JsonWriterReaderFactory.createRecordWriter(writer, mode);
-  }
-
-  /* End JSON Methods */
-
-  @Override
-  public void notify(List<String> addresses, String subject, String body) throws StageException {
-    try {
-      emailSender.send(addresses, subject, body);
-    } catch (EmailException e) {
-      LOG.error(Utils.format(ContainerError.CONTAINER_01001.getMessage(), e.toString(), e));
-      throw new StageException(ContainerError.CONTAINER_01001, e.toString(), e);
-    }
-  }
-
-  @Override
-  public Sampler getSampler() {
-    return sampler;
-  }
-
-  @Override
+  @Override // TODO: Candidate to be moved to ProtoConfigurableEntity.Context
   public String getConfig(String configName) {
     return configuration.get(STAGE_CONF_PREFIX + configName, null);
   }
