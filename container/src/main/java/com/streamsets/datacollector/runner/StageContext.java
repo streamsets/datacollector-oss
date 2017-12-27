@@ -95,7 +95,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
 
   private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
   private static final String STAGE_CONF_PREFIX = "stage.conf_";
-  private static final String CUSTOM_METRICS_PREFIX = "custom.";
   private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
   private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
 
@@ -105,7 +104,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private final Stage.UserContext userContext;
   private final StageType stageType;
   private final boolean isPreview;
-  private final MetricRegistry metrics;
   private final Stage.Info stageInfo;
   private final List<String> outputLanes;
   private final OnRecordError onRecordError;
@@ -118,9 +116,7 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private final ExecutionMode executionMode;
   private final DeliveryGuarantee deliveryGuarantee;
   private final String sdcId;
-  private final String pipelineId;
   private final String pipelineTitle;
-  private final String rev;
   private volatile boolean stop;
   private final EmailSender emailSender;
   private final Sampler sampler;
@@ -149,11 +145,16 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       LineagePublisherDelegator lineagePublisherDelegator,
       RuntimeInfo runtimeInfo
   ) {
-    super("x", null, resourcesDir);
-    this.pipelineId = "myPipeline";
+    super(
+      new MetricRegistry(),
+      "myPipeline",
+      "0",
+      "x",
+      null,
+      resourcesDir
+    );
     this.pipelineTitle = "My Pipeline";
     this.sdcId = "mySDC";
-    this.rev = "0";
     // create dummy info for Stage Runners. This is required for stages that expose custom metrics
     this.stageInfo = new Stage.Info() {
       @Override
@@ -181,7 +182,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
-    metrics = new MetricRegistry();
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
@@ -228,16 +228,20 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       LineagePublisherDelegator lineagePublisherDelegator,
       Map<Class, ServiceRuntime> services
   ) {
-    super(stageRuntime.getInfo().getInstanceName(), null, runtimeInfo.getResourcesDir());
-    this.pipelineId = pipelineId;
+    super(
+      metrics,
+      pipelineId,
+      rev,
+      stageRuntime.getInfo().getInstanceName(),
+      null,
+      runtimeInfo.getResourcesDir()
+    );
     this.pipelineTitle = pipelineTitle;
-    this.rev = rev;
     this.pipelineInfo = pipelineInfo;
     this.userContext = userContext;
     this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
-    this.metrics = metrics;
     this.stageInfo = stageRuntime.getInfo();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
     onRecordError = stageRuntime.getOnRecordError();
@@ -408,66 +412,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   @Override
   public List<Stage.Info> getPipelineInfo() {
     return pipelineInfo;
-  }
-
-  @Override
-  public MetricRegistry getMetrics() {
-    return metrics;
-  }
-
-  @Override
-  public Timer createTimer(String name) {
-    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineId,
-      rev);
-  }
-
-  public Timer getTimer(String name) {
-    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
-  }
-
-  @Override
-  public Meter createMeter(String name) {
-    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineId,
-      rev);
-  }
-
-  public Meter getMeter(String name) {
-    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
-  }
-
-  @Override
-  public Counter createCounter(String name) {
-    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineId,
-      rev);
-  }
-
-  public Counter getCounter(String name) {
-    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
-  }
-
-  @Override
-  public Histogram createHistogram(String name) {
-    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineId, rev);
-  }
-
-  @Override
-  public Histogram getHistogram(String name) {
-    return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
-  }
-
-  @Override
-  public Gauge<Map<String, Object>> createGauge(String name) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, null, pipelineId, rev);
-  }
-
-  @Override
-  public Gauge<Map<String, Object>> createGauge(String name, Comparator<String> comparator) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, comparator, pipelineId, rev);
-  }
-
-  @Override
-  public Gauge<Map<String, Object>> getGauge(String name) {
-    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name);
   }
 
   // for SDK

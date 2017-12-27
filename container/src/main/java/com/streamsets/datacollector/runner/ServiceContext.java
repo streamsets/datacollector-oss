@@ -15,16 +15,27 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.service.Service;
 
 public class ServiceContext extends ProtoContext implements Service.Context {
 
   public ServiceContext(
+      MetricRegistry metrics,
+      String pipelineId,
+      String rev,
       String stageName,
       String serviceName,
       String resourceDir
   ) {
-    super(stageName, serviceName, resourceDir);
+    super(
+      metrics,
+      pipelineId,
+      rev,
+      stageName,
+      serviceName,
+      resourceDir
+    );
   }
 
 }

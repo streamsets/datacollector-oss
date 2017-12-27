@@ -15,7 +15,14 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Histogram;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ConfigIssue;
@@ -23,20 +30,34 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
 
+import java.util.Comparator;
+import java.util.Map;
+
 /**
  * Shared context for both Service and Stage.
  */
-public class ProtoContext implements ProtoConfigurableEntity.Context {
+public abstract class ProtoContext implements ProtoConfigurableEntity.Context {
 
-  private final String stageInstanceName;
-  private final String serviceInstanceName;
-  private final String resourcesDir;
+  private static final String CUSTOM_METRICS_PREFIX = "custom.";
+
+  protected final MetricRegistry metrics;
+  protected final String pipelineId;
+  protected final String rev;
+  protected final String stageInstanceName;
+  protected final String serviceInstanceName;
+  protected final String resourcesDir;
 
   protected ProtoContext(
+      MetricRegistry metrics,
+      String pipelineId,
+      String rev,
       String stageInstanceName,
       String serviceInstanceName,
       String resourcesDir
   ) {
+    this.metrics = metrics;
+    this.pipelineId = pipelineId;
+    this.rev = rev;
     this.stageInstanceName = stageInstanceName;
     this.serviceInstanceName = serviceInstanceName;
     this.resourcesDir = resourcesDir;
@@ -84,4 +105,64 @@ public class ProtoContext implements ProtoConfigurableEntity.Context {
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(stageInstanceName, serviceInstanceName, configGroup, configName, errorCode, args);
   }
+  @Override
+  public MetricRegistry getMetrics() {
+    return metrics;
+  }
+
+  @Override
+  public Timer createTimer(String name) {
+    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+      rev);
+  }
+
+  public Timer getTimer(String name) {
+    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
+  @Override
+  public Meter createMeter(String name) {
+    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+      rev);
+  }
+
+  public Meter getMeter(String name) {
+    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
+  @Override
+  public Counter createCounter(String name) {
+    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+      rev);
+  }
+
+  public Counter getCounter(String name) {
+    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
+  @Override
+  public Histogram createHistogram(String name) {
+    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId, rev);
+  }
+
+  @Override
+  public Histogram getHistogram(String name) {
+    return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
+  @Override
+  public Gauge<Map<String, Object>> createGauge(String name) {
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, null, pipelineId, rev);
+  }
+
+  @Override
+  public Gauge<Map<String, Object>> createGauge(String name, Comparator<String> comparator) {
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, comparator, pipelineId, rev);
+  }
+
+  @Override
+  public Gauge<Map<String, Object>> getGauge(String name) {
+    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+  }
+
 }

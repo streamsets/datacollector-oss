@@ -954,6 +954,9 @@ public class Pipeline {
       ServiceRuntime runtime = new ServiceRuntime(pipelineBean, serviceBean);
 
       runtime.setContext(new ServiceContext(
+        pipelineRunner.getMetrics(),
+        pipelineName,
+        pipelineRev,
         stageBean.getConfiguration().getInstanceName(),
         serviceBean.getDefinition().getClassName(),
         pipelineRunner.getRuntimeInfo().getResourcesDir()
