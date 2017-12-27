@@ -65,7 +65,7 @@ public class AvroMessageGenerator extends BaseAvroDataGenerator {
   @Override
   protected void postInitialize() throws IOException {
     // If using Confluent Kafka Serializer we must write the magic byte
-    if (schemaInHeader && schemaHelper != null && schemaHelper.hasRegistryClient() && schemaId > 0) {
+    if (schemaHelper != null && schemaHelper.hasRegistryClient() && schemaId > 0) {
       schemaHelper.writeSchemaId(outputStream, schemaId);
     }
   }
