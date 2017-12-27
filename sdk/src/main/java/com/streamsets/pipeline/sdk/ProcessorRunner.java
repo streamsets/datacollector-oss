@@ -49,7 +49,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       processorClass,
@@ -64,7 +65,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -79,7 +81,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       processorClass,
@@ -93,7 +96,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -137,7 +141,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       } else {
         return new ProcessorRunner(
@@ -151,7 +156,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       }
     }

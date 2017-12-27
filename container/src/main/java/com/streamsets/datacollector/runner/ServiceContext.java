@@ -16,17 +16,15 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.service.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ServiceContext extends ProtoContext implements Service.Context {
 
+  // Production Run
   public ServiceContext(
       Configuration configuration,
       Map<String, Object> constants,
@@ -54,4 +52,31 @@ public class ServiceContext extends ProtoContext implements Service.Context {
     );
   }
 
+  // SDK
+  public ServiceContext(
+      Configuration configuration,
+      Map<String, Class<?>[]> configToElDefMap,
+      Map<String, Object> constants,
+      EmailSender emailSender,
+      MetricRegistry metrics,
+      String pipelineId,
+      String rev,
+      String stageName,
+      String serviceName,
+      String resourceDir
+  ) {
+    super(
+      configuration,
+      configToElDefMap,
+      constants,
+      emailSender,
+      metrics,
+      pipelineId,
+      rev,
+      stageName,
+      null,
+      serviceName,
+      resourceDir
+    );
+  }
 }

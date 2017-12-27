@@ -181,7 +181,8 @@ public class TestStageContext {
       sender,
       new Configuration(),
       new LineagePublisherDelegator.NoopDelegator(),
-      Mockito.mock(RuntimeInfo.class)
+      Mockito.mock(RuntimeInfo.class),
+      Collections.emptyMap()
     );
 
     try {
@@ -213,7 +214,8 @@ public class TestStageContext {
       sender,
       new Configuration(),
       new LineagePublisherDelegator.NoopDelegator(),
-      Mockito.mock(RuntimeInfo.class)
+      Mockito.mock(RuntimeInfo.class),
+      Collections.emptyMap()
     );
 
     context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
@@ -471,7 +473,8 @@ public class TestStageContext {
       new EmailSender(new Configuration()),
       configuration,
       new LineagePublisherDelegator.NoopDelegator(),
-      Mockito.mock(RuntimeInfo.class)
+      Mockito.mock(RuntimeInfo.class),
+      Collections.emptyMap()
     );
   }
 }

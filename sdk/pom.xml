@@ -268,7 +268,10 @@
                     <exclude>com.streamsets.pipeline.api.lineage.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.annotationsprocessor.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.service.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.service.dataformats.*</exclude>
                     <exclude>com.streamsets.pipeline.sdk.*</exclude>
+                    <exclude>com.streamsets.pipeline.sdk.service.*</exclude>
                   </excludes>
                 </relocation>
               </relocations>

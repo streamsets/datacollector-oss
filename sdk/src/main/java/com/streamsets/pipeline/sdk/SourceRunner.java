@@ -47,7 +47,8 @@ public class SourceRunner extends StageRunner<Source> {
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       sourceClass,
@@ -62,7 +63,8 @@ public class SourceRunner extends StageRunner<Source> {
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -77,7 +79,8 @@ public class SourceRunner extends StageRunner<Source> {
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       sourceClass,
@@ -91,7 +94,8 @@ public class SourceRunner extends StageRunner<Source> {
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -137,7 +141,8 @@ public class SourceRunner extends StageRunner<Source> {
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       } else {
         return new SourceRunner(
@@ -151,7 +156,8 @@ public class SourceRunner extends StageRunner<Source> {
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       }
     }

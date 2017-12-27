@@ -46,7 +46,8 @@ public class TestStageRunner {
       Map<String, String> stageSdcConf,
       ExecutionMode executionMode,
       String resourcesDir,
-      RuntimeInfo runtimeInfo
+      RuntimeInfo runtimeInfo,
+      List<ServiceRunner> services
     ) {
       super(
         stageClass,
@@ -60,7 +61,8 @@ public class TestStageRunner {
         executionMode,
         DeliveryGuarantee.AT_LEAST_ONCE,
         resourcesDir,
-        runtimeInfo
+        runtimeInfo,
+        services
       );
     }
 
@@ -74,7 +76,8 @@ public class TestStageRunner {
       Map<String, String> stageSdcConf,
       ExecutionMode executionMode,
       String resourcesDir,
-      RuntimeInfo runtimeInfo
+      RuntimeInfo runtimeInfo,
+      List<ServiceRunner> services
     ) {
       super(
         stageClass,
@@ -89,7 +92,8 @@ public class TestStageRunner {
         executionMode,
         DeliveryGuarantee.AT_LEAST_ONCE,
         resourcesDir,
-        runtimeInfo
+        runtimeInfo,
+        services
       );
     }
 
@@ -117,7 +121,8 @@ public class TestStageRunner {
             stageSdcConf,
             executionMode,
             resourcesDir,
-            runtimeInfo
+            runtimeInfo,
+            services
           )
           : new DummyStageRunner(
             stageClass,
@@ -128,7 +133,8 @@ public class TestStageRunner {
             stageSdcConf,
             executionMode,
             resourcesDir,
-            runtimeInfo
+            runtimeInfo,
+            services
           );
       }
     }

@@ -59,7 +59,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       stageClass,
@@ -73,7 +74,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -89,7 +91,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir,
-    RuntimeInfo runtimeInfo
+    RuntimeInfo runtimeInfo,
+    List<ServiceRunner> services
   ) {
     super(
       stageClass,
@@ -104,7 +107,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       executionMode,
       deliveryGuarantee,
       resourcesDir,
-      runtimeInfo
+      runtimeInfo,
+      services
     );
   }
 
@@ -251,7 +255,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       } else {
         return new PushSourceRunner(
@@ -265,7 +270,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           executionMode,
           deliveryGuarantee,
           resourcesDir,
-          runtimeInfo
+          runtimeInfo,
+          services
         );
       }
     }

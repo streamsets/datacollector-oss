@@ -95,7 +95,8 @@ public class ContextInfoCreator {
         new EmailSender(new Configuration()),
         new Configuration(),
         new LineagePublisherDelegator.NoopDelegator(),
-        new SdkRuntimeInfo("",null, null)
+        new SdkRuntimeInfo("",null, null),
+        Collections.emptyMap()
     );
   }
 

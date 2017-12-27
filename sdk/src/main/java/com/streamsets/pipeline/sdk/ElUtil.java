@@ -36,7 +36,7 @@ public class ElUtil {
 
   private ElUtil() {}
 
-  public static Map<String, Class<?>[]> getConfigToElDefMap(Class<?> stageClass) throws Exception {
+  public static Map<String, Class<?>[]> getConfigToElDefMap(Class<?> stageClass) {
     Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
     for (Field field : stageClass.getFields()) {
       if (field.isAnnotationPresent(ConfigDef.class)) {

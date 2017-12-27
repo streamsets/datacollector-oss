@@ -78,7 +78,7 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
   private RuntimeInfo runtimeInfo;
-  private final Map<Class, ServiceRuntime> services;
+  private final Map services;
 
   //for SDK
   public StageContext(
@@ -96,7 +96,8 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       EmailSender emailSender,
       Configuration configuration,
       LineagePublisherDelegator lineagePublisherDelegator,
-      RuntimeInfo runtimeInfo
+      RuntimeInfo runtimeInfo,
+      Map<Class, Object> services
   ) {
     super(
       configuration,
@@ -149,13 +150,11 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     reportErrorDelegate = errorSink;
     this.sharedRunnerMap = new ConcurrentHashMap<>();
     this.runtimeInfo = runtimeInfo;
+    this.services = services;
 
     // sample all records while testing
     this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
-
-    // Services are currently not supported in SDK
-    this.services = Collections.emptyMap();
   }
 
   public StageContext(
