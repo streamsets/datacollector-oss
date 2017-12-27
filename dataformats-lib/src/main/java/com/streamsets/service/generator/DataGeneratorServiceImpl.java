@@ -19,11 +19,13 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseService;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
+import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
@@ -31,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,6 +85,42 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    return null;
+    return new DataGeneratorWraper(dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(os));
+  }
+
+  /**
+   * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
+   * service world. This will be removed once all stages gets migrated off the older code to services.
+   */
+  class DataGeneratorWraper implements DataGenerator {
+
+    private final com.streamsets.pipeline.lib.generator.DataGenerator generator;
+
+    DataGeneratorWraper(com.streamsets.pipeline.lib.generator.DataGenerator generator) {
+      this.generator = generator;
+    }
+
+    @Override
+    public void write(Record record) throws IOException, DataGeneratorException {
+      try {
+        generator.write(record);
+      } catch (com.streamsets.pipeline.lib.generator.DataGeneratorException e) {
+        throw new DataGeneratorException(
+          e.getErrorCode(),
+          e.getParams(),
+          e.getCause()
+          );
+      }
+    }
+
+    @Override
+    public void flush() throws IOException {
+      generator.flush();
+    }
+
+    @Override
+    public void close() throws IOException {
+      generator.close();
+    }
   }
 }
