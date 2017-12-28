@@ -19,15 +19,23 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.runner.service.DataGeneratorServiceWrapper;
+import com.streamsets.datacollector.runner.service.DataParserServiceWrapper;
 import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
+import com.streamsets.pipeline.api.service.dataformats.DataParser;
+import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,11 +44,12 @@ import java.util.Set;
  * object rather then Service instance itself because we need to wrap each method execution to change active class
  * loader and execute the code in privileged mode to apply the proper permissions.
  */
-public class ServiceRuntime implements DataFormatGeneratorService {
+public class ServiceRuntime implements DataFormatGeneratorService, DataFormatParserService {
 
   // Static list with all supported services
   private static Set<Class> SUPPORTED_SERVICES = ImmutableSet.of(
-    DataFormatGeneratorService.class
+    DataFormatGeneratorService.class,
+    DataFormatParserService.class
   );
 
   /**
@@ -95,6 +104,39 @@ public class ServiceRuntime implements DataFormatGeneratorService {
       cl,
       IOException.class,
       () -> new DataGeneratorServiceWrapper(cl, ((DataFormatGeneratorService)serviceBean.getService()).getGenerator(os))
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
+    ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
+
+     return LambdaUtil.privilegedWithClassLoader(
+      cl,
+      DataParserException.class,
+      () -> new DataParserServiceWrapper(cl, ((DataFormatParserService)serviceBean.getService()).getParser(id, is, offset))
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public DataParser getParser(String id, Reader reader, long offset) throws DataParserException {
+    ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
+
+    return LambdaUtil.privilegedWithClassLoader(
+      cl,
+      DataParserException.class,
+      () -> new DataParserServiceWrapper(cl, ((DataFormatParserService)serviceBean.getService()).getParser(id, reader, offset))
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public DataParser getParser(String id, Map<String, Object> metadata, FileRef fileRef) throws DataParserException {
+    ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
+
+    return LambdaUtil.privilegedWithClassLoader(
+      cl,
+      DataParserException.class,
+      () -> new DataParserServiceWrapper(cl, ((DataFormatParserService)serviceBean.getService()).getParser(id, metadata, fileRef))
     );
   }
 }
