@@ -31,13 +31,8 @@
             <step>
                 <cmd>Use the following command to extract the file to a different directory than the
                     previous version:</cmd>
-                <info>
-                    <codeblock>tar xf streamsets-datacollector-&lt;version>-&lt;operating_system>-all-rpms.tgz</codeblock>
-                    <p>For example, to extract version <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
-                        /> on CentOS 7, use the following
-                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-el7-all-rpms.tgz</codeblock></p>
-                </info>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/infoRPMinstall-extract"/>
             </step>
             <step>
                 <cmd>To install the full RPM package and all available stage libraries, use the
