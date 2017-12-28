@@ -29,6 +29,7 @@ import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 
+import com.streamsets.pipeline.api.StageUpgrader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -303,10 +304,17 @@ public class PipelineConfigurationUpgrader {
     int toVersion = def.getVersion();
     try {
       Thread.currentThread().setContextClassLoader(def.getStageClassLoader());
-      LOG.warn("Upgraded instance '{}' from version '{}' to version '{}'", conf.getInstanceName(), fromVersion,
-               toVersion);
-      List<Config> configs = def.getUpgrader().upgrade(def.getLibrary(), def.getName(), conf.getInstanceName(),
-                                                       fromVersion, toVersion, conf.getConfiguration());
+      LOG.warn("Upgraded instance '{}' from version '{}' to version '{}'", conf.getInstanceName(), fromVersion, toVersion);
+
+      UpgradeContext upgradeContext = new UpgradeContext(
+        def.getLibrary(),
+        def.getName(),
+        conf.getInstanceName(),
+        fromVersion,
+        toVersion
+      );
+      List<Config> configs = def.getUpgrader().upgrade(conf.getConfiguration(), upgradeContext);
+
       conf.setStageVersion(def.getVersion());
       conf.setConfig(configs);
     } catch (StageException ex) {
@@ -319,6 +327,59 @@ public class PipelineConfigurationUpgrader {
       Thread.currentThread().setContextClassLoader(cl);
     }
     return conf;
+  }
+
+  private static class UpgradeContext implements StageUpgrader.Context {
+
+    private final String library;
+    private final String stageName;
+    private final String stageInstanceName;
+    private final int fromVersion;
+    private final int toVersion;
+
+    UpgradeContext(
+      String library,
+      String stageName,
+      String stageInstanceName,
+      int fromVersion,
+      int toVersion
+    ) {
+      this.library = library;
+      this.stageName = stageName;
+      this.stageInstanceName = stageInstanceName;
+      this.fromVersion = fromVersion;
+      this.toVersion = toVersion;
+    }
+
+    @Override
+    public String getLibrary() {
+      return library;
+    }
+
+    @Override
+    public String getStageName() {
+      return stageName;
+    }
+
+    @Override
+    public String getStageInstance() {
+      return stageInstanceName;
+    }
+
+    @Override
+    public int getFromVersion() {
+      return fromVersion;
+    }
+
+    @Override
+    public int getToVersion() {
+      return toVersion;
+    }
+
+    @Override
+    public void registerService(Class service, List<Config> configs) {
+      throw new UnsupportedOperationException("registerService() is not currently supported");
+    }
   }
 
 }
