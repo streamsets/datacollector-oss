@@ -48,12 +48,12 @@
             </step>
             <step id="RPMinstall-extract">
                 <cmd>Use the following command to extract the file to the desired location:</cmd>
-                <info>
-                    <codeblock>tar xf streamsets-datacollector-&lt;version>-&lt;operating_system>-all-rpms.tgz</codeblock>
+                <info id="infoRPMinstall-extract">
+                    <codeblock>tar xf streamsets-datacollector-&lt;version>-&lt;operating_system>-all-rpms.tar</codeblock>
                     <p>For example, to extract version <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
                         /> on CentOS 7, use the following
-                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-el7-all-rpms.tgz</codeblock></p>
+                        command:<codeblock>tar xf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-el7-all-rpms.tar</codeblock></p>
                 </info>
             </step>
             <step>
