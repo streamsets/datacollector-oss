@@ -38,21 +38,6 @@ public class DataParserConfig {
   @FieldSelectorModel(singleValued = true)
   public String fieldPathToParse;
 
-
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Data Format",
-      displayPosition = 1,
-      group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDefBean(groups = "PARSER")
-  public DataParserFormatConfig dataFormatConfig;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,

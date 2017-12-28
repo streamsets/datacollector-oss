@@ -21,7 +21,6 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   PARSER("Parser"),
-  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

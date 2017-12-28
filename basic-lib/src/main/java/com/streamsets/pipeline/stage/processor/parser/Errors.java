@@ -20,12 +20,11 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  DATAPARSER_01("Cannot parse the field '{}' as type {} for record '{}': {}"),
-  DATAPARSER_02("Cannot parse the field '{}' as type {} for record '{}' since its type is {}.  Supported types are STRING" +
-      " and BYTE_ARRAY."),
+  DATAPARSER_01("Cannot parse the field '{}' for record '{}': {}"),
+  DATAPARSER_02("Cannot parse the field '{}' as type {} is not supported"),
   DATAPARSER_03("{} parsing the field '{}' as type {} for record '{}': {}"),
   DATAPARSER_04("IOException attempting to parse whole file field '{}' for record '{}': {}"),
-  DATAPARSER_05("Input field '{}' does not exist in record '{}'; cannot parse as type {}"),
+  DATAPARSER_05("Input field '{}' does not exist in record '{}'"),
   ;
 
 

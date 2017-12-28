@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
 import org.apache.commons.io.IOUtils;
@@ -38,57 +40,48 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(DataParserProcessor.class);
 
   private final DataParserConfig configs;
-  private final DataFormatParser parser;
 
   public DataParserProcessor(DataParserConfig configs) {
     this.configs = configs;
-    this.parser = new DataFormatParser(Groups.PARSER.name(), configs.dataFormat, configs.dataFormatConfig, null);
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    issues.addAll(parser.init(getContext(), "configs."));
     return issues;
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Field field = record.get(configs.fieldPathToParse);
-    final String typeName = configs.dataFormat.name();
     if (field != null) {
       try {
         final String parserId = String.format(
-            "%s_%s_%s_%s",
+            "%s_%s_%s",
             getContext().getStageInfo().getInstanceName(),
-            typeName,
             record.getHeader().getSourceId(),
             configs.fieldPathToParse
         );
-        byte[] fieldData;
+        List<Record> parsedRecords;
         switch (field.getType()) {
           case STRING:
-            try {
-              fieldData = field.getValueAsString().getBytes(configs.dataFormatConfig.charset);
-            } catch (UnsupportedEncodingException e) {
-              throw new OnRecordErrorException(
-                  Errors.DATAPARSER_03,
-                  e.getClass().getSimpleName(),
-                  configs.fieldPathToParse,
-                  typeName,
-                  record.getHeader().getSourceId(),
-                  e.toString(),
-                  e
-              );
+            try(DataParser parser = getContext().getService(DataFormatParserService.class).getParser(parserId, field.getValueAsString())) {
+              parsedRecords = parser.parseAll();
             }
             break;
           case BYTE_ARRAY:
-            fieldData = field.getValueAsByteArray();
+            try(DataParser parser = getContext().getService(DataFormatParserService.class).getParser(parserId, field.getValueAsByteArray())) {
+              parsedRecords = parser.parseAll();
+            }
             break;
           case FILE_REF:
             try {
               final InputStream inputStream = field.getValueAsFileRef().createInputStream(getContext(), InputStream.class);
-              fieldData = IOUtils.toByteArray(inputStream);
+              byte []fieldData = IOUtils.toByteArray(inputStream);
+
+              try(DataParser parser = getContext().getService(DataFormatParserService.class).getParser(parserId, fieldData)) {
+                parsedRecords = parser.parseAll();
+              }
             } catch (IOException e) {
               throw new OnRecordErrorException(
                   record,
@@ -104,17 +97,14 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
             throw new OnRecordErrorException(
                 Errors.DATAPARSER_02,
                 configs.fieldPathToParse,
-                typeName,
-                record.getHeader().getSourceId(),
                 field.getType().name()
             );
 
         }
-        List<Record> parsedRecords = parser.parse(getContext(), parserId, fieldData);
+
         if (parsedRecords == null || parsedRecords.isEmpty()) {
           LOG.warn(
-              "No records of {} format were parsed from field {} of record {}",
-              typeName,
+              "No records were parsed from field {} of record {}",
               configs.fieldPathToParse,
               record.getHeader().getSourceId()
           );
@@ -149,11 +139,10 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
             });
             break;
         }
-      } catch (DataParserException ex) {
+      } catch (IOException ex) {
         throw new OnRecordErrorException(
             Errors.DATAPARSER_01,
             configs.fieldPathToParse,
-            typeName,
             record.getHeader().getSourceId(),
             ex.toString(),
             ex
@@ -164,8 +153,7 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
           record,
           Errors.DATAPARSER_05,
           configs.fieldPathToParse,
-          record.getHeader().getSourceId(),
-          typeName
+          record.getHeader().getSourceId()
       );
     }
   }
