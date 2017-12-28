@@ -482,7 +482,7 @@ public class TestSpoolDirSource {
     outputStream.close();
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source)
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addOutputLane("lane")
       .build();
@@ -554,7 +554,7 @@ public class TestSpoolDirSource {
     Assert.assertTrue(current.setLastModified(System.currentTimeMillis()));
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source)
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addOutputLane("lane")
         .build();
@@ -818,7 +818,7 @@ public class TestSpoolDirSource {
     conf.numberOfThreads = numberOfThreads;
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
 
     AtomicInteger batchCount = new AtomicInteger(0);
     final List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
@@ -893,7 +893,7 @@ public class TestSpoolDirSource {
     conf.numberOfThreads = 10;
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
 
     AtomicInteger batchCount = new AtomicInteger(0);
     final List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
@@ -966,7 +966,7 @@ public class TestSpoolDirSource {
     outputStream.close();
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source)
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source)
       .setPreview(preview)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addOutputLane("lane")

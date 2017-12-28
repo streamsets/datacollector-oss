@@ -167,7 +167,7 @@ public class TestJmsSource {
     JmsSource origin = new JmsSource(basicConfig, credentialsConfig, jmsSourceConfig,
       new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormat, dataFormatConfig, messageConfig),
       new InitialContextFactory());
-    SourceRunner runner = new SourceRunner.Builder(JmsSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(JmsDSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();

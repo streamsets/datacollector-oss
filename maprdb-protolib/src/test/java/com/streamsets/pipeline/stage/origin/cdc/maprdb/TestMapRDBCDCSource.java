@@ -146,7 +146,7 @@ public class TestMapRDBCDCSource {
     Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -181,7 +181,7 @@ public class TestMapRDBCDCSource {
     Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -221,7 +221,7 @@ public class TestMapRDBCDCSource {
         .thenReturn(emptyRecords);
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -275,7 +275,7 @@ public class TestMapRDBCDCSource {
     conf.topicTableList = topicTableList;
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -307,7 +307,7 @@ public class TestMapRDBCDCSource {
         .thenThrow(new IllegalStateException());
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -357,7 +357,7 @@ public class TestMapRDBCDCSource {
     conf.topicTableList = topicTableNames;
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();

@@ -137,6 +137,7 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
+    Utils.checkState(getStageDefinition(stageClass) != null, Utils.format("@StageDef annotation not found on class {} (provided the right DStage as stageClass argument?)", stageClass.toString()));
     this.stageClass = stageClass;
     this.stage = stage;
     try {

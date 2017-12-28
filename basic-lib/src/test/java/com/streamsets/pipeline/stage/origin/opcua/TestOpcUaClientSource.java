@@ -61,7 +61,7 @@ public class TestOpcUaClientSource {
     conf.nodeIdConfigs = Collections.emptyList();
     OpcUaClientSource source = new OpcUaClientSource(conf);
     PushSourceRunner runner = new PushSourceRunner
-        .Builder(OpcUaClientSource.class, source)
+        .Builder(OpcUaClientDSource.class, source)
         .addOutputLane("a").build();
     try {
       runner.runInit();
@@ -77,7 +77,7 @@ public class TestOpcUaClientSource {
   public void testBrowseDescReadMode() throws Exception {
     OpcUaClientSource source = new OpcUaClientSource(getConfig(OpcUaReadMode.BROWSE_NODES, Collections.emptyList()));
     PushSourceRunner runner = new PushSourceRunner
-        .Builder(OpcUaClientSource.class, source)
+        .Builder(OpcUaClientDSource.class, source)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -103,7 +103,7 @@ public class TestOpcUaClientSource {
   public void testPollingReadMode() throws Exception {
     OpcUaClientSource source = new OpcUaClientSource(getConfig(OpcUaReadMode.POLLING, getTestNodeConfigs()));
     PushSourceRunner runner = new PushSourceRunner
-        .Builder(OpcUaClientSource.class, source)
+        .Builder(OpcUaClientDSource.class, source)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -141,7 +141,7 @@ public class TestOpcUaClientSource {
 
     OpcUaClientSource source = new OpcUaClientSource(getConfig(OpcUaReadMode.SUBSCRIBE, nodeIdConfigs));
     PushSourceRunner runner = new PushSourceRunner
-        .Builder(OpcUaClientSource.class, source)
+        .Builder(OpcUaClientDSource.class, source)
         .addOutputLane("a").build();
 
     runner.runInit();

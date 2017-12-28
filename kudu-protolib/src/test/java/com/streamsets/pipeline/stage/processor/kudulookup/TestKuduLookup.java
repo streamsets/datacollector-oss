@@ -132,7 +132,7 @@ public class TestKuduLookup {
     conf.outputColumnMapping = new ArrayList<>();
     conf.outputColumnMapping.add(new KuduOutputColumnMapping("column", "/field", ""));
     KuduLookupProcessor processor = new KuduLookupProcessor(conf);
-    return new ProcessorRunner.Builder(KuduLookupProcessor.class, processor)
+    return new ProcessorRunner.Builder(KuduLookupDProcessor.class, processor)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addOutputLane("lane")
         .build();

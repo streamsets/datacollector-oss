@@ -36,7 +36,7 @@ public class TestEventHubConsumerSource {
         .build();
 
     PushSourceRunner sourceRunner = new PushSourceRunner
-        .Builder(EventHubConsumerSource.class, eventHubConsumerSource)
+        .Builder(EventHubConsumerDSource.class, eventHubConsumerSource)
         .addOutputLane("a").build();
 
     List<Stage.ConfigIssue> issues = sourceRunner.runValidateConfigs();

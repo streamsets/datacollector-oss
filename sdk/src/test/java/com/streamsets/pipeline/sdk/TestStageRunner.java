@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 
+import com.streamsets.pipeline.api.StageDef;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +33,13 @@ import java.util.Map;
 
 public class TestStageRunner {
 
-  public static interface DummyStage extends Stage {
+
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
+  public static abstract class DummyStage implements Stage {
   }
 
   public static class DummyStageRunner extends StageRunner<DummyStage> {
@@ -140,7 +147,12 @@ public class TestStageRunner {
     }
   }
 
-  public static class DummyStage1 implements DummyStage {
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
+  public static class DummyStage1 extends DummyStage {
 
     public boolean initialized;
     public boolean destroyed;
@@ -290,6 +302,11 @@ public class TestStageRunner {
     builder.build();
   }
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummyStage2 extends DummyStage1 {
 
     @ConfigDef(type = ConfigDef.Type.BOOLEAN, label = "L", required = false)

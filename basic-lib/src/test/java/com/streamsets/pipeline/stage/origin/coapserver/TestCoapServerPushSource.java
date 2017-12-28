@@ -44,7 +44,7 @@ public class TestCoapServerPushSource {
     CoapServerPushSource source =
         new CoapServerPushSource(coapServerConfigs, DataFormat.TEXT, new DataParserFormatConfig());
     final PushSourceRunner runner =
-        new PushSourceRunner.Builder(CoapServerPushSource.class, source).addOutputLane("a").build();
+        new PushSourceRunner.Builder(CoapServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();

@@ -35,7 +35,7 @@ public class TestIotHubProducerTarget {
         .build();
 
     TargetRunner targetRunner = new TargetRunner
-        .Builder(IotHubProducerTarget.class, target)
+        .Builder(IotHubProducerDTarget.class, target)
         .build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();

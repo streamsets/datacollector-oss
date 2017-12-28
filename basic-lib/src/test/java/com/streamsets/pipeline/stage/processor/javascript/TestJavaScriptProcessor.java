@@ -341,7 +341,7 @@ public class TestJavaScriptProcessor {
             "  output.write(records[i]);\n" +
             "}"
     );
-    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -356,7 +356,7 @@ public class TestJavaScriptProcessor {
             "  output.write(records[i]);\n" +
             "}"
     );
-    ScriptingProcessorTestUtil.verifyNestedMap(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyNestedMap(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -370,7 +370,7 @@ public class TestJavaScriptProcessor {
             "  output.write(records[i]);" +
             "}"
     );
-    ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -427,7 +427,7 @@ public class TestJavaScriptProcessor {
         "}"
     );
 
-    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptProcessor.class, processor, record);
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptDProcessor.class, processor, record);
   }
 
   @Test
@@ -463,7 +463,7 @@ public class TestJavaScriptProcessor {
             "  output.write(records[i]);\n" +
             "}"
     );
-    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptProcessor.class, processor,record);
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptDProcessor.class, processor,record);
   }
 
   @Test
@@ -499,7 +499,7 @@ public class TestJavaScriptProcessor {
             "}"
     );
 
-    ScriptingProcessorTestUtil.verifyNullField(JavaScriptProcessor.class, processor,record);
+    ScriptingProcessorTestUtil.verifyNullField(JavaScriptDProcessor.class, processor,record);
   }
 
   @Test
@@ -522,7 +522,7 @@ public class TestJavaScriptProcessor {
         script
     );
 
-    ScriptingProcessorTestUtil.verifyCreateRecord(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyCreateRecord(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -540,7 +540,7 @@ public class TestJavaScriptProcessor {
     );
 
     Record record = RecordCreator.create();
-    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptProcessor.class, processor, record);
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptDProcessor.class, processor, record);
   }
 
   @Test
@@ -559,7 +559,7 @@ public class TestJavaScriptProcessor {
         initScript,
         destroyScript
     );
-    ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -569,7 +569,7 @@ public class TestJavaScriptProcessor {
         "  output.write(records[i]);\n" +
         "}";
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
-    ScriptingProcessorTestUtil.verifyConstants(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyConstants(JavaScriptDProcessor.class, processor);
   }
 
   private static final String WRITE_ERROR_SCRIPT = "for(var i = 0; i < records.length; i++) { error.write(records[i], 'oops'); }";
@@ -580,7 +580,7 @@ public class TestJavaScriptProcessor {
       ProcessingMode.RECORD,
       WRITE_ERROR_SCRIPT
     );
-    ScriptingProcessorTestUtil.verifyErrorRecordStopPipeline(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyErrorRecordStopPipeline(JavaScriptDProcessor.class, processor);
   }
 
   @Test
@@ -589,7 +589,7 @@ public class TestJavaScriptProcessor {
       ProcessingMode.RECORD,
       WRITE_ERROR_SCRIPT
     );
-    ScriptingProcessorTestUtil.verifyErrorRecordDiscard(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyErrorRecordDiscard(JavaScriptDProcessor.class, processor);
   }
 
 
@@ -599,6 +599,6 @@ public class TestJavaScriptProcessor {
       ProcessingMode.RECORD,
       WRITE_ERROR_SCRIPT
     );
-    ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(JavaScriptProcessor.class, processor);
+    ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(JavaScriptDProcessor.class, processor);
   }
 }

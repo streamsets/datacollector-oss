@@ -45,7 +45,7 @@ public class TestPubSubSource {
     PubSubSourceConfig config = getConfig();
 
     PubSubSource source = new PubSubSource(config);
-    PushSourceRunner runner = new PushSourceRunner.Builder(PubSubSource.class, source)
+    PushSourceRunner runner = new PushSourceRunner.Builder(PubSubDSource.class, source)
         .addOutputLane("lane")
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
@@ -62,7 +62,7 @@ public class TestPubSubSource {
     config.credentials.path = "/tmp/does_not_exist.json";
 
     PubSubSource source = new PubSubSource(config);
-    PushSourceRunner runner = new PushSourceRunner.Builder(PubSubSource.class, source)
+    PushSourceRunner runner = new PushSourceRunner.Builder(PubSubDSource.class, source)
         .addOutputLane("lane")
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();

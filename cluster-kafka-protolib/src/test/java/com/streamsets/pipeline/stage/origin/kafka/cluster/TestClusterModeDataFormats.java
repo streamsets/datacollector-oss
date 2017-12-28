@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaSourceFactory;
 import kafka.utils.TestUtils;
 import org.junit.AfterClass;
@@ -113,7 +114,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.textMaxLineLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -169,7 +170,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -214,7 +215,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -266,7 +267,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -317,7 +318,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.xmlRecordElement = "";
     conf.dataFormatConfig.xmlMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -368,7 +369,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.xmlRecordElement = "author";
     conf.dataFormatConfig.xmlMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();
@@ -421,7 +422,7 @@ public class TestClusterModeDataFormats {
     conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
     conf.dataFormatConfig.csvSkipStartLines = 0;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .build();

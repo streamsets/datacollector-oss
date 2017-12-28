@@ -36,7 +36,7 @@ public class TestEventHubProducerTarget {
         .build();
 
     TargetRunner targetRunner = new TargetRunner
-        .Builder(EventHubProducerTarget.class, target)
+        .Builder(EventHubProducerDTarget.class, target)
         .build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();

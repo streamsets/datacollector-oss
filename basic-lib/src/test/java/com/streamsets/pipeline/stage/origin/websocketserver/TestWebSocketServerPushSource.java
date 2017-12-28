@@ -47,7 +47,7 @@ public class TestWebSocketServerPushSource {
     WebSocketServerPushSource source =
         new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
     final PushSourceRunner runner =
-        new PushSourceRunner.Builder(WebSocketServerPushSource.class, source).addOutputLane("a").build();
+        new PushSourceRunner.Builder(WebSocketServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();
@@ -101,7 +101,7 @@ public class TestWebSocketServerPushSource {
     WebSocketServerPushSource source =
         new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
     final PushSourceRunner runner =
-        new PushSourceRunner.Builder(WebSocketServerPushSource.class, source).addOutputLane("a").build();
+        new PushSourceRunner.Builder(WebSocketServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();

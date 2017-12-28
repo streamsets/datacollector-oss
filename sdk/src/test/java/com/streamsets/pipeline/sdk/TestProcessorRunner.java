@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import org.junit.Assert;
@@ -29,6 +30,11 @@ import java.util.Iterator;
 
 public class TestProcessorRunner {
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummyProcessorEmptyBatch extends BaseProcessor {
 
     @Override
@@ -40,6 +46,11 @@ public class TestProcessorRunner {
 
   }
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummyProcessor extends BaseProcessor {
 
     @Override

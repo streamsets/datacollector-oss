@@ -73,7 +73,7 @@ public abstract class BaseHttpTargetTest extends JerseyTest {
   @Test
   public void testHttpTarget() throws StageException, IOException {
     HttpTarget httpTarget = createHttpTarget();
-    TargetRunner targetRunner = new TargetRunner.Builder(HttpTarget.class, httpTarget)
+    TargetRunner targetRunner = new TargetRunner.Builder(HttpDTarget.class, httpTarget)
       .build();
     targetRunner.runInit();
     targetRunner.runWrite(createRecords());

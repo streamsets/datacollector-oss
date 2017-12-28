@@ -235,7 +235,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.textMaxLineLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -294,7 +294,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.textMaxLineLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -342,7 +342,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -384,7 +384,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -425,7 +425,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
     conf.dataFormatConfig.jsonMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -468,7 +468,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.xmlRecordElement = "";
     conf.dataFormatConfig.xmlMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -509,7 +509,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.xmlRecordElement = "author";
     conf.dataFormatConfig.xmlMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -546,7 +546,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.xmlRecordElement = "author";
     conf.dataFormatConfig.xmlMaxObjectLen = 4096;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -577,7 +577,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
     conf.dataFormatConfig.csvSkipStartLines = 0;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -628,7 +628,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
     conf.dataFormatConfig.log4jCustomLogFormat = null;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -698,7 +698,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
     conf.dataFormatConfig.log4jCustomLogFormat = null;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -774,7 +774,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
     conf.dataFormatConfig.log4jCustomLogFormat = null;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
         // Set mode to preview
       .setPreview(true)
@@ -870,7 +870,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
     conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -1026,7 +1026,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.INLINE;
     conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
 
@@ -1136,7 +1136,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.binaryMaxObjectLen = 1000;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -1192,7 +1192,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.messageType = "util.Employee";
     conf.dataFormatConfig.isDelimited = true;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -1235,7 +1235,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.messageType = "util.Employee";
     conf.dataFormatConfig.isDelimited = true;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -1289,7 +1289,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.excludeInterval = false;
     conf.dataFormatConfig.authFilePath = Resources.getResource(COLLECTD_AUTH_TXT).getPath();
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -1330,7 +1330,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.datagramMode = DatagramMode.SYSLOG;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();
@@ -1389,7 +1389,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.datagramMode = DatagramMode.NETFLOW;
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class, createSource(conf))
       .addOutputLane("lane")
       .build();
     sourceRunner.runInit();

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.devtest.rawdata.RawDataDSource;
 import com.streamsets.pipeline.stage.devtest.rawdata.RawDataSource;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.Assert;
@@ -44,7 +45,7 @@ public class TestRawDataSource {
 
     RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, "text", true);
 
-    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addOutputLane("a")
         .build();
 
@@ -66,7 +67,7 @@ public class TestRawDataSource {
 
     RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8, false);
 
-    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addOutputLane("a")
         .build();
 
@@ -90,7 +91,7 @@ public class TestRawDataSource {
 
     RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, gbk, false);
 
-    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addOutputLane("a")
         .build();
 
@@ -114,7 +115,7 @@ public class TestRawDataSource {
 
     RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8, false);
 
-    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addOutputLane("a")
         .build();
 
@@ -140,7 +141,7 @@ public class TestRawDataSource {
 
     RawDataSource origin = new RawDataSource(DataFormat.DELIMITED, dataFormatConfig, data, false);
 
-    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addOutputLane("a")
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();

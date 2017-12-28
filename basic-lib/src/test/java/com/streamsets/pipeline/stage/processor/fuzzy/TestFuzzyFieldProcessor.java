@@ -22,6 +22,7 @@ import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Ignore("The stage itself is currently disabled by having the @StageDef annotation commented out on which the tests depends on.")
 public class TestFuzzyFieldProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestFuzzyFieldProcessor.class);
 

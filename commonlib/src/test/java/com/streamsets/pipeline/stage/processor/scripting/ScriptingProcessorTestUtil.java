@@ -56,7 +56,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ScriptingProcessorTestUtil {
   private ScriptingProcessorTestUtil() {}
-  static final String JAVASCRIPT_CLASSNAME = "com.streamsets.pipeline.stage.processor.javascript.JavaScriptProcessor";
+  static final String JAVASCRIPT_CLASSNAME = "com.streamsets.pipeline.stage.processor.javascript.JavaScriptDProcessor";
 
   public static <C extends Processor> void verifyMapAndArray(Class<C> clazz, Processor processor)
       throws StageException {

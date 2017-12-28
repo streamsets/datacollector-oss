@@ -88,7 +88,7 @@ public class TestMultiKafkaSource {
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -129,7 +129,7 @@ public class TestMultiKafkaSource {
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -182,7 +182,7 @@ public class TestMultiKafkaSource {
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -215,7 +215,7 @@ public class TestMultiKafkaSource {
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();
@@ -268,7 +268,7 @@ public class TestMultiKafkaSource {
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
-    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaSource.class, source)
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
         .addOutputLane("lane")
         .build();
     sourceRunner.runInit();

@@ -77,7 +77,7 @@ public class TestSdcIpcSource {
     configs.port = randomPort;
     configs.maxWaitTimeSecs = 2;
     Source source = new SdcIpcSource(configs);
-    final SourceRunner runner = new SourceRunner.Builder(SdcIpcSource.class, source).addOutputLane("lane").build();
+    final SourceRunner runner = new SourceRunner.Builder(SdcIpcDSource.class, source).addOutputLane("lane").build();
     try {
       runner.runInit();
 

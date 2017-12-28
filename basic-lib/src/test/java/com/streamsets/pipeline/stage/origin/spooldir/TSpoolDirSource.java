@@ -15,11 +15,17 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 
 import java.io.File;
 import java.util.Map;
 
+@StageDef(
+  version = 1,
+  label = "Test stage",
+  onlineHelpRefUrl = ""
+)
 public class TSpoolDirSource extends SpoolDirSource {
   File file;
   long offset;

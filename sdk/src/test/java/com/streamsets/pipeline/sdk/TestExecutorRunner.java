@@ -18,6 +18,7 @@ package com.streamsets.pipeline.sdk;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseExecutor;
 import org.junit.Assert;
@@ -28,6 +29,11 @@ import java.util.Iterator;
 
 public class TestExecutorRunner {
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummyExecutorEmptyBatch extends BaseExecutor {
     public boolean write;
 
@@ -41,6 +47,11 @@ public class TestExecutorRunner {
 
   }
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummyExecutor extends BaseExecutor {
     public boolean write;
 

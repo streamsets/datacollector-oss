@@ -55,7 +55,7 @@ public class TestHttpServerPushSource {
     HttpServerPushSource source =
         new HttpServerPushSource(httpConfigs, 1, DataFormat.TEXT, new DataParserFormatConfig());
     final PushSourceRunner runner =
-        new PushSourceRunner.Builder(HttpServerPushSource.class, source).addOutputLane("a").build();
+        new PushSourceRunner.Builder(HttpServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();
@@ -111,7 +111,7 @@ public class TestHttpServerPushSource {
     HttpServerPushSource source =
         new HttpServerPushSource(httpConfigs, 1, DataFormat.TEXT, new DataParserFormatConfig());
     final PushSourceRunner runner =
-        new PushSourceRunner.Builder(HttpServerPushSource.class, source).addOutputLane("a").build();
+        new PushSourceRunner.Builder(HttpServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();
@@ -163,7 +163,7 @@ public class TestHttpServerPushSource {
     HttpServerPushSource source =
             new HttpServerPushSource(httpConfigs, 1, DataFormat.AVRO, dataFormatConfig);
     final PushSourceRunner runner =
-            new PushSourceRunner.Builder(HttpServerPushSource.class, source).addOutputLane("a").build();
+            new PushSourceRunner.Builder(HttpServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
     try {
       final List<Record> records = new ArrayList<>();

@@ -156,7 +156,7 @@ public class TestSdcIpcTarget {
 
     SdcIpcTarget target = new SdcIpcTarget(config);
 
-    TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target).build();
+    TargetRunner runner = new TargetRunner.Builder(SdcIpcDTarget.class, target).build();
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
@@ -204,7 +204,7 @@ public class TestSdcIpcTarget {
     SdcIpcTarget target = new SdcIpcTarget(config);
 
     // RECORDS TO ERROR
-    TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR)
+    TargetRunner runner = new TargetRunner.Builder(SdcIpcDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR)
                                                                               .build();
     try {
       runner.runInit();
@@ -227,7 +227,7 @@ public class TestSdcIpcTarget {
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
     Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
-    runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.DISCARD).build();
+    runner = new TargetRunner.Builder(SdcIpcDTarget.class, target).setOnRecordError(OnRecordError.DISCARD).build();
     try {
       runner.runInit();
 
@@ -249,7 +249,7 @@ public class TestSdcIpcTarget {
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
     Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
-    runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.STOP_PIPELINE).build();
+    runner = new TargetRunner.Builder(SdcIpcDTarget.class, target).setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     try {
       runner.runInit();
 
@@ -337,7 +337,7 @@ public class TestSdcIpcTarget {
       // test OK without compression
       SdcIpcTarget target = new SdcIpcTarget(config);
 
-      TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+      TargetRunner runner = new TargetRunner.Builder(SdcIpcDTarget.class, target)
           .setOnRecordError(OnRecordError.TO_ERROR).build();
       try {
         runner.runInit();
@@ -354,7 +354,7 @@ public class TestSdcIpcTarget {
 
       config.compression = false;
       target = new SdcIpcTarget(config);
-      runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+      runner = new TargetRunner.Builder(SdcIpcDTarget.class, target)
           .setOnRecordError(OnRecordError.TO_ERROR).build();
       try {
         runner.runInit();
@@ -371,7 +371,7 @@ public class TestSdcIpcTarget {
 
       target = new SdcIpcTarget(config);
 
-      runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR).build();
+      runner = new TargetRunner.Builder(SdcIpcDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR).build();
       try {
         runner.runInit();
 
@@ -438,7 +438,7 @@ public class TestSdcIpcTarget {
 
       SdcIpcTarget target = new SdcIpcTarget(config);
 
-      TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+      TargetRunner runner = new TargetRunner.Builder(SdcIpcDTarget.class, target)
           .setOnRecordError(OnRecordError.TO_ERROR).setResourcesDir(testDir.toString()).build();
       try {
         runner.runInit();
@@ -483,7 +483,7 @@ public class TestSdcIpcTarget {
     Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
 
-    TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+    TargetRunner runner = new TargetRunner.Builder(SdcIpcDTarget.class, target)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
 

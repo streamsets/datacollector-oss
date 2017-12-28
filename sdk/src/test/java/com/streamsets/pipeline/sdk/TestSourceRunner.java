@@ -17,6 +17,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import org.junit.Assert;
@@ -24,6 +25,11 @@ import org.junit.Test;
 
 public class TestSourceRunner {
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummySource extends BaseSource {
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -34,6 +40,11 @@ public class TestSourceRunner {
     }
   }
 
+  @StageDef(
+    version = 1,
+    label = "Test",
+    onlineHelpRefUrl = ""
+  )
   public static class DummySourceOffsetCommitter extends BaseSource implements OffsetCommitter {
     boolean committed;
 
