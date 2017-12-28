@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.service.lib.ShimUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,11 +106,7 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
       try {
         generator.write(record);
       } catch (com.streamsets.pipeline.lib.generator.DataGeneratorException e) {
-        throw new DataGeneratorException(
-          e.getErrorCode(),
-          e.getParams(),
-          e.getCause()
-          );
+        throw ShimUtil.convert(e);
       }
     }
 
