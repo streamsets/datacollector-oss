@@ -17,6 +17,7 @@ package com.streamsets.datacollector.configupgrade;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -62,10 +63,10 @@ public class TestPipelineConfigurationUpgrader {
 
   public static class Upgrader2 implements StageUpgrader {
     @Override
-    public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-        List<Config> configs) throws StageException {
+    public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
       UPGRADE_CALLED++;
       configs.add(new Config("a", "A"));
+      context.registerService(Runnable.class, ImmutableList.of(new Config("a", "A")));
       return configs;
     }
   }
@@ -318,6 +319,13 @@ public class TestPipelineConfigurationUpgrader {
     Assert.assertTrue(issues.isEmpty());
     Assert.assertEquals(SOURCE2_V2_DEF.getVersion(), stageConf.getStageVersion());
     Assert.assertEquals(1, UPGRADE_CALLED);
+
+    // Validate services
+    Assert.assertEquals(1, stageConf.getServices().size());
+    ServiceConfiguration serviceConf = stageConf.getServices().get(0);
+    Assert.assertEquals(Runnable.class, serviceConf.getService());
+    Assert.assertEquals(-1, serviceConf.getServiceVersion());
+    Assert.assertEquals("A", serviceConf.getConfig("a").getValue());
   }
 
   private PipelineConfiguration getPipelineToUpgrade() {

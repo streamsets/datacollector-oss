@@ -17,6 +17,7 @@ package com.streamsets.datacollector.configupgrade;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -35,7 +36,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PipelineConfigurationUpgrader {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationUpgrader.class);
@@ -317,6 +320,19 @@ public class PipelineConfigurationUpgrader {
 
       conf.setStageVersion(def.getVersion());
       conf.setConfig(configs);
+
+      // Propagate newly registered services to the StageConfiguration
+      if(!upgradeContext.registeredServices.isEmpty()) {
+        List<ServiceConfiguration> services = new ArrayList<>();
+        services.addAll(conf.getServices());
+
+        // Version -1 is special to note that this version has been created by stage and not by the service itself
+        upgradeContext.registeredServices
+          .forEach((s, c) -> services.add(new ServiceConfiguration(s, -1, c)));
+
+        conf.setServices(services);
+
+      }
     } catch (StageException ex) {
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ex.getErrorCode(), ex.getParams()));
     } catch (Exception ex) {
@@ -336,6 +352,7 @@ public class PipelineConfigurationUpgrader {
     private final String stageInstanceName;
     private final int fromVersion;
     private final int toVersion;
+    private final Map<Class, List<Config>> registeredServices;
 
     UpgradeContext(
       String library,
@@ -349,6 +366,7 @@ public class PipelineConfigurationUpgrader {
       this.stageInstanceName = stageInstanceName;
       this.fromVersion = fromVersion;
       this.toVersion = toVersion;
+      this.registeredServices = new HashMap<>();
     }
 
     @Override
@@ -378,7 +396,7 @@ public class PipelineConfigurationUpgrader {
 
     @Override
     public void registerService(Class service, List<Config> configs) {
-      throw new UnsupportedOperationException("registerService() is not currently supported");
+      registeredServices.put(service, configs);
     }
   }
 
