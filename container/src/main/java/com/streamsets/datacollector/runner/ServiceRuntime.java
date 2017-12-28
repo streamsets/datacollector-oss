@@ -49,7 +49,7 @@ public class ServiceRuntime implements DataFormatGeneratorService {
    * @param serviceInterface Service interface
    * @return True if given interface is supported by this runtime
    */
-  private static boolean supports(Class serviceInterface) {
+  public static boolean supports(Class serviceInterface) {
     return SUPPORTED_SERVICES.contains(serviceInterface);
   }
 

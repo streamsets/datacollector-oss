@@ -46,6 +46,7 @@ import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.ServiceRuntime;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.SDCClassLoader;
@@ -297,9 +298,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
-  // Go over all stages and validate that we can satisfy all the service dependencies. It's a runtime error
-  // and fatal error if we can't.
+  /**
+   * Validate service dependencies.
+   *
+   * Any error is considered fatal and RuntimeException() will be thrown that will terminate the SDC start up procedure.
+   */
   private void validateAllServicesAvailable() {
+    // Firstly validate that all stages have satisfied service dependencies
     List<String> missingServices = new LinkedList<>();
 
     for(StageDefinition stage : stageList) {
@@ -309,9 +314,19 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         }
       }
     }
-
     if(!missingServices.isEmpty()) {
       throw new RuntimeException("Missing services: " + StringUtils.join(missingServices, ", "));
+    }
+
+    // Secondly ensure that all loaded services are compatible with what is supported by our runtime engine
+    List<String> unsupportedServices = new LinkedList<>();
+    for(ServiceDefinition serviceDefinition : serviceList) {
+      if(!ServiceRuntime.supports(serviceDefinition.getProvides())) {
+        unsupportedServices.add(serviceDefinition.getProvides().toString());
+      }
+    }
+    if(!unsupportedServices.isEmpty()) {
+      throw new RuntimeException("Unsupported services: " + StringUtils.join(unsupportedServices, ", "));
     }
   }
 
