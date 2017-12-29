@@ -23,14 +23,16 @@ angular
       },
       pipelineConfig: pipelineConfig,
       pipelineConstant: pipelineConstant,
-      selectedEdgeOs: pipelineConstant.DARWIN_OS,
-      selectedEdgeArch: pipelineConstant.AMD64_ARCH,
+      downloadModel: {
+        selectedEdgeOs: pipelineConstant.DARWIN_OS,
+        selectedEdgeArch: pipelineConstant.AMD64_ARCH
+      },
       downloaded: false,
 
       download: function() {
         api.pipelineAgent.downloadEdgeExecutable(
-          $scope.selectedEdgeOs,
-          $scope.selectedEdgeArch,
+          $scope.downloadModel.selectedEdgeOs,
+          $scope.downloadModel.selectedEdgeArch,
           [pipelineConfig.pipelineId]
         );
         $scope.downloaded = true;

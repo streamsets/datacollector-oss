@@ -18,24 +18,24 @@
         <label class="control-label" translate="global.form.os">OS</label>
         <select class="form-control"
                 name="density"
-                ng-model="selectedEdgeOs">
+                ng-model="downloadModel.selectedEdgeOs">
           <option value="{{pipelineConstant.DARWIN_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.DARWIN_OS">Darwin (Mac OS)</option>
+                  ng-selected="downloadModel.selectedEdgeOs === pipelineConstant.DARWIN_OS">Darwin (Mac OS)</option>
           <option value="{{pipelineConstant.LINUX_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.LINUX_OS">Linux</option>
+                  ng-selected="downloadModel.selectedEdgeOs === pipelineConstant.LINUX_OS">Linux</option>
           <option value="{{pipelineConstant.WINDOWS_OS}}"
-                  ng-selected="selectedEdgeOs === pipelineConstant.WINDOWS_OS">Windows</option>
+                  ng-selected="downloadModel.selectedEdgeOs === pipelineConstant.WINDOWS_OS">Windows</option>
         </select>
       </div>
       <div class="form-group">
         <label class="control-label" translate="global.form.architecture">Architecture</label>
         <select class="form-control"
                 name="density"
-                ng-model="selectedEdgeArch">
+                ng-model="downloadModel.selectedEdgeArch">
           <option value="{{pipelineConstant.AMD64_ARCH}}"
-                  ng-selected="selectedEdgeArch === pipelineConstant.AMD64_ARCH">AMD64</option>
+                  ng-selected="downloadModel.selectedEdgeArch === pipelineConstant.AMD64_ARCH">AMD64</option>
           <option value="{{pipelineConstant.ARM_ARCH}}"
-                  ng-selected="selectedEdgeArch === pipelineConstant.ARM_ARCH">ARM</option>
+                  ng-selected="downloadModel.selectedEdgeArch === pipelineConstant.ARM_ARCH">ARM</option>
         </select>
       </div>
     </div>
