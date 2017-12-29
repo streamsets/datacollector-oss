@@ -24,6 +24,7 @@ import com.streamsets.pipeline.stage.processor.aggregation.aggregator.DoubleMinA
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.DoubleStdDevAggregator;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.DoubleSumAggregator;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.LongAvgAggregator;
+import com.streamsets.pipeline.stage.processor.aggregation.aggregator.LongMaxAggregator;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.LongMinAggregator;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.LongSumAggregator;
 
@@ -35,7 +36,7 @@ public enum AggregationFunction implements Label {
   MIN_DOUBLE("MIN (double)", DoubleMinAggregator.class),
   MIN_INTEGER("MIN (int)", LongMinAggregator.class),
   MAX_DOUBLE("MAX (double)", DoubleMaxAggregator.class),
-  MAX_INTEGER("MAX (int)", LongMinAggregator.class),
+  MAX_INTEGER("MAX (int)", LongMaxAggregator.class),
   SUM_DOUBLE("SUM (double)", DoubleSumAggregator.class),
   SUM_INTEGER("SUM (int)", LongSumAggregator.class),
   ;
