@@ -22,9 +22,11 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.Aggregator;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.AggregatorData;
 import com.streamsets.pipeline.stage.processor.aggregation.aggregator.Aggregators;
@@ -167,9 +169,15 @@ public class AggregationEvaluators {
     JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
     try {
       String jsonData = json.writeValueAsString(data);
-      windowRollEvent.set(Field.create(jsonData));
+      Field field;
+      if (config.eventRecordWithTextField) {
+        field = Field.create(jsonData);
+      } else {
+        field = JsonUtil.bytesToField((ContextExtensions) context, jsonData.getBytes());
+      }
+      windowRollEvent.set(field);
       queue.add(windowRollEvent);
-    } catch (IOException ex) {
+    } catch (IOException | StageException ex) {
       context.toError(windowRollEvent, ex);
     }
   }

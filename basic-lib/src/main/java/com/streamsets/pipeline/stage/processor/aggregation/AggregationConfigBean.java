@@ -134,6 +134,17 @@ public class AggregationConfigBean {
   )
   public boolean perAggregatorEvents;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Produce Event Record with Text Field",
+      description = "When this option is chosen the aggregation data is written in a String field as a JSON string in the event record",
+      group = "EVENTS",
+      displayPosition = 20
+  )
+  public boolean eventRecordWithTextField;
+
   private TimeZone timeZone;
 
   protected List<Stage.ConfigIssue> init(Processor.Context context) {
