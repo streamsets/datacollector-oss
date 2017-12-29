@@ -27,6 +27,7 @@ public class DoubleStdDevAggregator extends SimpleAggregator<DoubleStdDevAggrega
     private long count;
     private double total;
     private double totalSquare;
+    private double stdDev;
 
     @Override
     public String getName() {
@@ -62,6 +63,15 @@ public class DoubleStdDevAggregator extends SimpleAggregator<DoubleStdDevAggrega
 
     public DoubleStdDevAggregatable setTotalSquare(double totalSquare) {
       this.totalSquare = totalSquare;
+      return this;
+    }
+
+    public double getStdDev() {
+      return stdDev;
+    }
+
+    public DoubleStdDevAggregatable setStdDev(double stdDev) {
+      this.stdDev = stdDev;
       return this;
     }
   }
@@ -100,7 +110,7 @@ public class DoubleStdDevAggregator extends SimpleAggregator<DoubleStdDevAggrega
     public Aggregatable<DoubleStdDevAggregator> getAggregatable() {
       DoubleStdDevAggregatable aggregatable = new DoubleStdDevAggregatable().setName(getName());
       synchronized (this) {
-        aggregatable.setCount(count).setTotal(total).setTotalSquare(totalSquare);
+        aggregatable.setCount(count).setTotal(total).setTotalSquare(totalSquare).setStdDev(get());
       }
       return aggregatable;
     }

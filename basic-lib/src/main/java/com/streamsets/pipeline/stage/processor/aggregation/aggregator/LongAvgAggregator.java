@@ -26,6 +26,7 @@ public class LongAvgAggregator extends SimpleAggregator<LongAvgAggregator, Long>
     private String name;
     private long count;
     private long total;
+    private long average;
 
     @Override
     public String getName() {
@@ -52,6 +53,15 @@ public class LongAvgAggregator extends SimpleAggregator<LongAvgAggregator, Long>
 
     public LongAvgAggregatable setTotal(long total) {
       this.total = total;
+      return this;
+    }
+
+    public long getAverage() {
+      return average;
+    }
+
+    public LongAvgAggregatable setAverage(long average) {
+      this.average = average;
       return this;
     }
   }
@@ -84,7 +94,7 @@ public class LongAvgAggregator extends SimpleAggregator<LongAvgAggregator, Long>
 
     @Override
     public synchronized Aggregatable<LongAvgAggregator> getAggregatable() {
-      return new LongAvgAggregatable().setName(getName()).setCount(count).setTotal(total);
+      return new LongAvgAggregatable().setName(getName()).setCount(count).setTotal(total).setAverage(get());
     }
 
     @Override

@@ -26,6 +26,7 @@ public class DoubleAvgAggregator extends SimpleAggregator<DoubleAvgAggregator, D
     private String name;
     private long count;
     private double total;
+    private double average;
 
     @Override
     public String getName() {
@@ -52,6 +53,15 @@ public class DoubleAvgAggregator extends SimpleAggregator<DoubleAvgAggregator, D
 
     public DoubleAvgAggregatable setTotal(double total) {
       this.total = total;
+      return this;
+    }
+
+    public double getAverage() {
+      return average;
+    }
+
+    public DoubleAvgAggregatable setAverage(double average) {
+      this.average = average;
       return this;
     }
   }
@@ -88,7 +98,7 @@ public class DoubleAvgAggregator extends SimpleAggregator<DoubleAvgAggregator, D
     public Aggregatable<DoubleAvgAggregator> getAggregatable() {
       DoubleAvgAggregatable aggregatable = new DoubleAvgAggregatable().setName(getName());
       synchronized (this) {
-        aggregatable.setCount(count).setTotal(total);
+        aggregatable.setCount(count).setTotal(total).setAverage(get());
       }
       return aggregatable;
     }

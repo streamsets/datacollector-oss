@@ -46,6 +46,7 @@ public class TestLongAvgAggregator {
     Assert.assertEquals(LongAvgAggregator.LongAvgAggregatable.class.getSimpleName(), aggregator.getAggregatable().getType());
     Assert.assertEquals(2L, ((LongAvgAggregator.LongAvgAggregatable) aggregator.getAggregatable()).getCount());
     Assert.assertEquals(4L, ((LongAvgAggregator.LongAvgAggregatable) aggregator.getAggregatable()).getTotal());
+    Assert.assertEquals(2L, ((LongAvgAggregator.LongAvgAggregatable) aggregator.getAggregatable()).getAverage());
 
     aggregatorA.process(1L);
 

@@ -48,6 +48,7 @@ public class TestDoubleStdDevAggregator {
     Assert.assertEquals(2L, ((DoubleStdDevAggregator.DoubleStdDevAggregatable) aggregator.getAggregatable()).getCount());
     Assert.assertEquals(3d, ((DoubleStdDevAggregator.DoubleStdDevAggregatable) aggregator.getAggregatable()).getTotal(), 0.0001);
     Assert.assertEquals(5d, ((DoubleStdDevAggregator.DoubleStdDevAggregatable) aggregator.getAggregatable()).getTotalSquare(), 0.0001);
+    Assert.assertEquals( 0.707d, ((DoubleStdDevAggregator.DoubleStdDevAggregatable) aggregator.getAggregatable()).getStdDev(), 0.0002);
 
     aggregatorA.process(1d);
 

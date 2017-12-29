@@ -46,6 +46,7 @@ public class TestDoubleAvgAggregator {
     Assert.assertEquals(DoubleAvgAggregator.DoubleAvgAggregatable.class.getSimpleName(), aggregator.getAggregatable().getType());
     Assert.assertEquals(2L, ((DoubleAvgAggregator.DoubleAvgAggregatable) aggregator.getAggregatable()).getCount());
     Assert.assertEquals(3d, ((DoubleAvgAggregator.DoubleAvgAggregatable) aggregator.getAggregatable()).getTotal(), 0.0001);
+    Assert.assertEquals(1.5d, ((DoubleAvgAggregator.DoubleAvgAggregatable) aggregator.getAggregatable()).getAverage(), 0.0001);
 
     aggregatorA.process(1d);
 
