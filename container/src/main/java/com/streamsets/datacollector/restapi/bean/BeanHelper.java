@@ -852,6 +852,8 @@ public class BeanHelper {
         return MetricElementJson.HISTOGRAM_MEAN;
       case HISTOGRAM_MEDIAN:
         return MetricElementJson.HISTOGRAM_MEDIAN;
+      case HISTOGRAM_P50:
+        return MetricElementJson.HISTOGRAM_P50;
       case HISTOGRAM_P75:
         return MetricElementJson.HISTOGRAM_P75;
       case HISTOGRAM_P95:
@@ -961,6 +963,8 @@ public class BeanHelper {
         return MetricElement.HISTOGRAM_MEAN;
       case HISTOGRAM_MEDIAN:
         return MetricElement.HISTOGRAM_MEDIAN;
+      case HISTOGRAM_P50:
+        return MetricElement.HISTOGRAM_P50;
       case HISTOGRAM_P75:
         return MetricElement.HISTOGRAM_P75;
       case HISTOGRAM_P95:

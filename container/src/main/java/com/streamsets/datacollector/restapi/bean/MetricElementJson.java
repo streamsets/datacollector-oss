@@ -16,15 +16,16 @@
 package com.streamsets.datacollector.restapi.bean;
 
 public enum MetricElementJson {
-  //Related to Counters
+  // Related to Counters
   COUNTER_COUNT,
 
-  //Related to Histogram
+  // Related to Histogram
   HISTOGRAM_COUNT,
   HISTOGRAM_MAX,
   HISTOGRAM_MIN,
   HISTOGRAM_MEAN,
   HISTOGRAM_MEDIAN,
+  HISTOGRAM_P50,
   HISTOGRAM_P75,
   HISTOGRAM_P95,
   HISTOGRAM_P98,
@@ -32,7 +33,7 @@ public enum MetricElementJson {
   HISTOGRAM_P999,
   HISTOGRAM_STD_DEV,
 
-  //Meters
+  // Meters
   METER_COUNT,
   METER_M1_RATE,
   METER_M5_RATE,
@@ -44,7 +45,7 @@ public enum MetricElementJson {
   METER_H24_RATE,
   METER_MEAN_RATE,
 
-  //Timer
+  // Timer
   TIMER_COUNT,
   TIMER_MAX,
   TIMER_MIN,
@@ -61,7 +62,7 @@ public enum MetricElementJson {
   TIMER_M15_RATE,
   TIMER_MEAN_RATE,
 
-  //Gauge - Related to Runtime Stats
+  // Gauge - Related to Runtime Stats
   CURRENT_BATCH_AGE,
   TIME_IN_CURRENT_STAGE,
   TIME_OF_LAST_RECEIVED_RECORD,

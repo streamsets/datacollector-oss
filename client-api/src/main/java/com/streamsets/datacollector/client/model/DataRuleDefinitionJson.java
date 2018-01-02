@@ -57,6 +57,7 @@ public enum ThresholdTypeEnum {
   private Boolean sendEmail = null;
   private Boolean enabled = null;
   private Boolean valid = null;
+  private long timestamp;
 
 
   /**
@@ -238,7 +239,16 @@ public enum ThresholdTypeEnum {
     this.valid = valid;
   }
 
-
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("timestamp")
+  public long getTimestamp() {
+    return timestamp;
+  }
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
 
   @Override
   public String toString()  {
@@ -260,6 +270,7 @@ public enum ThresholdTypeEnum {
     sb.append("    sendEmail: ").append(StringUtil.toIndentedString(sendEmail)).append("\n");
     sb.append("    enabled: ").append(StringUtil.toIndentedString(enabled)).append("\n");
     sb.append("    valid: ").append(StringUtil.toIndentedString(valid)).append("\n");
+    sb.append("    timestamp: ").append(StringUtil.toIndentedString(timestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }
