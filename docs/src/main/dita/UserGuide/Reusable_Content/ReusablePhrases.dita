@@ -63,6 +63,16 @@
                   />, use: <codeph>service sdc stop</codeph></p>
             <p id="shutdownServiceLinxuEL7_RPM">For <ph conref="#concept_vhs_5tz_xp/ph_LinuxEL7_RPM"
                   />, use: <codeph>systemctl stop sdc</codeph></p>
+            <draft-comment author="alisontaylor">The following are used in install, upgrade, and
+                  configuring system user and group for OS's that use the systemd init
+                  system</draft-comment>
+            <p id="override_systemdconfig">Override the default values in the
+                        <codeph>sdc.service</codeph> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <xref
+                        href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html"
+                        format="html" scope="external">systemd.unit manpage</xref>.</p>
+            <codeblock id="systemd_reload">systemctl daemon-reload</codeblock>
             <draft-comment author="alisontaylor">SDC UI shutdown instructions used in
                   Uninstallation, Upgrade, and Shutdown task in Admin chapter. </draft-comment>
             <p id="shutdownUI">To use the <ph
