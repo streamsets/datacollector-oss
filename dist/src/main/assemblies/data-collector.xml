@@ -403,6 +403,13 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Aerospike -->
+    <fileSet>
+        <directory>${basedir}/../aerospike-lib/target/streamsets-libs/</directory>
+        <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+
     <!-- CDH5 Kafka libs -->
     <fileSet>
       <directory>${basedir}/../${cdh_kafka_2_0-lib}/target/streamsets-libs/</directory>
