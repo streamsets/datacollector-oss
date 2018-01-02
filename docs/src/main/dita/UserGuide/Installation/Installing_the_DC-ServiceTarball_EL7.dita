@@ -33,9 +33,6 @@
                 user and group used to start <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service.</p>
-            <p>Before you install, you can alternatively use the
-                    <filepath>$SDC_DIST/systemd/sdc.service</filepath> file to modify the
-                environment variables that define directories and the system user and group.</p>
             <p>Installing the full Data Collector as a service requires root privileges. </p>
         </context>
         <steps>
@@ -66,10 +63,16 @@
                 </info>
             </step>
             <step>
-                <cmd>Edit the <systemoutput>/etc/systemd/system/sdc.service</systemoutput> file to
-                    modify the environment variables that define <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> directories and the system user and group.</cmd>
+                <cmd>Optionally, customize the
+                        <systemoutput>/etc/systemd/system/sdc.service</systemoutput> file to modify
+                    the environment variables that define the <xref
+                        href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v"
+                        >system user and group</xref>.</cmd>
+                <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/override_systemdconfig"
+                    />
+                </info>
             </step>
             <step>
                 <cmd>Use the following command from the directory where you extracted the tarball to
@@ -103,7 +106,7 @@
             <step>
                 <cmd>Use the following command to reload the systemd manager configuration:</cmd>
                 <info>
-                    <codeblock>systemctl daemon-reload</codeblock>
+                    <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/systemd_reload"/>
                 </info>
             </step>
             <step>
@@ -164,8 +167,4 @@ chown sdc:sdc /var/log/sdc</codeblock>
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="../Configuration/DCDirectories.dita#concept_mnx_j3r_3v"/>
-        <link href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v"/>
-    </related-links>
 </task>
