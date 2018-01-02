@@ -40,6 +40,7 @@ import java.util.List;
 @ServiceDef(
   provides = DataFormatGeneratorService.class,
   version = 1,
+  upgrader = GeneratorUpgrader.class,
   label = "DataFormat Generator"
 )
 @ConfigGroups(Groups.class)
