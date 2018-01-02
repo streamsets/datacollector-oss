@@ -110,8 +110,8 @@ public class RuleDefinitionsUpgrader {
 
   private void upgrade(RuleDefinitions ruleDefinitions, List<Issue> issues) {
     StageConfiguration rulesConfAsStageConf = PipelineBeanCreator.getRulesConfAsStageConf(ruleDefinitions);
-    if (PipelineConfigurationUpgrader.needsUpgrade(getRulesDefinition(), rulesConfAsStageConf, issues)) {
-      rulesConfAsStageConf = PipelineConfigurationUpgrader.upgrade(getRulesDefinition(), rulesConfAsStageConf, issues);
+    if (PipelineConfigurationUpgrader.needsUpgrade(null, getRulesDefinition(), rulesConfAsStageConf, issues)) {
+      rulesConfAsStageConf = PipelineConfigurationUpgrader.upgradeIfNeeded(null, getRulesDefinition(), rulesConfAsStageConf, issues);
       ruleDefinitions.setConfiguration(rulesConfAsStageConf.getConfiguration());
       ruleDefinitions.setVersion(rulesConfAsStageConf.getStageVersion());
     }

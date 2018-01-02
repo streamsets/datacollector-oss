@@ -144,7 +144,9 @@ public enum ContainerError implements ErrorCode {
   //PipelineConfigurationUpgrader
   CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),
   CONTAINER_0901("Could not find stage definition for '{}:{}'"),
-  CONTAINER_0902("Stage definition '{}:{}' version '{}' is older than the version specified in the configuration '{}' for stage '{}'"),
+  CONTAINER_0902("Definition requires at least version {} which is higher then available library supports ({})"),
+  CONTAINER_0903("Could not find service definition for '{}'"),
+  CONTAINER_0904("Service Upgrader can't register another service."),
 
   //Email Notifier
   CONTAINER_01000("Error loading email template, reason : {}"),
