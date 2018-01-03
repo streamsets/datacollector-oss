@@ -161,7 +161,9 @@ public abstract class ConfigValueExtractor {
             }
             break;
           case RUNTIME:
-            // TODO: SDC-7362: Isolate DataFormat library to it's own class loader
+            if (!NUMBER_TYPES.contains(field.getType()) && !String.class.isAssignableFrom(field.getType())) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_015, contextMsg, field.getType()));
+            }
             break;
         }
       }
@@ -194,19 +196,7 @@ public abstract class ConfigValueExtractor {
                 value = Boolean.parseBoolean(valueStr);
                 break;
               case NUMBER:
-                if (field.getType() == Byte.TYPE || field.getType() == Byte.class) {
-                  value = Byte.parseByte(valueStr);
-                } else  if (field.getType() == Short.TYPE || field.getType() == Short.class) {
-                  value = Short.parseShort(valueStr);
-                } else   if (field.getType() == Integer.TYPE || field.getType() == Integer.class) {
-                  value = Integer.parseInt(valueStr);
-                } else if (field.getType() == Long.TYPE || field.getType() == Long.class) {
-                  value = Long.parseLong(valueStr);
-                } else if (field.getType() == Float.TYPE || field.getType() == Float.class) {
-                  value = Float.parseFloat(valueStr);
-                } else if (field.getType() == Double.TYPE || field.getType() == Double.class) {
-                  value = Double.parseDouble(valueStr);
-                }
+                value = extractAsNumber(field, valueStr);
                 break;
               case STRING:
               case MODEL:
@@ -221,9 +211,7 @@ public abstract class ConfigValueExtractor {
                 }
                 break;
               case LIST:
-                value = ObjectMapperFactory.get().readValue(valueStr, List.class);
-                // convert to enum if necessary
-                value = convertElementsToEnum(field, (List) value);
+                value = extractAsList(field, valueStr);
                 break;
               case MAP:
                 Map<String, ?> map = ObjectMapperFactory.get().readValue(valueStr, LinkedHashMap.class);
@@ -243,7 +231,7 @@ public abstract class ConfigValueExtractor {
                 value = new ClearCredentialValue(valueStr);
                 break;
               case RUNTIME:
-                // TODO: SDC-7362: Isolate DataFormat library to it's own class loader
+                value = extractAsRuntime(field, valueStr);
                 break;
             }
           } catch (IOException ex) {
@@ -255,6 +243,47 @@ public abstract class ConfigValueExtractor {
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid configuration value: {}", errors));
     }
+  }
+
+  // RUNTIME supports only Numeric types and String at the moment
+  private Object extractAsRuntime(Field field, String valueStr) {
+     if (field.getType() == Byte.TYPE || field.getType() == Byte.class ||
+         field.getType() == Short.TYPE || field.getType() == Short.class ||
+         field.getType() == Integer.TYPE || field.getType() == Integer.class ||
+         field.getType() == Long.TYPE || field.getType() == Long.class ||
+         field.getType() == Float.TYPE || field.getType() == Float.class ||
+         field.getType() == Double.TYPE || field.getType() == Double.class) {
+       return extractAsNumber(field, valueStr);
+    } else if (String.class.isAssignableFrom(field.getType())) {
+       return valueStr;
+    }
+
+    throw new IllegalArgumentException(Utils.format("Invalid type for RUNTIME type: {}", field.getType()));
+  }
+
+  private Object extractAsList(Field field, String valueStr) throws IOException {
+    Object value = ObjectMapperFactory.get().readValue(valueStr, List.class);
+    // convert to enum if necessary
+    value = convertElementsToEnum(field, (List) value);
+    return value;
+  }
+
+  private Object extractAsNumber(Field field, String valueStr) {
+    if (field.getType() == Byte.TYPE || field.getType() == Byte.class) {
+      return Byte.parseByte(valueStr);
+    } else if (field.getType() == Short.TYPE || field.getType() == Short.class) {
+      return Short.parseShort(valueStr);
+    } else if (field.getType() == Integer.TYPE || field.getType() == Integer.class) {
+      return Integer.parseInt(valueStr);
+    } else if (field.getType() == Long.TYPE || field.getType() == Long.class) {
+      return Long.parseLong(valueStr);
+    } else if (field.getType() == Float.TYPE || field.getType() == Float.class) {
+      return Float.parseFloat(valueStr);
+    } else if (field.getType() == Double.TYPE || field.getType() == Double.class) {
+      return Double.parseDouble(valueStr);
+    }
+
+    throw new IllegalArgumentException(Utils.format("Invalid number type: ", field.getType()));
   }
 
   Class getListType(Field listField) {

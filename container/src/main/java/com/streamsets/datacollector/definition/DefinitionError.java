@@ -38,6 +38,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_013("{}, configuration field is '{}', must have a numeric value"),
 
   DEF_014("{}, configuration field is '{}', it must be 'CredentialValue'"),
+  DEF_015("{}, configuration field is '{}', it must be String or Number"),
 
   //ELDefinitionExtractor
   DEF_050("{} Class='{}' Method='{}', method must be public to be an EL function"),

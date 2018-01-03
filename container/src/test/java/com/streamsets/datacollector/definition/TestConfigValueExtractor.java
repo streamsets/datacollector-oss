@@ -177,6 +177,21 @@ public class TestConfigValueExtractor {
     @MultiValueChooserModel(FooEnumValueChooser.class)
     public List<FooEnum> enumM;
 
+    @ConfigDef(
+      type = ConfigDef.Type.RUNTIME,
+      required = true,
+      label = "L",
+      defaultValue = "stringValue"
+    )
+    public String runtimeString;
+
+    @ConfigDef(
+      type = ConfigDef.Type.RUNTIME,
+      required = true,
+      label = "L",
+      defaultValue = "1987"
+    )
+    public int runtimeInteger;
   }
 
   @Test
@@ -247,5 +262,12 @@ public class TestConfigValueExtractor {
     configDef = field.getAnnotation(ConfigDef.class);
     Assert.assertEquals(ImmutableList.of(FooEnum.A), ConfigValueExtractor.get().extract(field, configDef, "x"));
 
+    field = Configs.class.getField("runtimeString");
+    configDef = field.getAnnotation(ConfigDef.class);
+    Assert.assertEquals("stringValue", ConfigValueExtractor.get().extract(field, configDef, "x"));
+
+    field = Configs.class.getField("runtimeInteger");
+    configDef = field.getAnnotation(ConfigDef.class);
+    Assert.assertEquals(1987, ConfigValueExtractor.get().extract(field, configDef, "x"));
   }
 }
