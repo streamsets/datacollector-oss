@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pyb_2fc_jcb">
+    <title>Pipeline Execution Mode</title>
+    <shortdesc>Pipelines can run in standalone, cluster, or edge execution mode. Some pipeline
+        execution modes do not support all statistics aggregator options.</shortdesc>
+    <conbody>
+        <p>The following table lists each pipeline execution mode and the statistics aggregator
+            options that it supports:<table frame="all" rowsep="1" colsep="1" id="table_ihb_ggc_jcb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Pipeline Execution Mode</entry>
+                            <entry>Supported Statistics Aggregator Options</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Standalone</entry>
+                            <entry>All options are supported.</entry>
+                        </row>
+                        <row>
+                            <entry><xref
+                                    href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"
+                                    >Cluster</xref></entry>
+                            <entry>
+                                <ul id="ul_dcj_vgc_jcb">
+                                    <li>Write to SDC RPC</li>
+                                    <li>Write to Kafka</li>
+                                    <li>Write to Kinesis Streams</li>
+                                    <li>Write to MapR Streams</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><xref
+                                    href="../Edge_Mode/EdgePipelines_Overview.dita#concept_d4h_kkq_4bb"
+                                    >Edge</xref></entry>
+                            <entry>
+                                <ul id="ul_ubg_3gc_jcb">
+                                    <li>Write to SCH Directly</li>
+                                </ul>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+    </conbody>
+</concept>
