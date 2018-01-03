@@ -49,7 +49,8 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCConnectString_row">
                                     <entry/>
-                                </row>  <row
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
                                     <entry/>
                                 </row>
@@ -58,11 +59,11 @@
                                     <entry>SQL query to use to look up data in the database. Use the
                                         following syntax for the
                                             query:<codeblock>SELECT &lt;column1 name>, &lt;column2 name> FROM &lt;table name> WHERE &lt;column3 name> =
-    '${record:value(&lt;field path>)}'</codeblock><p>For example, to use the department ID field to look up the department name column, use the
-                                            following
+    '${record:value(&lt;field path>)}'</codeblock><p>For
+                                            example, to use the department ID field to look up the
+                                            department name column, use the following
                                             query:<codeblock>SELECT DeptName FROM Departments WHERE DeptID = '${record:value('/dept_ID')}'</codeblock></p></entry>
                                 </row>
-                              
                                 <row>
                                     <entry>Column Mappings</entry>
                                     <entry>Use to override the default column to field mappings. By
@@ -104,23 +105,24 @@
                                                 value in a separate record. </li>
                                         </ul></entry>
                                 </row>
-                                
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
                                     <entry/>
                                 </row>
                                 <row>
                                     <entry>Max Blob Size (bytes)</entry>
-                                    <entry>Maximum number of bytes to be read in a Blob field. </entry>
+                                    <entry>Maximum number of bytes to be read in a Blob field.
+                                    </entry>
                                 </row>
                                 <row>
-                                    <entry>Enable Local Caching
-                                        <xref
-                                            href="JDBCLookup-Cache.dita">
+                                    <entry>Enable Local Caching <xref href="JDBCLookup-Cache.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p7v_uh"/></xref></entry>
-                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"></entry>
-                                </row><row
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"
+                                    />
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCMaxEntriesCache">
                                     <entry/>
                                 </row>
@@ -136,7 +138,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCtimeUnit">
                                     <entry/>
                                 </row>
-                                
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
                                     <entry/>
@@ -155,8 +156,8 @@
             <step id="JDBC-Advanced">
                 <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
                     properties.</cmd>
-                <info>The defaults for these properties should work in most cases: 
-                    <table frame="all" rowsep="1" colsep="1" id="table_z1c_hjj_kw">
+                <info>The defaults for these properties should work in most cases: <table
+                        frame="all" rowsep="1" colsep="1" id="table_z1c_hjj_kw">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -197,6 +198,10 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TransactionIsolation">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitQuery">
                                     <entry/>
                                 </row>
                             </tbody>
