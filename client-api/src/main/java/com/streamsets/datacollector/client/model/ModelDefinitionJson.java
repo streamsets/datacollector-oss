@@ -31,21 +31,29 @@ public class ModelDefinitionJson   {
   private String valuesProviderClass = null;
   private List<String> values = new ArrayList<String>();
   private List<ConfigDefinitionJson> configDefinitions = new ArrayList<ConfigDefinitionJson>();
+  private String filteringConfig = null;
 
-public enum ModelTypeEnum {
-  FIELD_SELECTOR_MULTI_VALUE("FIELD_SELECTOR_MULTI_VALUE"), FIELD_SELECTOR("FIELD_SELECTOR"), FIELD_VALUE_CHOOSER("FIELD_VALUE_CHOOSER"), VALUE_CHOOSER("VALUE_CHOOSER"), MULTI_VALUE_CHOOSER("MULTI_VALUE_CHOOSER"), PREDICATE("PREDICATE"), LIST_BEAN("LIST_BEAN");
+  public enum ModelTypeEnum {
+    FIELD_SELECTOR_MULTI_VALUE("FIELD_SELECTOR_MULTI_VALUE"),
+    FIELD_SELECTOR("FIELD_SELECTOR"),
+    FIELD_VALUE_CHOOSER("FIELD_VALUE_CHOOSER"),
+    VALUE_CHOOSER("VALUE_CHOOSER"),
+    MULTI_VALUE_CHOOSER("MULTI_VALUE_CHOOSER"),
+    PREDICATE("PREDICATE"),
+    LIST_BEAN("LIST_BEAN"),
+    ;
 
-  private String value;
+    private String value;
 
-  ModelTypeEnum(String value) {
-    this.value = value;
+    ModelTypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private ModelTypeEnum modelType = null;
 
@@ -109,6 +117,16 @@ public enum ModelTypeEnum {
     this.modelType = modelType;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("filteringConfig")
+  public String getFilteringConfig() {
+    return filteringConfig;
+  }
+  public void setFilteringConfig(String filteringConfig) {
+    this.filteringConfig = filteringConfig;
+  }
 
 
   @Override
@@ -121,6 +139,7 @@ public enum ModelTypeEnum {
     sb.append("    values: ").append(StringUtil.toIndentedString(values)).append("\n");
     sb.append("    configDefinitions: ").append(StringUtil.toIndentedString(configDefinitions)).append("\n");
     sb.append("    modelType: ").append(StringUtil.toIndentedString(modelType)).append("\n");
+    sb.append("    filteringConfig: ").append(StringUtil.toIndentedString(filteringConfig)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -135,7 +135,15 @@ public abstract class ModelDefinitionExtractor {
         FieldSelectorModel fieldSelectorModel = field.getAnnotation(FieldSelectorModel.class);
         ModelType modelType = (fieldSelectorModel.singleValued()) ? ModelType.FIELD_SELECTOR
                                                              : ModelType.FIELD_SELECTOR_MULTI_VALUE;
-        return new ModelDefinition(modelType, null, null, null, null, null);
+        return new ModelDefinition(
+            modelType,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
@@ -163,8 +171,15 @@ public abstract class ModelDefinitionExtractor {
         ValueChooserModel valueChooserModel = field.getAnnotation(ValueChooserModel.class);
         try {
           ChooserValues values = valueChooserModel.value().newInstance();
-          return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
-                                     values.getLabels(), null, null);
+          return new ModelDefinition(
+              ModelType.VALUE_CHOOSER,
+              values.getClass().getName(),
+              values.getValues(),
+              values.getLabels(),
+              null,
+              null,
+              valueChooserModel.filteringConfig()
+          );
         } catch (Exception ex) {
           throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
         }
@@ -195,8 +210,15 @@ public abstract class ModelDefinitionExtractor {
         MultiValueChooserModel multiValueChooserModel = field.getAnnotation(MultiValueChooserModel.class);
         try {
           ChooserValues values = multiValueChooserModel.value().newInstance();
-          return new ModelDefinition(ModelType.MULTI_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
-            values.getLabels(), null, null);
+          return new ModelDefinition(
+              ModelType.MULTI_VALUE_CHOOSER,
+              values.getClass().getName(),
+              values.getValues(),
+              values.getLabels(),
+              null,
+              null,
+              null
+          );
         } catch (Exception ex) {
           throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
         }
@@ -217,7 +239,15 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        return new ModelDefinition(ModelType.PREDICATE, null, null, null, null, null);
+        return new ModelDefinition(
+            ModelType.PREDICATE,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
@@ -244,9 +274,15 @@ public abstract class ModelDefinitionExtractor {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
         Class listBeanClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        return new ModelDefinition(ModelType.LIST_BEAN, null, null, null, listBeanClass,
-                                   ConfigDefinitionExtractor.get().extract("", listBeanClass,
-                                                                           Collections.<String>emptyList(), contextMsg));
+        return new ModelDefinition(
+            ModelType.LIST_BEAN,
+            null,
+            null,
+            null,
+            listBeanClass,
+            ConfigDefinitionExtractor.get().extract("", listBeanClass, Collections.<String>emptyList(), contextMsg),
+            null
+        );
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }

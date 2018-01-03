@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -57,10 +58,15 @@ public class TestModelDefinitionBean {
       triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(),
       Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null));
 
-    com.streamsets.datacollector.config.ModelDefinition modelDefinition =
-      new com.streamsets.datacollector.config.ModelDefinition(ModelType.LIST_BEAN,
-                                                         "valuesProviderClass", values,labels, String.class,
-                                                         configDefinitions);
+    ModelDefinition modelDefinition = new ModelDefinition(
+        ModelType.LIST_BEAN,
+        "valuesProviderClass",
+        values,
+        labels,
+        String.class,
+        configDefinitions,
+        null
+    );
 
     ModelDefinitionJson modelDefinitionJsonBean = new ModelDefinitionJson(modelDefinition);
 

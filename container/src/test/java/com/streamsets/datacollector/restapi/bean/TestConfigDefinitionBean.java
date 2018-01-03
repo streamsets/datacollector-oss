@@ -39,9 +39,15 @@ public class TestConfigDefinitionBean {
 
   @Test
   public void testConfigDefinitionBean() {
-    com.streamsets.datacollector.config.ModelDefinition modelDefinition = new ModelDefinition(ModelType.LIST_BEAN,
-                                                                                         "myClass", null , null, null,
-                                                                                         null);
+    com.streamsets.datacollector.config.ModelDefinition modelDefinition = new ModelDefinition(
+        ModelType.LIST_BEAN,
+        "myClass",
+        null ,
+        null,
+        null,
+        null,
+        null
+    );
 
     List<Object> triggeredBy = new ArrayList<>();
     triggeredBy.add("X");

@@ -48,4 +48,8 @@ public class ModelDefinitionJson {
     return BeanHelper.wrapConfigDefinitions(modelDefinition.getConfigDefinitions());
   }
 
+  public String getFilteringConfig() {
+    return modelDefinition.getFilteringConfig();
+  }
+
 }

@@ -29,19 +29,48 @@ public class ModelDefinition {
   private List<String> values;
   private List<String> labels;
   private final Class listBeanClass;
+  private final String filteringConfig;
 
-  public static ModelDefinition localizedValueChooser(ModelDefinition model, List<String> values, List<String> labels) {
-    return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), values, labels,
-                        model.getListBeanClass(), model.getConfigDefinitions());
+  public static ModelDefinition localizedValueChooser(
+      ModelDefinition model,
+      List<String> values,
+      List<String> labels
+  ) {
+    return new ModelDefinition(
+        model.getModelType(),
+        model.getValuesProviderClass(),
+        values,
+        labels,
+        model.getListBeanClass(),
+        model.getConfigDefinitions(),
+        model.getFilteringConfig()
+    );
   }
 
-  public static ModelDefinition localizedComplexField(ModelDefinition model, List<ConfigDefinition> configDefs) {
-    return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), model.getValues(),
-                               model.getLabels(), model.getListBeanClass(), configDefs);
+  public static ModelDefinition localizedComplexField(
+      ModelDefinition model,
+      List<ConfigDefinition> configDefs
+  ) {
+    return new ModelDefinition(
+        model.getModelType(),
+        model.getValuesProviderClass(),
+        model.getValues(),
+        model.getLabels(),
+        model.getListBeanClass(),
+        configDefs,
+        model.getFilteringConfig()
+    );
   }
 
-  public ModelDefinition(ModelType modelType, String valuesProviderClass, List<String> values,
-      List<String> labels, Class listBeanClass, List<ConfigDefinition> configDefinitions) {
+  public ModelDefinition(
+      ModelType modelType,
+      String valuesProviderClass,
+      List<String> values,
+      List<String> labels,
+      Class listBeanClass,
+      List<ConfigDefinition> configDefinitions,
+      String filteringConfig
+  ) {
     this.modelType = modelType;
     this.valuesProviderClass = valuesProviderClass;
     this.configDefinitions = configDefinitions;
@@ -54,6 +83,7 @@ public class ModelDefinition {
     this.values = values;
     this.labels = labels;
     this.listBeanClass = listBeanClass;
+    this.filteringConfig = filteringConfig;
   }
 
   public ModelType getModelType() {
@@ -92,10 +122,19 @@ public class ModelDefinition {
     return configDefinitionsAsMap;
   }
 
+  public String getFilteringConfig() {
+    return filteringConfig;
+  }
+
   @Override
   public String toString() {
-    return Utils.format("ModelDefinition[type='{}' valuesProviderClass='{}' values='{}']", getModelType(), getValues(),
-                        getValuesProviderClass());
+    return Utils.format(
+      "ModelDefinition[type='{}' valuesProviderClass='{}' values='{}' filteringConfig='{}']",
+      getModelType(),
+      getValuesProviderClass(),
+      getValues(),
+      getFilteringConfig()
+    );
   }
 
 }

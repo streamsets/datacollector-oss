@@ -52,7 +52,7 @@ public class TestStageDefinitionLocalization {
                                      0, 0, "mode", 1,
       Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null));
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, OptionsChooserValues.class.getName(),
-                                                ImmutableList.of("OPTION"), ImmutableList.of("Option"), null,  null);
+                                                ImmutableList.of("OPTION"), ImmutableList.of("Option"), null,  null, null);
     configs.add(new ConfigDefinition("c2", ConfigDef.Type.MODEL, "Config2Label", "Config2Description", "default",
                                      true, "GROUP", "c2", model, null, null, 0,
                                      Collections.<ElFunctionDefinition>emptyList(),
