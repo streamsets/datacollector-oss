@@ -113,6 +113,86 @@ public class TestSQLListener {
                     put("LASTLOGIN", null);
                   }
                 }
+            },
+            {
+              "insert into \"SYS\".\"WIN\" (\"ID\", \"DESC\", \"STATUS\", \"TOTAL\", \"DATE1\", \"DATE2\") " +
+                  "values ('1', 'This is a \r\n test \r\n that tests windows \r\n line endings\r', 'COMPLETE', '45', " +
+                  "TO_DATE('21-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'), " +
+                  "TO_DATE('10-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'))",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("DESC", "This is a \r\n test \r\n that tests windows \r\n line endings\r");
+                    put("STATUS", "COMPLETE");
+                    put("TOTAL", "45");
+                    put("DATE1", "TO_DATE('21-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                    put("DATE2", "TO_DATE('10-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                  }
+                }
+            },
+            {
+                "insert into \"SYS\".\"UNIX\" (\"ID\", \"DESC\", \"STATUS\", \"TOTAL\", \"DATE1\", \"DATE2\") " +
+                    "values ('1', 'This is a \n test \n that tests windows \n line endings\n', 'COMPLETE', '45', " +
+                    "TO_DATE('21-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'), " +
+                    "TO_DATE('10-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'))",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("DESC", "This is a \n test \n that tests windows \n line endings\n");
+                    put("STATUS", "COMPLETE");
+                    put("TOTAL", "45");
+                    put("DATE1", "TO_DATE('21-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                    put("DATE2", "TO_DATE('10-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                  }
+                }
+            },
+            {
+                "insert into \"SYS\".\"PROPER_WIN\" (\"ID\", \"DESC\", \"STATUS\", \"TOTAL\", \"DATE1\", \"DATE2\") " +
+                    "values ('1', 'This is a \r\n test \r\n that tests windows \r\n line endings\r\n', 'COMPLETE', '45', " +
+                    "TO_DATE('21-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'), " +
+                    "TO_DATE('10-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'))",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("DESC", "This is a \r\n test \r\n that tests windows \r\n line endings\r\n");
+                    put("STATUS", "COMPLETE");
+                    put("TOTAL", "45");
+                    put("DATE1", "TO_DATE('21-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                    put("DATE2", "TO_DATE('10-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                  }
+                }
+            },
+            {
+                "insert into \"SYS\".\"MIX\" (\"ID\", \"DESC\", \"STATUS\", \"TOTAL\", \"DATE1\", \"DATE2\") " +
+                    "values ('1', 'This is a \r test \n that tests windows \r\n line endings\r', 'COMPLETE', '45', " +
+                    "TO_DATE('21-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'), " +
+                    "TO_DATE('10-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'))",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("DESC", "This is a \r test \n that tests windows \r\n line endings\r");
+                    put("STATUS", "COMPLETE");
+                    put("TOTAL", "45");
+                    put("DATE1", "TO_DATE('21-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                    put("DATE2", "TO_DATE('10-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                  }
+                }
+            },
+            {
+                "insert into \"SYS\".\"MIX\" (\"ID\", \"DESC\", \"STATUS\", \"TOTAL\", \"DATE1\", \"DATE2\") " +
+                    "values ('1', 'This is a test     that tests no line     endings', 'COMPLETE', '45', " +
+                    "TO_DATE('21-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'), " +
+                    "TO_DATE('10-12-2017 14:13:04', 'DD-MM-YYYY HH24:MI:SS'))",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("DESC", "This is a test     that tests no line     endings");
+                    put("STATUS", "COMPLETE");
+                    put("TOTAL", "45");
+                    put("DATE1", "TO_DATE('21-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                    put("DATE2", "TO_DATE('10-12-2017 14:13:04','DD-MM-YYYY HH24:MI:SS')");
+                  }
+                }
             }
         }
     );
