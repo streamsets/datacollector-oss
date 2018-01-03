@@ -90,6 +90,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../DPM/AggStatistics_ExecutionMode.dita"/>
    <topicref href="../DPM/AggStatistics_DirectlyToDPM.dita"/>
    <topicref href="../DPM/AggStatistics_SDCRPC.dita">
     <topicref href="../DPM/AggStatistics_SDCRPCBestPractices.dita"/>
