@@ -114,10 +114,11 @@
                                             href="../Origins/MultitableJDBCConsumer-NonIncremental.dita#concept_xwr_bhm_nbb"
                                             >non-incremental processing</xref> for tables with no
                                         primary key or offset column. </li>
-                                    <li>You can now specify a query to be executed after
-                                        establishing a connection to the database, before performing
-                                        other tasks. This can be used, for example, to modify
-                                        session attributes. </li>
+                                    <li>You can now specify an <xref
+                                            href="../Origins/MultiTableJDBCConsumer-Configuring.dita#task_kst_m4w_4y"
+                                            >Init Query</xref> to be executed after establishing a
+                                        connection to the database, before performing other tasks.
+                                        This can be used, for example, to modify session attributes. </li>
                                     <li>A new <xref
                                             href="../Origins/MultiTableJDBCConsumer-Configuring.dita#task_kst_m4w_4y"
                                             >Queries Per Second property</xref> determines how many
@@ -129,10 +130,12 @@
                                                 Change</xref>.</p></li>
                                 </ul></li>
                             <li>JDBC Query Consumer origin enhancements:<ul id="ul_hzy_tbl_wbb">
-                                    <li>You can now specify a query to be executed after
-                                        establishing a connection to the database, before performing
-                                        other tasks. This can be used, for example, to modify
-                                        session attributes.</li>
+                                    <li>You can now specify an <xref
+                                            href="../Origins/JDBCConsumer-Configuring.dita#task_ryz_tkr_bs"
+                                            >Init Query</xref> to be executed after establishing a
+                                        connection to the database, before performing other tasks.
+                                        This can be used, for example, to modify session
+                                        attributes.</li>
                                     <li>The Microsoft SQL Server CDC functionality in the JDBC Query
                                         Consumer origin is now deprecated and will be removed from
                                         the origin in a future release. For upgrade information, see
@@ -225,9 +228,13 @@
                             <li>HTTP Client processor enhancement - The Rate Limit now defines the
                                 maximum number of requests to make per millisecond. Previously, it
                                 defined the maximum number of requests per second.</li>
-                            <li>JDBC Lookup and JDBC Tee processor enhancements - You can now
-                                specify a query to be executed after establishing a connection to
-                                the database, before performing other tasks. This can be used, for
+                            <li><xref
+                                    href="../Processors/JDBCLookup-Configuring.dita#task_kbr_2cy_hw"
+                                    >JDBC Lookup</xref> and <xref
+                                    href="../Processors/JDBCTee-Configuring.dita#task_qpj_ncy_hw"
+                                    >JDBC Tee</xref> processor enhancements - You can now specify an
+                                Init Query to be executed after establishing a connection to the
+                                database, before performing other tasks. This can be used, for
                                 example, to modify session attributes. </li>
                             <li>Kudu Lookup processor enhancement - The Cache Kudu Table property is
                                 now named Enable Table Caching. The Maximum Entries to Cache Table
@@ -258,10 +265,12 @@
                             <li>HTTP Client destination enhancement - You can now use the HTTP
                                 Client destination to write Avro, Delimited, and Protobuf data in
                                 addition to the previous data formats. </li>
-                            <li>JDBC Producer destination enhancement - You can now specify a query
-                                to be executed after establishing a connection to the database,
-                                before performing other tasks. This can be used, for example, to
-                                modify session attributes. </li>
+                            <li><xref
+                                    href="../Destinations/JMSProducer-Configuring.dita#task_udk_yw5_n1b"
+                                    >JDBC Producer destination enhancement</xref> - You can now
+                                specify an Init Query to be executed after establishing a connection
+                                to the database, before performing other tasks. This can be used,
+                                for example, to modify session attributes. </li>
                             <li><xref href="../Destinations/Kudu-Configuring.dita#task_c4x_tmh_4v"
                                     >Kudu destination enhancement</xref> - If the destination
                                 receives a change data capture log from the following source
@@ -316,6 +325,11 @@
                         <ul id="ul_if5_jgl_wbb">
                             <li>Hive Query executor enhancement - You can now configure additional
                                 JDBC configuration properties to pass to the JDBC driver. </li>
+                            <li><xref href="../Executors/JDBCQuery-Configuring.dita#task_ym2_3cv_sx"
+                                    >JDBC Query executor enhancement</xref> - You can now specify an
+                                Init Query to be executed after establishing a connection to the
+                                database, before performing other tasks. This can be used, for
+                                example, to modify session attributes. </li>
                         </ul>
                     </dd>
                 </dlentry>

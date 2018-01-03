@@ -1421,6 +1421,13 @@
           tables.</li>
         </ul></entry>
       </row>
+      <row id="row-InitQuery">
+       <entry>Init Query</entry>
+       <entry>SQL query to perform immediately after the stage connects to the database. Use to set
+        up the database session as needed. <p>For example, the following query sets the time zone
+         for the session for a MySQL database: <codeph>SET time_zone =
+        timezone;</codeph></p></entry>
+      </row>
       <row id="row-JDBCunknownType">
        <entry>On Unknown Type</entry>
        <entry>Action to take when the origin encounters a record with an unsupported data type:<ul

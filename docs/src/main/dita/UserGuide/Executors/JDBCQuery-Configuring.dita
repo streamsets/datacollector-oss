@@ -119,6 +119,10 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TransactionIsolation">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitQuery">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table></info>

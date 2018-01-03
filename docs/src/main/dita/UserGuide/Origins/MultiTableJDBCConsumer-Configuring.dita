@@ -23,7 +23,8 @@
         <context>
             <p><indexterm>JDBC Multitable Consumer
                     origin<indexterm>configuring</indexterm></indexterm>Configure a JDBC Multitable
-                Consumer origin to use a JDBC connection to read database data from multiple tables. </p>
+                Consumer origin to use a JDBC connection to read database data from multiple tables.
+            </p>
         </context>
         <steps>
             <step>
@@ -55,7 +56,8 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_plp_tp2_px"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
@@ -96,10 +98,10 @@
                                 </row>
                                 <row>
                                     <entry>Number of Threads <xref
-                                            href="MultiTableJDBCConsumer-MultithreadTable.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r2s_8lq_fs"/>
-                                    </xref></entry>
+                                            href="MultiTableJDBCConsumer-MultithreadTable.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_r2s_8lq_fs"/>
+                                        </xref></entry>
                                     <entry>Number of threads the origin generates and uses for
                                         multithreaded processing.<p>Configure the Maximum Pool Size
                                             property on the Advanced tab to be equal to or greater
@@ -424,6 +426,10 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitTableOrder">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitQuery">
                                     <entry/>
                                 </row>
                                 <row
