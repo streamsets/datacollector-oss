@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.destination.mapr.v6_0.loader;
 
 import com.mapr.db.MapRDB;
 import com.mapr.db.exceptions.DBException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
@@ -27,8 +26,6 @@ import org.ojai.store.DocumentMutation;
 import org.ojai.store.DocumentStore;
 import org.ojai.store.DriverManager;
 import org.ojai.store.exceptions.StoreException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

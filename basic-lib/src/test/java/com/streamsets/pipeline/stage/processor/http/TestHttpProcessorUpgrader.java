@@ -23,7 +23,6 @@ import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
 import com.streamsets.pipeline.lib.http.OAuthConfigBean;
 import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
 import com.streamsets.pipeline.lib.http.SslConfigBean;
-import com.streamsets.pipeline.stage.destination.http.HttpClientTargetUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
 import org.slf4j.Logger;

@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.lib.parser.net.syslog;
 
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.ext.io.CountingReader;
 import com.streamsets.pipeline.lib.parser.net.BaseNetworkMessageDataParser;

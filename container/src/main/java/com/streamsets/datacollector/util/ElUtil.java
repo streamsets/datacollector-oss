@@ -17,7 +17,6 @@ package com.streamsets.datacollector.util;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;

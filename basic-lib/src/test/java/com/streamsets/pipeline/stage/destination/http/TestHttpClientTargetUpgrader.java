@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.destination.http;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.origin.http.HttpClientSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
 

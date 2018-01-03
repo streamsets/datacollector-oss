@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.AbstractOverrunDelimitedReader;
 import com.streamsets.pipeline.lib.io.OverrunCustomDelimiterReader;

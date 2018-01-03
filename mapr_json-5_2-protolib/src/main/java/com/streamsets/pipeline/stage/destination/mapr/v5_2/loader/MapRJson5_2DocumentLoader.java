@@ -22,8 +22,6 @@ import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoa
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
 import org.ojai.store.DocumentMutation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

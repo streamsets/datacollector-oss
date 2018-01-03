@@ -22,8 +22,6 @@ import com.streamsets.pipeline.lib.jdbc.schemawriter.JdbcSchemaWriter;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcType;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcTypeInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

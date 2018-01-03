@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.parser.sdcrecord;
 
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.Sampler;

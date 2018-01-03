@@ -16,8 +16,6 @@
 package com.streamsets.pipeline.lib.jdbc.schemawriter;
 
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.lib.jdbc.JdbcStageCheckedException;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcType;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcTypeInfo;
 import com.zaxxer.hikari.HikariDataSource;

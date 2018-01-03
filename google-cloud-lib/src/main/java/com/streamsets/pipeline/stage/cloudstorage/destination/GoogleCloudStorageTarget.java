@@ -24,7 +24,6 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
@@ -67,8 +66,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPOutputStream;
-
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
 
 public class GoogleCloudStorageTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudStorageTarget.class);

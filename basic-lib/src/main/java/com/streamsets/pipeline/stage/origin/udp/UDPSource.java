@@ -21,28 +21,14 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
-import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
-import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
-import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
-import com.streamsets.pipeline.lib.parser.udp.collectd.CollectdParser;
-import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
-import com.streamsets.pipeline.lib.parser.udp.separated.SeparatedDataParser;
-import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;
 import com.streamsets.pipeline.lib.udp.UDPConsumingServer;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
-import io.netty.channel.epoll.Epoll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,20 +36,6 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_PATH;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_MAX_TEMPLATE_CACHE_SIZE;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_OUTPUT_VALUES_MODE;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_SEPARATOR_BYTES;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
-
 
 public class UDPSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(UDPSource.class);

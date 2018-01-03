@@ -21,7 +21,6 @@ import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import io.netty.buffer.ByteBuf;

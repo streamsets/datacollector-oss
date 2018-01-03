@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.parser.net;
 
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.ext.io.CountingReader;
 import com.streamsets.pipeline.lib.io.CountingInputStream;

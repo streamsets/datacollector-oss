@@ -29,15 +29,11 @@ import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soql.SOQLLexer;
 import soql.SOQLParser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ForceUtils {

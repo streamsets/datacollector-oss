@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 

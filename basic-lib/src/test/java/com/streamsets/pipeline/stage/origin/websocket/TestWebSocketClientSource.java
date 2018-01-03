@@ -21,7 +21,6 @@ import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.destination.http.HttpClientTarget;
 import com.streamsets.pipeline.stage.origin.websocketserver.WebSocketServerDPushSource;
-import com.streamsets.pipeline.stage.origin.websocketserver.WebSocketServerPushSource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

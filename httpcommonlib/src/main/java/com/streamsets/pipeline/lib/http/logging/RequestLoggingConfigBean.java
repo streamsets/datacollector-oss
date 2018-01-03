@@ -18,8 +18,6 @@ package com.streamsets.pipeline.lib.http.logging;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import org.glassfish.jersey.logging.LoggingFeature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestLoggingConfigBean {
 

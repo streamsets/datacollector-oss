@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.io.fileref;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
-import com.streamsets.pipeline.api.Stage;
 
 import java.io.IOException;
 import java.text.DecimalFormat;

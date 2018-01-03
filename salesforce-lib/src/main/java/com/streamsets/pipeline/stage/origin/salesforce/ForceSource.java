@@ -73,7 +73,6 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 
 public class ForceSource extends BaseSource {
   private static final long EVENT_ID_FROM_NOW = -1;

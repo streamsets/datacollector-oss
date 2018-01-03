@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;

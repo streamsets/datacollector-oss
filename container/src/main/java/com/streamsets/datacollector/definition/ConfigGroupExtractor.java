@@ -18,7 +18,6 @@ package com.streamsets.datacollector.definition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 

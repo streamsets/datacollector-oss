@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.parser.json;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonObjectReader;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;

@@ -23,7 +23,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BulkRecordCreator extends SobjectRecordCreator {
   public BulkRecordCreator(Stage.Context context, ForceSourceConfigBean conf, String sobjectType) {

@@ -29,7 +29,6 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.testing.fieldbuilder.MapFieldBuilder;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;

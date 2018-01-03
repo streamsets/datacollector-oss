@@ -16,11 +16,8 @@
 package com.streamsets.pipeline.stage.origin.cdc.maprdb;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Stage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MapRDBCDCBeanConfig {

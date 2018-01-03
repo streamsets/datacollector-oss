@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.jdbc.typesupport;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import com.streamsets.pipeline.lib.jdbc.JdbcMetastoreUtil;
 import com.streamsets.pipeline.lib.jdbc.schemawriter.JdbcSchemaWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcStageCheckedException;
 

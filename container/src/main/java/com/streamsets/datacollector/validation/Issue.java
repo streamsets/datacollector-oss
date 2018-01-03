@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.validation.ValidationIssue;
 
 import java.io.Serializable;

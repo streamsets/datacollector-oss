@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.util;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
 import java.security.AccessController;
 import java.security.PrivilegedActionException;

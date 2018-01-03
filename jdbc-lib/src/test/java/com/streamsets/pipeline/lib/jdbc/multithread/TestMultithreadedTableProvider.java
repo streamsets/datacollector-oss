@@ -29,7 +29,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import org.mapdb.DBException;
 
 import java.sql.Types;
 import java.util.ArrayList;

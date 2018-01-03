@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.mapr;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.mapr.db.exceptions.DBException;
 import com.mapr.org.apache.hadoop.hbase.util.Bytes;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;

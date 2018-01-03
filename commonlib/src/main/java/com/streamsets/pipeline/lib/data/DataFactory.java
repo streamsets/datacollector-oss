@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.Compression;
 
 import java.nio.charset.Charset;

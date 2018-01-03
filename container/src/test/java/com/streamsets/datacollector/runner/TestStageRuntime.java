@@ -25,14 +25,12 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.CreateByRef;
 
-import com.streamsets.pipeline.api.service.Service;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Collections;
-import java.util.concurrent.Callable;
 
 public class TestStageRuntime {
   private PipelineBean pipelineBean;

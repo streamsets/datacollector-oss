@@ -16,14 +16,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;

@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.configurablestage.DPushSource;
-import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 
 @StageDef(
     version = 1,

@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
-import com.sforce.soap.partner.PartnerConnection;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 

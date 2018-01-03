@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.generator.json;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.api.ext.json.Mode;
