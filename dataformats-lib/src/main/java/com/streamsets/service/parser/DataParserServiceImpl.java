@@ -34,6 +34,7 @@ import com.streamsets.service.lib.ShimUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,13 +49,20 @@ import java.util.Map;
 public class DataParserServiceImpl extends BaseService implements DataFormatParserService {
 
   @ConfigDef(
+    type = ConfigDef.Type.RUNTIME,
+    required = false,
+    label = "List of formats that should be displayed to the user."
+  )
+  public String displayFormats = "";
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
     displayPosition = 1,
     group = "DATA_FORMAT"
   )
-  @ValueChooserModel(DataFormatChooserValues.class)
+  @ValueChooserModel(value = DataFormatChooserValues.class, filteringConfig = "displayFormats")
   public DataFormat dataFormat;
 
   @ConfigDefBean

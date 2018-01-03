@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,26 @@
  */
 package com.streamsets.service.parser;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import org.junit.Test;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+import java.util.List;
 
-  public DataFormatChooserValues() {
-    super(
-      DataFormat.AVRO,
-      DataFormat.BINARY,
-      DataFormat.DATAGRAM,
-      DataFormat.DELIMITED,
-      DataFormat.JSON,
-      DataFormat.LOG,
-      DataFormat.NETFLOW,
-      DataFormat.PROTOBUF,
-      DataFormat.SDC_JSON,
-      DataFormat.SYSLOG,
-      DataFormat.TEXT,
-      DataFormat.WHOLE_FILE,
-      DataFormat.XML
-    );
+import static org.junit.Assert.assertTrue;
+
+public class DataFormatChooserValuesTest {
+
+  // Make sure that all available data formats are in fact present in the enum that is exposed in user configuration.
+  @Test
+  public void ensureAllFormatsAreAvailable() {
+    List<String> values = new DataFormatChooserValues().getValues();
+
+    for(DataFormat format: DataFormat.values()) {
+      // Skip formats for which we don't have parser
+      if(format.getParserFormat() == null) {
+        return;
+      }
+      assertTrue("Missing: " + format, values.contains(format.name()));
+    }
   }
 }

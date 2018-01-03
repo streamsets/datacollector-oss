@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 
 public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
-
   public DataFormatChooserValues() {
     super(
       DataFormat.AVRO,
@@ -28,7 +27,9 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
       DataFormat.JSON,
       DataFormat.PROTOBUF,
       DataFormat.TEXT,
-      DataFormat.WHOLE_FILE
+      DataFormat.SDC_JSON,
+      DataFormat.WHOLE_FILE,
+      DataFormat.XML
     );
   }
 }

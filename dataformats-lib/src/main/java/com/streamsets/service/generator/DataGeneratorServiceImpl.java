@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,6 +50,13 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
   private static final Logger LOG = LoggerFactory.getLogger(DataGeneratorServiceImpl.class);
 
   @ConfigDef(
+    type = ConfigDef.Type.RUNTIME,
+    required = false,
+    label = "List of formats that should be displayed to the user."
+  )
+  public String displayFormats = "";
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
@@ -56,7 +64,7 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
     displayPosition = 1,
     group = "DATA_FORMAT"
   )
-  @ValueChooserModel(DataFormatChooserValues.class)
+  @ValueChooserModel(value = DataFormatChooserValues.class, filteringConfig = "displayFormats")
   public DataFormat dataFormat;
 
   @ConfigDefBean()
