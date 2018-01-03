@@ -3075,7 +3075,7 @@ fragment Z: [zZ];
 //{ Rule #358 <NATIONAL_CHAR_STRING_LIT> - subtoken typecast in <REGULAR_ID>, it also incorporates <character_representation>
 //  Lowercase 'n' is a usual addition to the standard
 NATIONAL_CHAR_STRING_LIT
-    : N '\'' (~('\'' | '\r' | '\n' ) | '\'' '\'' | NEWLINE)* '\''
+    : N '\'' (~('\'') | '\'' '\'' | NEWLINE)* '\''
     ;
 //}
 
@@ -3126,7 +3126,7 @@ APPROXIMATE_NUM_LIT: FLOAT_FRAGMENT (('e'|'E') ('+'|'-')? (FLOAT_FRAGMENT | UNSI
 //{ Rule #--- <CHAR_STRING> is a base for Rule #065 <char_string_lit> , it incorporates <character_representation>
 //  and a superfluous subtoken typecasting of the "QUOTE"
 CHAR_STRING
-    : '\'' (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\''
+    : '\'' (~('\'') | '\'' '\'' | NEWLINE)* '\''
     ;
 //}
 
