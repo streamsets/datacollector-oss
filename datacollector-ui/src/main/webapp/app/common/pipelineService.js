@@ -701,6 +701,15 @@ angular.module('dataCollectorApp.common')
           serviceInstance.configuration.push(self.setDefaultValueForConfig(configDefinition, null));
         });
 
+        // Propagate RUNTIME configuration injected by the stage
+        angular.forEach(serviceDependency.configuration, function(value, key) {
+          angular.forEach(serviceInstance.configuration, function(config) {
+            if(config.name == key) {
+              config.value = value;
+            }
+          });
+        });
+
         // And finally push it to the stage definition
         stageInstance.services.push(serviceInstance);
       });
