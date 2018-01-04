@@ -522,6 +522,55 @@ angular
         }
       },
 
+      /**
+       * Generate structure for ng-repeat of a ValueChooserModel.
+       *
+       * Return structure will be filtered based on the runtime value of a filterConfig if one
+       * exists and is specified.
+       *
+       * @param instance Instance of a stage or service.
+       * @param configDefinition Definition of the ValueChooser config
+       * @returns [{label:*, value:*}]
+       */
+      getValueChooserOptions: function(instance, definition) {
+        var list = [];
+        var filter = $scope.getConfig(definition.model.filteringConfig, instance);
+
+        angular.forEach(definition.model.values, function(value, index) {
+
+          if(filter && filter.indexOf(value) < 0) {
+            return;
+          }
+
+          var entry = {
+            label: definition.model.labels[index],
+            value: value
+          };
+          list.push(entry);
+        });
+
+        return list;
+      },
+
+      /**
+       * Return config of given name from the stage or service instance.
+       *
+       * @param name Name of the config.
+       * @param instance Instance of a stage or service.
+       * @returns {*}
+       */
+      getConfig: function(name, instance) {
+        var value = undefined;
+
+        angular.forEach(instance.configuration, function(config) {
+          if(config.name === name) {
+            value = config.value;
+          }
+        });
+
+        return value;
+      },
+
 
       /**
        * Returns true if at least one config is visible in given group.

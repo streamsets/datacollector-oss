@@ -373,10 +373,11 @@
             focus-me="{{autoFocusConfigName === configDefinition.name}}"
             ng-required="configDefinition.required"
             ng-disabled="isPipelineReadOnly || isPipelineRunning"
-            ng-model="detailPaneConfig.configuration[configIndex].value">
-      <option ng-repeat="listValue in configDefinition.model.values"
-              value="{{listValue}}"
-              ng-selected="listValue === detailPaneConfig.configuration[configIndex].value">{{configDefinition.model.labels[$index]}}</option>
+            ng-model="detailPaneConfig.configuration[configIndex].value"
+            ng-init="entities = getValueChooserOptions(detailPaneConfig, configDefinition)">
+      <option ng-repeat="entity in entities"
+              value="{{entity.value}}"
+              ng-selected="entity.value === detailPaneConfig.configuration[configIndex].value">{{entity.label}}</option>
     </select>
 
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
