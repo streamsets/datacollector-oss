@@ -21,7 +21,9 @@
  <title>Origins</title>
  <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
-    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
    <topicref href="../Origins/Origins-MapRComparison.dita"/>
    <topicref href="../Origins/Origins-UDP.dita"/>
@@ -29,9 +31,12 @@
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/MaxRecordSize.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
-  <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
+   <topicref href="../Origins/PreviewingRawSourceData.dita"/>
+  </topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/AmazonS3-AWSCredentials.dita"/>
    <topicref href="../Origins/AmazonS3-CommonPrefixPatterns.dita"/>
    <topicref href="../Origins/AmazonS3-RecordHeaderAttributes.dita">
@@ -47,7 +52,9 @@
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/AmazonSQS.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/AmazonSQS-AWSCredentials.dita"/>
    <topicref href="../Origins/AmazonSQS-QueueNamePrefix.dita"/>
    <topicref href="../Origins/AmazonSQS-MultithreadProcessing.dita"/>
@@ -58,7 +65,9 @@
    <topicref href="../Origins/AmazonSQS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/AzureEventHub.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/AzureEventHub-StorageAccount.dita"/>
    <topicref href="../Origins/AzureEventHub-ResetOrigin.dita"/>
    <topicref href="../Origins/AzureEventHub-MultithreadProcessing.dita"/>
@@ -66,7 +75,9 @@
    <topicref href="../Origins/AzureEventHub-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/CoAPServer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/CoAPServer-Prerequisites.dita"/>
    <topicref href="../Origins/CoAPServer-MultithreadProcessing.dita"/>
    <topicref href="../Origins/CoAPServer-NetworkConfiguration.dita"/>
@@ -74,7 +85,9 @@
    <topicref href="../Origins/CoAPServer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Directory-FileNamePattern-Mode.dita"/>
    <topicref href="../Origins/Directory-ReadOrder.dita"/>
    <topicref href="../Origins/Directory-MultithreadProcessing.dita"/>
@@ -94,7 +107,9 @@
    <topicref href="../Origins/Directory-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Elasticsearch.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Elasticsearch-BatchIncrementalMode.dita"/>
    <topicref href="../Origins/Elasticsearch-Query.dita">
     <topicref href="../Origins/Elasticsearch-IncrementalQuery.dita"/>
@@ -104,7 +119,9 @@
    <topicref href="../Origins/Elasticsearch-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/FileTail.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>
    <topicref href="../Origins/FileTail-MultipleDirectories.dita"/>
    <topicref href="../Origins/FileTail-FirstFile.dita"/>
@@ -124,7 +141,9 @@
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/BigQuery.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/BigQuery-Credentials.dita">
     <topicref href="../Origins/BigQuery-CredentialsDefault.dita"/>
     <topicref href="../Origins/BigQuery-CredentialsFile.dita"/>
@@ -136,7 +155,9 @@
    <topicref href="../Origins/BigQuery-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/GCS.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/GCS-Credentials.dita">
     <topicref href="../Origins/GCS-CredentialsDefault.dita"/>
     <topicref href="../Origins/GCS-CredentialsFile.dita"/>
@@ -149,7 +170,9 @@
    <topicref href="../Origins/GCS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/PubSub.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/PubSub-Credentials.dita">
     <topicref href="../Origins/PubSub-CredentialsDefault.dita"/>
     <topicref href="../Origins/PubSub-CredentialsFile.dita"/>
@@ -159,8 +182,10 @@
    <topicref href="../Origins/PubSub-DataFormats.dita"/>
    <topicref href="../Origins/PubSub-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">   
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Hadoop-OtherFS.dita"/>
    <topicref href="../Origins/HadoopFS-Kerberos.dita"/>
    <topicref href="../Origins/HadoopFS-HDFSUser-origin.dita"/>
@@ -169,7 +194,9 @@
    <topicref href="../Origins/HadoopFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/HTTPClient-ProcessingMode.dita"/>
    <topicref href="../Origins/HTTPClient-Pagination.dita">
     <topicref href="../Origins/HTTPClient-ResultFieldPath.dita"/>
@@ -186,7 +213,9 @@
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPServer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/HTTPServer-Prerequisites.dita">
     <topicref href="../Origins/HTTPServer-PrerequisitesPort.dita"/>
     <topicref href="../Origins/HTTPServer-PrerequisitesAppID.dita"/>
@@ -196,7 +225,9 @@
    <topicref href="../Origins/HTTPServer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPtoKafka.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/HTTPtoKafka-Prerequisites.dita"/>
    <topicref href="../Origins/HTTPtoKafka-PipeConfig.dita"/>
    <topicref href="../Origins/HTTPtoKafka-MaxMessageSize.dita"/>
@@ -243,7 +274,10 @@
    </topicref>
    <topicref href="../Origins/MultiTableJDBCConsumer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/JDBCConsumer-DriverInstall.dita"/>
    <topicref href="../Origins/JDBCConsumer-OffsetColumn_Value.dita"/>
    <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
@@ -266,7 +300,9 @@
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JMS.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/JMS-InstallDrivers.dita"/>
    <topicref href="../Origins/JMS-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
@@ -274,7 +310,9 @@
    <topicref href="../Origins/JMS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/KConsumer-Offsets.dita"/>
    <topicref href="../Origins/KConsumer-ExistingData.dita"/>
    <topicref href="../Origins/KConsumer_AdditionalKProp.dita"/>
@@ -308,16 +346,21 @@
    </topicref>
    <topicref href="../Origins/KafkaMultiConsumer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Origins/KinConsumer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/KinConsumer-MultithreadProc.dita"/>
    <topicref href="../Origins/KinConsumer-AWSCredentials.dita"/>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-ResetOrigin.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
-   <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
+   <topicref href="../Origins/KinConsumer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/MapRdbCDC.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MapRdbCDC-Multithreaded.dita"/>
    <topicref href="../Origins/MapRdbCDC-IDField.dita"/>
    <topicref href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita"/>
@@ -325,12 +368,16 @@
    <topicref href="../Origins/MapRdbCDC-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MapRDBJSON.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MapRDBJSON-IDField.dita"/>
    <topicref href="../Origins/MapRDBJSON-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MapRFS.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MapRFS-Kerberos.dita"/>
    <topicref href="../Origins/MapRFS-HadoopUser-origin.dita"/>
    <topicref href="../Origins/MapRFS-HadoopProps-origin.dita"/>
@@ -352,7 +399,9 @@
    <topicref href="../Origins/MapRStreamsMultiConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MapRStreamsCons-AllData.dita"/>
    <topicref href="../Origins/MapRStreamsCons-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
@@ -362,7 +411,9 @@
    <topicref href="../Origins/MapRStreamsCons-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MongoDB.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MongoDB-Credentials.dita"/>
    <topicref href="../Origins/MongoDB-OffsetField.dita"/>
    <topicref href="../Origins/MongoDB-ReadPreference.dita"/>
@@ -371,7 +422,9 @@
    <topicref href="../Origins/MongoDB-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MongoDBOplog.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MongoDBOplog-Credentials.dita"/>
    <topicref href="../Origins/MongoDBOplog-TimestampOrdinal.dita"/>
    <topicref href="../Origins/MongoDBOplog-ReadPreference.dita"/>
@@ -382,13 +435,17 @@
    <topicref href="../Origins/MongoDBOplog-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MQTTSubscriber.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MQTTSubscriber-Topics.dita"/>
    <topicref href="../Origins/MQTTSubscriber-DataFormat.dita"/>
    <topicref href="../Origins/MQTTSubscriber-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/MySQLBinaryLog-Prereqs.dita">
     <topicref href="../Origins/MySQLBinaryLog-RowFormat.dita"/>
     <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
@@ -401,18 +458,24 @@
    <topicref href="../Origins/MySQLBinaryLog-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Omniture.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/OPCUAClient.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/OPCUAClient-Mode.dita"/>
    <topicref href="../Origins/OPCUAClient-NodeIDs.dita"/>
    <topicref href="../Origins/OPCUAClient-Security.dita"/>
    <topicref href="../Origins/OPCUAClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/OracleCDC.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/OracleCDC-Dictionary.dita"/>
    <topicref href="../Origins/OracleCDC-Prerequisites.dita">
     <topicref href="../Origins/OracleCDC-T1-LogMiner.dita"/>
@@ -427,7 +490,9 @@
     <topicref href="../Origins/OracleCDC-UncommittedTransactions.dita"/>
    </topicref>
    <topicref href="../Origins/OracleCDC-SendNulls.dita"/>
-   <topicref href="../Origins/OracleCDC-UnsupportedTypes.dita"/>
+   <topicref href="../Origins/OracleCDC-UnsupportedTypes.dita">
+    <topicref href="../Origins/OracleCDC-ConditionalTypes.dita"/>
+   </topicref>
    <topicref href="../Origins/OracleCDC-GeneratedRecords.dita">
     <topicref href="../Origins/OracleCDC-CDCOpHeaderAtt.dita"/>
     <topicref href="../Origins/OracleCDC-CDCAdditionalAtts.dita"/>
@@ -440,14 +505,18 @@
    <topicref href="../Origins/OracleCDC-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/RabbitMQ.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/RabbitMQ-Queue.dita"/>
    <topicref href="../Origins/RabbitMQ-HeaderAttributes.dita"/>
    <topicref href="../Origins/RabbitMQ-DataFormat.dita"/>
    <topicref href="../Origins/RabbitMQ-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Redis.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Redis-ChannelPattern.dita"/>
    <topicref href="../Origins/Redis-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
@@ -455,7 +524,9 @@
    <topicref href="../Origins/Redis-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Salesforce.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/Salesforce-Query.dita">
     <topicref href="../Origins/Salesforce-SOQLQuery.dita"/>
     <topicref href="../Origins/Salesforce-QueryExample.dita"/>
@@ -477,11 +548,15 @@
    <topicref href="../Origins/Salesforce-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/SDC_RPCorigin-Configuring.dita"/>
   </topicref>
-   <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
-    <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/SDCRPCtoKafka-PipelineConfig.dita"/>
    <topicref href="../Origins/SDCPRCtoKafka-ConRequests.dita"/>
    <topicref href="../Origins/SDCRPCtoKafka-RequestMessageSize.dita"/>
@@ -494,7 +569,9 @@
    <topicref href="../Origins/SDCRPCtoKafka-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/SFTP.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/SFTP-ReadOrder.dita"/>
    <topicref href="../Origins/SFTP-FirstFile.dita"/>
    <topicref href="../Origins/SFTP-Credentials.dita"/>
@@ -543,7 +620,9 @@
    <topicref href="../Origins/SQLServerChange-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/TCPServer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/TCPServer-MultithreadProc.dita"/>
    <topicref href="../Origins/TCPServer-Connections.dita"/>
    <topicref href="../Origins/TCPServer-Acks.dita">
@@ -554,7 +633,9 @@
    <topicref href="../Origins/TCPServer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDPMulti.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/UDPMulti-RawData.dita"/>
    <topicref href="../Origins/UDPMulti-ReceiverWorkerThreads.dita"/>
    <topicref href="../Origins/UDPMulti-PacketQueue.dita"/>
@@ -563,13 +644,17 @@
    <topicref href="../Origins/UDPMulti-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/UDP-RawData.dita"/>
    <topicref href="../Origins/UDP-ReceiverThreads.dita"/>
    <topicref href="../Origins/UDP-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDPtoKafka.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/UDPtoKafka-PipelineConfig.dita"/>
    <topicref href="../Origins/UDPtoKafka-AddKafkaProps.dita"/>
    <topicref href="../Origins/UDPtoKafka-EnablingKSecurity.dita">
@@ -580,13 +665,17 @@
    <topicref href="../Origins/UDPtoKafka-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/WebSocketClient.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/WebSocketClient-SDCRestResponse.dita"/>
    <topicref href="../Origins/WebSocketClient-DataFormat.dita"/>
    <topicref href="../Origins/WebSocketClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/WebSocketServer.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/WebSocketServer-Prerequisites.dita">
     <topicref href="../Origins/WebSocketServer-PrerequisitesPort.dita"/>
     <topicref href="../Origins/WebSocketServer-PrerequisitesAppID.dita"/>
@@ -596,7 +685,9 @@
    <topicref href="../Origins/WebSocketServer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/WindowsLog.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Origins/WindowsLog-Configuring.dita"/>
   </topicref>
  </topicref>

@@ -42,7 +42,7 @@
       </row>
       <row>
        <entry>Byte</entry>
-       <entry>Decimal, Double, Float, Integer, Long, Short,  String</entry>
+       <entry>Decimal, Double, Float, Integer, Long, Short, String</entry>
       </row>
       <row>
        <entry>Byte Array</entry>
@@ -62,7 +62,7 @@
       </row>
       <row>
        <entry>Decimal</entry>
-       <entry>Byte, Double, Float,  Integer, Long, Short, String</entry>
+       <entry>Byte, Double, Float, Integer, Long, Short, String</entry>
       </row>
       <row>
        <entry>Double</entry>
@@ -91,6 +91,10 @@
       <row>
        <entry>Time</entry>
        <entry>Date, Datetime, String, Long</entry>
+      </row>
+      <row>
+       <entry>Zoned Datetime</entry>
+       <entry>String</entry>
       </row>
      </tbody>
     </tgroup>

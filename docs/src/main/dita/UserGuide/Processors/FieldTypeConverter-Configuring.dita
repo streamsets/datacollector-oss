@@ -116,20 +116,51 @@
                                 <row>
                                     <entry>Date Format </entry>
                                     <entry>Format of the date, datetime, or time data to be
-                                        converted. For conversions to Date, Datetime, or Time. Or
-                                        for converting date, datetime, or time data to String.
-                                            <p>Select the format to use or create a custom format.
-                                                <note
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PreviewDateFormat"
-                                            /></p></entry>
+                                        converted. Use to convert datetime data without time zone or
+                                        UTC offset details to Date, Datetime, or Time. Or to convert
+                                        date, datetime, or time data to String. <p>Select the format
+                                            to use or create a custom format. </p><p>To convert
+                                            datetime data with the time zone or offset information,
+                                            use the Zoned Datetime Format property.</p><note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PreviewDateFormat"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Other Date Format</entry>
                                     <entry>Use to enter a custom date format.<p>For more information
-                                            about creating a custom date format, see <xref
-                                                href="http://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html"
-                                                format="html" scope="external"
-                                                >http://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html</xref>.</p></entry>
+                                            about creating a custom date format, see the <xref
+                                                href="https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html"
+                                                format="html" scope="external">Oracle Java
+                                                documentation</xref>. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Zoned Datetime Format</entry>
+                                    <entry>Format for the date, datetime, or time data to be
+                                        converted. Use to convert datetime data with time zone or
+                                        offset information to the Zoned Datetime format or to
+                                        convert Zoned Datetime data to String. <p>Select one of the
+                                            following options:<ul id="ul_hh5_5gm_kcb">
+                                                <li>yyyy-MM-dd'T'HH:mm:ssX - Use for datetime values
+                                                  with a UTC offset.</li>
+                                                <li>yyyy-MM-dd'T'HH:mm:ssX[VV] - Use for datetime
+                                                  values with a UTC offset and time zone. If the
+                                                  datetime value does not include a UTC offset, the
+                                                  stage uses the minimum offset for the specified
+                                                  time stamp.</li>
+                                                <li>Other - Use to enter a different zone datetime
+                                                  format.</li>
+                                            </ul></p><p>To convert datetime data without time zone
+                                            or offset information, use the Date Format property.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Other Zoned Datetime Format</entry>
+                                    <entry>Use to enter a custom zoned datetime format. <p>For more
+                                            information about creating a custom zoned datetime
+                                            format, see the <xref
+                                                href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html"
+                                                format="html" scope="external">Oracle Java
+                                                documentation</xref>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Charset</entry>
