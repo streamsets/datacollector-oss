@@ -1913,7 +1913,7 @@
                             </thead>
                             <tbody>
                                 <row id="TLS-EnableTLS-row">
-                                    <entry>Enable TLS</entry>
+                                    <entry>Use TLS</entry>
                                     <entry>
                                         <p>Enables the use of TLS. </p>
                                     </entry>
