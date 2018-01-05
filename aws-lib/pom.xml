@@ -34,7 +34,7 @@
 
   <properties>
     <kinesis.client.version>1.8.8</kinesis.client.version>
-    <kpl.version>0.12.6</kpl.version>
+    <kpl.version>0.12.8</kpl.version>
     <commons-lang3.version>3.4</commons-lang3.version>
     <commons-math3.version>3.5</commons-math3.version>
     <sqs.version>1.0.4</sqs.version>
