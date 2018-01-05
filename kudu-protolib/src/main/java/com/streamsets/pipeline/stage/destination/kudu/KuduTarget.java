@@ -428,6 +428,8 @@ public class KuduTarget extends BaseTarget {
               errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
             }
           }
+        } catch (OnRecordErrorException e) {
+          errorRecordHandler.onError(e);
         } catch (KuduException ex) {
           LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));

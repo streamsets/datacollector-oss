@@ -208,6 +208,32 @@ public class TestKuduTarget {
   }
 
   /**
+   * Ensure that if given field is null and column doesn't support that, the record will
+   * end up in error stream rather then terminating whole pipeline execution.
+   */
+  @Test
+  public void testNullColumnWillEndInError() throws Exception{
+    TargetRunner targetRunner = setTargetRunner(tableName, KuduOperationType.INSERT, UnsupportedOperationAction.SEND_TO_ERROR);
+    targetRunner.runInit();
+
+    Record record =  RecordCreator.create();
+    LinkedHashMap<String, Field> field = new LinkedHashMap<>();
+    field.put("key", Field.create(1));
+    field.put("value", Field.create(Field.Type.STRING, null));
+    field.put("name", Field.create(Field.Type.STRING, null));
+    record.set(Field.createListMap(field));
+
+    try {
+      targetRunner.runWrite(ImmutableList.of(record));
+
+      List<Record> errors = targetRunner.getErrorRecords();
+      Assert.assertEquals(1, errors.size());
+    } finally {
+      targetRunner.runDestroy();
+    }
+  }
+
+  /**
    * Checks that a LineageEvent is returned.
    * @throws Exception
    */
