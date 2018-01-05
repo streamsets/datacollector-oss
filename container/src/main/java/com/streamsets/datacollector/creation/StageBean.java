@@ -68,6 +68,15 @@ public class StageBean {
     return services;
   }
 
+  public ServiceBean getService(Class service) {
+    for(ServiceBean serviceBean : services) {
+      if(serviceBean.getDefinition().getProvides() == service) {
+        return serviceBean;
+      }
+    }
+    return null;
+  }
+
   public void releaseClassLoader() {
     classLoaderReleaser.releaseStageClassLoader(stage.getClass().getClassLoader());
     services.forEach(ServiceBean::releaseClassLoader);

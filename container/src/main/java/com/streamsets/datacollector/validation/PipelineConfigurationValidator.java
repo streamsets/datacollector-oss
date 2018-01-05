@@ -35,6 +35,7 @@ import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
@@ -154,6 +155,7 @@ public class PipelineConfigurationValidator {
 
     upgradeBadRecordsHandlingStage(pipelineConfiguration);
     upgradeStatsAggregatorStage(pipelineConfiguration);
+    propagateRuntimeConfiguration();
 
     if (LOG.isTraceEnabled() && issues.hasIssues()) {
       for (Issue issue : issues.getPipelineIssues()) {
@@ -174,6 +176,7 @@ public class PipelineConfigurationValidator {
     pipelineConfiguration.setValidation(this);
     return pipelineConfiguration;
   }
+
 
   private boolean isLibraryAlias(String name) {
     return stageLibrary.getLibraryNameAliases().containsKey(name);
@@ -1500,6 +1503,38 @@ public class PipelineConfigurationValidator {
     if (!(config == null || config.getValue() == null|| config.getValue().equals(stageName))) {
       pipelineConfiguration.getConfiguration().remove(config);
       pipelineConfiguration.getConfiguration().add(new Config(label, stageName));
+    }
+  }
+
+  /**
+   * We have special type of a ConfigDef called RUNTIME. This config is never displayed in UI and instead it's values
+   * are supplied at "runtime". This method is the "runtime" method that propagates them.
+   */
+  private void propagateRuntimeConfiguration() {
+    // If pipeline wasn't loaded, there is nothing to propagate
+    if(pipelineBean == null) {
+      return;
+    }
+
+    for(StageBean stageBean : pipelineBean.getPipelineStageBeans().getStages()) {
+      for(ServiceDependencyDefinition serviceDependency: stageBean.getDefinition().getServices()) {
+
+        ServiceConfiguration serviceConfiguration = stageBean.getService(serviceDependency.getService()).getConf();
+        List<Config> configs = serviceConfiguration.getConfiguration();
+
+        // Simply remove all RUNTIME configs
+        configs.removeAll(
+          serviceDependency.getConfiguration().keySet().stream()
+            .map(serviceConfiguration::getConfig)
+            .collect(Collectors.toList())
+        );
+
+        // And insert them with the stage-instance-constant values
+        serviceDependency.getConfiguration().forEach((key, value) -> configs.add(new Config(key, value)));
+
+        // And overwrite the new state
+        serviceConfiguration.setConfig(configs);
+      }
     }
   }
 }
