@@ -1589,10 +1589,11 @@ public class TestRemoteDownloadSource {
       records = output.getRecords().get("lane");
       Assert.assertEquals(0, records.size());
       Assert.assertEquals(1, runner.getEventRecords().size());
+      //Counters are reset, so we should have seen one file after the last no more data event
       noMoreDataEventRecord = runner.getEventRecords().get(0);
       Assert.assertEquals("no-more-data", noMoreDataEventRecord.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals(3, noMoreDataEventRecord.get("/record-count").getValueAsLong());
-      Assert.assertEquals(3, noMoreDataEventRecord.get("/file-count").getValueAsLong());
+      Assert.assertEquals(1, noMoreDataEventRecord.get("/record-count").getValueAsLong());
+      Assert.assertEquals(1, noMoreDataEventRecord.get("/file-count").getValueAsLong());
     } finally {
       runner.runDestroy();
     }

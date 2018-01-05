@@ -416,6 +416,9 @@ public class RemoteDownloadSource extends BaseSource {
                 .with("error-count", noMoreDataErrorCount)
                 .with("file-count", noMoreDataFileCount)
                 .createAndSend();
+            noMoreDataErrorCount = 0;
+            noMoreDataRecordCount = 0;
+            noMoreDataFileCount = 0;
             canTriggerNoMoreDataEvent = false;
           }
           if (currentOffset == null) {
