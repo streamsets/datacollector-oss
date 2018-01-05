@@ -380,7 +380,8 @@
                                             <li>Write to Elasticsearch - Writes error records to the
                                                 specified Elasticsearch cluster.</li>
                                             <li>Write to File - Writes error records to a file in
-                                                the specified directory. </li>
+                                                the specified directory. <p>Write to File is not
+                                                  supported for cluster mode at this time. </p></li>
                                             <li>Write to Google Cloud Storage - Writes error records
                                                 to Google Cloud Storage.</li>
                                             <li>Write to Google Pub/Sub - Writes error records to
@@ -390,9 +391,10 @@
                                             <li>Write to Kinesis - Writes error records to the
                                                 specified Kinesis stream.</li>
                                             <li>Write to MapR Streams - Writes error records to the
-                                                specified MapR cluster.</li>
-                                        </ul><p>For cluster mode, Write to File is not supported at
-                                            this time. </p></entry>
+                                                specified MapR Streams cluster.</li>
+                                            <li>Write to MQTT - Writes error records to the
+                                                specified MQTT broker.</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Error Record Policy</entry>
@@ -729,8 +731,9 @@
                 </info>
             </step>
             <step>
-                <cmd>When writing to Kinesis, click the <wintitle>Error Records - Write to
-                        Kinesis</wintitle> tab and configure the following properties:</cmd>
+                <cmd>When writing error records to Kinesis, click the <wintitle>Error Records -
+                        Write to Kinesis</wintitle> tab and configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_cgq_yn4_yr">
                         <tgroup cols="2">
@@ -798,12 +801,114 @@
                 </info>
             </step>
             <step>
-                <cmd>When writing data to a MapR Streams cluster, click the <wintitle>Error Records
-                        - Write to MapR Streams</wintitle> tab and configure the following
+                <cmd>When writing error records to a MapR Streams cluster, click the <wintitle>Error
+                        Records - Write to MapR Streams</wintitle> tab and configure the following
                     properties:</cmd>
                 <info
                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MapRStreams-Info"
                 />
+            </step>
+            <step>
+                <cmd>When writing error records to an MQTT broker, click the <wintitle>Error Records
+                        - Write to MQTT</wintitle> tab and configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_a2r_l4t_kcb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MQTT Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_MQTTBrokerURL">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_MQTTClientID">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MQTT_topic">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_MQTTQoS">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MQTT-CliPersistMech">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MQTT-CliPersDataDir">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MQTT-KeepAlive">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Enables entering MQTT credentials. <note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
+                                        /></entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>MQTT user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>MQTT password.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MQTT-RetainMess">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-EnableTLS-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreFile-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststorePassword-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreKeyAlgo-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TransportProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultCipherSuites-Row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-CipherSuites-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>When using the cluster execution mode, click the <uicontrol>Cluster</uicontrol>

@@ -520,8 +520,10 @@
                                 Collector Metrics and now include general Data Collector metrics in
                                 addition to JVM metrics. The JVM Metrics menu item has also been
                                 renamed SDC Metrics.</li>
-                            <li>Pipeline error records - You can now write error records to Google
-                                Pub/Sub, Google Cloud Storage, or an MQTT broker.</li>
+                            <li><xref
+                                    href="../Pipeline_Design/ErrorHandling-Pipeline.dita#concept_kgc_l4y_5r"
+                                    >Pipeline error records </xref>- You can now write error records
+                                to Google Pub/Sub, Google Cloud Storage, or an MQTT broker.</li>
                             <li>Snapshot enhancements:<ul id="ul_cv5_53l_wbb">
                                     <li>Standalone pipelines can now automatically take a <xref
                                             href="../Pipeline_Monitoring/FailureSnapshot.dita#concept_vkf_xjf_ybb"
