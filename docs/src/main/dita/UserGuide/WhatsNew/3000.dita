@@ -175,8 +175,15 @@
                                     <li>The origin now uses <xref
                                             href="../Origins/OracleCDC-ChoosingBuffers.dita#concept_yqk_3hn_n1b"
                                             >local buffering</xref> instead of Oracle LogMiner
-                                        buffering by default. Upgraded pipelines require no changes.
-                                    </li>
+                                        buffering by default. Upgraded pipelines require no changes. </li>
+                                    <li>The origin now supports reading the <xref
+                                            href="../Origins/OracleCDC-ConditionalTypes.dita#concept_w1n_p5l_kcb"
+                                            >Timestamp with Timezone data type</xref>. When reading
+                                        Timestamp with Timezone data, the origin includes the offset
+                                        with the datetime data in the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> Zoned Datetime data type. It does not include the time
+                                        zone ID.</li>
                                 </ul></li>
                             <li>SQL Server CDC Client origin enhancements - You can now perform the
                                 following tasks with the SQL Server CDC Client origin:<ul
@@ -219,9 +226,11 @@
                             <li><xref href="../Processors/Delay.dita#concept_ez5_pvf_wbb">New Delay
                                     processor</xref> - A processor that can delay processing a batch
                                 of records for a specified amount of time.</li>
-                            <li>Field Converter processor enhancement - You can now convert strings
-                                to the Zoned Datetime data type, and vice versa. You can also
-                                specify the format to use. </li>
+                            <li><xref
+                                    href="../Processors/FieldTypeConverter-Configuring.dita#task_g23_2tq_wq"
+                                    >Field Type Converter processor enhancement</xref> - You can now
+                                convert strings to the Zoned Datetime data type, and vice versa. You
+                                can also specify the format to use. </li>
                             <li>Hive Metadata processor enhancement - You can now configure
                                 additional JDBC configuration properties to pass to the JDBC
                                 driver.</li>
@@ -504,8 +513,9 @@
                     <dt>Miscellaneous</dt>
                     <dd>
                         <ul id="ul_fw1_s3l_wbb">
-                            <li>New data type - Data Collector now supports the Zoned Datetime data
-                                type.</li>
+                            <li><xref href="../Pipeline_Design/DataTypes.dita#concept_hjl_vyd_kcb"
+                                    >New data type</xref> - Data Collector now supports the Zoned
+                                Datetime data type.</li>
                             <li>New Data Collector metrics - JVM metrics have been renamed Data
                                 Collector Metrics and now include general Data Collector metrics in
                                 addition to JVM metrics. The JVM Metrics menu item has also been

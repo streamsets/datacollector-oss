@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_w1n_p5l_kcb">
+    <title>Conditional Data Type Support</title>
+    <conbody>
+        <p><indexterm>Oracle CDC Client<indexterm>conditionally supported data
+                types</indexterm></indexterm>Note the following information about conditionally
+            supported Oracle data types:<ul id="ul_qz5_t5l_kcb">
+                <li>The Oracle Raw data type is treated as a <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> Byte Array.</li>
+                <li>The Oracle Timestamp with Timezone data type is converted to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> Zoned Datetime data type. To maximize efficiency while providing more
+                    precision, the origin includes only the UTC offset with the data. It omits the
+                    time zone ID.</li>
+            </ul></p>
+    </conbody>
+</concept>
