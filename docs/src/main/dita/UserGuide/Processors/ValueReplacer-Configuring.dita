@@ -30,7 +30,6 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-           
             <step>
                 <cmd>On the <uicontrol>Replace</uicontrol> tab, configure the following
                     properties:</cmd>
@@ -47,15 +46,16 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Fields to Null <xref
-                                            href="ValueReplacer-Nulls.dita"
+                                    <entry>Fields to Null <xref href="ValueReplacer-Nulls.dita"
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_mfp_twk_3y"/>
                                         </xref>
                                     </entry>
                                     <entry>One or more fields to replace with null values. Configure
                                         the following properties:<ul id="ul_ec3_2cl_3y">
-                                            <li>Fields - The fields to use.<note
+                                            <li>Fields - The fields to use. <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                                  /><note
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
                                                 /></li>
                                             <li>Condition - An optional condition to use to replace
@@ -71,7 +71,9 @@
                                     <entry>Replaces null values with constants. Click
                                             <uicontrol>Add</uicontrol> to include more fields.
                                         Configure the following properties:<ul id="ul_sq3_fcg_zq">
-                                            <li>Fields to Replace - Name of the field to use.<note
+                                            <li>Fields to Replace - Name of the field to use. <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                                  /><note
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
                                                 /></li>
                                             <li>Replacement Value - Constant to replace null values
@@ -80,15 +82,17 @@
                                 </row>
                                 <row>
                                     <entry>Conditionally Replace Values <xref
-                                            href="ValueReplacer-Constants.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_ucq_nks_3x"/>
+                                            href="ValueReplacer-Constants.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ucq_nks_3x"/>
                                         </xref>
                                     </entry>
                                     <entry>Replaces the specified values with constants. Click
                                             <uicontrol>Add</uicontrol> to include more fields.
                                         Configure the following properties:<ul id="ul_vqp_sjs_3x">
-                                            <li>Fields to Replace - Name of the field to use.<note
+                                            <li>Fields to Replace - Name of the field to use. <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                                  /><note
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
                                                 /></li>
                                             <li>Operator - Operator to use for the condition. </li>

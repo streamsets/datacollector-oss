@@ -436,9 +436,20 @@
                     <dt>Expression Language</dt>
                     <dd>
                         <ul id="ul_ppq_whl_wbb">
-                            <li>New field-path syntax - You can use a powerful new field-path syntax
-                                in certain stages to specify the fields that you want to use in an
+                            <li><xref
+                                    href="../Pipeline_Configuration/FieldPathExp-Overview.dita#concept_ir4_rxt_3cb"
+                                    >New field path expressions</xref> - You can use field path
+                                expressions in certain stages to specify the fields to use in an
                                 expression. </li>
+                            <li><xref
+                                    href="../Expression_Language/FieldFunctions.dita#concept_gfs_w55_3cb"
+                                    >New field functions</xref> - You can use the following new
+                                field functions in field path expressions:<ul id="ul_avp_bws_kcb">
+                                    <li>f:attribute() - Returns the value of the specified
+                                        attribute.</li>
+                                    <li>f:type() - Returns the data type of a field.</li>
+                                    <li>f:value() - Returns the value of a field.</li>
+                                </ul></li>
                             <li><xref
                                     href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
                                     >New string functions</xref> - The release includes the

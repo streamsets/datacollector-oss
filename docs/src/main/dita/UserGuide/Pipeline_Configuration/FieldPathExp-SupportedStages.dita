@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bs3_dm5_3cb">
+    <title>Supported Stages</title>
+    <conbody>
+        <p><indexterm>field path expressions<indexterm>supported stages</indexterm></indexterm>You
+            can use field path expressions to specify the fields to use in the following
+                processors:<ul id="ul_l3q_fm5_3cb">
+                <li>Field Hasher processor</li>
+                <li>Field Masker processor</li>
+            </ul><ul id="ul_w5q_3m5_3cb">
+                <li>Field Remover processor</li>
+                <li>Field Type Converter processor</li>
+                <li>Value Replacer processor</li>
+            </ul></p>
+    </conbody>
+</concept>

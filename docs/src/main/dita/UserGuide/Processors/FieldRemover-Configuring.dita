@@ -21,13 +21,13 @@
     <title>Configuring a Field Remover</title>
     <taskbody>
         <context><indexterm>Field Remover
-            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Remover to remove unwanted fields from the pipeline. </context>
+            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Remover to
+            remove unwanted fields from the pipeline. </context>
         <steps id="steps_fdt_ttq_wq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-noEHandling">
                 <cmd/>
             </step>
-            
             <step>
                 <cmd>On the <uicontrol>Remove</uicontrol> tab, configure the following
                     properties:</cmd>
@@ -55,7 +55,9 @@
                                     <entry>Fields</entry>
                                     <entry>List of fields to keep or remove.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                                /><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                            /></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
