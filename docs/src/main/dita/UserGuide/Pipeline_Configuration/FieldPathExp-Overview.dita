@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ir4_rxt_3cb">
+    <title>Field Path Expressions</title>
+    <shortdesc>You can use field path expressions in certain processors to determine the set of
+        fields that you want the processor to use.</shortdesc>
+    <conbody>
+        <p><indexterm>expression language<indexterm>field path
+                expressions</indexterm></indexterm><indexterm>field path
+                    expressions<indexterm>overview</indexterm></indexterm>For example, you want to
+            use the Field Remover processor to remove all fields that start with the same prefix.
+            Instead of manually entering each field name, you can use a field path expression to
+            specify the fields to remove.</p>
+    </conbody>
+</concept>

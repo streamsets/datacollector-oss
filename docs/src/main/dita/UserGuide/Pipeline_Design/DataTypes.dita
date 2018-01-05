@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hjl_vyd_kcb">
+    <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        Data Types</title>
+    <conbody>
+        <p><indexterm>Data Collector<indexterm>data types</indexterm></indexterm>Within a pipeline,
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> uses the following data types, converting data as necessary when reading from or
+            writing to external systems:<ul id="ul_t55_xyd_kcb">
+                <li>BOOLEAN</li>
+                <li>BYTE</li>
+                <li>BYTE_ARRAY</li>
+                <li>CHAR</li>
+                <li>DATE</li>
+                <li>DATETIME</li>
+                <li>DECIMAL</li>
+                <li>DOUBLE</li>
+                <li>FILE_REF</li>
+                <li>FLOAT</li>
+                <li>INTEGER</li>
+                <li>LIST</li>
+                <li>LIST_MAP</li>
+                <li>LONG</li>
+                <li>MAP</li>
+                <li>SHORT</li>
+                <li>STRING</li>
+                <li>TIME</li>
+                <li>ZONED_DATETIME</li>
+            </ul></p>
+    </conbody>
+</concept>

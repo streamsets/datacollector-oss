@@ -28,7 +28,6 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-            
             <step id="SelectHashField">
                 <cmd>On the <uicontrol>Mask</uicontrol> tab, configure the following
                     properties:</cmd>
@@ -49,7 +48,9 @@
                                     <entry>One or more String fields to mask with the same mask
                                             type.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                                /><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Mask Type <xref

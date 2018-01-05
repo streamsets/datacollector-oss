@@ -53,8 +53,9 @@
                             <tbody>
                                 <row>
                                     <entry>Fields to Hash</entry>
-                                    <entry>One or more fields to hash with the same hash
-                                        type.</entry>
+                                    <entry>One or more fields to hash with the same hash type.<p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                            /></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-HashType">
@@ -77,7 +78,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Hash to Target Property  <xref
+                                    <entry>Hash to Target Property <xref
                                             href="FieldHasher-Methods.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_qvf_wvh_mv"/></xref></entry>
@@ -89,7 +90,9 @@
                                     <entry>Fields to Hash</entry>
                                     <entry>One or more fields to hash and write to a target field or
                                         header attribute.<p>If you enter more than one field, the
-                                            processor hashes them together.</p></entry>
+                                            processor hashes them together.</p><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                            /></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-HashType">
@@ -149,7 +152,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Hash Record Property  <xref
+                                    <entry>Hash Record Property <xref
                                             href="FieldHasher-Methods.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_dlx_wvh_mv"/></xref></entry>

@@ -36,6 +36,7 @@
    <topicref href="../Expression_Language/Base64Functions.dita"/>
    <topicref href="../Expression_Language/CredentialFunctions.dita"/>
    <topicref href="../Expression_Language/DataDriftFunctions.dita"/>
+   <topicref href="../Expression_Language/FieldFunctions.dita"/>
    <topicref href="../Expression_Language/FileFunctions.dita"/>
    <topicref href="../Expression_Language/MathFunctions.dita"/>
    <topicref href="../Expression_Language/PipelineFunctions.dita"/>

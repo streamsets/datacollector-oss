@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gfs_w55_3cb">
+    <title>Field Functions</title>
+    <shortdesc>You can use field functions in field path expressions that determine the set of
+        fields that a processor uses. Each function is evaluated against a set of matching fields
+        individually.</shortdesc>
+    <conbody>
+        <p>For more information about field path expressions, see <xref
+                href="../Pipeline_Configuration/FieldPathExp-Overview.dita#concept_ir4_rxt_3cb"/>. For a list of stages where
+            you can use field functions, see <xref
+                href="../Pipeline_Configuration/FieldPathExp-SupportedStages.dita#concept_bs3_dm5_3cb"/>.</p>
+        <p>
+            <dl>
+                <dlentry>
+                    <dt>f:attribute(&lt;attribute name>)</dt>
+                    <dd>Returns the value of the specified field attribute. </dd>
+                    <dd>Uses the following argument:<ul id="ul_w4q_nkv_3cb">
+                            <li>attribute name - A string value that specifies a field attribute
+                                name.</li>
+                        </ul></dd>
+                    <dd>Return type: String. </dd>
+                    <dd>The following field path expression returns only the fields where the region
+                        attribute is set to
+                        "west":<codeblock>/*[${f:attribute('region') == 'west'}]</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>f:type()</dt>
+                    <dd>Returns the data type of a field. Use to the return fields with a specified
+                        field type or where the field type is as defined in the expression. </dd>
+                    <dd>
+                        <note type="important">Use all caps when specifying a data type in an
+                            expression and enclose the string in quotation marks. For a list of
+                            valid datatypes, see <xref
+                                href="../Pipeline_Design/DataTypes.dita#concept_hjl_vyd_kcb"
+                            />.</note>
+                    </dd>
+                    <dd>Return type: String.</dd>
+                    <dd>For example, the following field path expression returns all boolean
+                        fields:<codeblock>/*[${f:type() == 'BOOLEAN'}]</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>f:value()</dt>
+                    <dd>Returns the value of the field. Use to return the fields with a specified
+                        value or where the value is as defined in the expression.</dd>
+                    <dd>Return type: Dependent on the field type.</dd>
+                    <dd>For example, the following field path expression returns only the fields
+                        where the value is greater than 0.
+                        <codeblock>/*[${f:value() > 0}]</codeblock></dd>
+                </dlentry>
+            </dl>
+        </p>
+    </conbody>
+</concept>

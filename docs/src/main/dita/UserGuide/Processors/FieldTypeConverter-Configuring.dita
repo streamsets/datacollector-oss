@@ -28,7 +28,6 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-            
             <step>
                 <cmd>On the <wintitle>Conversions</wintitle> tab, configure the following
                     properties:</cmd>
@@ -54,7 +53,9 @@
                                     <entry>One or more fields to convert to the same data type. Used
                                         when converting by field name only.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                                /><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldPathExp"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Source Type</entry>
@@ -90,11 +91,10 @@
                                             "1485979200".</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Scale <xref
-                                        href="FieldTypeConverter-ChangeScale.dita">
-                                        <image href="../Graphics/icon_moreInfo.png"
-                                            id="image_sd3_jx8_9r" scale="10"/>
-                                    </xref></entry>
+                                    <entry>Scale <xref href="FieldTypeConverter-ChangeScale.dita">
+                                            <image href="../Graphics/icon_moreInfo.png"
+                                                id="image_sd3_jx8_9r" scale="10"/>
+                                        </xref></entry>
                                     <entry>Scale to use when converting to the Decimal data type.
                                             <p>Enter a zero or positive number to indicate the
                                             number of digits to the right of the decimal point. If

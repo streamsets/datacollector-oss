@@ -31,16 +31,22 @@
    </topicmeta>
    <topicref href="../Pipeline_Design/SingleMultithreadedPipes.dita"/>
    <topicref href="../Pipeline_Design/DeliveryGuarantee.dita"/>
+   <topicref href="../Pipeline_Design/DataTypes.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/DesigningDataFlow.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Design/BranchingStreams.dita"/>
    <topicref href="../Pipeline_Design/MergingStreams.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/DroppingUnwantedRecords.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Design/RequiredFields.dita"/>
-   <topicref href="../Pipeline_Design/Preconditions.dita"/></topicref>
+   <topicref href="../Pipeline_Design/Preconditions.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Design/ErrorHandling.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -64,7 +70,9 @@
    <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/FieldAttributes.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Design/FieldAtts-Working.dita"/>
    <topicref href="../Pipeline_Design/FieldAttributeGeneratingStages.dita"/>
    <topicref href="../Pipeline_Design/FieldAtts-DataPreview.dita"/>
@@ -87,6 +95,9 @@
    </topicmeta>
   </topicref>
   <topicref href="../Pipeline_Design/DevStages.dita" chunk="to-content">
-  <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

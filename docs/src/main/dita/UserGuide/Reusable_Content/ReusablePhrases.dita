@@ -465,11 +465,9 @@
                         whichever ones allow wildcard use:</draft-comment>
             </p>
             <p id="wildcard"><ph id="ph-wildcard">You can use the asterisk wildcard to represent
-                        array indices and map elements. <xref
+                              <xref
                               href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
-                                    ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                                    id="image_ukp_2dt_bz"/>
-                        </xref></ph>
+                              >array indices and map elements</xref>.</ph>
             </p>
             <p>
                   <draft-comment author="Loretta">The following tip is used several times in
@@ -478,12 +476,9 @@
             <p>
                   <note type="tip" id="tip-asterisk">To use all fields, you can use the asterisk
                         wildcard as follows: <codeph>/*</codeph>. You can also use the asterisk
-                        wildcard to represent array indices and map elements. <ph><xref
-                                    href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
-                                          ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                                          id="image_phy_rdt_bz"/>
-                              </xref></ph>
-                  </note>
+                        wildcard to represent <xref
+                              href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                              >array indices and map elements</xref>. </note>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>DataFormats-ALL</uicontrol> - <b>no
@@ -1476,7 +1471,7 @@ web-0011.log</codeblock></dd>
                                     Consumer</xref> - Reads data from queues in Amazon Simple Queue
                               Services (SQS).</li>
                         <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">Azure
-                              IoT/Event Hub Consumer</xref> - Reads data from Microsoft Azure
+                                    IoT/Event Hub Consumer</xref> - Reads data from Microsoft Azure
                               Event Hub.</li>
                         <li><xref href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz">CoAP
                                     Server</xref> - Listens on a CoAP endpoint and processes the
@@ -1708,6 +1703,13 @@ web-0011.log</codeblock></dd>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Used in Configuring topic of any processor that
+                        allows field path expressions.</draft-comment>
+            </p>
+            <p><ph id="ph-FieldPathExp">You can specify individual fields or use a <xref
+                              href="../Pipeline_Configuration/FieldPathExp-Overview.dita#concept_ir4_rxt_3cb"
+                              >field path expression</xref> to specify a set of fields.</ph></p>
             <p>
                   <draft-comment author="Loretta">Aggregator processor</draft-comment>
             </p>
@@ -2349,13 +2351,13 @@ input_stream.read()</codeblock></p>
             </p>
             <p id="EXP-p1">Use the expression language to configure expressions and conditions in
                   processors, such as the Expression Evaluator or Stream Selector. Some destination
-                  properties also require the expression language, such as the directory template
-                  for Hadoop FS or Local FS. </p>
-            <p id="EXP-p2">Optionally, you can use the expression language to define any stage or
-                  pipeline property that represents a numeric or string value. This allows you to
-                  use runtime parameters or runtime properties throughout the pipeline. You can use
-                  expression completion to determine where you can use an expression and the
-                  expression elements that you can use in that location. </p>
+                  properties also allow the expression language, such as the directory template for
+                  the Hadoop FS destination. </p>
+            <p id="EXP-p2">You can use the expression language to define any stage or pipeline
+                  property that represents a numeric or string value. You can also use field path
+                  expressions to select the fields to use in some processors. </p>
+            <p id="EXP-p2.2">Use expression completion to determine where you can use an expression
+                  and the expression elements that you can use in that location. </p>
             <p id="EXP-p3">You can use the following elements in an expression:<ul
                         id="ul_w34_vxl_2s">
                         <li>Constants</li>

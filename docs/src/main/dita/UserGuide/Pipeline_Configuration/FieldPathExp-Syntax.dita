@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nhd_5p5_3cb">
+    <title>Field Path Expression Syntax</title>
+    <conbody>
+        <p><indexterm>field path
+                    expressions<indexterm>syntax</indexterm></indexterm><indexterm>syntax<indexterm>field
+                    path expressions</indexterm></indexterm>When creating a field path expression,
+            you can use a combination of standard expression language syntax with field path
+            expression syntax. You can use the following components in field path expressions:<dl>
+                <dlentry>
+                    <dt>Root field and relative paths</dt>
+                    <dd>As with specifying any field path, begin a field path expression with a
+                        slash ( / ) to indicate the location of the fields in relation to the root
+                        field. Then, continue defining the field path as appropriate.</dd>
+                    <dd>For example, the following field path expression uses a wildcard to specify
+                        all fields in the record:<codeblock>/*</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Wildcard characters</dt>
+                    <dd>You can use the asterisk character ( * ) and question mark character ( ? )
+                        as wildcards, as follows:<ul id="ul_jxg_ds5_3cb">
+                            <li>Use the asterisk wildcard to represent one or more characters.<p>For
+                                    example, to perform an action on all fields in a Stores map
+                                    field, you can use the following field path
+                                    expression:<codeblock>/Stores/*</codeblock></p></li>
+                            <li>Use the question mark wildcard to represent exactly one character.
+                                    <p>For example, the following expression includes all fields
+                                    that have a two-character prefix followed by an
+                                    underscore:<codeblock>/??_*</codeblock></p></li>
+                        </ul></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Brackets for position predicates</dt>
+                    <dd>You can specify a field based on its position in a list field. After the
+                        name of the list field, specify the position surrounded by brackets ( [ ] ).
+                        Note that position numbering starts with 0.</dd>
+                    <dd>For example, the following expression calls the fourth item in a colors list
+                        field:<codeblock>/colors[3]</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Brackets for complex expressions</dt>
+                    <dd>You can configure field path expressions that use functions, typically field
+                        functions, to define a specific subset of fields to return. When configuring
+                        complex expressions, surround the expression with brackets ( [ ] ), as
+                        follows:</dd>
+                    <dd>
+                        <codeblock>/*[${&lt;complex expression>}]</codeblock>
+                    </dd>
+                    <dd>For example, the following expression returns all fields with an "info"
+                        field attribute set to any
+                        value:<codeblock>/*[${f:attribute('info') == '*'}]</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Field functions</dt>
+                    <dd>Use field functions to determine the fields to use based on field-related
+                        information, such as <codeph>f:type</codeph> for the datatype of the field,
+                            <codeph>f:value</codeph> for the value of the field, or
+                            <codeph>f:attribute</codeph> for an attribute or attribute value of the
+                        field.</dd>
+                    <dd>For example, you can use the Field Type Converter processor to convert all
+                        Integer fields with the following
+                        expression:<codeblock>/*[${f:type() == 'INTEGER'}]</codeblock></dd>
+                    <dd>For more information about field functions, see <xref
+                            href="../Expression_Language/FieldFunctions.dita#concept_gfs_w55_3cb"
+                        />.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Other functions</dt>
+                    <dd>You can use other functions, such as record, string, or time functions, as
+                        part of complex field path expressions. </dd>
+                    <dd>For example, the following expression defines the subset of fields where the
+                        region attribute is set to the results of the storeId
+                        field:<codeblock>/*[${f:attribute('storeId') == record:value('/storeId')}]</codeblock></dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>

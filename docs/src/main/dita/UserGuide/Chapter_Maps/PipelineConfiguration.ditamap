@@ -20,7 +20,8 @@
 <map collection-type="sequence">
  <title>Pipeline Configuration</title>
  <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita">
-  <topicref href="../Pipeline_Configuration/DataCollectorUI-Config.dita" product="SDC" chunk="to-content">
+  <topicref href="../Pipeline_Configuration/DataCollectorUI-Config.dita" product="SDC"
+   chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -35,17 +36,18 @@
   <topicref href="../Pipeline_Configuration/PipelineMemory.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
-   </topicmeta></topicref>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Configuration/PipelineRateLimit.dita" chunk="to-content">
-  <topicmeta>
-   <shortdesc/>
-  </topicmeta>
- </topicref>
-  <topicref href="../Pipeline_Configuration/SimpleBulkEdit.dita" chunk="to-content"> 
-  <topicmeta>
-   <shortdesc/>
-  </topicmeta>
- </topicref>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/SimpleBulkEdit.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Configuration/RuntimeValues.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -66,21 +68,22 @@
    <topicref href="../Pipeline_Configuration/RuntimeResources.dita">
     <topicref href="../Pipeline_Configuration/RuntimeResources-Defining.dita"/>
     <topicref href="../Pipeline_Configuration/RuntimeResources-Calling.dita"/>
-   </topicref>  </topicref>
+   </topicref>
+  </topicref>
   <topicref href="../Pipeline_Configuration/EventGeneration.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Configuration/EventRecords.dita"/>
   </topicref>
-   <topicref href="../Pipeline_Configuration/Webhooks.dita" chunk="to-content">
-    <topicmeta>
-     <shortdesc/>
-    </topicmeta>
-    <topicref href="../Pipeline_Configuration/Webhooks-RequestMethod.dita"/>
-    <topicref href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita"/>
+  <topicref href="../Pipeline_Configuration/Webhooks.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/Webhooks-RequestMethod.dita"/>
+   <topicref href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita"/>
    <topicref href="../Pipeline_Configuration/Webhooks-Examples.dita"/>
-   </topicref>
+  </topicref>
   <topicref href="../Pipeline_Configuration/Notifications.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -133,12 +136,19 @@
    <topicref href="../Pipeline_Configuration/ReferencingFieldNames.dita">
     <topicref href="../Pipeline_Configuration/WildcardsArraysMaps.dita"/>
    </topicref>
+   <topicref href="../Pipeline_Configuration/FieldPathExp-Overview.dita">
+    <topicref href="../Pipeline_Configuration/FieldPathExp-SupportedStages.dita"/>
+    <topicref href="../Pipeline_Configuration/FieldPathExp-Syntax.dita"/>
+   </topicref>
    <topicref href="../Pipeline_Configuration/Expressions-ExpComp.dita">
     <topicref href="../Pipeline_Configuration/Expressions-ExpCompTips.dita"/>
    </topicref>
    <topicref href="../Pipeline_Configuration/DataTypeCoercion.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>
