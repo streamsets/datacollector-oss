@@ -1,7 +1,7 @@
 /*
 
 Oxygen WebHelp Plugin
-Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
@@ -43,7 +43,7 @@ function highlightSearchTerm(words) {
                 }
             }
         } catch (e) {
-            error(e);
+            debug(e);
         }
     }
 }
@@ -70,7 +70,7 @@ $(document).ready(function () {
                     $('#permalink').hide();
                 }
             } catch (e) {
-                error(e);
+                
             }
         } else {
             window.location.href=getPath(location.pathname);
@@ -79,13 +79,13 @@ $(document).ready(function () {
     
     // Expand toc in case there are frames.
     // Rewrite page title
-    try {
-        if (top !== self && window.parent.tocwin) {
-        	window.parent.tocwin.markSelectItem(window.location.href);
-	        setTimeout(rewriteTitle, 10);
+    if (top !== self && window.parent.tocwin) {
+       try {
+            window.parent.tocwin.markSelectItem(window.location.href);
+            setTimeout(rewriteTitle, 10);
+        } catch (e) {
+            
         }
-    } catch (e) {
-        error(e);
     }
 
     // Click on navigation links without text 	     

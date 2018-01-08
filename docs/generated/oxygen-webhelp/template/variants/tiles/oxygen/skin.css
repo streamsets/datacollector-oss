@@ -1,0 +1,436 @@
+/*
+ * ==============================================
+ * Skin for oXygen generated WebHelp.
+ * ==============================================
+ */
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Fonts.
+ *  
+ */
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700,300");
+
+html, body {
+    min-width:100%;
+}
+
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+    /*
+     * ------------------------------------------------------------------
+     *
+     * Fight with bootstrap
+     *
+     */
+.navbar-brand{
+    height:auto;
+}
+.navbar {
+    border:none;
+    border-radius:0;
+    margin:0;
+}
+.wh_header{
+    background: #000 none;
+    color: #ffffff;
+}
+a,
+a:hover,
+a:visited{
+    
+}
+a:hover{
+    text-decoration: none;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Publication titles
+ *  
+ */
+ .wh_publication_title > a{
+     color:#fff;
+     font-size: 1.4em;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Menu
+ *  
+ */
+.wh_top_menu {
+    text-transform: uppercase;
+    margin: .4em 0;
+    font-size: 0.9em;
+}
+.wh_top_menu a{
+    color: #fff;
+    line-height: 2em;
+}
+
+/* The submenus */
+.wh_top_menu ul ul {
+    background-color: #333;
+}
+.wh_top_menu ul li:hover {
+    background-color: #333;
+}
+.wh_top_menu ul ul li a:hover {
+    background: #000;
+}
+.wh_top_menu ul ul li {
+    border-top-color: #000;
+    width: 270px;
+    text-transform: capitalize;
+}
+.wh_top_menu ul ul li.has-children:after{
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Link to the index.
+ * 
+ */
+ .wh_indexterms_link a span{
+    display:none;
+}
+.wh_indexterms_link a:before{
+    color:#fff;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Breadcrumb
+ *  
+ */
+.wh_breadcrumb ol {
+    color: #878787;
+}
+.wh_breadcrumb ol a {
+    color:inherit;
+}
+.wh_breadcrumb ol .active {
+    color: #5185cb;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tools and navigation
+ * 
+ */
+.wh_tools{
+    background-color: #ECF2F9;
+    margin: 1em 0 2em;
+}
+
+.wh_print_link,
+.wh_navigation_links,
+.wh_navigation_links .navnext,
+.wh_navigation_links .navprev{
+}
+
+
+.wh_print_link a,
+.wh_navigation_links a,
+.wh_navigation_links a:hover,
+.wh_navigation_links a:active,
+.wh_navigation_links a:visited,
+.wh_print_link a:before,
+.wh_navigation_links a:before,
+.wh_navigation_links a:hover:before,
+.wh_navigation_links a:active:before,
+.wh_navigation_links a:visited:before{
+    color: #347bb7;
+    text-decoration: none;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tiles
+ * 
+ */
+.wh_tile {
+    background-color: #ECF2F9;
+    font-weight: 300;
+}
+.wh_tile_shortdesc{
+    margin-top:1em;
+    text-align: center;
+    color: #0D1A2B;
+    font-size:1.1em;
+}
+.wh_tile_text:after{
+    background: linear-gradient(to bottom, rgba(236, 242, 249, 0), rgba(236, 242, 249, 1) 75%);
+}
+.wh_tile_title{
+    font-size:1.7em;
+    text-align: center;
+    text-decoration: none;
+}
+.wh_tile_title a{
+    color: #3077be;
+}
+@media only screen and (max-width: 767px) {
+    .wh_tile > div {
+        height: auto;
+    }
+}
+
+/* 
+You can style some of the tiles in a special way. 
+Example:
+.wh_tiles *[data-id='getting_started']{
+    background-color:gray;
+}
+*/
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Search area
+ * 
+ */
+.wh_search_input{
+    display:block;
+    margin:0;
+    position:relative;
+    background: url('resources/images/bgr_right_small.png') right no-repeat #2771bb;
+    padding: 40px 0;
+}
+
+.wh_welcome:not(:empty){
+    font-size: 4em;
+    margin: 0 auto;
+    font-family: 'Roboto Thin', sans-serif;
+    padding: 0 0 1.5em 0;
+    text-shadow: none;
+}
+
+.wh_main_page .wh_search_input{
+    padding: 115px 0;
+    background: url('resources/images/bgr_right.png') right no-repeat #2771bb;
+
+}
+.wh_search_textfield{
+    border: solid 1px #CCC;
+    border-radius: 5px;
+    padding: 0 .5em;
+    position: relative;
+    height: 2.8em;
+}
+.wh_search_button{
+    border: solid 1px #CCC;
+    border-radius: 0 5px 5px 0;
+    padding: 0 .5em;
+    color:#fff;
+    background-color: #C93416;
+    height: 2.8em;
+}
+
+/*@media only screen and (max-width: 999px) {*/
+    /*.wh_search_input:after{*/
+        /*display:none;*/
+    /*}*/
+
+/*}*/
+@media only screen and (max-width: 767px) {
+    .wh_main_page .wh_search_input,
+    .wh_search_input {
+        padding: 3em 0;
+    }
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Side TOC
+ * 
+ */
+.wh_side_toc{
+    border-radius: 3px;
+    padding: 1.5em 2em;
+    background-color: #f8f8f8
+}
+.wh_side_toc .active {
+    color: #5185cb;
+}
+.wh_side_toc a, .wh_side_toc a:visited, .wh_side_toc a:hover {
+    color: #878787;
+}
+.wh_side_toc a:hover {
+    text-decoration: underline;
+}
+
+.wh_side_toc  ul  li{
+    margin: .7em 0;
+}
+.wh_side_toc > ul > li > span{
+    font-size: 1.2em;
+}
+
+@media only screen and (max-width: 767px) {
+    .wh_side_toc {
+        border-radius: 0;
+        padding: 1em 0.5em;
+        margin-top: 10px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .wh_related_links,
+    .wh_child_links,
+    .wh_topic_content .related-links{
+        border: 1px solid #e0e0e0;
+    }
+}
+
+/*
+ * ------------------------------------------------------------------
+ *
+ * Footer
+ * 
+ */
+.wh_footer{
+    text-align: center;
+    padding: 1em;
+    position:relative;
+    bottom: 0;
+    width: 100%;
+    color: #ffffff;
+    background: none #255B90;
+    margin-top: 2em;
+}
+
+.wh_footer a{
+    color: #CCE2F1;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Topic content
+ * 
+ */
+.wh_topic_content,.wh_content_area {
+    color: #000000;
+}
+.wh_main_page .wh_content_area {
+    margin: 40px auto;
+}
+.wh_topic_content .title.topictitle1 {
+    color: #346ec5;
+    font-size: 2em;
+    margin-bottom: 1em;
+    line-height: 1.1em;
+}
+
+.wh_related_links,
+.wh_child_links,
+.wh_topic_content .related-links{
+    background-color: #F8F8F8;
+    margin-top: 1em;
+}
+
+.wh_related_links,
+.wh_topic_content .related-links{
+    padding: .5em 1.5em ;
+}
+
+.wh_child_links {
+    padding: 1.5em ;
+}
+
+.related-links strong{
+    font-weight: 500;
+}
+
+.related-links a,
+.related-links a:visited {
+    color: #5185cb;
+    padding-bottom: .3em;
+    display:inline-block;
+}
+
+.filepath {
+    color: #c7254e !important;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Search results.
+ * 
+ */
+.searchresult {
+    list-style: none;
+}
+.searchresult li{
+    padding: .5em;
+}
+.searchresult li a, 
+.wh_search_expression{
+    color:#346ec5;
+}
+.searchresult .shortdesclink {
+    margin: .3em .5em 0;
+}
+.wh_search_expression{
+    font-weight:bold;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Index terms.
+ * 
+ */
+.wh_index_terms span.wh_first_letter {
+    color: #346ec5;
+}
+.wh_index_terms #indexList{
+    padding:0;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tree TOC for the main page.
+ * 
+ */
+.wh_main_page_toc{
+}
+
+
+.wh_main_page_toc .expanded, .wh_main_page_toc .wh_main_page_toc_accordion_header:hover, .wh_main_page_toc>.wh_main_page_toc_entry:hover, .wh_main_page_toc_accordion_entries{
+    background-color: #F2F8FF;
+}
+
+/**
+ *
+ * Styles used for RTL pages
+ *
+ */
+html[dir='rtl'] .wh_top_menu ul li:hover > ul {
+    max-width: 270px;
+}

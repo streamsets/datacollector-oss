@@ -415,7 +415,7 @@
                                     Customers who have purchased the StreamSets Enterprise Edition
                                     will gain access to all SCH functionality and continue to have
                                     access to all DPM functionality as before.</p><p>To understand
-                                    the end-to-end StreamSet Data Operations Platform and how the
+                                    the end-to-end StreamSets Data Operations Platform and how the
                                     products fit together, visit <xref
                                         href="https://streamsets.com/products/" format="html"
                                         scope="external">https://streamsets.com/products/</xref>.
@@ -501,7 +501,7 @@
                                 stage libraries as custom stage libraries. <p>If you have pipelines
                                     that use these legacy stage libraries, you will need to update
                                     the pipelines to use a more current stage library or install the
-                                    legacy stage library manually, For moe information see <xref
+                                    legacy stage library manually, For more information see <xref
                                         href="../Upgrade/PostUpgrade-LegacyLibraries.dita#concept_wnl_zk4_5bb"
                                         >Update Pipelines using Legacy Stage
                                 Libraries</xref>.</p></li>

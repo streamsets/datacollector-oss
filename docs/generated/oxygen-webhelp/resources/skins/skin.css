@@ -288,8 +288,19 @@ table.tool td{
 /**
  * WebHelp Feedback section
  */
-#comments{
-    border-bottom: 1px solid #eee;
+#comments
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+#u_Profile,
+#confirmDelete
+{
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
 }
 .bt_reply
 {
@@ -302,3 +313,64 @@ table.tool td{
 /**
   * Administration page
   */
+#loginData,
+#signUp,
+#recoverPwd,
+#exportDiv,
+#inlineViewDiv,
+#setVersionDiv
+{
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+#editUser {
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+#loginResponse {
+    color: red;
+}
+
+/**
+  * Product / Version buttons
+  */
+.selectedItem {
+    background-color: #369;
+    color: #fff;
+}
+.selectable:hover,
+.p_selectable:hover {
+    background-color: #58b;
+    color: #fff;
+}
+.products, .versions {
+    border: 1px solid #ccc;
+}
+
+/**
+  * Tables
+  */
+.tbHRow {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+}
+.tbRow:nth-of-type(2n) {
+    background-color: #dfefff;
+}
+.tbRow:hover {
+    background-color: #cef4ff;
+}
+
+/**
+  * Set version
+  */
+.v_true,.v_false {
+    background-color: #eee;
+    box-shadow: 0 1px 2px #999;
+}
+.v_true:hover,.v_false:hover {
+    background-color: #98C1D6;
+}
+.v_true {
+    background-color: #dfd;
+}

@@ -1,7 +1,7 @@
 /*
 
 Oxygen Webhelp Plugin
-Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
@@ -40,18 +40,18 @@ var notLocalChrome = verifyBrowser();
 function getParameter(parameter) {
     var whLocation = "";
 
+    var toReturn = undefined;
+
     try {
         whLocation = window.location;
         var p = parseUri(whLocation);
 
-        for (var param in p.queryKey) {
-            if (p.queryKey.hasOwnProperty(param) && parameter.toLowerCase() == param.toLowerCase()){
-                return p.queryKey[param];
-            }
-        }
+        toReturn = p.queryKey[parameter];
     } catch (e) {
-        error(e);
+        debug(e);
     }
+
+    return toReturn;
 }
 
 /**
@@ -60,8 +60,7 @@ function getParameter(parameter) {
  */
 function parseParameters() {
     debug("parseParameters()...");
-    // All parameters in this list have to be lower case
-    var excludeParameters = ["contextid", "appname"];
+    var excludeParameters = ["contextId", "appname"];
     var whLocation = "";
     var query = "?";
 
@@ -71,13 +70,13 @@ function parseParameters() {
         whLocation = window.location;
         p = parseUri(whLocation);
     } catch (e) {
-        error(e);
+        debug(e);
     }
 
     var parameters = p.queryKey;
 
     for (var para in parameters) {
-        if ($.inArray(para.toLowerCase(), excludeParameters) == -1) {
+        if ($.inArray(para, excludeParameters) == -1) {
             query += para + "=" + parameters[para] + "&";
         }
     }
@@ -103,7 +102,7 @@ function executeQuery() {
 	try {
 		var element = google.search.cse.element.getElement('searchresults-only0');
 	} catch (e) {
-		error(e);
+		debug(e);
 	}
 	if (element != undefined) {
 		if (input.value == '') {
@@ -112,12 +111,31 @@ function executeQuery() {
 			element.execute(input.value);
 		}
 	} else {
-		searchRequest('wh-classic');
+		searchRequest();
 	}
 	
 	return false;
 }
 	
+/**
+ * Debug functions 
+ */
+function debug(msg, obj) {
+    log.debug(msg, obj);
+}
+
+function info(msg, obj) {
+    log.info(msg, obj);
+}
+
+function error(msg, obj) {
+    log.error(msg, obj);
+}
+
+function warn(msg, obj) {
+    log.warn(msg, obj);
+}
+
 function openTopic(anchor) {
     $("#contentBlock ul").css("background-color", $("#splitterContainer #leftPane").css('background-color'));
     $("#contentBlock li").css("background-color", "transparent");
@@ -142,12 +160,6 @@ function openTopic(anchor) {
         redirect($(anchor).attr('href'));
     } else {
         window.open($(anchor).attr('href'), $(anchor).attr('target'));
-    }
-
-    try {
-        recomputeBreadcrumb(-1);
-    } catch (e) {
-        debug(e);
     }
 }
 
@@ -230,11 +242,13 @@ $(document).ready(function () {
                                     var newLocation = whUrl + path;
                                     window.parent.contentwin.location.href = newLocation;
                                 } catch (e) {
-                                    error(e);
+                                    debug(e);
                                 }
                             } else {
                                 var newLocation = window.location.protocol + '//' + window.location.host;
-                                
+                                if (window.location.port!="") {
+                                    newLocation+=':' + window.location.port;
+                                }
                                 newLocation+= window.location.pathname + query + '#' + path;
                                 window.location=newLocation;
                             }
@@ -249,7 +263,7 @@ $(document).ready(function () {
         try {
             var p = parseUri(parent.location);
         } catch (e) {
-            error(e);
+            debug(e);
             var p = parseUri(window.location);
         }
         if (withFrames) {
@@ -258,7 +272,7 @@ $(document).ready(function () {
                 	var link = p.protocol + '://' + p.host + ':' + p.port + q;
 	                window.parent.contentwin.location.href = link;
                 } catch (e) {
-                    error(e);
+                    debug(e);
                 }
             } else {
 								openTopic($('#tree a').first());
@@ -317,17 +331,17 @@ $(document).ready(function () {
 
     // Determine if li element have submenus and sets corresponded class
     $('#contentBlock li>span').each(function () {
-        if ($(this).parent().find('>ul').length > 0) {
+        if ($(this).parent().find('>ul').size() > 0) {
             $(this).addClass('hasSubMenuClosed');
         } else {
             $(this).addClass('topic');
         }
     });
 
-    debug('discover foldables ' + $('#tree > ul li > span').length + ' - ' + $('#tree > ul li > span.topic').length);
+    debug('discover foldables ' + $('#tree > ul li > span').size() + ' - ' + $('#tree > ul li > span.topic').size());
 
     // Calculate number of foldable nodes and show/hide expand buttons
-    noFoldableNodes = $('#tree > ul li > span').length - $('#tree > ul li > span.topic').length;
+    noFoldableNodes = $('#tree > ul li > span').size() - $('#tree > ul li > span.topic').size();
     showHideExpandButtons();
 
     // Set title of expand/collapse all buttons
@@ -369,14 +383,10 @@ $(window).resize(function(){
 });
 
 
-try {
-    $(window.parent).resize(function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(resizeContent, 10);
-    });
-} catch (e) {
-    error(e);
-}
+$(window.parent).resize(function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeContent, 10);
+});
 
 // Return true if "word1" starts with "word2"
 function startsWith(word1, word2) {
@@ -472,7 +482,7 @@ function loadIndexterms() {
         }, 10);
     } catch (e) {
         if ( $("#indexList").length < 1 ) {
-            $("#index").html('<span id="loadingError">Index loading error: ' + e.message + '</span>');
+            $("#index").html('<span id="loadingError">Index loading error: ' + e + '</span>');
         }
     }
 }
@@ -498,7 +508,7 @@ function showMenu(displayTab) {
         try {
         	parent.termsToHighlight = Array();
         } catch (e) {
-            error(e);
+            debug(e);
 	    }
     }
 
@@ -686,22 +696,23 @@ debug('os:' + navigator.appVersion);
  * @param words (type:Array) - Words to be highlighted
  */
 function highlightSearchTerm(words) {
-
+    if (words.length < 1) {
+        return false;
+    }
     if (notLocalChrome) {
-        if (words !== null && words !== undefined && words.length > 0) {
+        if (words != null) {
             // highlight each term in the content view
-            var $frm = $('#frm');
-            $frm.contents().find('body').removeHighlight();
-            for (var i = 0; i < words.length; i++) {
+            $('#frm').contents().find('body').removeHighlight();
+            for (i = 0; i < words.length; i++) {
                 debug('highlight(' + words[i] + ');');
-                $frm.contents().find('body').highlight(words[i]);
+                $('#frm').contents().find('body').highlight(words[i]);
             }
         }
     } else {
         // For index with frames
-        if (parent.termsToHighlight !== null && parent.termsToHighlight !== undefined && parent.termsToHighlight > 0) {
+        if (parent.termsToHighlight != null) {
             // highlight each term in the content view
-            for (var i = 0; i < parent.termsToHighlight.length; i++) {
+            for (i = 0; i < parent.termsToHighlight.length; i++) {
                 $('*', window.parent.contentwin.document).highlight(parent.termsToHighlight[i]);
             }
         }
@@ -722,7 +733,7 @@ function clearHighlights() {
         try {
             $(window.parent.contentwin.document).find('body').removeHighlight();
         } catch (e) {
-            error(e);
+            debug(e);
         }
     }
 }
@@ -737,12 +748,12 @@ function showHideExpandButtons() {
             $('#expandAllLink').show();
             $('#collapseAllLink').show();
         } else {
-            if ($('#tree > ul li > span.hasSubMenuOpened').length != noFoldableNodes) {
+            if ($('#tree > ul li > span.hasSubMenuOpened').size() != noFoldableNodes) {
                 $('#expandAllLink').show();
             } else {
                 $('#expandAllLink').hide();
             }
-            if ($('#tree > ul > li > span.hasSubMenuOpened').length <= 0) {
+            if ($('#tree > ul > li > span.hasSubMenuOpened').size() <= 0) {
                 $('#collapseAllLink').hide();
             } else {
                 $('#collapseAllLink').show();
@@ -809,7 +820,7 @@ function scrollToVisibleItem() {
             $bckToc.scrollTop(tocSelectedItemOffset.top);
         }
     } catch (e) {
-        error(e);
+        debug(e);
     }
 }
 
@@ -825,13 +836,13 @@ function toggleItem(loc, forceOpen) {
     $(loc).parent().parents('#contentBlock li').find('>span').addClass('hasSubMenuOpened');
     $(loc).parent().parents('#contentBlock li').find('>span').removeClass('hasSubMenuClosed');
     if (loc.hasClass('hasSubMenuOpened') && !(forceOpen == true)) {
-        if ($(loc).parent().find('>ul').length > 0) {
+        if ($(loc).parent().find('>ul').size() > 0) {
             $(loc).removeClass('hasSubMenuOpened');
             $(loc).addClass('hasSubMenuClosed');
             $(loc).parent('#contentBlock li').find('>ul').hide();
         }
     } else {
-        if ($(loc).parent().find('>ul').length > 0) {
+        if ($(loc).parent().find('>ul').size() > 0) {
             $(loc).addClass('hasSubMenuOpened');
             $(loc).removeClass('hasSubMenuClosed');
             $(loc).parent('#contentBlock li').find('>ul').show();
@@ -858,8 +869,8 @@ function showParents() {
             var nextTOCIndex = currentTOCSelection + 1;
 
             // Get the href of the parent / next / previous related to current item
-            var prevTOCSelection = getUrlWithoutAnchor($('#tree li:eq(' + prevTOCIndex + ')').find('a').attr('href'));
-            var nextTOCSelection = getUrlWithoutAnchor($('#tree li:eq(' + nextTOCIndex + ')').find('a').attr('href'));
+            var prevTOCSelection = getParameter($('#tree li:eq(' + prevTOCIndex + ')').find('a').attr('href'));
+            var nextTOCSelection = getParameter($('#tree li:eq(' + nextTOCIndex + ')').find('a').attr('href'));
 
 
             // Current href
@@ -872,7 +883,7 @@ function showParents() {
 
             var auxSelection = currentTOCSelection-2;
             var auxHref = $('#tree li:eq(' + auxSelection + ')').find('a').attr('href');
-            while (auxHref != undefined && getUrlWithoutAnchor(prevTOCSelection) == getUrlWithoutAnchor(auxHref)) {
+            while (getUrlWithoutAnchor(prevTOCSelection) == getUrlWithoutAnchor(auxHref)) {
                 prevTOCIndex=auxSelection;
                 prevTOCSelection = $('#tree li:eq(' + prevTOCIndex + ')').find('a').attr('href');
 
@@ -949,10 +960,6 @@ function showParents() {
 function getUrlWithoutAnchor(url){
     var toReturn = url;
 
-    if (url == undefined || url == "undefined") {
-        return url;
-    }
-    
     if (url.lastIndexOf("#") > 0) {
         toReturn = url.substring(0, url.lastIndexOf("#"))
     }
@@ -968,11 +975,22 @@ function getUrlWithoutAnchor(url){
 function normalizeLink(originalHref) {
     var relLink = originalHref;
     var logStr = '';
+    if (! $.support.hrefNormalized) {
+        var relp = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        //ie7
+        logStr = ' IE7 ';
+        var srv = window.location.protocol + '//' + window.location.hostname;
+        var localHref = parseUri(originalHref);
         
-    if (startsWith(relLink, whUrl)) {
-        relLink = relLink.substr(whUrl.length);
+        if (window.location.protocol.toLowerCase() != 'file:' && localHref.protocol.toLowerCase() != '') {
+            debug('ie7 file://');
+            relLink = originalHref.substring(whUrl.length);
+        }
+    } else {
+        if (startsWith(relLink, whUrl)) {
+            relLink = relLink.substr(whUrl.length);
+        }
     }
-
     var toReturn = stripUri(relLink);
     info(logStr + 'normalizeLink(' + originalHref + ')=' + toReturn);
     return toReturn;
