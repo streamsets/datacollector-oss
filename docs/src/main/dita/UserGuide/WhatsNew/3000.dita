@@ -380,9 +380,10 @@
                     <dt>Data Collector Configuration</dt>
                     <dd>By default when Data Collector restarts, it automatically restarts all
                         pipelines that were running before Data Collector shut down. You can now
-                        disable the automatic restart of pipelines by enabling the
-                            <codeph>runner.boot.pipeline.restart</codeph> property in the
-                            <codeph>$SDC_CONF/sdc.properties</codeph> file. </dd>
+                        disable the automatic restart of pipelines by <xref
+                            href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r/table_k1y_drr_bx"
+                            >configuring the <codeph>runner.boot.pipeline.restart</codeph>
+                            property</xref> in the <codeph>$SDC_CONF/sdc.properties</codeph> file. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Dataflow Performance Manager / <ph
