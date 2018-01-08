@@ -681,9 +681,10 @@
                             </row>
                         </tbody>
                     </tgroup>
-                </table></p>The <ph
+                </table></p><p>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file includes the following miscellaneous properties:<p>
+                    configuration file includes the following miscellaneous properties:</p>
+            <p>
                 <table frame="all" rowsep="1" colsep="1" id="table_k1y_drr_bx">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -711,6 +712,14 @@
                                         pipeline. </p><p>Default is 50, which is sufficient to run
                                         approximately 22 standalone pipelines at the same
                                     time.</p></entry>
+                            </row>
+                            <row>
+                                <entry>runner.boot.pipeline.restart</entry>
+                                <entry>Automatically restarts all running pipelines on a <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> restart.<p>To disable the automatic restart of pipelines,
+                                        uncomment this property. Disable only for troubleshooting or
+                                        in a development environment.</p></entry>
                             </row>
                             <row>
                                 <entry>pipeline.max.runners.count</entry>
