@@ -16,18 +16,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xr1_fh3_x1b">
- <title>Cache Lookup Values</title>
- <conbody>
-                <p>By default, the processor does not cache the lookup values returned
-                    from a Kudu table. To improve pipeline performance, you can enable the processor
-                    to locally cache the lookup values.</p>
-                <p>When enabled, the processor caches values until the cache reaches the
-                    maximum size or the expiration time. When the first limit is reached, the
-                    processor evicts values from the cache.</p>
-     <p
-         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBCLookupCacheOptions"/>
-        <p>The following image displays the properties that configure the lookup value cache:</p>
-        <p><image href="../Graphics/KuduLookup_CacheValues.png" scale="70" id="image_vpz_rl3_x1b"
-            /></p>
- </conbody>
+    <title>Cache Lookup Values</title>
+    <conbody>
+        <p>By default, the processor does not cache the lookup values returned from a Kudu table. To
+            improve pipeline performance, you can enable the processor to locally cache the lookup
+            values.</p>
+        <p>When enabled, the processor caches values until the cache reaches the maximum size or the
+            expiration time. When the first limit is reached, the processor evicts values from the
+            cache.</p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBCLookupCacheOptions"
+        />
+    </conbody>
 </concept>
