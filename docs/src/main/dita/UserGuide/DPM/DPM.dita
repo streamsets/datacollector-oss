@@ -22,37 +22,48 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
         /></title>
     <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-            /><sup>TM</sup> (SCH) is a management console for data in motion. <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> lets
-        you map, measure, and master complex dataflows within your organization.</shortdesc>
+            /><sup>TM</sup> (SCH) is a central point of control for all of your dataflow pipelines.
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        allows teams to build and execute large numbers of complex dataflows at scale. </shortdesc>
     <conbody>
-        <p><indexterm>StreamSets Control Hub<indexterm>overview</indexterm></indexterm>With <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
-            you can map multiple dataflows in a single visual topology and track changes to the
-            dataflows over time. You can view real-time statistics to measure dataflow performance
-            across each topology, from end-to-end or point-to-point. You can master your day-to-day
-            operations by performing release and configuration management, and monitoring alerts to
-            ensure incoming data meets business requirements for availability and accuracy.</p>
+        <p><indexterm>StreamSets Control Hub<indexterm>overview</indexterm></indexterm>Teams of data
+            engineers use the shared repository provided with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
+            collaboratively build pipelines. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            provides full life cycle management of the pipelines, allowing you to track the version
+            history and giving you full control of the evolving development process. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            lets you deploy and execute dataflows at scale on manually administered or automatically
+            provisioned <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            or on edge devices using <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"/>.
+            You can map multiple dataflows in a single visual topology and can view real-time
+            statistics to measure dataflow performance across each topology, from end-to-end or
+            point-to-point. You can also monitor alerts to ensure that incoming data meets business
+            requirements for availability and accuracy. </p>
         <p>Multiple types of users within your organization can perform different roles in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
             For example, a data architect typically creates a high-level design of how data needs to
-            flow through multiple systems. A data engineer uses this high-level design to develop
-            individual pipelines in <ph
+            flow through multiple systems. Teams of data engineers use this high-level design to
+            build individual pipelines in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or
             a development <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-            The data engineer then publishes the finished pipelines to <ph
+            The data engineers then publish the finished pipelines to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
         <p>A DevOps or site reliability engineer adds published pipelines to jobs and then starts
-            the jobs across multiple <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
-            running a remote pipeline instance on each <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-            Data architects map the related jobs into a single visual topology, and then use the
-            topology to monitor and measure the complete dataflow. DevOps engineers create data SLAs
-            (service level agreements) for topologies to define thresholds that the dataflows cannot
-            exceed, ensuring that data is delivered in a timely manner.</p>
+            the jobs across multiple execution <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            or <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+            />, running a remote pipeline instance on each execution component. Data architects map
+            the related jobs into a single visual topology, and then use the topology to monitor and
+            measure the complete dataflow. DevOps engineers create data SLAs (service level
+            agreements) for topologies to define thresholds that the dataflows cannot exceed,
+            ensuring that data is delivered in a timely manner.</p>
         <p>Let’s take a closer look at what data architects, data engineers, and DevOps engineers
             can accomplish with <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"

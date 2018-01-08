@@ -18,8 +18,8 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xvp_x2x_fz">
- <title>Master Dataflow Operations</title>
- <shortdesc>As a DevOps or site reliability engineer, you can master your day-to-day operations by
+ <title>Monitor Dataflow Operations</title>
+ <shortdesc>As a DevOps or site reliability engineer, you can monitor your day-to-day operations by
         defining data SLAs (service level agreements) to ensure that incoming data meets business
         requirements for availability and accuracy.</shortdesc>
  <conbody>
@@ -31,7 +31,7 @@
             expected thresholds of the data throughput rate or the error record rate. Data SLAs
             trigger an alert when the specified threshold is reached. Data SLA alerts provide
             immediate feedback on the data processing rates expected by your team. They enable you
-            to master your dataflow operations by quickly investigating and resolving issues that
+            to monitor your dataflow operations and quickly investigate and resolve issues that
             arise.</p>
         <p>For example, you have service level agreements with the operational analytics team to
             ensure that all of the data captured and processed in the Customer 360 topology is clean
@@ -53,8 +53,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             turn a high-level architecture diagram of your dataflows into pipelines and jobs that
             you can then manage and measure from a single topology. Give it a try, and see for
-            yourself how easy <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> has
-            made it to map, measure, and master your data in motion.</p>
+            yourself how easily you can control all of your complex dataflow pipelines with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />.</p>
  </conbody>
 </concept>
