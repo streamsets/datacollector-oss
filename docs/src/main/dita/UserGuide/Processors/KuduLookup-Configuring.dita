@@ -58,8 +58,7 @@
                                         /></entry>
                                 </row>
                                 <row>
-                                    <entry>Key Columns Mapping
-                                        <xref
+                                    <entry>Key Columns Mapping <xref
                                             href="KuduLookup-ColumnMappings.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h6p_p2v_uq"/></xref></entry>
@@ -80,8 +79,7 @@
                                             columns for a compound primary key.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Columns to Output Fields Mapping
-                                        <xref
+                                    <entry>Columns to Output Fields Mapping <xref
                                             href="KuduLookup-ColumnMappings.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2h_k3v_uq"/></xref></entry>
@@ -180,8 +178,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Cache Kudu Table
-                                        <xref
+                                    <entry>Enable Table Caching <xref
                                             href="KuduLookup-CacheTableInfo.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h3p_p9g_kj"/></xref></entry>
@@ -189,21 +186,22 @@
                                         the Kudu tables to look up.</entry>
                                 </row>
                                 <row>
-                                    <entry>Maximum Entries to Cache Table Objects</entry>
+                                    <entry>Maximum Table Entries to Cache</entry>
                                     <entry>Maximum number of table entries to cache. When the
                                         maximum number is reached, the processor evicts the oldest
                                         values from the cache.<p>Default is -1, which means
                                             unlimited.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Enable Local Caching
-                                        <xref
+                                    <entry>Enable Local Caching <xref
                                             href="KuduLookup-CacheValues.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p7v_uh"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"/>
-                                </row><row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"
+                                    />
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCMaxEntriesCache">
                                     <entry/>
                                 </row>

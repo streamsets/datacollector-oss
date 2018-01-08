@@ -16,17 +16,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_eqf_dh3_x1b">
- <title>Cache Table Information</title>
- <conbody>
-        <p>By default, the processor locally caches information about each Kudu table to look up,
-            including the table name and schema. You can configure the maximum number of tables that
-            the processor caches information for. When the maximum number is reached, the processor
-            evicts the oldest values from the cache.</p>
+    <title>Cache Table Information</title>
+    <conbody>
+        <p>By default, the Kudu Lookup processor locally caches information about each Kudu table to
+            look up, including the table name and schema. </p>
+        <p>You can configure the maximum number of tables that the processor caches information for.
+            When the maximum number is reached, the processor evicts the oldest values from the
+            cache. </p>
         <p>Disable the caching of table information only when you expect the Kudu table schemas to
             change frequently. In this situation, you want the processor to fetch the updated
-            schemas from Kudu, rather than use an outdated schema in the cache.</p>
-        <p>The following image displays the properties that configure the table cache:</p>
-        <p><image href="../Graphics/KuduLookup_CacheTableInfo.png" scale="70" id="image_n41_rm3_x1b"
-            /></p>
+            schemas from Kudu, rather than use an outdated schema in the cache. </p>
+        <p>To configure the maximum number of tables that can be cached, configure the Maximum Table
+            Entries to Cache property. To disable caching Kudu tables, clear the Enable Table
+            Caching property. Both properties are on the Lookup tab of the processor.</p>
     </conbody>
 </concept>
