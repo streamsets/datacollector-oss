@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="CollapseRectangle" class="cls-1" d="M0,24V0H24V24H0ZM18,11H6v2H18V11Z"/>
+</svg>

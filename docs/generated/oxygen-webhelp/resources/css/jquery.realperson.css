@@ -1,0 +1,29 @@
+/* Real Person jQuery plugin styles v2.0.1. */
+/* 
+ * The Oxygen Webhelp plugin redistributes this file under the terms of the MIT license. 
+ */
+ 
+.realperson-challenge {
+	display: block;
+	color: #000;
+}
+.realperson-text {
+	font-family: "Courier New",monospace !important;
+	font-size: 6px;
+	font-weight: bold;
+	letter-spacing: -1px;
+	line-height: 3px;
+}
+.realperson-regen {
+	padding-top: 4px;
+	font-size: 12px;
+	text-align: center;
+	cursor: pointer;
+}
+.realperson-disabled {
+	opacity: 0.5;
+	filter: Alpha(Opacity=50);
+}
+.realperson-disabled .realperson-regen {
+	cursor: default;
+}

@@ -14,14 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ncs_5jl_wbb">
- <title>Update MongoDB Destination Upsert Pipelines</title>
- <conbody>
-  <p>With version 3.0.0.0, the MongoDB destination supports the replace and update operation codes,
-            and no longer supports the upsert operation code. You can use a new Upsert flag in
-            conjunction with Replace and Update. </p>
-        <p>After upgrading to this release, update the pipeline as needed to ensure that records
-            passed to the destination do not use the upsert operation code (sdc.operation.type = 4).
-            Records that use the upsert operation code will be sent to error. </p>
+    <title>Update MongoDB Destination Upsert Pipelines</title>
+    <conbody>
+        <p>With version 3.0.0.0, the MongoDB destination supports the replace and update operation
+            codes, and no longer supports the upsert operation code. You can use a new Upsert flag
+            in conjunction with Replace and Update. </p>
+        <p>After upgrading from a version earlier than 3.0.0.0, update the pipeline as needed to
+            ensure that records passed to the destination do not use the upsert operation code
+            (sdc.operation.type = 4). Records that use the upsert operation code will be sent to
+            error. </p>
         <p>In previous releases, records flagged for upsert were treated in the MongoDB system as
             Replace operations with the Upsert flag set. </p>
         <p>If you want to replicate the upsert behavior from earlier releases, perform the following
@@ -30,5 +31,5 @@
                         sdc.operation.type is set to 7 for Replace instead of 4 for Upsert.</p></li>
                 <li>In the MongoDB destination, enable the new Upsert property.</li>
             </ol></p>
- </conbody>
+    </conbody>
 </concept>

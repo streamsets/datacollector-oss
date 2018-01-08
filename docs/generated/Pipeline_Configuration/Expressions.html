@@ -2,11 +2,11 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Use the expression language to configure expressions and conditions in processors, such as the Expression Evaluator or Stream Selector. Some destination properties also require the expression ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Expression Configuration" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_rjh_ntz_qr" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_fjx_g31_1s" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_bs4_5nm_2s" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ofb_1cm_xq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Expression Configuration</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-          
-          var prefix = "../index.html";
-          
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Use the expression language to configure expressions and conditions in processors, such as the Expression Evaluator or Stream Selector. Some destination properties also allow the expression language, ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Expression Configuration" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_rjh_ntz_qr" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_fjx_g31_1s" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_bs4_5nm_2s" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ofb_1cm_xq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Configuration</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
 <!--
     Copyright 2017 StreamSets Inc.
 
@@ -32,14 +32,14 @@
  <div class="body conbody">
     <p class="p">Use the expression language to configure expressions and conditions in
                   processors, such as the Expression Evaluator or Stream Selector. Some destination
-                  properties also require the expression language, such as the directory template
-                  for Hadoop FS or Local FS. </p>
-<p class="p">Optionally, you can use the expression language to define any stage or
-                  pipeline property that represents a numeric or string value. This allows you to
-                  use runtime parameters or runtime properties throughout the pipeline. You can use
-                  expression completion to determine where you can use an expression and the
-                  expression elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d76627e3520">
+                  properties also allow the expression language, such as the directory template for
+                  the Hadoop FS destination. </p>
+<p class="p">You can use the expression language to define any stage or pipeline
+                  property that represents a numeric or string value. You can also use field path
+                  expressions to select the fields to use in some processors. </p>
+<p class="p">Use expression completion to determine where you can use an expression
+                  and the expression elements that you can use in that location. </p>
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d76835e3550">
                         <li class="li">Constants</li>
 
                         <li class="li">Datetime variables</li>
@@ -293,6 +293,154 @@ ${record:value("/'city&amp;state'"}</pre>
 </div>
 
   </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_ir4_rxt_3cb">
+    <h2 class="title topictitle2">Field Path Expressions</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can use field path expressions in certain processors to determine the set of
+        fields that you want the processor to use.</p>
+
+        <p class="p">For example, you want to
+            use the Field Remover processor to remove all fields that start with the same prefix.
+            Instead of manually entering each field name, you can use a field path expression to
+            specify the fields to remove.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_bs3_dm5_3cb">
+    <h3 class="title topictitle3">Supported Stages</h3>
+
+    <div class="body conbody">
+        <div class="p">You
+            can use field path expressions to specify the fields to use in the following
+                processors:<ul class="ul" id="concept_bs3_dm5_3cb__ul_l3q_fm5_3cb">
+                <li class="li">Field Hasher processor</li>
+
+                <li class="li">Field Masker processor</li>
+
+            </ul>
+<ul class="ul" id="concept_bs3_dm5_3cb__ul_w5q_3m5_3cb">
+                <li class="li">Field Remover processor</li>
+
+                <li class="li">Field Type Converter processor</li>
+
+                <li class="li">Value Replacer processor</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_nhd_5p5_3cb">
+    <h3 class="title topictitle3">Field Path Expression Syntax</h3>
+
+    <div class="body conbody">
+        <div class="p">When creating a field path expression,
+            you can use a combination of standard expression language syntax with field path
+            expression syntax. You can use the following components in field path expressions:<dl class="dl">
+                
+                    <dt class="dt dlterm">Root field and relative paths</dt>
+
+                    <dd class="dd">As with specifying any field path, begin a field path expression with a
+                        slash ( / ) to indicate the location of the fields in relation to the root
+                        field. Then, continue defining the field path as appropriate.</dd>
+
+                    <dd class="dd">For example, the following field path expression uses a wildcard to specify
+                        all fields in the record:<pre class="pre codeblock">/*</pre>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Wildcard characters</dt>
+
+                    <dd class="dd">You can use the asterisk character ( * ) and question mark character ( ? )
+                        as wildcards, as follows:<ul class="ul" id="concept_nhd_5p5_3cb__ul_jxg_ds5_3cb">
+                            <li class="li">Use the asterisk wildcard to represent one or more characters.<div class="p">For
+                                    example, to perform an action on all fields in a Stores map
+                                    field, you can use the following field path
+                                    expression:<pre class="pre codeblock">/Stores/*</pre>
+</div>
+</li>
+
+                            <li class="li">Use the question mark wildcard to represent exactly one character.
+                                    <div class="p">For example, the following expression includes all fields
+                                    that have a two-character prefix followed by an
+                                    underscore:<pre class="pre codeblock">/??_*</pre>
+</div>
+</li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Brackets for position predicates</dt>
+
+                    <dd class="dd">You can specify a field based on its position in a list field. After the
+                        name of the list field, specify the position surrounded by brackets ( [ ] ).
+                        Note that position numbering starts with 0.</dd>
+
+                    <dd class="dd">For example, the following expression calls the fourth item in a colors list
+                        field:<pre class="pre codeblock">/colors[3]</pre>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Brackets for complex expressions</dt>
+
+                    <dd class="dd">You can configure field path expressions that use functions, typically field
+                        functions, to define a specific subset of fields to return. When configuring
+                        complex expressions, surround the expression with brackets ( [ ] ), as
+                        follows:</dd>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">/*[${&lt;complex expression&gt;}]</pre>
+
+                    </dd>
+
+                    <dd class="dd">For example, the following expression returns all fields with an "info"
+                        field attribute set to any
+                        value:<pre class="pre codeblock">/*[${f:attribute('info') == '*'}]</pre>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Field functions</dt>
+
+                    <dd class="dd">Use field functions to determine the fields to use based on field-related
+                        information, such as <samp class="ph codeph">f:type</samp> for the datatype of the field,
+                            <samp class="ph codeph">f:value</samp> for the value of the field, or
+                            <samp class="ph codeph">f:attribute</samp> for an attribute or attribute value of the
+                        field.</dd>
+
+                    <dd class="dd">For example, you can use the Field Type Converter processor to convert all
+                        Integer fields with the following
+                        expression:<pre class="pre codeblock">/*[${f:type() == 'INTEGER'}]</pre>
+</dd>
+
+                    <dd class="dd">For more information about field functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field Functions</a>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Other functions</dt>
+
+                    <dd class="dd">You can use other functions, such as record, string, or time functions, as
+                        part of complex field path expressions. </dd>
+
+                    <dd class="dd">For example, the following expression defines the subset of fields where the
+                        region attribute is set to the results of the storeId
+                        field:<pre class="pre codeblock">/*[${f:attribute('storeId') == record:value('/storeId')}]</pre>
+</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
 
 </div>
 </div>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="ExpandRectangle" class="cls-1" d="M0,24V0H24V24H0ZM18,11H13V6H11v5H6v2h5v5h2V13h5V11Z"/>
+</svg>

@@ -1,7 +1,7 @@
 /*
 
 Oxygen WebHelp Plugin
-Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 /**
@@ -41,7 +41,7 @@ $(document).ready(function () {
     /**
      * @description Action to take on iframe unload
      */
-    $('#frm').on('unload', function (ev) {
+    $('#frm').unload(function (ev) {
         ev.preventDefault();
         return false;
     });
@@ -72,7 +72,7 @@ $(document).ready(function () {
             loadSearchResources();
         } catch (e) {
             if ( $('#loadingError').length < 1 ) {
-                $('#searchResults').prepend('<span id="loadingError">' + e.message + '</span>');
+                $('#searchResults').prepend('<span id="loadingError">' + e + '</span>');
             }
             $('#search').trigger( 'click' );
         }
@@ -86,7 +86,7 @@ $(document).ready(function () {
             newLink = $(this).attr("href") + "?q=" + currentLink.relative;
             $(this).attr("href", newLink);
         } catch (e) {
-            error(e);
+            debug(e);
         }
     });
 });
@@ -96,7 +96,7 @@ $(document).ready(function () {
  */
 function loadSearchResources() {
     if (typeof window.indexerLanguage == 'undefined') {
-        var scripts = ["oxygen-webhelp/search/htmlFileInfoList.js?uniqueId=20171226114841", "oxygen-webhelp/search/index-1.js?uniqueId=20171226114841", "oxygen-webhelp/search/index-2.js?uniqueId=20171226114841", "oxygen-webhelp/search/index-3.js?uniqueId=20171226114841"];
+        var scripts = ["oxygen-webhelp/search/htmlFileInfoList.js", "oxygen-webhelp/search/index-1.js", "oxygen-webhelp/search/index-2.js", "oxygen-webhelp/search/index-3.js", "oxygen-webhelp/search/htmlFileList.js"];
         for (var entry in scripts) {
             var scriptTag = document.createElement("script");
             scriptTag.type = "text/javascript";
@@ -113,6 +113,7 @@ function loadSearchResources() {
  */
 function printFrame(id) {
     var frm = document.getElementById(id).contentWindow;
+    frm.focus();// focus on contentWindow is needed on some ie versions
     frm.print();
     return false;
 }
@@ -149,28 +150,6 @@ function showDivs() {
 }
 
 /**
- * @description Check if an URL is available or not
- * @param pageUrl - URL to be checked
- * @returns {boolean} true if page is available
- *                    false if page is not available
- */
-function isPageAvailable(pageUrl){
-    debug("isPageAvailable(" + pageUrl + ")");
-    var toReturn = true;
-    var request = new XMLHttpRequest();
-    request.open('HEAD', pageUrl, false);
-    request.onload = function(){
-        if(request.status === 404 || request.status === 403){
-            debug(pageUrl + " does not exists!");
-            toReturn = false;
-        }
-    };
-    request.send();
-
-    return toReturn;
-}
-
-/**
  * @description Load dynamicURL to iFrame
  * @param dynamicURL - URL to be loaded
  */
@@ -186,8 +165,7 @@ function loadIframe(dynamicURL) {
             return false;
         }
     } catch (e) {
-        error(e);
-        return false;
+        debug(e);
     }
 
     if (dynamicURL.indexOf("#") > 0) {
@@ -203,14 +181,8 @@ function loadIframe(dynamicURL) {
         tempLink = tempLinks[tempLinks.length-1];
     }
     if (tempLink.indexOf('.') != -1 && tempLink.indexOf('.htm') === -1 && tempLink.indexOf('.xhtm') === -1) {
-        tempLink = whUrl + encodeURI(decodeURI(tempLink));
-
-        if (isPageAvailable(tempLink)) {
-        	debug('open in new window: ' + tempLink);
-        	window.open(tempLink, '_blank');
-        } else {
-            debug("Page doesn't exist in current WebHelp output!");
-        }
+        debug('open in new window: ' + tempLink);
+        window.open(tempLink, '_blank');
         return;
     }
 
@@ -234,7 +206,7 @@ function loadIframe(dynamicURL) {
     iframeHeader.style.display = 'none';
     iframeHeaderCell.appendChild(iframeHeader);
 
-    $('#frm').on('load', function () {
+    $('#frm').load(function () {
         setTimeout(function(){
             tocWidth = parseInt($('#tocMenu').css('width'));
             navLinksWidth = parseInt($('#navigationLinks').css('width'));
@@ -248,15 +220,11 @@ function loadIframe(dynamicURL) {
             try {
                 $("title").html($("title").attr("title") + " - " + $("#frm").contents().find("title").html());
             } catch (e) {
-                error(e);
+                debug(e);
             }
 
             // EXM-31118 Rewrite anchors relative to current loaded frame to contain frame link
-            try {
-                var links = $('#frm').contents().find('a');
-            } catch (e) {
-                error(e);
-            }
+            var links = $('#frm').contents().find('a');
             var currentLocation = $('#frm').attr('src');
             if(currentLocation.indexOf('#')>0) {
                 currentLocation = currentLocation.substring(0, currentLocation.indexOf('#'));
@@ -323,7 +291,14 @@ function loadIframe(dynamicURL) {
                 } else {
                     $('#frm').contents().find("table.nav").find("tr:first-child").hide();
                 }
-
+                /**
+                 * Nu mai ascundem toc-ul - ii scadem relevanta din indexer
+                 * EXM-25565
+                 */
+                //$('#frm').contents().find('.toc').hide();
+                if (navigator.appVersion.indexOf("MSIE 7.") == -1) {
+                 $('#breadcrumbLinks').html($('#frm').contents().find('span.topic_breadcrumb_links'));
+                }
                 // normalize links
                 $('#breadcrumbLinks a, #navigationLinks a').each(function () {
                     var oldLink = $(this).attr('href');
@@ -341,12 +316,17 @@ function loadIframe(dynamicURL) {
 
                 }
             } catch (e) {
-                error(e);
+                debug(e);
             }
         }
         $('#frm').show();
         $('div.tooltip').remove();
         
+        /* Recompute the breadcrumb by looking at the selection in the TOC... */
+        recomputeBreadcrumb(-1);
+        
+        $('#breadcrumbLinks').find('a').after('<span></span>');
+        $('#breadcrumbLinks').find('span').last().html('&nbsp;&nbsp;');
         $('.navparent a').click(function () {
             if ($.cookie("wh_pn") != "" && $.cookie("wh_pn") !== undefined && $.cookie("wh_pn") !== null) {
                 currentTOCSelection = parseInt($.cookie("wh_pn"));
@@ -381,9 +361,10 @@ function loadIframe(dynamicURL) {
         highlightSearchTerm(searchedWords);
 
         // Click on navigation links without text
-	    $('.navparent,.navprev,.navnext').unbind('click').bind('click', function(ev){
-	        $(this).find('a').trigger(ev);
+	    $('.navparent,.navprev,.navnext').unbind('click').bind('click', function(){
+	        $(this).find('a').trigger('click');
 	    });
+
 
         scrollToVisibleItem();
     });
@@ -398,23 +379,20 @@ function recomputeBreadcrumb(breadcrumbLevels) {
     if (breadcrumbLevels==undefined) {
         breadcrumbLevels = -1;
     }
-    var selectedTocItem = parseInt($.cookie("wh_pn"));
-    var $breadcrumbLinks = $('#breadcrumbLinks');
-
     /*Most of the times we'll try to compute the link starting from the TOC selection...*/
-    if (selectedTocItem != null && selectedTocItem != 'none') {
-        var selectedLi = $('#contentBlock li:eq(' + selectedTocItem + ')');
+    if (currentTOCSelection != null && currentTOCSelection != 'none') {
+        var selectedLi = $('#contentBlock li:eq(' + currentTOCSelection + ')');
         var parentLis = selectedLi.parents("#contentBlock li");
         if (parentLis.length > 0) {
             // Keep title attributes from old breadcrumbs
-            var oldBreadcrumbs = $breadcrumbLinks.clone();
+            var oldBreadcrumbs = $('#breadcrumbLinks').clone();
             var titles = [];
             $.each(oldBreadcrumbs.find('.topic_breadcrumb_link > .navheader_parent_path'), function(){
                 titles[$(this).attr('href')] = $(this).attr('title');
             });
 
             // Remove all children
-            $breadcrumbLinks.empty();
+            $('#breadcrumbLinks').empty();
 
             // Decide how many breadcrumbs to show
             var i = parentLis.length - 1;
@@ -444,12 +422,9 @@ function recomputeBreadcrumb(breadcrumbLevels) {
                             firstAHref.attr('title', titles[cleanHref]);
                         }
                     }
-                    $breadcrumbLinks.append(span);
+                    $('#breadcrumbLinks').append(span);
                 }
             }
-        } else {
-            // Remove all children
-            $breadcrumbLinks.empty();
         }
     }
 }
@@ -539,12 +514,6 @@ function markSelectItem(hrl, startWithMatch) {
     debug('markSelectItem(...) =' + toReturn);
     $('#contentBlock .menuItemSelected').parent('li').first().css('background-color', $('#contentBlock .menuItemSelected').css('background-color'));
 
-    /* Recompute the breadcrumb by looking at the selection in the TOC... */
-    recomputeBreadcrumb(-1);
-
-    $('#breadcrumbLinks').find('a').after('<span></span>');
-    $('#breadcrumbLinks').find('span').last().html('&nbsp;&nbsp;');
-
     return toReturn;
 }
 
@@ -606,7 +575,6 @@ function load(link) {
         hr="3";
         }
          */
-        hr = hr.replace(/%23/g,'#').replace(/%2F/ig,'/')
         debug(' link @ hash : ' + hr);
         var hrl = hr;
         if (hr.indexOf("#") > 0) {
@@ -723,7 +691,7 @@ $(function () {
         try {
             var textAreaContent = $("#frm").contents().find(".cleditorMain").find("iframe").contents().find("body").html();
         } catch (e) {
-            error(e);
+            debug(e);
         }
 
         if(textAreaContent!='' && textAreaContent!==undefined && $("#frm").contents().find("#newComment").is(":visible") && currentHref!=newHref) {
