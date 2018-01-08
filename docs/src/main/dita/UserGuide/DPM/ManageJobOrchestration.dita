@@ -18,17 +18,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_inh_ccs_bx">
- <title>Manage the Orchestration of Jobs</title>
- <shortdesc>In <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
-        pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
-        engineers design pipelines with the <ph
+ <title>Execute Jobs at Scale</title>
+ <shortdesc>Pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
+        engineers build pipelines with the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PDesigner"/> or a
         development <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
         DevOps or site reliability engineers run jobs on groups of execution <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        />s.</shortdesc>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s or
+            <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+        />.</shortdesc>
  <conbody>
         <p>
             <draft-comment author="alisontaylor">text copied from same topic in Control Hub User
@@ -46,19 +47,28 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s -
             either manually administered or automatically provisioned - function in the same
             way.</p>
+        <p>If your organization runs dataflows on edge devices, you also register and manually
+            administer execution <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+            /> with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
         <p>You create <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             jobs to run pipelines on groups of execution <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.
-            When you start a job on a group of <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
-                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-            remotely runs the pipeline on the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
-            in the group. This enables you to manage and orchestrate large scale dataflows run
-            across multiple <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />s.</p>
+            or <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+            />. When you start a job on a group of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            or <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+            />, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            remotely runs the pipeline on each execution component in the group. This enables you to
+            manage and orchestrate large scale dataflows run across multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
+            or <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long-Plural"
+            />.</p>
         <p>You might organize jobs by project, geographic region, or department. For example, your
             data engineer has developed and published the WebLog Collection pipeline and the EDW
             Replication Flows pipeline. In your data center, you designate <ph
