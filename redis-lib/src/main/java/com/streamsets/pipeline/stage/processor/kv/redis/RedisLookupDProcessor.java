@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.processor.kv.redis;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
@@ -31,6 +32,9 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@HideConfigs(
+  "conf.cache.retryOnCacheMiss"
+)
 public class RedisLookupDProcessor extends DProcessor {
 
   @ConfigDefBean(groups = {"LOOKUP", "REDIS"})

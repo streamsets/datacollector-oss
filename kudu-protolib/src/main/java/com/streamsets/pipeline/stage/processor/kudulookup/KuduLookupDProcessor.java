@@ -30,6 +30,9 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@HideConfigs(
+  "conf.cache.retryOnCacheMiss"
+)
 public class KuduLookupDProcessor extends DProcessor {
   @ConfigDefBean(groups = {"LOOKUP", "KUDU"})
   public KuduLookupConfig conf;

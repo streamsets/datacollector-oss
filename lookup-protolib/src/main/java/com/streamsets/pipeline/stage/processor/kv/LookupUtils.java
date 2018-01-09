@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 public class LookupUtils {
   private static final Logger LOG = LoggerFactory.getLogger(LookupUtils.class);
@@ -33,14 +34,35 @@ public class LookupUtils {
 
   @NotNull
   @SuppressWarnings("unchecked")
-  public static LoadingCache buildCache(CacheLoader store, CacheConfig conf) {
-    CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-    if (!conf.enabled) {
-      return cacheBuilder.maximumSize(0)
-          .build(store);
+  public static<Key, Value> LoadingCache<Key, Value> buildCache(CacheLoader<Key, Value> cacheLoader, CacheConfig conf) {
+    if(conf.retryOnCacheMiss) {
+      throw new IllegalArgumentException("This stage does not support retry on cache miss feature.");
     }
 
-    if(conf.maxSize == -1) {
+    return createBuilder(conf).build(cacheLoader);
+  }
+
+  @NotNull
+  @SuppressWarnings("unchecked")
+  public static<Key, Value> LoadingCache<Key, Optional<Value>> buildCache(
+    CacheLoader<Key, Optional<Value>> cacheLoader,
+    CacheConfig conf,
+    Optional<Value> defaultValue
+  ) {
+    return new OptionalLoadingCache(
+      !conf.retryOnCacheMiss,
+      createBuilder(conf).build(cacheLoader),
+      defaultValue
+    );
+  }
+
+  private static CacheBuilder createBuilder(CacheConfig conf) {
+    CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
+
+    if(!conf.enabled) {
+      // If cache is disabled, simply set size to zero
+      conf.maxSize = 0;
+    } else if(conf.maxSize == -1) {
       conf.maxSize = Long.MAX_VALUE;
     }
 
@@ -61,16 +83,21 @@ public class LookupUtils {
     // CacheBuilder doesn't support specifying type thus suffers from erasure, so
     // we build it with this if / else logic.
     if (conf.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_ACCESS) {
-      cacheBuilder.maximumSize(conf.maxSize)
-          .expireAfterAccess(conf.expirationTime, conf.timeUnit);
+      cacheBuilder
+          .maximumSize(conf.maxSize)
+          .expireAfterAccess(conf.expirationTime, conf.timeUnit)
+      ;
     } else if (conf.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_WRITE) {
-      cacheBuilder.maximumSize(conf.maxSize)
-          .expireAfterWrite(conf.expirationTime, conf.timeUnit);
+      cacheBuilder
+          .maximumSize(conf.maxSize)
+          .expireAfterWrite(conf.expirationTime, conf.timeUnit)
+      ;
     } else {
       throw new IllegalArgumentException(
           Utils.format("Unrecognized EvictionPolicyType: '{}'", conf.evictionPolicyType)
       );
     }
-    return cacheBuilder.build(store);
+
+    return cacheBuilder;
   }
 }

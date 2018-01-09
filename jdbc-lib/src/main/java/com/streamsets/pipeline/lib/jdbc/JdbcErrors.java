@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.jdbc;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.stage.processor.jdbclookup.JdbcLookupLoader;
+import com.streamsets.pipeline.stage.processor.jdbclookup.JdbcLookupProcessor;
 
 @GenerateResourceBundle
 public enum JdbcErrors implements ErrorCode {
@@ -78,8 +79,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_52("Error starting LogMiner"),
   JDBC_53("Since the default value of '{}' is not empty, its data type cannot be '" + DataType.USE_COLUMN_TYPE.getLabel() + "'."),
   JDBC_54("Column: '{}' does not exist in table: '{}'. This is likely due to a DDL being performed on this table"),
-  JDBC_55("The default value of '{}' must be in the format '" + JdbcLookupLoader.DATE_FORMAT + "': {}"),
-  JDBC_56("The default value of '{}' must be in the format '" + JdbcLookupLoader.DATETIME_FORMAT + "': {}"),
+  JDBC_55("The default value of '{}' must be in the format '" + JdbcLookupProcessor.DATE_FORMAT + "': {}"),
+  JDBC_56("The default value of '{}' must be in the format '" + JdbcLookupProcessor.DATETIME_FORMAT + "': {}"),
   JDBC_57("Unsupported Multi-Row Operation to SQL Server"),
 
   JDBC_60("Cannot Serialize Offset: {}"),

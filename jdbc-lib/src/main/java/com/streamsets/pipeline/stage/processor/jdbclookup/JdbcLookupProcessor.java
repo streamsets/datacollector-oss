@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
@@ -43,18 +44,26 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.closeQuietly;
 
 public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcLookupProcessor.class);
+
+  public static final String DATE_FORMAT = "yyyy/MM/dd";
+  public static final String DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
+  static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_FORMAT);
+  static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern(DATETIME_FORMAT);
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
@@ -76,7 +85,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private Map<String, String> columnsToDefaults = new HashMap<>();
   private Map<String, DataType> columnsToTypes = new HashMap<>();
 
-  private LoadingCache<String, List<Map<String, Field>>> cache;
+  private LoadingCache<String, Optional<List<Map<String, Field>>>> cache;
+  private Optional<List<Map<String, Field>>> defaultValue;
   private CacheCleaner cacheCleaner;
   private final MissingValuesBehavior missingValuesBehavior;
 
@@ -121,6 +131,19 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    if(issues.isEmpty()) {
+      this.defaultValue = calculateDefault(context, issues);
+    }
+
+    if (issues.isEmpty()) {
+      cache = buildCache();
+      cacheCleaner = new CacheCleaner(cache, "JdbcLookupProcessor", 10 * 60 * 1000);
+    }
+    // If issues is not empty, the UI will inform the user of each configuration issue in the list.
+    return issues;
+  }
+
+  private Optional<List<Map<String, Field>>> calculateDefault(Processor.Context context, List<ConfigIssue> issues) {
     for (JdbcFieldColumnMapping mapping : columnMappings) {
       LOG.debug("Mapping field {} to column {}", mapping.field, mapping.columnName);
       columnsToFields.put(mapping.columnName, mapping.field);
@@ -131,7 +154,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       columnsToTypes.put(mapping.columnName, mapping.dataType);
       if (mapping.dataType == DataType.DATE) {
         try {
-          JdbcLookupLoader.DATE_FORMATTER.parseDateTime(mapping.defaultValue);
+          DATE_FORMATTER.parseDateTime(mapping.defaultValue);
         } catch (IllegalArgumentException e) {
           issues.add(context.createConfigIssue(
               Groups.JDBC.name(),
@@ -143,7 +166,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
         }
       } else if (mapping.dataType == DataType.DATETIME) {
         try {
-          JdbcLookupLoader.DATETIME_FORMATTER.parseDateTime(mapping.defaultValue);
+          DATETIME_FORMATTER.parseDateTime(mapping.defaultValue);
         } catch (IllegalArgumentException e) {
           issues.add(context.createConfigIssue(
               Groups.JDBC.name(),
@@ -156,13 +179,40 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if (issues.isEmpty()) {
-      cache = buildCache();
-
-      cacheCleaner = new CacheCleaner(cache, "JdbcLookupProcessor", 10 * 60 * 1000);
+    if(!issues.isEmpty()) {
+      return Optional.empty();
     }
-    // If issues is not empty, the UI will inform the user of each configuration issue in the list.
-    return issues;
+
+    Map<String, Field> defaultValues = new HashMap<>();
+
+    for (String column : columnsToFields.keySet()) {
+      String defaultValue = columnsToDefaults.get(column);
+      DataType dataType = columnsToTypes.get(column);
+      if (dataType != DataType.USE_COLUMN_TYPE) {
+        Field field;
+        try {
+          if (dataType == DataType.DATE) {
+            field = Field.createDate(DATE_FORMATTER.parseDateTime(defaultValue).toDate());
+          } else if (dataType == DataType.DATETIME) {
+            field = Field.createDatetime(DATETIME_FORMATTER.parseDateTime(defaultValue).toDate());
+          } else {
+            field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
+          }
+          defaultValues.put(column, field);
+        } catch (IllegalArgumentException e) {
+          issues.add(context.createConfigIssue(
+            Groups.JDBC.name(),
+            COLUMN_MAPPINGS,
+            JdbcErrors.JDBC_03,
+            column,
+            defaultValue,
+            e
+          ));
+        }
+      }
+    }
+
+    return defaultValues.isEmpty() ? Optional.empty() : Optional.of(ImmutableList.of(defaultValues));
   }
 
   /** {@inheritDoc} */
@@ -188,9 +238,9 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
       String preparedQuery = queryEval.eval(elVars, query, String.class);
-      List<Map<String, Field>> values = cache.get(preparedQuery);
+      Optional<List<Map<String, Field>>> entry = cache.get(preparedQuery);
 
-      if (values.isEmpty()) {
+      if (!entry.isPresent()) {
         // No results
         switch (missingValuesBehavior) {
           case SEND_TO_ERROR:
@@ -204,6 +254,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
             throw new IllegalStateException("Unknown missing value behavior: " + missingValuesBehavior);
         }
       } else {
+        List<Map<String, Field>> values = entry.get();
         switch (multipleValuesBehavior) {
           case FIRST_ONLY:
             setFieldsInRecord(record, values.get(0));
@@ -264,17 +315,15 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   }
 
   @SuppressWarnings("unchecked")
-  private LoadingCache<String, List<Map<String, Field>>> buildCache() {
+  private LoadingCache<String, Optional<List<Map<String, Field>>>> buildCache() {
     JdbcLookupLoader loader = new JdbcLookupLoader(
       getContext(),
       dataSource,
-      columnsToFields,
-      columnsToDefaults,
       columnsToTypes,
       maxClobSize,
       maxBlobSize,
       errorRecordHandler
     );
-    return LookupUtils.buildCache(loader, cacheConfig);
+    return LookupUtils.buildCache(loader, cacheConfig, defaultValue);
   }
 }

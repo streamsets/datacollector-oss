@@ -70,7 +70,7 @@ public class CacheConfig {
       displayPosition = 130,
       group = "#0"
   )
-  public long expirationTime;
+  public long expirationTime = 1;
 
   @ConfigDef(
       required = true,
@@ -83,5 +83,18 @@ public class CacheConfig {
       group = "#0"
   )
   @ValueChooserModel(TimeUnitChooserValues.class)
-  public TimeUnit timeUnit;
+  public TimeUnit timeUnit = TimeUnit.SECONDS;
+
+    @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Retry on Cache Miss",
+      description = "By default, the cache 'remembers' that look up for given key failed and always returns default" +
+        " value. This is to avoid doing un-necessary look ups for known missing values. Select this option if new" +
+        " values can be inserted later on and the cache should retry the request rather than returning the cached" +
+        " default value.",
+      displayPosition = 150,
+      group = "#0"
+  )
+  public boolean retryOnCacheMiss = false;
 }
