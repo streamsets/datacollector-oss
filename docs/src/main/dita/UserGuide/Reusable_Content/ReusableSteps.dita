@@ -732,8 +732,8 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Message type: <ul
+                                    <entry>Datagram Packet Format</entry>
+                                    <entry>Packet format of the data: <ul
                                             conref="#task_kzs_5vz_sq/ul-UDPDataFormat"
                                             id="ul_q1q_yp4_4x">
                                             <li/>
