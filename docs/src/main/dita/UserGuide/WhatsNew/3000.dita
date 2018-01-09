@@ -234,9 +234,12 @@
                             <li>Hive Metadata processor enhancement - You can now configure
                                 additional JDBC configuration properties to pass to the JDBC
                                 driver.</li>
-                            <li>HTTP Client processor enhancement - The Rate Limit now defines the
-                                maximum number of requests to make per millisecond. Previously, it
-                                defined the maximum number of requests per second.</li>
+                            <li><xref
+                                    href="../Processors/HTTPClient-Configuring.dita#task_z54_1qr_fw"
+                                    >HTTP Client processor enhancement</xref> - The Rate Limit now
+                                defines the maximum number of requests to make per millisecond.
+                                Previously, it defined the maximum number of requests per second.
+                                Upgraded pipelines require no changes.</li>
                             <li><xref
                                     href="../Processors/JDBCLookup-Configuring.dita#task_kbr_2cy_hw"
                                     >JDBC Lookup</xref> and <xref
