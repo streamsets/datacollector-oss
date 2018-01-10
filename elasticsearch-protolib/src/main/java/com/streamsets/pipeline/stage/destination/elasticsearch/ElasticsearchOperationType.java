@@ -25,6 +25,7 @@ public enum ElasticsearchOperationType implements Label {
   CREATE(OperationType.INSERT_CODE),
   UPDATE(OperationType.UPDATE_CODE),
   DELETE(OperationType.DELETE_CODE),
+  MERGE(OperationType.MERGE_CODE)
   ;
 
   final int code;
@@ -45,6 +46,8 @@ public enum ElasticsearchOperationType implements Label {
         return "UPDATE";
       case OperationType.DELETE_CODE:
         return "DELETE";
+      case OperationType.MERGE_CODE:
+        return "MERGE";
       default:
         return null;
     }

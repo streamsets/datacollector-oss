@@ -632,4 +632,67 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     }
   }
 
+  @Test
+  public void testMergeRecords() throws Exception {
+    // Use the index field as document ID.
+    Target target = createTarget(
+            "${time:now()}",
+            "${record:value('/index')}",
+            "docId",
+            ElasticsearchOperationType.MERGE,
+            "",
+            ""
+    );
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    try {
+      runner.runInit();
+      List<Record> records = new ArrayList<>();
+      Record record1 = RecordCreator.create();
+      record1.set(Field.create(ImmutableMap.of("a", Field.create("Old"), // field to be changed
+              "nested", Field.create(ImmutableMap.of("one", Field.create("uno"), // nested unchanged
+                      "two", Field.create("dos"),      // nested changed
+                      "three", Field.create("tres"))), // nested left alone
+              "existing", Field.create("not touched"), // left alone
+              "index", Field.create("j"), "type", Field.create("t")))); // index and mapping
+      Record record2 = RecordCreator.create();
+      record2.set(Field.create(ImmutableMap.of("a", Field.create("New"), // field changed
+              "nested", Field.create(ImmutableMap.of("one", Field.create("uno"), // nested unchanged
+                      "two", Field.create("duo"),          // nested changed
+                      "four", Field.create("quattour"))),  // nested new field added
+              "new", Field.create("fresh"),                // new field added
+              "index", Field.create("j"), "type", Field.create("t")))); // index and mapping
+      records.add(record1);
+      records.add(record2);
+      runner.runWrite(records);
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+
+      prepareElasticSearchServerForQueries();
+
+      // Second record must be merged into first record: "New" replaces "Old", etc.
+      Map expected = ImmutableMap.builder().put("a", "New")  // field changed
+              .put("existing", "not touched") // untouched fields left alone
+              .put("nested", ImmutableMap.of( // can merge nested fields as well
+                 "one", "uno",                // nested and unchanged
+                 "two", "duo",                // nested and changed
+                 "three", "tres",             // nested and left alone
+                 "four", "quattour"           // nested new field added
+              ))
+              .put("new", "fresh")            // new field added
+              .put("index", "j")
+              .put("type", "t").build();
+
+      SearchResponse response = esServer.client().prepareSearch("j").setTypes("t")
+              .setSearchType(SearchType.DEFAULT).execute().actionGet();
+      SearchHit[] hits = response.getHits().getHits();
+      Assert.assertEquals(1, hits.length);
+      Map got = hits[0].getSource();
+
+      Assert.assertEquals(expected, got);
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

@@ -30,6 +30,7 @@ public class OperationType {
   public static final int UNSUPPORTED_CODE = 5;
   public static final int UNDELETE_CODE = 6;
   public static final int REPLACE_CODE = 7;
+  public static final int MERGE_CODE = 8;
 
   private static final BiMap<Integer, String> CODE_LABEL = new ImmutableBiMap.Builder<Integer, String>()
       .put(INSERT_CODE, "INSERT")
@@ -39,6 +40,7 @@ public class OperationType {
       .put(UNSUPPORTED_CODE, "UNSUPPORTED")
       .put(UNDELETE_CODE, "UNDELETE")
       .put(REPLACE_CODE, "REPLACE")
+      .put(MERGE_CODE, "MERGE")
       .build();
 
   private static final ImmutableMap<String, Integer> LABEL_CODE = new ImmutableMap.Builder<String, Integer>()
@@ -49,6 +51,7 @@ public class OperationType {
       .put("UNSUPPORTED", UNSUPPORTED_CODE)
       .put("UNDELETE", UNDELETE_CODE)
       .put("REPLACE", REPLACE_CODE)
+      .put("MERGE", MERGE_CODE)
       .build();
 
 

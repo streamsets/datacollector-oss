@@ -376,6 +376,10 @@ public class ElasticsearchTarget extends BaseTarget {
         getOperationMetadata("update", index, type, id, parent, routing, op);
         op.append(String.format("{\"doc\":%s}%n", record));
         break;
+      case OperationType.MERGE_CODE:
+        getOperationMetadata("update", index, type, id, parent, routing, op);
+        op.append(String.format("{\"doc_as_upsert\": \"true\", \"doc\":%s}%n", record));
+        break;
       case OperationType.DELETE_CODE:
         getOperationMetadata("delete", index, type, id, parent, routing, op);
         break;
