@@ -20,16 +20,16 @@
 <concept id="concept_fb2_qmn_bz">
  <title>Install Additional Stage Libraries</title>
  <conbody>
-        <p>Install additional stage libraries to use stages that are not included in the core
-            installation of <ph
+        <p>Install additional stage libraries to use stages that are not included in the core RPM or
+            core tarball installation of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             This is an optional step, but generally you'll want to install additional stage
-            libraries to process data after completing a core installation. When necessary, you can
-            also install legacy stage libraries.</p>
-        <note type="important">You must perform additional steps to install the MapR stage libraries, as described in
-                <xref href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note>
+            libraries to process data after completing a core installation. </p>
         <p>For a complete list of the stages installed with each stage library, see <xref
                 href="AvailableStageLibraries.dita"/>.</p>
+        <note type="important">You must perform additional steps to install the MapR stage
+            libraries, as described in <xref href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"
+            />.</note>
         <p>You can install additional RPM stage libraries using the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             command line program.</p>
@@ -38,5 +38,10 @@
             using the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             command line program.</p>
+        <note>An installation with Cloudera Manager includes all available stage libraries. As a
+            result, you cannot use the Package Manager or the command line program to install or
+            uninstall additional stage libraries in a Cloudera Manager installation.</note>
+        <p>When necessary, you can also install legacy stage libraries for all installation
+            types.</p>
  </conbody>
 </concept>

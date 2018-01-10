@@ -22,7 +22,7 @@
  <conbody>
   <p><indexterm>core RPM install<indexterm>installing additional
             libraries</indexterm></indexterm>Use the following commands to install additional stage
-            libraries for an RPM installation:</p>
+            libraries for a core RPM installation:</p>
         <dl>
             <dlentry>
                 <dt>To install one or more stage libraries:</dt>
