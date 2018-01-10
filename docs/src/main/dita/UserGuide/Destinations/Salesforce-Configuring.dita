@@ -104,20 +104,23 @@
                                 </row>
                                 <row>
                                     <entry>External ID Field</entry>
-                                    <entry>External ID field to use for upsert operations.</entry>
+                                    <entry>External ID field in the Salesforce object to use for
+                                        upsert operations. <p>Enter the Salesforce field name, for
+                                            example <codeph>Customer_Id__c</codeph>. Or enter an
+                                            expression that defines the field, such as
+                                                <codeph>${record:value('/ExternalIdField')}</codeph>.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Field Mapping</entry>
+                                    <entry>Field Mapping <xref
+                                            href="../Destinations/Salesforce-FieldMappings.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r1f_gkg_h6"/>
+                                        </xref></entry>
                                     <entry>Map fields in the record to existing fields in the
-                                        Salesforce object. Enter the following:<ul
-                                            id="ul_zgb_wlw_tw">
-                                            <li>SDC Field - Name of the field in the record that
-                                                contains the data to be written. </li>
-                                            <li>Salesforce Field - API name of the existing field in
-                                                the Salesforce object that receives the data. Enter
-                                                a field name or enter an expression that defines the
-                                                field. </li>
-                                        </ul><p>Using <xref
+                                        Salesforce object. <xref
+                                            href="Salesforce-FieldMappings.dita#concept_xql_wbj_mcb"
+                                            >Map the fields</xref> as required by the CRUD operation
+                                        that the destination uses. <p>Using <xref
                                                 href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
                                                 >simple or bulk edit mode</xref>, click the
                                                 <uicontrol>Add</uicontrol> icon to create additional

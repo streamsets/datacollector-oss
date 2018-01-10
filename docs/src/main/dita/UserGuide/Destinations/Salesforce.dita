@@ -24,14 +24,15 @@
   <p><indexterm>Salesforce
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Salesforce</indexterm></indexterm>When
             you configure the Salesforce destination, you define connection information, including
-            the API type and version that the destination uses to connect to Salesforce. </p>
-        <p>You specify the Salesforce object to write to by entering the object name or by defining
-            an expression that evaluates to the object name. You also map incoming fields in the
-            record to existing fields in the Salesforce object.</p>
+            the API type and version that the destination uses to connect to Salesforce. You specify
+            the Salesforce object to write to by entering the object name or by defining an
+            expression that evaluates to the object name. </p>
         <p>The Salesforce destination <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"
                 /><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"
             /></p>
+        <p>You also map incoming fields in the record to existing fields in the Salesforce object.
+            Map the fields as required by the CRUD operation that the destination uses.</p>
         <p>You can optionally use an HTTP proxy to connect to Salesforce.</p>
  </conbody>
 </concept>
