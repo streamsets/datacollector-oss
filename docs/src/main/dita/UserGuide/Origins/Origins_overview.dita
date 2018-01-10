@@ -18,19 +18,19 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hpr_twm_jq">
- <title>Origins</title>
- <shortdesc>An origin stage represents the source for the pipeline. You can use a single origin
+  <title>Origins</title>
+  <shortdesc>An origin stage represents the source for the pipeline. You can use a single origin
     stage in a pipeline.</shortdesc>
- <conbody>
-  <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use different origins
+  <conbody>
+    <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use different origins
       based on the execution mode of the pipeline. </p>
     <p>In standalone pipelines, you can use the following origins: <ul id="ul_mxz_jxm_jq">
         <li><xref href="AmazonS3.dita#concept_kvs_3hh_ht">Amazon S3</xref> - Reads objects from
           Amazon S3.</li>
         <li><xref href="AmazonSQS.dita#concept_xsh_knm_5bb">Amazon SQS Consumer</xref> - Reads data
           from queues in Amazon Simple Queue Services (SQS). </li>
-        <li><xref href="AzureEventHub.dita#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</xref> -
-          Reads data from Microsoft Azure Event Hub. Creates multiple threads to enable parallel
+        <li><xref href="AzureEventHub.dita#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</xref>
+          - Reads data from Microsoft Azure Event Hub. Creates multiple threads to enable parallel
           processing in a multithreaded pipeline.</li>
         <li><xref href="CoAPServer.dita#concept_wfy_ghn_sz">CoAP Server</xref> - Listens on a CoAP
           endpoint and processes the contents of all authorized CoAP requests. Creates multiple
@@ -72,7 +72,7 @@
         <li><xref href="KinConsumer.dita#concept_anh_4y3_yr">Kinesis Consumer</xref> - Reads data
           from Kinesis Streams. Creates multiple threads to enable parallel processing in a
           multithreaded pipeline.</li>
-        <li><xref href="MapRdbCDC.dita#concept_qwj_5vm_pbb">MapR DB CDC</xref> - Reads  changed MapR
+        <li><xref href="MapRdbCDC.dita#concept_qwj_5vm_pbb">MapR DB CDC</xref> - Reads changed MapR
           DB data that has been written to MapR Streams. Creates multiple threads to enable parallel
           processing in a multithreaded pipeline.</li>
         <li><xref href="MapRDBJSON.dita#concept_ywh_k15_3y"/> - Reads JSON documents from MapR DB
@@ -163,8 +163,9 @@
         <li>Dev Random Source</li>
         <li>Dev Raw Data Source </li>
         <li>Dev SDC RPC with Buffering</li>
+        <li>Sensor Reader</li>
       </ul></p>
     <p>For more information, see <xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
       />.</p>
- </conbody>
+  </conbody>
 </concept>

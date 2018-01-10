@@ -97,6 +97,11 @@
                                     Windows Event Log origin</xref> - An origin that reads data from
                                 Microsoft Windows event logs. You can use this origin only in
                                 pipelines configured for edge execution mode.</li>
+                            <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+                                    >New Sensor Reader development origin</xref> - A development
+                                origin that generates sample atmospheric data for <xref
+                                    href="../Edge_Mode/EdgePipelines_Overview.dita#concept_d4h_kkq_4bb"
+                                    >edge pipelines</xref>.</li>
                             <li>Amazon S3 origin enhancements:<ul id="ul_gxg_dbl_wbb">
                                     <li>The origin now produces <xref
                                             href="../Origins/AmazonS3-EventGeneration.dita#concept_vtn_ty4_jbb"
@@ -391,7 +396,8 @@
                         disable the automatic restart of pipelines by <xref
                             href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r/table_k1y_drr_bx"
                             >configuring the <codeph>runner.boot.pipeline.restart</codeph>
-                            property</xref> in the <codeph>$SDC_CONF/sdc.properties</codeph> file. </dd>
+                            property</xref> in the <codeph>$SDC_CONF/sdc.properties</codeph> file.
+                    </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Dataflow Performance Manager / <ph

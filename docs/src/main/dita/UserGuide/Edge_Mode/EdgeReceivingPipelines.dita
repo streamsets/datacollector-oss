@@ -55,12 +55,21 @@
                             <entry>Origins</entry>
                             <entry>
                                 <ul id="ul_npd_drs_4bb">
-                                    <li>Dev Random Record Source </li>
-                                    <li>HTTP Server<p>Edge pipelines do not support multithreaded
-                                            processing. In an edge pipeline, the HTTP Server origin
-                                            always creates a single thread to read the files even if
-                                            you configure multiple threads.</p></li>
-                                    <li>MQTT Subscriber</li>
+                                    <li><xref
+                                            href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+                                            >Dev Random Record Source</xref> - A development
+                                        stage.</li>
+                                    <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y"
+                                            >HTTP Server</xref><p>Edge pipelines do not support
+                                            multithreaded processing. In an edge pipeline, the HTTP
+                                            Server origin always creates a single thread to read the
+                                            files even if you configure multiple threads.</p></li>
+                                    <li><xref
+                                            href="../Origins/MQTTSubscriber.dita#concept_ukz_3vt_lz"
+                                            >MQTT Subscriber</xref></li>
+                                    <li><xref
+                                            href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+                                            >Sensor Reader</xref> - A development stage.</li>
                                 </ul>
                             </entry>
                         </row>
@@ -68,13 +77,22 @@
                             <entry>Processors</entry>
                             <entry>
                                 <ul id="ul_opd_drs_4bb">
-                                    <li>Delay</li>
-                                    <li>Dev Identity</li>
-                                    <li>Expression Evaluator<p
+                                    <li><xref href="../Processors/Delay.dita#concept_ez5_pvf_wbb"
+                                            >Delay</xref></li>
+                                    <li><xref
+                                            href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+                                            >Dev Identity</xref> - A development stage.</li>
+                                    <li><xref
+                                            href="../Processors/Expression.dita#concept_zm2_pp3_wq"
+                                            >Expression Evaluator</xref><p
                                             conref="../Reusable_Content/Reusable_Topics/Reusable-EdgePipelinePhrasesSteps.dita#task_i3g_dpl_pbb/p_ExpressionLimitation"
                                         /></li>
-                                    <li>Field Remover</li>
-                                    <li>Stream Selector</li>
+                                    <li><xref
+                                            href="../Processors/FieldRemover.dita#concept_jdd_blr_wq"
+                                            >Field Remover</xref></li>
+                                    <li><xref
+                                            href="../Processors/StreamSelector.dita#concept_tqv_t5r_wq"
+                                            >Stream Selector</xref></li>
                                 </ul>
                             </entry>
                         </row>
@@ -82,11 +100,20 @@
                             <entry>Destinations</entry>
                             <entry>
                                 <ul id="ul_ppd_drs_4bb">
-                                    <li>CoAP Client</li>
-                                    <li>HTTP Client</li>
-                                    <li>MQTT Publisher</li>
-                                    <li>Trash</li>
-                                    <li>WebSocket Client</li>
+                                    <li><xref
+                                            href="../Destinations/CoAPClient.dita#concept_hw5_s3n_sz"
+                                            >CoAP Client</xref></li>
+                                    <li><xref
+                                            href="../Destinations/HTTPClient.dita#concept_khl_sg5_lz"
+                                            >HTTP Client</xref></li>
+                                    <li><xref
+                                            href="../Destinations/MQTTPublisher.dita#concept_odz_txt_lz"
+                                            >MQTT Publisher</xref></li>
+                                    <li><xref href="../Destinations/Trash.dita#concept_htf_ydj_wq"
+                                            >Trash</xref></li>
+                                    <li><xref
+                                            href="../Destinations/WebSocketClient.dita#concept_l4d_mjn_lz"
+                                            >WebSocket Client</xref></li>
                                 </ul>
                             </entry>
                         </row>
