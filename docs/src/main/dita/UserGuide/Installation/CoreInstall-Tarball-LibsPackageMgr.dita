@@ -25,7 +25,7 @@
                     additional libraries</indexterm></indexterm>You can use the Package Manager
             within <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            install additional tarball stage libraries. </p>
+            install additional stage libraries for a core tarball installation. </p>
         <p>Complete one of the following steps to display the Package Manager:</p>
         <ul id="ul_lnr_4y4_xx">
             <li>

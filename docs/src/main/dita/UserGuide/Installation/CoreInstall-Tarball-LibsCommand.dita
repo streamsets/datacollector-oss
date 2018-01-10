@@ -22,7 +22,7 @@
  <conbody>
         <p><indexterm>core tarball install<indexterm>installing additional
                 libraries</indexterm></indexterm>You can use the <codeph>stagelibs</codeph> command
-            to install additional tarball stage libraries.</p>
+            to install additional stage libraries for a core tarball installation.</p>
         <p>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
             sha1sum utilities are installed on the machine. Verify that these utilities are
             installed before running the command.</p>
