@@ -237,8 +237,8 @@
                             <li><xref
                                     href="../Processors/HTTPClient-Configuring.dita#task_z54_1qr_fw"
                                     >HTTP Client processor enhancement</xref> - The Rate Limit now
-                                defines the maximum number of requests to make per millisecond.
-                                Previously, it defined the maximum number of requests per second.
+                                defines the minimum amount of time between requests in milliseconds.
+                                Previously, it defined the time between requests in seconds.
                                 Upgraded pipelines require no changes.</li>
                             <li><xref
                                     href="../Processors/JDBCLookup-Configuring.dita#task_kbr_2cy_hw"
