@@ -18,12 +18,8 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.security.HadoopSecurityUtil;
-import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -42,95 +38,37 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import org.apache.commons.lang.StringUtils;
+import com.streamsets.pipeline.lib.hdfs.common.Errors;
+import com.streamsets.pipeline.lib.hdfs.common.HdfsBaseConfigBean;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RawLocalFileSystem;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class HdfsTargetConfigBean {
+public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(HdfsTargetConfigBean.class);
   private static final int MEGA_BYTE = 1024 * 1024;
 
-  protected String getTargetConfigBeanPrefix() {
+  @Override
+  protected String getConfigBeanPrefix() {
     return "hdfsTargetConfigBean.";
   }
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Hadoop FS URI",
-    description = "",
-    displayPosition = 10,
-    group = "HADOOP_FS"
-  )
-  public String hdfsUri;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "HDFS User",
-    description = "If set, the data collector will write to HDFS as this user. " +
-      "The data collector user must be configured as a proxy user in HDFS.",
-    displayPosition = 20,
-    group = "HADOOP_FS"
-  )
-  public String hdfsUser;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Kerberos Authentication",
-    defaultValue = "false",
-    description = "",
-    displayPosition = 30,
-    group = "HADOOP_FS"
-  )
-  public boolean hdfsKerberos;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "",
-    label = "Hadoop FS Configuration Directory",
-    description = "An SDC resource directory or symbolic link with HDFS configuration files core-site.xml and hdfs-site.xml",
-    displayPosition = 50,
-    group = "HADOOP_FS"
-  )
-  public String hdfsConfDir;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MODEL,
-    label = "Hadoop FS Configuration",
-    description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem. These properties " +
-      "have precedence over properties loaded via the 'Hadoop FS Configuration Directory' property.",
-    displayPosition = 60,
-    group = "HADOOP_FS"
-  )
-  @ListBeanModel
-  public List<HadoopConfigBean> hdfsConfigs;
 
   @ConfigDef(
     required = false,
@@ -445,11 +383,6 @@ public class HdfsTargetConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   //private members
-
-  private Configuration hdfsConfiguration;
-  private UserGroupInformation loginUgi;
-  private UserGroupInformation userUgi;
-  private FileSystem fs;
   private long lateRecordsLimitSecs;
   private long idleTimeSecs = -1;
   private ActiveRecordWriters currentWriters;
@@ -478,7 +411,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.LATE_RECORDS.name(),
-              getTargetConfigBeanPrefix() + "maxFileSize",
+              getConfigBeanPrefix() + "maxFileSize",
               Errors.HADOOPFS_08
           )
       );
@@ -488,7 +421,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.LATE_RECORDS.name(),
-              getTargetConfigBeanPrefix() + "maxRecordsPerFile",
+              getConfigBeanPrefix() + "maxRecordsPerFile",
               Errors.HADOOPFS_09
           )
       );
@@ -506,7 +439,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                getTargetConfigBeanPrefix() + "fileNameSuffix",
+                getConfigBeanPrefix() + "fileNameSuffix",
                 Errors.HADOOPFS_57
             )
         );
@@ -517,7 +450,7 @@ public class HdfsTargetConfigBean {
         context,
         dataFormat,
         Groups.OUTPUT_FILES.name(),
-        getTargetConfigBeanPrefix() + "dataGeneratorFormatConfig",
+        getConfigBeanPrefix() + "dataGeneratorFormatConfig",
         issues
     );
 
@@ -603,13 +536,13 @@ public class HdfsTargetConfigBean {
           if (mgr.validateDirTemplate(
             Groups.OUTPUT_FILES.name(),
             "dirPathTemplate",
-            getTargetConfigBeanPrefix() + "dirPathTemplate",
+            getConfigBeanPrefix() + "dirPathTemplate",
             issues
           )) {
             String newDirPath = mgr.getDirPath(new Date()).toString();
             if (validateHadoopDir(       // permission check on the output directory
               context,
-              getTargetConfigBeanPrefix() + "dirPathTemplate",
+              getConfigBeanPrefix() + "dirPathTemplate",
               Groups.OUTPUT_FILES.name(),
               newDirPath, issues
             )) {
@@ -657,7 +590,7 @@ public class HdfsTargetConfigBean {
           if (mgr.validateDirTemplate(
               Groups.OUTPUT_FILES.name(),
               "lateRecordsDirPathTemplate",
-              getTargetConfigBeanPrefix() + "lateRecordsDirPathTemplate",
+              getConfigBeanPrefix() + "lateRecordsDirPathTemplate",
               issues
           )) {
             String newLateRecordPath = mgr.getDirPath(new Date()).toString();
@@ -665,7 +598,7 @@ public class HdfsTargetConfigBean {
                 lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty() &&
                 validateHadoopDir(       // permission check on the late record directory
                     context,
-                    getTargetConfigBeanPrefix() + "lateRecordsDirPathTemplate",
+                    getConfigBeanPrefix() + "lateRecordsDirPathTemplate",
                     Groups.LATE_RECORDS.name(),
                     newLateRecordPath, issues
             )) {
@@ -690,7 +623,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "timeDriver",
+              getConfigBeanPrefix() + "timeDriver",
               Errors.HADOOPFS_19,
               ex.toString(),
               ex
@@ -702,7 +635,7 @@ public class HdfsTargetConfigBean {
       issues.add(
         context.createConfigIssue(
           Groups.OUTPUT_FILES.name(),
-          getTargetConfigBeanPrefix() + "rollHeaderName",
+          getConfigBeanPrefix() + "rollHeaderName",
           Errors.HADOOPFS_51
         )
       );
@@ -747,7 +680,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
               Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "dirPathTemplate",
+              getConfigBeanPrefix() + "dirPathTemplate",
               Errors.HADOOPFS_59,
               ex.toString(),
               ex
@@ -811,7 +744,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
                 configGroup.name(),
-                getTargetConfigBeanPrefix() + configName,
+                getConfigBeanPrefix() + configName,
                 errorCode
             )
         );
@@ -820,7 +753,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               configGroup.name(),
-              getTargetConfigBeanPrefix() + configName,
+              getConfigBeanPrefix() + configName,
               Errors.HADOOPFS_06,
               configuredValue,
               ex.toString(),
@@ -883,141 +816,6 @@ public class HdfsTargetConfigBean {
 
   //private implementation
 
-  private Configuration getHadoopConfiguration(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    Configuration conf = new Configuration();
-    conf.setClass("fs.file.impl", RawLocalFileSystem.class, FileSystem.class);
-    //We handle the file system close ourselves in destroy
-    //If enabled, Also this will cause issues (not allow us to rename the files on destroy call)
-    // when we run a shutdown hook on app kill
-    //See https://issues.streamsets.com/browse/SDC-4057
-    conf.setBoolean("fs.automatic.close", false);
-
-    // See SDC-5451, we set hadoop.treat.subject.external automatically to take advantage of HADOOP-13805
-    HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(conf);
-
-    if (hdfsKerberos) {
-      conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-        UserGroupInformation.AuthenticationMethod.KERBEROS.name());
-      try {
-        conf.set(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY, "hdfs/_HOST@" + HadoopSecurityUtil.getDefaultRealm());
-      } catch (Exception ex) {
-        if (!hdfsConfigs.stream().anyMatch(i -> DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY.equals(i.key))) {
-          issues.add(context.createConfigIssue(
-              Groups.HADOOP_FS.name(),
-              null,
-              Errors.HADOOPFS_28,
-              ex.toString())
-          );
-        }
-      }
-    }
-    if (hdfsConfDir != null && !hdfsConfDir.isEmpty()) {
-      File hadoopConfigDir = new File(hdfsConfDir);
-      if ((context.getExecutionMode() == ExecutionMode.CLUSTER_BATCH ||
-        context.getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING ||
-        context.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) &&
-        hadoopConfigDir.isAbsolute()
-        ) {
-        //Do not allow absolute hadoop config directory in cluster mode
-        issues.add(
-            context.createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                getTargetConfigBeanPrefix() + "hdfsConfDir",
-                Errors.HADOOPFS_45,
-                hdfsConfDir
-            )
-        );
-      } else {
-        if (!hadoopConfigDir.isAbsolute()) {
-          hadoopConfigDir = new File(context.getResourcesDirectory(), hdfsConfDir).getAbsoluteFile();
-        }
-        if (!hadoopConfigDir.exists()) {
-          issues.add(
-              context.createConfigIssue(
-                  Groups.HADOOP_FS.name(),
-                  getTargetConfigBeanPrefix() + "hdfsConfDir",
-                  Errors.HADOOPFS_25,
-                  hadoopConfigDir.getPath()
-              )
-          );
-        } else if (!hadoopConfigDir.isDirectory()) {
-          issues.add(
-              context.createConfigIssue(
-                  Groups.HADOOP_FS.name(),
-                  getTargetConfigBeanPrefix() + "hdfsConfDir",
-                  Errors.HADOOPFS_26,
-                  hadoopConfigDir.getPath()
-              )
-          );
-        } else {
-          File coreSite = new File(hadoopConfigDir, "core-site.xml");
-          if (coreSite.exists()) {
-            if (!coreSite.isFile()) {
-              issues.add(
-                  context.createConfigIssue(
-                      Groups.HADOOP_FS.name(),
-                      getTargetConfigBeanPrefix() + "hdfsConfDir",
-                      Errors.HADOOPFS_27,
-                      coreSite.getPath()
-                  )
-              );
-            }
-            conf.addResource(new Path(coreSite.getAbsolutePath()));
-          }
-          File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
-          if (hdfsSite.exists()) {
-            if (!hdfsSite.isFile()) {
-              issues.add(
-                  context.createConfigIssue(
-                      Groups.HADOOP_FS.name(),
-                      getTargetConfigBeanPrefix() + "hdfsConfDir",
-                      Errors.HADOOPFS_27,
-                      hdfsSite.getPath()
-                  )
-              );
-            }
-            conf.addResource(new Path(hdfsSite.getAbsolutePath()));
-          }
-        }
-      }
-    } else {
-      Optional<HadoopConfigBean> fsDefaultFS = hdfsConfigs.stream()
-        .filter(item -> CommonConfigurationKeys.FS_DEFAULT_NAME_KEY.equals(item.key))
-        .findFirst();
-      if (StringUtils.isEmpty(hdfsUri) && !fsDefaultFS.isPresent()) {
-        // No URI, no config dir, and no fs.defaultFS config param
-        // Avoid defaulting to writing to file:/// (SDC-5143)
-        issues.add(
-            context.createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                getTargetConfigBeanPrefix() + "hdfsUri",
-                Errors.HADOOPFS_61
-            )
-        );
-      }
-    }
-
-    for(HadoopConfigBean configBean : hdfsConfigs) {
-      try {
-        conf.set(
-          configBean.key,
-          configBean.value.get()
-        );
-      } catch (StageException e) {
-         issues.add(
-            context.createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                getTargetConfigBeanPrefix() + "hdfsConfigs",
-                Errors.HADOOPFS_62,
-                e.toString()
-            )
-        );
-      }
-    }
-
-    return conf;
-  }
-
   protected void validateStageForWholeFileFormat(Stage.Context context, List<Stage.ConfigIssue> issues) {
     maxFileSize = 0;
     maxRecordsPerFile = 1;
@@ -1026,7 +824,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "fileType",
+              getConfigBeanPrefix() + "fileType",
               Errors.HADOOPFS_53,
               fileType,
               HdfsFileType.WHOLE_FILE.getLabel(),
@@ -1038,7 +836,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.DATA_FORMAT.name(),
-              getTargetConfigBeanPrefix() + "dataFormat",
+              getConfigBeanPrefix() + "dataFormat",
               Errors.HADOOPFS_60,
               dataFormat.name(),
               DataFormat.WHOLE_FILE.getLabel(),
@@ -1048,97 +846,9 @@ public class HdfsTargetConfigBean {
     }
   }
 
-  private boolean validateHadoopFS(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    hdfsConfiguration = getHadoopConfiguration(context, issues);
 
-    boolean validHapoopFsUri = true;
-    // if hdfsUri is empty, we'll use the default fs uri from hdfs config. no validation required.
-    if (!hdfsUri.isEmpty()) {
-      if (hdfsUri.contains("://")) {
-        try {
-          new URI(hdfsUri);
-        } catch (Exception ex) {
-          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
-              ex.toString(), ex));
-          validHapoopFsUri = false;
-        }
-
-        // Configured URI have precedence
-        hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
-      } else {
-        issues.add(
-            context.createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                getTargetConfigBeanPrefix() + "hdfsUri",
-                Errors.HADOOPFS_18,
-                hdfsUri
-            )
-        );
-        validHapoopFsUri = false;
-      }
-    } else {
-      // HDFS URI is not set, we're expecting that it will be available in config files
-      hdfsUri = hdfsConfiguration.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
-    }
-
-    // We must have value of default.FS otherwise it's clear miss configuration
-    if (hdfsUri == null || hdfsUri.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_49));
-      validHapoopFsUri = false;
-    }
-
-    StringBuilder logMessage = new StringBuilder();
-    try {
-      // forcing UGI to initialize with the security settings from the stage
-      loginUgi = HadoopSecurityUtil.getLoginUser(hdfsConfiguration);
-      userUgi = HadoopSecurityUtil.getProxyUser(
-        hdfsUser,
-        context,
-        loginUgi,
-        issues,
-        Groups.HADOOP_FS.name(),
-        getTargetConfigBeanPrefix() + "hdfsUser"
-      );
-
-      if(!issues.isEmpty()) {
-        return false;
-      }
-
-      if (hdfsKerberos) {
-        logMessage.append("Using Kerberos");
-        if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          issues.add(
-              context.createConfigIssue(
-                  Groups.HADOOP_FS.name(),
-                  getTargetConfigBeanPrefix() + "hdfsKerberos",
-                  Errors.HADOOPFS_00,
-                  loginUgi.getAuthenticationMethod(),
-                  UserGroupInformation.AuthenticationMethod.KERBEROS
-              )
-          );
-        }
-      } else {
-        logMessage.append("Using Simple");
-        hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-          UserGroupInformation.AuthenticationMethod.SIMPLE.name());
-      }
-      if (validHapoopFsUri) {
-        fs = createFileSystem();
-      }
-    } catch (Exception ex) {
-      LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
-      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
-        String.valueOf(ex), ex));
-
-      // We weren't able connect to the cluster and hence setting the validity to false
-      validHapoopFsUri = false;
-    }
-    LOG.info("Authentication Config: " + logMessage);
-    return validHapoopFsUri;
-  }
-
-  private boolean validateHadoopDir(final Stage.Context context, final String configName, final String configGroup,
-                            String dirPathTemplate, final List<Stage.ConfigIssue> issues) {
+  protected boolean validateHadoopDir(final Stage.Context context, final String configName, final String configGroup,
+      String dirPathTemplate, final List<Stage.ConfigIssue> issues) {
     if (!dirPathTemplate.startsWith("/")) {
       issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_40));
       return false;
@@ -1154,8 +864,8 @@ public class HdfsTargetConfigBean {
     try {
       final Path dir = new Path(dirPathTemplate);
       userUgi.doAs(new PrivilegedExceptionAction<Void>() {
-                  @Override
-                  public Void run() throws Exception {
+        @Override
+        public Void run() throws Exception {
           // Based on whether the target directory exists or not, we'll do different check
           if (!fs.exists(dir)) {
             // Target directory doesn't exists, we'll try to create directory a directory and then drop it
@@ -1199,18 +909,28 @@ public class HdfsTargetConfigBean {
             }
           }
           return null;
-      }
-    });
+        }
+      });
     } catch (Exception ex) {
       issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
-        ex.toString()));
+          ex.toString()));
       ok.set(false);
     }
 
     return ok.get();
   }
 
-  private FileSystem createFileSystem() throws Exception {
+  private void recoveryOldTempFile(Stage.Context context) throws IOException, InterruptedException {
+    if(!context.isPreview() && dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
+      userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
+        getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+        return null;
+      });
+    }
+  }
+
+  @Override
+  protected FileSystem createFileSystem() throws Exception {
     try {
       return userUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
@@ -1226,15 +946,6 @@ public class HdfsTargetConfigBean {
         throw (Exception)cause;
       }
       throw ex;
-    }
-  }
-
-  private void recoveryOldTempFile(Stage.Context context) throws IOException, InterruptedException {
-    if(!context.isPreview() && dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
-      userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
-        getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
-        return null;
-      });
     }
   }
 }

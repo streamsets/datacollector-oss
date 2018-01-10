@@ -1,0 +1,78 @@
+/*
+ * Copyright 2018 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.origin.hdfs;
+
+import com.streamsets.pipeline.api.PushSource;
+import org.apache.hadoop.fs.FileSystem;
+
+import java.util.Map;
+
+public class HdfsSourceRunnableBuilder {
+  private int threadNumber;
+  private int maxBatchSize;
+  private PushSource.Context context;
+  private FileSystem fileSystem;
+  private HdfsDirectorySpooler spooler;
+  private Map<String, String> lastOffsets;
+  private HdfsSourceConfigBean hdfsSourceConfigBean;
+
+  public HdfsSourceRunnableBuilder threadNumber(int threadNumber) {
+    this.threadNumber = threadNumber;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder maxBatchSize(int maxBatchSize) {
+    this.maxBatchSize = maxBatchSize;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder context(PushSource.Context context) {
+    this.context = context;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder fileSystem(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder spooler(HdfsDirectorySpooler spooler) {
+    this.spooler = spooler;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder lastOffsets(Map<String, String> lastOffsets) {
+    this.lastOffsets = lastOffsets;
+    return this;
+  }
+
+  public HdfsSourceRunnableBuilder hdfsSourceConfigBean(HdfsSourceConfigBean hdfsSourceConfigBean) {
+    this.hdfsSourceConfigBean = hdfsSourceConfigBean;
+    return this;
+  }
+
+  public HdfsSourceRunnable build() {
+    return new HdfsSourceRunnable(
+        threadNumber,
+        maxBatchSize,
+        context,
+        fileSystem,
+        spooler,
+        lastOffsets,
+        hdfsSourceConfigBean
+    );
+  }
+}

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hdfs;
+package com.streamsets.pipeline.lib.hdfs.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
@@ -93,6 +94,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_60("Invalid Data Format {}, should be {} for File Type {}."),
   HADOOPFS_61("You must specify at least one of Hadoop FS URI, Hadoop FS Configuration Directory or fs.defaultFS"),
   HADOOPFS_62("Can't resolve credential: {}"),
+  HADOOPFS_63("Cannot parse record '{}': {}"),
 
   ;
 
