@@ -318,10 +318,12 @@
                                 processing data using <xref
                                     href="../Destinations/Redis-CRUDOperation.dita#concept_dz2_4xh_xbb"
                                     >CRUD operations stored in record header attributes</xref>. </li>
-                            <li>Salesforce destination enhancement - When using the Salesforce Bulk
-                                API to update, insert, or upsert data, you can now use a colon (:)
-                                or period (.) as a field separator when defining the Salesforce
-                                field to map the Data Collector field to. For example,
+                            <li><xref
+                                    href="../Destinations/Salesforce-FieldMappings.dita#concept_xql_wbj_mcb"
+                                    >Salesforce destination enhancement</xref> - When using the
+                                Salesforce Bulk API to update, insert, or upsert data, you can now
+                                use a colon (:) or period (.) as a field separator when defining the
+                                Salesforce field to map the Data Collector field to. For example,
                                     <codeph>Parent__r:External_Id__c</codeph> or
                                     <codeph>Parent__r.External_Id__c</codeph> are both valid
                                 Salesforce fields. </li>

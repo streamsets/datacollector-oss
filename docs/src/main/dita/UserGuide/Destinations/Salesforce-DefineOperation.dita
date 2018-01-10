@@ -20,9 +20,10 @@
 <concept id="concept_opg_tyg_4z">
  <title>Define the CRUD Operation</title>
  <conbody>
-        <p><indexterm>Salesforce destination<indexterm>CRUD operation</indexterm></indexterm>The
-            Salesforce destination can insert, update, upsert, delete, or undelete data. To upsert
-            data, you must specify the external ID column to use. </p>
+        <p><indexterm>Salesforce destination<indexterm>CRUD operation</indexterm></indexterm>When
+            using the SOAP API, the Salesforce destination can insert, update, upsert, delete, or
+            undelete data. When using the Bulk API, the destination can insert, update, upsert, or
+            delete data. </p>
         <p>The destination writes the records based on the CRUD operation defined in a CRUD
             operation header attribute or in operation-related stage properties:<dl>
                 <dlentry>
@@ -35,8 +36,7 @@
                             <li>2 for DELETE</li>
                             <li>3 for UPDATE</li>
                             <li>4 for UPSERT</li>
-                            <li>5 for unsupported operations</li>
-                            <li>6 for UNDELETED</li>
+                            <li>6 for UNDELETE (not supported by the Salesforce Bulk API)</li>
                         </ul></dd>
                     <dd
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"
