@@ -61,6 +61,10 @@
                                     </entry>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCConfig">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
                                     <entry/>
                                 </row>

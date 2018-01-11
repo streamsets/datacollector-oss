@@ -236,9 +236,10 @@
                                     >Field Type Converter processor enhancement</xref> - You can now
                                 convert strings to the Zoned Datetime data type, and vice versa. You
                                 can also specify the format to use. </li>
-                            <li>Hive Metadata processor enhancement - You can now configure
-                                additional JDBC configuration properties to pass to the JDBC
-                                driver.</li>
+                            <li><xref href="../Processors/HiveMeta-Configuring.dita#task_hpg_pft_zv"
+                                    >Hive Metadata processor enhancement</xref> - You can now
+                                configure additional JDBC configuration properties to pass to the
+                                JDBC driver.</li>
                             <li><xref
                                     href="../Processors/HTTPClient-Configuring.dita#task_z54_1qr_fw"
                                     >HTTP Client processor enhancement</xref> - The Rate Limit now
@@ -279,9 +280,11 @@
                             <li><xref href="../Destinations/KineticaDB.dita#concept_hxh_5xg_qbb">New
                                     KineticaDB destination</xref> - A new destination that writes
                                 data to a Kinetica table. </li>
-                            <li>Hive Metastore destination enhancement - You can now configure
-                                additional JDBC configuration properties to pass to the JDBC
-                                driver.</li>
+                            <li><xref
+                                    href="../Destinations/HiveMetastore-Configuring.dita#task_a4n_1ft_zv"
+                                    >Hive Metastore destination enhancement</xref> - You can now
+                                configure additional JDBC configuration properties to pass to the
+                                JDBC driver.</li>
                             <li>HTTP Client destination enhancement - You can now use the HTTP
                                 Client destination to write Avro, Delimited, and Protobuf data in
                                 addition to the previous data formats. </li>
@@ -345,8 +348,9 @@
                     <dt>Executor</dt>
                     <dd>
                         <ul id="ul_if5_jgl_wbb">
-                            <li>Hive Query executor enhancement - You can now configure additional
-                                JDBC configuration properties to pass to the JDBC driver. </li>
+                            <li><xref href="../Executors/HiveQuery-Configuring.dita#task_mgm_4lk_fx"
+                                    >Hive Query executor enhancement</xref> - You can now configure
+                                additional JDBC configuration properties to pass to the JDBC driver. </li>
                             <li><xref href="../Executors/JDBCQuery-Configuring.dita#task_ym2_3cv_sx"
                                     >JDBC Query executor enhancement</xref> - You can now specify an
                                 Init Query to be executed after establishing a connection to the
