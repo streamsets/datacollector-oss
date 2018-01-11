@@ -28,20 +28,15 @@
                                 Oracle Java 8 and OpenJDK 8.</li>
                             <li><xref
                                     href="../Installation/Installing_the_DC-ServiceRPM.dita#task_th5_1yj_dx"
-                                    >RPM packages</xref> - StreamSets now provides the following <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> RPM packages:<ul id="ul_k13_cvk_wbb">
-                                    <li>EL6 - Use to install <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> on CentOS 6 or Red Hat Enterprise Linux 6</li>
-                                    <li>EL7 - Use to install <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> on CentOS 7 or Red Hat Enterprise Linux 7.</li>
-                                </ul><p>Previously, <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"
-                                    /> provided a single RPM package used to install <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> on any of these operating systems.</p></li>
+                                    >RPM packages</xref> - StreamSets now provides the following
+                                Data Collector RPM packages:<ul id="ul_k13_cvk_wbb">
+                                    <li>EL6 - Use to install Data Collector on CentOS 6 or Red Hat
+                                        Enterprise Linux 6</li>
+                                    <li>EL7 - Use to install Data Collector on CentOS 7 or Red Hat
+                                        Enterprise Linux 7.</li>
+                                </ul><p>Previously, StreamSets provided a single RPM package used to
+                                    install Data Collector on any of these operating
+                                systems.</p></li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -50,15 +45,12 @@
                     <dd>You can now design and run <xref
                             href="../Edge_Mode/EdgePipelines_Overview.dita#concept_d4h_kkq_4bb">edge
                             pipelines</xref> to read data from or send data to an edge device. Edge
-                        pipelines are bidirectional. They can send edge data to other <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> pipelines for further processing. Or, they can receive data from other
+                        pipelines are bidirectional. They can send edge data to other Data Collector
+                        pipelines for further processing. Or, they can receive data from other
                         pipelines and then act on that data to control the edge device. </dd>
                     <dd>Edge pipelines run in edge execution mode on <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/>
-                        <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Long"
-                        /> (<ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"
+                        /> Data Collector Edge (<ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                         />). <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
@@ -66,10 +58,8 @@
                         Install <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                         /> on each edge device where you want to run edge pipelines. </dd>
-                    <dd>You design edge pipelines in <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, export the edge pipelines, and then use commands to run the edge
-                        pipelines on an <ph
+                    <dd>You design edge pipelines in Data Collector, export the edge pipelines, and
+                        then use commands to run the edge pipelines on an <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Edge-Short"
                         /> installed on an edge device. </dd>
                 </dlentry>
@@ -373,14 +363,11 @@
                     <dt>Cloudera Navigator </dt>
                     <dd>Cloudera Navigator integration is now released as part of the StreamSets
                         Commercial Subscription. The beta version included in earlier releases is no
-                        longer available with <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />. For information about the StreamSets Commercial Subscription, <xref
-                            href="https://streamsets.com/contact-us/" format="html" scope="external"
-                            >contact us</xref>.<p dir="ltr">For information about upgrading a
-                            version of <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> with Cloudera Navigator integration enabled, see <xref
+                        longer available with Data Collector. For information about the StreamSets
+                        Commercial Subscription, <xref href="https://streamsets.com/contact-us/"
+                            format="html" scope="external">contact us</xref>.<p dir="ltr">For
+                            information about upgrading a version of Data Collector with Cloudera
+                            Navigator integration enabled, see <xref
                                 href="../Upgrade/PostUpgrade-ClouderaNav.dita#concept_wnp_scs_wbb"
                                 >Disable Cloudera Navigator Integration</xref>.</p></dd>
                 </dlentry>
@@ -407,14 +394,10 @@
                     </dd>
                 </dlentry>
                 <dlentry>
-                    <dt><ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> Configuration</dt>
-                    <dd>By default when <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> restarts, it automatically restarts all pipelines that were running
-                        before Data Collector shut down. You can now disable the automatic restart
-                        of pipelines by <xref
+                    <dt>Data Collector Configuration</dt>
+                    <dd>By default when Data Collector restarts, it automatically restarts all
+                        pipelines that were running before Data Collector shut down. You can now
+                        disable the automatic restart of pipelines by <xref
                             href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r/table_k1y_drr_bx"
                             >configuring the <codeph>runner.boot.pipeline.restart</codeph>
                             property</xref> in the <codeph>$SDC_CONF/sdc.properties</codeph> file.
@@ -466,17 +449,14 @@
                         <ul id="ul_sp4_rhl_wbb">
                             <li><xref
                                     href="../Data_Formats/NetFlow_Overview.dita#concept_thl_nnr_hbb"
-                                    >New NetFlow 9 support</xref> - <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> now supports processing NetFlow 9 template-based messages. Stages
-                                that previously processed NetFlow 5 data can now process NetFlow 9
-                                data as well. </li>
+                                    >New NetFlow 9 support</xref> - Data Collector now supports
+                                processing NetFlow 9 template-based messages. Stages that previously
+                                processed NetFlow 5 data can now process NetFlow 9 data as well. </li>
                             <li>Datagram data format enhancement - The Datagram Data Format property
                                 is now named the Datagram Packet Format. </li>
-                            <li>Delimited data format enhancement - <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> can now process data using the Postgres CSV and Postgres Text
-                                delimited format types. </li>
+                            <li>Delimited data format enhancement - Data Collector can now process
+                                data using the Postgres CSV and Postgres Text delimited format
+                                types. </li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -531,23 +511,20 @@
                             <li><xref
                                     href="../Installation/LegacyLibraries.dita#concept_fw3_zt3_tbb"
                                     >Legacy stage libraries</xref> - Stage libraries that are more
-                                than two years old are no longer included with <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />. Though not recommended, you can still download and install the
-                                older stage libraries as custom stage libraries. <p>If you have
-                                    pipelines that use these legacy stage libraries, you will need
-                                    to update the pipelines to use a more current stage library or
-                                    install the legacy stage library manually, For more information
-                                    see <xref
+                                than two years old are no longer included with Data Collector.
+                                Though not recommended, you can still download and install the older
+                                stage libraries as custom stage libraries. <p>If you have pipelines
+                                    that use these legacy stage libraries, you will need to update
+                                    the pipelines to use a more current stage library or install the
+                                    legacy stage library manually, For more information see <xref
                                         href="../Upgrade/PostUpgrade-LegacyLibraries.dita#concept_wnl_zk4_5bb"
                                         >Update Pipelines using Legacy Stage
                                 Libraries</xref>.</p></li>
                             <li><xref
                                     href="../Installation/CoreInstall_Overview.dita#concept_vvw_p3m_s5"
                                     >Statistics stage library enhancement</xref> - The statistics
-                                stage library is now included in the core <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> installation. </li>
+                                stage library is now included in the core Data Collector
+                                installation. </li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -556,17 +533,12 @@
                     <dd>
                         <ul id="ul_fw1_s3l_wbb">
                             <li><xref href="../Pipeline_Design/DataTypes.dita#concept_hjl_vyd_kcb"
-                                    >New data type</xref> - <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> now supports the Zoned Datetime data type.</li>
-                            <li>New <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> metrics - JVM metrics have been renamed <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> Metrics and now include general <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> metrics in addition to JVM metrics. The JVM Metrics menu item has
-                                also been renamed SDC Metrics.</li>
+                                    >New data type</xref> - Data Collector now supports the Zoned
+                                Datetime data type.</li>
+                            <li>New Data Collector metrics - JVM metrics have been renamed Data
+                                Collector Metrics and now include general Data Collector metrics in
+                                addition to JVM metrics. The JVM Metrics menu item has also been
+                                renamed SDC Metrics.</li>
                             <li><xref
                                     href="../Pipeline_Design/ErrorHandling-Pipeline.dita#concept_kgc_l4y_5r"
                                     >Pipeline error records </xref>- You can now write error records
