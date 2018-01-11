@@ -40,7 +40,7 @@ public class Configuration {
     fileRefsBaseDir = dir;
   }
 
-  private abstract static class Ref {
+  public abstract static class Ref {
     private String unresolvedValue;
 
     protected Ref(String unresolvedValue) {
@@ -206,7 +206,7 @@ public class Configuration {
     }
   }
 
-  private static Ref createRef(String value) {
+  public static Ref createRef(String value) {
     Ref ref;
     if (FileRef.isValueMyRef(value)) {
       ref = new FileRef(value);

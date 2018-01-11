@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,6 +49,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -100,7 +102,7 @@ public class TestRuntimeEL {
   }
 
   @Test
-  public void testRuntimeELExternal() throws IOException {
+  public void testRuntimeELExternal() throws Exception {
     File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(configDir.mkdirs());
     try (OutputStream os = new FileOutputStream(new File(configDir, "sdc.properties"))) {
@@ -110,13 +112,27 @@ public class TestRuntimeEL {
     }
     try (OutputStream os = new FileOutputStream(new File(configDir, "foo.properties"))) {
       Properties props = new Properties();
+      setEnvVar("ENV_FOO", "ENV_BAR");
       props.setProperty("foo", "bar");
+      props.setProperty("env-foo", "${env(ENV_FOO)}");
       props.store(os, "");
     }
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
     Assert.assertEquals("bar", RuntimeEL.conf("foo"));
+    Assert.assertEquals("ENV_BAR", RuntimeEL.conf("env-foo"));
+  }
+
+  // Hack to set the environment the process sees in memory
+  private void setEnvVar(String key, String val) throws Exception {
+    Map<String, String> env = System.getenv();
+    Class cl = Class.forName("java.util.Collections$UnmodifiableMap");
+    Field field = cl.getDeclaredField("m");
+    field.setAccessible(true);
+    Object obj = field.get(env);
+    Map<String, String> map = (Map<String, String>) obj;
+    map.put(key, val);
   }
 
   private void createSDCFile(String sdcFileName) throws IOException {

@@ -168,6 +168,9 @@ public class RuntimeEL {
         File runtimeConfFile = new File(runtimeInfo.getConfigDir(), runtimeConfLocation);
         try (FileInputStream fileInputStream = new FileInputStream(runtimeConfFile)) {
           RUNTIME_CONF_PROPS.load(fileInputStream);
+          for (String key : RUNTIME_CONF_PROPS.stringPropertyNames()) {
+            RUNTIME_CONF_PROPS.setProperty(key, Configuration.createRef(RUNTIME_CONF_PROPS.getProperty(key)).getValue());
+          }
         } catch (IOException e) {
           LOG.error("Could not read '{}': {}", runtimeConfFile.getAbsolutePath(), e.toString(), e);
           throw e;
