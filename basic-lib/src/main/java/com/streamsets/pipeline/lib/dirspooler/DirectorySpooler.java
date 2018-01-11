@@ -600,7 +600,7 @@ public class DirectorySpooler {
       public boolean accept(Path entry) throws IOException {
         boolean accept = false;
         // SDC-3551: Pick up only files with mtime strictly less than scan time.
-        if (entry != null && Files.getLastModifiedTime(entry).toMillis() < scanTime && fileMatcher.matches(entry.getFileName())) {
+        if (entry != null && fileMatcher.matches(entry.getFileName()) && Files.getLastModifiedTime(entry).toMillis() < scanTime) {
           if (startingFile == null || startingFile.toString().isEmpty()) {
             accept = true;
           } else {
