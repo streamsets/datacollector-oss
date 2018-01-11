@@ -109,6 +109,7 @@ public class ForceSource extends BaseSource {
   private CSVReader rdr;
   private List<String> resultHeader;
   private Set<String> processedBatches;
+  private BatchInfoList batchList;
 
   // SOAP API state
   private QueryResult queryResult;
@@ -470,8 +471,7 @@ public class ForceSource extends BaseSource {
     // We started the job already, see if the results are ready
     // Loop here so that we can wait for results in preview mode and not return an empty batch
     // Preview will cut us off anyway if we wait too long
-    BatchInfoList batchList = null;
-    while (queryResultList == null && job != null) {
+    while (queryResultList == null) {
       if (destroyed.get()) {
         throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
       }
