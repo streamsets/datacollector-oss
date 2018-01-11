@@ -58,6 +58,8 @@ public class BinaryLogConsumer implements EventListener {
   // seq no of the CRUD event in current tx
   private int currentTxEventSeqNo;
 
+  private String currentBinLogFileName;
+
   private SourceOffset currentOffset;
 
   public BinaryLogConsumer(MysqlSchemaRepository schemaRepository, EventBuffer eventBuffer, BinaryLogClient client) {
@@ -74,6 +76,7 @@ public class BinaryLogConsumer implements EventListener {
   public void onEvent(Event event) {
     LOG.trace("Received event {}", event);
     EventType eventType = event.getHeader().getEventType();
+    currentBinLogFileName = client.getBinlogFilename();
     switch (eventType) {
       case TABLE_MAP:
         handleTableMappingEvent((TableMapEventData) event.getData());
@@ -193,7 +196,7 @@ public class BinaryLogConsumer implements EventListener {
           .withIncompleteTransaction(currentTxGtid, currentTxEventSeqNo);
     } else {
       return new BinLogPositionSourceOffset(
-          client.getBinlogFilename(),
+          currentBinLogFileName,
           ((EventHeaderV4) event.getHeader()).getNextPosition()
       );
     }
