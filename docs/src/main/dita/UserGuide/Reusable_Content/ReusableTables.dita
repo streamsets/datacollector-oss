@@ -954,6 +954,13 @@
        <entry>JDBC Driver Name</entry>
        <entry>The fully-qualified JDBC driver name.</entry>
       </row>
+      <row id="P-D_HiveJDBCConfig">
+       <entry>Additional JDBC Configuration Properties</entry>
+       <entry>Additional JDBC configuration properties to pass to the JDBC driver.<p>Using <xref
+          href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb">simple or bulk
+          edit mode</xref>, click Add to add additional properties and define the property name and
+         value. Use the property names and values as expected by the JDBC driver.</p></entry>
+      </row>
       <row id="P-D_HiveConfigDir">
        <entry>Hadoop Configuration Directory</entry>
        <entry>
@@ -972,8 +979,10 @@
        <entry>Additional Hadoop Configuration</entry>
        <entry>
         <p>Additional properties to use. </p>
-        <p>To add properties, click <uicontrol>Add</uicontrol> and define the property name and
-         value. Use the property names and values as expected by HDFS and Hive.</p>
+        <p>Using <xref href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+          >simple or bulk edit mode</xref>, click Add to add additional properties and define the
+         property name and value. Use the property names and values as expected by HDFS and
+         Hive.</p>
        </entry>
       </row>
       <row>

@@ -51,10 +51,53 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCdriver">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCConfig">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
+                                    <entry/>
+                                </row>
                                 <row>
-                                    <entry>Database Expression <xref href="HiveMeta-DBtablePartition.dita">
+                                    <entry>
+                                        <p>Additional Hadoop Configuration </p>
+                                    </entry>
+                                    <entry>
+                                        <p>Additional properties to use. </p>
+                                        <p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click Add to add
+                                            additional properties and define the property name and
+                                            value. Use the property names and values as expected by
+                                            Hive and HDFS or MapR FS.</p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Table</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gy3_4yq_mcb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Table Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Database Expression <xref
+                                            href="HiveMeta-DBtablePartition.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_t3v_yzk_gw"
+                                                placement="inline" id="image_hy3_4yq_mcb"
                                         /></xref></entry>
                                     <entry>Optional name of the database to use. You can use an
                                         expression that evaluates to a database name. <p>When not
@@ -64,7 +107,7 @@
                                 <row>
                                     <entry>Table Name <xref href="HiveMeta-DBtablePartition.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_jwt_11l_gw"
+                                                placement="inline" id="image_iy3_4yq_mcb"
                                         /></xref></entry>
                                     <entry>Name of the table to use. You can use an expression that
                                         evaluates to a table name. <p>Note that Hive table names are
@@ -89,7 +132,7 @@
                                     <entry>Partition Value Expression <xref
                                             href="HiveMeta-DBtablePartition.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_ojy_11l_gw"
+                                                placement="inline" id="image_jy3_4yq_mcb"
                                         /></xref></entry>
                                     <entry>Expression that evaluates to the partition value to
                                         use.</entry>
@@ -125,9 +168,9 @@
                                 </row>
                                 <row>
                                     <entry>Decimal Precision Expression <xref
-                                        href="HiveMeta-DecimalFieldEx.dita">
+                                            href="HiveMeta-DecimalFieldEx.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_b3j_wvq_fx"
+                                                placement="inline" id="image_ky3_4yq_mcb"
                                         /></xref></entry>
                                     <entry>Expression that defines the precision of decimal fields.
                                         Enter a single value to be used by all decimal fields in the
@@ -146,7 +189,7 @@
                                     <entry>Decimal Scale Expression <xref
                                             href="HiveMeta-DecimalFieldEx.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_s2q_wvq_fx"
+                                                placement="inline" id="image_ly3_4yq_mcb"
                                         /></xref></entry>
                                     <entry>Expression that defines the scale for decimal fields.
                                         Enter a single value to be used by all decimal fields in the
@@ -159,24 +202,6 @@
                                             Consumer or a JDBC Multitable Consumer with JDBC header
                                             attributes enabled. Replace "jdbc" with the configured
                                             JDBC header prefix when necessary. </p></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry>
-                                        <p>Additional Hadoop Configuration </p>
-                                    </entry>
-                                    <entry>
-                                        <p>Additional properties to use. </p>
-                                        <p>Using <xref
-                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
-                                                >simple or bulk edit mode</xref>, click Add to add
-                                            additional properties and define the property name and
-                                            value. Use the property names and values as expected by
-                                            Hive and HDFS or MapR FS.</p>
-                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
