@@ -434,10 +434,9 @@
                   </ul>
             </p>
             <p>
-                  <draft-comment author="Loretta">The following bullets are CSV file types. Used in
-                        "Configuring a Directory Origin", Directory-Data Formats and "Configuring
-                        the Kafka Consumer" -- Make sure changes to this are copied to the Delimited
-                        data format info later in this SAME FILE.</draft-comment>
+                  <draft-comment author="Loretta">The following bullets are CSV file types. Used
+                        everywhere. This should be the source of truth for origins and
+                        destinations.</draft-comment>
             </p>
             <p>
                   <ul id="ul_delFileTypes">
@@ -447,7 +446,10 @@
                               follows RFC4180 guidelines.</li>
                         <li><uicontrol>MS Excel CSV</uicontrol> - Microsoft Excel comma-separated
                               file.</li>
-                        <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma separated file.</li>
+                        <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma-separated file.</li>
+                        <li><uicontrol>Postgres CSV</uicontrol> - Postgres comma-separated
+                              file.</li>
+                        <li><uicontrol>Postgres Text</uicontrol> - Postgres text file.</li>
                         <li><uicontrol>Tab-Separated Values</uicontrol> - File that includes
                               tab-separated values.</li>
                         <li><uicontrol>Custom</uicontrol> - File that uses user-defined delimiter,
@@ -772,21 +774,10 @@
                         <dlentry id="OriginDF-DELIM">
                               <dt>Delimited</dt>
                               <dd>Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul id="ul_c12_1k2_gt">
-                                          <li><uicontrol>Default CSV</uicontrol> - File that
-                                                includes comma-separated values. Ignores empty lines
-                                                in the file.</li>
-                                          <li><uicontrol>RFC4180 CSV</uicontrol> - Comma-separated
-                                                file that strictly follows RFC4180 guidelines.</li>
-                                          <li><uicontrol>MS Excel CSV</uicontrol> - Microsoft Excel
-                                                comma-separated file.</li>
-                                          <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma
-                                                separated file.</li>
-                                          <li><uicontrol>Tab-Separated Values</uicontrol> - File
-                                                that includes tab-separated values.</li>
-                                          <li><uicontrol>Custom</uicontrol> - File that uses
-                                                user-defined delimiter, escape, and quote
-                                                characters.</li>
+                                    following delimited format types:<ul
+                                          conref="#concept_vhs_5tz_xp/ul_delFileTypes"
+                                          id="ul_vyp_ksl_mcb">
+                                          <li/>
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. For
@@ -807,21 +798,10 @@
                         <dlentry id="OriginDF-DELIMFILE">
                               <dt>Delimited</dt>
                               <dd>Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul id="ul_hbd_f2p_ht">
-                                          <li><uicontrol>Default CSV</uicontrol> - File that
-                                                includes comma-separated values. Ignores empty lines
-                                                in the file.</li>
-                                          <li><uicontrol>RFC4180 CSV</uicontrol> - Comma-separated
-                                                file that strictly follows RFC4180 guidelines.</li>
-                                          <li><uicontrol>MS Excel CSV</uicontrol> - Microsoft Excel
-                                                comma-separated file.</li>
-                                          <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma
-                                                separated file.</li>
-                                          <li><uicontrol>Tab-Separated Values</uicontrol> - File
-                                                that includes tab-separated values.</li>
-                                          <li><uicontrol>Custom</uicontrol> - File that uses
-                                                user-defined delimiter, escape, and quote
-                                                characters.</li>
+                                    following delimited format types:<ul
+                                          conref="#concept_vhs_5tz_xp/ul_delFileTypes"
+                                          id="ul_evg_nsl_mcb">
+                                          <li/>
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. For
@@ -2118,6 +2098,13 @@ input_stream.read()</codeblock></p>
                               <dt>Delimited</dt>
                               <dd>The destination writes records as delimited data. When you use
                                     this data format, the root field must be list or list-map.</dd>
+                              <dd>
+                                    <p>You can use the following delimited format types: <ul
+                                                conref="#concept_vhs_5tz_xp/ul_delFileTypes"
+                                                id="ul_jtv_5sl_mcb">
+                                                <li/>
+                                          </ul></p>
+                              </dd>
                         </dlentry>
                         <dlentry id="DEST-DataF-JSON">
                               <dt>JSON</dt>
