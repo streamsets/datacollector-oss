@@ -19,11 +19,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_uj4_mxy_bs">
   <title>SQL Query</title>
+    <shortdesc>The SQL query defines the data returned from the database.</shortdesc>
   <conbody>
-    <p><indexterm>JDBC Query Consumer origin<indexterm>SQL
-        query</indexterm></indexterm><indexterm>SQL query<indexterm>JDBC Query
-        Consumer</indexterm></indexterm>The SQL query defines the data returned from the database.
-      The SQL query guidelines depend on whether you configure the origin to perform an incremental
-      or full query.</p>
+        <p><indexterm>JDBC Query Consumer origin<indexterm>SQL
+                query</indexterm></indexterm><indexterm>SQL query<indexterm>JDBC Query
+                    Consumer</indexterm></indexterm>You define the query in the SQL Query property
+            on the JDBC tab. Or, you can define the query in a <xref
+                href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s">runtime
+                resource</xref>, and then use the <codeph>runtime:loadResource</codeph> function in
+            the SQL Query property to load the query from the resource file at runtime. For example,
+            you might enter the following expression for the property:</p>
+        <codeblock>${runtime:loadResource("myquery.sql", false)}</codeblock>
+        <p>The SQL query guidelines depend on whether you configure the origin to perform an
+            incremental or full query.<note><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                /></note></p>
   </conbody>
 </concept>

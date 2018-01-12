@@ -104,7 +104,14 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_yxz_srq_ds"/>
                                         </xref></entry>
-                                    <entry>SQL query to use when reading data from the database. <p>
+                                    <entry>SQL query to use when reading data from the database.
+                                            <p>Define the query in the property. Or, define the
+                                            query in a <xref
+                                                href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
+                                                >runtime resource</xref>, and then use the
+                                                <codeph>runtime:loadResource</codeph> function in
+                                            the property to load the query from the resource file at
+                                            runtime. </p><p>
                                             <note><ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
                                                 /></note>
