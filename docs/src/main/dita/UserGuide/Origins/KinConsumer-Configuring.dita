@@ -46,24 +46,24 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Access Key ID
-                                        <xref
+                                    <entry>Access Key ID <xref
                                             href="KinConsumer-AWSCredentials.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_v83_wcr_yv"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"
+                                    />
                                 </row>
                                 <row>
-                                    <entry>Secret Access Key
-                                        <xref
+                                    <entry>Secret Access Key <xref
                                             href="KinConsumer-AWSCredentials.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_v75_wcr_yv"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisRegion">
@@ -73,7 +73,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisEndpoint">
                                     <entry/>
                                 </row>
-                                
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisStreamName">
                                     <entry/>
@@ -124,8 +123,7 @@
                                             200.</p><p>Default is 1,000. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Threads <xref
-                                            href="KinConsumer-MultithreadProc.dita">
+                                    <entry>Max Threads <xref href="KinConsumer-MultithreadProc.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_d5x_vnc_mz"
                                         /></xref></entry>
@@ -146,46 +144,9 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure proxy
-                    information:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_vcz_1dc_mv">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Advanced Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Use Proxy</entry>
-                                    <entry>Specifies whether to use a proxy to connect to Kinesis
-                                        Streams.</entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ProxyHost">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ProxyPort">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ProxyUser">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ProxyPassword">
-                                    <entry/>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-AmazonOrigins-Advanced">
+                <cmd/>
             </step>
             <step>
                 <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following

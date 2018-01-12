@@ -1452,7 +1452,7 @@
   </p>
   <p/>
   <draft-comment author="alisontaylor"><b>table-S3AdvProps</b> Amazon S3 destination uses the whole
-   table, S3 and Kinesis Consumer use certain rows.</draft-comment>
+   table, Amazon origin reusable table uses certain rows</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table-S3AdvProps">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1464,6 +1464,19 @@
      </row>
     </thead>
     <tbody>
+     <row id="row-S3ConnectTimeout">
+      <entry>Connection Timeout</entry>
+      <entry>Seconds to wait for a response before closing the connection. <p>Default is 10
+        seconds.</p></entry>
+     </row>
+     <row id="row-S3SocketTimeout">
+      <entry>Socket Timeout</entry>
+      <entry>Seconds to wait for a response to a query.</entry>
+     </row>
+     <row id="row-S3RetryCount">
+      <entry>Retry Count</entry>
+      <entry>Maximum number of times to retry requests.</entry>
+     </row>
      <row id="row-UseProxy">
       <entry>Use Proxy</entry>
       <entry>Specifies whether to use a proxy to connect.</entry>
