@@ -782,7 +782,7 @@ angular
         // stages have services, we need to add their groups only selectively.
         if ('services' in $scope.detailPaneConfigDefn) {
           angular.forEach($scope.detailPaneConfigDefn.services, function(serviceDependency) {
-            let serviceDef = pipelineService.getServiceDefinition(serviceDependency.service);
+            var serviceDef = pipelineService.getServiceDefinition(serviceDependency.service);
             angular.forEach(serviceDef.configGroupDefinition.groupNameToLabelMapList, function(item) {
               $scope.configGroupTabs.push(item);
             });
