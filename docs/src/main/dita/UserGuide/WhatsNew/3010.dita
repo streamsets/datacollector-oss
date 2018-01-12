@@ -29,9 +29,10 @@
                 <li>MongoDB origins enhancement - Both the MongoDB origin and the MongoDB Oplog
                     origin now support delegated authentication and the BSON data type for binary
                     data. </li>
-                <li>SQL Server CDC origin enhancement - The SQL Server CDC origin now includes
-                    information from the SQL Server CDC __$command_id column in a record header
-                    attribute named jdbc. __$command_id.</li>
+                <li><xref href="../Origins/SQLServerCDC-RecordHeaderAtts.dita#concept_pc4_xts_r1b"
+                        >SQL Server CDC origin enhancement</xref> - The SQL Server CDC origin now
+                    includes information from the SQL Server CDC __$command_id column in a record
+                    header attribute named jdbc. __$command_id.</li>
                 <li>Mongo DB destination enhancement - The MongoDB destination now supports
                     delegated authentication.</li>
             </ul></p>
