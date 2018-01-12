@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pc4_xts_r1b">
- <title>Record Header Attributes</title>
- <conbody>
-  <p><indexterm>SQL Server CDC Client origin<indexterm>record header
+    <title>Record Header Attributes</title>
+    <conbody>
+        <p><indexterm>SQL Server CDC Client origin<indexterm>record header
                 attributes</indexterm></indexterm>The SQL Server CDC Client origin generates JDBC
             record header attributes that provide the SQL Server CDC data for each record, such as
             the start or end log sequence numbers (LSN). </p>
@@ -55,7 +55,8 @@
                         <row>
                             <entry>jdbc.tables</entry>
                             <entry
-                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCtables"/>
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCtables"
+                            />
                         </row>
                         <row>
                             <entry>jdbc.&lt;column name>.jdbcType</entry>
@@ -80,6 +81,10 @@
                             <entry
                                 conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCscale"
                             />
+                        </row>
+                        <row>
+                            <entry>jdbc. __$command_id</entry>
+                            <entry>Data from the SQL Server CDC __$command_id column.</entry>
                         </row>
                         <row>
                             <entry>jdbc.__$end_lsn</entry>
@@ -108,5 +113,5 @@
         <p>For details about the CDC attributes, see the <xref
                 href="https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/cdc-fn-cdc-get-all-changes-capture-instance-transact-sql"
                 format="html" scope="external">SQL Server documentation</xref>.</p>
- </conbody>
+    </conbody>
 </concept>
