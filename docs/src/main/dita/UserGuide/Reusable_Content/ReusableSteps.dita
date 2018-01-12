@@ -1637,7 +1637,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">S3 origins:</draft-comment>
+                    <draft-comment author="Loretta">S3 origins: Amazon S3, Amazon SQS Consumer,
+                        Kinesis Consumer use the whole table. Amazon S3 destination uses some
+                        rows.</draft-comment>
                 </cmd>
             </step>
             <step id="step-AmazonOrigins-Advanced">
@@ -1655,14 +1657,17 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Connection Timeout</entry>
-                                    <entry>Seconds to wait for a response before closing the
-                                        connection. <p>Default is 10 seconds.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-S3ConnectTimeout">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Socket Timeout</entry>
-                                    <entry>Seconds to wait for a response to a query.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-S3SocketTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-S3RetryCount">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-UseProxy">

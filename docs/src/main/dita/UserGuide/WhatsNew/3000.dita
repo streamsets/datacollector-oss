@@ -117,8 +117,9 @@
                                             href="../Origins/AmazonS3-EventGeneration.dita#concept_vtn_ty4_jbb"
                                             >no-more-data events</xref> and includes a new socket
                                         timeout property.</li>
-                                    <li>You can now specify the number of times the origin retries a
-                                        query. The default is three.</li>
+                                    <li>You can now specify the number of times the origin <xref
+                                            href="../Origins/AmazonS3-Configuring.dita#task_gfj_ssv_yq"
+                                            >retries a query</xref>. The default is three.</li>
                                 </ul></li>
                             <li>Directory origin enhancement - The origin can now <xref
                                     href="../Origins/Directory-MultithreadProcessing.dita#concept_pcl_nwn_qbb"
@@ -172,8 +173,10 @@
                                         <p>HDP 2.5 and 2.6</p>
                                     </li>
                                 </ul></li>
-                            <li>Kinesis Consumer origin enhancement - You can now specify the number
-                                of times the origin retries a query. The default is three.</li>
+                            <li><xref href="../Origins/KinConsumer-Configuring.dita#task_p4b_vv4_yr"
+                                    >Kinesis Consumer origin enhancement</xref> - You can now
+                                specify the number of times the origin retries a query. The default
+                                is three.</li>
                             <li>Oracle CDC Client origin enhancements:<ul id="ul_wbj_fcl_wbb">
                                     <li>When using <xref
                                             href="../Origins/OracleCDC-InitialChange.dita#concept_zrc_pyj_dx"
@@ -290,6 +293,11 @@
                             <li><xref href="../Destinations/KineticaDB.dita#concept_hxh_5xg_qbb">New
                                     KineticaDB destination</xref> - A new destination that writes
                                 data to a Kinetica table. </li>
+                            <li><xref
+                                    href="../Destinations/AmazonS3-Configuring.dita#task_pxb_j3r_rt"
+                                    >Amazon S3 destination enhancement</xref> - You can now specify
+                                the number of times the destination retries a query. The default is
+                                three.</li>
                             <li><xref
                                     href="../Destinations/HiveMetastore-Configuring.dita#task_a4n_1ft_zv"
                                     >Hive Metastore destination enhancement</xref> - You can now
