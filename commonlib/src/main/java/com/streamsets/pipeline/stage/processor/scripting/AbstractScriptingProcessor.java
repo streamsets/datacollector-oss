@@ -104,6 +104,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));
     }
 
+    public boolean isPreview() { return getContext().isPreview(); }
+
     public Object createMap(boolean listMap) {
       return getScriptObjectFactory().createMap(listMap);
     }
