@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -80,6 +81,8 @@ import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -207,10 +210,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       return hdfsDirPaths;
     }
 
+
     for (String hdfsDirLocation : conf.hdfsDirLocations) {
-      try (FileSystem fs = getFileSystemForInitDestroy()) {
-        Path ph = fs.makeQualified(new Path(hdfsDirLocation));
+      Path ph = new Path(hdfsDirLocation);
+      try (FileSystem fs = getFileSystemForInitDestroy(ph)) {
         hdfsDirPaths.add(ph);
+
         if (!fs.exists(ph)) {
           issues.add(getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
@@ -571,7 +576,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
       if (validHadoopFsUri) {
         getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
-          try (FileSystem fs = getFileSystemForInitDestroy()) { // NOSONAR
+          try (FileSystem fs = getFileSystemForInitDestroy(null)) { // NOSONAR
             // to trigger fs close
           }
           return null;
@@ -633,9 +638,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @VisibleForTesting
-  FileSystem getFileSystemForInitDestroy() throws IOException {
+  FileSystem getFileSystemForInitDestroy(Path path) throws IOException {
     try {
-      return getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.get(new URI(conf.hdfsUri), hadoopConf));
+      return getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> (path != null)? path.getFileSystem(hadoopConf): FileSystem.get(new URI(conf.hdfsUri), hadoopConf));
     } catch (IOException ex) {
       throw ex;
     } catch (Exception ex) {
