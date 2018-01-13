@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,12 +44,7 @@ public class TestClusterHdfsSource {
     ClusterHdfsConfigBean conf = getConfigBean(dirPaths);
     ClusterHdfsSource clusterHdfsSource = Mockito.spy(createSource(conf));
     Mockito.doNothing().when(clusterHdfsSource).validateHadoopFS(Mockito.anyListOf(Stage.ConfigIssue.class));
-    Mockito.doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-        return null;
-      }
-    }).when(clusterHdfsSource).getFileSystemForInitDestroy();
+    Mockito.doAnswer(invocationOnMock -> null).when(clusterHdfsSource).getFileSystemForInitDestroy(Mockito.any(Path.class));
     Mockito.doReturn(dirPaths).when(clusterHdfsSource).validateAndGetHdfsDirPaths(Mockito.anyListOf(Stage.ConfigIssue
         .class));
     try {
