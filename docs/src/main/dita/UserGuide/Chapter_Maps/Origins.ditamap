@@ -451,9 +451,8 @@
     <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
    </topicref>
    <topicref href="../Origins/MySQLBinaryLog-Offset.dita"/>
-   <topicref href="../Origins/MySQLBinaryLog-Record.dita">
-    <topicref href="../Origins/MySQLBinaryLog-ProcessingGR.dita"/>
-   </topicref>
+   <topicref href="../Origins/MySQLBinaryLog-Record.dita"/>
+   <topicref href="../Origins/MySQLBinaryLog-ProcessingGR.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Tables.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Configuring.dita"/>
   </topicref>

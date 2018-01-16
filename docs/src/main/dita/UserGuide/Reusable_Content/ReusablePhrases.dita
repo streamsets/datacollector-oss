@@ -3382,7 +3382,15 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         conref="#concept_vhs_5tz_xp/pName-long"/> changed data processing and a list
                   of CRUD-enabled destinations, see <xref
                         href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</p>
-            <p/>
+            <p>
+                  <draft-comment author="Loretta">Used a couple times in the MySQL Binary Log origin
+                        docs:</draft-comment>
+            </p>
+            <p><ph id="ph-OnlyKudu">Of the <xref
+                              href="../Pipeline_Design/CRUDDestinations.dita#concept_lfb_phd_ty"
+                              >CRUD-enabled destinations</xref>, only the Kudu destination includes
+                        a Change Log Format property that enables processing MySQL Binary Log
+                        records as generated. </ph></p>
             <draft-comment author="Loretta">CRUD-dest-def is used in Processing Changed Data
                   overview &amp; sdc.operation.type overview</draft-comment>
             <p id="CRUD-dest-def">CRUD-enabled processors and destinations can use the CRUD
