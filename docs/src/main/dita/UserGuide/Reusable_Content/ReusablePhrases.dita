@@ -3264,6 +3264,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <li>JDBC Query Consumer origin</li>
                         <li>JDBC Multitable Consumer origin</li>
                         <li>Salesforce origin</li>
+                        <li>SFTP/FTP Client origin</li>
                         <li>SQL Server CDC Client origin</li>
                         <li>SQL Server Change Tracking origin</li>
                   </ul></p>

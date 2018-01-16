@@ -575,6 +575,9 @@
    <topicref href="../Origins/SFTP-FirstFile.dita"/>
    <topicref href="../Origins/SFTP-Credentials.dita"/>
    <topicref href="../Origins/SFTP-RecordHeaderAtts.dita"/>
+   <topicref href="../Origins/SFTP-EventGeneration.dita">
+    <topicref href="../Origins/SFTP-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>

@@ -18,9 +18,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zrl_mhn_lx">
- <title>Stage Event Generation</title>
- <conbody>
-  <p><indexterm>event framework<indexterm>stage event
+    <title>Stage Event Generation</title>
+    <conbody>
+        <p><indexterm>event framework<indexterm>stage event
                 generation</indexterm></indexterm><indexterm>event generating
                     stages<indexterm>overview</indexterm></indexterm>You can configure certain
             stages to generate events. Event generation differs from stage to stage, based on the
@@ -109,7 +109,8 @@
                                 </ul>
                                 <p>For more information, see <xref
                                         href="../Origins/MultiTableJDBCConsumer-EventGen.dita">Event
-                                        Generation for the JDBC Multitable Consumer origin</xref>. </p>
+                                        Generation for the JDBC Multitable Consumer origin</xref>.
+                                </p>
                             </entry>
                         </row>
                         <row>
@@ -148,6 +149,20 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>SFTP/FTP Client origin</entry>
+                            <entry>
+                                <ul id="ul_xmd_1mr_mcb">
+                                    <li>Starts processing a file.</li>
+                                    <li>Completes processing a file. </li>
+                                    <li>Completes processing all available files and the configured
+                                        batch wait time has elapsed.</li>
+                                </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/SFTP-EventGeneration.dita#concept_jbf_cmr_mcb"
+                                        >Event Generation for the SFTP/FTP Client origin</xref>.</p>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>SQL Server CDC Client origin</entry>
                             <entry>
                                 <ul id="ul_dfr_cxg_x1b">
@@ -173,7 +188,8 @@
                                 </ul>
                                 <p>For more information, see <xref
                                         href="../Origins/SQLServerChange-EventGeneration.dita">Event
-                                        Generation for the SQL Server Change Tracking origin</xref>. </p>
+                                        Generation for the SQL Server Change Tracking origin</xref>.
+                                </p>
                             </entry>
                         </row>
                         <row>
@@ -207,7 +223,8 @@
                                 </ul>
                                 <p>For more information, see <xref
                                         href="../Processors/JavaScript-EventGeneration.dita">Event
-                                        Generation for the JavaScript Evaluator processor</xref>. </p>
+                                        Generation for the JavaScript Evaluator processor</xref>.
+                                </p>
                             </entry>
                         </row>
                         <row>
@@ -281,7 +298,8 @@
                                 </ul>
                                 <p>For more information, see <xref
                                         href="../Destinations/HiveMetastore-EventGeneration.dita"
-                                        >Event Generation for the Hive Metastore destination</xref>. </p>
+                                        >Event Generation for the Hive Metastore destination</xref>.
+                                </p>
                             </entry>
                         </row>
                         <row>
@@ -375,5 +393,5 @@
                     </tbody>
                 </tgroup>
             </table></p>
- </conbody>
+    </conbody>
 </concept>

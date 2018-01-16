@@ -18,13 +18,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_scs_3hh_tx">
- <title>Logical Pairings</title>
- <conbody>
-  <p><indexterm>event generation<indexterm>logical pairings</indexterm></indexterm><indexterm>stage
-                    events<indexterm>logical pairings</indexterm></indexterm><indexterm>pipeline
-                    events<indexterm>logical pairings</indexterm></indexterm>You can use events in
-            any way that works for your needs. The following tables outline some logical pairings of
-            event generation with executors and destinations.</p>
+    <title>Logical Pairings</title>
+    <conbody>
+        <p><indexterm>event generation<indexterm>logical
+                pairings</indexterm></indexterm><indexterm>stage events<indexterm>logical
+                    pairings</indexterm></indexterm><indexterm>pipeline events<indexterm>logical
+                    pairings</indexterm></indexterm>You can use events in any way that works for
+            your needs. The following tables outline some logical pairings of event generation with
+            executors and destinations.</p>
         <section id="section_nnn_2ng_x1b">
             <title>Pipeline Events</title>
             <p>
@@ -176,6 +177,18 @@
                                             processing queried data.</li>
                                         <li>Email executor to send email when the origin completes
                                             processing all data returned by a query.</li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>SFTP/FTP Client</entry>
+                                <entry>
+                                    <ul id="ul_zyf_wcs_mcb">
+                                        <li>Email executor to send email each time the origin starts
+                                            or completes processing a file. </li>
+                                        <li>Pipeline Finisher executor to stop the pipeline after
+                                            processing all available files.</li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
@@ -443,5 +456,5 @@
                 </table>
             </p>
         </section>
- </conbody>
+    </conbody>
 </concept>

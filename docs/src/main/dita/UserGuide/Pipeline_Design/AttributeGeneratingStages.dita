@@ -18,10 +18,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ih1_3f1_2z">
- <title>Header Attribute-Generating Stages</title>
- <conbody>
-  <p>The following table lists the stages that generate record header attributes to enable special
-                processing:<table frame="all" rowsep="1" colsep="1" id="table_hzf_lf1_2z">
+    <title>Header Attribute-Generating Stages</title>
+    <conbody>
+        <p>The following table lists the stages that generate record header attributes to enable
+            special processing:<table frame="all" rowsep="1" colsep="1" id="table_hzf_lf1_2z">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -54,7 +54,7 @@
                         <row>
                             <entry>Amazon SQS Consumer origin</entry>
                             <entry>Can be configured to include SQS message attributes in record
-                                header attributes.  <xref
+                                header attributes. <xref
                                     href="../Origins/AmazonSQS-MessageAttributes.dita">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_zxr_lvc_vbb"/></xref></entry>
@@ -77,8 +77,8 @@
                             <entry>File Tail origin</entry>
                             <entry>Includes <ph
                                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"
-                                    > in record header attributes.</ph>  in record header
-                                attributes. <xref
+                                    > in record header attributes.</ph> in record header attributes.
+                                    <xref
                                     href="../Origins/FileTail-RecordHeaderAtts.dita#concept_tlj_3g1_2z">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_j1n_ycv_2z"/></xref><p>Can be configured to use
@@ -154,8 +154,7 @@
                         <row>
                             <entry>MapR DB CDC origin</entry>
                             <entry>Includes CRUD and CDC information in record header attributes.
-                                    <xref
-                                    href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita">
+                                    <xref href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_owj_54h_qbb"/></xref></entry>
                         </row>
@@ -228,11 +227,15 @@
                             <entry>SFTP/FTP Client origin</entry>
                             <entry>Includes <ph
                                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"
-                                    > in record header attributes.</ph>  in record header
-                                attributes. <xref
+                                    > in record header attributes.</ph> in record header attributes.
+                                    <xref
                                     href="../Origins/SFTP-RecordHeaderAtts.dita#concept_tlj_3g1_2z">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ocq_zjb_j1b"/></xref></entry>
+                                        id="image_ocq_zjb_j1b"/></xref><p>Includes event header
+                                    attributes when generating events. <xref
+                                        href="../Origins/SFTP-EventRecords.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_w4w_m1s_mcb"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>SQL Server CDC Client origin</entry>
@@ -254,8 +257,7 @@
                         <row>
                             <entry>SQL Server Change Tracking origin</entry>
                             <entry>Includes CRUD and CDC information in record header attributes.
-                                    <xref
-                                    href="../Origins/SQLServerChange-RecordHeaderAtts.dita">
+                                    <xref href="../Origins/SQLServerChange-RecordHeaderAtts.dita">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_l3n_4dh_x1b"/></xref><p>Includes the CRUD
                                     operation type in the sdc.operation.type header attribute. <xref
@@ -356,62 +358,50 @@
                             <entry>Azure Data Lake Store destination</entry>
                             <entry>
                                 <p>Includes event header attributes when generating events. <xref
-                                    href="../Destinations/DataLakeStore-EventRecords.dita">
+                                        href="../Destinations/DataLakeStore-EventRecords.dita">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_xgz_xq1_j1b"/></xref></p>
                             </entry>
                         </row>
                         <row>
                             <entry>Hadoop FS destination</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Destinations/HadoopFS-EventRecords.dita#concept_dmx_1ln_qx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Destinations/HadoopFS-EventRecords.dita#concept_dmx_1ln_qx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_tkv_m44_2z"/></xref></entry>
                         </row>
                         <row>
                             <entry>Hive Metastore destination</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Destinations/HiveMetastore-EventRecords.dita#concept_x4p_fyc_rx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Destinations/HiveMetastore-EventRecords.dita#concept_x4p_fyc_rx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_b11_n44_2z"/></xref></entry>
                         </row>
                         <row>
                             <entry>Local FS destination</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Destinations/LocalFS-EventRecords.dita#concept_tyc_scc_rx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Destinations/LocalFS-EventRecords.dita#concept_tyc_scc_rx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_ksd_n44_2z"/></xref></entry>
                         </row>
                         <row>
                             <entry>MapR FS destination</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Destinations/MapRFS-EventRecords.dita#concept_z15_qcc_rx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Destinations/MapRFS-EventRecords.dita#concept_z15_qcc_rx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_vk3_n44_2z"/></xref></entry>
                         </row>
                         <row>
                             <entry>HDFS File Metadata executor</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Executors/HDFSFileMeta-EventRecords.dita#concept_omr_3tk_rx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Executors/HDFSFileMeta-EventRecords.dita#concept_omr_3tk_rx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_lbm_n44_2z"/></xref></entry>
                         </row>
                         <row>
                             <entry>Hive Query executor</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Executors/HiveQuery-EventRecords.dita#concept_iwg_r2p_my"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Executors/HiveQuery-EventRecords.dita#concept_iwg_r2p_my">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_myq_n44_2z"/></xref></entry>
                         </row>
@@ -424,12 +414,10 @@
                         </row>
                         <row>
                             <entry>MapReduce executor</entry>
-                            <entry>Includes event header attributes when generating events.
-                                <xref
-                                    href="../Executors/MapReduce-EventRecords.dita#concept_vjr_cn5_sx"
-                                    >
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Executors/MapReduce-EventRecords.dita#concept_vjr_cn5_sx">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                      /></xref></entry>
+                                /></xref></entry>
                         </row>
                         <row>
                             <entry>Spark executor</entry>
@@ -441,5 +429,5 @@
                     </tbody>
                 </tgroup>
             </table></p>
- </conbody>
+    </conbody>
 </concept>
