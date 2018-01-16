@@ -16,17 +16,19 @@
 package com.streamsets.pipeline.stage.processor.aggregation;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class AggregationProcessor extends SingleLaneRecordProcessor {
+public class AggregationProcessor extends SingleLaneProcessor {
   private final static String EVALUATORS = "evaluators";
   public static final int EVENT_RECORD_QUEUE_CAPACITY = 100;
 
@@ -67,6 +69,19 @@ public class AggregationProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
+  public void process(
+      Batch batch, SingleLaneBatchMaker singleLaneBatchMaker
+  ) throws StageException {
+    publishEventRecordsIfAny();
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      Record record = it.next();
+      evaluators.evaluate(record);
+      singleLaneBatchMaker.addRecord(record);
+    }
+  }
+
+  @Override
   public void destroy() {
     synchronized (getClass()) {
       if (evaluators != null) {
@@ -81,13 +96,6 @@ public class AggregationProcessor extends SingleLaneRecordProcessor {
   @VisibleForTesting
   AggregationEvaluators getEvaluators() {
     return evaluators;
-  }
-
-  @Override
-  protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    publishEventRecordsIfAny();
-    evaluators.evaluate(record);
-    batchMaker.addRecord(record);
   }
 
   private void publishEventRecordsIfAny() {

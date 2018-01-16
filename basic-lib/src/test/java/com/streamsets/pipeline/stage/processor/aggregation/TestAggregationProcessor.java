@@ -25,23 +25,26 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({
+    AggregationProcessor.class,
+})
 public class TestAggregationProcessor {
 
   @Test
   @SuppressWarnings("unchecked")
   public void testProcessor() throws StageException {
 
-    AggregationConfigBean aggregationConfigBean = new AggregationConfigBean();
-    aggregationConfigBean.windowType = WindowType.ROLLING;
-    aggregationConfigBean.timeWindow = TimeWindow.TW_5S;
-    aggregationConfigBean.timeWindowsToRemember = 1;
-    aggregationConfigBean.timeZoneID = "x";
-    AggregatorConfig aggregatorConfig1 = getAggregatorConfig("a");
-    aggregationConfigBean.aggregatorConfigs = Arrays.asList(aggregatorConfig1);
+    AggregationConfigBean aggregationConfigBean = getAggregationConfigBean();
 
     AggregationProcessor aggregationProcessor = new AggregationProcessor(aggregationConfigBean);
     ProcessorRunner runner = new ProcessorRunner.Builder(AggregationDProcessor.class, aggregationProcessor)
@@ -57,6 +60,18 @@ public class TestAggregationProcessor {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @NotNull
+  private AggregationConfigBean getAggregationConfigBean() {
+    AggregationConfigBean aggregationConfigBean = new AggregationConfigBean();
+    aggregationConfigBean.windowType = WindowType.ROLLING;
+    aggregationConfigBean.timeWindow = TimeWindow.TW_5S;
+    aggregationConfigBean.timeWindowsToRemember = 1;
+    aggregationConfigBean.timeZoneID = "x";
+    AggregatorConfig aggregatorConfig1 = getAggregatorConfig("a");
+    aggregationConfigBean.aggregatorConfigs = Arrays.asList(aggregatorConfig1);
+    return aggregationConfigBean;
   }
 
   @Test
@@ -90,6 +105,31 @@ public class TestAggregationProcessor {
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains("AGGREGATOR_00"));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testEventPublishingEmptyBatch() throws Exception {
+
+    AggregationConfigBean aggregationConfigBean = getAggregationConfigBean();
+
+    AggregationProcessor aggregationProcessor = PowerMockito.spy(new AggregationProcessor(aggregationConfigBean));
+    ProcessorRunner runner = new ProcessorRunner.Builder(AggregationDProcessor.class, aggregationProcessor)
+        .addOutputLane("a").build();
+
+    try {
+      runner.runInit();
+      Record record = RecordCreator.create();
+      record.set(Field.create(true));
+      runner.runProcess(Arrays.asList());
+      PowerMockito.verifyPrivate(
+          aggregationProcessor,
+          Mockito.times(1)
+      ).invoke("publishEventRecordsIfAny");
+
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @NotNull
