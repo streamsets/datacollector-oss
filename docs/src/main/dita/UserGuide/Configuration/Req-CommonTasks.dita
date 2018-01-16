@@ -114,7 +114,9 @@
                             <entry>Not applicable</entry>
                         </row>
                         <row>
-                            <entry>View log data and JVM metrics</entry>
+                            <entry>View log data and <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> metrics</entry>
                             <entry>Admin</entry>
                             <entry>Not applicable</entry>
                         </row>
