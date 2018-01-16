@@ -1511,8 +1511,8 @@ public class PipelineConfigurationValidator {
    * are supplied at "runtime". This method is the "runtime" method that propagates them.
    */
   private void propagateRuntimeConfiguration() {
-    // If pipeline wasn't loaded, there is nothing to propagate
-    if(pipelineBean == null) {
+    // If pipeline wasn't loaded or there if there are no stages, there is nothing to propagate
+    if(pipelineBean == null || pipelineBean.getPipelineStageBeans() == null) {
       return;
     }
 
