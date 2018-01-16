@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ic5_bzd_5v">
- <title>SFTP/FTP Client</title>
- <shortdesc>The SFTP/FTP Client origin reads files from a server using the Secure File Transfer
+    <title>SFTP/FTP Client</title>
+    <shortdesc>The SFTP/FTP Client origin reads files from a server using the Secure File Transfer
         Protocol (SFTP) or the File Transfer Protocol (FTP). </shortdesc>
- <conbody>
-  <p><indexterm>SFTP/FTP Client
+    <conbody>
+        <p><indexterm>SFTP/FTP Client
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>SFTP/FTP
                     Client</indexterm></indexterm>When you configure the SFTP/FTP Client origin, you
             specify the URL where the files reside on the remote server. You can specify whether to
@@ -34,5 +34,8 @@
         <p>When the pipeline stops, the SFTP/FTP Client origin notes where it stops reading. When
             the pipeline starts again, the origin continues processing from where it stopped by
             default. You can reset the origin to process all requested files.</p>
- </conbody>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"
+        />
+    </conbody>
 </concept>
