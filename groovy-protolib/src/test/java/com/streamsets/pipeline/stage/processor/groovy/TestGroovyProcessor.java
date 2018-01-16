@@ -354,6 +354,16 @@ public class TestGroovyProcessor {
     ScriptingProcessorTestUtil.verifyConstants(GroovyProcessor.class, processor);
   }
 
+  @Test
+  public void testIsPreview() throws Exception {
+    String script = "for(record in records) {\n" +
+        "  record.value['isPreview'] = sdcFunctions.isPreview();\n" +
+        "  output.write(record);\n" +
+        "}";
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyIsPreview(GroovyDProcessor.class, processor);
+  }
+
   private static final String WRITE_ERROR_SCRIPT = "for (record in records) { error.write(record, 'oops'); }";
 
   @Test

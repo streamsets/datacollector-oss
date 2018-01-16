@@ -570,6 +570,16 @@ public class TestJavaScriptProcessor {
     ScriptingProcessorTestUtil.verifyConstants(JavaScriptProcessor.class, processor);
   }
 
+  @Test
+  public void testIsPreview() throws Exception {
+    String script = "for(var i = 0; i < records.length; i++) {\n" +
+        "  records[i].value['isPreview'] = sdcFunctions.isPreview();\n" +
+        "  output.write(records[i]);\n" +
+        "}";
+    Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyIsPreview(JavaScriptDProcessor.class, processor);
+  }
+
   private static final String WRITE_ERROR_SCRIPT = "for(var i = 0; i < records.length; i++) { error.write(records[i], 'oops'); }";
 
   @Test

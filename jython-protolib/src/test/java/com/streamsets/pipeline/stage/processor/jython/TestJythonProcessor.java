@@ -474,6 +474,15 @@ public class TestJythonProcessor {
     ScriptingProcessorTestUtil.verifyConstants(JythonProcessor.class, processor);
   }
 
+  @Test
+  public void testIsPreview() throws Exception {
+    String script = "for record in records:\n" +
+        "  record.value['isPreview'] = sdcFunctions.isPreview();\n" +
+        "  output.write(record)";
+    Processor processor = new JythonProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyIsPreview(JythonDProcessor.class, processor);
+  }
+
   private static final String WRITE_ERROR_SCRIPT = "for record in records:\n  error.write(record, 'oops')\n";
 
   @Test

@@ -785,9 +785,9 @@ public class ScriptingProcessorTestUtil {
 
   public static <C extends Processor> void verifyConstants(Class<C> clazz, Processor processor) throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
-      .addConstants(ImmutableMap.of("company", "StreamSets"))
-      .addOutputLane("lane")
-      .build();
+        .addConstants(ImmutableMap.of("company", "StreamSets"))
+        .addOutputLane("lane")
+        .build();
 
     Record record = RecordCreator.create();
     record.set(Field.create(new HashMap<>()));
@@ -806,6 +806,30 @@ public class ScriptingProcessorTestUtil {
     assertEquals(1, records.size());
     assertTrue(records.get(0).has("/company"));
     assertEquals("StreamSets", records.get(0).get("/company").getValueAsString());
+  }
+
+  public static <C extends Processor> void verifyIsPreview(Class<C> clazz, Processor processor) throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .setPreview(true)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(new HashMap<>()));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      List<Record> input = Collections.singletonList(record);
+      output = runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
+
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+    assertTrue(records.get(0).has("/isPreview"));
+    assertEquals("true", records.get(0).get("/isPreview").getValueAsString());
   }
 
   static void assertFieldUtil(String fieldName, Field field, Object obj){
