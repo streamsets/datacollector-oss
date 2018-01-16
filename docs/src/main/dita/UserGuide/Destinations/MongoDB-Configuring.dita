@@ -72,8 +72,7 @@
                                         are sent to stage for error handling.</entry>
                                 </row>
                                 <row>
-                                    <entry>Upsert <xref
-                                            href="MongoDB-Upserts.dita">
+                                    <entry>Upsert <xref href="MongoDB-Upserts.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_dpb_pyn_lw"/></xref></entry>
                                     <entry>Inserts records flagged for update or replace when the
@@ -95,24 +94,12 @@
                         <uicontrol>Credentials</uicontrol> tab and configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fhj_pmt_tz">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials
-                                        <xref href="MongoDB-Credentials.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_hqm_7ks_fv"
-                                            /></xref></entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDBCredentials"
+                        id="table_kzl_2mz_mcb">
+                        <tgroup cols="1">
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoAuthType"
-                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoPassword">
+                                <row>
                                     <entry/>
                                 </row>
                             </tbody>

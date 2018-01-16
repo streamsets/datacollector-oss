@@ -26,15 +26,19 @@
                 <li>HTTP Server origin enhancement - The HTTP Server origin now includes path and
                     queryString record header attributes, as well as any other HTTP header
                     attributes included in the request. </li>
-                <li>MongoDB origins enhancement - Both the MongoDB origin and the MongoDB Oplog
-                    origin now support delegated authentication and the BSON data type for binary
-                    data. </li>
-                <li><xref href="../Origins/SQLServerCDC-RecordHeaderAtts.dita#concept_pc4_xts_r1b"
+                <li>MongoDB origins enhancement - Both the <xref
+                        href="../Origins/MongoDB-Configuring.dita#task_mdf_2rs_ns">MongoDB
+                        origin</xref> and the <xref
+                        href="../Origins/MongoDBOplog-Configuring.dita#task_qj5_drw_4y">MongoDB
+                        Oplog</xref> origin now support delegated authentication and the BSON data
+                    type for binary data. </li>
+                 <li><xref href="../Origins/SQLServerCDC-RecordHeaderAtts.dita#concept_pc4_xts_r1b"
                         >SQL Server CDC origin enhancement</xref> - The SQL Server CDC origin now
                     includes information from the SQL Server CDC __$command_id column in a record
                     header attribute named jdbc. __$command_id.</li>
-                <li>Mongo DB destination enhancement - The MongoDB destination now supports
-                    delegated authentication.</li>
+                 <li>Mongo DB destination enhancement - The MongoDB destination now supports <xref
+                        href="../Destinations/MongoDB-Configuring.dita#task_mrc_k5n_4v">delegated
+                        authentication</xref>.</li>
             </ul></p>
     </conbody>
 </concept>

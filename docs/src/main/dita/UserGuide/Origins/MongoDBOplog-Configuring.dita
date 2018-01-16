@@ -128,10 +128,9 @@
                                                 id="image_o23_1rd_ww"/></xref>
                                     </entry>
                                     <entry
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-Mongo-ReadPref"
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-Mongo-ReadPref"
                                     />
                                 </row>
-                                
                             </tbody>
                         </tgroup>
                     </table>
@@ -142,24 +141,12 @@
                         <uicontrol>Credentials</uicontrol> tab and configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fhj_pmt_tz">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials
-                                        <xref
-                                            href="MongoDBOplog-Credentials.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_o89_5rd_ww"/></xref></entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDBCredentials"
+                        id="table_dqz_cmz_mcb">
+                        <tgroup cols="1">
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoAuthType"
-                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoPassword">
+                                <row>
                                     <entry/>
                                 </row>
                             </tbody>

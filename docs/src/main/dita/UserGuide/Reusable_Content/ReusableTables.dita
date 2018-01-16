@@ -2382,9 +2382,9 @@
     </tbody>
    </tgroup>
   </table>
-  <draft-comment author="alisontaylor">Rows in this table are used in MongoDB origin, MongoDB Oplog
+  <draft-comment author="alisontaylor">This table is used by the MongoDB origin, MongoDB Oplog
    origin, and MongoDB destination</draft-comment>
-  <table frame="all" rowsep="1" colsep="1" id="table_bdl_csd_3t">
+  <table frame="all" rowsep="1" colsep="1" id="MongoDBCredentials">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -2407,6 +2407,11 @@
       <entry>Password</entry>
       <entry>MongoDB or LDAP password.<note
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
+     </row>
+     <row>
+      <entry>Authentication Source</entry>
+      <entry>An optional alternate database name to perform delegated authentication. <p>Available
+        for the Username/Password option.</p></entry>
      </row>
     </tbody>
    </tgroup>
