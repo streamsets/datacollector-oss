@@ -3558,6 +3558,15 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
+            <p>
+                  <draft-comment author="Loretta">Used in the MongoDB and MongoDB oplog Credentials
+                        topics. </draft-comment>
+            </p>
+            <p><ph id="ph-MongoDB-Cred1">Based on the authentication used by the MongoDB server,
+                        configure the origin to use no authentication, username/password
+                        authentication, or LDAP authentication. When using username/password
+                        authentication, you can also use delegated authentication. </ph></p>
+            <p id="p-MongoDB-Cred2">By default, the origin uses no authentication.</p>
             <draft-comment author="alisontaylor">Used in the Credentials topic for MongoDB origin,
                   MongoDB Oplog origin, and MongoDB destination</draft-comment>
             <p id="MongoDBCredentials">To use username/password or LDAP authentication, enter the
@@ -3580,6 +3589,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dd>Select either the Username/Password or LDAP authentication type in
                                     the Credentials tab. Then enter the username and password for
                                     the authentication type. </dd>
+                              <dd>When using the Username/Password option, you can also specify an
+                                    alternate database to perform delegated authentication.</dd>
                         </dlentry>
                   </dl></p>
             <p id="MongoDBCredentialsConclusion">If you enter credentials in both the connection
