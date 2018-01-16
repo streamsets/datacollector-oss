@@ -18,25 +18,33 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wvx_4hk_br">
-    <title>Viewing JVM Metrics</title>
-    <shortdesc>The <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        provides JVM metrics for the Data Collector. </shortdesc>
+    <title>Viewing Data Collector Metrics</title>
+    <shortdesc>You can view metrics about <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, such
+        as the CPU usage or the number of pipeline runners in the thread pool. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_dmf_l3k_br">
             <step>
-                <cmd><indexterm>JVM metrics<indexterm>viewing</indexterm></indexterm>To view JVM
-                    metrics, click <menucascade>
+                <cmd><indexterm>Data Collector
+                            metrics<indexterm>viewing</indexterm></indexterm><indexterm>metrics<indexterm>Data
+                            Collector</indexterm></indexterm>To view <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> metrics, click <menucascade>
                         <uicontrol>Administration</uicontrol>
-                        <uicontrol>JVM Metrics</uicontrol>
+                        <uicontrol>SDC Metrics</uicontrol>
                     </menucascade>.</cmd>
-                <info>The <wintitle>JVM Metrics </wintitle>page displays all JVM metrics by default.
-                </info>
+                <info>The <wintitle>Data Collector Metrics</wintitle> page displays all metrics by
+                    default. </info>
             </step>
             <step>
-                <cmd>Use the <uicontrol>Configuration</uicontrol> icon to define the metrics that
-                    display on the page and click <uicontrol>Save</uicontrol>.</cmd>
+                <cmd>To modify the metrics that display on the page, click the
+                        <uicontrol>More</uicontrol> icon, and then click
+                        <uicontrol>Settings</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>Remove any metric charts that you don't want to display, and then click
+                        <uicontrol>Save</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

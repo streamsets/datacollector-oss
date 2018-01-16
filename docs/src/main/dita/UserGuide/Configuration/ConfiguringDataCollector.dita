@@ -405,8 +405,9 @@
                             </row>
                             <row>
                                 <entry>ui.jvmMetrics.refresh.interval.ms</entry>
-                                <entry>Interval in milliseconds that the JVM metrics are
-                                        refreshed.<p>Default is 4000.</p></entry>
+                                <entry>Interval in milliseconds that the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> metrics are refreshed.<p>Default is 4000.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.enable.usage.data.collection</entry>

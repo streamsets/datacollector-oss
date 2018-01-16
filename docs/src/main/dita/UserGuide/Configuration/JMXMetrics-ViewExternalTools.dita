@@ -27,7 +27,7 @@
  <conbody>
   <p><indexterm>JMX metrics<indexterm>viewing in external tools</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            JVM metrics use the following naming pattern:</p>
+            JMX metrics use the following naming pattern:</p>
         <codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.&lt;category: pipeline|stage|custom>.\
 [&lt;stage library>_&lt;library revision>].&lt;metric name>.&lt;metric type></codeblock>
         <p>For example, the following is a batch count meter for the first revision of a pipeline

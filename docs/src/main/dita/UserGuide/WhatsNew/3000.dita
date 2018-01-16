@@ -567,9 +567,11 @@
                                     >New data type</xref> - <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> now supports the Zoned Datetime data type.</li>
-                            <li>New <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> metrics - JVM metrics have been renamed <ph
+                            <li><xref
+                                    href="../Administration/ViewingJVMMetrics.dita#task_wvx_4hk_br"
+                                    >New <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> metrics</xref> - JVM metrics have been renamed <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> Metrics and now include general <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

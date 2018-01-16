@@ -39,7 +39,8 @@
           Also includes monitoring information that is not used in preview.</li>
         <li>Pipeline Monitoring - Provides monitoring information for the pipeline.</li>
         <li>Pipeline Status - Provides the current status of the pipeline.</li>
-        <li>JVM Metrics - Provides JVM metrics for the <ph
+        <li><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          Metrics - Provides metrics about <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
         <li>Thread Dump - Lists all active Java threads used by the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
