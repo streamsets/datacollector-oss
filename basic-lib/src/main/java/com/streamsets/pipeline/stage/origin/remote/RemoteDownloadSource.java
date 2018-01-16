@@ -534,6 +534,7 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private void handleFatalException(Exception ex, RemoteFile next) throws StageException {
+    LOG.error("Error while attempting to parse file: " + next.filename, ex);
     if (ex instanceof FileNotFoundException) {
       LOG.warn("File: {} was found in listing, but is not downloadable", next != null ? next.filename : "(null)", ex);
     }
