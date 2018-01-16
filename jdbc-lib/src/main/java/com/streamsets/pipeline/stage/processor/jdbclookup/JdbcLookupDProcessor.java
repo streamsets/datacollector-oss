@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
@@ -46,6 +47,9 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@HideConfigs(
+  "cacheConfig.retryOnCacheMiss"
+)
 public class JdbcLookupDProcessor extends DProcessor {
 
   @ConfigDef(

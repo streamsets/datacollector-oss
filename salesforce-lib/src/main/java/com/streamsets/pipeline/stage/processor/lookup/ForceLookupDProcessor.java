@@ -33,11 +33,11 @@ import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-@HideConfigs(
-    value = {
-        "forceConfig.useCompression", "forceConfig.showTrace"
-    }
-)
+@HideConfigs({
+  "forceConfig.useCompression",
+  "forceConfig.showTrace",
+  "forceConfig.cacheConfig.retryOnCacheMiss"
+})
 public class ForceLookupDProcessor extends DProcessor {
   @ConfigDefBean
   public ForceLookupConfigBean forceConfig;
