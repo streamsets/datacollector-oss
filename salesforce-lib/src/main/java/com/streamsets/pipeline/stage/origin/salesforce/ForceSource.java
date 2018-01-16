@@ -63,12 +63,14 @@ import soql.SOQLParser;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -92,6 +94,7 @@ public class ForceSource extends BaseSource {
   private static final String ID = "Id";
   private static final String START_ROW = "startRow";
   private static final String RECORDS_NOT_FOUND = "Records not found for this query";
+  private static final String CONF_PREFIX = "conf";
 
   static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
 
@@ -153,6 +156,9 @@ public class ForceSource extends BaseSource {
   protected List<ConfigIssue> init() {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
+    Optional
+        .ofNullable(conf.init(getContext(), CONF_PREFIX))
+        .ifPresent(issues::addAll);
 
     if (!conf.subscribeToStreaming && !conf.queryExistingData) {
       issues.add(
@@ -216,6 +222,9 @@ public class ForceSource extends BaseSource {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
 
         partnerConnection = new PartnerConnection(partnerConfig);
+        if (conf.mutualAuth.useMutualAuth) {
+          ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+        }
 
         bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
 
@@ -232,7 +241,7 @@ public class ForceSource extends BaseSource {
             ));
           }
         }
-      } catch (ConnectionException | AsyncApiException | StageException e) {
+      } catch (ConnectionException | AsyncApiException | StageException | URISyntaxException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             ForceConfigBean.CONF_PREFIX + "authEndpoint",
@@ -283,6 +292,11 @@ public class ForceSource extends BaseSource {
 
     if (issues.isEmpty()) {
       recordCreator = buildRecordCreator();
+      try {
+        recordCreator.init();
+      } catch (StageException e) {
+        issues.add(getContext().createConfigIssue(null, null, Errors.FORCE_34, e));
+      }
     }
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
@@ -320,7 +334,7 @@ public class ForceSource extends BaseSource {
       if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
         return new PushTopicRecordCreator(getContext(), conf, sobjectType);
       } else {
-        return new PlatformEventRecordCreator(getContext(), conf.platformEvent);
+        return new PlatformEventRecordCreator(getContext(), conf.platformEvent, conf);
       }
     }
 
@@ -358,6 +372,10 @@ public class ForceSource extends BaseSource {
       } else {
         LOG.info("Queue was empty at shutdown. No data lost.");
       }
+    }
+
+    if (recordCreator != null) {
+      recordCreator.destroy();
     }
 
     // Clean up any open resources.

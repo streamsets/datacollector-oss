@@ -55,6 +55,7 @@ public enum Errors implements ErrorCode {
   FORCE_31("SOQL query can't include ORDER BY clause when PK Chunking is enabled."),
   FORCE_32("SOQL query can't use Id field in a WHERE clause when PK Chunking is enabled."),
   FORCE_33("Can't repeat an incremental query when PK Chunking is enabled."),
+  FORCE_34("Can't create HTTP client"),
   ;
   private final String msg;
 

@@ -26,18 +26,28 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.salesforce.mutualauth.ClientSSLTransportFactory;
+import com.streamsets.pipeline.lib.salesforce.mutualauth.MutualAuthConfigBean;
+import com.streamsets.pipeline.lib.salesforce.mutualauth.MutualAuthConnectorConfig;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpProxy;
+import org.eclipse.jetty.client.util.BasicAuthentication;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soql.SOQLLexer;
 import soql.SOQLParser;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class ForceUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
+  private static final int MUTUAL_AUTHENTICATION_PORT = 8443;
 
   public static String getExceptionCode(Throwable th) {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionCode().name() : "";
@@ -75,12 +85,14 @@ public class ForceUtils {
   public static BulkConnection getBulkConnection(
       ConnectorConfig partnerConfig,
       ForceConfigBean conf
-  ) throws ConnectionException, AsyncApiException, StageException {
+  ) throws ConnectionException, AsyncApiException, StageException, URISyntaxException {
     // When PartnerConnection is instantiated, a login is implicitly
     // executed and, if successful,
     // a valid session is stored in the ConnectorConfig instance.
     // Use this key to initialize a BulkConnection:
-    ConnectorConfig config = new ConnectorConfig();
+    ConnectorConfig config = conf.mutualAuth.useMutualAuth
+        ? new MutualAuthConnectorConfig(conf.mutualAuth.getUnderlyingConfig().getSslContext())
+        : new ConnectorConfig();
     config.setSessionId(partnerConfig.getSessionId());
 
     // The endpoint for the Bulk API service is the same as for the normal
@@ -95,7 +107,13 @@ public class ForceUtils {
 
     setProxyConfig(conf, config);
 
-    return new BulkConnection(config);
+    BulkConnection bulkConnection = new BulkConnection(config);
+
+    if (conf.mutualAuth.useMutualAuth) {
+      setupMutualAuthBulk(config, conf.mutualAuth);
+    }
+
+    return bulkConnection;
   }
 
   public static String getSobjectTypeFromQuery(String query) throws StageException {
@@ -152,5 +170,67 @@ public class ForceUtils {
       opCode = defaultOp.code;
     }
     return opCode;
+  }
+
+  public static void setProxy(HttpClient httpClient, ForceConfigBean conf) throws URISyntaxException, StageException {
+    httpClient.getProxyConfiguration().getProxies().add(
+        new HttpProxy(conf.proxyHostname, conf.proxyPort));
+    if (conf.useProxyCredentials) {
+      URI proxyURI = new URI("http",
+          null,
+          conf.proxyHostname,
+          conf.proxyPort,
+          null,
+          null,
+          null
+      );
+      httpClient.getAuthenticationStore().addAuthentication(new BasicAuthentication(
+          proxyURI,
+          conf.proxyRealm.get(),
+          conf.proxyUsername.get(),
+          conf.proxyPassword.get()
+      ));
+    }
+  }
+
+  public static void setupMutualAuth(ConnectorConfig config, MutualAuthConfigBean mutualAuth) throws
+      URISyntaxException {
+    String serviceEndpoint = config.getServiceEndpoint();
+    config.setTransportFactory(new ClientSSLTransportFactory(mutualAuth.getUnderlyingConfig().getSslContext()));
+    config.setServiceEndpoint(changePort(serviceEndpoint, MUTUAL_AUTHENTICATION_PORT));
+
+    LOG.debug("Set Service Endpoint to {} for Mutual Authentication", config.getServiceEndpoint());
+  }
+
+  public static void setupMutualAuthBulk(ConnectorConfig config, MutualAuthConfigBean mutualAuth) throws
+      URISyntaxException {
+    String serviceEndpoint = config.getRestEndpoint();
+    // Bulk API client doesn't set ConnectorConfig when using custom transport
+    config.setTransportFactory(new ClientSSLTransportFactory(mutualAuth.getUnderlyingConfig().getSslContext(), config));
+    config.setRestEndpoint(changePort(serviceEndpoint, MUTUAL_AUTHENTICATION_PORT));
+
+    LOG.debug("Set Service Endpoint to {} for Mutual Authentication", config.getServiceEndpoint());
+  }
+
+  private static String changePort(String url, int port) throws URISyntaxException {
+    URI uri = new URI(url);
+    return new URI(uri.getScheme(),
+        uri.getUserInfo(),
+        uri.getHost(),
+        port,
+        uri.getPath(),
+        uri.getQuery(),
+        uri.getFragment()
+    ).toString();
+  }
+
+  public static SslContextFactory makeSslContextFactory(ForceConfigBean conf) throws StageException {
+    SslContextFactory sslContextFactory = new SslContextFactory();
+    if (conf.mutualAuth.useMutualAuth) {
+      sslContextFactory.setKeyStore(conf.mutualAuth.getUnderlyingConfig().getKeyStore());
+      // Need to set password in the SSLContextFactory even though it's set in the KeyStore
+      sslContextFactory.setKeyStorePassword(conf.mutualAuth.getUnderlyingConfig().keyStorePassword.get());
+    }
+    return sslContextFactory;
   }
 }

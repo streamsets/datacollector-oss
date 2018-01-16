@@ -60,12 +60,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -76,6 +78,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private static final int MAX_OBJECT_IDS = 2000;
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupProcessor.class);
   final ForceLookupConfigBean conf;
+  private static final String CONF_PREFIX = "conf";
 
   private Map<String, String> columnsToFields = new HashMap<>();
   private Map<String, String> columnsToDefaults = new HashMap<>();
@@ -114,6 +117,9 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    Optional
+        .ofNullable(conf.init(getContext(), CONF_PREFIX ))
+        .ifPresent(issues::addAll);
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
@@ -124,7 +130,10 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceLookupProcessor.ForceSessionRenewer());
 
         partnerConnection = new PartnerConnection(partnerConfig);
-      } catch (ConnectionException | StageException e) {
+        if (conf.mutualAuth.useMutualAuth) {
+          ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+        }
+      } catch (ConnectionException | StageException | URISyntaxException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             "connectorConfig",

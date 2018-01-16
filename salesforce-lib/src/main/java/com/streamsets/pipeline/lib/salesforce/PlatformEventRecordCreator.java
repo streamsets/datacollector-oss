@@ -22,21 +22,54 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import org.apache.avro.Schema;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.client.fluent.Request;
+import org.eclipse.jetty.client.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
+  private static final Logger LOG = LoggerFactory.getLogger(PlatformEventRecordCreator.class);
   private static final String UNEXPECTED_TYPE = "Unexpected type: ";
+  private final ForceConfigBean conf;
   private Schema schema;
   private String platformEventName;
   private final Stage.Context context;
+  private HttpClient httpClient;
 
-  public PlatformEventRecordCreator(Stage.Context context, String platformEventName) {
+  public PlatformEventRecordCreator(Stage.Context context, String platformEventName, ForceConfigBean conf) {
     this.context = context;
     this.platformEventName = platformEventName;
+    this.conf = conf;
+  }
+
+  @Override
+  public void init() throws StageException {
+    super.init();
+
+    try {
+      httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
+      if (conf.useProxy) {
+        ForceUtils.setProxy(httpClient, conf);
+      }
+      httpClient.start();
+    } catch (Exception e) {
+      throw new StageException(Errors.FORCE_34, e);
+    }
+  }
+
+  @Override
+  public void destroy() {
+    try {
+      httpClient.stop();
+    } catch (Exception e) {
+      LOG.error("Exception stopping HttpClient", e);
+    }
+
+    super.destroy();
   }
 
   private Schema getSchemaMetadata(PartnerConnection partnerConnection, String schemaId) throws StageException {
@@ -45,13 +78,13 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
 
     String path = "/services/data/v41.0/event/eventSchema/" + schemaId;
     try {
-      String json = Request.Get(restEndpoint + path).addHeader(
-          "Authorization",
-          "OAuth " + partnerConnection.getConfig().getSessionId()
-      ).execute().returnContent().asString();
+      String json = httpClient.newRequest(restEndpoint + path)
+          .header("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId())
+          .send()
+          .getContentAsString();
 
       return new Schema.Parser().parse(json);
-    } catch (IOException e) {
+    } catch (InterruptedException | TimeoutException | ExecutionException e ) {
       throw new StageException(Errors.FORCE_21, platformEventName, e);
     }
   }

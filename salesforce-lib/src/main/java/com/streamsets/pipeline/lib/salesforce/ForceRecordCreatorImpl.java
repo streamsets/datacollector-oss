@@ -15,8 +15,16 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
+import com.streamsets.pipeline.api.StageException;
+
 abstract class ForceRecordCreatorImpl implements ForceRecordCreator {
   static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
 
   ForceRecordCreatorImpl() {}
+
+  @Override
+  public void init() throws StageException {}
+
+  @Override
+  public void destroy() {}
 }

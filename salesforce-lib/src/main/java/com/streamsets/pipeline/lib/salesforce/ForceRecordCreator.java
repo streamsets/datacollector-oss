@@ -19,5 +19,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 
 public interface ForceRecordCreator {
+  void init() throws StageException;
+
+  void destroy();
+
   Record createRecord(String sourceId, Object source) throws StageException;
 }

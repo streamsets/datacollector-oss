@@ -15,9 +15,15 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.salesforce.mutualauth.MutualAuthConfigBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ForceConfigBean {
   public static final String CONF_PREFIX = "forceConfig.";
@@ -173,4 +179,17 @@ public class ForceConfigBean {
       displayPosition = 1010
   )
   public boolean showTrace;
+
+  @ConfigDefBean(groups = "ADVANCED")
+  public MutualAuthConfigBean mutualAuth = new MutualAuthConfigBean();
+
+  public List<Stage.ConfigIssue> init(Stage.Context context, String prefix) {
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    if (mutualAuth.useMutualAuth) {
+      mutualAuth.init(context, prefix + "mutualAuth.", issues);
+    }
+
+    return issues;
+  }
 }

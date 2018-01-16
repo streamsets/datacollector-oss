@@ -41,11 +41,10 @@ import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 import com.streamsets.pipeline.lib.waveanalytics.Errors;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.apache.http.util.EntityUtils;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.util.StringContentProvider;
+import org.eclipse.jetty.http.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +57,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * This target writes records to Salesforce Einstein Analytics
@@ -68,6 +70,7 @@ public class WaveAnalyticsTarget extends BaseTarget {
   private static final String dataflowList = "/insights/internal_api/v1.0/esObject/workflow";
   private static final String dataflowJson = "/insights/internal_api/v1.0/esObject/workflow/%s/json";
   private static final String startDataflow = "/insights/internal_api/v1.0/esObject/workflow/%s/start";
+  private static final String CONF_PREFIX = "conf";
 
   // Status values indicating that the job is done
   private static final List<String> DONE = ImmutableList.of("Completed",
@@ -75,6 +78,7 @@ public class WaveAnalyticsTarget extends BaseTarget {
       "Failed",
       "NotProcessed"
   );
+  private static final String HTTP_PATCH = "PATCH";
   private final WaveAnalyticsConfigBean conf;
 
   private PartnerConnection connection;
@@ -83,6 +87,7 @@ public class WaveAnalyticsTarget extends BaseTarget {
   private int partNumber = 1;
   private long lastBatchTime = 0;
   private String datasetName = null;
+  private HttpClient httpClient;
 
   public WaveAnalyticsTarget(WaveAnalyticsConfigBean conf) {
     this.conf = conf;
@@ -202,70 +207,76 @@ public class WaveAnalyticsTarget extends BaseTarget {
     }
   }
 
-  private String getDataflowId() throws IOException {
-    LOG.info("*** " + restEndpoint + dataflowList);
+  private String getDataflowId() throws StageException {
+    LOG.info("getDataflowId: " + restEndpoint + dataflowList);
 
-    String json = Request.Get(restEndpoint + dataflowList).addHeader(
-        "Authorization",
-        "OAuth " + connection.getConfig().getSessionId()
-    ).execute().returnContent().asString();
+    try {
+      String json = httpClient.newRequest(restEndpoint + dataflowList)
+          .header("Authorization", "OAuth " + connection.getConfig().getSessionId())
+          .send()
+          .getContentAsString();
 
-    LOG.info("Got dataflow list: {}", json);
+      LOG.info("Got dataflow list: {}", json);
 
-    ObjectMapper mapper = new ObjectMapper();
-    DataflowList dataflows = mapper.readValue(json, DataflowList.class);
+      ObjectMapper mapper = new ObjectMapper();
+      DataflowList dataflows = mapper.readValue(json, DataflowList.class);
 
-    for (int i = 0; i < dataflows.result.size(); i++) {
-      Result r = dataflows.result.get(i);
-      if (r.name.equals(conf.dataflowName)) {
-        return r._uid;
+      for (int i = 0; i < dataflows.result.size(); i++) {
+        Result r = dataflows.result.get(i);
+        if (r.name.equals(conf.dataflowName)) {
+          return r._uid;
+        }
+
       }
-
+    } catch (InterruptedException | TimeoutException | ExecutionException | IOException e ) {
+      throw new StageException(Errors.WAVE_02, e.getMessage(), e);
     }
 
     return null;
   }
 
-  private String getDataflowJson(String dataflowId) throws IOException {
+  private String getDataflowJson(String dataflowId) throws StageException {
     // Add the dataset to the dataflow
-    return Request.Get(String.format(restEndpoint + dataflowJson, dataflowId)).addHeader(
-        "Authorization",
-        "OAuth " + connection.getConfig().getSessionId()
-    ).execute().returnContent().asString();
-  }
-
-  private void putDataflowJson(String dataflowId, String payload) throws IOException {
     try {
-      HttpResponse res = Request.Patch(restEndpoint + String.format(dataflowJson, dataflowId))
-          .addHeader("Authorization", "OAuth " + connection.getConfig().getSessionId())
-          .bodyString(payload, ContentType.APPLICATION_JSON)
-          .execute()
-          .returnResponse();
-
-      int statusCode = res.getStatusLine().getStatusCode();
-      String content = EntityUtils.toString(res.getEntity());
-
-      LOG.info("PATCH dataflow with result {} content {}", statusCode, content);
-    } catch (HttpResponseException e) {
-      LOG.error("PATCH dataflow with result {} {}", e.getStatusCode(), e.getMessage());
-      throw e;
+      return httpClient.newRequest(String.format(restEndpoint + dataflowJson, dataflowId))
+          .header("Authorization", "OAuth " + connection.getConfig().getSessionId())
+          .send()
+          .getContentAsString();
+    } catch (InterruptedException | TimeoutException | ExecutionException e ) {
+      throw new StageException(Errors.WAVE_03, e.getMessage(), e);
     }
   }
 
-  private void runDataflow(String dataflowId) throws IOException {
+  private void putDataflowJson(String dataflowId, String payload) throws StageException {
     try {
-      HttpResponse res = Request.Put(restEndpoint + String.format(startDataflow, dataflowId)).addHeader(
-          "Authorization",
-          "OAuth " + connection.getConfig().getSessionId()
-      ).execute().returnResponse();
+      ContentResponse response = httpClient.newRequest(String.format(restEndpoint + dataflowJson, dataflowId))
+          .method(HTTP_PATCH)
+          .content(new StringContentProvider(payload), "application/json")
+          .header("Authorization", "OAuth " + connection.getConfig().getSessionId())
+          .send();
+      int statusCode = response.getStatus();
+      String content = response.getContentAsString();
 
-      int statusCode = res.getStatusLine().getStatusCode();
-      String content = EntityUtils.toString(res.getEntity());
+      LOG.info("PATCH dataflow with result {} content {}", statusCode, content);
+    } catch (InterruptedException | TimeoutException | ExecutionException e) {
+      LOG.error("PATCH dataflow with result {}", e.getMessage());
+      throw new StageException(Errors.WAVE_03, e.getMessage(), e);
+    }
+  }
+
+  private void runDataflow(String dataflowId) throws StageException {
+    try {
+      ContentResponse response = httpClient.newRequest(restEndpoint + String.format(startDataflow, dataflowId))
+          .method(HttpMethod.PUT)
+          .header("Authorization", "OAuth " + connection.getConfig().getSessionId())
+          .send();
+      int statusCode = response.getStatus();
+      String content = response.getContentAsString();
 
       LOG.info("PUT dataflow with result {} content {}", statusCode, content);
-    } catch (HttpResponseException e) {
-      LOG.error("PUT dataflow with result {} {}", e.getStatusCode(), e.getMessage());
-      throw e;
+    } catch (InterruptedException | TimeoutException | ExecutionException e) {
+      LOG.error("PUT dataflow with result {}", e.getMessage());
+      throw new StageException(Errors.WAVE_03, e.getMessage(), e);
     }
   }
 
@@ -441,18 +452,32 @@ public class WaveAnalyticsTarget extends BaseTarget {
   protected List<ConfigIssue> init() {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
+    Optional
+        .ofNullable(conf.init(getContext(), CONF_PREFIX ))
+        .ifPresent(issues::addAll);
 
     try {
-      connection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer()));
+      ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer());
+      connection = Connector.newConnection(partnerConfig);
       LOG.info("Successfully authenticated as {}", conf.username);
+      if (conf.mutualAuth.useMutualAuth) {
+        ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+      }
 
       String soapEndpoint = connection.getConfig().getServiceEndpoint();
       restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
-    } catch (ConnectionException | StageException ce) {
+
+      httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
+      if (conf.useProxy) {
+        ForceUtils.setProxy(httpClient, conf);
+      }
+      httpClient.start();
+    } catch (Exception e) {
+      LOG.error("Exception during init()", e);
       issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
           ForceConfigBean.CONF_PREFIX + "authEndpoint",
           Errors.WAVE_00,
-          ForceUtils.getExceptionCode(ce) + ", " + ForceUtils.getExceptionMessage(ce)
+          ForceUtils.getExceptionCode(e) + ", " + ForceUtils.getExceptionMessage(e)
       ));
     }
 
@@ -471,6 +496,14 @@ public class WaveAnalyticsTarget extends BaseTarget {
         closeDataset();
       } catch (Exception e) {
         LOG.error("Exception updating InsightsExternalData", e);
+      }
+    }
+
+    if (httpClient != null) {
+      try {
+        httpClient.stop();
+      } catch (Exception e) {
+        LOG.error("Exception stopping HttpClient", e);
       }
     }
 

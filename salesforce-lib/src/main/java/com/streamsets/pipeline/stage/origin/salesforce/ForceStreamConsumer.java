@@ -19,6 +19,7 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
@@ -28,16 +29,12 @@ import org.cometd.client.BayeuxClient;
 import org.cometd.client.transport.ClientTransport;
 import org.cometd.client.transport.LongPollingTransport;
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,22 +195,11 @@ public class ForceStreamConsumer {
   }
 
   private BayeuxClient makeClient() throws Exception {
-    httpClient = new HttpClient(new SslContextFactory());
+    httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
     httpClient.setConnectTimeout(CONNECTION_TIMEOUT);
     httpClient.setIdleTimeout(READ_TIMEOUT);
     if (conf.useProxy) {
-      httpClient.getProxyConfiguration().getProxies().add(
-          new HttpProxy(conf.proxyHostname, conf.proxyPort));
-      if (conf.useProxyCredentials) {
-        URI proxyURI = new URI("http", null, conf.proxyHostname,
-            conf.proxyPort, null, null, null);
-        httpClient.getAuthenticationStore().addAuthentication(new BasicAuthentication(
-              proxyURI,
-              conf.proxyRealm.get(),
-              conf.proxyUsername.get(),
-              conf.proxyPassword.get()
-        ));
-      }
+      ForceUtils.setProxy(httpClient, conf);
     }
     httpClient.start();
 

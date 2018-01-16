@@ -215,13 +215,6 @@
       <artifactId>jetty-util-ajax</artifactId>
       <version>${jetty.version}</version>
     </dependency>
-
-    <!-- Fluent -->
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>fluent-hc</artifactId>
-      <version>${fluent.version}</version>
-    </dependency>
   </dependencies>
 
   <build>
