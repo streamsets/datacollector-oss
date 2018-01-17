@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.FieldEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class ReplaceRule {
   @ConfigDef(
@@ -53,7 +54,7 @@ public class ReplaceRule {
     description = "Replacement value for the given field(s).",
     group = "REPLACE",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = {RecordEL.class, FieldEL.class},
+    elDefs = {RecordEL.class, FieldEL.class, TimeNowEL.class},
     dependencies = {
       @Dependency(configName = "setToNull", triggeredByValues = "false")
     },

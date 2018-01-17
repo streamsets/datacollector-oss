@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -97,6 +100,28 @@ public class TimeNowEL {
       return 0;
     }
     return in.getTime();
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "timeZoneOffset",
+      description = "Return timezone's offset in milliseconds. Pass empty timezone to get offset for 'current' timezone.")
+  public static long timeZoneOffset(@ElParam("timezone") String timeZone) {
+    TimeZone tz;
+
+    if(timeZone == null || timeZone.isEmpty()) {
+      tz = TimeZone.getDefault();
+    } else {
+      tz = TimeZone.getTimeZone(timeZone);
+
+      // TimeZone.getTimeZone() returns "GMT" by default, hence we need to detect if that
+      // did not happened intentionally.
+      if ("GMT".equals(tz.getID()) && !"GMT".equals(timeZone)) {
+        throw new IllegalArgumentException("Unknown timezone: " + timeZone);
+      }
+    }
+
+    Calendar calendar = Calendar.getInstance(tz);
+    return calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET);
   }
 
   @ElFunction(prefix = TIME_CONTEXT_VAR,

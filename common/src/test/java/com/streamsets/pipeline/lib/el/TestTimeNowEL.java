@@ -155,4 +155,14 @@ public class TestTimeNowEL {
 
     Assert.assertEquals("2016-07-14 11:23:45 Hawaii Standard Time", formatter.format(dt));
   }
+
+  @Test
+  public void testTimeZoneOffset() {
+    long HOUR = 60*60*1000;
+    long HALF = 30*60*1000;
+    Assert.assertEquals(0, TimeNowEL.timeZoneOffset("GMT"));
+    Assert.assertEquals(-5*HOUR, TimeNowEL.timeZoneOffset("GMT-05:00"));
+    Assert.assertEquals(1*HOUR, TimeNowEL.timeZoneOffset("GMT+01:00"));
+    Assert.assertEquals(5*HOUR+HALF, TimeNowEL.timeZoneOffset("IST"));
+  }
 }
