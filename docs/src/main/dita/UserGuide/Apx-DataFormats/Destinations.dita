@@ -444,6 +444,22 @@
               <entry/>
             </row>
             <row>
+              <entry>Named Pipe</entry>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_erf_dpm_mcb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_frf_dpm_mcb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_grf_dpm_mcb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_hrf_dpm_mcb"
+                /></entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
               <entry>RabbitMQ Producer</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zp4_bzc_kv"
                 /></entry>

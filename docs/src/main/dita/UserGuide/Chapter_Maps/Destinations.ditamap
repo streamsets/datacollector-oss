@@ -378,6 +378,18 @@
    <topicref href="../Destinations/MapRStreamsProd-AddProps.dita"/>
    <topicref href="../Destinations/MapRStreamsProd-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/NamedPipe.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/NamedPipe-Prereqs.dita">
+    <topicref href="../Destinations/NamedPipe_mkfifo.dita"/>
+    <topicref href="../Destinations/NamedPipe_ConfigureReader.dita"/>
+   </topicref>
+   <topicref href="../Destinations/NamedPipe_WorkingWithReader.dita"/>
+   <topicref href="../Destinations/NamedPipe_DataFormats.dita"/>
+   <topicref href="../Destinations/NamedPipe-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/MongoDB.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

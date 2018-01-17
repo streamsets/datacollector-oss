@@ -92,6 +92,8 @@
           MongoDB.</li>
         <li><xref href="MQTTPublisher.dita#concept_odz_txt_lz">MQTT Publisher</xref> - Publishes
           messages to a topic on an MQTT broker.</li>
+        <li><xref href="NamedPipe.dita#concept_pl5_tdg_gcb">Named Pipe</xref> - Writes data to a
+          named pipe.</li>
         <li><xref href="Redis.dita#concept_ktc_gw2_gw">Redis</xref> - Writes data to Redis.</li>
         <li><xref href="Salesforce.dita#concept_rlb_rt3_rx">Salesforce</xref> - Writes data to
           Salesforce.</li>

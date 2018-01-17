@@ -359,6 +359,7 @@
                         <li>HTTP Client</li>
                         <li>Local FS</li>
                         <li>MQTT Publisher</li>
+                        <li>Named Pipe</li>
                         <li>SDC RPC</li>
                         <li>To Error</li>
                         <li>Trash</li>
@@ -2158,7 +2159,7 @@ input_stream.read()</codeblock></p>
                               When necessary, merge record data into the field earlier in the
                               pipeline. </dd>
                         <dd>You can configure the characters to use as record separators. By
-                              default, the destination uses a Unix-style line ending (\n) to
+                              default, the destination uses a UNIX-style line ending (\n) to
                               separate records.</dd>
                         <dd>When a record contains no data in the text field, you can configure the
                               destination to write the record separator characters, creating an
