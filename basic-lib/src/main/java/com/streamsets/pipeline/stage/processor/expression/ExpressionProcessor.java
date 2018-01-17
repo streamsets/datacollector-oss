@@ -220,7 +220,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  private static Field.Type getTypeFromObject(Object result) {
+  // TODO: Better to move to some util class?
+  public static Field.Type getTypeFromObject(Object result) {
     if(result instanceof Double) {
       return Field.Type.DOUBLE;
     } else if(result instanceof Long) {

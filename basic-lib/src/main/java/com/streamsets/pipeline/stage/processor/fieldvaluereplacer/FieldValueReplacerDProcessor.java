@@ -39,6 +39,7 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@Deprecated // Use FieldReplacerProcessor that is based on field path expression rather then set of difficult conditions
 public class FieldValueReplacerDProcessor extends DProcessor {
 
   @ConfigDef(
