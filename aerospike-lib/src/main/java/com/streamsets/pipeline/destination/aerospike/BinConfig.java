@@ -27,7 +27,7 @@ public class BinConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Bin name expression",
+      label = "Bin Name Expression",
       description = "Expression language to obtain bin name from record",
       defaultValue = "${record:value('/bin_name_1')}",
       displayPosition = 10,
@@ -39,7 +39,7 @@ public class BinConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Bin value expression",
+      label = "Bin Value Expression",
       description = "Expression language to obtain bin value from record",
       defaultValue = "${record:value('/bin_val_1')}",
       displayPosition = 20,
@@ -53,8 +53,8 @@ public class BinConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "STRING",
-      label = "Partition Value Type",
-      description = "Partition column's value type",
+      label = "Bin Value Type",
+      description = "Bin value data type",
       displayPosition = 30
   )
   @ValueChooserModel(DataTypeChooserValues.class)
