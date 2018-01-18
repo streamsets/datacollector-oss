@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MqttClientSource implements PushSource, MqttCallback {
 
   private static final Logger LOG = LoggerFactory.getLogger(MqttClientSource.class);
+  private static final String TOPIC_HEADER_NAME = "topic";
   private final MqttClientConfigBean commonConf;
   private final MqttClientSourceConfigBean subscriberConf;
   private final MqttClientCommon mqttClientCommon;
@@ -141,21 +142,22 @@ public class MqttClientSource implements PushSource, MqttCallback {
   }
 
   @Override
-  public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+  public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     try (DataParser parser = parserFactory.getParser(requestId, mqttMessage.getPayload())) {
-      process(parser);
+      process(topic, parser);
     } catch (DataParserException ex) {
       errorQueue.offer(ex);
       LOG.warn("Error while processing request payload from: {}", ex.toString(), ex);
     }
   }
 
-  private void process(DataParser parser) throws IOException, DataParserException {
+  private void process(String topic, DataParser parser) throws IOException, DataParserException {
     BatchContext batchContext = context.startBatch();
     List<Record> records = new ArrayList<>();
     Record parsedRecord = parser.parse();
     while (parsedRecord != null) {
+      parsedRecord.getHeader().setAttribute(TOPIC_HEADER_NAME, topic);
       records.add(parsedRecord);
       parsedRecord = parser.parse();
     }
