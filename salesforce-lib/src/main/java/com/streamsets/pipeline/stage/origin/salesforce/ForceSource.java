@@ -895,7 +895,7 @@ public class ForceSource extends BaseSource {
           throws AsyncApiException {
     JobInfo job = new JobInfo();
     job.setObject(sobjectType);
-    job.setOperation(conf.queryAll ? OperationEnum.queryAll : OperationEnum.query);
+    job.setOperation((conf.queryAll && !conf.usePKChunking) ? OperationEnum.queryAll : OperationEnum.query);
     job.setContentType(ContentType.CSV);
     if (conf.usePKChunking) {
       String headerValue = CHUNK_SIZE + "=" + conf.chunkSize;
