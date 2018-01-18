@@ -65,12 +65,12 @@ public class KafkaTargetConfig {
   private static final String RETRY_BACKOFF_MS_KEY = "retry.backoff.ms";
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
-  public static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SDC_JSON",
+      defaultValue = "JSON",
       label = "Data Format",
       displayPosition = 1,
       group = "DATA_FORMAT"
