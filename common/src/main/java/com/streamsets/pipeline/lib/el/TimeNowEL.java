@@ -106,6 +106,17 @@ public class TimeNowEL {
       name = "timeZoneOffset",
       description = "Return timezone's offset in milliseconds. Pass empty timezone to get offset for 'current' timezone.")
   public static long timeZoneOffset(@ElParam("timezone") String timeZone) {
+    return timeZoneOffsetInternal(timeZone, null);
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "dateTimeZoneOffset",
+      description = "Return timezone's offset in milliseconds of given date and timezone. Pass empty timezone to get offset for 'current' timezone.")
+  public static long timeZoneOffset(@ElParam("date") Date date, @ElParam("timezone") String timeZone) {
+    return timeZoneOffsetInternal(timeZone, date);
+  }
+
+  public static long timeZoneOffsetInternal(String timeZone, Date date) {
     TimeZone tz;
 
     if(timeZone == null || timeZone.isEmpty()) {
@@ -121,6 +132,9 @@ public class TimeNowEL {
     }
 
     Calendar calendar = Calendar.getInstance(tz);
+    if(date != null) {
+      calendar.setTimeInMillis(date.getTime());
+    }
     return calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET);
   }
 

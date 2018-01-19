@@ -160,9 +160,18 @@ public class TestTimeNowEL {
   public void testTimeZoneOffset() {
     long HOUR = 60*60*1000;
     long HALF = 30*60*1000;
+
+    // Pure timezone
     Assert.assertEquals(0, TimeNowEL.timeZoneOffset("GMT"));
     Assert.assertEquals(-5*HOUR, TimeNowEL.timeZoneOffset("GMT-05:00"));
     Assert.assertEquals(1*HOUR, TimeNowEL.timeZoneOffset("GMT+01:00"));
     Assert.assertEquals(5*HOUR+HALF, TimeNowEL.timeZoneOffset("IST"));
+
+    // And offset for a given date
+    Date july = new Date(2018 - 1900, 8, 1);
+    Date february = new Date(2018 - 1900, 1, 1);
+
+    Assert.assertEquals(-7*HOUR, TimeNowEL.timeZoneOffset(july,"PST")); // Daylight saving time
+    Assert.assertEquals(-8*HOUR, TimeNowEL.timeZoneOffset(february,"PST"));
   }
 }
