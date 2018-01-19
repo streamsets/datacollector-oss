@@ -464,6 +464,7 @@
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
+        <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <hdp_2_3-hive1-lib>hdp_2_3-hive1-lib</hdp_2_3-hive1-lib>
@@ -535,6 +536,7 @@
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
         <module>kinetica_6_0-lib</module>
+        <module>kinetica_6_1-lib</module>
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
         <module>hdp_2_3-hive1-lib</module>
@@ -584,7 +586,7 @@
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
+        <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
         <hdp_2_6-lib>hdp_2_6-lib</hdp_2_6-lib>
         <hdp_2_6_2-hive1-lib>hdp_2_6_2-hive1-lib</hdp_2_6_2-hive1-lib>
         <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
@@ -614,7 +616,7 @@
         <module>cdh_spark_2_1_r1-lib</module>
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
-        <module>kinetica_6_0-lib</module>
+        <module>kinetica_6_1-lib</module>
         <module>hdp_2_6-lib</module>
         <module>hdp_2_6_2-hive1-lib</module>
         <module>hdp_2_6-hive2-lib</module>
