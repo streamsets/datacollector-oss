@@ -179,40 +179,42 @@ public class ForceSource extends BaseSource {
     }
 
     if (conf.queryExistingData) {
-      SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(conf.soqlQuery);
-      SOQLParser.ConditionExpressionsContext conditionExpressions = statementContext.conditionExpressions();
-      SOQLParser.FieldOrderByListContext fieldOrderByList = statementContext.fieldOrderByList();
-
       if (conf.usePKChunking) {
-        if (fieldOrderByList != null) {
-          issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-              ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_31
-          ));
-        }
-
-        if (conditionExpressions != null
-            && checkConditionExpressions(conditionExpressions, ID)) {
-          issues.add(getContext().createConfigIssue(
-            Groups.QUERY.name(),
-            ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_32
-          ));
-        }
-
-        if (conf.repeatQuery == ForceRepeatQuery.INCREMENTAL) {
-          issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-              ForceConfigBean.CONF_PREFIX + "repeatQuery", Errors.FORCE_33
-          ));
-        }
-
         conf.offsetColumn = ID;
-      } else {
-        if (conditionExpressions == null
-            || !checkConditionExpressions(conditionExpressions, conf.offsetColumn)
-            || fieldOrderByList == null
-            || !checkFieldOrderByList(fieldOrderByList, conf.offsetColumn)) {
-          issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-              ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn
-          ));
+      }
+
+      if (!conf.disableValidation) {
+        SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(conf.soqlQuery);
+        SOQLParser.ConditionExpressionsContext conditionExpressions = statementContext.conditionExpressions();
+        SOQLParser.FieldOrderByListContext fieldOrderByList = statementContext.fieldOrderByList();
+
+        if (conf.usePKChunking) {
+          if (fieldOrderByList != null) {
+            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_31
+            ));
+          }
+
+          if (conditionExpressions != null && checkConditionExpressions(conditionExpressions, ID)) {
+            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                ForceConfigBean.CONF_PREFIX + "soqlQuery",
+                Errors.FORCE_32
+            ));
+          }
+
+          if (conf.repeatQuery == ForceRepeatQuery.INCREMENTAL) {
+            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                ForceConfigBean.CONF_PREFIX + "repeatQuery", Errors.FORCE_33
+            ));
+          }
+        } else {
+          if (conditionExpressions == null || !checkConditionExpressions(conditionExpressions,
+              conf.offsetColumn
+          ) || fieldOrderByList == null || !checkFieldOrderByList(fieldOrderByList, conf.offsetColumn)) {
+            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn
+            ));
+          }
         }
       }
     }

@@ -253,6 +253,18 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
   @ValueChooserModel(ReplayOptionChooserValues.class)
   public ReplayOption replayOption = ReplayOption.NEW_EVENTS;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Disable Query Validation",
+      description = "Disables validation of query formatting such as " +
+          "presence of ${OFFSET} or ORDER BY clause.",
+      defaultValue = "false",
+      displayPosition = 300,
+      group = "ADVANCED"
+  )
+  public boolean disableValidation = false;
+
   @ConfigDefBean(groups = {"FORCE", "QUERY", "SUBSCRIBE", "ADVANCED"})
   public BasicConfig basicConfig = new BasicConfig();
 }
