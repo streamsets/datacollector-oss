@@ -23,6 +23,7 @@ import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
@@ -56,6 +57,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.security.KeyPair;
@@ -109,6 +111,21 @@ public class HttpProcessorIT extends JerseyTest {
         return Response.status(Response.Status.FORBIDDEN).build();
       }
       return Response.ok(getBody("http/get_response.json"))
+          .header("x-test-header", "StreamSets")
+          .header("x-list-header", ImmutableList.of("a", "b"))
+          .build();
+    }
+  }
+
+  @Path("/test/getzip")
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  public static class TestGetZip {
+    @GET
+    public Response get(@Context HttpHeaders headers) throws Exception {
+      if (token != null && !headers.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0).equals("Bearer " + token)) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+      return Response.ok(new File(Resources.getResource("http/compressed.gz").getPath()))
           .header("x-test-header", "StreamSets")
           .header("x-list-header", ImmutableList.of("a", "b"))
           .build();
@@ -319,6 +336,7 @@ public class HttpProcessorIT extends JerseyTest {
     return new ResourceConfig(
         Sets.newHashSet(
             TestGet.class,
+            TestGetZip.class,
             TestPut.class,
             HttpStageTestUtil.TestPostCustomType.class,
             TestXmlGet.class,
@@ -443,14 +461,28 @@ public class HttpProcessorIT extends JerseyTest {
 
   @Test
   public void testHttpGetJson() throws Exception {
+    doTestGetJson(false);
+  }
+
+  @Test
+  public void testHttpGetJsonCompressed() throws Exception {
+    doTestGetJson(true);
+  }
+
+  private void doTestGetJson(boolean compressed) throws com.streamsets.pipeline.api.StageException {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
     conf.outputField = "/output";
     conf.dataFormat = DataFormat.JSON;
     conf.resourceUrl = getBaseUri() + "test/get";
+    if (compressed) {
+      conf.resourceUrl = conf.resourceUrl + "zip";
+      conf.dataFormatConfig.compression = Compression.COMPRESSED_FILE;
+    }
+    System.out.println(conf.resourceUrl);
 
     Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
+    record.set("/", Field.create(new HashMap<>()));
 
     List<Record> records = ImmutableList.of(record);
     Processor processor = new HttpProcessor(conf);

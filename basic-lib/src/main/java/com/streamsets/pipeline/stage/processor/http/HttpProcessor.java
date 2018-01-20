@@ -26,9 +26,9 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.Groups;
+import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -46,6 +46,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -247,14 +248,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       boolean failOn403
   ) throws StageException {
 
-    Response response;
+    Response response = null;
     try {
       response = responseFuture.get(maxRequestCompletionSecs, TimeUnit.SECONDS);
-      String responseBody = "";
+      InputStream responseBody = null;
       if (response.hasEntity()) {
-        responseBody = response.readEntity(String.class);
+        responseBody = response.readEntity(InputStream.class);
       }
-      response.close();
       if (conf.client.useOAuth2 && response.getStatus() == 403 && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return null;
@@ -279,6 +279,10 @@ public class HttpProcessor extends SingleLaneProcessor {
     } catch (TimeoutException e) {
       LOG.error("HTTP request future timed out", e.toString(), e);
       throw new OnRecordErrorException(record, Errors.HTTP_03, e.toString());
+    } finally {
+      if (response != null) {
+        response.close();
+      }
     }
   }
 
@@ -290,9 +294,9 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return an SDC record resulting from the response text
    * @throws StageException if the response could not be parsed
    */
-  private Record parseResponse(String response) throws StageException {
+  private Record parseResponse(InputStream response) throws StageException {
     Record record = null;
-    try (DataParser parser = parserFactory.getParser("", response)) {
+    try (DataParser parser = parserFactory.getParser("", response, "0")) {
       // A response may only contain a single record, so we only parse it once.
       record = parser.parse();
       if (conf.dataFormat == DataFormat.TEXT) {

@@ -34,7 +34,6 @@ import com.streamsets.pipeline.lib.http.Groups;
     onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/HTTPClient.html#task_z54_1qr_fw"
 )
 @HideConfigs(value = {
-    "conf.dataFormatConfig.compression",
     "conf.dataFormatConfig.jsonContent"
 })
 @ConfigGroups(Groups.class)
