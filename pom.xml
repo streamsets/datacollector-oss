@@ -275,6 +275,9 @@
             <!-- Bower -->
             <exclude>**/.bowerrc</exclude>
 
+            <!-- Rat doesn't properly recognize header in some files -->
+            <exclude>salesforce-lib/src/main/java/com/streamsets/pipeline/lib/salesforce/mutualauth/ClientSSLTransport.java</exclude>
+
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
             <exclude>sdk/src/main/services/**</exclude>
@@ -293,6 +296,7 @@
             <exclude>**/*.desc</exclude>
             <exclude>**/*.proto</exclude>
             <exclude>**/*.md</exclude>
+
             <!-- Protobuf generated files which are checked in for testing-->
             <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/EmployeeProto.java</exclude>
             <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/EngineerProto.java</exclude>
