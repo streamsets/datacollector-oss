@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   description = "Writes data to Flume Source",
   icon = "flume.png",
   upgrader = FlumeTargetUpgrader.class,
-  onlineHelpRefUrl = "index.html#Destinations/Flume.html#task_vft_g5p_yr"
+  onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/Flume.html#task_vft_g5p_yr"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

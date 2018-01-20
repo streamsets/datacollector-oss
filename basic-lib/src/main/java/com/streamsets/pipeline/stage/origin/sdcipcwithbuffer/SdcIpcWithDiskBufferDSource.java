@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
         "It buffers records in memory/disk. In case of failure/stop records may be lost.",
     execution = ExecutionMode.STANDALONE,
     icon = "dev.png",
-    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html",
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html",
     upgrader = SdcIpcWithDiskBufferSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)

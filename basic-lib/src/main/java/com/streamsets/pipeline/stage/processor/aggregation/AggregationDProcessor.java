@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     description = "Aggregates data that arrives within a window of time",
     icon="aggregation.png",
     producesEvents = true,
-    onlineHelpRefUrl = "index.html#Processors/Aggregator.html#task_bd3_vvm_5bb",
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/Aggregator.html#task_bd3_vvm_5bb",
     upgrader = AggregationProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)

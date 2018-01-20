@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
     description = "Executes queries against JDBC compliant database",
     upgrader = JdbcQueryExecutorUpgrader.class,
     icon = "rdbms-executor.png",
-    onlineHelpRefUrl = "index.html#Executors/JDBCQuery.html#task_ym2_3cv_sx"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Executors/JDBCQuery.html#task_ym2_3cv_sx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

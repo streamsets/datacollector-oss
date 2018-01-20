@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Writes data to Amazon Kinesis Firehose",
     icon = "kinesisfirehose.png",
     upgrader = FirehoseTargetUpgrader.class,
-    onlineHelpRefUrl = "index.html#Destinations/KinFirehose.html#task_rpf_qbq_kv"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/KinFirehose.html#task_rpf_qbq_kv"
 )
 @ConfigGroups(value = FirehoseGroups.class)
 @GenerateResourceBundle

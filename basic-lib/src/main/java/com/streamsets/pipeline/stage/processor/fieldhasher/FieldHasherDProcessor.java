@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     description = "Uses an algorithm to hash field values",
     icon="hash.png",
     upgrader = FieldHasherProcessorUpgrader.class,
-    onlineHelpRefUrl = "index.html#Processors/FieldHasher.html#task_xjd_dlk_wq"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/FieldHasher.html#task_xjd_dlk_wq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

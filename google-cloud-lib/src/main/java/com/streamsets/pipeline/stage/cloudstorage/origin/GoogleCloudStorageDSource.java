@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    onlineHelpRefUrl = "index.html#Origins/GCS.html#task_wzm_2rl_nbb"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/GCS.html#task_wzm_2rl_nbb"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

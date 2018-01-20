@@ -38,7 +38,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
       }
     ),
     upgrader = DataParserUpgrader.class,
-    onlineHelpRefUrl = "index.html#Processors/DataParser.html#task_cx3_2yk_r1b"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/DataParser.html#task_cx3_2yk_r1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

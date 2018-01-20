@@ -33,7 +33,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/UDPMulti.html#task_g2k_v5f_5bb"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/UDPMulti.html#task_g2k_v5f_5bb"
 )
 
 @ConfigGroups(Groups.class)

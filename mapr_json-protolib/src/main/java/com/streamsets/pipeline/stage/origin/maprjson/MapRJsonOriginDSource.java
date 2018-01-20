@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     icon = "mapr.png",
     resetOffset = true,
     privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Origins/MapRDBJSON.html#task_hys_s15_3y"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRDBJSON.html#task_hys_s15_3y"
 )
 
 @ConfigGroups(Groups.class)

@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
     label = "JDBC Metadata",
     description = "Write metadata to JDBC and write information for JDBC",
     icon = "rdbms.png",
-    onlineHelpRefUrl = "index.html#TBD"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/TBD"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

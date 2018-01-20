@@ -35,7 +35,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     resetOffset = true,
     producesEvents = true,
     upgrader = AmazonS3SourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#Origins/AmazonS3.html#task_gfj_ssv_yq"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/AmazonS3.html#task_gfj_ssv_yq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon = "dev.png",
     upgrader = RawDataSourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 @ConfigGroups(value = RawDataSourceGroups.class)
 public class RawDataDSource extends DSource {

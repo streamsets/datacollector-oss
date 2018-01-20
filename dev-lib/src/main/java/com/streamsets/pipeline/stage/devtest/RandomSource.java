@@ -41,7 +41,7 @@ import java.util.Random;
   description = "Generates records with the specified field names, using Long data. For development only.",
   execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
   icon = "dev.png",
-  onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+  onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class RandomSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);

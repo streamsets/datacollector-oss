@@ -34,7 +34,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     resetOffset = true,
     producesEvents = true,
     upgrader = RemoteDownloadSourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/SFTP.html#task_lfx_fzd_5v"
 )
 @HideConfigs(value = {"conf.dataFormatConfig.verifyChecksum"})
 @GenerateResourceBundle

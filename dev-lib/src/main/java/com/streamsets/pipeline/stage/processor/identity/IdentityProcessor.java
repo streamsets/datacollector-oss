@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
-    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class IdentityProcessor extends SingleLaneRecordProcessor {
 

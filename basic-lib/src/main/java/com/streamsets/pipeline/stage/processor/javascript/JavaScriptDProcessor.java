@@ -32,7 +32,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     icon = "javascript.png",
     upgrader = JavaScriptProcessorUpgrader.class,
     producesEvents = true,
-    onlineHelpRefUrl = "index.html#Processors/JavaScript.html#task_mzc_1by_nr"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/JavaScript.html#task_mzc_1by_nr"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

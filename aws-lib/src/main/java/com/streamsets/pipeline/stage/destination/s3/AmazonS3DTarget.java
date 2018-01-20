@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   privateClassLoader = true,
   upgrader = AmazonS3TargetUpgrader.class,
   producesEvents = true,
-  onlineHelpRefUrl = "index.html#Destinations/AmazonS3.html#task_pxb_j3r_rt"
+  onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/AmazonS3.html#task_pxb_j3r_rt"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

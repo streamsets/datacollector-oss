@@ -29,7 +29,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Writes data to Cassandra",
     icon = "cassandra.png",
     upgrader = CassandraTargetUpgrader.class,
-    onlineHelpRefUrl = "index.html#Destinations/Cassandra.html#task_t1d_z3l_sr"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/Cassandra.html#task_t1d_z3l_sr"
 )
 @ConfigGroups(value = Groups.class)
 public class CassandraDTarget extends DTarget {

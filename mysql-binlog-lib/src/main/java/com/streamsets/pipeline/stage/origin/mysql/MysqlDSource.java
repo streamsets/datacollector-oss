@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.*;
     execution = ExecutionMode.STANDALONE,
     resetOffset = true,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/MySQLBinaryLog.html#task_qbt_kyh_xx"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MySQLBinaryLog.html#task_qbt_kyh_xx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

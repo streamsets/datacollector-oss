@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     icon = "hive.png",
     privateClassLoader = true,
     upgrader = HiveMetastoreTargetUpgrader.class,
-    onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv",
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/HiveMetastore.html#task_a4n_1ft_zv",
     producesEvents = true
 )
 @ConfigGroups(value = Groups.class)
