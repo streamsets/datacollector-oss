@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.solr.impl;
 
+import org.apache.http.auth.AuthSchemeRegistry;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.impl.auth.SPNegoSchemeFactory;
@@ -74,7 +75,14 @@ public class SdcKrb5HttpClientConfigurer extends HttpClientConfigurer {
 
       // Change for SDC-2962
       //Configuration.setConfiguration(jaasConf);
-      httpClient.getAuthSchemes().register("negotiate", new SPNegoSchemeFactory(true));
+
+      // Change for SDC-8292
+      //httpClient.getAuthSchemes().register("negotiate", new SPNegoSchemeFactory(true));
+      //Enable only SPNEGO authentication scheme.
+      AuthSchemeRegistry registry = new AuthSchemeRegistry();
+      registry.register("Negotiate", new SPNegoSchemeFactory(true));
+      httpClient.setAuthSchemes(registry);
+
       Credentials use_jaas_creds = new Credentials() {
         public String getPassword() {
           return null;
