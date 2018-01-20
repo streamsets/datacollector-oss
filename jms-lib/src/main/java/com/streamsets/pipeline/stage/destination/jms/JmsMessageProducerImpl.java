@@ -202,7 +202,6 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
         case DELIMITED:
         case DATAGRAM:
         case JSON:
-        case SDC_JSON:
         case TEXT:
         case XML:
           message = session.createTextMessage(new String(payload, this.dataFormatConfig.charset));
@@ -210,6 +209,7 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
         case PROTOBUF:
         case AVRO:
         case BINARY:
+        case SDC_JSON:
           BytesMessage bytesMessage = session.createBytesMessage();
           bytesMessage.writeBytes(payload);
           message = bytesMessage;
