@@ -113,6 +113,7 @@ public class DependencyParserExhaustiveTest {
       {"javassist-3.18.1-GA.jar", new Dependency("javassist", "3.18.1-GA")},
       {"javax.jdo-3.2.0-m3.jar", new Dependency("javax.jdo", "3.2.0-m3")},
       {"javax.servlet-3.0.0.v201112011016.jar", new Dependency("javax.servlet", "3.0.0.v201112011016")},
+      {"jbcrypt-0.3m.jar", new Dependency("jbcrypt", "0.3m")},
       {"JDBC-9.3.0.0206-cubrid.jar", new Dependency("JDBC", "9.3.0.0206-cubrid")},
       {"jersey-apache-connector-2.25.1.jar", new Dependency("jersey", "2.25.1")},
       {"jersey-client-1.19.jar", new Dependency("jersey", "1.19")},
