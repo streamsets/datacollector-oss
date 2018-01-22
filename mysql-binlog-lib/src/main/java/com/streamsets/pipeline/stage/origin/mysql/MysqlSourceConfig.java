@@ -19,6 +19,9 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 
 public class MysqlSourceConfig {
+
+  public static final String CONFIG_PREFIX = "config.";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -106,7 +109,31 @@ public class MysqlSourceConfig {
       displayPosition = 60,
       group = "ADVANCED"
   )
-  public int connectTimeout;
+  public long connectTimeout;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Enable KeepAlive Thread",
+      description = "Whether keepAlive thread should be automatically started",
+      displayPosition = 65,
+      group = "ADVANCED"
+  )
+  public boolean enableKeepAlive;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "60000",
+      label = "KeepAlive Interval (ms)",
+      description = "Keep Alive interval in milliseconds. 1 minute by default",
+      dependsOn = "enableKeepAlive",
+      triggeredByValue = "true",
+      displayPosition = 70,
+      group = "ADVANCED"
+  )
+  public long keepAliveInterval;
 
   @ConfigDef(
       required = true,
@@ -114,7 +141,7 @@ public class MysqlSourceConfig {
       defaultValue = "false",
       label = "Use SSL",
       description = "Whether to use SSL for the MySQL connection",
-      displayPosition = 65,
+      displayPosition = 80,
       group = "ADVANCED"
   )
   public boolean useSsl;
