@@ -15,6 +15,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.util.Configuration;
@@ -40,10 +41,12 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
       ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM, SSOConstants.REPEATED_REDIRECT_PARAM);
 
   public static final String HTTP_LOAD_BALANCER_URL = "http.load.balancer.url";
+  public static final String HTTP_META_REDIRECT_TO_SSO = "http.meta.redirect.to.sso";
 
   private Configuration conf;
   private String loadBalancerURL;
   private boolean loadBalancerSecure;
+  private boolean doMetaRedirectToSso;
 
   public SSOUserAuthenticator(SSOService ssoService, Configuration conf) {
     super(ssoService);
@@ -53,6 +56,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
       if (this.loadBalancerURL != null && this.loadBalancerURL.trim().toLowerCase().startsWith("https")) {
         this.loadBalancerSecure = true;
       }
+      this.doMetaRedirectToSso = conf.get(HTTP_META_REDIRECT_TO_SSO, false);
     }
   }
 
@@ -117,12 +121,22 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     }
   }
 
+  @VisibleForTesting
+  static final String HTML_META_REDIRECT =
+      "<HTML><HEAD><meta http-equiv=\"refresh\" content=\"0; url='%s'\"/></HEAD></HTML>";
+
   Authentication redirectToLogin(HttpServletRequest httpReq, HttpServletResponse httpRes) throws ServerAuthException {
     boolean repeatedRedirect = httpReq.getParameter(SSOConstants.REPEATED_REDIRECT_PARAM) != null;
     String urlToLogin = getLoginUrl(httpReq, repeatedRedirect);
     try {
       LOG.debug("Redirecting to login '{}'", urlToLogin);
-      httpRes.sendRedirect(urlToLogin);
+      if (doMetaRedirectToSso) {
+        httpRes.setContentType("text/html");
+        httpRes.setStatus(HttpServletResponse.SC_OK);
+        httpRes.getWriter().println(String.format(HTML_META_REDIRECT, urlToLogin));
+      } else {
+        httpRes.sendRedirect(urlToLogin);
+      }
       return Authentication.SEND_CONTINUE;
     } catch (IOException ex) {
       throw new ServerAuthException(Utils.format("Could not redirect to '{}': {}", urlToLogin, ex.toString(), ex));
