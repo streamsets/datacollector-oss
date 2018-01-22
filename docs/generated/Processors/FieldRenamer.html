@@ -9,7 +9,7 @@
             
             --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
 <!--
-    Copyright 2017 StreamSets Inc.
+    Copyright 2018 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -44,40 +44,63 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_ogb_bqf_lw">
- <h2 class="title topictitle2">Renaming Sets of Fields</h2>
+    <h2 class="title topictitle2">Renaming Sets of Fields</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">You can use regular expressions, or <dfn class="term">regex</dfn>, to rename sets of fields. You
+    
+    <div class="body conbody"><p class="shortdesc">You can use regular expressions, or <dfn class="term">regex</dfn>, to rename sets of fields. You
         can use regex to define the set of source fields to rename. You can also use regex to define
         the target field names. </p>
 
-  <div class="p">For example, say you want to remove an OPS prefix from a set of fields. You can do this by
-            using the following expression to define the source fields to change:
-            <pre class="pre codeblock">OPS(.*)</pre>
+        <div class="p">Below are some examples of how to use expressions
+            to rename sets of fields:<dl class="dl">
+                
+                    <dt class="dt dlterm">Remove a prefix or suffix</dt>
+
+                    <dd class="dd">
+                        <div class="p">Say you want to remove an OPS prefix from a set of fields. You can do
+                            this by using the following expression to define the source fields to
+                            change: <pre class="pre codeblock">/'OPS(.*)'</pre>
 </div>
 
-        <div class="p">Then use the following expression to remove the OPS prefix:<pre class="pre codeblock">$1</pre>
+                        <div class="p">Then use the following expression to remove the OPS
+                            prefix:<pre class="pre codeblock">/$1</pre>
 </div>
 
-        <div class="p">Or, to remove special characters from field names, you can use the following expression
-            for the source field
-            names:<pre class="pre codeblock">/([A-Z a-z]*)[^a-z A-Z 0-9]([A-Z a-z 0-9]*)</pre>
-</div>
+                    </dd>
 
-        <div class="p">Then use the following expression for target field
-            names:<pre class="pre codeblock">/$1_invalid_character_removed_$2</pre>
-</div>
+                    <dd class="dd">Or, say after using a Field Flattener processor to flatten XML data, all
+                        fields have a suffix of .0.value. You can remove the suffix by using the
+                        following expression to specify the source field
+                        names:<pre class="pre codeblock">/'(.*)\.0\.value'</pre>
+</dd>
 
-        <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> To include regex special characters such as the pipe symbol (|) in field names,
-                use single quotation marks to surround the field name. For example, if you have a
-                field named <samp class="ph codeph">tag|attr</samp>, enter the field name as follows:
+                    <dd class="dd">Then use the following expression to define the target field
+                        names:<pre class="pre codeblock">/$1</pre>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Remove special characters</dt>
+
+                    <dd class="dd">To remove special characters from field names, you can use the following
+                        expression for the source field
+                        names:<pre class="pre codeblock">/'([A-Z a-z]*)[^a-z A-Z 0-9]([A-Z a-z 0-9]*)'</pre>
+</dd>
+
+                    <dd class="dd">Then use the following expression for target field
+                        names:<pre class="pre codeblock">/$1_invalid_character_removed_$2</pre>
+</dd>
+
+                
+            </dl>
+<div class="note note"><span class="notetitle">Note:</span> To include regex special characters such as the pipe symbol (|) in field
+                names, use single quotation marks to surround the field name. For example, if you
+                have a field named <samp class="ph codeph">tag|attr</samp>, enter the field name as follows:
                 <pre class="pre codeblock">/'tag|attr'</pre>
 </div>
+</div>
 
-        </div>
-
- </div>
+    </div>
 
 </div>
 <div class="topic task nested1" id="task_y5g_4hh_ht">
@@ -92,14 +115,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_y5g_4hh_ht__d81047e4987" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_y5g_4hh_ht__d82081e4982" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d436926e131">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d440272e161">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d436926e134">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d440272e164">Description</th>
 
                                 </tr>
 
@@ -107,24 +130,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e131 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e161 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e134 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e131 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d436926e134 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d440272e164 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e131 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_y5g_4hh_ht__d81047e5033" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e161 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e134 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d440272e164 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e161 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_y5g_4hh_ht__d82081e5028" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440272e164 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -136,10 +159,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e131 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_y5g_4hh_ht__d81047e5049" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e161 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_y5g_4hh_ht__d82081e5044" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e134 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d440272e164 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -150,10 +173,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e131 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_y5g_4hh_ht__d81047e5066" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e161 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_y5g_4hh_ht__d82081e5061" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e134 ">Error record handling for the stage: <ul class="ul" id="task_y5g_4hh_ht__d81047e5070">
+                                    <td class="entry" valign="top" width="70%" headers="d440272e164 ">Error record handling for the stage: <ul class="ul" id="task_y5g_4hh_ht__d82081e5065">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -184,9 +207,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d436926e245">Field Renamer Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d440272e275">Field Renamer Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d436926e248">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d440272e278">Description</th>
 
                                 </tr>
 
@@ -194,9 +217,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e245 ">Fields to Rename</td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e275 ">Fields to Rename</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e248 ">To rename fields, enter or select the fields to rename
+                                    <td class="entry" valign="top" width="70%" headers="d440272e278 ">To rename fields, enter or select the fields to rename
                                         and enter the new name for the field. Click
                                             <span class="ph uicontrol">Add</span> to rename additional fields.
                                             <p class="p">You can use regex in both properties to rename sets
@@ -226,9 +249,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e245 ">Source Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e275 ">Source Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e248 ">Behavior when a source field does not exist in a
+                                    <td class="entry" valign="top" width="70%" headers="d440272e278 ">Behavior when a source field does not exist in a
                                             record:<ul class="ul" id="task_y5g_4hh_ht__ul_uhd_115_jt">
                                             <li class="li">Continue - Continues processing the record, ignoring
                                                 missing source fields.</li>
@@ -242,9 +265,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e245 ">Target Field Already Exists</td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e275 ">Target Field Already Exists</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e248 ">Behavior when the record includes a field name that
+                                    <td class="entry" valign="top" width="70%" headers="d440272e278 ">Behavior when the record includes a field name that
                                         matches a proposed target field:<ul class="ul" id="task_y5g_4hh_ht__ul_d3f_5fg_lw">
                                             <li class="li">Replace - Replaces the existing field with the
                                                 renamed field.</li>
@@ -264,9 +287,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d436926e245 ">Multiple Source Field Matches</td>
+                                    <td class="entry" valign="top" width="30%" headers="d440272e275 ">Multiple Source Field Matches</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d436926e248 ">Behavior when a source field matches more than one source
+                                    <td class="entry" valign="top" width="70%" headers="d440272e278 ">Behavior when a source field matches more than one source
                                         field expression:<ul class="ul" id="task_y5g_4hh_ht__ul_csy_wnn_lw">
                                             <li class="li">Continue - Continues processing the record, skipping
                                                 fields with multiple matches.</li>

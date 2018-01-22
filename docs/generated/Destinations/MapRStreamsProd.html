@@ -9,7 +9,7 @@
             
             --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
 <!--
-    Copyright 2017 StreamSets Inc.
+    Copyright 2018 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_izv_vcn_2v__d16661e3158">
+                                    <ul class="ul" id="concept_izv_vcn_2v__d16790e3110">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -110,12 +110,41 @@
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, the root field must be list or list-map.</dd>
 
+                              <dd class="dd">
+                                    <div class="p">You can use the following delimited format types: <ul class="ul" id="concept_izv_vcn_2v__ul_jtv_5sl_mcb">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</div>
+
+                              </dd>
+
                         
                 
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_izv_vcn_2v__d16661e3216">
+                                    the following formats:<ul class="ul" id="concept_izv_vcn_2v__d16790e3178">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -277,14 +306,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e5480" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e5475" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e381">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e430">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e384">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e433">Description</th>
 
                                 </tr>
 
@@ -292,24 +321,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e381 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e430 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e384 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e381 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d148287e384 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d149721e433 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e381 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_tbh_nbn_2v__d16871e5526" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e430 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e384 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d149721e433 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e430 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_tbh_nbn_2v__d17000e5521" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d149721e433 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -321,10 +350,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e381 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_tbh_nbn_2v__d16871e5542" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e430 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_tbh_nbn_2v__d17000e5537" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e384 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d149721e433 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -335,10 +364,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e381 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_tbh_nbn_2v__d16871e5559" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e430 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_tbh_nbn_2v__d17000e5554" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e384 ">Error record handling for the stage: <ul class="ul" id="task_tbh_nbn_2v__d16871e5563">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e433 ">Error record handling for the stage: <ul class="ul" id="task_tbh_nbn_2v__d17000e5558">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -361,16 +390,16 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">MapR Streams Producer</span> tab, configure the following
                     properties:</span>
-                <div class="itemgroup info" id="task_tbh_nbn_2v__d16871e8803">
+                <div class="itemgroup info" id="task_tbh_nbn_2v__d17000e8798">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e8805" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e8800" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e495">MapR Streams Producer Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e544">MapR Streams Producer Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e498">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e547">Description</th>
 
                                 </tr>
 
@@ -378,37 +407,37 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_tbh_nbn_2v__d16871e8643" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_tbh_nbn_2v__d17000e8638" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                                             </a></td>
 
-                                        <td class="entry" id="task_tbh_nbn_2v__d16871e8646" valign="top" width="70%" headers="d148287e498 ">Evaluates an expression at
+                                        <td class="entry" id="task_tbh_nbn_2v__d17000e8641" valign="top" width="70%" headers="d149721e547 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Topic</td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d148287e498 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="70%" headers="d149721e547 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d148287e498 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="70%" headers="d149721e547 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d148287e498 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="70%" headers="d149721e547 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -419,10 +448,10 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Partition Strategy <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_tbh_nbn_2v__d16871e8688" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Partition Strategy <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_tbh_nbn_2v__d17000e8683" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d148287e498 ">Strategy to use to write to partitions:<ul class="ul" id="task_tbh_nbn_2v__d16871e8692">
+                                        <td class="entry" valign="top" width="70%" headers="d149721e547 ">Strategy to use to write to partitions:<ul class="ul" id="task_tbh_nbn_2v__d17000e8687">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -444,10 +473,10 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_tbh_nbn_2v__d16871e8714" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_tbh_nbn_2v__d17000e8709" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" id="task_tbh_nbn_2v__d16871e8716" valign="top" width="70%" headers="d148287e498 ">Expression to use with the
+                                        <td class="entry" id="task_tbh_nbn_2v__d17000e8711" valign="top" width="70%" headers="d149721e547 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -465,19 +494,19 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d148287e495 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="30%" headers="d149721e544 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d148287e498 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="70%" headers="d149721e547 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e495 ">MapR Streams Configuration <a class="xref" href="MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
-                                            <img class="image" id="task_tbh_nbn_2v__d16871e8869" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e544 ">MapR Streams Configuration <a class="xref" href="MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
+                                            <img class="image" id="task_tbh_nbn_2v__d17000e8864" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e498 ">Additional configuration properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d149721e547 ">Additional configuration properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the MapR
                                         Streams property name and value.<p class="p">Use the property names
                                             and values as expected by MapR.</p>
@@ -505,9 +534,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e672">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e721">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e675">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e724">Description</th>
 
                                 </tr>
 
@@ -515,11 +544,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e672 ">Data Format <a class="xref" href="MapRFS.html#concept_yr4_tqc_fv">
+                                    <td class="entry" valign="top" width="30%" headers="d149721e721 ">Data Format <a class="xref" href="MapRFS.html#concept_yr4_tqc_fv">
                                             <img class="image" id="task_tbh_nbn_2v__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e675 ">Data format for messages:<ul class="ul" id="task_tbh_nbn_2v__ul_x43_nhj_vx">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e724 ">Data format for messages:<ul class="ul" id="task_tbh_nbn_2v__ul_x43_nhj_vx">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -552,14 +581,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6210" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6205" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e760">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e809">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e763">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e812">Description</th>
 
                                 </tr>
 
@@ -567,10 +596,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_tbh_nbn_2v__d16871e6239">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_tbh_nbn_2v__d17000e6234">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -578,7 +607,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_tbh_nbn_2v__d16871e6248" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_tbh_nbn_2v__d17000e6243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -589,9 +618,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -600,17 +629,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -620,10 +649,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_tbh_nbn_2v__d16871e6296">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_tbh_nbn_2v__d17000e6291">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -636,9 +665,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -650,17 +679,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -669,9 +698,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e760 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e809 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e763 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d149721e812 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -690,14 +719,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6547" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6542" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e918">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e967">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e921">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e970">Description</th>
 
                                 </tr>
 
@@ -705,9 +734,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e918 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e967 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e921 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d149721e970 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -723,14 +752,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6604" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6599" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e965">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e1014">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e968">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e1017">Description</th>
 
                                 </tr>
 
@@ -738,9 +767,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Format for delimited data:<ul class="ul" id="task_tbh_nbn_2v__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Format for delimited data:<ul class="ul" id="task_tbh_nbn_2v__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -750,7 +779,12 @@
                         <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
                               file.</li>
 
-                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
 
                         <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
                               tab-separated values.</li>
@@ -764,16 +798,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -781,9 +815,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -792,9 +826,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -809,9 +843,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -820,9 +854,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e965 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e968 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -831,9 +865,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d148287e965 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d149721e1014 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d148287e968 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d149721e1017 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -849,14 +883,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6743" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6738" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e1126">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e1185">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e1129">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e1188">Description</th>
 
                                 </tr>
 
@@ -864,9 +898,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1126 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1185 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1129 ">Determines how JSON data is written:<ul class="ul" id="task_tbh_nbn_2v__d16871e6772">
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1188 ">Determines how JSON data is written:<ul class="ul" id="task_tbh_nbn_2v__d17000e6767">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -881,9 +915,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d148287e1126 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d149721e1185 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d148287e1129 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d149721e1188 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -899,14 +933,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6816" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6811" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e1189">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e1248">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e1192">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e1251">Description</th>
 
                                 </tr>
 
@@ -914,9 +948,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1189 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1248 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1192 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1251 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
@@ -927,9 +961,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1189 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1248 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1192 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1251 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -950,14 +984,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d16871e6989" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tbh_nbn_2v__d17000e6984" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148287e1305">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d149721e1364">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148287e1308">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d149721e1367">Description</th>
 
                                 </tr>
 
@@ -965,17 +999,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1305 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1364 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1308 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1367 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1305 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1364 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1308 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1367 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -984,9 +1018,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148287e1305 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d149721e1364 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148287e1308 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d149721e1367 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
@@ -995,9 +1029,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d148287e1305 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d149721e1364 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d148287e1308 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d149721e1367 ">Character set to use when writing data. </td>
 
       </tr>
 
