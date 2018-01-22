@@ -18,6 +18,8 @@
                path="Getting_Started/GettingStarted_Title.html#concept_wc5_ysp_1w"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_z4b_qrb_4cb"
+               path="WhatsNew/WhatsNew_Title.html#concept_z4b_qrb_4cb"/>
    <appContext helpID="concept_lhn_cvv_lcb"
                path="WhatsNew/WhatsNew_Title.html#concept_lhn_cvv_lcb"/>
    <appContext helpID="concept_lgz_yp4_gcb"
@@ -29,9 +31,9 @@
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_1011522039"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_939927582"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_592276625"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_1487348718"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -98,7 +100,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_138518219"/>
+               path="Installation/CMInstall-Overview.html#unique_795462971"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -2262,6 +2264,8 @@
                path="Destinations/Salesforce.html#task_es3_25d_dy"/>
    <appContext helpID="concept_opg_tyg_4z"
                path="Destinations/Salesforce.html#concept_opg_tyg_4z"/>
+   <appContext helpID="concept_xql_wbj_mcb"
+               path="Destinations/Salesforce.html#concept_xql_wbj_mcb"/>
    <appContext helpID="task_ncv_153_rx"
                path="Destinations/Salesforce.html#task_ncv_153_rx"/>
    <appContext helpID="concept_lfk_hx2_ct"
@@ -2995,7 +2999,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_1036863908"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_1289882224"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
