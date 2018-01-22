@@ -309,8 +309,10 @@ public abstract class MysqlSource extends BaseSource {
         }
       }
 
-      client.setKeepAlive(true);
-      client.setKeepAliveInterval(getConfig().connectTimeout);
+      client.setKeepAlive(getConfig().enableKeepAlive);
+      if (getConfig().enableKeepAlive) {
+        client.setKeepAliveInterval(getConfig().keepAliveInterval);
+      }
       registerClientLifecycleListener();
       client.registerEventListener(consumer);
       client.connect(getConfig().connectTimeout);
