@@ -17,10 +17,25 @@ package com.streamsets.pipeline.stage.processor.fieldreplacer.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 
 import java.util.List;
 
 public class ReplacerConfigBean {
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "CONTINUE",
+    label = "Field Does Not Exist",
+    description="Action for data that does not contain the specified fields",
+    displayPosition = 10,
+    group = "ADVANCED"
+  )
+  @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
+  public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @ConfigDef(
       required = true,

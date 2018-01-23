@@ -15,24 +15,27 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldreplacer;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  REPLACE("Replace"),
-  ADVANCED("Advanced")
+public enum Errors implements ErrorCode {
+  FIELD_REPLACER_00("Rule {} did not match any fields"),
   ;
 
-  private String label;
-  Groups(String label) {
-    this.label = label;
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 
 }
-

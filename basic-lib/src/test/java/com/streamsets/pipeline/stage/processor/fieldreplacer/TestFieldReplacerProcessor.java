@@ -17,8 +17,10 @@ package com.streamsets.pipeline.stage.processor.fieldreplacer;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -115,12 +117,77 @@ public class TestFieldReplacerProcessor {
     }
   }
 
+  @Test
+  public void fieldDoesNotExistsContinue() throws Exception {
+    ReplaceRule rule = new ReplaceRule();
+    rule.fields = "/a";
+    rule.replacement = "static";
+
+    ProcessorRunner runner = getRunner(OnStagePreConditionFailure.CONTINUE, rule);
+
+    try {
+      Record record = RecordCreator.create();
+      record.set(Field.create(Field.Type.MAP, new LinkedHashMap<>()));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      assertEquals(1, output.getRecords().get("lane").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void fieldDoesNotExistsToError() throws Exception {
+    ReplaceRule rule = new ReplaceRule();
+    rule.fields = "/a";
+    rule.replacement = "static";
+
+    ProcessorRunner runner = getRunner(OnStagePreConditionFailure.TO_ERROR, rule);
+
+    try {
+      Record record = RecordCreator.create();
+      record.set(Field.create(Field.Type.MAP, new LinkedHashMap<>()));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      assertEquals(0, output.getRecords().get("lane").size());
+      assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void fieldExpressionEmptyToError() throws Exception {
+    ReplaceRule rule = new ReplaceRule();
+    rule.fields = "/*[${f:value() == 'SORRY NOT HERE'}]";
+    rule.replacement = "static";
+
+    ProcessorRunner runner = getRunner(OnStagePreConditionFailure.TO_ERROR, rule);
+
+    try {
+      Record record = RecordCreator.create();
+      record.set(Field.create(Field.Type.MAP, new LinkedHashMap<>()));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      assertEquals(0, output.getRecords().get("lane").size());
+      assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private static ProcessorRunner getRunner(ReplaceRule ...rules) throws StageException {
+    return getRunner(OnStagePreConditionFailure.CONTINUE, rules);
+  }
+
+  private static ProcessorRunner getRunner(OnStagePreConditionFailure missingField, ReplaceRule ...rules) throws StageException {
     ReplacerConfigBean config = new ReplacerConfigBean();
     config.rules = ImmutableList.copyOf(rules);
+    config.onStagePreConditionFailure = missingField;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldReplacerDProcessor.class, new FieldReplacerProcessor(config))
       .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
 
     runner.runInit();

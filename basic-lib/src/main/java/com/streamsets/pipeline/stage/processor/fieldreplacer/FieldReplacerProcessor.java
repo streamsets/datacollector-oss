@@ -18,9 +18,11 @@ package com.streamsets.pipeline.stage.processor.fieldreplacer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.el.FieldEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
@@ -64,8 +66,16 @@ public class FieldReplacerProcessor extends SingleLaneRecordProcessor {
         record
       );
 
+      if(fieldPaths.isEmpty() && conf.onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR) {
+        throw new OnRecordErrorException(record, Errors.FIELD_REPLACER_00, rule.fields);
+      }
+
       // Perform the replacement
       for(String path : fieldPaths) {
+        if(!record.has(path) && conf.onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR) {
+          throw new OnRecordErrorException(record, Errors.FIELD_REPLACER_00, rule.fields);
+        }
+
         Field field = record.get(path);
         FieldEL.setFieldInContext(vars, path, field);
 
