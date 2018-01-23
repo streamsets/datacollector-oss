@@ -122,6 +122,11 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+               <artifactSet>
+                <includes>
+                  <include>org.apache.avro:*</include>
+                </includes>
+              </artifactSet>
               <relocations>
                 <relocation>
                   <pattern>org.apache.avro</pattern>
