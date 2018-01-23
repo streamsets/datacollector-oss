@@ -55,6 +55,7 @@ public class MqttClientSource implements PushSource, MqttCallback {
   private AtomicLong counter = new AtomicLong();
   private BlockingQueue<Exception> errorQueue;
   private List<Exception> errorList;
+  private boolean connectionLostError = false;
 
   MqttClientSource(MqttClientConfigBean commonConf, MqttClientSourceConfigBean subscriberConf) {
     this.commonConf = commonConf;
@@ -93,12 +94,9 @@ public class MqttClientSource implements PushSource, MqttCallback {
   @Override
   public void produce(Map<String, String> map, int i) throws StageException {
     try {
-      mqttClient = mqttClientCommon.createMqttClient(this);
-      for (String topicFilter: subscriberConf.topicFilters) {
-        mqttClient.subscribe(topicFilter, commonConf.qos.getValue());
-      }
+      initializeClient();
 
-      while (!context.isStopped()) {
+      while (!context.isStopped() && !connectionLostError) {
         dispatchHttpReceiverErrors(100);
       }
 
@@ -107,6 +105,14 @@ public class MqttClientSource implements PushSource, MqttCallback {
       }
     } catch(MqttException me) {
       throw new StageException(Errors.MQTT_04, me, me);
+    }
+  }
+
+  private void initializeClient() throws MqttException, StageException {
+    connectionLostError = false;
+    mqttClient = mqttClientCommon.createMqttClient(this);
+    for (String topicFilter: subscriberConf.topicFilters) {
+      mqttClient.subscribe(topicFilter, commonConf.qos.getValue());
     }
   }
 
@@ -138,7 +144,14 @@ public class MqttClientSource implements PushSource, MqttCallback {
 
   @Override
   public void connectionLost(Throwable throwable) {
-    throw new RuntimeException((new StageException(Errors.MQTT_00, throwable, throwable)));
+    destroy();
+    try {
+      initializeClient();
+    } catch(Exception ex) {
+      errorQueue.offer(ex);
+      LOG.warn("Error while reconnecting to MQTT: {}", ex.toString(), ex);
+      connectionLostError = true;
+    }
   }
 
   @Override
