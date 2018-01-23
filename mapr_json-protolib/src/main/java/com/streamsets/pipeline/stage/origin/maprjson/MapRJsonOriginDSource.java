@@ -24,18 +24,19 @@ import com.streamsets.pipeline.configurablestage.DSource;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "MapR DB JSON Origin",
     description = "Retrieves Documents from MapR DB JSON Document Database",
     icon = "mapr.png",
     resetOffset = true,
     privateClassLoader = true,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRDBJSON.html#task_hys_s15_3y"
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRDBJSON.html#task_hys_s15_3y",
+    upgrader = MaprJsonSourceUpgrader.class
 )
 
 @ConfigGroups(Groups.class)
-
 public class MapRJsonOriginDSource extends DSource {
+  public static final String MAPR_JSON_ORIGIN_CONFIG_BEAN_PREFIX = "mapRJsonOriginConfigBean";
 
   @ConfigDefBean(groups="MAPR_JSON_ORIGIN")
   public MapRJsonOriginConfigBean mapRJsonOriginConfigBean;

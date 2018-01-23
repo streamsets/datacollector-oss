@@ -47,8 +47,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.streamsets.pipeline.stage.origin.lib.DataFormatParser.DATA_FORMAT_CONFIG_PREFIX;
-
 public class MapRJsonOriginSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MapRJsonOriginSource.class);
   private static final String MAPR_ID = "_id";
@@ -64,7 +62,6 @@ public class MapRJsonOriginSource extends BaseSource {
   private int binaryColumnWidth = 0;
 
   public MapRJsonOriginSource(MapRJsonOriginConfigBean mapRJsonOriginConfigBean) {
-
     conf = mapRJsonOriginConfigBean;
   }
 
@@ -80,10 +77,14 @@ public class MapRJsonOriginSource extends BaseSource {
     }
 
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
+    dataFormatConfig.jsonMaxObjectLen = conf.jsonMaxObjectLen;
+
     if (!dataFormatConfig.init(getContext(),
         DataFormat.JSON,
         Groups.MAPR_JSON_ORIGIN.getLabel(),
-        DATA_FORMAT_CONFIG_PREFIX,
+        // We don't have DataParserFormatConfig specifcally, we will use the default
+        // origin's prefix for json config errors (currently only json object length)
+        MapRJsonOriginDSource.MAPR_JSON_ORIGIN_CONFIG_BEAN_PREFIX,
         issues
     )) {
       issues.add(getContext().createConfigIssue(Groups.MAPR_JSON_ORIGIN.name(),

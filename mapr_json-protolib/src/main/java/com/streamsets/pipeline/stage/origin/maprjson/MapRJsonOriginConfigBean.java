@@ -20,6 +20,9 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
 public class MapRJsonOriginConfigBean {
+
+  public static final String JSON_MAX_OBJECT_LENGTH = "jsonMaxObjectLen";
+
   @ConfigDefBean(groups = "MAPR_JSON_ORIGIN")
   public BasicConfig basic = new BasicConfig();
 
@@ -42,5 +45,19 @@ public class MapRJsonOriginConfigBean {
       group = "MAPR_JSON_ORIGIN"
   )
   public String startValue;
+
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "4096",
+      label = "Max Object Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 30,
+      group = "MAPR_JSON_ORIGIN",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int jsonMaxObjectLen = 4096;
 
 }

@@ -53,7 +53,7 @@ public class MapRJsonOriginSourceIT {
   }
 
 
-@After
+  @After
   public void deleteTable() {
     try {
       MapRDB.deleteTable(TABLE_NAME);
@@ -81,7 +81,7 @@ public class MapRJsonOriginSourceIT {
 
     MapRJsonOriginSource mapr = new MapRJsonOriginSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(MapRJsonOriginSource.class, mapr)
+    SourceRunner runner = new SourceRunner.Builder(MapRJsonOriginDSource.class, mapr)
         .addOutputLane("lane")
         .setOnRecordError(OnRecordError.DISCARD)
         .build();
