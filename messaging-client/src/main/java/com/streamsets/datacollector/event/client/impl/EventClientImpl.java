@@ -19,6 +19,8 @@ import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.client.filter.EncodingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
@@ -39,8 +41,11 @@ public class EventClientImpl implements EventClient {
   private final Client client;
 
   public EventClientImpl(String targetURL) {
+    ClientConfig clientConfig = new ClientConfig()
+        .property(ClientProperties.CONNECT_TIMEOUT, 10000)
+        .property(ClientProperties.READ_TIMEOUT, 10000);
     this.targetURL = targetURL;
-    this.client = ClientBuilder.newClient();
+    this.client = ClientBuilder.newClient(clientConfig);
     client.register(new CsrfProtectionFilter("CSRF"));
   }
 
@@ -56,7 +61,6 @@ public class EventClientImpl implements EventClient {
       client.register(GZipEncoder.class);
       client.register(EncodingFilter.class);
     }
-
     WebTarget target = client.target(targetURL + path);
 
     for (Map.Entry<String, String> entry : queryParams.entrySet()) {
