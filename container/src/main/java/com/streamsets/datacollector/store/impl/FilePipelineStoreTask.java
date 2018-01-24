@@ -298,6 +298,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         } catch (Exception e) {
           LOG.warn("Cannot set delete event for pipeline");
         }
+        pipelineStateStore.delete(name, REV);
       }
     }
   }

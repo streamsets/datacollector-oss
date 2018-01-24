@@ -37,6 +37,7 @@ import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,9 +112,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
   @Override
   public void delete(String name, String rev) {
     File pipelineStateFile = getPipelineStateFile(name, rev);
-    if (!pipelineStateFile.delete()){
-      LOG.warn("Failed to delete pipeline state file " + pipelineStateFile.getPath().toString());
-    }
+    FileUtils.deleteQuietly(pipelineStateFile);
   }
 
   @Override
