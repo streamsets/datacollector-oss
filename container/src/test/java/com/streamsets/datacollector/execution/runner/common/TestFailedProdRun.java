@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
@@ -38,6 +39,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -127,7 +130,7 @@ public class TestFailedProdRun {
   }
 
   @Test
-  public void testPipelineError() throws PipelineRuntimeException, StageException {
+  public void testPipelineError() throws PipelineRuntimeException, StageException, IOException {
     String msg = "ERROR YALL";
     ErrorListeningSource.thrownError = new SomeException(msg);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
@@ -143,6 +146,7 @@ public class TestFailedProdRun {
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, PIPELINE_NAME, REVISION).toPath());
     ProductionPipeline pipeline = new ProductionPipelineBuilder(
       PIPELINE_NAME,
       REVISION,

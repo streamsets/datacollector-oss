@@ -36,6 +36,7 @@ import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
@@ -67,6 +68,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -426,7 +428,7 @@ public class TestProductionPipeline {
         pConf =  MockStages.createPipelineConfigurationPushSourceTarget();
         break;
     }
-
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, PIPELINE_NAME, REVISION).toPath());
     ProductionPipeline pipeline = new ProductionPipelineBuilder(
       PIPELINE_NAME,
       REVISION,

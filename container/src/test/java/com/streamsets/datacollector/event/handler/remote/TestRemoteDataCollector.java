@@ -54,6 +54,7 @@ import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -72,6 +73,7 @@ import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -911,6 +913,10 @@ public class TestRemoteDataCollector {
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       File testFolder = tempFolder.newFolder();
       Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+      Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name", "rev").toPath());
+      Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name1", "rev1").toPath());
+      Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name2", "rev1").toPath());
+
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name", "rev", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:100"));
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name1", "rev1", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:101"));
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name2", "rev1", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:102"));
@@ -982,6 +988,7 @@ public class TestRemoteDataCollector {
     SourceOffset sourceOffset = new SourceOffset();
     sourceOffset.setOffset("offset:1000");
     new SourceOffsetUpgrader().upgrade(sourceOffset);
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "0").toPath());
     dataCollector.savePipeline("user", "foo", "0", "", sourceOffset, Mockito.mock(PipelineConfiguration.class), null,
         acl);
     Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq("foo"), Mockito.eq(acl));
@@ -1029,6 +1036,7 @@ public class TestRemoteDataCollector {
     SourceOffset sourceOffset = new SourceOffset();
     sourceOffset.setOffset("offset:1000");
     new SourceOffsetUpgrader().upgrade(sourceOffset);
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "0").toPath());
     dataCollector.savePipeline("user", "foo", "0", "", sourceOffset, Mockito.mock(PipelineConfiguration.class), null,
         new Acl());
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());

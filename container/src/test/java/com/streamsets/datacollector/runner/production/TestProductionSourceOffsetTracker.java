@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 public class TestProductionSourceOffsetTracker {
@@ -61,12 +63,13 @@ public class TestProductionSourceOffsetTracker {
   }
 
   @Before
-  public void createOffsetTracker() {
+  public void createOffsetTracker() throws Exception {
     RuntimeInfo info = new StandaloneRuntimeInfo(
       RuntimeModule.SDC_PROPERTY_PREFIX,
       new MetricRegistry(),
       Arrays.asList(TestProductionSourceOffsetTracker.class.getClassLoader())
     );
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, PIPELINE_NAME, PIPELINE_REV).toPath());
     OffsetFileUtil.resetOffsets(info, PIPELINE_NAME, PIPELINE_REV);
     offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
   }

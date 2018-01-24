@@ -62,6 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -186,11 +187,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (!draft) {
         try {
           Files.createDirectory(getPipelineDir(pipelineId));
+          Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineId, REV).toPath());
         } catch (IOException e) {
           throw new PipelineStoreException(
               ContainerError.CONTAINER_0202,
               pipelineId,
-              Utils.format("'{}' mkdir failed", getPipelineDir(pipelineId)),
+              "mkdir failed",
               e
           );
         }

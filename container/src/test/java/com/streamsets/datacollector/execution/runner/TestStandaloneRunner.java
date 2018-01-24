@@ -39,6 +39,7 @@ import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -59,6 +60,7 @@ import org.junit.Test;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -92,6 +94,7 @@ public class TestStandaloneRunner {
     TestUtil.EMPTY_OFFSET = false;
     RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(getClass().getClassLoader()));
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, TestUtil.MY_PIPELINE, "0").toPath());
     OffsetFileUtil.saveOffsets(info, TestUtil.MY_PIPELINE, "0", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "dummy"));
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);

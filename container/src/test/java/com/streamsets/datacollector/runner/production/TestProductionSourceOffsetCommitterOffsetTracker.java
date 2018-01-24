@@ -21,6 +21,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -33,6 +34,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 public class TestProductionSourceOffsetCommitterOffsetTracker {
@@ -52,13 +54,13 @@ public class TestProductionSourceOffsetCommitterOffsetTracker {
   }
 
   @Test
-  public void testProductionSourceOffsetCommitterOffsetTracker() {
+  public void testProductionSourceOffsetCommitterOffsetTracker() throws Exception {
     RuntimeInfo info = new StandaloneRuntimeInfo(
       RuntimeModule.SDC_PROPERTY_PREFIX,
       new MetricRegistry(),
       Arrays.asList(getClass().getClassLoader())
     );
-
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, PIPELINE_NAME, PIPELINE_REV).toPath());
     ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(
       PIPELINE_NAME, PIPELINE_REV, info, new OffsetCommitter() {
       @Override

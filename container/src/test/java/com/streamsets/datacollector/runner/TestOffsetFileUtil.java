@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Map;
 
 public class TestOffsetFileUtil {
@@ -37,6 +39,7 @@ public class TestOffsetFileUtil {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "1").toPath());
     OffsetFileUtil.saveIfEmpty(runtimeInfo, "foo", "1");
     OffsetFileUtil.saveOffsets(runtimeInfo, "foo", "1", ImmutableMap.of("a", "b", "c", "d"));
     Map<String, String> offsets = OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1");
@@ -53,6 +56,7 @@ public class TestOffsetFileUtil {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "1").toPath());
     OffsetFileUtil.resetOffsets(runtimeInfo, "foo", "1");
     Assert.assertEquals(0, OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1").size());
   }
