@@ -1499,7 +1499,11 @@ public class PipelineConfigurationValidator {
   ) {
     Config config = pipelineConfiguration.getConfiguration(label);
     final String stageName = stageConfig == null ? "" :
-        stageConfig.getLibrary() + "::" + stageConfig.getStageName() + "::" + stageConfig.getStageVersion();
+        getStageDefQualifiedName(
+            stageConfig.getLibrary(),
+            stageConfig.getStageName(),
+            String.valueOf(stageConfig.getStageVersion())
+        );
     if (!(config == null || config.getValue() == null|| config.getValue().equals(stageName))) {
       pipelineConfiguration.getConfiguration().remove(config);
       pipelineConfiguration.getConfiguration().add(new Config(label, stageName));
@@ -1536,5 +1540,13 @@ public class PipelineConfigurationValidator {
         serviceConfiguration.setConfig(configs);
       }
     }
+  }
+
+  public static String getStageDefQualifiedName(String library, String stageName, String stageVersion) {
+    return library + "::" + stageName + "::" + stageVersion;
+  }
+
+  public static String[] getSpecialStageDefQualifiedNameParts(String stageQualifiedName) {
+    return stageQualifiedName.split("::");
   }
 }

@@ -57,7 +57,13 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 7;
+  public static final int VERSION = 8;
+
+  public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
+      "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
+
+  public static final String STATS_DPM_DIRECTLY_TARGET = "streamsets-datacollector-basic-lib" +
+      "::com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
 
   @ConfigDef(
       required = true,
@@ -208,7 +214,7 @@ public class PipelineConfigBean implements Stage {
     required = false,
     type = ConfigDef.Type.MODEL,
     label = "Statistics Aggregator",
-    defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1",
+    defaultValue = STATS_AGGREGATOR_DEFAULT,
     displayPosition = 95,
     group = "STATS"
   )

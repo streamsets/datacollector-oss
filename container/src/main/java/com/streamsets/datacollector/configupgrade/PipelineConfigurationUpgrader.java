@@ -22,16 +22,19 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.PipelineConfigUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,9 +157,50 @@ public class PipelineConfigurationUpgrader {
     // Extra stages
     convertNullServiceToEmptyList(pipelineConf.getErrorStage());
     convertNullServiceToEmptyList(pipelineConf.getStatsAggregatorStage());
+
+    //Fix: Stats aggregator stage upgrade if needed
+    boolean isPipelineClusterMode = PipelineConfigUpgrader.isPipelineClusterMode(pipelineConf.getConfiguration());
+    if (isPipelineClusterMode) {
+      final String statsAggregatorStageNameFromStageConfig = PipelineConfigurationValidator.getStageDefQualifiedName(
+          pipelineConf.getStatsAggregatorStage().getLibrary(),
+          pipelineConf.getStatsAggregatorStage().getStageName(),
+          String.valueOf(pipelineConf.getStatsAggregatorStage().getStageVersion())
+      );
+      
+      if(statsAggregatorStageNameFromStageConfig.equals(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
+        String[] stageQualfiedParts = PipelineConfigurationValidator
+            .getSpecialStageDefQualifiedNameParts(PipelineConfigBean.STATS_AGGREGATOR_DEFAULT);
+        Utils.checkArgument(
+            stageQualfiedParts.length == 3,
+            Utils.format(
+                "Wrong Stage Qualified Name {}, does not contain 3 parts",
+                PipelineConfigBean.STATS_AGGREGATOR_DEFAULT
+            )
+        );
+        String library = stageQualfiedParts[0];
+        String stageName = stageQualfiedParts[1];
+        int stageVersion = Integer.parseInt(stageQualfiedParts[2]);
+
+        //Reset the Stats aggregator to Discard
+        pipelineConf.setStatsAggregatorStage(
+            new StageConfiguration(
+                "Discard_StatsAggregatorStage",
+                library,
+                stageName,
+                stageVersion,
+                Collections.emptyList(),
+                Collections.emptyMap(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList()
+            )
+        );
+      }
+    }
   }
 
-   private void convertNullServiceToEmptyList(StageConfiguration stage) {
+  private void convertNullServiceToEmptyList(StageConfiguration stage) {
     if(stage != null && stage.getServices() == null) {
       stage.setServices(Collections.emptyList());
     }
@@ -217,26 +261,26 @@ public class PipelineConfigurationUpgrader {
         ServiceDefinition serviceDef = library.getServiceDefinition(serviceConf.getService(), false);
         if(serviceDef == null) {
           issues.add(IssueCreator.getStage(conf.getInstanceName()).create(
-            ContainerError.CONTAINER_0903,
-            conf.getLibrary(),
-            conf.getStageName()
+              ContainerError.CONTAINER_0903,
+              conf.getLibrary(),
+              conf.getStageName()
           ));
         } else {
           upgrade |= needsUpgrade(
-            serviceDef.getVersion(),
-            serviceConf.getServiceVersion(),
-            IssueCreator.getService(conf.getInstanceName(), serviceConf.getService().getName()),
-            issues
+              serviceDef.getVersion(),
+              serviceConf.getServiceVersion(),
+              IssueCreator.getService(conf.getInstanceName(), serviceConf.getService().getName()),
+              issues
           );
         }
       }
 
       // Validate version of the stage itself
       upgrade |= needsUpgrade(
-        def.getVersion(),
-        conf.getStageVersion(),
-        IssueCreator.getStage(conf.getInstanceName()),
-        issues
+          def.getVersion(),
+          conf.getStageVersion(),
+          IssueCreator.getStage(conf.getInstanceName()),
+          issues
       );
     }
     return upgrade;
@@ -254,9 +298,9 @@ public class PipelineConfigurationUpgrader {
         break;
       case -1: // current def is older
         issues.add(issueCreator.create(
-          ContainerError.CONTAINER_0902,
-          currentVersion,
-          defVersion
+            ContainerError.CONTAINER_0902,
+            currentVersion,
+            defVersion
         ));
         break;
       default:
@@ -340,10 +384,10 @@ public class PipelineConfigurationUpgrader {
    */
   static StageConfiguration upgradeIfNeeded(StageLibraryTask library, StageConfiguration conf, List<Issue> issues) {
     return upgradeIfNeeded(
-      library,
-      library.getStage(conf.getLibrary(), conf.getStageName(), false),
-      conf,
-      issues
+        library,
+        library.getStage(conf.getLibrary(), conf.getStageName(), false),
+        conf,
+        issues
     );
   }
 
@@ -363,19 +407,19 @@ public class PipelineConfigurationUpgrader {
 
       // And then upgrade all it's services
       conf.getServices().forEach(serviceConf -> upgradeServicesIfNeeded(
-        library,
-        conf,
-        serviceConf,
-        issueCreator.forService(serviceConf.getService().getName()),
-        issues
+          library,
+          conf,
+          serviceConf,
+          issueCreator.forService(serviceConf.getService().getName()),
+          issues
       ));
     } catch (Exception ex) {
       LOG.error("Unknown exception during upgrade: " + ex, ex);
       issues.add(issueCreator.create(
-        ContainerError.CONTAINER_0900,
-        fromVersion,
-        toVersion,
-        ex.toString()
+          ContainerError.CONTAINER_0900,
+          fromVersion,
+          toVersion,
+          ex.toString()
       ));
     }
 
@@ -388,11 +432,11 @@ public class PipelineConfigurationUpgrader {
    * This method is idempotent.
    */
   private static ServiceConfiguration upgradeServicesIfNeeded(
-    StageLibraryTask library,
-    StageConfiguration stageConf,
-    ServiceConfiguration conf,
-    IssueCreator issueCreator,
-    List<Issue> issues
+      StageLibraryTask library,
+      StageConfiguration stageConf,
+      ServiceConfiguration conf,
+      IssueCreator issueCreator,
+      List<Issue> issues
   ) {
     ServiceDefinition def = library.getServiceDefinition(conf.getService(), false);
     if (def == null) {
@@ -412,11 +456,11 @@ public class PipelineConfigurationUpgrader {
       LOG.warn("Upgrading service instance from version '{}' to version '{}'", conf.getServiceVersion(), def.getVersion());
 
       UpgradeContext upgradeContext = new UpgradeContext(
-        "",
-        def.getName(),
-        stageConf.getInstanceName(),
-        fromVersion,
-        toVersion
+          "",
+          def.getName(),
+          stageConf.getInstanceName(),
+          fromVersion,
+          toVersion
       );
 
       List<Config> configs = def.getUpgrader().upgrade(conf.getConfiguration(), upgradeContext);
@@ -442,10 +486,10 @@ public class PipelineConfigurationUpgrader {
    * This method is idempotent.
    */
   static private void upgradeStageIfNeeded(
-    StageDefinition def,
-    StageConfiguration conf,
-    IssueCreator issueCreator,
-    List<Issue> issues
+      StageDefinition def,
+      StageConfiguration conf,
+      IssueCreator issueCreator,
+      List<Issue> issues
   ) {
     int fromVersion = conf.getStageVersion();
     int toVersion = def.getVersion();
@@ -461,11 +505,11 @@ public class PipelineConfigurationUpgrader {
       LOG.warn("Upgrading stage instance '{}' from version '{}' to version '{}'", conf.getInstanceName(), fromVersion, toVersion);
 
       UpgradeContext upgradeContext = new UpgradeContext(
-        def.getLibrary(),
-        def.getName(),
-        conf.getInstanceName(),
-        fromVersion,
-        toVersion
+          def.getLibrary(),
+          def.getName(),
+          conf.getInstanceName(),
+          fromVersion,
+          toVersion
       );
       List<Config> configs = def.getUpgrader().upgrade(conf.getConfiguration(), upgradeContext);
 
@@ -479,7 +523,7 @@ public class PipelineConfigurationUpgrader {
 
         // Version -1 is special to note that this version has been created by stage and not by the service itself
         upgradeContext.registeredServices
-          .forEach((s, c) -> services.add(new ServiceConfiguration(s, -1, c)));
+            .forEach((s, c) -> services.add(new ServiceConfiguration(s, -1, c)));
 
         conf.setServices(services);
 
@@ -501,11 +545,11 @@ public class PipelineConfigurationUpgrader {
     private final Map<Class, List<Config>> registeredServices;
 
     UpgradeContext(
-      String library,
-      String stageName,
-      String stageInstanceName,
-      int fromVersion,
-      int toVersion
+        String library,
+        String stageName,
+        String stageInstanceName,
+        int fromVersion,
+        int toVersion
     ) {
       this.library = library;
       this.stageName = stageName;

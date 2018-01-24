@@ -22,14 +22,21 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PipelineConfigUpgrader implements StageUpgrader {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigUpgrader.class);
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-                              List<Config> configs) throws StageException {
+      List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 0:
         // nothing to do from 0 to 1
@@ -50,6 +57,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        //fall through
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -89,7 +99,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
       configs.remove(index);
       Utils.checkNotNull(sourceName, "Source stage name cannot be null");
       configs.add(new Config("executionMode", (sourceName.contains("ClusterHdfsDSource")) ? ExecutionMode.CLUSTER_BATCH
-        : ExecutionMode.CLUSTER_YARN_STREAMING));
+          : ExecutionMode.CLUSTER_YARN_STREAMING));
     }
   }
 
@@ -97,8 +107,8 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("shouldRetry", false));
     configs.add(new Config("retryAttempts", -1));
     configs.add(new Config("notifyOnStates",
-      ImmutableList.of(PipelineState.RUN_ERROR, PipelineState.STOPPED, PipelineState.FINISHED)));
-    configs.add(new Config("emailIDs", Collections.EMPTY_LIST));
+        ImmutableList.of(PipelineState.RUN_ERROR, PipelineState.STOPPED, PipelineState.FINISHED)));
+    configs.add(new Config("emailIDs", Collections.emptyList()));
   }
 
   private void upgradeV4ToV5(List<Config> configs) {
@@ -106,10 +116,43 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV5ToV6(List<Config> configs) {
-    configs.add(new Config("webhookConfigs", Collections.EMPTY_LIST));
+    configs.add(new Config("webhookConfigs", Collections.emptyList()));
   }
 
   private void upgradeV6ToV7(List<Config> configs) {
     configs.add(new Config("workerCount", 0));
+  }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    boolean isClusterExecutionMode = isPipelineClusterMode(configs);
+    if (isClusterExecutionMode) {
+      Config statsAggregatorStageConfig = getStatsAggregatorStageConfig(configs);
+      String statsAggregatorStage = (String) statsAggregatorStageConfig.getValue();
+      if (statsAggregatorStage.contains(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
+        LOG.warn(
+            "Cluster Pipeline Stats Aggregator is set to {} from {}",
+            PipelineConfigBean.STATS_AGGREGATOR_DEFAULT,
+            PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET
+        );
+        configs.remove(statsAggregatorStageConfig);
+        configs.add(new Config("statsAggregatorStage", PipelineConfigBean.STATS_AGGREGATOR_DEFAULT));
+      }
+    }
+  }
+
+  public static boolean isPipelineClusterMode(List<Config> configs) {
+    Set<String> clusterExecutionModes = Arrays.stream(ExecutionMode.values())
+        .filter(executionMode -> executionMode.name().contains("CLUSTER"))
+        .map(ExecutionMode::name)
+        .collect(Collectors.toSet());
+    return configs.stream()
+        .anyMatch(config -> config.getName().equals("executionMode") && clusterExecutionModes.contains(config.getValue().toString()));
+  }
+
+  public static Config getStatsAggregatorStageConfig(List<Config> configs) {
+    List<Config> statsAggregatorConfigList = configs.stream()
+        .filter(config -> config.getName().equals("statsAggregatorStage"))
+        .collect(Collectors.toList());
+    return (!statsAggregatorConfigList.isEmpty())? statsAggregatorConfigList.get(0): null;
   }
 }
