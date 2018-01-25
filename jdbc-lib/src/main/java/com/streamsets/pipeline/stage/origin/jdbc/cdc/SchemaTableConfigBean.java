@@ -16,9 +16,6 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ListBeanModel;
-
-import java.util.List;
 
 public class SchemaTableConfigBean {
 
@@ -34,19 +31,18 @@ public class SchemaTableConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.LIST,
-      label = "Table Name Patterns",
-      description = "Patterns of the table names to read. Use a SQL like syntax.",
+      type = ConfigDef.Type.STRING,
+      label = "Table Name Pattern",
+      description = "Pattern of the table names to read. Use a SQL like syntax.",
       displayPosition = 20,
       group = "#0"
   )
-  @ListBeanModel
-  public List<String> tables;
+  public String table;
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Table Exclusion Pattern",
+      label = "Exclusion Pattern",
       description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no exclusion needed.",
       displayPosition = 30,

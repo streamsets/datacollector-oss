@@ -1010,17 +1010,15 @@ public class OracleCDCSource extends BaseSource {
       for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
         Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
 
-        for (String table : tables.tables) {
-          try (ResultSet rs =
-                   JdbcUtil.getTableMetadata(connection, null, tables.schema, table, true)) {
-            while (rs.next()) {
-              String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
-              String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-              if (p == null || !p.matcher(tableName).matches()) {
-                schemaName = schemaName.trim();
-                tableName = tableName.trim();
-                schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
-              }
+        try (ResultSet rs =
+                 JdbcUtil.getTableMetadata(connection, null, tables.schema, tables.table, true)) {
+          while (rs.next()) {
+            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+            if (p == null || !p.matcher(tableName).matches()) {
+              schemaName = schemaName.trim();
+              tableName = tableName.trim();
+              schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
             }
           }
         }

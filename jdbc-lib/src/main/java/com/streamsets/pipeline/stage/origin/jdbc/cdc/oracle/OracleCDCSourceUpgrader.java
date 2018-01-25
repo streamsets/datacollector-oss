@@ -22,8 +22,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OracleCDCSourceUpgrader implements StageUpgrader {
@@ -100,7 +102,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
     configs.removeAll(configsToSave);
 
     String schema = null;
-    List<String> tables = null;
+    List<String> tables = Collections.emptyList();
     String excludePattern = null;
 
     for (Config config : configsToSave) {
@@ -109,7 +111,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
           schema = (String) config.getValue();
           break;
         case "oracleCDCConfigBean.baseConfigBean.tables":
-          tables = (List<String>) config.getValue();
+          tables = Optional.ofNullable((List<String>) config.getValue()).orElse(Collections.emptyList());
           break;
         case "oracleCDCConfigBean.baseConfigBean.excludePattern":
           excludePattern = (String) config.getValue();
@@ -119,12 +121,14 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
 
     List<LinkedHashMap<String, Object>> schemaTables = new ArrayList<>();
 
-    LinkedHashMap<String, Object> schemaTable = new LinkedHashMap<>();
-    schemaTable.put("schema", schema);
-    schemaTable.put("tables", tables);
-    schemaTable.put("excludePattern", excludePattern);
+    for (String table : tables) {
+      LinkedHashMap<String, Object> schemaTable = new LinkedHashMap<>();
+      schemaTable.put("schema", schema);
+      schemaTable.put("table", table);
+      schemaTable.put("excludePattern", excludePattern);
 
-    schemaTables.add(schemaTable);
+      schemaTables.add(schemaTable);
+    }
 
     configs.add(new Config("oracleCDCConfigBean.baseConfigBean.schemaTableConfigs", schemaTables));
 
