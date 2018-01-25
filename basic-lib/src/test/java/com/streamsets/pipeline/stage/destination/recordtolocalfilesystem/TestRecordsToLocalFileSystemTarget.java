@@ -43,7 +43,7 @@ public class TestRecordsToLocalFileSystemTarget {
   public void testTargetLifecycleTimeRotation() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "x", "${900}", 0);
+    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "x", "${1}", 0);
     TargetRunner runner = new TargetRunner.Builder(ToErrorLocalFSDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     input.add(createRecord("a"));
@@ -54,7 +54,7 @@ public class TestRecordsToLocalFileSystemTarget {
       runner.runWrite(input);
       Assert.assertTrue(runner.getErrorRecords().isEmpty());
       Assert.assertTrue(runner.getErrors().isEmpty());
-      Thread.sleep(1001);
+      Thread.sleep(1100);
       runner.runWrite(input);
       Assert.assertTrue(runner.getErrorRecords().isEmpty());
       Assert.assertTrue(runner.getErrors().isEmpty());

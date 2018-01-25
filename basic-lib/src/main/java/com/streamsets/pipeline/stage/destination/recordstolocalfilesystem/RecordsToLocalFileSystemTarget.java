@@ -46,7 +46,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
 
   private final String directory;
   private final String uniquePrefix;
-  private final String rotationIntervalSecs;
+  private final String rotationIntervalSecsExpr;
   private final int maxFileSizeMbs;
 
   private File dir;
@@ -62,11 +62,11 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
                                         int maxFileSizeMbs) {
     this.directory = directory;
     this.uniquePrefix = (uniquePrefix == null) ? "" : uniquePrefix;
-    this.rotationIntervalSecs = rotationIntervalSecs;
+    this.rotationIntervalSecsExpr = rotationIntervalSecs;
     this.maxFileSizeMbs = maxFileSizeMbs;
   }
 
-  private ELEval createRotationMillisEval(ELContext elContext) {
+  private ELEval createRotationIntervalSecsEval(ELContext elContext) {
     return elContext.createELEval("rotationIntervalSecs");
   }
 
@@ -83,16 +83,17 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
     }
     try {
-      ELEval rotationMillisEvaluator = createRotationMillisEval(getContext());
-      getContext().parseEL(rotationIntervalSecs);
-      rotationMillis = rotationMillisEvaluator.eval(getContext().createELVars(), rotationIntervalSecs, Long.class);
+      ELEval rotationIntervalSecsEvaluator = createRotationIntervalSecsEval(getContext());
+      getContext().parseEL(rotationIntervalSecsExpr);
+      long rotationIntervalSecs = rotationIntervalSecsEvaluator.eval(getContext().createELVars(), rotationIntervalSecsExpr, Long.class);
+      rotationMillis = rotationIntervalSecs * 1000;
       if (rotationMillis <= 0) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_03,
-                                                  rotationIntervalSecs, rotationMillis / 1000));
+            rotationIntervalSecsExpr, rotationIntervalSecs));
       }
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_04,
-                                                rotationIntervalSecs));
+          rotationIntervalSecsExpr));
     }
     if (maxFileSizeMbs < 0) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "maxFileSizeMbs", Errors.RECORDFS_00,
