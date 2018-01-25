@@ -57,16 +57,25 @@ public class KineticaBulkInserterUtils {
 
     BulkInserter.WorkerList workers = null;
 
-    // see if we need to filter worker host names
-    if (ipRegex != null) {
-      Pattern pattern = Pattern.compile(ipRegex);
-      workers = new BulkInserter.WorkerList(gpudb, pattern);
+    // if multi-head-ingest is disabled, leave workers as null
+    if (isMultiheadIngestDisabled){
+      LOG.info("Kinetica multi-head ingest is disabled");
     } else {
-      workers = new BulkInserter.WorkerList(gpudb);
+      LOG.info("Kinetica multi-head ingest is enabled");
+      // see if we need to filter worker host names
+      if (ipRegex != null && ipRegex.trim().length() > 0) {
+        LOG.info("Using ipRegex: '" + ipRegex + "'");
+        Pattern pattern = Pattern.compile(ipRegex);
+        workers = new BulkInserter.WorkerList(gpudb, pattern);
+      } else {
+        workers = new BulkInserter.WorkerList(gpudb);
+      }
     }
 
-    for (Iterator<URL> iter = workers.iterator(); iter.hasNext();) {
-      LOG.info("GPUdb BulkInserter worker: " + iter.next());
+    if (workers != null){
+      for (Iterator<URL> iter = workers.iterator(); iter.hasNext();) {
+        LOG.info("GPUdb BulkInserter worker: " + iter.next());
+      }
     }
 
     HashMap<String, String> options = new HashMap<String, String>();
