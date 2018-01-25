@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +78,8 @@ public class TestRecordEL {
 
     ELVariables variables = new ELVariables();
 
+    String stackTrace = new IOException("Error Record Function Stack Trace Test").toString();
+
     Record.Header header = Mockito.mock(Record.Header.class);
     Mockito.when(header.getErrorStage()).thenReturn("stage");
     Mockito.when(header.getErrorStageLabel()).thenReturn("label");
@@ -85,6 +88,7 @@ public class TestRecordEL {
     Mockito.when(header.getErrorDataCollectorId()).thenReturn("collector");
     Mockito.when(header.getErrorPipelineName()).thenReturn("pipeline");
     Mockito.when(header.getErrorTimestamp()).thenReturn(10L);
+    Mockito.when(header.getErrorStackTrace()).thenReturn(stackTrace);
     Record record = Mockito.mock(Record.class);
     Mockito.when(record.getHeader()).thenReturn(header);
 
@@ -94,6 +98,7 @@ public class TestRecordEL {
     Assert.assertEquals("label", eval.eval(variables, "${record:errorStageLabel()}", String.class));
     Assert.assertEquals("code", eval.eval(variables, "${record:errorCode()}", String.class));
     Assert.assertEquals("message", eval.eval(variables, "${record:errorMessage()}", String.class));
+    Assert.assertEquals(stackTrace, eval.eval(variables, "${record:errorStackTrace()}", String.class));
     Assert.assertEquals("collector", eval.eval(variables, "${record:errorCollectorId()}", String.class));
     Assert.assertEquals("pipeline", eval.eval(variables, "${record:errorPipeline()}", String.class));
     Assert.assertEquals(10L, (long)eval.eval(variables, "${record:errorTime()}", Long.class));
@@ -214,12 +219,12 @@ public class TestRecordEL {
     assertEquals(
         "default",
         eval.eval(vars, "${record:fieldAttributeOrDefault('/A/first', 'attr3', 'default')}",
-        String.class)
+            String.class)
     );
     assertEquals(
         "attrVal3",
         eval.eval(vars, "${record:fieldAttributeOrDefault('/A/second', 'attr3', 'default')}",
-        String.class)
+            String.class)
     );
     assertEquals("attrVal10", eval.eval(vars, "${record:fieldAttribute('/A', 'attr10')}", String.class));
     assertEquals("attrVal20", eval.eval(vars, "${record:fieldAttribute('/B', 'attr20')}", String.class));
@@ -227,7 +232,7 @@ public class TestRecordEL {
     assertEquals(
         "default2",
         eval.eval(vars, "${record:fieldAttributeOrDefault('/XYZ', 'attr21', 'default2')}",
-        String.class)
+            String.class)
     );
   }
 

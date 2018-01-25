@@ -43,11 +43,11 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "type",
-    description = "Returns the type of the field represented by path 'fieldPath' for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "type",
+      description = "Returns the type of the field represented by path 'fieldPath' for the record in context")
   public static Field.Type getType(
-    @ElParam("fieldPath") String fieldPath) {
+      @ElParam("fieldPath") String fieldPath) {
     Field.Type type = null;
     Record record = getRecordInContext();
     if (record != null) {
@@ -60,12 +60,12 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "value",
-    description = "Returns the value of the field represented by path 'fieldPath' for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "value",
+      description = "Returns the value of the field represented by path 'fieldPath' for the record in context")
   @SuppressWarnings("unchecked")
   public static Object getValue(
-    @ElParam("fieldPath") String fieldPath) {
+      @ElParam("fieldPath") String fieldPath) {
     Object value = null;
     Record record = getRecordInContext();
     if (record != null) {
@@ -78,12 +78,12 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "valueOrDefault",
-    description = "Returns the value of the field represented by path 'fieldPath' for the record in context or "
-      + "the default value if the field is not present or if the field is null")
+      prefix = RECORD_EL_PREFIX,
+      name = "valueOrDefault",
+      description = "Returns the value of the field represented by path 'fieldPath' for the record in context or "
+          + "the default value if the field is not present or if the field is null")
   public static Object getValueOrDefault(
-    @ElParam("fieldPath") String fieldPath, @ElParam("defaultValue") String defaultValue) {
+      @ElParam("fieldPath") String fieldPath, @ElParam("defaultValue") String defaultValue) {
     Object value = null;
     Record record = getRecordInContext();
     if (record != null) {
@@ -115,11 +115,11 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "exists",
-    description = "Checks if the field represented by path 'fieldPath' exists in the record")
+      prefix = RECORD_EL_PREFIX,
+      name = "exists",
+      description = "Checks if the field represented by path 'fieldPath' exists in the record")
   public static boolean exists(
-    @ElParam("fieldPath") String fieldPath) {
+      @ElParam("fieldPath") String fieldPath) {
     Record record = getRecordInContext();
     if (record != null) {
       return record.has(fieldPath);
@@ -168,6 +168,7 @@ public class RecordEL {
     ERROR_STAGE_LABEL,
     ERROR_CODE,
     ERROR_MESSAGE,
+    ERROR_STACK_TRACE,
     ERROR_DATA_COLLECTOR_ID,
     ERROR_PIPELINE_NAME,
     ERROR_TIME,
@@ -203,6 +204,9 @@ public class RecordEL {
         case ERROR_MESSAGE:
           value = record.getHeader().getErrorMessage();
           break;
+        case ERROR_STACK_TRACE:
+          value = record.getHeader().getErrorStackTrace();
+          break;
         case ERROR_DATA_COLLECTOR_ID:
           value = record.getHeader().getErrorDataCollectorId();
           break;
@@ -227,105 +231,113 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "id",
-    description = "Returns the id of the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "id",
+      description = "Returns the id of the record in context")
   public static String getId() {
     return getFromHeader(HeaderProperty.ID);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "creator",
-    description = "Returns the id of the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "creator",
+      description = "Returns the id of the record in context")
   public static String getStageCreator() {
     return getFromHeader(HeaderProperty.STAGE_CREATOR);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "path",
-    description = "Returns the stage path for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "path",
+      description = "Returns the stage path for the record in context")
   public static String getStagesPath() {
     return getFromHeader(HeaderProperty.STAGES_PATH);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorStage",
-    description = "Returns the error stage for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorStage",
+      description = "Returns the error stage for the record in context")
   public static String getErrorStage() {
     return getFromHeader(HeaderProperty.ERROR_STAGE);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorStageLabel",
-    description = "Returns the error stage label for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorStageLabel",
+      description = "Returns the error stage label for the record in context")
   public static String getErrorStageLabel() {
     return getFromHeader(HeaderProperty.ERROR_STAGE_LABEL);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorCode",
-    description = "Returns the error code for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorCode",
+      description = "Returns the error code for the record in context")
   public static String getErrorCode() {
     return getFromHeader(HeaderProperty.ERROR_CODE);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorMessage",
-    description = "Returns the error message for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorMessage",
+      description = "Returns the error message for the record in context")
   public static String getErrorMessage() {
     return getFromHeader(HeaderProperty.ERROR_MESSAGE);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorCollectorId",
-    description = "Returns the error data collector id for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorStackTrace",
+      description = "Returns the error stack trace for the record in context")
+  public static String getErrorStackTrace() {
+    return getFromHeader(HeaderProperty.ERROR_STACK_TRACE);
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "errorCollectorId",
+      description = "Returns the error data collector id for the record in context")
   public static String getErrorDataCollectorId() {
     return getFromHeader(HeaderProperty.ERROR_DATA_COLLECTOR_ID);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorPipeline",
-    description = "Returns the error pipeline name for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorPipeline",
+      description = "Returns the error pipeline name for the record in context")
   public static String getErrorPipelineName() {
     return getFromHeader(HeaderProperty.ERROR_PIPELINE_NAME);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "errorTime",
-    description = "Returns the error time for the record in context")
+      prefix = RECORD_EL_PREFIX,
+      name = "errorTime",
+      description = "Returns the error time for the record in context")
   public static long getErrorTime() {
     return getFromHeader(HeaderProperty.ERROR_TIME);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "eventType",
-    description = "Returns type of the event for event records and null for non-event records.")
+      prefix = RECORD_EL_PREFIX,
+      name = "eventType",
+      description = "Returns type of the event for event records and null for non-event records.")
   public static String getEventType() {
     return getFromHeader(HeaderProperty.EVENT_TYPE);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "eventVersion",
-    description = "Returns version of the event for event records and null for non-event records.")
+      prefix = RECORD_EL_PREFIX,
+      name = "eventVersion",
+      description = "Returns version of the event for event records and null for non-event records.")
   public static String getEventVersion() {
     return getFromHeader(HeaderProperty.EVENT_VERSION);
   }
 
   @ElFunction(
-    prefix = RECORD_EL_PREFIX,
-    name = "eventCreation",
-    description = "Returns creation time of the event for event records and null for non-event records.")
+      prefix = RECORD_EL_PREFIX,
+      name = "eventCreation",
+      description = "Returns creation time of the event for event records and null for non-event records.")
   public static String getEventCreationTime() {
     return getFromHeader(HeaderProperty.EVENT_CREATION);
   }
