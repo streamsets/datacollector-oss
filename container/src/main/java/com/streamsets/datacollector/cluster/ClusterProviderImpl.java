@@ -121,6 +121,8 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
+  private static final String MAPR_UNAME_PWD_SECURITY_ENABLED_KEY = "maprlogin.password.enabled";
+
   static final String CLUSTER_BOOTSTRAP_JAR_REGEX = "cluster.bootstrap.jar.regex_";
   static final Pattern CLUSTER_BOOTSTRAP_API_JAR_PATTERN = Pattern.compile(
       "streamsets-datacollector-cluster-bootstrap-api-\\d+.*.jar$");
@@ -830,13 +832,17 @@ public class ClusterProviderImpl implements ClusterProvider {
         sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY) : String.valueOf(config.workerCount);
     List<String> args;
     File hostingDir = null;
+    String slaveJavaOpts = config.clusterSlaveJavaOpts + Optional.ofNullable(System.getProperty(MAPR_UNAME_PWD_SECURITY_ENABLED_KEY))
+        .map(opValue -> !config.clusterSlaveJavaOpts.contains(MAPR_UNAME_PWD_SECURITY_ENABLED_KEY)? " -D" + MAPR_UNAME_PWD_SECURITY_ENABLED_KEY + "=" + opValue : "")
+        .orElse("");
+    LOG.info("Slave Java Opts : {}", slaveJavaOpts);
     if (executionMode == ExecutionMode.CLUSTER_BATCH) {
       LOG.info("Submitting MapReduce Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MAPREDUCE);
       args = generateMRArgs(
           clusterManager.getAbsolutePath(),
           String.valueOf(config.clusterSlaveMemory),
-          config.clusterSlaveJavaOpts,
+          slaveJavaOpts,
           libsTarGz.getAbsolutePath(),
           etcTarGz.getAbsolutePath(),
           resourcesTarGz.getAbsolutePath(),
@@ -852,7 +858,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       args = generateSparkArgs(
           clusterManager.getAbsolutePath(),
           String.valueOf(config.clusterSlaveMemory),
-          config.clusterSlaveJavaOpts,
+          slaveJavaOpts,
           config.sparkConfigs,
           numExecutors,
           libsTarGz.getAbsolutePath(),
