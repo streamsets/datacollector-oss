@@ -1447,7 +1447,6 @@ public class OracleCDCSource extends BaseSource {
     // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
     // Good source of recommended mappings is here:
     // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
-    columnValue = NULL.equalsIgnoreCase(columnValue) ? null : columnValue; //NOSONAR
     switch (columnType) {
       case Types.BIGINT:
         field = Field.create(Field.Type.LONG, columnValue);

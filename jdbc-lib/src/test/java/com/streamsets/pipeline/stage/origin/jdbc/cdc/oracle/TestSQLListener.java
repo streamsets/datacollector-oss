@@ -66,7 +66,7 @@ public class TestSQLListener {
                     put("NAME", "stream");
                     put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')");
                     put("SALARY", "10000.1");
-                    put("LASTLOGIN", "NULL"); //inserts just return string "NULL" which we handle in the origin itself.
+                    put("LASTLOGIN", null);
                   }
                 }
             },
@@ -94,6 +94,36 @@ public class TestSQLListener {
                     put("ID", "1");
                     put("SALARY=", "1998.483");
                     put("NAME", "=sdc");
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+
+                  }
+                }
+            },
+            {" update \"SYS\".\"MANYCOLS\" set \"SALARY=\" = '1998.483', NAME = NULL " +
+                "where \"ID\" = '1' and \"NAME\" = '=sdc' and" +
+                " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+                "\"SALARY=\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("SALARY=", "1998.483");
+                    put("NAME", null);
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+
+                  }
+                }
+            },
+            {" update \"SYS\".\"MANYCOLS\" set \"SALARY=\" = NULL, NAME = 'New Name' " +
+                "where \"ID\" = '1' and \"NAME\" = '=sdc' and" +
+                " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+                "\"SALARY=\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("SALARY=", null);
+                    put("NAME", "New Name");
                     put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
                     put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
 

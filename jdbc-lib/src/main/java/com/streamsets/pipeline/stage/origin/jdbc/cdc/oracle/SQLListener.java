@@ -31,6 +31,7 @@ import java.util.Set;
 public class SQLListener extends plsqlBaseListener {
 
   private final HashMap<String, String> columns = new HashMap<>();
+  private static final String NULL_STRING = "NULL";
   private boolean insideStatement = false;
   private boolean caseSensitive = false;
   private boolean allowNulls = false;
@@ -115,7 +116,8 @@ public class SQLListener extends plsqlBaseListener {
    * Unescapes strings and returns them.
    */
   private String formatValue(String value) {
-    if (value == null) {
+    // The value can either be null (if the IS keyword is present before it or just a NULL string with no quotes)
+    if (value == null || NULL_STRING.equalsIgnoreCase(value)) {
       return null;
     }
     String returnValue = format(value);
