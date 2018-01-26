@@ -362,13 +362,13 @@ public class TestCsvSpoolDirSource {
     }
   }
 
-  @Ignore
+  @Test
   public void testRecordOverrunOnBatchBoundary() throws Exception {
     final File csvFile = createSomeRecordsTooLongFile();
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {2, 0}, new int[] {1, 3});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {2, 1}, new int[] {1, 2});
     runRecordOverrunOnBatchBoundaryHelper(csvFile, 4, new int[] {3, 2}, new int[] {1, 2});
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {3, 0}, new int[] {2, 2});
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 6, new int[] {3, 0}, new int[] {3, 0});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {3, 2}, new int[] {2, 3});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 6, new int[] {3, 2}, new int[] {3, 2});
   }
 
   private void runRecordOverrunOnBatchBoundaryHelper(File sourceFile, int batchSize, int[] recordCounts,
@@ -385,29 +385,30 @@ public class TestCsvSpoolDirSource {
         .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     AtomicInteger batchCount = new AtomicInteger();
+    AtomicInteger errorCount = new AtomicInteger();
 
     runner.runInit();
 
     try {
-      runner.runProduce(new HashMap<>(), 10, output -> {
+      runner.runProduce(new HashMap<>(), batchSize, output -> {
 
         List<Record> records = output.getRecords().get("lane");
         int produceNum = batchCount.getAndIncrement();
 
-          if (!output.getNewOffset().endsWith("-1") && produceNum < 99) {
+          if (!output.getNewOffset().endsWith("-1") && produceNum < recordCounts.length) {
             final int recordCount = recordCounts[produceNum];
-            final int errorCount = errorCounts[produceNum];
+            errorCount.set(errorCounts[produceNum] + errorCount.get());
 
             Assert.assertNotNull(records);
             Assert.assertEquals(recordCount, records.size());
-            Assert.assertEquals(errorCount, runner.getErrors().size());
+            Assert.assertEquals(errorCount.get(), runner.getErrors().size());
           } else {
             runner.setStop();
           }
       });
 
-      Assert.assertTrue(batchCount.get() > 0);
       runner.waitOnProduce();
+      Assert.assertTrue(batchCount.get() > 0);
 
     } finally {
       runner.runDestroy();

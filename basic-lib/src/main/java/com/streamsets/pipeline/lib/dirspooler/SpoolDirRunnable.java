@@ -362,7 +362,7 @@ public class SpoolDirRunnable implements Runnable {
           }
         } catch (ObjectLengthException ex) {
           String exOffset = offset;
-          offset = MINUS_ONE;
+          offset = (parser != null) ? parser.getOffset() : MINUS_ONE;
           errorRecordHandler.onError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
           perFileErrorCount++;
           noMoreDataErrorCount++;
