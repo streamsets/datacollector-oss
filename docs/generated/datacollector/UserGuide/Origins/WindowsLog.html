@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Windows Event Log" /><meta name="abstract" content="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log." /><meta name="description" content="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_agf_5jv_sbb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Windows Event Log</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_agf_5jv_sbb">
+ <h1 class="title topictitle1">Windows Event Log</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Windows Event Log origin reads data from a Microsoft Windows event log located on a
+        Windows machine. The origin generates a record for each event in the log. </p>
+
+        <p class="p">Use the Windows Event Log origin only in
+            pipelines configured for edge execution mode. Run the pipeline on <span class="ph">StreamSets</span>
+            <span class="ph">Data Collector Edge</span>
+                (<span class="ph">SDC Edge</span>) installed on the Windows machine.</p>
+
+        <p class="p">For example, you might use the Windows Event Log origin in an edge pipeline to read logs
+            from a web or application farm of Windows servers. You install <span class="ph">SDC Edge</span> on
+            each Windows machine that you want to read the logs from, and run the edge pipeline on
+            each <span class="ph">SDC Edge</span> installation. You design the edge pipeline to pass the log data to a <span class="ph">Data Collector</span>
+            receiving pipeline that runs on <span class="ph">StreamSets</span>
+            <span class="ph">Data Collector</span>.
+            The <span class="ph">Data Collector</span> receiving pipeline performs more complex processing on the data, and then writes the
+            data to a big data system such as Hadoop. You can then analyze the data to detect
+            security violations such as insider threats or illegal access to the Windows
+            machines.</p>
+
+        <p class="p">When you configure the Windows Event Log origin, you specify the Windows log to read
+            from. You also specify whether the origin reads all events in the log or whether it
+            reads only new events that occur after the pipeline starts.</p>
+
+        <p class="p">When the pipeline stops, the Windows Event Log origin notes where it stops reading. When
+            the pipeline starts again, the origin continues processing from where it stopped by
+            default. You can reset the origin to process all requested files.</p>
+
+        <p class="p">For more information about installing <span class="ph">SDC Edge</span>,
+            designing edge pipelines, and running and maintaining edge pipelines, see <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="An edge pipeline is a pipeline that runs on an edge device with limited resources. Use edge pipelines to read data from the edge device or to receive data from another pipeline and then act on that data to control the edge device.Let's say that you have a factory with a network of machine tools. Sensors are installed on each machine that measure the temperature, relative humidity, and pressure of the machine. You need to continuously monitor this sensor data, and shut down any machine that exceeds the allowed limits. Install Data Collector Edge (SDC Edge) on each edge device where you want to run edge pipelines.An edge sending pipeline uses an origin specific to the edge device to read local data residing on the device. The pipeline can perform minimal processing on the data before sending the data to a Data Collector receiving pipeline. An edge receiving pipeline listens for data sent by another pipeline running on Data Collector or on SDC Edge and then acts on that data to control the edge device. Edge pipelines run on SDC Edge which is a lightweight agent without a UI. As a result, some features available for standalone pipelines are not available for edge pipelines at this time. We will provide support for some of these features in edge pipelines in a future release.Data Collector receiving pipelines run in the standalone execution mode. You design and run receiving pipelines in Data Collector.Data Collector Edge (SDC Edge) includes several sample pipelines that make it easy to get started. You simply create the appropriate Data Collector receiving pipeline, download and install SDC Edge on the edge device, and then run the sample edge pipeline.Edge sending pipelines work in tandem with Data Collector pipelines. So after choosing the sample edge pipeline that you want to use, create and start the corresponding Data Collector receiving pipeline. The Data Collector receiving pipeline must start before the edge sending pipeline.Download and install SDC Edge on each edge device where you want to run edge pipelines. All sample edge pipelines are included in each SDC Edge installation.Run a single command to start SDC Edge and a sample edge pipeline at the same time. You can then run additional commands to start additional pipelines and to manage running pipelines after SDC Edge is running. Download and install SDC Edge on each edge device where you want to run edge pipelines. Use Data Collector to download the SDC Edge executable along with your designed edge pipelines. The downloaded tarball includes the SDC Edge executable, the sample edge pipelines, and your selected edge pipelines. You can download the SDC Edge executable from the StreamSets website. The downloaded tarball includes the SDC Edge executable and the sample edge pipelines.You can run an SDC Edge container from the StreamSets Data Collector Edge Docker image. The image includes the SDC Edge executable and the sample edge pipelines.Administering Data Collector Edge (SDC Edge) involves configuring, starting, and shutting down the agent.You can customize SDC Edge by editing the SDC Edge configuration file, &lt;SDCEdge_home&gt;/etc/edge.conf.When you first get started with SDC Edge, the easiest way to deploy pipelines to SDC Edge is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDC Edge is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDC Edge installed on the edge device.">Edge Pipelines</a>.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_lmc_yjv_sbb">
+    <h2 class="title topictitle2">Configuring a Windows Event Log Origin</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Windows Event Log
+                origin to read data from a Windows event log. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__d43782e425" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d405274e268">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d405274e271">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d405274e268 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d405274e271 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d405274e268 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d405274e271 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d405274e268 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_lmc_yjv_sbb__d43782e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d405274e271 ">Error record handling for the stage: <ul class="ul" id="task_lmc_yjv_sbb__d43782e475">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Windows</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__table_vw4_swv_sbb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d405274e347">Windows Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d405274e350">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d405274e347 ">Log Name</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d405274e350 ">Name of the Windows log to read from:<ul class="ul" id="task_lmc_yjv_sbb__ul_awt_xwv_sbb">
+                                            <li class="li">Application</li>
+
+                                            <li class="li">System</li>
+
+                                            <li class="li">Security</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d405274e347 ">Read Mode</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d405274e350 ">Determines how the origin reads the log:<ul class="ul" id="task_lmc_yjv_sbb__ul_vnv_1xv_sbb">
+                                            <li class="li">All - Read all events in the log.</li>
+
+                                            <li class="li">New - Read only new events in the log that occur
+                                                after the pipeline starts. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,0 +1,559 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Azure IoT Hub Producer destination writes data to Microsoft Azure IoT Hub. To write to Microsoft Azure Data Lake Store, use the Azure Data Lake Store destination. To write to Microsoft Azure Event ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Azure IoT Hub Producer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_pnd_jkq_1bb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Azure IoT Hub Producer</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_pnd_jkq_1bb">
+ <h1 class="title topictitle1">Azure IoT Hub Producer</h1>
+
+ <div class="body conbody">
+  <p class="p">The Azure IoT Hub Producer destination
+            writes data to Microsoft Azure IoT Hub. To write to Microsoft Azure Data Lake Store, use
+            the Azure Data Lake Store destination. To write to Microsoft Azure Event Hub, use the
+            Azure Event Hub Producer destination.</p>
+
+        <p class="p">Use the Azure IoT Hub Producer destination in a pipeline when you want to send device
+            data - such as temperature or sensor data - to Azure IoT Hub after processing the
+            data.</p>
+
+        <p class="p"><span class="ph">Data Collector</span>
+            functions as a simulated device that sends messages to Azure IoT Hub. Before you
+            configure the Azure IoT Hub Producer destination, register <span class="ph">Data Collector</span> as
+            a simulated device in your IoT hub. </p>
+
+        <p class="p">When you configure the Azure IoT Hub Producer destination, you specify connection
+            information such as the IoT hub name and device ID. You also specify the authentication
+            key that the destination uses to identify itself when it sends messages to your IoT
+            hub.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_cwj_dcs_1bb">
+ <h2 class="title topictitle2">Register Data Collector as an IoT Hub Device</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        functions as a simulated device that sends messages to Azure IoT Hub. Before you configure
+        the Azure IoT Hub Producer destination, register <span class="ph">Data Collector</span> as a
+        device in your IoT hub. </p>
+
+        <p class="p"><span class="ph">Data Collector</span>
+            cannot connect to your IoT hub unless it has an entry in the identity registry. When you
+            register <span class="ph">Data Collector</span> as
+            a simulated device, Azure IoT Hub generates a unique device ID and authentication key
+            that <span class="ph">Data Collector</span> uses to identify itself when it sends messages to your IoT hub.</p>
+
+        <div class="note note"><span class="notetitle">Note:</span> If you run pipelines that contain multiple Azure IoT Hub Producer destinations, you
+            can configure each destination to use the same <span class="ph">Data Collector</span>
+            device ID. Or, if you need to separate the data being sent by each pipeline, you can
+            create a unique device ID for each destination. </div>
+
+        <ol class="ol" id="concept_cwj_dcs_1bb__ol_axn_jhw_1bb">
+            <li class="li">Log in to the Azure portal: <a class="xref" href="https://portal.azure.com" target="_blank">https://portal.azure.com</a>.
+            </li>
+
+            <li class="li">Open your IoT hub.</li>
+
+            <li class="li">In the Navigation panel, click <span class="ph uicontrol">Device Explorer</span>.</li>
+
+            <li class="li">To create a device, click <span class="ph uicontrol">Add</span>.</li>
+
+            <li class="li">On the <span class="ph uicontrol">Add Device</span> page, enter the following information:<ul class="ul" id="concept_cwj_dcs_1bb__ul_wdt_33w_1bb">
+                    <li class="li"><span class="ph uicontrol">Device ID</span>: Enter the ID to use for <span class="ph">Data Collector</span>. Device IDs are case sensitive.</li>
+
+                    <li class="li"><span class="ph uicontrol">Authentication Type</span>: Select <span class="ph uicontrol">Symmetric
+                            Key</span>.</li>
+
+                    <li class="li"><span class="ph uicontrol">Auto Generate Keys</span>: Select the checkbox.</li>
+
+                    <li class="li"><span class="ph uicontrol">Connect device to IoT Hub</span>: Click
+                            <span class="ph uicontrol">Enable</span>.</li>
+
+                </ul>
+</li>
+
+            <li class="li">Click <span class="ph uicontrol">Save</span>.</li>
+
+            <li class="li">In the <span class="ph uicontrol">Device Explorer</span> pane, select the newly created
+                device.</li>
+
+            <li class="li">Make a note of the device ID and the primary key. When you configure the Azure IoT
+                Hub Producer destination, use these values for the Device ID property and the Shared
+                Access Key stage property.<p class="p"><img class="image" id="concept_cwj_dcs_1bb__image_wly_lvw_1bb" src="../Graphics/AzureIoTHubProducer_Device.png" height="316" width="683" /></p>
+</li>
+
+        </ol>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_r1l_lbr_1bb">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">The Azure IoT Hub Producer
+            destination writes data to Microsoft Azure IoT Hub based on the data format that you
+            select. You can use the following data formats: </p>
+
+     <dl class="dl">
+         
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">The destination writes binary data from a single field in the
+                                    record. </dd>
+
+                        
+         
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_r1l_lbr_1bb__d16872e3128">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+         
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+         
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a UNIX-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+     </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_tqc_vkq_1bb">
+    <h2 class="title topictitle2">Configuring an Azure IoT Hub Producer Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an Azure IoT
+                Hub Producer destination to write data to Microsoft Azure IoT Hub. Be sure to <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">register Data Collector
+                    as a device</a> in your IoT hub before you configure the destination. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16805e5475" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d80657e297">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d80657e300">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e297 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e300 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e297 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e300 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e297 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_tqc_vkq_1bb__d16805e5521" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e300 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e297 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_tqc_vkq_1bb__d16805e5537" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e300 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e297 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_tqc_vkq_1bb__d16805e5554" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e300 ">Error record handling for the stage: <ul class="ul" id="task_tqc_vkq_1bb__d16805e5558">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">IoT Hub</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__table_m31_ghr_1bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d80657e411">IoT Hub Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d80657e414">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80657e411 ">IoT Hub Name</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80657e414 ">Name of your IoT hub.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80657e411 ">Device ID
+                                        <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">
+                                            <img class="image" id="task_tqc_vkq_1bb__image_ohs_5jk_ex" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80657e414 ">ID for the <span class="ph">Data Collector</span> device registered in your IoT hub. Device IDs are case
+                                        sensitive.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80657e411 ">Shared Access Key <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">
+                                            <img class="image" id="task_tqc_vkq_1bb__image_nlx_yjt_1bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80657e414 ">Shared access primary key string for the <span class="ph">Data Collector</span> device registered in your IoT hub. Enter the primary key
+                                        value for the <span class="ph">Data Collector</span> device created in the Azure portal.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80657e411 ">Maximum Request Time</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80657e414 ">Maximum number of seconds to wait for a request to
+                                        complete.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d80657e519">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d80657e522">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e519 ">Data Format <a class="xref" href="AzureIoTHub.html#concept_r1l_lbr_1bb">
+                                            <img class="image" id="task_tqc_vkq_1bb__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e522 ">Data format for messages:<ul class="ul" id="task_tqc_vkq_1bb__ul_wlj_353_br">
+                                            <li class="li">Binary</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_tqc_vkq_1bb__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Text</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16805e6542" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d80657e597">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d80657e600">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e597 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e600 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16805e6738" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d80657e643">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d80657e646">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e643 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e646 ">Determines how JSON data is written:<ul class="ul" id="task_tqc_vkq_1bb__d16805e6767">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d80657e643 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d80657e646 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16805e6984" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d80657e707">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d80657e710">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e707 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e710 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e707 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e710 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d80657e707 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d80657e710 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d80657e707 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d80657e710 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

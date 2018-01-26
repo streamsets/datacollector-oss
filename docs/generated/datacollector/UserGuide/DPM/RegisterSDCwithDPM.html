@@ -1,0 +1,716 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Register Data Collector with Control Hub" /><meta name="abstract" content="You must register a Data Collector to work with StreamSets Control Hub. When you register a Data Collector, Data Collector generates an authentication token that it uses to issue authenticated requests to Control Hub." /><meta name="description" content="You must register a Data Collector to work with StreamSets Control Hub. When you register a Data Collector, Data Collector generates an authentication token that it uses to issue authenticated requests to Control Hub." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kc4_xyf_xw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Register Data Collector with Control Hub</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub">StreamSets Control Hub</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">StreamSets Control Hub</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_kc4_xyf_xw">
+    <h1 class="title topictitle1">Register Data Collector with <span class="ph">Control Hub</span></h1>
+
+    
+    <div class="body conbody"><p class="shortdesc">You must register a <span class="ph">Data Collector</span> to
+        work with <span class="ph">StreamSets Control Hub</span>.
+        When you register a <span class="ph">Data Collector</span>, <span class="ph">Data Collector</span>
+        generates an authentication token that it uses to issue authenticated requests to <span class="ph">Control Hub</span>.</p>
+
+        <p class="p">You can register a <span class="ph">Data Collector</span>
+            from the <span class="ph">Data Collector</span>
+            UI, from the command line interface, or from <span class="ph">Control Hub</span>.
+            For instructions on registering from <span class="ph">Control Hub</span>,
+            see the <span class="ph">Control Hub</span>
+            online help.</p>
+
+        <p class="p">For a Cloudera Manager installation, you must register a <span class="ph">Data Collector</span>
+            from Cloudera Manager.</p>
+
+        <p class="p">A registered <span class="ph">Data Collector</span>
+            communicates with <span class="ph">Control Hub</span> at
+            regular intervals. If a <span class="ph">Data Collector</span>
+            cannot connect to <span class="ph">Control Hub</span>,
+            due to a network or system outage, then the <span class="ph">Data Collector</span>
+            uses the <span class="ph">Control Hub</span>
+            disconnected mode.</p>
+
+        <p class="p">You can optionally configure each registered <span class="ph">Data Collector</span> to
+            use an authenticated HTTP proxy server to access <span class="ph">Control Hub</span>.</p>
+
+        <p class="p">Before you register a <span class="ph">Data Collector</span>,
+            perform the necessary prerequisites. The prerequisites include creating new <span class="ph">Control Hub</span>
+            users and groups. After registration, be sure to transfer permissions to the new <span class="ph">Control Hub</span>
+            users and groups.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_w11_n1q_rx">
+ <h2 class="title topictitle2">Registration Prerequisites</h2>
+
+ <div class="body conbody">
+  <p class="p">Before you register <span class="ph">Data Collector</span>s,
+            complete the following prerequisites:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Verify that the statistics stage library is installed.</dt>
+
+                <dd class="dd"><span class="ph">Control Hub</span> requires that the statistics stage library be installed on each registered
+                        <span class="ph">Data Collector</span>. <span class="ph">Control Hub</span> requires the library to run system pipelines on the <span class="ph">Data Collector</span>. By default, both the core and full <span class="ph">Data Collector</span> installations include the statistics stage library.</dd>
+
+                <dd class="dd">To verify that a <span class="ph">Data Collector</span> has the statistics stage library installed, click the Package Manager icon
+                        (<img class="image" id="concept_w11_n1q_rx__image_hgv_t1q_rx" src="../Graphics/icon_PackageManager.png" height="13" width="16" />) to display the list of installed stage libraries.
+                    If the statistics library was uninstalled, <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">install
+                        the library</a> before registering the <span class="ph">Data Collector</span>.</dd>
+
+            
+            
+                <dt class="dt dlterm">Create a <span class="ph">Control Hub</span> user account and group for each Data Collector user and group.</dt>
+
+                <dd class="dd">If your organization currently uses <span class="ph">Data Collector</span>, you must create a <span class="ph">Control Hub</span> user account and group for each <span class="ph">Data Collector</span> user account and group, assigning the corresponding <span class="ph">Data Collector</span> roles to each. After a <span class="ph">Data Collector</span> is registered with <span class="ph">Control Hub</span>, the <span class="ph">Data Collector</span> uses <span class="ph">Control Hub</span> user authentication. Only <span class="ph">Control Hub</span> user accounts can log in to registered <span class="ph">Data Collector</span>s.</dd>
+
+                <dd class="dd">
+                    <p class="p">If your organization is not using <span class="ph">Data Collector</span>, you can skip this prerequisite. You can create new <span class="ph">Control Hub</span> user accounts and groups at any time.</p>
+
+                </dd>
+
+                <dd class="dd">Registered <span class="ph">Data Collector</span>s belong to the organization of the user who completes the registration. All
+                    user accounts that belong to the same organization and that have the appropriate
+                    roles can log in to the registered <span class="ph">Data Collector</span>s.</dd>
+
+                <dd class="dd">For instructions on creating corresponding <span class="ph">Control Hub</span> user accounts, see the first tutorial in the <span class="ph">Control Hub</span> online help.<div class="note tip"><span class="tiptitle">Tip:</span> If <span class="ph">Data Collector</span> uses file-based authentication and if you register the <span class="ph">Data Collector</span> from the <span class="ph">Data Collector</span> UI, you can skip this step and create <span class="ph">Control Hub</span> user accounts during the registration process, as described in <a class="xref" href="RegisterSDCwithDPM.html#task_a4y_v1g_xw" title="You can register a Data Collector with Control Hub from the Data Collector UI.">Registering from Data Collector</a>.</div>
+</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_a4y_v1g_xw">
+    <h2 class="title topictitle2">Registering from Data Collector</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can register a <span class="ph">Data Collector</span> with
+            <span class="ph">Control Hub</span>
+        from the <span class="ph">Data Collector</span> UI.</p>
+
+        <div class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> For a <span class="ph">Data Collector</span> installation with Cloudera Manager, you must <a class="xref" href="RegisterSDCwithDPM.html#task_oxx_y5m_xw" title="If you installed Data Collector through Cloudera Manager, you must use Cloudera Manager to register the Data Collector with Control Hub.">use Cloudera Manager to
+                    register</a> the <span class="ph">Data Collector</span>. </div>
+
+            <p class="p">
+                
+            </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Log in to <span class="ph">Data Collector</span> using your <span class="ph">Data Collector</span> user account.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Enable SCH</span></span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the following information in the <span class="keyword wintitle">Enable SCH</span>
+                    window:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_a4y_v1g_xw__table_sld_z4l_nw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d63825e389">Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d63825e392">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e389 ">SCH Base URL</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e392 ">Enter the appropriate URL:<ul class="ul" id="task_a4y_v1g_xw__d10482e4700">
+        <li class="li">For <span class="ph">Control Hub</span> cloud, use
+          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+        <li class="li">For <span class="ph">Control Hub</span> on-premises, use the
+         URL provided by your system administrator. For example,
+          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+       </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e389 ">SCH User ID</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e392 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                  <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
+
+            </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e389 ">SCH User Password</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e392 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e389 ">Labels for this <span class="ph">Data Collector</span></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e392 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
+                                            <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
+                                        these labels after you register the <span class="ph">Data Collector</span>, you must modify the configuration file.<p class="p">Use labels to
+                                            group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels
+                                            in <span class="ph">Control Hub</span> after you register the <span class="ph">Data Collector</span>.</p>
+<p class="p">Default is "all", which you can use to run a
+                                            job on all registered <span class="ph">Data Collector</span>s.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Enable SCH</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If the <span class="ph">Data Collector</span> uses file-based authentication, you can click <span class="ph uicontrol">Create SCH Groups
+                        and Users</span> to create a <span class="ph">Control Hub</span> user account and group for each <span class="ph">Data Collector</span> user account and group.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Create SCH Groups and Users</span> window maps all
+                    existing <span class="ph">Data Collector</span> user accounts and groups to <span class="ph">Control Hub</span> user accounts and groups. You can remove users or groups and can edit the
+                    IDs, names, and email addresses as needed.<p class="p">When you have finished reviewing
+                        the users and groups to create, click <span class="ph uicontrol">Create</span>. Each
+                        new user is assigned a default set of <span class="ph">Control Hub</span> roles. Groups are not assigned any roles. After you log in to <span class="ph">Control Hub</span>, change the default role assignments as needed to secure the integrity of
+                        your organization and data. </p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart the <span class="ph">Data Collector</span> in one of the following ways:</span>
+                <ul class="ul choices" id="task_a4y_v1g_xw__choices_ost_pkm_nw">
+                    <li class="li choice">If you started the <span class="ph">Data Collector</span> manually from the command line, click <span class="ph uicontrol">Restart Data
+                            Collector</span> in the <span class="keyword wintitle">Enable SCH</span>
+                        window.</li>
+
+                    <li class="li choice">If you started the <span class="ph">Data Collector</span> as a service, you must use the command line for restart. Click
+                            <span class="ph uicontrol">Cancel</span> in the <span class="keyword wintitle">Enable SCH</span>
+                        window, and then run the following command:
+                        <pre class="pre codeblock">service sdc restart</pre>
+</li>
+
+                </ul>
+
+                <div class="itemgroup info">When you log in to the registered <span class="ph">Data Collector</span> using a <span class="ph">Control Hub</span> user account, the following <span class="ph">Control Hub</span> Enabled icon displays:<p class="p"><img class="image" id="task_a4y_v1g_xw__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="60" width="700" /></p>
+</div>
+                <div class="itemgroup info"><span class="ph">To enable <span class="ph">Control Hub</span> users to
+                        work with pipelines, transfer permissions to the <span class="ph">Control Hub</span> users and
+                        groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to Control Hub Users</a>.</span></div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_js4_2z1_cx">
+ <h2 class="title topictitle2">Registering from the Command Line Interface</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can register a <span class="ph">Data Collector</span> with
+            <span class="ph">Control Hub</span>
+        from the <span class="ph">Data Collector</span> command line interface. The <span class="ph">Data Collector</span> must
+        be running before you can use the command line interface.</p>
+
+        <div class="note note"><span class="notetitle">Note:</span> For a <span class="ph">Data Collector</span>
+            installation with Cloudera Manager, you must <a class="xref" href="RegisterSDCwithDPM.html#task_oxx_y5m_xw" title="If you installed Data Collector through Cloudera Manager, you must use Cloudera Manager to register the Data Collector with Control Hub.">use Cloudera Manager to
+                register</a> the <span class="ph">Data Collector</span>. </div>
+
+        <p class="p">Start <span class="ph">Data Collector</span>,
+            and then use the system enableDPM command to register the <span class="ph">Data Collector</span>. </p>
+
+        <div class="p">Use the command as
+            follows:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli \
+(-U &lt;sdcURL&gt; | --url &lt;sdcURL&gt;) \
+[(-D &lt;dpmURL&gt; | --dpmURL &lt;dpmURL&gt;)] \
+[(-a &lt;sdcAuthType&gt; | --auth-type &lt;sdcAuthType&gt;)] \
+[(-u &lt;sdcUser&gt; | --user &lt;sdcUser&gt;)] \
+[(-p &lt;sdcPassword&gt; | --password &lt;sdcPassword&gt;)] \
+system enableDPM \
+(--dpmUrl &lt;dpmBaseURL&gt;) \
+(--dpmUser &lt;dpmUserID&gt;) \
+(--dpmPassword &lt;dpmUserPassword&gt;) \
+[(--labels &lt;labels&gt;)]</pre>
+</div>
+
+        <p class="p">When using the system enableDPM command, the following basic options are required:</p>
+
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_js4_2z1_cx__table_lkb_qkl_nx" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d63825e707">Basic Option</th>
+
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d63825e710">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e707 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+--url &lt;sdcURL&gt;</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e710 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
+                                    <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e707 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+<p class="p">--dpmURL &lt;dpmURL&gt;</p>
+</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e710 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c2n_5kd_j1b">
+        <li class="li">For <span class="ph">Control Hub</span> cloud, use
+          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+        <li class="li">For <span class="ph">Control Hub</span> on-premises, use the
+         URL provided by your system administrator. For example,
+          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+       </ul>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+
+        <p class="p">The following table describes the enableDPM options:</p>
+
+  <div class="p">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_js4_2z1_cx__table_njq_3bb_cx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d63825e790">Enable DPM Option</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d63825e793">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e790 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e793 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c6n_9jk_j1b">
+        <li class="li">For <span class="ph">Control Hub</span> cloud, use
+          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+        <li class="li">For <span class="ph">Control Hub</span> on-premises, use the
+         URL provided by your system administrator. For example,
+          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+       </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e790 ">--dpmUser &lt;dpmUserID&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e793 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                  <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
+
+            </div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e790 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e793 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e790 ">--labels &lt;labels&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e793 ">Optional. Assign a label to this <span class="ph">Data Collector</span>. You can enter multiple labels separated by commas. Labels that
+                                you assign here are defined in the <span class="ph">Control Hub</span> configuration file, <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To
+                                remove these labels after you register the <span class="ph">Data Collector</span>, you must modify the configuration file.<p class="p">Use labels to group
+                                        <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels in <span class="ph">Control Hub</span> after you register the <span class="ph">Data Collector</span>.</p>
+<p class="p">Default is "all", which you can use to run a job on
+                                    all registered <span class="ph">Data Collector</span>s.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+For example, the following command registers a <span class="ph">Data Collector</span>
+            with <span class="ph">Control Hub</span> and assigns three labels to the <span class="ph">Data Collector</span>:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli -U http://localhost:18630 -D https://cloud.streamsets.com system enableDPM --dpmUrl https://cloud.streamsets.com --dpmUser alison@MyOrg --dpmPassword MyPassword --labels Finance,Accounting,Development</pre>
+</div>
+
+        <p class="p">Restart the <span class="ph">Data Collector</span> to
+            apply the changes. </p>
+
+        <p class="p">When you log in to the registered <span class="ph">Data Collector</span>
+            using a <span class="ph">Control Hub</span>
+            user account, the following <span class="ph">Control Hub</span>
+            Enabled icon displays:</p>
+
+     <p class="p"><img class="image" id="concept_js4_2z1_cx__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="60" width="700" /></p>
+
+        <p class="p"><span class="ph">To enable <span class="ph">Control Hub</span> users to
+                        work with pipelines, transfer permissions to the <span class="ph">Control Hub</span> users and
+                        groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to Control Hub Users</a>.</span></p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_oxx_y5m_xw">
+    <h2 class="title topictitle2">Registering from Cloudera Manager</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If you installed <span class="ph">Data Collector</span>
+        through Cloudera Manager, you must use Cloudera Manager to register the <span class="ph">Data Collector</span> with
+            <span class="ph">Control Hub</span>.</p>
+
+        <div class="section context">
+            
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service, then
+                    click <span class="ph uicontrol">Configuration</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter <kbd class="ph userinput">SCH</kbd> in the search field to display the <span class="ph">Control Hub</span> configuration properties.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_oxx_y5m_xw__table_sld_z4l_nw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d63825e1026">Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d63825e1029">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e1026 ">Enable SCH</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e1029 ">Select to enable <span class="ph">Control Hub</span>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e1026 ">SCH URL</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e1029 ">Enter the appropriate URL:<ul class="ul" id="task_oxx_y5m_xw__d10482e4700">
+        <li class="li">For <span class="ph">Control Hub</span> cloud, use
+          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+        <li class="li">For <span class="ph">Control Hub</span> on-premises, use the
+         URL provided by your system administrator. For example,
+          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+       </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e1026 ">SCH User ID</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e1029 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                  <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
+
+            </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e1026 ">SCH Password</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e1029 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63825e1026 ">SCH Labels</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63825e1029 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
+                                            <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
+                                        these labels after you register the <span class="ph">Data Collector</span>, you must modify the labels through Cloudera
+                                            Manager.<p class="p">Use labels to group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels
+                                            in <span class="ph">Control Hub</span> after you register the <span class="ph">Data Collector</span>.</p>
+Default is "all", which you can use to run a job
+                                        on all registered <span class="ph">Data Collector</span>s.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save Changes</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph menucascade"><span class="ph uicontrol">Actions</span> &gt; <span class="ph uicontrol"> Restart</span></span> to restart the <span class="ph">Data Collector</span>.</span>
+                <div class="itemgroup info">When you log in to the registered <span class="ph">Data Collector</span> using a <span class="ph">Control Hub</span> user account, the following <span class="ph">Control Hub</span> Enabled icon displays:<p class="p"><img class="image" id="task_oxx_y5m_xw__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="60" width="700" /></p>
+<p class="p"><span class="ph">To enable <span class="ph">Control Hub</span> users to
+                        work with pipelines, transfer permissions to the <span class="ph">Control Hub</span> users and
+                        groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to Control Hub Users</a>.</span></p>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_t2f_m1g_jx">
+ <h2 class="title topictitle2">Disconnected Mode</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">After a <span class="ph">Data Collector</span> is
+        registered with <span class="ph">Control Hub</span>, the
+            <span class="ph">Data Collector</span>
+        communicates with <span class="ph">Control Hub</span> at
+        regular intervals - around every 30 seconds or less. If a <span class="ph">Data Collector</span> cannot
+        connect to <span class="ph">Control Hub</span>, due to
+        a network or system outage, then the <span class="ph">Data Collector</span> uses
+        the <span class="ph">Control Hub</span>
+        disconnected mode.</p>
+
+        <p class="p">In disconnected mode, you can still log into and use
+                <span class="ph">Data Collector</span>. However, you cannot publish pipelines to <span class="ph">Control Hub</span>,
+            view pipeline commit history, or download published pipelines from <span class="ph">Control Hub</span>.
+            When the <span class="ph">Data Collector</span>
+            can connect to <span class="ph">Control Hub</span>
+            again, it switches back to the <span class="ph">Control Hub</span>
+            enabled mode - and then you can continue to manage how pipelines work with <span class="ph">Control Hub</span>.</p>
+
+        <p class="p">If a <span class="ph">Data Collector</span> switches to disconnected mode while you are logged in, <span class="ph">Data Collector</span>
+            requires that you log in again with your <span class="ph">Control Hub</span>
+            user account. After you log in, the following Disconnected Mode icon displays:</p>
+
+        <p class="p"><img class="image" id="concept_t2f_m1g_jx__image_ztz_bkg_jx" src="../Graphics/SDC_DPMDisconnected.png" height="65" width="759" /></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_dmr_df5_5y">
+ <h2 class="title topictitle2">Using an HTTP or HTTPS Proxy Server</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure each registered <span class="ph">Data Collector</span> to use
+        an authenticated HTTP or HTTPS proxy server for outbound requests made to <span class="ph">Control Hub</span>. Define
+        the proxy properties in the SDC_JAVA_OPTS environment variable in the <span class="ph">Data Collector</span>
+        environment configuration file located in the <samp class="ph codeph">$SDC_DIST/libexec</samp> directory. </p>
+
+        
+        <p class="p">Modify the <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">environment configuration file</a> used by your installation type.</p>
+
+        <p class="p">Add the following Java options to the SDC_JAVA_OPTS
+            environment variable:</p>
+
+        <ul class="ul" id="concept_dmr_df5_5y__ul_ovt_fr5_5y">
+            <li class="li"><samp class="ph codeph">https.proxyUser</samp></li>
+
+            <li class="li"><samp class="ph codeph">https.proxyPassword</samp></li>
+
+            <li class="li"><samp class="ph codeph">https.proxyHost</samp></li>
+
+            <li class="li"><samp class="ph codeph">https.proxyPort</samp></li>
+
+        </ul>
+
+        <p class="p">If the proxy server uses HTTP instead of HTTPS, use <samp class="ph codeph">http.&lt;property
+                name&gt;</samp> for each property.</p>
+
+        <p class="p">For example, to configure a <span class="ph">Data Collector</span> to
+            use an HTTPS proxy server on host 138.0.0.1 and port 3138, define SDC_JAVA_OPTS as
+            follows: </p>
+
+        <pre class="pre codeblock">export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m <span class="ph uicontrol">-Dhttps.proxyUser=MyName -Dhttps.proxyPassword=MyPsswrd -Dhttps.proxyHost=138.0.0.1 -Dhttps.proxyPort=3138</span> -server ${SDC_JAVA_OPTS}" </pre>
+
+        <div class="note note"><span class="notetitle">Note:</span> Oracle JDK disabled HTTP proxy authentication for HTTPS URLs in JDK 8 update 111. If
+                <span class="ph">Data Collector</span> runs on a machine with Java 8u111 or later, consider using an HTTPS proxy server. Or
+            as a workaround, consider adding the following Java property to the SDC_JAVA_OPTS
+            environment variable, setting the property to an empty string:<div class="p">
+                <pre class="pre codeblock">-Djdk.http.auth.tunneling.disabledSchemes=''</pre>
+
+            </div>
+<p class="p">However, use this workaround with caution since it exposes credentials by sending
+                them through an unencrypted proxy.</p>
+</div>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_a42_stw_2z">
+ <h2 class="title topictitle2">Using a Publicly Accessible URL</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If you register a <span class="ph">Data Collector</span> that
+        is installed on a cloud-computing platform such as Amazon Elastic Compute Cloud (EC2),
+        configure the <span class="ph">Data Collector</span> to use
+        a publicly accessible URL.</p>
+
+        
+        <p class="p">When you register a <span class="ph">Data Collector</span>
+            with <span class="ph">Control Hub</span>, the <span class="ph">Data Collector</span>
+            sends its URL to <span class="ph">Control Hub</span> in
+            the format <samp class="ph codeph">http://&lt;hostname&gt;:&lt;http.port&gt;</samp>, where
+                <samp class="ph codeph">&lt;hostname&gt;</samp> is the value defined in the
+                <samp class="ph codeph">http.bindHost</samp> property in the <span class="ph">Data Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. If the host name is not
+            defined in <samp class="ph codeph">http.bindHost</samp>, <span class="ph">Data Collector</span>
+            runs the following command to determine the host name: <samp class="ph codeph">hostname -f</samp></p>
+
+        <p class="p">For most cloud-computing platforms, the <samp class="ph codeph">hostname -f</samp> command returns the
+            private IP address of the machine on the cloud platform. <span class="ph">Control Hub</span>
+            includes the private IP address in the<span class="ph">Data Collector</span>
+            URL displayed in <span class="ph">Control Hub</span>.
+            However, when you click the <span class="ph">Data Collector</span>
+            URL, you cannot access the <span class="ph">Data Collector</span>
+            because you must use a public IP address to access a cloud machine. </p>
+
+        <p class="p">To access a <span class="ph">Data Collector</span>
+            installed on a cloud-computing platform from <span class="ph">Control Hub</span>,
+            uncomment the <samp class="ph codeph">sdc.base.http.url</samp> property in the <span class="ph">Data Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, and then configure it to
+            use the publicly accessible URL to that <span class="ph">Data Collector</span>. </p>
+
+        <p class="p">After modifying the configuration file, restart <span class="ph">Data Collector</span>
+            for the changes to take effect.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_xzz_rnr_yy">
+ <h2 class="title topictitle2">Transfer Permissions to <span class="ph">Control Hub</span>
+        Users</h2>
+
+ <div class="body conbody">
+        <p class="p">After you register <span class="ph">Data Collector</span>
+            with <span class="ph">Control Hub</span>, transfer permissions from the obsolete <span class="ph">Data Collector</span>
+            users and groups to the new <span class="ph">Control Hub</span>
+            users and groups.</p>
+
+        <p class="p">When pipeline access controls are enabled in <span class="ph">Data Collector</span>,
+            pipeline permissions determine the access that each user has to a pipeline. Any user
+            without the Admin role requires read permission to view a pipeline. So by default, only
+                <span class="ph">Control Hub</span>
+            users with the Organization Administrator or <span class="ph">Data Collector</span>
+            Administrator roles can access pipelines immediately after registering <span class="ph">Data Collector</span>.</p>
+
+        <p class="p">To enable other users to access pipelines, transfer pipeline permissions to <span class="ph">Control Hub</span>
+            users and groups. When you transfer permissions, all permissions associated with a user
+            or group transfers to the specified user or group. If you need to customize pipeline
+            permissions, you can edit each pipeline individually.</p>
+
+        <p class="p">For information about transferring pipeline permissions, see <a class="xref" href="../Configuration/RolesandPermissions.html#concept_p11_msc_1z">Transfer Pipeline Permissions</a>. For
+            information about configuring permissions for individual pipelines, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_jrg_1vy_wy">Sharing Pipelines</a>.</p>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">StreamSets Control Hub</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

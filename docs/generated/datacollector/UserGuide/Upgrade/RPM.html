@@ -1,0 +1,413 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Upgrade an Installation from the RPM Package" /><meta name="abstract" content="When you upgrade an installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version." /><meta name="description" content="When you upgrade an installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ws4_vq5_xv" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Upgrade an Installation from the RPM Package</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ws4_vq5_xv">
+ <h1 class="title topictitle1">Upgrade an Installation from the RPM Package</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you upgrade an installation from the RPM package, the new version uses the default
+        configuration, data, log, and resource directories. If the previous version used the default
+        directories, the new version has access to the files created in the previous
+        version.</p>
+
+  <p class="p">If the previous version used
+            customized values for the directory environment variables, you must make the same
+            customizations in the new version so that the new version can access the same files.</p>
+
+        <div class="note note"><span class="notetitle">Note:</span> If you installed external libraries or developed custom stages, verify that those
+            libraries are stored in a local directory external to the <span class="ph">Data Collector</span>
+            installation directory before you upgrade. That way, <span class="ph">Data Collector</span>
+            can still use the libraries after the upgrade.</div>
+
+        <p class="p">To upgrade an installation from the RPM package, perform the following steps:</p>
+
+            <p class="p"><a class="xref" href="RPM.html#task_zk4_tr5_xv" title="Stop all pipelines and then shut down the previous version of Data Collector.">Step 1. Shut Down the Previous Version</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw">Step 2. Back Up the Previous Version</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires root privileges.">Step 3. Install the New Version</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#task_krt_sj5_xv" title="Each RPM installation uses the same default values as the previous version for all of the directory environment variables. If the previous version used the default values, the new version is configured to use the same working directories.">Step 4. Update the Environment Configuration File</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#task_lkl_wk5_xv" title="A new Data Collector version can include new properties and configuration files required for Data Collector to start or function properly.">Step 5. Update the Configuration Files</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#concept_pch_vnr_bx" title="If you installed the core RPM package, install the individual stage libraries that the upgraded pipelines require.">Step 6. Install Additional Libraries for the Core Installation</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#concept_r3f_xyl_1z" title="Uninstall all stage libraries used by the previous Data Collector version.">Step 7. Uninstall Previous Libraries</a></p>
+
+            <p class="p"><a class="xref" href="RPM.html#concept_n35_s55_xv">Step 8. Start the New Version of Data Collector</a></p>
+
+        
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_zk4_tr5_xv">
+    <h2 class="title topictitle2">Step 1. Shut Down the Previous Version</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Stop all pipelines and then shut down the previous version of <span class="ph">Data Collector</span>.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select all running pipelines in the
+                    list and then click the <span class="ph uicontrol">Stop</span> icon.</span>
+                <div class="itemgroup info">When the confirmation dialog appears, click <span class="ph uicontrol">Yes</span>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use one of the following methods to shut down <span class="ph">Data Collector</span>:</span>
+                <ul class="ul choices" id="task_zk4_tr5_xv__choices_hwp_k2c_rx">
+                    <li class="li choice">To use the command line for shutdown, use the required command for your
+                        operating system.<p class="p">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, use: <samp class="ph codeph">service sdc stop</samp></p>
+<p class="p">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, use: <samp class="ph codeph">systemctl stop sdc</samp></p>
+</li>
+
+                    <li class="li choice">
+                        <p class="p">To use the <span class="ph">Data Collector</span> UI, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
+                        <span class="ph uicontrol">Yes</span>.</p>
+
+                    </li>
+
+                </ul>
+
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_nzl_hkb_mw">
+    <h2 class="title topictitle2">Step 2. Back Up the Previous Version</h2>
+
+    <div class="body conbody">
+        <p class="p">Before you install the new version, create a backup of the files in the previous version
+            by copying and renaming the data and resource directories. You’ll also need to create a
+            backup of the environment configuration file,
+                <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten
+            when you install the new version. That way, you can continue to run the previous version
+            if needed. </p>
+
+        <div class="p">Copy and rename the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
+                <li class="li">Data directory defined in the SDC_DATA environment variable. Default is
+                        <samp class="ph codeph">/var/lib/sdc</samp>.</li>
+
+                <li class="li">Resource directory defined in the SDC_RESOURCES environment variable. Default is
+                        <samp class="ph codeph">/var/lib/sdc-resources</samp>.</li>
+
+                <li class="li">Environment configuration file used by your operating system:<ul class="ul" id="concept_nzl_hkb_mw__ul_z4r_t5w_5bb">
+                        <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</li>
+
+                        <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file.</li>
+
+                    </ul>
+</li>
+
+            </ul>
+</div>
+
+        <p class="p">For example, if you are upgrading version 2.7.0.0, copy the Data Collector data directory
+            and rename it as follows: <samp class="ph codeph">/var/lib/sdc2700</samp>. Create a backup of the
+            environment configuration file by renaming the file as follows:
+                <samp class="ph codeph">sdcd-env-2700.sh</samp>.</p>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_ofc_2zl_5v">
+    <h2 class="title topictitle2">Step 3. Install the New Version</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the new version of the RPM package. Installing the full <span class="ph">Data Collector</span> as a
+        service requires root privileges. </p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector</span> RPM package for your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
+                <ul class="ul choices" id="task_ofc_2zl_5v__d90872e38">
+                    <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, download the RPM EL6 package.</li>
+
+                    <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, download the RPM EL7 package.</li>
+
+                </ul>
+
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to extract the file to a different directory than the
+                    previous version:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-&lt;operating_system&gt;-all-rpms.tar</pre>
+
+                    <div class="p">For example, to extract version <span class="ph">3.0.0.0</span> on CentOS 7, use the following
+                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.0.0.0</span>-el7-all-rpms.tar</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To install the full RPM package and all available stage libraries, use the
+                    following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">yum localinstall streamsets*</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Or, to install the core RPM package and then install individual stage libraries
+                    as needed, use the following command:</span>
+                <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
+For
+                    example, to install version <span class="ph">3.0.0.0</span>, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">3.0.0.0</span>-1.noarch.rpm</pre>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_krt_sj5_xv">
+    <h2 class="title topictitle2">Step 4. Update the Environment Configuration File</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Each RPM installation uses the same default values as the previous version for all of
+        the directory environment variables. If the previous version used the default values, the
+        new version is configured to use the same working directories.</p>
+
+        <div class="section context">
+            <p class="p">If the previous version used customized values for the directory environment
+                variables, you must make the same customizations in the new version. The new version
+                must use the same data, log, and resource directories as the previous version.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the environment configuration file that you backed up in the previous
+                    version.</span>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2700.sh</samp>
+                    file.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the new version of <span class="ph">Data Collector</span>, open the environment variable file used by your operating system: </span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_krt_sj5_xv__ul_xzj_vfv_5bb">
+                        <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</li>
+
+                        <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Compare the previous and new versions of the environment configuration file,
+                    and update the new file as needed with the same customized property
+                    values.</span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_lkl_wk5_xv">
+    <h2 class="title topictitle2">Step 5. Update the Configuration Files</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">A new <span class="ph">Data Collector</span>
+        version can include new properties and configuration files required for <span class="ph">Data Collector</span> to
+        start or function properly. </p>
+
+        <div class="section context">
+            <p class="p">When you install the new RPM package, the configuration files are written to the same
+                default directory as the previous version, <samp class="ph codeph">/etc/sdc</samp>. The new
+                versions of the configuration files are renamed with the following extension:
+                    <samp class="ph codeph">.rpmnew</samp>. For example, the new version of the <span class="ph">Data Collector</span> configuration file is renamed to <samp class="ph codeph">sdc.properties.rpmnew</samp>.</p>
+
+            <p class="p">To update the configuration files, you must rename the previous and new versions of
+                the files and then update the new files with any customized property values defined
+                in the previous version.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> If the previous version used a customized value for <samp class="ph codeph">$SDC_CONF</samp>,
+                the new configuration files are written to a different directory than the previous
+                version, and so do not require the <samp class="ph codeph">.rpmnew</samp> file extension. In this
+                case, you do not rename the configuration files, but must update the new files with
+                any customized values defined in the previous version.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the working <samp class="ph codeph">$SDC_CONF</samp> directory, <samp class="ph codeph">/etc/sdc</samp>
+                    by default, rename all previous configuration files except for the
+                        <samp class="ph codeph">application-token.txt</samp> file with the following extension:
+                        <samp class="ph codeph">.old</samp>.</span>
+                <div class="itemgroup info">The previous version of the <samp class="ph codeph">application-token.txt</samp> file
+                    includes the authentication token that this <span class="ph">Data Collector</span> instance requires to issue authenticated requests to <span class="ph">Control Hub</span>. As a result, you'll need <span class="ph">Data Collector</span> to use the previous version of the file.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Remove the following extension from all new configuration files except for the
+                        <samp class="ph codeph">application-token.txt</samp> file: <samp class="ph codeph">.rpmnew</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Compare the previous and new versions of the <samp class="ph codeph">sdc.properties</samp>
+                    file, and update the new file as needed with the same customized property
+                    values.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Compare the previous and new versions of the remaining files, and update the
+                    new files as needed with the same customized property values:</span>
+                <div class="itemgroup info">
+                    <ul class="ul">
+                        <li class="li">The appropriate realm.properties file, based on the authentication type
+                            that you use.</li>
+
+                        <li class="li">credential stores properties file</li>
+
+                        <li class="li"><samp class="ph codeph">email-password.txt</samp></li>
+
+                        <li class="li">keystore files</li>
+
+                        <li class="li">LDAP files</li>
+
+                        <li class="li">log4j properties file</li>
+
+                        <li class="li">security policy file</li>
+
+                        <li class="li">Vault properties file<p class="p">As of version 2.7.0.0, most of the Vault
+                                configuration properties have been moved to the new credential
+                                stores properties file. The properties use the same name, with an
+                                added "credentialStore.vault.config" prefix. If you are upgrading
+                                from a version earlier than 2.7.0.0, copy any values that you
+                                customized in the previous Vault properties file into the same
+                                property names in the credential stores properties file.</p>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_pch_vnr_bx">
+ <h2 class="title topictitle2">Step 6. Install Additional Libraries for the Core Installation</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If you installed the core RPM package, install the individual stage libraries that the
+        upgraded pipelines require. </p>
+
+        <p class="p">For instructions on installing additional stage libraries, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_r3f_xyl_1z">
+ <h2 class="title topictitle2">Step 7. Uninstall Previous Libraries</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Uninstall all stage libraries used by the previous Data Collector version.</p>
+
+  <div class="p">
+            <ol class="ol" id="concept_r3f_xyl_1z__ol_s5t_czl_1z">
+                <li class="li">Run the following command to list all stage libraries used by the previous Data
+                    Collector
+                        version:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "&lt;version&gt;"</pre>
+<div class="p">For
+                        example, to list all stage libraries used by Data Collector version 2.7.0.0,
+                        run the following
+                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "2.7.0.0"</pre>
+</div>
+</li>
+
+                <li class="li">Run the following command to uninstall all stage libraries used by the previous
+                        version:<pre class="pre codeblock">yum remove &lt;library package name&gt;,&lt;library package name&gt;,...</pre>
+<p class="p">Where
+                            <samp class="ph codeph">library package name</samp> is the full name of the libraries
+                        that you want to uninstall. Separate each name with commas. Do not include
+                        spaces in the command.</p>
+</li>
+
+            </ol>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_n35_s55_xv">
+ <h2 class="title topictitle2">Step 8. Start the New Version of Data Collector</h2>
+
+ <div class="body conbody">
+        <div class="p">Use the required command for your operating system to start the new version of <span class="ph">Data Collector</span>:<ul class="ul" id="concept_n35_s55_xv__ul_g5m_bgv_5bb">
+                <li class="li">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, use:<pre class="pre codeblock">service sdc start</pre>
+</li>
+
+                <li class="li">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, use:<pre class="pre codeblock">systemctl start sdc</pre>
+</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,0 +1,691 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Named Pipe" /><meta name="abstract" content="The Named Pipe destination writes data to a UNIX named pipe." /><meta name="description" content="The Named Pipe destination writes data to a UNIX named pipe." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_pl5_tdg_gcb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Named Pipe</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_pl5_tdg_gcb">
+ <h1 class="title topictitle1">Named Pipe</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Named Pipe destination writes data to a UNIX named pipe. </p>
+
+  <p class="p">A named pipe (or FIFO) can be accessed by two separate
+      processes on a machine - one process opens the pipe as the writer, and the other as a reader.
+      The Named Pipe destination serves as the writer. Another process running on the same <span class="ph">Data Collector</span> machine
+      can serve as the reader.</p>
+
+    <p class="p">Use the destination to send data to an application that can read data from a named pipe. For
+      example, the Greenplum <samp class="ph codeph">gpload</samp> utility supports loading data from named pipes.
+      You can configure the utility to read from the named pipe written to by the Named Pipe
+      destination. The utility can then load that data into a Greenplum database.</p>
+
+    <p class="p">Before you use the Named Pipe destination, you must create a named pipe on the machine where
+        <span class="ph">Data Collector</span> is
+      installed. You also must configure the named pipe reader - or reading application - that runs
+      on the <span class="ph">Data Collector</span>
+      machine to receive the data from the same named pipe.</p>
+
+    <p class="p">When you configure the Named Pipe destination, you enter the full path to the local named
+      pipe that you created. You also specify the data format that the destination uses to write
+      data to the named pipe.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hcz_tjk_mcb">
+    <h2 class="title topictitle2">Prerequisites</h2>
+
+    <div class="body conbody">
+        <div class="p">Before
+            you can write to a named pipe, you must complete the following prerequisites:<ul class="ul" id="concept_hcz_tjk_mcb__ul_bxd_wjk_mcb">
+                <li class="li">Create the named pipe on the local <span class="ph">Data Collector</span> machine.</li>
+
+                <li class="li">Configure the named pipe reader on the <span class="ph">Data Collector</span> local machine to read from the same named pipe. </li>
+
+            </ul>
+</div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_drt_4lk_mcb">
+    <h3 class="title topictitle3">Create the Named Pipe</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">mkfifo</samp> command to create the named pipe on the same machine
+        where <span class="ph">Data Collector</span>
+        is installed.</p>
+
+        <div class="p">For example, use the following command to create a local named
+            pipe:<pre class="pre codeblock">mkfifo /tmp/my_pipe</pre>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_esq_fnk_mcb">
+    <h3 class="title topictitle3">Configure the Named Pipe Reader</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">The named pipe reader - or reading application - must be installed on the <span class="ph">Data Collector</span>
+        machine and must be configured to read from the same named pipe.</p>
+
+        <p class="p">For example, configure the reader to read from the same named pipe that you created with
+            the <samp class="ph codeph">mkfifo</samp> command:</p>
+
+        <div class="p">
+            <pre class="pre codeblock">/tmp/my_pipe</pre>
+
+        </div>
+
+        <p class="p">As a best practice, we recommend starting the reader before starting the pipeline that
+            contains the Named Pipe destination.</p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_xdm_24k_mcb">
+    <h2 class="title topictitle2">Working with the Named Pipe Reader</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">The Named Pipe destination writes data to the named pipe, and the named pipe reader -
+        or reading application - then reads the incoming data.</p>
+
+        <p class="p">Consider the following ways that the Named Pipe destination and the named pipe reader
+            interact:</p>
+
+        <ul class="ul" id="concept_xdm_24k_mcb__ul_wwh_w5k_mcb">
+            <li class="li">If you start the pipeline before the  named pipe reader is available to read, the
+                pipeline remains in a STARTING state until the reader becomes available. <p class="p">As a
+                    best practice, we recommend starting the reader before starting the pipeline
+                    that contains the Named Pipe destination.</p>
+</li>
+
+            <li class="li">When the named pipe reader becomes available, the pipeline transitions to a RUNNING
+                state and the Named Pipe destination begins writing to the named pipe. If the
+                destination writes faster than the reader can process the data, the named pipe might
+                become full. In this case, the destination waits to write additional data until the
+                named pipe can receive more data. </li>
+
+            <li class="li">If the pipeline stops while the named pipe reader is still available, the reader
+                receives an IOException for the broken pipe.</li>
+
+            <li class="li">If the named pipe reader stops while the pipeline with the Named Pipe destination is
+                running, <span class="ph">Data Collector</span> displays a stage exception about the broken pipe.</li>
+
+        </ul>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_bmy_cjl_mcb">
+    <h2 class="title topictitle2">Data Formats</h2>
+
+    <div class="body conbody">
+        <p class="p">The Named Pipe destination writes data to a
+            named pipe based on the data format that you select. The destination supports data
+            formats that produce a single line of output for each record. Data formats that produce
+            a nested structure with multiple lines of output for each record - such as the XML data
+            format - are not supported. </p>
+
+        <div class="p">You can use the following data formats: <dl class="dl">
+            
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                              <dd class="dd">
+                                    <div class="p">You can use the following delimited format types: <ul class="ul" id="concept_bmy_cjl_mcb__ul_jtv_5sl_mcb">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</div>
+
+                              </dd>
+
+                        
+            
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_bmy_cjl_mcb__d16872e3128">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+            
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+            
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a UNIX-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_pdv_vdg_gcb">
+    <h2 class="title topictitle2">Configuring a Named Pipe Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Named Pipe
+                destination to write data to a UNIX named pipe.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__d16805e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e362">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e365">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e362 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e365 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e362 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e365 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e362 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_pdv_vdg_gcb__d16805e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e365 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e362 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_pdv_vdg_gcb__d16805e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e365 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e362 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_pdv_vdg_gcb__d16805e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e365 ">Error record handling for the stage: <ul class="ul" id="task_pdv_vdg_gcb__d16805e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Named Pipe</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__table_wg3_bll_mcb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e476">Named Pipe Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e479">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e476 ">Named Pipe <a class="xref" href="NamedPipe.html#concept_drt_4lk_mcb" title="Use the mkfifo command to create the named pipe on the same machine where Data Collector is installed.">
+                                        <img class="image" id="task_pdv_vdg_gcb__image_hgm_2lj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e479 ">Full path to the local named pipe created with the
+                                            <samp class="ph codeph">mkfifo</samp> command.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e538">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e541">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_pdv_vdg_gcb__KP-DataFormats">
+                                    <td class="entry" valign="top" width="30%" headers="d155839e538 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e541 ">Data format to write data:<ul class="ul" id="task_pdv_vdg_gcb__ul_wlj_353_br">
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_pdv_vdg_gcb__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Text</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__d16805e6599" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e611">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e614">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Format for delimited data:<ul class="ul" id="task_pdv_vdg_gcb__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Replace New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Replaces new line characters with the configured
+                                            string.<p class="p">Recommended when writing data as a single line
+                                            of text.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">New Line Character Replacement</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p class="p">Leave empty to remove the new line
+                                        characters.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e611 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e614 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d155839e611 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d155839e614 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__d16805e6738" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e782">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e785">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e782 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e785 ">Determines how JSON data is written:<ul class="ul" id="task_pdv_vdg_gcb__d16805e6767">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d155839e782 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d155839e785 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pdv_vdg_gcb__d16805e6984" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d155839e846">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d155839e849">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e846 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e849 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e846 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e849 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d155839e846 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d155839e849 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d155839e846 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d155839e849 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

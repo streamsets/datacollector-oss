@@ -1,0 +1,605 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Elasticsearch" /><meta name="abstract" content="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document." /><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_u5t_vpv_4r" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Elasticsearch</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_u5t_vpv_4r">
+ <h1 class="title topictitle1">Elasticsearch</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic
+        Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to
+        write each record to Elasticsearch as a document.</p>
+
+  <p class="p">When
+            you configure the Elasticsearch destination, you configure the cluster name, the HTTP
+            URI, and document-related information.</p>
+
+        <p class="p">When the Data Collector shares the same network as the Elasticsearch cluster, you can
+            enter one or more node URI and automatically detect additional Elasticsearch nodes on
+            the cluster. </p>
+
+    <p class="p">The Elasticsearch destination <span class="ph">can use CRUD operations defined in the sdc.operation.type
+                        record header attribute to write data. You can define a default operation
+                        for records without the header attribute or value. You can also configure
+                        whether to use multi-row operations for inserts and deletes, and how to
+                        handle records with unsupported operations.</span>
+            <span class="ph">For information about <span class="ph">Data Collector</span> change data
+                        processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+    <p class="p">You can also add advanced Elasticsearch properties as needed. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dd3_vhk_r5">
+ <h2 class="title topictitle2">Time Basis and Time-Based Indexes</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">The time basis is the time used by the Elasticsearch destination to write records to
+        time-based indexes. When indexes have no time component, you can ignore the time basis
+        property.</p>
+
+        <p class="p">You can use the time of
+            processing or the time associated with the data as the time basis. </p>
+
+        <div class="p">For example, say you define the Index property using the following datetime variables:
+            <pre class="pre codeblock">logs-${YYYY()}-${MM()}-${DD()}</pre>
+</div>
+
+        <p class="p">If you use the time of processing as the time basis, the destination write records to
+            indexes based on when it processes each record. If you use the time associated with the
+            data, such as a transaction timestamp, then the destination writes records to the
+            indexes based on that timestamp. </p>
+
+        <div class="p">You can use the following times as the time basis: <dl class="dl">
+                
+                    <dt class="dt dlterm">Processing Time</dt>
+
+                    <dd class="dd">When you use processing time as the time basis, the destination writes to
+                        indexes based on the processing time and the index. To use the processing
+                        time as the time basis, use the following expression:
+                        <pre class="pre codeblock">${time:now()}</pre>
+This is the default time basis. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Record Time</dt>
+
+                    <dd class="dd">When you use the time associated with a record as the time basis, you
+                        specify a date field in the record. The destination writes data to indexes
+                        based on the datetimes associated with the records. </dd>
+
+                    <dd class="dd">To use a time associated with the record, use an expression that calls a
+                        field and resolves to a datetime value, such as
+                            <samp class="ph codeph">${record:value("/Timestamp")}</samp>. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_yr2_1tf_z5">
+ <h2 class="title topictitle2">Document IDs</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When appropriate, you can specify an expression that defines the document ID. When you
+        do not specify an expression, Elasticsearch generates IDs for each document.</p>
+
+  <p class="p">When you
+            configure the destination to perform create, update, or delete operations, you must
+            define the document ID. </p>
+
+        <p class="p">For example, to perform updates for documents with IDs based on the EmployeeID field,
+            define the write operation as update and define the Document ID as follows:
+                <samp class="ph codeph">${record:value('/EmployeeID')}</samp>.</p>
+
+        <p class="p">You can also optionally define a parent ID for each document to define a parent/child
+            relationship between documents in the same index. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_w2r_ktb_ry">
+ <h2 class="title topictitle2">Define the CRUD Operation</h2>
+
+ <div class="body conbody">
+        <p class="p">The
+            Elasticsearch destination can create, update, delete, or index data. The destination
+            writes the records based on the CRUD operation defined in a CRUD operation header
+            attribute or in operation-related stage properties. </p>
+
+        <p class="p">You define the CRUD operation in the following ways:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">CRUD record header attribute</dt>
+
+                <dd class="dd">You can define the CRUD operation in a CRUD
+                              operation record header attribute. The destination looks for the CRUD
+                              operation to use in the sdc.operation.type record header attribute. </dd>
+
+                <dd class="dd">The attribute can contain one of the following numeric values:<ul class="ul" id="concept_w2r_ktb_ry__ul_smy_qf3_1y">
+                        <li class="li">1 for CREATE, the equivalent of INSERT</li>
+
+                        <li class="li">2 for DELETE</li>
+
+                        <li class="li">3 for UPDATE</li>
+
+                        <li class="li">4 for INDEX, the equivalent of UPSERT</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">If your pipeline includes a CRUD-enabled
+                              origin that processes changed data, the destination simply reads the
+                              operation type from the sdc.operation.type header attribute that the
+                              origin generates. If your pipeline uses a non-CDC origin, you can use
+                              the Expression Evaluator or a scripting processor to define the record
+                              header attribute. For more information about <span class="ph">Data Collector</span>
+                              changed data processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</dd>
+
+            
+            
+                <dt class="dt dlterm">Operation stage properties</dt>
+
+                <dd class="dd">You define a default operation in the destination
+                              properties. The destination uses the default operation when the
+                              sdc.operation.type record header attribute is not set.</dd>
+
+                <dd class="dd">You can also define how to handle records with
+                              unsupported operations defined in the sdc.operation.type header
+                              attribute. The destination can discard them, send them to error, or
+                              use the default operation. </dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_uns_gtv_4r">
+    <h2 class="title topictitle2">Configuring an Elasticsearch Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context"><p class="p">Configure an Elasticsearch
+            destination to write data to an Elasticsearch cluster.</p>
+</div>
+
+        <ol class="ol steps" id="task_uns_gtv_4r__steps_tgy_3tv_4r"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d16805e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d94617e270">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d94617e273">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e270 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e273 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e270 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e273 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e270 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e273 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e270 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e273 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e270 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e273 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d16805e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info" id="task_uns_gtv_4r__d16805e7747">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d16805e7749" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d94617e384">Elasticsearch Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d94617e387">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_uns_gtv_4r__d16805e7771">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Cluster HTTP URI</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">HTTP URI used to connect to the cluster. Use the
+                                        following format:
+                                        <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7782">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Additional HTTP Params</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Additional HTTP parameters that you want to send as query
+                                        string parameters to Elasticsearch. Enter the exact
+                                        parameter name and value expected by Elasticsearch.</td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7791">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Detect Additional Nodes in Cluster</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">
+                                        <p class="p">Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>
+
+                                        <p class="p">Selecting this property is the equivalent to setting the
+                                            client.transport.sniff Elasticsearch property to true. </p>
+
+                                        <p class="p">Use only when the Data Collector shares the same network
+                                            as the Elasticsearch cluster. Do not use for Elastic
+                                            Cloud or Docker clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7809">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Use Security</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Specifies whether security is enabled on the
+                                        Elasticsearch cluster. </td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7818">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e7824" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">
+                                        <div class="p">Time basis to use for writing to time-based indexes. Use
+                                            one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__d16805e7831">
+                                                <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
+                                                  processing time as the time basis. The processing
+                                                  time is the time associated with the <span class="ph">Data Collector</span> running the pipeline. </li>
+
+                                                <li class="li">An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <samp class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</samp>. Uses the datetime result as the
+                                                  time basis. </li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">When the Index property does not include datetime
+                                            variables, you can ignore this property. </p>
+
+                                        <p class="p">Default is <samp class="ph codeph">${time:now()}</samp>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7859">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Data Time Zone</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Time zone for the destination system. Used to resolve
+                                        datetimes in time-based indexes. </td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7868">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Index</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Index for the generated documents. Enter an index name or
+                                        an expression that evaluates to the index name. <p class="p">For
+                                            example, if you enter <samp class="ph codeph">customer</samp> as the
+                                            index, the destination writes the document within the
+                                                <samp class="ph codeph">customer</samp> index. </p>
+<p class="p">If you use
+                                            datetime variables in the expression, make sure to
+                                            configure the time basis appropriately. For details
+                                            about datetime variables, see <a class="xref" href="../Expression_Language/DateTimeVariables.html#concept_gh4_qd2_sv" title="The expression language provides datetime variables for use in expressions.">Datetime Variables</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7889">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Mapping</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Mapping type for the generated documents. Enter the
+                                        mapping type, an expression that evaluates to the mapping
+                                        type, or a field that includes the mapping type. <p class="p">For
+                                            example, if you enter <samp class="ph codeph">user</samp> as the
+                                            mapping type, the destination writes the document with a
+                                                <samp class="ph codeph">user</samp> mapping type.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7906">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Document ID <a class="xref" href="Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e7912" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Expression that evaluates to the ID for the generated
+                                        documents. When you do not specify an ID, Elasticsearch
+                                        creates an ID for each document.<p class="p">By default, the
+                                            destination allows Elasticsearch to create the
+                                        ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Parent ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Optional parent ID for the generated documents. Enter a
+                                        parent ID or an expression that evaluates to the parent ID.
+                                            <p class="p">Use to establish a parent-child relationship between
+                                            documents in the same index.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Routing</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">Optional custom routing value for the generated
+                                        documents. Enter a routing value or an expression that
+                                        evaluates to the routing value.<p class="p">Elasticsearch routes a
+                                            document to a particular shard in an index based on the
+                                            routing value defined for the document. You can define a
+                                            custom value for each document. If you don’t define a
+                                            custom routing value, Elasticsearch uses the parent ID
+                                            (if defined) or the document ID as the routing
+                                            value.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d16805e7944">
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Data Charset</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e387 ">
+                                        <p class="p">Character encoding of the data to be processed. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Default Operation <a class="xref" href="Elasticsearch.html#concept_w2r_ktb_ry">
+                                            <img class="image" id="task_uns_gtv_4r__d16805e7962" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" id="task_uns_gtv_4r__d16805e7965" valign="top" width="70%" headers="d94617e387 ">Default CRUD operation to
+                                        perform if the sdc.operation.type record header attribute is
+                                        not set. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e384 ">Unsupported Operation Handling</td>
+
+                                    <td class="entry" id="task_uns_gtv_4r__d16805e7974" valign="top" width="70%" headers="d94617e387 ">Action to take when the
+                                        CRUD operation type defined in the sdc.operation.type record
+                                        header attribute is not supported:<ul class="ul" id="task_uns_gtv_4r__d16805e7976">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Use Default Operation - Writes the record to the
+                                                destination system using the default operation.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you enabled security, on the <span class="keyword wintitle">Security</span> tab, configure
+                    the following properties:</span>
+                <div class="itemgroup info" id="task_uns_gtv_4r__d16805e8002">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d16805e8004" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d94617e654">Security Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d94617e657">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e654 ">Security Username/Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e657 ">Elasticsearch username and password. <div class="p">Enter the
+                                            username and password using the following
+                                            syntax:<pre class="pre codeblock">&lt;username&gt;:&lt;password&gt;</pre>
+</div>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e654 ">SSL Truststore Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e657 ">
+                                        <p class="p">Location of the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.path Elasticsearch
+                                            property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d94617e654 ">SSL Truststore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d94617e657 ">
+                                        <p class="p">Password for the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.password
+                                            Elasticsearch property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,0 +1,490 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="SDC RPC" /><meta name="abstract" content="The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC destination passes data to one or more SDC RPC origins. Use the SDC RPC destination as part of an SDC RPC origin pipeline." /><meta name="description" content="The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC destination passes data to one or more SDC RPC origins. Use the SDC RPC destination as part of an SDC RPC origin pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_lfk_hx2_ct" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>SDC RPC</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_lfk_hx2_ct">
+ <h1 class="title topictitle1">SDC RPC</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC
+    destination passes data to one or more SDC RPC origins. Use the SDC RPC destination as part of
+    an SDC RPC origin pipeline.</p>
+
+    <p class="p">You can use SDC RPC pipelines across a single Data Collector
+      instance on a single machine, or across a local network or the public internet to a remote
+      Data Collector. </p>
+
+    <p class="p">When you configure the SDC RPC destination, you specify the RPC ID and RPC connections to
+      use. You can optionally enable encryption to pass data securely and define retry and timeout
+      properties. <span class="ph">You can also configure SSL/TLS properties, including default
+                        transport protocols and cipher suites.</span></p>
+
+ </div>
+
+ <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" title="Data Collector Remote Protocol Call pipelines, a.k.a. SDC RPC pipelines, are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system.">SDC RPC Pipeline Overview</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_icz_wzw_dt">
+ <h2 class="title topictitle2">RPC Connections</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">In an SDC RPC destination, the RPC connections define where the destination passes data. </p>
+
+  <p class="p">The RPC
+            connection is the host and port number of the SDC RPC origin to receive the data. Define
+            multiple connections to allow the SDC RPC destination to round-robin through multiple
+            pipelines in case of bottlenecks. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_zdq_rdj_r5">
+ <h2 class="title topictitle2">Disabling Compression</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The SDC RPC destination compresses data by default when passing data to an SDC RPC
+        origin. When necessary, you can disable compression in the destination.</p>
+
+  <p class="p">The SDC RPC
+            destination compresses data to enhance performance. When the destination processes small
+            records, compression might not enhance pipeline performance. When tuning pipeline
+            performance, you might try disabling compression in the destination when working with
+            small records. </p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_nbl_r2x_dt">
+    <h2 class="title topictitle2">Configuring an SDC RPC Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure an SDC RPC
+            destination to pass data to one or more SDC RPC origins in another pipeline.</div>
+
+        <ol class="ol steps" id="task_nbl_r2x_dt__steps_lmk_v2x_dt"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d16805e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d167412e141">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d167412e144">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e141 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e144 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e141 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e144 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e141 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_nbl_r2x_dt__d16805e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e144 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e141 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_nbl_r2x_dt__d16805e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e144 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e141 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_nbl_r2x_dt__d16805e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e144 ">Error record handling for the stage: <ul class="ul" id="task_nbl_r2x_dt__d16805e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_nbl_r2x_dt__step-SDCRPCdesttab">
+                <span class="ph cmd">On the <span class="keyword wintitle">RPC</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__table_a5c_34t_51b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d167412e255">RPC Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d167412e258">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_nbl_r2x_dt__d16805e8930">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e255 ">SDC RPC Connection <a class="xref" href="SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
+                                            <img class="image" id="task_nbl_r2x_dt__d16805e8936" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e258 ">Connection information for the destination pipeline to
+                                        continue processing data. Use the following format:
+                                            <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">Use a single
+                                            RPC connection for each destination pipeline. Using
+                                                <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, add additional
+                                            connections as needed.</p>
+<p class="p">Use the port number when
+                                            you configure the SDC RPC origin that receives the
+                                            data.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e8952">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e255 ">SDC RPC ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e258 ">User-defined ID to allow the destination to pass data to
+                                        an SDC RPC origin. Use this ID in all SDC RPC origins to
+                                        process data from the destination.</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e8961">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e255 ">Verify Host in Server Certificate</td>
+
+                                    <td class="entry" id="task_nbl_r2x_dt__d16805e8966" valign="top" width="70%" headers="d167412e258 ">Verifies the host in the SDC RPC
+                                        origin keystore file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d16805e8996" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d167412e337">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d167412e340">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_nbl_r2x_dt__d16805e9018">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e337 ">Retries Per Batch</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e340 ">Number of times the destination tries to write a batch to
+                                        the SDC RPC origin. <p class="p" id="task_nbl_r2x_dt__d16805e9025">When the
+                                            destination cannot write the batch within the configured
+                                            number of retries, it fails the batch.</p>
+<p class="p" id="task_nbl_r2x_dt__d16805e9027">Default is 3.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e9031">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e337 ">Back Off Period</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e340 ">Milliseconds to wait before retrying writing a batch to
+                                        the SDC RPC origin.<p class="p" id="task_nbl_r2x_dt__d16805e9038">The value that
+                                            you enter increases exponentially after each retry,
+                                            until it reaches the maximum wait time of 5 minutes. For
+                                            example, if you set the back off period to 10, the
+                                            destination attempts the first retry after waiting 10
+                                            milliseconds, attempts the second retry after waiting
+                                            100 milliseconds, and attempts the third retry after
+                                            waiting 1,000 milliseconds. </p>
+<p class="p">Set to 0 to retry
+                                            immediately.</p>
+<p class="p" id="task_nbl_r2x_dt__d16805e9042">Default is
+                                            0.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e9046">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e337 ">Connection Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e340 ">Milliseconds to establish a connection to the SDC RPC
+                                        origin. <p class="p">The destination retries the connection based on
+                                            the Retries Per Batch property.</p>
+<p class="p">Default is 5000
+                                            milliseconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e9059">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e337 ">Read Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e340 ">Milliseconds to wait for the SDC RPC origin to read data
+                                        from a batch. <p class="p" id="task_nbl_r2x_dt__d16805e9066">The destination retries
+                                            the write based on the Retries Per Batch property.</p>
+<p class="p" id="task_nbl_r2x_dt__d16805e9068">Default is 2000
+                                            milliseconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d16805e9072">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e337 ">Use Compression <a class="xref" href="SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e340 ">Enables the destination to use compression to pass data
+                                        to the SDC RPC origin. Enabled by default. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use SSL/TLS, on the <span class="keyword wintitle">TLS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__table_isk_mgv_zz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d167412e444">TLS Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d167412e447">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_nbl_r2x_dt__TLS-EnableTLS-row">
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Enable TLS <a class="xref" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_mrm_qhf_2t" title="You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use SSL/TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.">
+                                            <img class="image" id="task_nbl_r2x_dt__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">
+                                        <p class="p">Enables the use of TLS. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Truststore Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Truststore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_nbl_r2x_dt__d16805e3368">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Use Default Protocols</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_nbl_r2x_dt__d16805e3390" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">The TLS protocols to use. To use a protocol other than
+                                        the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Use Default Cipher Suites</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d167412e444 ">Cipher Suites</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167412e447 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,0 +1,512 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Azure Event Hub Producer writes data to Microsoft Azure Event Hub. To write to Microsoft Azure Data Lake Store, use the Azure Data Lake Store destination. To write to Microsoft Azure IoT Hub, use ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Azure Event Hub Producer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xq5_d5q_1bb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Azure Event Hub Producer</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_xq5_d5q_1bb">
+ <h1 class="title topictitle1">Azure Event Hub Producer</h1>
+
+ <div class="body conbody">
+  <p class="p">The Azure Event Hub Producer writes
+            data to Microsoft Azure Event Hub. To write to Microsoft Azure Data Lake Store, use the
+            Azure Data Lake Store destination. To write to Microsoft Azure IoT Hub, use the Azure
+            IoT Hub Producer destination.</p>
+
+        <p class="p">When you configure the Azure Event Hub Producer, <span class="ph">you specify the Microsoft Azure namespace and event hub names.
+                        You also define the shared access policy name and connection string
+                        key.</span></p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zpk_wsx_1bb">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <div class="p">The Azure Event Hub Producer
+            destination writes data to Microsoft Azure Event Hub based on the data format that you
+            select. You can use the following data formats: <dl class="dl">
+                
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">The destination writes binary data from a single field in the
+                                    record. </dd>
+
+                        
+                
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_zpk_wsx_1bb__d16872e3128">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+                
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a UNIX-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_in4_f5q_1bb">
+    <h2 class="title topictitle2">Configuring an Azure Event Hub Producer</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure an Azure Event
+            Hub Producer destination to write data to Microsoft Azure Event Hub. </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__d16805e5730" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e156">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e159">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
+                                            <img class="image" id="task_in4_f5q_1bb__d16805e5785" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Generates event records when events occur. Use for event
+                                        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+                                            <img class="image" id="task_in4_f5q_1bb__d16805e5791" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_in4_f5q_1bb__d16805e5800" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_in4_f5q_1bb__d16805e5817" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e156 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_in4_f5q_1bb__d16805e5834" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e159 ">Error record handling for the stage: <ul class="ul" id="task_in4_f5q_1bb__d16805e5838">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Event Hub</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__d16805e7653" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e297">Event Hub Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e300">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_in4_f5q_1bb__d16805e7675">
+                                    <td class="entry" valign="top" width="30%" headers="d79344e297 ">Namespace Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e300 ">The name of the namespace that contains the event hub
+                                        that you want to use.</td>
+
+                                </tr>
+
+                                <tr id="task_in4_f5q_1bb__d16805e7684">
+                                    <td class="entry" valign="top" width="30%" headers="d79344e297 ">Event Hub Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e300 ">The event hub name.</td>
+
+                                </tr>
+
+                                <tr id="task_in4_f5q_1bb__d16805e7693">
+                                    <td class="entry" valign="top" width="30%" headers="d79344e297 ">Shared Access Policy Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e300 ">The policy name associated with the namespace. <p class="p">To
+                                            retrieve the policy name, when logged into the Azure
+                                            portal, navigate to your namespace and event hub, and
+                                            then click Shared Access Policies for a list of
+                                            policies. </p>
+<p class="p">When appropriate, you can use the
+                                            default shared access key policy,
+                                            RootManageSharedAccessKey.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_in4_f5q_1bb__d16805e7706">
+                                    <td class="entry" valign="top" width="30%" headers="d79344e297 ">Connection String Key </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e300 ">One of the connection string keys associated with the
+                                        specified shared access policy. <p class="p">To retrieve a connection
+                                            string key, after accessing the list of shared access
+                                            policies, click the policy name, and then copy the
+                                            Connection String - Primary Key value. </p>
+<p class="p">The value
+                                            typically begins with "Endpoint".</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+                <div class="itemgroup info">For more information about Microsoft Azure Event Hub, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/event-hubs/" target="_blank">Event Hub documentation</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e385">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e388">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e385 ">Data Format <a class="xref" href="AzureEventHubProducer.html#concept_zpk_wsx_1bb">
+                                            <img class="image" id="task_in4_f5q_1bb__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e388 ">Format of data to be written. Use one of the following
+                                            options:<ul class="ul" id="task_in4_f5q_1bb__ul_ffs_xxw_zx">
+                                            <li class="li">Binary</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_in4_f5q_1bb__image_kvq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Text</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__d16805e6542" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e463">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e466">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e463 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e466 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__d16805e6738" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e509">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e512">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e509 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e512 ">Determines how JSON data is written:<ul class="ul" id="task_in4_f5q_1bb__d16805e6767">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d79344e509 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d79344e512 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_in4_f5q_1bb__d16805e6984" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d79344e573">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d79344e576">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e573 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e576 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e573 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e576 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d79344e573 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d79344e576 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d79344e573 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d79344e576 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /*
 
 Oxygen WebHelp Plugin
-Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
  
@@ -41,26 +41,27 @@ function markSelectItem(url) {
     
     if (currentTOCSelection != "none") {
         var newloc = '#contentBlock a[href^="' + toFind + '"]';
-        var closest = 65000;
-        var diff = 65000;
-        $(newloc).each(function () {
-            if (Math.abs($(this).parents('li').index('li') - currentTOCSelection) < diff) {
-                diff = Math.abs($(this).parents('li').index('li') - currentTOCSelection);
-                var findIndexFor = $(this).closest('li');
-                closest = $('#contentBlock li').index(findIndexFor);
+        if ($(newloc).length > 0) {
+            var closest = 65000;
+            var diff = 65000;
+            $(newloc).each(function () {
+                if (Math.abs($(this).parents('li').index('li') - currentTOCSelection) < diff) {
+                    diff = Math.abs($(this).parents('li').index('li') - currentTOCSelection);
+                    var findIndexFor = $(this).closest('li');
+                    closest = $('#contentBlock li').index(findIndexFor);
+                }
+            });
+            var loc = '#contentBlock li:eq(' + currentTOCSelection + ') a[href="' + toFind + '"]';
+            if ($(loc).length == 0) {
+                loc = '#contentBlock li:eq(' + closest + ') a[href="' + toFind + '"]';
             }
-        });
-        var loc = '#contentBlock li:eq(' + currentTOCSelection + ') a[href="' + toFind + '"]';
-        if ($(loc).length == 0) {
-            loc = '#contentBlock li:eq(' + closest + ') a[href="' + toFind + '"]';
+            
+                if (wh.protocol == 'https') {
+                    $.cookie('wh_pn', closest, {secure: true});
+            } else {
+                $.cookie('wh_pn', closest);
+            }
         }
-        
-        if ( wh.protocol == 'https' ) {
-            $.cookie('wh_pn', closest, { secure: true });
-        } else {
-            $.cookie('wh_pn', closest);
-        }
-        
     } else {
         var loc = '#contentBlock a[href^="' + toFind + '"]';
     }

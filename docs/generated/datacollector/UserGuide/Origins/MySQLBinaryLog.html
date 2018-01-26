@@ -1,0 +1,643 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MySQL Binary Log origin processes change data capture (CDC) information provided by MySQL server in binary logs. The MySQL Binary Log origin acts as a MySQL replication slave. MySQL replication ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MySQL Binary Log" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kqg_1yh_xx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>MySQL Binary Log</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_kqg_1yh_xx">
+    <h1 class="title topictitle1">MySQL Binary Log</h1>
+
+    <div class="body conbody">
+        <p class="p">The MySQL Binary Log
+            origin processes change data capture (CDC) information provided by MySQL server in
+            binary logs. </p>
+
+        <p class="p">The MySQL Binary Log origin acts as a MySQL replication slave. MySQL replication allows
+            you to maintain multiple copies of MySQL data by copying the data from a master to a
+            slave server. The origin uses the replication process to capture changes from the MySQL
+            master database and then pass the changed data to a <span class="ph">Data Collector</span>
+            pipeline. </p>
+
+        <p class="p">The origin can process binary logs from a MySQL server that has Global Transaction
+            Identifier (GTID) enabled or disabled. A GTID is a unique transaction ID assigned to
+            every transaction that happens in the MySQL server database.</p>
+
+        <p class="p">MySQL Binary Log processes only change capture data. The origin creates records for the
+            INSERT, UPDATE, and DELETE operations. The origin produces one record for each change
+            noted in the binary logs. </p>
+
+        <p class="p">The generated record includes a map of fields of CDC information. It also <span class="ph">includes the CRUD operation type in a record header attribute
+                        so generated records can be easily processed by CRUD-enabled destinations.
+                        For an overview of <span class="ph">Data Collector</span> changed data
+                        processing and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+        <p class="p">When needed, you can use a JDBC Query Consumer or a JDBC Multitable Consumer in a
+            separate pipeline to read existing data from the MySQL database before you start a
+            pipeline with a MySQL Binary Log origin. When necessary, you should also configure the
+            MySQL Binary Log pipeline to modify the generated records. <span class="ph">Of the <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_lfb_phd_ty">CRUD-enabled destinations</a>, only the Kudu destination includes
+                        a Change Log Format property that enables processing MySQL Binary Log
+                        records as generated. </span></p>
+
+        <p class="p">Before you configure the origin, you must complete several prerequisites including
+            configuring MySQL server for row-based logging and installing the JDBC driver.</p>
+
+        <p class="p">When you configure MySQL Binary Log, you configure the database server from which to read
+            the log files. You can configure the origin to read the binary log files from the
+            beginning, or you can specify an offset to determine where the origin starts reading
+            data. </p>
+
+        <p class="p">You specify the credentials to use to connect to MySQL server, and can also configure the
+            origin to use SSL to connect to the server. If you do not want to process CDC
+            information from all tables in the database, you can specify the tables that the origin
+            includes or ignores when it reads the binary log files.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_nwf_f4x_1bb">
+ <h2 class="title topictitle2">Prerequisites</h2>
+
+ <div class="body conbody">
+  <div class="p">Before you can read MySQL binary logs to generate change data capture records, you must
+            complete the following prerequisites:<ul class="ul" id="concept_nwf_f4x_1bb__ul_gcz_k4x_1bb">
+                <li class="li">Configure MySQL server to use row-based logging.</li>
+
+                <li class="li">Install the MySQL JDBC driver.</li>
+
+            </ul>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ppw_r4x_1bb">
+ <h3 class="title topictitle3">Configure MySQL Server for Row-based Logging</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The MySQL Binary Log origin can process binary logs from a MySQL server configured to
+        use row-based logging.</p>
+
+  <p class="p">Before you use the origin, verify that the binary log format for the MySQL server is set to
+            ROW. For instructions, see <a class="xref" href="https://dev.mysql.com/doc/refman/5.7/en/binary-log-setting.html" target="_blank">Setting the Binary Log Format</a> in the MySQL
+            documentation.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_wps_52k_qy">
+ <h3 class="title topictitle3">Install the JDBC Driver</h3>
+
+ <div class="body conbody">
+        <p class="p">Before you use the MySQL Binary Log origin, install
+            the MySQL JDBC driver. You cannot access the database until you install the required
+            driver. </p>
+
+        <p class="p">The MySQL JDBC driver must be located in a MySQL Binary Log subdirectory of the external
+            directory for additional drivers. For example:
+                <samp class="ph codeph">/opt/sdc-extras/streamsets-datacollector-mysql-binlog-lib/lib/</samp>.</p>
+
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_emp_1tl_dy">
+ <h2 class="title topictitle2">Initial Offset</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the origin to start reading the binary log file from the beginning of
+        the file or from an initial offset in the file.</p>
+
+  <p class="p">The initial offset is the
+            point in the binary log file where you want to start processing. When you start the
+            pipeline, the MySQL Binary Log origin starts processing from the initial offset and
+            continues until you stop the pipeline.</p>
+
+        <p class="p">The format that you use to configure the initial offset depends on whether MySQL server
+            is enabled for Global Transaction Identifiers (GTID):</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">GTID enabled</dt>
+
+                <dd class="dd">
+                    <div class="p">When the database is enabled for GTID, the MySQL Binary Log origin expects
+                        the initial offset to contain a GTID using the following
+                        format:<pre class="pre codeblock">&lt;source_id&gt;:&lt;transaction_id&gt;</pre>
+</div>
+
+                    <p class="p">For example, to begin reading the binary log file at the GTID
+                            <samp class="ph codeph">8720bebf-bb38-11e6-97b1-0242ac110004:7066</samp>, you simply
+                        enter that GTID for the offset.</p>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">GTID disabled</dt>
+
+                <dd class="dd">When the database is disabled for GTID, the MySQL Binary Log origin expects the
+                    initial offset to contain both the binary log file name and a position within
+                    the file. Use the following format to configure the
+                    offset:<pre class="pre codeblock">&lt;binary log file name&gt;:&lt;position&gt;</pre>
+</dd>
+
+                <dd class="dd">
+                    <div class="p">For example, the following offset configures the origin to start reading the
+                        mysql-bin.000004 binary log file at position
+                        587:<pre class="pre codeblock">mysql-bin.000004:587</pre>
+</div>
+
+                </dd>
+
+            
+        </dl>
+
+        <div class="note note"><span class="notetitle">Note:</span> If you change the GTID mode on the database server after you have run a pipeline with
+            the MySQL Binary Log origin, you must reset the origin and change the format of the
+            initial offset value. Otherwise, the origin cannot correctly read the offset. </div>
+
+        <p class="p">When the pipeline stops, the MySQL Binary Log origin notes the offset where it stops
+            reading. When the pipeline starts again, the origin continues processing from the last
+            saved offset. You can reset the origin to process all requested objects. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rfd_15l_dy">
+ <h2 class="title topictitle2">Generated Records</h2>
+
+ <div class="body conbody">
+        <div class="p">The
+            MySQL Binary Log origin generates one record for each transaction recorded in the binary
+            logs. The record includes fields and record header attributes that contain the operation
+            type, change data capture information, and the changed data.<div class="note note"><span class="notetitle">Note:</span> If a transaction
+                recorded in the binary logs is rolled back in the MySQL database, MySQL retains the
+                original transaction in the log and then also records the rolled back transaction.
+                As a result, the MySQL Binary Log origin can process the changes recorded in the
+                original transaction and in the rolled back transaction. </div>
+</div>
+
+        <p class="p">Each generated record includes the following information:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">CRUD operation type</dt>
+
+                <dd class="dd">The CRUD operation type is stored in the Type record field and also in the
+                        <samp class="ph codeph">sdc.operation.type</samp> record header attribute. </dd>
+
+                <dd class="dd">The Type field contains one of the following string values: INSERT, DELETE, or
+                    UPDATE.</dd>
+
+                <dd class="dd">The <samp class="ph codeph">sdc.operation.type</samp> record header attribute contains one of
+                    the following numeric values:<ul class="ul" id="concept_rfd_15l_dy__ul_dkt_g5l_dy">
+                        <li class="li">1 for insert data</li>
+
+                        <li class="li">2 for delete data</li>
+
+                        <li class="li">3 for update data</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">You can use either the Type record field or the sdc.operation.type record header
+                    attribute to write records to the destination system. CRUD-enabled destinations
+                    such as JDBC Producer and Kudu use the sdc.operation.type header attribute. For
+                    an overview of <span class="ph">Data Collector</span> CDC and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</dd>
+
+            
+            
+                <dt class="dt dlterm">Change data capture information</dt>
+
+                <dd class="dd">The change data capture information is stored in the following record fields:
+                        <ul class="ul" id="concept_rfd_15l_dy__ul_t5r_r5l_dy">
+                        <li class="li">BinLogFilename - when GTID is disabled</li>
+
+                        <li class="li">BinLogPosition- when GTID is disabled</li>
+
+                        <li class="li">SeqNo - when GTID is enabled</li>
+
+                        <li class="li">GTID - when GTID is enabled</li>
+
+                        <li class="li">Table</li>
+
+                        <li class="li">ServerId</li>
+
+                        <li class="li">Database</li>
+
+                        <li class="li">Timestamp</li>
+
+                        <li class="li">Offset</li>
+
+                    </ul>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">New data</dt>
+
+                <dd class="dd">
+                    <p class="p">Fields that contain new data to be inserted or updated appears in a Data map
+                        field. </p>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Changed data</dt>
+
+                <dd class="dd">Fields that contain old data to be updated, or fields in a delete record appear
+                    in an OldData map field. </dd>
+
+            
+        </dl>
+
+        <p class="p">For example, the origin generates the following record when it reads from binary log
+            files for a MySQL server with GTID enabled:</p>
+
+        <p class="p"><img class="image" id="concept_rfd_15l_dy__image_hvd_b24_2y" src="../Graphics/MySQLBinaryLog-Record.png" height="410" width="675" /></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ety_5hg_5y">
+    <h2 class="title topictitle2">Processing Generated Records</h2>
+
+    <div class="body conbody">
+        <p class="p">Due to the structure of the MySQL binary log records,
+            you might want to use processors to restructure the record and remove any unnecessary
+            fields. <span class="ph">Of the <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_lfb_phd_ty">CRUD-enabled destinations</a>, only the Kudu destination includes
+                        a Change Log Format property that enables processing MySQL Binary Log
+                        records as generated. </span></p>
+
+        <p class="p">For example, MySQL binary log records include CDC data in record fields. If you are using
+            a destination other than Kudu and all you need is record data, you can use a Field
+            Remover to remove the unwanted fields. </p>
+
+        <p class="p">Similarly, update records include the previous data in an OldData map field, and the
+            updated data in a Data map field. If all you need is the updated data, you can use the
+            Field Remover to drop the OldData field from the record. And you could use a Field
+            Flattener processor to flatten the fields in the Data field.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lgb_nvl_dy">
+ <h2 class="title topictitle2">Tables to Include or Ignore</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The binary log file captures all changes made to the MySQL database. If you want the
+        MySQL Binary Log origin to capture changes from a subset of tables, you can configure the
+        origin to include changes from specific tables or to ignore changes from specific
+        tables.</p>
+
+  <div class="p">On the Advanced tab, you configure the tables to
+            include or ignore. Enter a list of database and table names separated by commas. You can
+            use the percent sign (%) as a wildcard to match any number of characters. Use the
+            following format to enter the table
+            names:<pre class="pre codeblock">&lt;database name&gt;.&lt;table name&gt;</pre>
+</div>
+
+        <div class="p">For example, if you enter the following for the <span class="ph uicontrol">Include Tables</span>
+            property, the origin captures changes only from the orders and customers tables in the
+            sales database:<pre class="pre codeblock">sales.orders,sales.customers</pre>
+</div>
+
+        <p class="p">If you enter the same value in the <span class="ph uicontrol">Ignore Tables</span> property, the
+            origin captures changes from all tables in the log file, except for the orders and
+            customers tables in the sales database.</p>
+
+        <p class="p">The <span class="ph uicontrol">Ignore Tables</span> property takes precedence. If you include a
+            table in both properties, the origin ignores the table.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_qbt_kyh_xx">
+    <h2 class="title topictitle2">Configuring a MySQL Binary Log Origin</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a MySQL Binary Log
+                origin to process change data capture (CDC) information provided by MySQL binary
+                logs. Be sure to complete the necessary <a class="xref" href="MySQLBinaryLog.html#concept_nwf_f4x_1bb" title="The MySQL Binary Log origin can process binary logs from a MySQL server configured to use row-based logging.">prerequisites</a>
+                before you configure the origin.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__d43782e425" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d337217e500">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d337217e503">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d337217e500 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d337217e503 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d337217e500 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d337217e503 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d337217e500 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_qbt_kyh_xx__d43782e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d337217e503 ">Error record handling for the stage: <ul class="ul" id="task_qbt_kyh_xx__d43782e475">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">MySQL Binary Log</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__table_r5s_313_xx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d337217e579">MySQL Binary Log Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d337217e582">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e579 ">Hostname</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e582 ">MySQL server hostname.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e579 ">Port</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e582 ">MySQL server port. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e579 ">Server ID</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e582 ">Replication server ID that the origin uses to connect to
+                                        the master MySQL server. Must be unique from the server ID
+                                        of the replication master and of all the other replication
+                                            slaves.<p class="p">When the MySQL server database is enabled for
+                                            GTID, the server ID is optional. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e579 ">Start from Beginning
+                                        <a class="xref" href="MySQLBinaryLog.html#concept_emp_1tl_dy" title="You can configure the origin to start reading the binary log file from the beginning of the file or from an initial offset in the file.">
+                                            <img class="image" id="task_qbt_kyh_xx__image_k2w_rsd_3t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e582 ">Specifies whether to start reading events from the
+                                        beginning of the binary log. When not selected, the origin
+                                        begins reading events from the last saved offset.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e579 ">Initial Offset
+                                        <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">
+                                            <img class="image" id="task_qbt_kyh_xx__image_k8w_rsd_6t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e582 ">Read events starting at this offset in the binary
+                                            log.<p class="p">If you configure an initial offset value and
+                                            configure the origin to start from the beginning, then
+                                            the origin starts reading from the initial
+                                        offset.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__table_w2g_pb3_xx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d337217e676">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d337217e679">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e676 ">Username</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e679 ">MySQL username. <p class="p">The user must have the REPLICATION
+                                            SLAVE MySQL privilege.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e676 ">Password</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e679 ">MySQL password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__table_i4r_j2l_yx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d337217e754">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d337217e757">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+         <img class="image" id="task_qbt_kyh_xx__d43579e891" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Max Batch Size (records)</td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum
+        batch size. <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default
+         is 1000.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Connection Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">Maximum time in milliseconds to wait for a connection to
+                                        the MySQL server. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Use SSL</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">Specifies whether to use SSL/TLS to connect to the MySQL
+                                        server.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Include Tables
+                                        <a class="xref" href="MySQLBinaryLog.html#concept_lgb_nvl_dy" title="The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">
+                                            <img class="image" id="task_qbt_kyh_xx__image_k5w_rsd_1t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">List of tables to include when reading change events in
+                                        the binary log file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d337217e754 ">Ignore Tables
+                                        <a class="xref" href="MySQLBinaryLog.html#concept_lgb_nvl_dy" title="The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">
+                                            <img class="image" id="task_qbt_kyh_xx__image_h2w_rsd_0t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d337217e757 ">List of tables to ignore when reading change events in
+                                        the binary log file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

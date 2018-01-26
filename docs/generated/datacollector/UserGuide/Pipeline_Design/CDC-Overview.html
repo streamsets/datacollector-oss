@@ -1,0 +1,641 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Certain stages enable you to easily process change capture data (CDC) or transactional data in a pipeline. CDC-enabled origins can read change capture data. Some exclusively read change capture data, ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Processing Changed Data" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_apw_l2c_ty" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Processing Changed Data</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_apw_l2c_ty">
+ <h1 class="title topictitle1">Processing Changed Data</h1>
+
+ <div class="body conbody">
+        <p class="p">Certain stages enable
+            you to easily process change capture data (CDC) or transactional data in a pipeline. </p>
+
+        <p class="p">CDC-enabled origins can read change capture data. Some exclusively read change capture
+            data, others can be configured to read it. When reading changed data, they determine the
+            CRUD operation associated with the data and include CRUD operations - such as insert,
+            update, upsert, or delete - in the sdc.operation.type record header attribute. </p>
+
+        <p class="p">CRUD-enabled processors and destinations can use the CRUD
+                  operation type in the sdc.operation.type header attribute when writing records,
+                  enabling the external system to perform the appropriate operation. </p>
+
+        <p class="p">Using a CDC-enabled origin and CRUD-enabled stages in a pipeline allows you to easily
+            write changed data from one system into another. You can also use a CDC-enabled origin
+            to write to non-CRUD destinations, and non-CDC origins to write to CRUD-enabled stages.
+            For information on how that works, see <a class="xref" href="CDC-Overview.html#concept_y5y_5xd_5y">Use Cases</a>.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_np1_wpc_ty">
+ <h2 class="title topictitle2">CRUD Operation Header Attribute</h2>
+
+ <div class="body conbody">
+  <p class="p">CDC-enabled origins read include the sdc.operation.type
+            record header attribute in all records when reading changed data.</p>
+
+        <p class="p">CRUD-enabled processors and destinations can use the CRUD
+                  operation type in the sdc.operation.type header attribute when writing records,
+                  enabling the external system to perform the appropriate operation. </p>
+
+        <div class="p">The sdc.operation.type record header attribute uses the following integers to represent
+            CRUD operations:<ul class="ul" id="concept_np1_wpc_ty__ul_sfx_gjd_ty">
+                <li class="li">1 for INSERT records</li>
+
+                <li class="li">2 for DELETE records</li>
+
+                <li class="li">3 for UPDATE records</li>
+
+                <li class="li">4 for UPSERT records</li>
+
+                <li class="li">5 for unsupported operations or codes</li>
+
+                <li class="li">6 for UNDELETE records</li>
+
+                <li class="li">7 for REPLACE records</li>
+
+            </ul>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> Some origins use only a subset of the operations, based on the operations supported by
+            the origin system. Similarly, destinations recognize only the subset of the operations
+            that the destination systems support. See the origin and destination documentation for
+            details about supported operations. </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_vzg_5yd_5y">
+ <h3 class="title topictitle3">Earlier Implementations</h3>
+
+ <div class="body conbody">
+        <p class="p">Some origins were enabled for CDC using
+            different record header attributes in earlier releases, but they all now include the
+            sdc.operation.type record header attribute. All earlier CRUD header attributes are
+            retained for backward compatibility. </p>
+
+        <p class="p">Similarly, CRUD-enabled destinations that were enabled to look for the CRUD operation
+            type in other header attributes can now look for the sdc.operation.type record header
+            attribute first and check the alternate attribute afterwards. The alternate header
+            attribute functionality is retained for backward compatibility.</p>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_iws_mhd_ty">
+ <h2 class="title topictitle2">CDC-Enabled Origins</h2>
+
+ <div class="body conbody">
+  <p class="p">CDC-enabled origins provide the CRUD operation
+            type in the sdc.operation.type record header attribute. Some origins provide alternate
+            and additional header attributes. </p>
+
+        <div class="p">The following origins provide CRUD record header attributes: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iws_mhd_ty__table_mg5_ljc_ty" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d419303e152">CDC-Enabled Origin</th>
+
+                            <th class="entry" valign="top" width="70%" id="d419303e155">CRUD Record Header Attributes</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">JDBC Query Consumer for Microsoft SQL Server</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute.<p class="p">For more information, see <a class="xref" href="../Origins/JDBCConsumer.html#concept_bnh_hry_ty">CRUD Record Header Attribute</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">MapR DB CDC</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">Includes additional CDC information in record
+                                    header attributes. </p>
+<p class="p">For more information, see <a class="xref" href="../Origins/MapRdbCDC.html#concept_oq4_mhh_qbb">CRUD Operation and CDC Header Attributes</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">MongoDB Oplog</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">Can include additional CDC information in
+                                    record header attributes, such as the op and ns
+                                    attributes.</p>
+<p class="p">For more information, see <a class="xref" href="../Origins/MongoDBOplog.html#concept_wc3_byl_5y">Generated Records</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">MySQL Binary Log</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">Includes additional CDC information in record
+                                    fields. </p>
+<p class="p">For more information, see <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_rfd_15l_dy">Generated Records</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">Oracle CDC Client</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in both of the following
+                                    headers:<ul class="ul" id="concept_iws_mhd_ty__ul_i32_xzy_t1b">
+                                    <li class="li">sdc.operation.type</li>
+
+                                </ul>
+<ul class="ul" id="concept_iws_mhd_ty__ul_j32_xzy_t1b">
+                                    <li class="li">oracle.cdc.operation</li>
+
+                                </ul>
+<p class="p">Includes additional CDC information in record header
+                                    attributes with the oracle.cdc prefix, such as oracle.cdc.table.
+                                    </p>
+<p class="p">For more information, see <a class="xref" href="../Origins/OracleCDC.html#concept_x4h_m42_5y">CRUD Operation Header Attributes</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">Salesforce</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">For more information, see <a class="xref" href="../Origins/Salesforce.html#concept_yns_y2m_5y">CRUD Operation Header Attribute</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">SQL Server CDC Client</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">Includes CDC information in header attributes
+                                    named jdbc.&lt;CDC column name&gt;. For more information, see <a class="xref" href="../Origins/SQLServerCDC.html#concept_pc4_xts_r1b">Record Header Attributes</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d419303e152 ">SQL Server Change Tracking</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d419303e155 ">Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p class="p">Includes additional information from change
+                                    tables in the jdbc.SYS_CHANGE header attributes. For more
+                                    information, see <a class="xref" href="../Origins/SQLServerChange.html#concept_pc4_xts_r1b">Record Header Attributes</a>.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lfb_phd_ty">
+ <h2 class="title topictitle2">CRUD-Enabled Stages </h2>
+
+ <div class="body conbody">
+        <div class="p">The
+            following stages recognize CRUD operations stored in record header attributes and can
+            perform writes based on those values. Some stages also provide CRUD-related
+                properties.
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lfb_phd_ty__table_jwt_vrc_ty" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="27.27272727272727%" id="d419303e339">CRUD-Enabled Stage</th>
+
+                            <th class="entry" valign="top" width="18.181818181818183%" id="d419303e342">Supported Operations</th>
+
+                            <th class="entry" valign="top" width="54.54545454545454%" id="d419303e345">Stage Processing</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">Elasticsearch destination</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_x3w_sbd_ty">
+                                    <li class="li">CREATE (INSERT)</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">INDEX (UPSERT)</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on either of the
+                                    following:<ul class="ul" id="concept_lfb_phd_ty__ul_l14_jbd_ty">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/Elasticsearch.html#concept_w2r_ktb_ry">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">JDBC Tee processor</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_c4w_xbd_ty">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on either of the
+                                    following:<ul class="ul" id="concept_lfb_phd_ty__ul_ls4_pbd_ty">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+
+                                </ul>
+<p class="p">Includes a Change Log property that enables processing
+                                    records based on the CDC-enabled origin that you use. For more
+                                    information, see <a class="xref" href="../Processors/JDBCTee.html#concept_qfd_tpm_5y">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">JDBC Producer destination </td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_jxl_zbd_ty">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_o2w_qbd_ty">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+
+                                </ul>
+<p class="p">Includes a Change Log property that enables processing
+                                    records based on the CDC-enabled origin that you use. For more
+                                    information, see <a class="xref" href="../Destinations/JDBCProducer.html#concept_plv_jpn_5y">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">Kudu destination </td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_ix1_bcd_ty">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">UPSERT</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_irr_ccd_ty">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/Kudu.html#concept_dvg_vvj_wx">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">MapR DB JSON</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_wwt_l1b_xbb">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_etm_dbb_xbb">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Insert API and Set API properties in the stage</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/MapRDBJSON.html#concept_hy5_3nb_xbb">Writing to MapR DB JSON</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">MongoDB destination</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_qkk_jcd_ty">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">REPLACE</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_fz3_hcd_ty">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Upsert property in the stage</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/MongoDB.html#concept_bkc_m24_4v">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">Redis destination</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_gkd_51d_ybb">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">REPLACE</li>
+
+                                    <li class="li">DELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_bbz_51d_ybb">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/Redis.html#concept_dz2_4xh_xbb">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="27.27272727272727%" headers="d419303e339 ">Salesforce destination</td>
+
+                            <td class="entry" valign="top" width="18.181818181818183%" headers="d419303e342 ">
+                                <ul class="ul" id="concept_lfb_phd_ty__ul_bm4_yxg_4z">
+                                    <li class="li">INSERT</li>
+
+                                    <li class="li">UPDATE</li>
+
+                                    <li class="li">UPSERT</li>
+
+                                    <li class="li">DELETE</li>
+
+                                    <li class="li">UNDELETE</li>
+
+                                </ul>
+
+                            </td>
+
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d419303e345 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_rdx_zxg_4z">
+                                    <li class="li">sdc.operation.type record header attribute</li>
+
+                                    <li class="li">Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Destinations/Salesforce.html#concept_opg_tyg_4z">Define the CRUD Operation</a>.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_wj5_hy2_5y">
+ <h2 class="title topictitle2">Processing the Record</h2>
+
+ <div class="body conbody">
+  <p class="p">Change logs
+            can provide record data in different formats. The JDBC Tee processor and JDBC Producer
+            can decode most change log formats to generate record data based on the origin change
+            log. When using other CRUD-enabled destinations, you might need to add additional
+            processing to the pipeline to alter the format of the record. </p>
+
+        <p class="p">For example, Microsoft SQL CDC records created by the JDBC Query Consumer contains CDC
+            fields in the record, in addition to record data. You might use a Field Remover to drop
+            any unnecessary fields from the record. </p>
+
+        <p class="p">In contrast, the MySQL Server binary logs read by the My SQL Binary Log origin provides
+            new or updated data in a New Data map field and changed or deleted data in a Changed
+            Data map field. You might want to use the Field Flattener processor to flatten the map
+            field with the data that you need, and a Field Remover to remove any unnecessary fields. </p>
+
+        <p class="p">For details on the format of generated records, see the documentation for the CDC-enabled
+            origin.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_y5y_5xd_5y">
+ <h2 class="title topictitle2">Use Cases</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use CDC-enabled
+            origins and CRUD-enabled destinations in pipelines together or individually. Here are
+            some typical use cases:<dl class="dl">
+                
+                    <dt class="dt dlterm">CDC-enabled origin with CRUD-enabled destinations</dt>
+
+                    <dd class="dd">You can use a CDC-enabled origin and a CRUD-enabled destination to easily
+                        process changed records and write them to a destination system. </dd>
+
+                    <dd class="dd">
+                        <p class="p">For example, say you want to write CDC data from Microsoft SQL Server to
+                            Kudu. To do this, you use the CDC-enabled JDBC Query Consumer origin to
+                            read data from a Microsoft SQL Server change capture table. The origin
+                            places the CRUD operation type in the sdc.operation.type header
+                            attribute, in this case: 1 for INSERT, 2 for DELETE, 3 for UPDATE. </p>
+
+                        <p class="p">You configure the pipeline to write to the CRUD-enabled Kudu destination.
+                            In the Kudu destination, you can specify a default operation for any
+                            record with no value set in the sdc.operation.type attribute, and you
+                            can configure error handling for invalid values. You set the default to
+                            INSERT and you configure the destination to use this default for invalid
+                            values. In the sdc.operation.type attribute, the Kudu destination
+                            supports 1 for INSERT, 2 for DELETE, 3 for UPDATE, and 4 for UPSERT.</p>
+
+                        <p class="p">When you run the pipeline, the JDBC Query Consumer origin determines the
+                            CRUD operation type for each record and writes it to the
+                            sdc.operation.type record header attribute. And the Kudu destination
+                            uses the operation in the sdc.operation.type attribute to inform the
+                            Kudu destination system how to process each record. Any record with an
+                            undeclared value in the sdc.operation.type attribute, such as a record
+                            created by the pipeline, is treated like an INSERT record. And any
+                            record with an invalid value uses the same default behavior.</p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">CDC-enabled origin to non-CRUD destinations</dt>
+
+                    <dd class="dd">
+                        <p class="p">If you need to write changed data to a destination system without a
+                            CRUD-enabled destination, you can use an Expression Evaluator or
+                            scripting processor to move the CRUD operation information from the
+                            sdc.operation.type header attribute to a field, so the information is
+                            retained in the record.</p>
+
+                        <p class="p">For example, say you want to read from Oracle LogMiner redo logs and
+                            write the records to Hive tables with all of the CDC information in
+                            record fields. To do this, you'd use the Oracle CDC Client origin to
+                            read the redo logs, then add an Expression Evaluator to pull the CRUD
+                            information from the sdc.operation.type header attribute into the
+                            record. Oracle CDC Client writes additional CDC information such as the
+                            table name and scn into oracle.cdc header attributes, so you can use
+                            expressions to pull that information into the record as well. Then you
+                            can use the Hadoop FS destination to write the enhanced records to
+                            Hive.</p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Non-CDC origin to CRUD destinations</dt>
+
+                    <dd class="dd">When reading data from a non-CDC origin, you can use the Expression
+                        Evaluator or scripting processors to define the sdc.operation.type header
+                        attribute. </dd>
+
+                    <dd class="dd">For example, say you want to read from a transactional database table and
+                        keep a dimension table in sync with the changes. You'd use the JDBC Query
+                        Consumer to read the source table and a JDBC Lookup processor to check the
+                        dimension table for the primary key value of each record. Then, based on the
+                        output of the lookup processor, you know if there was a matching record in
+                        the table or not. Using an Expression Evaluator, you set the
+                        sdc.operation.type record header attribute - 3 to update the records that
+                        had a matching record, and 1 to insert new records. </dd>
+
+                    <dd class="dd">When you pass the records to the JDBC Producer destination, the destination
+                        uses the operation in the sdc.operation.type header attribute to determine
+                        how to write the records to the dimension table.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

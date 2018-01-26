@@ -1,0 +1,1810 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="HTTP Client" /><meta name="abstract" content="The HTTP Client destination writes data to an HTTP endpoint. The destination sends requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of standard requests or use an expression to determine the request for each record." /><meta name="description" content="The HTTP Client destination writes data to an HTTP endpoint. The destination sends requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of standard requests or use an expression to determine the request for each record." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_khl_sg5_lz" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>HTTP Client</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_khl_sg5_lz">
+ <h1 class="title topictitle1">HTTP Client</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The HTTP Client destination writes data to an HTTP endpoint. The destination sends
+        requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of
+        standard requests or use an expression to determine the request for each record.</p>
+
+  <p class="p">When you configure the HTTP Client destination,
+            you define the resource URL, headers, and method to use for the requests. You configure
+            the destination to generate one request for each record or it to generate a single
+            request containing all records in the batch. </p>
+
+        <p class="p">You can configure the timeout, request transfer encoding, and authentication type. You
+            can configure the destination to use the Gzip or Snappy compression format to write the
+            messages. You can optionally use an HTTP proxy and configure SSL/TLS properties. </p>
+
+        <p class="p">You can also configure the destination to use the OAuth 2 protocol to connect to an HTTP
+            service.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ry4_ct5_lz">
+ <h2 class="title topictitle2">HTTP Method</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"></p>
+
+  <div class="p">You can use the
+            following methods with the HTTP Client destination: <ul class="ul" id="concept_ry4_ct5_lz__ul_m1f_s3h_jw">
+                <li class="li">GET</li>
+
+                <li class="li">PUT</li>
+
+                <li class="li">POST</li>
+
+                <li class="li">DELETE</li>
+
+                <li class="li">HEAD</li>
+
+                <li class="li">Expression - An expression that evaluates to one of the other methods. </li>
+
+            </ul>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_jky_jt5_lz">
+ <h3 class="title topictitle3">Expression Method</h3>
+
+ <div class="body conbody">
+  <p class="p">The Expression method allows you to write an
+            expression that evaluates to a standard HTTP method. Use the Expression method to
+            generate a workflow. For example, you can use an expression that passes data to the
+            server (PUT) based on the data in a field. </p>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_a5r_zt5_lz">
+ <h2 class="title topictitle2">Number of Requests</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The HTTP Client destination can generate one HTTP request for each record, or it can
+        generate a single request containing all records in the batch. </p>
+
+        <p class="p">Configure the destination to generate requests in one of the following ways:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Multiple requests per batch</dt>
+
+                <dd class="dd">By default, the destination generates one HTTP request for each record in the
+                    batch and sends multiple requests at a time. To preserve record order, the
+                    destination waits until all requests for the entire batch are completed before
+                    processing the next batch. </dd>
+
+                <dd class="dd">When the destination generates multiple requests per batch, you specify the
+                    maximum number of parallel requests. Default is 1. Increasing the number of
+                    parallel requests can improve performance but increases the load on the server.
+                    Network latency can also significantly impact the performance when sending
+                    multiple parallel requests.</dd>
+
+            
+            
+                <dt class="dt dlterm">Single request per batch</dt>
+
+                <dd class="dd">If you enable the One Request per Batch property, the destination generates a
+                    single HTTP request containing all records in the batch. </dd>
+
+                <dd class="dd">When the destination generates a single request per batch, it ignores the value
+                    entered for the maximum number of parallel requests. Generating a single request
+                    per batch can improve performance, depending on the amount of data sent in the
+                    request.</dd>
+
+            
+        </dl>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_yqm_h55_lz">
+ <h2 class="title topictitle2">OAuth 2 Authorization</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the HTTP Client destination to use the OAuth 2 protocol to connect to
+        an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client
+        credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).</p>
+
+  <p class="p">The OAuth 2 protocol
+            authorizes third-party access to HTTP service resources without sharing credentials. The
+            HTTP Client destination uses credentials to request an access token from the service.
+            The service returns the token to the destination, and then the destination includes the
+            token in a header in each request to the resource URL.</p>
+
+     <div class="p">The credentials that you enter to request an access token
+                  depend on the credentials grant type required by the HTTP service. You can define
+                  the following OAuth 2 credentials grant types for HTTP Client: <dl class="dl">
+                        
+                              <dt class="dt dlterm">Client credentials grant</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends its own credentials - the client ID and
+                                          client secret or the basic, digest, or universal
+                                          authentication credentials - to the HTTP service. For
+                                          example, use the client credentials grant to process data
+                                          from the Twitter API or from the Microsoft Azure Active
+                                          Directory (Azure AD) API.</p>
+
+                                    <p class="p">For more information about the client credentials grant, see
+                                                <a class="xref" href="https://tools.ietf.org/html/rfc6749#section-4.4" target="_blank">https://tools.ietf.org/html/rfc6749#section-4.4</a>.</p>
+
+                              </dd>
+
+                        
+                        
+                              <dt class="dt dlterm">Resource owner password credentials grant</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends the credentials for the resource owner -
+                                          the resource owner username and password - to the HTTP
+                                          service. Or, you can use this grant type to migrate
+                                          existing clients using basic, digest, or universal
+                                          authentication to OAuth 2 by converting the stored
+                                          credentials to an access token.</p>
+
+                                    <p class="p">For example, use this grant to process data from the Getty
+                                          Images API. For more information about using OAuth 2 to
+                                          connect to the Getty Images API, see <a class="xref" href="http://developers.gettyimages.com/api/docs/v3/oauth2.html" target="_blank">http://developers.gettyimages.com/api/docs/v3/oauth2.html</a>.</p>
+
+                                    <p class="p">For more information about the resource owner password
+                                          credentials grant, see <a class="xref" href="https://tools.ietf.org/html/rfc6749#section-4.3" target="_blank">https://tools.ietf.org/html/rfc6749#section-4.3</a>.</p>
+
+                              </dd>
+
+                        
+                        
+                              <dt class="dt dlterm">JSON Web Tokens (JWT)</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends a JSON-based security token encoding to the
+                                          HTTP service. For example, use JSON Web Tokens to process
+                                          data from the Google API.</p>
+
+                              </dd>
+
+                        
+                  </dl>
+</div>
+<p class="p">Let’s look at some examples of how to configure authentication
+                  and OAuth 2 authorization to process data from Twitter, Microsoft Azure AD, and
+                  Google APIs.</p>
+
+ </div>
+
+<div class="topic task nested2" id="task_uck_jw5_lz">
+    <h3 class="title topictitle3">Example for Twitter</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to write to Twitter, configure HTTP Client to use basic
+        authentication and the client credentials grant.</p>
+
+        <div class="section context">
+            <p class="p">For more information about configuring OAuth 2 authorization for Twitter, see <a class="xref" href="https://dev.twitter.com/oauth/application-only" target="_blank">https://dev.twitter.com/oauth/application-only</a>.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">Basic</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, enter the Twitter consumer key
+                    and consumer secret for the <span class="ph uicontrol">Username</span> and
+                    <span class="ph uicontrol">Password</span> properties.</span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  consumer key and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">Client Credentials
+                    Grant</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">https://api.twitter.com/oauth2/token</pre>
+
+                </div>
+            </li>
+</ol>
+
+        <div class="section result" id="task_uck_jw5_lz__result_y1d_1yf_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Twitter:<p class="p"><img class="image" id="task_uck_jw5_lz__image_dxb_4yf_5y" src="../Graphics/HTTPClientProcessor_OAuth2Twitter.png" height="259" width="734" /></p>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_sdb_tw5_lz">
+    <h3 class="title topictitle3">Example for Microsoft Azure AD</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to write to Microsoft Azure AD, configure HTTP Client to
+        use no authentication and the client credentials grant.</p>
+
+        <div class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> This example uses Microsoft Azure AD version 1.0.</div>
+
+            <p class="p">For more information about configuring OAuth 2 authorization for Microsoft Azure AD,
+                see <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-code" target="_blank">https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-code</a>.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">None</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">Client Credentials
+                    Grant</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">https://login.microsoftonline.com/&lt;tenant identifier&gt;/oauth2/token</pre>
+
+                    <p class="p">Where <samp class="ph codeph">&lt;tenant identifier&gt;</samp> is the Azure AD tenant
+                        identifier.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the OAuth 2 client ID and secret.</span>
+                <div class="itemgroup info">
+                    <p class="p">The client ID is the Application Id assigned to your app when you registered
+                        it with Azure AD, found in the Azure Classic Portal.</p>
+
+                    <p class="p">The client secret is the application secret that you created in the app
+                        registration portal for your app. </p>
+
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  client ID and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add any key-value pairs that the HTTP service requires in the token
+                    request.</span>
+                <div class="itemgroup info">In our example, we are accessing the <samp class="ph codeph">graph.microsoft.com</samp> API
+                    in our resource URL, so we need to add the following key-value
+                    pair:<pre class="pre codeblock">resource : https://graph.microsoft.com/</pre>
+</div>
+            </li>
+</ol>
+
+        <div class="section result" id="task_sdb_tw5_lz__result_frp_hcg_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Microsoft Azure AD version 1.0: <p class="p"><img class="image" id="task_sdb_tw5_lz__image_ik4_2kg_5y" src="../Graphics/HTTPClientProcessor_OAuth2AzureAD.png" height="311" width="867" /></p>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_zz3_bx5_lz">
+    <h3 class="title topictitle3">Example for Google</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to write to Google service accounts, configure HTTP
+        Client to use no authentication and the JSON Web Tokens grant.</p>
+
+        <div class="section context">
+            <p class="p">For more information about configuring OAuth 2 authorization for Google, see <a class="xref" href="https://developers.google.com/identity/protocols/OAuth2" target="_blank">https://developers.google.com/identity/protocols/OAuth2</a>.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">None</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">JSON Web
+                    Tokens</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">https://www.googleapis.com/oauth2/v4/token</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the following algorithm to sign the JWT: <span class="ph uicontrol">RSASSA-PKCS-v1_5
+                        using SHA-256</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the Base64 encoded key used to sign the JWT.</span>
+                <div class="itemgroup info">
+                    <p class="p">To access the key, download the JSON key file when you generate the Google
+                        credentials. Locate the "private_key" field in the file, which contains a
+                        string version of the key. Copy the string into the <span class="ph uicontrol">JWT Signing
+                            Key</span> property, and then replace all "\n" literals with new
+                        lines.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the JWT
+                  signing key, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">JWT Claims</span> property, enter the required claims to
+                    use with the JWT token request, in JSON format.</span>
+                <div class="itemgroup info"><p class="p">For a list of the required claims for Google service accounts, see <a class="xref" href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatingjwt" target="_blank">https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatingjwt</a>.</p>
+For example, enter the claims in
+                    the following JSON
+                        format:<pre class="pre codeblock">{
+   "iss":"my_name@my_account.iam.gserviceaccount.com",
+   "scope":"https://www.googleapis.com/auth/drive",
+   "aud":"https://www.googleapis.com/oauth2/v4/token",
+   "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * MINUTES},
+   "iat":${time:dateTimeToMilliseconds(time:now())/1000}
+}</pre>
+<p class="p">You
+                        can include the expression language in the JWT claims. For example, in the
+                        sample claim above, both the "exp" (expiration time) claim and the "iat"
+                        (issued at) claim include <span class="ph">Data Collector</span> time
+                        functions to set the expiration time and the issue time. </p>
+<div class="note tip"><span class="tiptitle">Tip:</span> Google access tokens expire after 60 minutes. As a result, set
+                        the expiration time claim to be slightly less than 60 minutes so that HTTP
+                        Client can request a new token within the time limit. </div>
+</div>
+            </li>
+</ol>
+
+        <div class="section result" id="task_zz3_bx5_lz__result_bqx_wkg_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Google service accounts:<p class="p"><img class="image" id="task_zz3_bx5_lz__image_act_slg_5y" src="../Graphics/HTTPClientProcessor_OAuth2Google.png" height="416" width="870" /></p>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_l2r_gy5_lz">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">HTTP Client writes data to HTTP endpoints
+            based on the data format that you select. You can use the following data formats:</p>
+
+        <dl class="dl">
+            
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
+
+                              <dd class="dd">
+                                    <ul class="ul" id="concept_l2r_gy5_lz__d16872e3060">
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Record Header</span> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p class="p">If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema Registry. You can
+                                                  also optionally include the schema definition in
+                                                  the message. Omitting the schema definition can
+                                                  improve performance, but requires the appropriate
+                                                  schema management to avoid losing track of the
+                                                  schema associated with the data.</p>
+</li>
+
+                                    </ul>
+
+                              </dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using any other compression
+                                    properties in the destination. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">The destination writes binary data from a single field in the
+                                    record. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                              <dd class="dd">
+                                    <div class="p">You can use the following delimited format types: <ul class="ul" id="concept_l2r_gy5_lz__ul_jtv_5sl_mcb">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</div>
+
+                              </dd>
+
+                        
+            
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_l2r_gy5_lz__d16872e3128">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+            
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes one record in a message. Uses the user-defined message type and
+                              the definition of the message type in the descriptor file to generate
+                              the message. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+            
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+            
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a UNIX-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_bdf_fk5_lz">
+    <h2 class="title topictitle2">Configuring an HTTP Client Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an HTTP Client
+                destination to write data to an HTTP endpoint.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e880">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e883">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e880 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e883 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e880 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e883 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e880 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_bdf_fk5_lz__d16805e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e883 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e880 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_bdf_fk5_lz__d16805e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e883 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e880 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_bdf_fk5_lz__d16805e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e883 ">Error record handling for the stage: <ul class="ul" id="task_bdf_fk5_lz__d16805e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__table_dvh_zgv_lz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e994">HTTP Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e997">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">Resource URL</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">HTTP resource URL.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">Headers</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">The headers to include in the request. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon to add additional
+                                        headers.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">HTTP Method <a class="xref" href="HTTPClient.html#concept_ry4_ct5_lz">
+                                            <img class="image" id="task_bdf_fk5_lz__image_mhs_5q2_nr" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">HTTP request method. Use one of the standard methods or
+                                        use Expression to enter an expression. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_jky_jt5_lz">
+                                            <img class="image" id="task_bdf_fk5_lz__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">Expression that evaluates to a standard HTTP method.
+                                            <p class="p">Used for the Expression method only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Request Transfer Encoding</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Use one of the following encoding types:<ul class="ul" id="task_bdf_fk5_lz__d16935e1416">
+         <li class="li">Buffered - The standard transfer encoding type. </li>
+
+         <li class="li">Chunked - Transfers data in chunks. Not supported by all servers.</li>
+
+        </ul>
+<p class="p">The default is Chunked.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">HTTP Compression</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">Compression format for the messages:<ul class="ul" id="task_bdf_fk5_lz__ul_t5n_3hb_4z">
+                                            <li class="li">None</li>
+
+                                            <li class="li">Snappy</li>
+
+                                            <li class="li">Gzip</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Connect Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Maximum number of milliseconds to wait for a connection. <p class="p">Use 0 to wait
+         indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Read Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Maximum number of milliseconds to wait for data. <p class="p">Use 0 to wait
+        indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_a5r_zt5_lz" title="The HTTP Client destination can generate one HTTP request for each record, or it can generate a single request containing all records in the batch.">
+                                            <img class="image" id="task_bdf_fk5_lz__image_mgp_9q4_hl" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">Maximum number of requests to send to the server at one
+                                        time when the destination generates one request for each
+                                        record in the batch. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e994 ">One Request per Batch <a class="xref" href="HTTPClient.html#concept_a5r_zt5_lz" title="The HTTP Client destination can generate one HTTP request for each record, or it can generate a single request containing all records in the batch.">
+                                            <img class="image" id="task_bdf_fk5_lz__image_mhl_5q8_hl" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e997 ">Enables generating a single request containing all
+                                        records in the batch. </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Authentication Type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_bdf_fk5_lz__d16935e1457">
+         <li class="li">None - Performs no authentication.</li>
+
+         <li class="li">Basic - Uses basic authentication. Requires a username and password. <p class="p">Use with HTTPS
+           to avoid passing unencrypted credentials.</p>
+</li>
+
+         <li class="li">Digest - Uses digest authentication. Requires a username and password.</li>
+
+         <li class="li">Universal - Makes an anonymous connection, then provides authentication credentials
+          upon receiving a 401 status and a WWW-Authenticate header request. <p class="p">Requires a username
+           and password associated with basic or digest authentication.</p>
+<p class="p">Use only with servers
+           that respond to this workflow.</p>
+</li>
+
+         <li class="li">OAuth - Uses OAuth 1.0 authentication. Requires OAuth credentials.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Use OAuth 2</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Enables using OAuth 2 authorization to request access tokens. <p class="p">You can use OAuth 2
+         authorization with none, basic, digest, or universal authentication.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Use Proxy</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">
+        <p class="p">Enables using an HTTP proxy to connect to the system. </p>
+
+       </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Rate Limit</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Minimum amount of time between requests in seconds. Set a rate limit when sending
+        requests to a rate-limited API. <p class="p">Default is 0, which means there is no delay between
+         requests.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e994 ">Maximum Request Time</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e997 ">Maximum number of seconds to wait for a request to complete.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using authentication, on the <span class="keyword wintitle">Credentials</span> tab,
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e2932" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e1256">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e1259">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Username</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">User name for basic, digest, or universal authentication.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">Password for basic, digest, or universal authentication.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Consumer Key</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">Consumer key for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Consumer Secret</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">Consumer secret for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Token</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">Consumer token for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1256 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1259 ">Token secret for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using OAuth 2 authorization, on the <span class="keyword wintitle">OAuth 2</span> tab,
+                    configure the following properties.</span>
+                <div class="itemgroup info">For more information about OAuth 2 and for example OAuth 2 configurations to
+                    read from Twitter, Microsoft Azure AD, or Google APIs, see <a class="xref" href="HTTPClient.html#concept_yqm_h55_lz" title="You can configure the HTTP Client destination to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).">OAuth 2 Authorization</a>. 
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__table_xwp_3w2_5y" class="table" frame="border" border="1" rules="all">
+    
+    
+    <thead class="thead" align="left">
+     <tr>
+      <th class="entry" valign="top" width="30%" id="d104595e1376">OAuth 2 Property</th>
+
+      <th class="entry" valign="top" width="70%" id="d104595e1379">Description</th>
+
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Credentials Grant Type</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Type of client credentials grant type required by the HTTP service:<ul class="ul" id="task_bdf_fk5_lz__d16935e1562">
+        <li class="li">Client credentials grant</li>
+
+        <li class="li">Resource owner password credentials grant</li>
+
+        <li class="li">JSON Web Tokens (JWT)</li>
+
+       </ul>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Token URL</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">URL to request the access token.</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Client ID</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Client ID that the HTTP service uses to identify the HTTP client.<p class="p">Enter for the
+        client credentials grant that uses a client ID and secret for authentication. Or, for the
+        resource owner password credentials grant that requires a client ID and secret.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Client Secret</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Client secret that the HTTP service uses to authenticate the HTTP client.<p class="p">Enter for
+        the client credentials grant that uses a client ID and secret for authentication. Or, for
+        the resource owner password credentials grant that requires a client ID and secret.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  client ID and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">User Name</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Resource owner user name.<p class="p">Enter for the resource owner password credentials
+        grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Resource owner password.<p class="p">Enter for the resource owner password credentials
+        grant.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">JWT Signing Algorithm</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Algorithm used to sign the JSON Web Token (JWT).<p class="p">Default is none. Enter for the JSON
+        Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">JWT Signing Key</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Base64 encoded key used to sign the JSON Web Token, if you selected a signing
+        algorithm.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the JWT
+                  signing key, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+<p class="p">Enter
+        for the JSON Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">JWT Claims</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Claims to use in the JSON Web Token request, entered in JSON format. Enter each claim
+       required by the HTTP service. You can include the expression language in the JWT
+        claims.<p class="p">For example, to read from Google service accounts, enter the following claims with
+        the appropriate
+        values:</p>
+<pre class="pre codeblock">{
+  "iss":"my_name@my_account.iam.gserviceaccount.com",
+  "scope":"https://www.googleapis.com/auth/drive",
+  "aud":"https://www.googleapis.com/oauth2/v4/token",
+  "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * 60},
+  "iat":${time:dateTimeToMilliseconds(time:now())/1000}
+}</pre>
+<p class="p">Enter
+        for the JSON Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Request Transfer Encoding</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Form of encoding to use when the stage requests an access token: buffered or
+        chunked.<p class="p">Default is buffered.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d104595e1376 ">Additional Key-Value Pairs</td>
+
+      <td class="entry" valign="top" width="70%" headers="d104595e1379 ">Optional key-value pairs to send to the token URL when requesting an access token. For
+       example, you can define the OAuth 2 <samp class="ph codeph">scope</samp> request parameter.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk
+         edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add additional key-value
+        pairs.</p>
+</td>
+
+     </tr>
+
+    </tbody>
+
+   </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use an HTTP proxy, on the <span class="keyword wintitle">Proxy</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e3037" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e1619">HTTP Proxy Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e1622">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1619 ">Proxy URI</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1622 ">Proxy URI.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1619 ">Username</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1622 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1619 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1622 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use SSL/TLS, on the <span class="keyword wintitle">TLS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__table_isk_mgv_zz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e1705">TLS Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e1708">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Use TLS</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">
+                                        <p class="p">Enables the use of TLS. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_bdf_fk5_lz__d16805e3244" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">The path to the keystore file. Enter an absolute path to
+                                        the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no keystore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Keystore Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_bdf_fk5_lz__d16805e3266">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Keystore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Password to the keystore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Keystore Key Algorithm</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                                <span class="ph">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Truststore Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Truststore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_bdf_fk5_lz__d16805e3368">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Use Default Protocols</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_bdf_fk5_lz__d16805e3390" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">The TLS protocols to use. To use a protocol other than
+                                        the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Use Default Cipher Suites</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e1705 ">Cipher Suites</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e1708 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2087">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2090">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_bdf_fk5_lz__KP-DataFormats">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2087 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2090 ">Data format for messages:<ul class="ul" id="task_bdf_fk5_lz__ul_wlj_353_br">
+                                            <li class="li">Avro</li>
+
+                                        <li class="li">Binary</li>
+
+                                            <li class="li">Delimited</li>
+
+                                        <li class="li">JSON</li>
+
+                                            <li class="li">Protobuf</li>
+
+                                        <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                            <img class="image" id="task_bdf_fk5_lz__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                        <li class="li">Text</li>
+
+                                    </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e848" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2170">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2173">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_bdf_fk5_lz__d16805e870">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Avro Schema Location</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_bdf_fk5_lz__d16805e877">
+                                            <li class="li">Message/Data Includes Schema - Use the schema in the
+                                                message.</li>
+
+                                            <li class="li">In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+
+                                        </ul>
+<p class="p">Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_bdf_fk5_lz__d16805e892">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Avro schema definition used to process the data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. <p class="p">You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_bdf_fk5_lz__d16805e903">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
+                                        the following format to enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr id="task_bdf_fk5_lz__d16805e917">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Lookup Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_bdf_fk5_lz__d16805e924">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID. </li>
+
+                                            <li class="li">Embedded Schema ID - Look up the Avro schema ID
+                                                embedded in each message.</li>
+
+                                        </ul>
+Overrides any existing schema definitions associated
+                                        with the message. </td>
+
+                                </tr>
+
+                                <tr id="task_bdf_fk5_lz__d16805e938">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p class="p">If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <span class="ph uicontrol">Look Up Schema By</span> property to
+                                            Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_bdf_fk5_lz__d16805e953">
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2170 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2173 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e6542" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2299">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2302">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2299 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2302 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e6599" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2345">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2348">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Format for delimited data:<ul class="ul" id="task_bdf_fk5_lz__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma-separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres CSV</span> - Postgres comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Postgres Text</span> - Postgres text file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Replace New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Replaces new line characters with the configured
+                                            string.<p class="p">Recommended when writing data as a single line
+                                            of text.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">New Line Character Replacement</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p class="p">Leave empty to remove the new line
+                                        characters.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e2345 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e2348 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e6738" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2516">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2519">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2516 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2519 ">Determines how JSON data is written:<ul class="ul" id="task_bdf_fk5_lz__d16805e6767">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e2516 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e2519 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e6811" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2580">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2583">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2580 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2583 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
+                                            see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2580 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2583 ">The fully-qualified name for the message type to use when
+                                        writing data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bdf_fk5_lz__d16805e6984" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d104595e2696">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d104595e2699">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2696 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2699 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2696 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2699 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d104595e2696 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d104595e2699 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d104595e2696 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d104595e2699 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

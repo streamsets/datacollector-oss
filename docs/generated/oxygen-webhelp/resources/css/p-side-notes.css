@@ -1,7 +1,7 @@
 /*
 
 Oxygen WebHelp Plugin
-Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2017 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 /*
@@ -83,7 +83,9 @@ Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
         border-radius: 10px;
 
         link:attr(href);
-        -ah-link: attr(href);        
+        -ah-link: attr(href);
+        -oxy-link: attr(href);
+        
     }
     
 
@@ -286,6 +288,8 @@ Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
     	display:inline;
         content:'[' attr(hr_id) ']';
     }
+    
+    
     /*
      * This marks the end of the range. 
      */
@@ -350,6 +354,7 @@ Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
              
     }        
 }
+
 
 /*
  * 
@@ -426,4 +431,83 @@ oxy-insert   	 oxy-comment,
 .oxy-delete  	.oxy-comment,
 .oxy-insert  	.oxy-comment {
 	border-left-color: orange;
+}
+
+
+
+/* Because Chemistry does not support the float:right, we use footnotes instead. */
+
+@media oxygen-chemistry{
+	oxy-attributes,
+    oxy-comment,
+    oxy-delete,
+    oxy-insert,
+    .oxy-attributes,
+    .oxy-comment,
+    .oxy-delete,
+    .oxy-insert {
+    	margin: 0.5em;
+        position:static;
+        float: footnote;
+        clear:none;
+	}
+	
+    oxy-attributes[hr_id]:before,
+    oxy-comment[hr_id]:before,
+    oxy-delete[hr_id]:before,
+    oxy-insert[hr_id]:before{
+        content:none;
+    }
+    
+    .oxy-attributes[hr_id]:before,
+    .oxy-comment[hr_id]:before,
+    .oxy-delete[hr_id]:before,
+    .oxy-insert[hr_id]:before{
+		content:none;
+    }
+
+    /*
+    oxy-range-start:before,
+    .oxy-range-start:before {
+        content:none;        
+    }
+    oxy-range-end:before,
+    .oxy-range-end:before {
+        content:none;
+    }
+    */
+    
+    oxy-attributes,
+    oxy-attributes:footnote-call,
+    oxy-attributes:footnote-marker,
+    .oxy-attributes,
+    .oxy-attributes:footnote-call,
+    .oxy-attributes:footnote-marker	{
+    	background-color:cyan;    
+	}	
+	oxy-comment,
+    oxy-comment:footnote-call,
+    oxy-comment:footnote-marker,
+    .oxy-comment,
+    .oxy-comment:footnote-call,
+    .oxy-comment:footnote-marker{
+    	background-color:#FFFFAA;    
+	}
+	oxy-delete,
+    oxy-delete:footnote-call,
+    oxy-delete:footnote-marker,
+    .oxy-delete,
+    .oxy-delete:footnote-call,
+    .oxy-delete:footnote-marker{
+    	background-color:#FFAAAA;    
+	}
+	oxy-insert,
+    oxy-insert:footnote-call,
+    oxy-insert:footnote-marker,
+    .oxy-insert,
+    .oxy-insert:footnote-call,
+    .oxy-insert:footnote-marker	{
+    	background-color:#DDDDFF;    
+	}
+    
 }

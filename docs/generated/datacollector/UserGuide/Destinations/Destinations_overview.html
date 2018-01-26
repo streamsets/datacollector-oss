@@ -1,0 +1,233 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Destinations" /><meta name="abstract" content="A destination stage represents the target for a pipeline. You can use one or more destinations in a pipeline." /><meta name="description" content="A destination stage represents the target for a pipeline. You can use one or more destinations in a pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hpr_twm_jq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Destinations</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_hpr_twm_jq">
+ <h1 class="title topictitle1">Destinations</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A destination stage represents the target for a pipeline. You can use one or more
+    destinations in a pipeline.</p>
+
+  <p class="p">You can use different
+      destinations based on the execution mode of the pipeline. </p>
+
+    <p class="p">In standalone or cluster pipelines, you can use the following destinations: </p>
+
+    <div class="p">
+      <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
+        <li class="li"><a class="xref" href="Aerospike.html#concept_gyq_rpr_4cb" title="The Aerospike destination writes data to Aerospike.">Aerospike</a> - Writes data to
+          Aerospike.</li>
+
+        <li class="li"><a class="xref" href="AmazonS3.html#concept_avx_bnq_rt" title="The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon Kinesis Streams, use the Kinesis Producer destination.">Amazon S3</a> - Writes data to Amazon
+          S3. </li>
+
+        <li class="li"><a class="xref" href="DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store</a> - Writes
+          data to the Azure Data Lake Store.</li>
+
+        <li class="li"><a class="xref" href="AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub
+            Producer</a> - Writes data to Azure Event Hub.</li>
+
+        <li class="li"><a class="xref" href="AzureIoTHub.html#concept_pnd_jkq_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">Azure IoT Hub Producer</a> - Writes
+          data to Microsoft Azure IoT Hub.</li>
+
+        <li class="li"><a class="xref" href="Cassandra.html#concept_hfy_mfd_sr" title="The Cassandra destination writes data to a Cassandra cluster.">Cassandra</a> - Writes data to a
+          Cassandra cluster.</li>
+
+        <li class="li"><a class="xref" href="CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a> - Writes data to a
+          CoAP endpoint.</li>
+
+        <li class="li"><a class="xref" href="Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document.">Elasticsearch</a> - Writes data to
+          an Elasticsearch cluster.</li>
+
+        <li class="li"><a class="xref" href="WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Einstein Analytics</a> - Writes
+          data to Salesforce Einstein Analytics.</li>
+
+        <li class="li"><a class="xref" href="Flume.html#concept_pzn_hl4_yr" title="The Flume destination writes data to a Flume source. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to hosts based on client configuration properties.">Flume</a> - Writes data to a Flume
+          source.</li>
+
+        <li class="li"><a class="xref" href="BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination maps fields from records to BigQuery columns in existing tables based on matching names and compatible data types. If needed, the destination converts Data Collector data types to BigQuery data types.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google BigQuery</a> - Streams data
+          into Google BigQuery.</li>
+
+        <li class="li"><a class="xref" href="Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination requires the BoringSSL library. You must download and install the external library so that the Google Bigtable destination can access it.Configure the Google Application Default Credentials that the Google Bigtable destination uses to connect to Google Cloud Bigtable. Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key. When you map record fields to Google Cloud Bigtable columns, you specify whether the Cloud Bigtable storage type is text or binary. The destination converts the data types of the record fields to the Cloud Bigtable storage types. When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">Google Bigtable</a> - Writes data to
+          Google Cloud Bigtable.</li>
+
+        <li class="li"><a class="xref" href="GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a> - Writes data to
+          Google Cloud Storage.</li>
+
+        <li class="li"><a class="xref" href="PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">Google Pub/Sub Publisher</a> -
+          Publishes messages to Google Pub/Sub.</li>
+
+        <li class="li"><a class="xref" href="HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a> - Writes data
+          to the Hadoop Distributed File System (HDFS).</li>
+
+        <li class="li"><a class="xref" href="HBase.html#concept_wsz_5t5_vr" title="The HBase destination writes data to an HBase cluster. The destination can write data to HBase as text, binary data, or JSON strings. You can define the data format for each column written to HBase.">HBase</a> - Writes data to an HBase
+          cluster.</li>
+
+        <li class="li"><a class="xref" href="HiveMetastore.html#concept_gcr_z2t_zv" title="The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS or MapR FS destination as part of the Drift Synchronization Solution for Hive.">Hive Metastore</a> - Creates and
+          updates Hive tables as needed.</li>
+
+        <li class="li"><a class="xref" href="Hive.html#concept_kvs_3hh_ht" title="The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized Row Columnar) file format.">Hive Streaming</a> - Writes data to
+          Hive.</li>
+
+        <li class="li"><a class="xref" href="HTTPClient.html#concept_khl_sg5_lz" title="The HTTP Client destination writes data to an HTTP endpoint. The destination sends requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of standard requests or use an expression to determine the request for each record.">HTTP Client</a> - Writes data to an
+          HTTP endpoint.</li>
+
+        <li class="li"><a class="xref" href="InfluxDB.html#concept_inf_db_sr" title="The InfluxDB destination writes data to an InfluxDB database.">InfluxDB</a> - Writes data to
+          InfluxDB.</li>
+
+        <li class="li"><a class="xref" href="JDBCProducer.html#concept_kvs_3hh_ht" title="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log.">JDBC Producer</a> - Writes data to
+          JDBC.</li>
+
+        <li class="li"><a class="xref" href="JMSProducer.html#concept_sfz_ww5_n1b" title="Before you use the JMS Producer, install the JMS drivers for the implementation that you are using.">JMS Producer</a> - Writes data to
+          JMS.</li>
+
+        <li class="li"><a class="xref" href="KProducer.html#concept_oq2_5jl_zq" title="The Kafka Producer destination writes data to a Kafka cluster.">Kafka Producer</a> - Writes data to a
+          Kafka cluster.</li>
+
+        <li class="li"><a class="xref" href="KinFirehose.html#concept_bjv_dpk_kv" title="The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift table that you specify in the delivery stream.">Kinesis Firehose</a> - Writes data
+          to a Kinesis Firehose delivery stream.</li>
+
+        <li class="li"><a class="xref" href="KinProducer.html#concept_swk_h1j_yr" title="The Kinesis Producer destination writes data to Amazon Kinesis Streams. To write data to an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon S3, use the Amazon S3 destination.">Kinesis Producer</a> - Writes data
+          to Kinesis Streams.</li>
+
+        <li class="li"><a class="xref" href="KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a> - Writes data to a
+          table in a Kinetica cluster.</li>
+
+        <li class="li"><a class="xref" href="Kudu.html#concept_chy_xxg_4v" title="The Kudu destination writes data to a Kudu cluster.">Kudu</a> - Writes data to Kudu.</li>
+
+        <li class="li"><a class="xref" href="LocalFS.html#concept_zvc_bv5_1r">Local FS</a> - Writes data to a local
+          file system. </li>
+
+        <li class="li"><a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB</a> - Writes data as text, binary
+          data, or JSON strings to MapR DB binary tables.</li>
+
+        <li class="li"><a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">MapR DB JSON</a> - Writes data as JSON documents to
+          MapR DB JSON tables.</li>
+
+        <li class="li"><a class="xref" href="MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR FS</a> - Writes data to MapR
+          FS.</li>
+
+        <li class="li"><a class="xref" href="MapRStreamsProd.html#concept_cfj_qbn_2v" title="The MapR Streams Producer destination writes messages to MapR Streams.">MapR Streams Producer</a> -
+          Writes data to MapR Streams.</li>
+
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v">MongoDB</a> - Writes data to
+          MongoDB.</li>
+
+        <li class="li"><a class="xref" href="MQTTPublisher.html#concept_odz_txt_lz" title="The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The destination functions as an MQTT client that publishes messages, writing each record as a message.">MQTT Publisher</a> - Publishes
+          messages to a topic on an MQTT broker.</li>
+
+        <li class="li"><a class="xref" href="NamedPipe.html#concept_pl5_tdg_gcb" title="The Named Pipe destination writes data to a UNIX named pipe.">Named Pipe</a> - Writes data to a
+          named pipe.</li>
+
+        <li class="li"><a class="xref" href="Redis.html#concept_ktc_gw2_gw" title="The Redis destination writes data to Redis.">Redis</a> - Writes data to Redis.</li>
+
+        <li class="li"><a class="xref" href="Salesforce.html#concept_rlb_rt3_rx" title="The Salesforce destination writes data to Salesforce objects.">Salesforce</a> - Writes data to
+          Salesforce.</li>
+
+        <li class="li"><a class="xref" href="SDC_RPCdest.html#concept_lfk_hx2_ct" title="The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC destination passes data to one or more SDC RPC origins. Use the SDC RPC destination as part of an SDC RPC origin pipeline.">SDC RPC</a> - Passes data to an SDC
+          RPC origin in an SDC RPC pipeline.</li>
+
+        <li class="li"><a class="xref" href="Solr.html#concept_z2g_q1r_wr" title="The Solr destination writes data to a Solr node or cluster.">Solr</a> - Writes data to a Solr node or cluster.</li>
+
+        <li class="li"><a class="xref" href="ToError.html#concept_ryn_v3z_lr" title="The To Error destination passes records to the pipeline for error handling. Use the To Error destination to send a stream of records to pipeline error handling.">To Error</a> - Passes records to the
+          pipeline for error handling.</li>
+
+        <li class="li"><a class="xref" href="Trash.html#concept_htf_ydj_wq" title="The Trash destination discards records. Use the Trash destination as a visual representation of records discarded from the pipeline. Or, you might use the Trash destination during development as a temporary placeholder.">Trash</a> - Removes records from the
+          pipeline.</li>
+
+        <li class="li"><a class="xref" href="WebSocketClient.html#concept_l4d_mjn_lz" title="The WebSocket Client destination writes data to a WebSocket endpoint. Use the destination to send data to a WebSocket resource URL.">WebSocket Client</a> - Writes
+          data to a WebSocket endpoint.</li>
+
+      </ul>
+
+    </div>
+
+    <div class="p">In standalone pipelines, you can also use the following destination:<ul class="ul" id="concept_hpr_twm_jq__ul_ms3_np5_sbb">
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v">Rabbit MQ Producer</a> - Writes data to
+          RabbitMQ.</li>
+
+      </ul>
+</div>
+
+    <div class="p">In edge pipelines, you can use the following destinations: <ul class="ul" id="concept_hpr_twm_jq__ul_nxf_rx2_rbb">
+        <li class="li"><a class="xref" href="CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a> - Writes data to a
+          CoAP endpoint.</li>
+
+        <li class="li"><a class="xref" href="HTTPClient.html#concept_khl_sg5_lz" title="The HTTP Client destination writes data to an HTTP endpoint. The destination sends requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of standard requests or use an expression to determine the request for each record.">HTTP Client</a> - Writes data to an
+          HTTP endpoint.</li>
+
+        <li class="li"><a class="xref" href="MQTTPublisher.html#concept_odz_txt_lz" title="The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The destination functions as an MQTT client that publishes messages, writing each record as a message.">MQTT Publisher</a> - Publishes
+          messages to a topic on an MQTT broker.</li>
+
+        <li class="li"><a class="xref" href="WebSocketClient.html#concept_l4d_mjn_lz" title="The WebSocket Client destination writes data to a WebSocket endpoint. Use the destination to send data to a WebSocket resource URL.">WebSocket Client</a> - Writes
+          data to a WebSocket endpoint.</li>
+
+      </ul>
+</div>
+
+    <div class="p">To help create or test pipelines, you can use the following development destination:<ul class="ul" id="concept_hpr_twm_jq__ul_wvk_p3f_lx">
+        <li class="li">To Event</li>
+
+      </ul>
+</div>
+
+    <p class="p">For more information, see <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Development Stages</a>.</p>
+
+ </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

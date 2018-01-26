@@ -20,14 +20,18 @@ Johann Burkard
  * located in the same directory as the present file you are reading. 
  */
 
-jQuery.fn.highlight = function(pat) {
+/*
+ * List of modifications added by the Oxygen Webhelp plugin:
+ * 1. Support to specify a custom class name for element that wraps highlighted terms
+ */
+jQuery.fn.highlight = function(pat, className) {
  function innerHighlight(node, pat) {
   var skip = 0;
   if (node.nodeType === 3) {
    var pos = node.data.toUpperCase().indexOf(pat.toUpperCase()); 
    if (pos >= 0) {
     var spannode = document.createElement('span');
-    spannode.className = 'highlight';
+    spannode.className = className || 'highlight';
     var middlebit = node.splitText(pos);
     var endbit = middlebit.splitText(pat.length);
     var middleclone = middlebit.cloneNode(true);
@@ -48,7 +52,9 @@ jQuery.fn.highlight = function(pat) {
  });
 };
 
-jQuery.fn.removeHighlight = function() {
+jQuery.fn.removeHighlight = function(className) {
+ var className = className || 'highlight';
+
  function newNormalize(node) {
     for (var i = 0, children = node.childNodes, nodeCount = children.length; i < nodeCount; i++) {
         var child = children[i];
@@ -69,7 +75,7 @@ jQuery.fn.removeHighlight = function() {
     }
  }
  
- return this.find("span.highlight").each(function() {
+ return this.find("span."+className).each(function() {
     var thisParent = this.parentNode;
     thisParent.replaceChild(this.firstChild, this);
     newNormalize(thisParent);

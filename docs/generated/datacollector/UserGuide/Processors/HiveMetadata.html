@@ -1,0 +1,1047 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Hive Metadata" /><meta name="abstract" content="The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS or MapR FS destinations as part of the Drift Synchronization Solution for Hive." /><meta name="description" content="The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS or MapR FS destinations as part of the Drift Synchronization Solution for Hive." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_ry2_qkm_hw" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rz5_nft_zv" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Hive Metadata</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_rz5_nft_zv">
+ <h1 class="title topictitle1">Hive Metadata</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS
+        or MapR FS destinations as part of the <span class="ph">Drift Synchronization Solution for Hive</span>. </p>
+
+        <p class="p">Use the Hive Metadata
+            processor for records to be written to HDFS or MapR FS when you want the Hive Metastore
+            destination to create and update tables as needed. The processor also generates record
+            header attributes that the Hadoop FS destination and the MapR FS destination can use to
+            process the data.</p>
+
+  <p class="p">When you configure the Hive Metadata processor, you define the connection information for Hive
+            and the expressions that define the database, table, partitions, and decimal field
+            expressions that the records require. You also specify the data format to use: Avro or
+            Parquet. </p>
+
+        <p class="p">You define the location of the Hive and Hadoop configuration files and optionally specify
+            additional required properties. You can also configure advanced options, such as the
+            maximum cache size, time basis, decimal precision and scale expressions, and custom
+            record header attributes for the metadata record.</p>
+
+        <p class="p">For more information about the Drift Synchronization Solution for Hive and case studies
+            for processing Avro and Parquet data, see <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a>. For a
+            tutorial, check out our <a class="xref" href="https://github.com/streamsets/tutorials/blob/master/tutorial-hivedrift/readme.md" target="_blank">tutorial on Github</a>.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_ry2_qkm_hw" title="Hive Data Types">Hive Data Types</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_avd_qym_fw">
+ <h2 class="title topictitle2">Output Streams</h2>
+
+ <div class="body conbody">
+        <p class="p">The
+            Hive Metadata processor includes a data and a metadata output stream. The following
+            image shows the Hive Metadata processor output streams:</p>
+
+        <p class="p"><img class="image" id="concept_avd_qym_fw__image_gk5_zpq_fw" src="../Graphics/HiveMeta-OutputStreams.png" height="192" width="329" /></p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Data output stream</dt>
+
+                <dd class="dd">Passes records downstream to the Hadoop FS destination or the MapR FS
+                    destination. You can add additional stages between the Hive Metadata processor
+                    and the destinations when needed, but only the Hadoop FS and MapR FS
+                    destinations can use the generated record header attributes to write
+                    records.</dd>
+
+            
+            
+                <dt class="dt dlterm">Metadata output stream</dt>
+
+                <dd class="dd">Passes the metadata records downstream to the Hive Metastore destination. The
+                    metadata output stream does not pass record data of any kind. <p class="p">You can add
+                        additional stages between the Hive Metadata processor and the Hive Metastore
+                        destination when needed, but only the Hive Metastore destination can use the
+                        metadata record to update the Hive Metastore. </p>
+</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_g3p_sss_dw">
+ <h2 class="title topictitle2">Metadata Records and Record Header Attributes</h2>
+
+ <div class="body conbody">
+        <p class="p">The Hive Metadata processor produces the
+            following specialized output: </p>
+
+  <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">metadata record</dt>
+
+                    <dd class="dd">When encountering compatible metadata changes, the Hive Metadata processor
+                        generates a metadata record. The metadata record passes the following
+                        information to the Hive Metastore destination:<ul class="ul" id="concept_g3p_sss_dw__ul_njs_x5j_kw">
+                            <li class="li">The expected table structure for compatible changes, based on the
+                                    record.<p class="p">Compatible changes include new tables and partitions, and
+                  the addition or removal of fields in the record. Changes in data type are not
+                  compatible.</p>
+</li>
+
+                            <li class="li">Any user-defined record header attributes configured in the
+                                stage.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">When the Hive Metastore destination receives the metadata record, the
+                        destination performs a final check against Hive metadata and creates or
+                        alters tables as needed.</dd>
+
+                
+                
+                    <dt class="dt dlterm">data record header attributes</dt>
+
+                    <dd class="dd">The Hive Metadata processor adds the following attributes to the record
+                        header for data records:<ul class="ul" id="concept_g3p_sss_dw__ul_oj1_1ws_dw">
+                            <li class="li">targetDirectory - The location where each record should be
+                                    written.<p class="p">The processor generates the directory based on the
+                                    database, table, and partition information for each record and
+                                    writes it to the targetDirectory header attribute. </p>
+<p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_g3p_sss_dw__d82843e2575">adds .avro to the target directory that it
+                        generates for each record. This allows the data-processing destination to
+                        write the Avro files to a directory that Hive ignores as a temporary
+                        directory.</span></p>
+<p class="p">As a result, the destination writes files to the following
+                  directories: <samp class="ph codeph" id="concept_g3p_sss_dw__d82843e2580">&lt;generated
+                  directory&gt;/.avro</samp>.</p>
+<div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_g3p_sss_dw__d82843e2587">You can configure
+                              the MapReduce executor to write the Parquet files to the parent
+                              generated directory and to delete the Avro files after processing
+                              them. You can also delete the temporary directories after the files
+                              are processed, as needed.</span></div>
+<p class="p">To use this header attribute, configure the Hadoop FS or
+                                    MapR FS destination to write records using the directory in the
+                                    record header.</p>
+</li>
+
+                            <li class="li">avroSchema - The Avro schema for the record. <p class="p">The processor writes
+                                    the Avro schema in the avroSchema header attribute for each
+                                    record. When the processor notes a compatible change in the Avro
+                                    schema, it generates a new Avro schema. This attribute is used
+                                    for both Avro and Parquet data. </p>
+<p class="p">To use this header
+                                    attribute, configure the Hadoop FS or MapR FS destination to
+                                    write records using the Avro schema in the record
+                                header.</p>
+</li>
+
+                            <li class="li"> roll - An indicator to roll the file associated with the record.
+                                    <p class="p">The processor generates a roll indicator only when the Avro
+                                    schema changes in a compatible way. Records with incompatible
+                                    changes are sent to the stage for error handling.</p>
+<p class="p">To use
+                                    this header attribute, configure the Hadoop FS or MapR FS
+                                    destination to roll records when encountering the roll attribute
+                                    in the record header. And then, use the default "roll" as the
+                                    name of the header attribute. </p>
+</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">For more information about using destinations to process these attributes,
+                        see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">Record Header Attributes for Record-Based Writes</a>.
+                        For general information about record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>. </dd>
+
+                
+            </dl>
+
+        </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_jv2_jjn_l1b">
+ <h3 class="title topictitle3">Custom Record Header Attributes</h3>
+
+ <div class="body conbody">
+  <p class="p">You can configure the Hive Metadata processor to
+            create custom record header attributes for the metadata record generated by the
+            processor. You can use a constant to define the custom attributes or you can use an
+            expression to define the attributes based on information in the record or pipeline.</p>
+
+        <p class="p">You might use custom record-header attributes when you route the metadata record to a
+            destination other than the Hive Metastore destination. The Hive Metastore destination
+            uses field information in the metadata record, but most other destinations, such as the
+            Amazon S3 or Kafka Producer destinations, can write the metadata records to different
+            locations based on the value of an expression. And you can configure the expression to
+            use the custom header attribute that you define.</p>
+
+        <p class="p">For example, say each incoming record has a SalesRegion value that you want to use to
+            write metadata records to different Amazon S3 partitions. You can configure the Hive
+            Metadata processor to create an SRegion header attribute and use the
+                <samp class="ph codeph">${record:value('/SalesRegion')}</samp> expression to define the attribute.
+            When you configure the Amazon S3 destination, you can use the following expression to
+            define the partition prefix: <samp class="ph codeph">${record.attribute('SRegion')}</samp>.</p>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_zbk_jk3_fw">
+ <h2 class="title topictitle2"> Database, Table, and Partition Expressions</h2>
+
+ <div class="body conbody">
+  <div class="p">You can configure the following expressions
+            in the Hive Metadata processor:<dl class="dl">
+                
+                    <dt class="dt dlterm">Database and table expressions</dt>
+
+                    <dd class="dd">The database expression represents the database where Hadoop FS or MapR FS
+                        destination should write the record. If you omit the database expression,
+                        the processor uses the default Hive database. </dd>
+
+                    <dd class="dd">The table expression represents the table to use. If the table doesn't
+                        exist, the processor generates a metadata record to create the table.</dd>
+
+                    <dd class="dd">The database and table expressions are also incorporated into the
+                        targetDirectory to allow record-based writes to the database. </dd>
+
+                    <dd class="dd">Tips for configuring the database and table expressions:<ul class="ul" id="concept_zbk_jk3_fw__ul_osg_jn3_fw">
+                            <li class="li">If all records are to be written to a single database or table, you
+                                can enter the database or table name instead of an expression. </li>
+
+                            <li class="li">If the database or table name can be extrapolated from record data
+                                or header attributes, you can enter an expression that evaluates to
+                                the database or table name. </li>
+
+                            <li class="li">When necessary, you can use an Expression Evaluator earlier in the
+                                pipeline to perform calculations and write the results to a new
+                                field or a header attribute, to be used by the Hive Metadata
+                                processor. </li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+<dl class="dl">
+                
+                    <dt class="dt dlterm">Partition configuration information</dt>
+
+                    <dd class="dd">You can optionally configure partition properties to write to partitions.
+                        When you configure partition information, you state the Hive partition
+                        column name, an expression that evaluates to the partition name, and the
+                        data format of the partition data. <span class="ph">You can use the Int, Bigint, and String data formats
+                        for partition data.</span>
+                    </dd>
+
+                    <dd class="dd">Like with database and table expressions, you can configure the partition
+                        expression as needed:<ul class="ul" id="concept_zbk_jk3_fw__ul_jzg_1r3_fw">
+                            <li class="li">If all records are to be written to a single partition, you can
+                                enter the partition name for the expression.</li>
+
+                            <li class="li">If the partition depends on information in the record, you can enter
+                                an expression that evaluates to the partition. </li>
+
+                            <li class="li">When necessary, you might use an Expression Evaluator earlier in the
+                                pipeline to generate the partition name and write it to the record
+                                as a new field or the record header as a header attribute. </li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">You can use datetime variables such as ${YYYY()} or ${DD()} to create
+                        datetime-based partitions. When creating datetime-based partitions, consider
+                        the time basis that you want to use. By default, the processor uses the time
+                        of processing as the time basis, but you can use the time associated with a
+                        record as well. </dd>
+
+                    <dd class="dd">For details about datetime variables, see <a class="xref" href="../Expression_Language/DateTimeVariables.html#concept_gh4_qd2_sv" title="The expression language provides datetime variables for use in expressions.">Datetime Variables</a>.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_vt5_z5l_nx">
+ <h3 class="title topictitle3">Hive Names and Supported Characters</h3>
+
+ <div class="body conbody">
+        <p class="p"><span class="ph">Hive table names, column names, and partition names are created
+                        with lowercase letters.</span>
+        </p>
+
+        <div class="p">The following table lists the valid characters that can be used in names:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vt5_z5l_nx__table_tkb_rxl_nx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d459622e363">Name</th>
+
+                            <th class="entry" valign="top" width="70%" id="d459622e366">Supported Characters</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d459622e363 ">Table names</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d459622e366 ">Alphanumeric characters and underscore ( _ ).</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d459622e363 ">Column names</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d459622e366 ">Alphanumeric characters and underscore, but must begin with a
+                                letter or underscore.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d459622e363 ">Partition names</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d459622e366 ">Alphanumeric characters and underscore, but must begin with a
+                                letter.</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When a table, partition or column name associated with a record includes
+                unsupported characters or an invalid format, the processor sends the record to
+                error.</div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_mrh_hrp_fx">
+ <h2 class="title topictitle2">Decimal Field Expressions</h2>
+
+ <div class="body conbody">
+  <p class="p">Decimal field expressions define the precision and scale to use for decimal fields. When you
+            configure the Hive Metadata processor, you specify an expression for the precision and
+            for the scale. </p>
+
+        <p class="p">You can enter expressions that evaluate to the same precision and scale for all decimal
+            fields in the record. For example, if your use case allows it, you could use a precision
+            of 10 and scale of 2 for all decimal fields.</p>
+
+        <p class="p">Or you can create a more complex expression that evaluates to different values for
+            different decimal fields. </p>
+
+        <div class="p">The default expressions for these properties use JDBC header attributes. You can use the
+            following default expressions when processing data from the JDBC Multitable Consumer or
+            the JDBC Query
+            Consumer:<pre class="pre codeblock">${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}
+${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}</pre>
+</div>
+
+        <div class="p">The <samp class="ph codeph">field:field</samp> function returns the name of the field. So by default,
+            the expressions resolve
+            to:<pre class="pre codeblock">${record:attribute(jdbc.&lt;fieldname&gt;.precision)}
+${record:attribute(jdbc.&lt;fieldname&gt;.scale)}</pre>
+</div>
+
+        <div class="p"><div class="note note"><span class="notetitle">Note:</span> The JDBC Query Consumer creates JDBC header attributes by default, writing the
+                precision and scale of each decimal field to a record header attribute. The JDBC
+                Multitable Consumer always creates JDBC header attributes.</div>
+In these
+            expressions, 'jdbc.' represents the default prefix for the JDBC header attributes. You
+            can change the prefix in the JDBC Query Consumer. If you change the prefix, be sure to
+            update it in the decimal field expressions. The JDBC Multitable Consumer always uses
+            'jdbc.' as the prefix. </div>
+
+        <p class="p">For information about enabling the JDBC Query Consumer to create JDBC header attributes,
+            see <a class="xref" href="../Origins/JDBCConsumer.html#concept_tvf_tgp_fx">Header Attributes with the Drift Synchronization Solution</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_pg1_1fl_3w">
+ <h2 class="title topictitle2">Time Basis</h2>
+
+ <div class="body conbody">
+  <div class="p">The time basis
+            helps determine when datetime-based partitions are created. The partitions are used in
+            the metadata record and as part of the targetDirectory path. You can use the following
+            times as the time basis:<dl class="dl">
+                
+                    <dt class="dt dlterm">processing time</dt>
+
+                    <dd class="dd">When you use processing time as the time basis, the processor uses the
+                        processing time and the partition value expression to determine the
+                        partition value to use in the metadata record and the partition portion of
+                        the targetDirectory header attribute. </dd>
+
+                    <dd class="dd">For example, say a partition value expression creates a new partition every
+                        day and the time basis is the time of processing. Then, the processor
+                        generates a daily metadata record that the Hive Metastore destination uses
+                        to create the daily partition. And the processor adds the daily partition
+                        value to the targetDirectory path. </dd>
+
+                    <dd class="dd">To use the processing time as the time basis, use the following expression:
+                            <samp class="ph codeph">${time:now()}</samp>. This is the default time basis. </dd>
+
+                
+                
+                    <dt class="dt dlterm">record-based time</dt>
+
+                    <dd class="dd">When you use the time associated with a record as the time basis, you
+                        specify a Date field in the record as part of the partition value
+                        expression. The processor uses the datetimes associated with the records and
+                        the partition value expression to determine the partition value to use in
+                        the metadata record and the partition portion of the targetDirectory header
+                        attribute. </dd>
+
+                    <dd class="dd">For example, say a partition value expression creates directories every hour
+                        and the time basis is based on the record. Then, for every hour associated
+                        with a record, the processor generates a metadata record so the Hive
+                        Metastore destination can create hourly partitions as needed. And the
+                        processor adds the hourly partition value to the targetDirectory path.  </dd>
+
+                    <dd class="dd">To use a time associated with the record, use an expression that calls a
+                        field and resolves to a datetime value, such as
+                            <samp class="ph codeph">${record:value("/Timestamp")}</samp>. </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_utk_3bt_dw">
+ <h2 class="title topictitle2">Cache</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Hive Metadata processor queries Hive for information and caches the results. When
+        possible, it uses the cache for record comparison to avoid unnecessary Hive queries. </p>
+
+  <div class="p">The processor caches the
+            following Hive metadata:<ul class="ul" id="concept_utk_3bt_dw__ul_y1l_2dt_dw">
+                <li class="li">Database and table to be written to</li>
+
+                <li class="li">Hive table properties</li>
+
+                <li class="li">Column names and data types in the table</li>
+
+                <li class="li">Avro schema</li>
+
+                <li class="li">Partition values</li>
+
+            </ul>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ovn_kdt_dw">
+ <h3 class="title topictitle3">Cache Size and Evictions</h3>
+
+ <p class="shortdesc">You can configure the maximum size of the cache. When the cache reaches the specified
+        limit, it uses the LRU eviction policy, which removes the least recently used data to allow
+        for new entries to be written to the cache. </p>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_fdq_ngd_3w">
+ <h2 class="title topictitle2">Kerberos Authentication</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use Kerberos authentication to connect
+            to HDFS or MapR FS. When you use Kerberos authentication, <span class="ph">Data Collector</span>
+            uses the Kerberos principal and keytab to connect to HiveServer2. </p>
+
+        <p class="p">The Kerberos principal and keytab are defined in the <span class="ph">Data Collector</span>
+            configuration file,<samp class="ph codeph"> $SDC_CONF/sdc.properties</samp>. To use Kerberos
+            authentication, configure all Kerberos properties in the<span class="ph">Data Collector</span>
+            configuration file, and include the Kerberos principal in the HiveServer2 JDBC URL.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_d2h_y1s_dw">
+    <h2 class="title topictitle2">Hive Properties and Configuration Files</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">You must configure Hive Metadata to use Hive and Hadoop configuration files and
+        individual properties.</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Configuration Files</dt>
+
+                <dd class="dd">
+                    <div class="p">The following configuration files are required for the Hive Metadata
+                            processor:<ul class="ul" id="concept_d2h_y1s_dw__ul_gwv_kbs_dw">
+                  <li class="li">core-site.xml</li>
+
+                  <li class="li">hdfs-site.xml</li>
+
+                  <li class="li">hive-site.xml</li>
+
+            </ul>
+</div>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Individual properties</dt>
+
+                <dd class="dd">You can configure individual Hive properties in the processor. To add a Hive
+                    property, specify the exact property name and the value. The processor does not
+                    validate the property names or values.<div class="note note"><span class="notetitle">Note:</span> Individual properties override
+                        properties defined in the configuration files. </div>
+</dd>
+
+            
+        </dl>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_hpg_pft_zv">
+    <h2 class="title topictitle2">Configuring a Hive Metadata Processor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Hive Metadata
+            processor to evaluate Avro data and generate Hive metadata information for the Hive
+            Metastore, and Hadoop FS or MapR FS destinations.</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__d82777e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d459622e698">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d459622e701">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e698 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e701 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e698 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e701 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e698 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_hpg_pft_zv__d82777e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e701 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e698 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_hpg_pft_zv__d82777e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e701 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e698 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_hpg_pft_zv__d82777e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e701 ">Error record handling for the stage: <ul class="ul" id="task_hpg_pft_zv__d82777e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Hive</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__table_at4_tgk_dw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d459622e812">Hive Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d459622e815">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d459622e812 ">JDBC URL</td>
+
+       <td class="entry" valign="top" width="70%" headers="d459622e815 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+        name with a specific database name when appropriate.<p class="p">For more information about specifying
+         the URL, see our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8" target="_blank">Ask StreamSets post</a>.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d459622e812 ">JDBC Driver Name</td>
+
+       <td class="entry" valign="top" width="70%" headers="d459622e815 ">The fully-qualified JDBC driver name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d459622e812 ">Additional JDBC Configuration Properties</td>
+
+       <td class="entry" valign="top" width="70%" headers="d459622e815 ">Additional JDBC configuration properties to pass to the JDBC driver.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk
+          edit mode</a>, click Add to add additional properties and define the property name and
+         value. Use the property names and values as expected by the JDBC driver.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d459622e812 ">Hadoop Configuration Directory</td>
+
+       <td class="entry" valign="top" width="70%" headers="d459622e815 ">
+        <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
+         Cloudera Manager installation, enter hive-conf. </p>
+
+        <div class="p">The stage uses the following configuration files: <ul class="ul" id="task_hpg_pft_zv__ul_tqf_lms_dw">
+                  <li class="li">core-site.xml</li>
+
+                  <li class="li">hdfs-site.xml</li>
+
+                  <li class="li">hive-site.xml</li>
+
+            </ul>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are overridden by individual properties defined
+         in this stage. </div>
+
+       </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e812 ">
+                                        <p class="p">Additional Hadoop Configuration </p>
+
+                                    </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e815 ">
+                                        <p class="p">Additional properties to use. </p>
+
+                                        <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click Add to add
+                                            additional properties and define the property name and
+                                            value. Use the property names and values as expected by
+                                            Hive and HDFS or MapR FS.</p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Table</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__table_gy3_4yq_mcb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d459622e939">Table Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d459622e942">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Database Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                            <img class="image" id="task_hpg_pft_zv__image_hy3_4yq_mcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Optional name of the database to use. You can use an
+                                        expression that evaluates to a database name. <p class="p">When not
+                                            defined, the processor uses the Hive default
+                                            database.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Table Name <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                            <img class="image" id="task_hpg_pft_zv__image_iy3_4yq_mcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Name of the table to use. You can use an expression that
+                                        evaluates to a table name. <p class="p">Note that Hive table names are
+                                            all lowercase.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Partition Column Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Name of the partition column in the Hive table. <p class="p">Note
+                                            that Hive partition column names are all
+                                        lowercase.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Partition Value Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">The data type of partition values. <span class="ph">You can use the Int, Bigint, and String data formats
+                        for partition data.</span><p class="p">Partition values should not include the following
+                                            characters: comma, slash (/), backslash (\), single and
+                                            double quotation marks, equals (=), and brackets ( []
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Partition Value Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                            <img class="image" id="task_hpg_pft_zv__image_jy3_4yq_mcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that evaluates to the partition value to
+                                        use.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">External Table</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Indicates if the table is an external table. Select to
+                                        write to tables outside the Hive default location. <p class="p">When
+                                            not selected, the processor uses the default location
+                                            defined by the hive.metastore.warehouse.dir property in
+                                            the hive-site.xml configuration file, typically
+                                                <samp class="ph codeph">/user/hive/warehouse/</samp>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Column Comment</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that evaluates to column comments. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Table Path Template</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that defines the path to use for external
+                                        tables. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Partition Path Template</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that defines the partition path to use for
+                                        external tables when partitions are configured. When you
+                                        omit partition configuration details, you can skip this
+                                        property as well.<p class="p">When configured, the value of the
+                                            partition path template is appended to the value of the
+                                            table path template to determine where each record is
+                                            written. </p>
+<div class="p">Use the following format:
+                                            <pre class="pre codeblock">&lt;partition column name&gt;=&lt;partition value expression&gt;</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Decimal Precision Expression <a class="xref" href="HiveMetadata.html#concept_mrh_hrp_fx">
+                                            <img class="image" id="task_hpg_pft_zv__image_ky3_4yq_mcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that defines the precision of decimal fields.
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different
+                                        precisions for different fields.<div class="note note"><span class="notetitle">Note:</span> At this time, the maximum precision and scale for
+                        decimal data in Hive is 38.</div>
+<p class="p">The default expression determines the precision
+                                            based on information in the JDBC header attribute.
+                                            </p>
+<p class="p">Use the default only when processing data from a
+                                            JDBC Query Consumer or a JDBC Multitable Consumer with
+                                            JDBC header attributes enabled. Replace "jdbc" with the
+                                            configured JDBC header prefix when necessary.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e939 ">Decimal Scale Expression <a class="xref" href="HiveMetadata.html#concept_mrh_hrp_fx">
+                                            <img class="image" id="task_hpg_pft_zv__image_ly3_4yq_mcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e942 ">Expression that defines the scale for decimal fields.
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different scales
+                                        for different fields. <div class="note note"><span class="notetitle">Note:</span> At this time, the maximum precision and scale for
+                        decimal data in Hive is 38.</div>
+<p class="p">The default expression determines the scale based
+                                            on information in the JDBC header attribute. </p>
+<p class="p">Use
+                                            the default only when processing data from a JDBC Query
+                                            Consumer or a JDBC Multitable Consumer with JDBC header
+                                            attributes enabled. Replace "jdbc" with the configured
+                                            JDBC header prefix when necessary. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__table_jnz_pns_dw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d459622e1129">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d459622e1132">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e1129 ">Max Cache Size (entries) <a class="xref" href="HiveMetadata.html#concept_utk_3bt_dw" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries.">
+                                            <img class="image" id="task_hpg_pft_zv__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e1132 ">Maximum number of entries in the cache. <p class="p">When the cache
+         reaches the maximum size, the oldest cached entries are evicted to allow for new
+         data.</p>
+<p class="p">Default is -1, an unlimited cache size.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e1129 ">Time Basis  <a class="xref" href="HiveMetadata.html#concept_pg1_1fl_3w">
+                                            <img class="image" id="task_hpg_pft_zv__image_mn2_pnl_3w" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e1132 ">Time basis used to evaluate datetime-based partition
+                                        value expressions.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e1129 ">Data Time Zone</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e1132 ">Time zone to use with Time Basis to evaluate
+                                        datetime-based partition value expressions.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e1129 ">Header Attribute Expressions <a class="xref" href="HiveMetadata.html#concept_jv2_jjn_l1b">
+                                            <img class="image" id="task_hpg_pft_zv__image_zxv_2nn_l1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e1132 ">Use to define custom record header attributes for the
+                                        metadata record. <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to configure custom
+                                            record header attributes.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the data format:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__table_zvy_qw2_wz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d459622e1230">Data Format</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d459622e1233">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d459622e1230 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d459622e1233 ">The data format of data. Select one of the following:<ul class="ul" id="task_hpg_pft_zv__ul_l13_5w2_wz">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Parquet</li>
+
+                                        </ul>
+The selected data format determines how the Hive
+                                        Metastore destination creates Hive tables and how the
+                                        processor populates the targetDirectory record header
+                                        attribute. For more information, see <a class="xref" href="HiveMetadata.html#concept_g3p_sss_dw">Metadata Records and Record Header Attributes</a>.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw" title="JDBC Record Header Attributes">JDBC Record Header Attributes</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

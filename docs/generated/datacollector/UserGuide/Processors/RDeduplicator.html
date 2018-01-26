@@ -1,0 +1,243 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Record Deduplicator" /><meta name="abstract" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="description" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_z3m_v52_zq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Record Deduplicator</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_z3m_v52_zq">
+ <h1 class="title topictitle1">Record Deduplicator</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Record Deduplicator evaluates records for duplicate data and routes data to two
+        streams -  one for unique records and one for duplicate records. Use the Record Deduplicator
+        to discard duplicate data or route duplicate data through different processing logic. </p>
+
+  <p class="p">The Record Deduplicator can compare entire
+            records or a subset of fields. Use a subset of fields to focus the comparison on fields
+            of concern. For example, to discard purchases that are accidentally submitted more than
+            once, you might compare information about the purchaser, selected items, and shipping
+            address, but ignore the timestamp of the event. </p>
+
+        <p class="p">To enhance pipeline performance, the Record Deduplicator hashes comparison fields and
+            uses the hashed values to evaluate for duplicates. On rare occasions, hash functions can
+            generate collisions that can cause records to be incorrectly treated as duplicates.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_swx_lbf_zq">
+ <h2 class="title topictitle2">Comparison Window</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Record Deduplicator caches record information for comparison until it reaches a
+  specified number of records. Then, it discards the information in the cache and starts over. </p>
+
+  <p class="p">You can configure a time limit to trigger a cache
+      refresh at regular time intervals. When you configure a time limit, the time limit takes
+      precedence over the record limit.</p>
+
+  <p class="p">When you stop the pipeline, the Record Deduplicator discards all information in memory.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_ikr_c2f_zq">
+    <h2 class="title topictitle2">Configuring a Record Deduplicator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Use a Record Deduplicator to
+            route or remove records with duplicate data. </div>
+
+        <ol class="ol steps" id="task_ikr_c2f_zq__steps_ojk_22f_zq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ikr_c2f_zq__d82777e5366" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d476502e111">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d476502e114">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d476502e111 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d476502e114 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d476502e111 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d476502e114 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d476502e111 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_ikr_c2f_zq__d82777e5412" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d476502e114 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d476502e111 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_ikr_c2f_zq__d82777e5428" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d476502e114 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Deduplication</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ikr_c2f_zq__table_mrg_m2f_zq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d476502e201">Record Deduplicator Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d476502e204">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d476502e201 ">Max Records to Compare</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d476502e204 ">The maximum number of records to compare. Upon reaching
+                                        this number, the Record Deduplicator clears its
+                                        cache.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d476502e201 ">Time to Compare</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d476502e204 ">Number of seconds to compare records. This property takes
+                                        precedence over the Max Records to Compare. <p class="p">Use 0 to opt
+                                            out of this property.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d476502e201 ">Compare</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d476502e204 ">Specifies the fields to compare. Use one of the following
+                                            options:<ul class="ul" id="task_ikr_c2f_zq__ul_ahq_dtp_1r">
+                                            <li class="li">All Fields - Compares all fields in the record.</li>
+
+                                            <li class="li">Specified Fields - Compares the specified fields.
+                                            </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d476502e201 ">Fields to Compare</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d476502e204 ">Subset of fields to compare for duplicate data. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

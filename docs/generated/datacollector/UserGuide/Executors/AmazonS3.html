@@ -1,0 +1,509 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Amazon S3 executor creates new Amazon S3 objects for the specified content or adds tags to an existing object each time it receives an event. Use the Amazon S3 executor as part of an event stream. ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Amazon S3 Executor" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_mvh_bnm_f1b" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Amazon S3 Executor</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Executors/Executors-title.html" title="Executors">Executors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_mvh_bnm_f1b">
+ <h1 class="title topictitle1">Amazon S3 Executor</h1>
+
+ <div class="body conbody">
+  <p class="p">The Amazon S3 executor creates new Amazon S3 objects
+            for the specified content or adds tags to an existing object each time it receives an
+            event.</p>
+
+        <p class="p">Use the Amazon S3 executor as part of an event stream. <span class="ph">You can use the executor in any logical way, such as writing
+                        information from an event record to an S3 object or tagging objects after
+                        they are written by the Amazon S3 destination.</span></p>
+
+        <p class="p">When you configure the Amazon S3 executor, you specify the connection information, such
+            as access keys, region, and bucket. You configure the expression that represents the
+            object name and location. When creating new objects, you specify the content to place in
+            the objects. When adding tags to an existing object, you specify the tags that you want
+            to use.</p>
+
+        <p class="p">You can optionally use an HTTP proxy to connect to Amazon S3.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_bmp_zlg_vw">
+ <h2 class="title topictitle2">AWS Credentials</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When <span class="ph">Data Collector</span> uses the Amazon S3 executor, it must pass credentials to Amazon Web Services. </p>
+
+  <p class="p">Use one of the
+            following methods to pass AWS credentials:</p>
+
+        <dl class="dl">
+                  
+                        <dt class="dt dlterm">IAM roles</dt>
+
+                        <dd class="dd">When <span class="ph">Data Collector</span> runs
+                              on an Amazon EC2 instance, you can use the AWS Management Console to
+                              configure an IAM role for the EC2 instance. <span class="ph">Data Collector</span> uses
+                              the IAM instance profile credentials to automatically connect to AWS. </dd>
+
+                        <dd class="dd">When you use IAM roles, you do not need to specify the Access Key ID and
+                              Secret Access Key properties in the destination. </dd>
+
+                        <dd class="dd">For more information about assigning an IAM role to an EC2 instance, see
+                              the Amazon EC2 documentation.</dd>
+
+                  
+                  
+                        <dt class="dt dlterm">AWS access key pairs</dt>
+
+                        <dd class="dd">
+                              <p class="p">When <span class="ph">Data Collector</span>
+                                    does not run on an Amazon EC2 instance or when the EC2 instance
+                                    doesn’t have an IAM role, you must specify the <span class="ph uicontrol">Access
+                                          Key ID</span> and <span class="ph uicontrol">Secret Access
+                                          Key</span> properties in the destination.</p>
+
+                        </dd>
+
+                  
+            </dl>
+
+     <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_mtm_dqx_m1b">
+ <h2 class="title topictitle2">Create New Objects</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use
+            the Amazon S3 executor to create new objects and write the specified content to the
+            object when it receives an event record. </p>
+
+        <p class="p">When you create an object, you specify where to create the object and the content to
+            write to the object. You can use an expression to represent both the location for the
+            object and the content to use. </p>
+
+        <p class="p">For example, say you want the executor to create a new Amazon S3 object for each object
+            that the Amazon S3 destination writes, and to use the new object to store the record
+            count information for each written object. Since the object-written event record
+            includes the record count, you can enable the destination to generate records and route
+            the event to the Amazon S3 executor. </p>
+
+        <div class="p">The object-written event record includes the bucket and object key of the written object.
+            So, to create a new record-count object in the same bucket as the written object, you
+            can use the following
+            expression:<pre class="pre codeblock">${record:value('/bucket')}/${record:value('/objectKey')}.recordcount</pre>
+</div>
+
+        <div class="p">The event record also includes the number of records written to the object. So, to write
+            this information to the new object, you can use the following
+            expression:<pre class="pre codeblock">${record:value('/recordCount')}</pre>
+</div>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph"><span class="ph" id="concept_mtm_dqx_m1b__d35091e4216">Stage-generated event records
+                              differ from stage to stage.</span> For a description of stage events,
+                        see "Event Record" in the documentation for the event-generating stage. For
+                        a description of pipeline events, see <a class="xref" href="../Pipeline_Configuration/EventGeneration.html#concept_cv3_nqt_51b">Pipeline Event Records</a>.</span></div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_gjz_m42_31b">
+ <h2 class="title topictitle2">Tag Existing Objects</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use the Amazon S3 executor to add tags to
+            existing Amazon S3 objects. Tags are key-value pairs that you can use to categorize
+            objects, such as product: &lt;product&gt;.</p>
+
+        <p class="p"><span class="ph">You can configure multiple tags. When you configure a tag,
+                        you can define a tag with just the key or specify a key and value. You can
+                        also use expressions to define tag values.</span></p>
+
+        <div class="p">For example, you can use an expression to specify the number of records that were written
+            to an object based on the recordCount field in the event record, as
+            follows:<pre class="pre codeblock">key: processed records
+value: ${record:value('/recordCount')}</pre>
+</div>
+
+        <p class="p">For more information about tags, including Amazon S3 restrictions, see the <a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html" target="_blank">Amazon S3 documentation</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_nky_cnm_f1b">
+    <h2 class="title topictitle2">Configuring an Amazon S3 Executor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                an Amazon S3 executor to create new Amazon S3 objects or to add tags to existing
+                objects. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__d35153e5475" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d184576e272">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d184576e275">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e272 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e275 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e272 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e275 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e272 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_nky_cnm_f1b__d35153e5521" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e275 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e272 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_nky_cnm_f1b__d35153e5537" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e275 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e272 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_nky_cnm_f1b__d35153e5554" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e275 ">Error record handling for the stage: <ul class="ul" id="task_nky_cnm_f1b__d35153e5558">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_nky_cnm_f1b__step-S3tab">
+                <span class="ph cmd">On the <span class="keyword wintitle">Amazon S3</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__table_zfh_cyz_31b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d184576e386">Amazon S3 Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d184576e389">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e386 ">Access Key ID <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
+                                            <img class="image" id="task_nky_cnm_f1b__image_v94_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e389 ">
+        <p class="p">AWS access key ID.</p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
+
+       </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e386 ">Secret Access Key <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
+                                            <img class="image" id="task_nky_cnm_f1b__image_v64_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e389 ">
+        <p class="p">AWS secret access key. </p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
+
+       </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d184576e386 ">Region</td>
+
+       <td class="entry" valign="top" width="70%" headers="d184576e389 ">Amazon S3 region. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d184576e386 ">Endpoint</td>
+
+       <td class="entry" valign="top" width="70%" headers="d184576e389 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+        name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d184576e386 ">Bucket</td>
+
+       <td class="entry" valign="top" width="70%" headers="d184576e389 ">Bucket that contains the objects to be read.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Tasks</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__table_eyy_kzz_31b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d184576e502">Task Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d184576e505">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e502 ">Task</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e505 ">Task to perform upon receiving an event record. Select
+                                        one of the following options:<ul class="ul" id="task_nky_cnm_f1b__ul_m5s_xkx_m1b">
+                                            <li class="li">Create New Object</li>
+
+                                            <li class="li">Add Tags to Existing Object</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e502 ">Object</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e505 ">Path to the object to create or update. To create or
+                                        update the object whose closure generated the event record,
+                                        use the following expression:
+                                            <pre class="pre codeblock">${record:value('/bucket')}/${record:value('/objectKey)}</pre>
+<div class="p">To
+                                            edit a whole file whose closure generated the event
+                                            record, use the following
+                                            expression:<pre class="pre codeblock">${record:value('/targetFileInfo/bucket')}/${record:value('/targetFileInfo/objectKey)}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e502 ">Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e505 ">The content to write to new objects. You can use
+                                        expressions to represent the content to use. For more
+                                        information, see <a class="xref" href="AmazonS3.html#concept_mtm_dqx_m1b">Create New Objects</a>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d184576e502 ">Tags <a class="xref" href="AmazonS3.html#concept_gjz_m42_31b">
+                                            <img class="image" id="task_nky_cnm_f1b__image_npg_nc1_j1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d184576e505 ">The tags to add to an existing object. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon to configure a tag.
+                                                <p class="p"><span class="ph">You can configure multiple tags. When you configure a tag,
+                        you can define a tag with just the key or specify a key and value. You can
+                        also use expressions to define tag values.</span></p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use an HTTP proxy, on the <span class="keyword wintitle">Advanced</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__table_ldy_2js_zw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d184576e608">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d184576e611">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d184576e608 ">Use Proxy</td>
+
+      <td class="entry" valign="top" width="70%" headers="d184576e611 ">Specifies whether to use a proxy to connect.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d184576e608 ">Proxy Host</td>
+
+      <td class="entry" valign="top" width="70%" headers="d184576e611 ">Proxy host.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d184576e608 ">Proxy Port</td>
+
+      <td class="entry" valign="top" width="70%" headers="d184576e611 ">Proxy port.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d184576e608 ">Proxy User</td>
+
+      <td class="entry" valign="top" width="70%" headers="d184576e611 ">User name for proxy credentials.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d184576e608 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d184576e611 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  usernames and passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+     </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

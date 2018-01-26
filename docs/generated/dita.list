@@ -1,9 +1,9 @@
-#Tue Jan 16 13:26:00 PST 2018
+#Fri Jan 26 12:21:19 PST 2018
 relflagimagelist=
-user.input.dir=/private/var/folders/tz/4qqxxv597_q4y3qxslwywz5h0000gn/T/OxygenXMLTemp/ditaTemporaryOutputDir-1516137934131/t1/t2/t3/t4/t5
+user.input.dir=/private/var/folders/b6/3x46lt4s597_nvvd9kzy_4dm0000gn/T/OxygenXMLTemp/ditaTemporaryOutputDir-1516998034331/t1/t2/t3/t4/t5
 copytotarget2sourcemaplist=
 uplevels=
-user.input.file=UserGuide.ditamap
+user.input.file=SDC_UserGuide.ditamap
 user.input.file.listfile=usr.input.file.list
 tempdirToinputmapdir.relative.value=
 relflagimagefile=relflagimage.list

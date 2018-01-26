@@ -1,0 +1,381 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The XML Flattener processor flattens a well-formed XML document embedded in a string field and adds the flattened data to the record as additional fields or as a map in a single field. When you ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="XML Flattener" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ck4_255_sv" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>XML Flattener</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ck4_255_sv">
+ <h1 class="title topictitle1">XML Flattener</h1>
+
+ <div class="body conbody">
+  <p class="p">The XML Flattener processor flattens a
+            well-formed XML document embedded in a string field and adds the flattened data to the
+            record as additional fields or as a map in a single field.</p>
+
+        <p class="p">When you configure the XML Flattener, you specify the field that contains the XML data.
+            You can specify a record delimiter to generate multiple records from the XML document.
+            When specifying a record delimiter, use an XML element directly under the root element. </p>
+
+        <p class="p">You can configure whether the processor keeps all fields in the original record, or keeps
+            just the flattened fields. </p>
+
+        <p class="p">You can also specify an output field. When you define an output field, the processor
+            writes the flattened fields to the output field as a map. You can optionally configure
+            the string used to separate entity names and attributes in the flattened field
+            names.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_eqj_vgw_vv">
+ <h2 class="title topictitle2">Generated Records</h2>
+
+ <div class="body conbody">
+  <p class="p">The XML
+            Flattener generates multiple records from a well-formed XML document based on a
+            user-defined record delimiter. The delimiter specifies the XML element to use to create
+            records. Use an XML element directly under the root element. </p>
+
+        <p class="p">When no record delimiter is defined, the processor reads the entire contents of the field
+            as a single record. </p>
+
+        <p class="p">For example, a string field contains the following XML:</p>
+
+        <pre class="pre codeblock">&lt;contacts&gt;
+    &lt;contact&gt;
+        &lt;name type="maiden"&gt;NAME1&lt;/name&gt;
+        &lt;phone&gt;(111)111-1111&lt;/phone&gt;
+        &lt;phone&gt;(222)222-2222&lt;/phone&gt;
+    &lt;/contact&gt;
+    &lt;contact&gt;
+        &lt;name type="maiden"&gt;NAME2&lt;/name&gt;
+        &lt;phone&gt;(333)333-3333&lt;/phone&gt;
+        &lt;phone&gt;(444)444-4444&lt;/phone&gt;      
+    &lt;/contact&gt;
+&lt;/contacts&gt;</pre>
+
+        <p class="p">If you specify the <samp class="ph codeph">contact</samp> element as the record delimiter, the XML
+            Flattener creates two records. Record 1 contains the following fields:</p>
+
+     <pre class="pre codeblock">contact.name: NAME1
+contact.name#type: maiden
+contact.phone(0): (111)111-1111
+contact.phone(1): (222)222-2222</pre>
+
+        <p class="p">Record 2 contains the following fields:</p>
+
+     <pre class="pre codeblock">contact.name: NAME2
+contact.name#type: maiden
+contact.phone(0): (333)333-3333
+contact.phone(1): (444)444-4444</pre>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When you configure the processor to keep the original fields in the incoming
+                record, each generated record includes the original fields as well. </div>
+
+        </div>
+
+        <p class="p">If you do not specify a record delimiter, the XML Flattener creates one record that
+            contains the following fields:</p>
+
+        <pre class="pre codeblock">contacts.contact(0).name: NAME1
+contacts.contact(0).name#type: maiden
+contacts.contact(0).phone(0): (111)111-1111
+contacts.contact(0).phone(1): (222)222-2222
+contacts.contact(1).name: NAME2
+contacts.contact(1).name#type: maiden
+contacts.contact(1).phone(0): (333)333-3333
+contacts.contact(1).phone(1): (444)444-4444</pre>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_pmb_l55_sv">
+    <h2 class="title topictitle2">Configuring an XML Flattener</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure an XML Flattener to flatten XML data embedded in a string
+        field.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmb_l55_sv__d82777e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d485474e137">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d485474e140">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e137 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e140 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e137 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e140 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e137 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_pmb_l55_sv__d82777e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e140 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e137 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_pmb_l55_sv__d82777e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e140 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e137 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_pmb_l55_sv__d82777e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e140 ">Error record handling for the stage: <ul class="ul" id="task_pmb_l55_sv__d82777e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Flatten</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmb_l55_sv__table_hj1_psr_k5" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d485474e251">Flatten Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d485474e254">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Field to Flatten</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">String field that contains the well-formed XML document
+                                        to flatten.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Keep Original Fields</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">Specifies whether to keep all fields in the original
+                                        record. When selected, the processor flattens the specified
+                                        field and keeps all other fields in the record. When
+                                        cleared, the processor flattens the specified field and
+                                        removes all other fields in the record.<p class="p">To keep the
+                                            original fields, the root field of the record must be
+                                            Map or List-Map.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Overwrite Existing Fields</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">Overwrites any existing fields with names that match the
+                                        new flattened fields. <p class="p">When writing flattened fields to an
+                                            output field, allows the processor to overwrite an
+                                            existing field.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Output Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">Specifies an output field for flattened fields to be
+                                        written. You can use an existing field or name a new field
+                                        to be created. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Record Delimiter <a class="xref" href="XMLFlattener.html#concept_eqj_vgw_vv">
+                                            <img class="image" id="task_pmb_l55_sv__image_h9p_p3v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">
+                                        <p class="p">XML element that indicates the data to use to generate
+                                            records. Use to create multiple records from an XML
+                                            document. Use an XML element directly under the root
+                                            element.</p>
+
+                                        <p class="p">To read the data as a single record, omit this property. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Field Delimiter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">String used to separate entity names in the flattened
+                                        field names. For example, in the following flattened field
+                                        names, the period (.) is defined as the field
+                                            delimiter:<pre class="pre codeblock">contact.name=NAME1
+contact.name#type=maiden</pre>
+<p class="p">The
+                                            following characters cannot be used as a field
+                                            delimiter: <samp class="ph codeph">[ ] ' " / </samp></p>
+<p class="p">Default is
+                                            the period.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Attribute Delimiter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">
+                                        <div class="p">String used to separate attributes in the flattened field
+                                            names. For example, in the following flattened field
+                                            name, the hash mark (#) is defined as the attribute
+                                            delimiter:<pre class="pre codeblock">contact.name#type=maiden</pre>
+</div>
+
+                                        <p class="p">The following characters cannot be used as an attribute
+                                            delimiter: <samp class="ph codeph">[ ] ' " / </samp></p>
+
+                                        <p class="p">Default is the hash mark.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Ignore Attributes</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">Ignores attributes defined for XML elements. Select if
+                                        you do not want to include attributes in the flattened
+                                        fields.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d485474e251 ">Ignore Namespace URI</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d485474e254 ">Ignores namespace URIs defined for XML elements. Select
+                                        if you do not want to include namespace URIs in the
+                                        flattened fields.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

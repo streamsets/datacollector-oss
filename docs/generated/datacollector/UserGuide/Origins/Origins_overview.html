@@ -1,0 +1,916 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Origins" /><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hpr_twm_jq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Origins</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_hpr_twm_jq">
+  <h1 class="title topictitle1">Origins</h1>
+
+  
+  <div class="body conbody"><p class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin
+    stage in a pipeline.</p>
+
+    <p class="p">You can use different origins
+      based on the execution mode of the pipeline. </p>
+
+    <div class="p">In standalone pipelines, you can use the following origins: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
+        <li class="li"><a class="xref" href="AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a> - Reads objects from
+          Amazon S3.</li>
+
+        <li class="li"><a class="xref" href="AmazonSQS.html#concept_xsh_knm_5bb" title="When Data Collector reads data from an Amazon SQS Consumer origin, it must pass credentials to Amazon Simple Queue Services.">Amazon SQS Consumer</a> - Reads data
+          from queues in Amazon Simple Queue Services (SQS). </li>
+
+        <li class="li"><a class="xref" href="AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a>
+          - Reads data from Microsoft Azure Event Hub. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP
+          endpoint and processes the contents of all authorized CoAP requests. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. When you use an origin to read log data, you define the format of the log files to be read. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully-written
+          files from a directory. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data
+          from an Elasticsearch cluster. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="FileTail.html#concept_n1y_qyp_5q" title="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data.">File Tail</a> - Reads lines of data
+          from an active file after reading related archived files in the directory. </li>
+
+        <li class="li"><a class="xref" href="BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">Google BigQuery</a> - Executes a query
+          job and reads the result from Google BigQuery. </li>
+
+        <li class="li"><a class="xref" href="GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a> - Reads fully
+          written objects from Google Cloud Storage.</li>
+
+        <li class="li"><a class="xref" href="PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes
+          messages from a Google Pub/Sub subscription. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP Client</a> - Reads data from a
+          streaming HTTP resource URL.</li>
+
+        <li class="li"><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> - Listens on an HTTP
+          endpoint and processes the contents of all authorized HTTP POST requests. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka</a> - Listens on a
+          HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to
+          Kafka.</li>
+
+        <li class="li"><a class="xref" href="MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable
+            Consumer</a> - Reads database data from multiple tables through a JDBC connection.
+          Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="JDBCConsumer.html#concept_qhf_hjr_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query. JDBC Query Consumer supports recovery after a deliberate or unexpected stop when it performs incremental queries. Recovery is not supported for full queries.The SQL query defines the data returned from the database.When you define the SQL query for incremental mode, JDBC Query Consumer requires a WHERE and ORDER BY clause in the query. You can define any type of SQL query for full mode.">JDBC Query Consumer</a> - Reads
+          database data using a user-defined SQL query through a JDBC connection. </li>
+
+        <li class="li"><a class="xref" href="JMS.html#concept_rhh_4nj_dt" title="The JMS Consumer origin reads data from a Java Messaging Service (JMS).">JMS Consumer</a> - Reads messages from JMS. </li>
+
+        <li class="li"><a class="xref" href="KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a> - Reads messages
+          from a single Kafka topic.</li>
+
+        <li class="li"><a class="xref" href="KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">Kafka Multitopic
+            Consumer</a> - Reads messages from multiple Kafka topics. Creates multiple threads to
+          enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data
+          from Kinesis Streams. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed MapR
+          DB data that has been written to MapR Streams. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="MapRDBJSON.html#concept_ywh_k15_3y" title="The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin converts each document into a record.">MapR DB JSON</a> - Reads JSON documents from MapR DB
+          JSON tables.</li>
+
+        <li class="li"><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR FS</a> - Reads files from MapR
+          FS.</li>
+
+        <li class="li"><a class="xref" href="MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams
+            Consumer</a> - Reads messages from multiple MapR Streams topics. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a> -
+          Reads messages from MapR Streams.</li>
+
+        <li class="li"><a class="xref" href="MongoDB.html#concept_bk4_2rs_ns">MongoDB</a> - Reads documents from
+          MongoDB.</li>
+
+        <li class="li"><a class="xref" href="MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a> - Reads entries
+          from a MongoDB Oplog.</li>
+
+        <li class="li"><a class="xref" href="MQTTSubscriber.html#concept_ukz_3vt_lz" title="The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages from the broker. The origin functions as an MQTT client that receives messages, generating a record for each message.">MQTT Subscriber</a> - Subscribes
+          to a topic on an MQTT broker to read messages from the broker.</li>
+
+        <li class="li"><a class="xref" href="MySQLBinaryLog.html#concept_kqg_1yh_xx" title="The MySQL Binary Log origin can process binary logs from a MySQL server configured to use row-based logging.You can configure the origin to start reading the binary log file from the beginning of the file or from an initial offset in the file.The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">MySQL Binary Log</a> - Reads
+          MySQL binary logs to generate change data capture records. </li>
+
+        <li class="li"><a class="xref" href="Omniture.html#concept_dsr_xmw_1s" title="The Omniture origin processes JSON website usage reports generated by the Omniture reporting APIs. Omniture is also known as the Adobe Marketing Cloud.">Omniture</a> - Reads web usage reports
+          from the Omniture reporting API.</li>
+
+        <li class="li"><a class="xref" href="OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client</a> - Reads data from
+          a OPC UA server.</li>
+
+        <li class="li"><a class="xref" href="OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a> - Reads LogMiner
+          redo logs to generate change data capture records.</li>
+
+        <li class="li"><a class="xref" href="RabbitMQ.html#concept_dyg_lq1_h5" title="RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.">RabbitMQ Consumer</a> - Reads messages
+          from RabbitMQ.</li>
+
+        <li class="li"><a class="xref" href="Redis.html#concept_plr_t3v_jw" title="The Redis Consumer origin reads messages from Redis.">Redis Consumer</a> - Reads messages from
+          Redis.</li>
+
+        <li class="li"><a class="xref" href="Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin reads data from Salesforce.">Salesforce</a> - Reads data from
+          Salesforce.</li>
+
+        <li class="li"><a class="xref" href="SDC_RPCorigin.html#concept_agb_5c1_ct" title="The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC origin reads data passed from an SDC RPC destination. Use the SDC RPC origin as part of an SDC RPC destination pipeline.">SDC RPC</a> - Reads data from an
+          SDC RPC destination in an SDC RPC pipeline.</li>
+
+        <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SDC RPC to Kafka</a> - Reads data
+          from an SDC RPC destination in an SDC RPC pipeline and writes it to Kafka.</li>
+
+        <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SFTP/FTP Client</a> - Reads files
+          from an SFTP or FTP server.</li>
+
+        <li class="li"><a class="xref" href="SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC Client</a> - Reads
+          data from Microsoft SQL Server CDC tables. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server Change Tracking</a>
+          - Reads data from Microsoft SQL Server change tracking tables and generates the latest
+          version of each record. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="TCPServer.html#concept_ppm_xb1_4z">TCP Server</a> - Listens at the
+          specified ports and processes incoming data over TCP/IP connections. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
+
+        <li class="li"><a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a> - Reads
+          messages from one or more UDP ports. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline. </li>
+
+        <li class="li"><a class="xref" href="UDP.html#concept_rst_2y5_1s">UDP Source</a> - Reads messages from one or
+          more UDP ports. </li>
+
+        <li class="li"><a class="xref" href="UDPtoKafka.html#concept_jzq_jcz_pw" title="When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash destination.">UDP to Kafka</a> - Reads messages
+          from one or more UDP ports and writes the data to Kafka.</li>
+
+        <li class="li"><a class="xref" href="WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">WebSocket Client</a> - Reads
+          data from a WebSocket server endpoint.</li>
+
+        <li class="li"><a class="xref" href="WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a> - Listens
+          on a WebSocket endpoint and processes the contents of all authorized WebSocket client
+          requests. Creates multiple threads to enable parallel processing in a multithreaded
+          pipeline.</li>
+
+      </ul>
+</div>
+
+    <div class="p">In cluster pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_unr_xhb_ws">
+        <li class="li"><a class="xref" href="HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface. Use this origin only in pipelines configured for cluster batch execution mode.">Hadoop FS</a> - Reads data from
+          the Hadoop Distributed File System (HDFS). Can read from other file systems using the
+          Hadoop FileSystem interface.</li>
+
+        <li class="li"><a class="xref" href="KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a> - Reads messages
+          from Kafka. Use the cluster version of the origin.</li>
+
+        <li class="li"><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR FS</a> - Reads data from MapR
+          FS.</li>
+
+        <li class="li"><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a> -
+          Reads messages from MapR Streams.</li>
+
+      </ul>
+</div>
+
+    <div class="p">In edge pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_r4p_zs2_rbb">
+        <li class="li"><a class="xref" href="Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. When you use an origin to read log data, you define the format of the log files to be read. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully-written
+          files from a directory.</li>
+
+        <li class="li"><a class="xref" href="FileTail.html#concept_n1y_qyp_5q" title="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data.">File Tail</a> - Reads lines of data
+          from an active file after reading related archived files in the directory. </li>
+
+        <li class="li"><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> - Listens on an HTTP
+          endpoint and processes the contents of all authorized HTTP POST requests.</li>
+
+        <li class="li"><a class="xref" href="MQTTSubscriber.html#concept_ukz_3vt_lz" title="The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages from the broker. The origin functions as an MQTT client that receives messages, generating a record for each message.">MQTT Subscriber</a> - Subscribes
+          to a topic on an MQTT broker to read messages from the broker.</li>
+
+        <li class="li"><a class="xref" href="WindowsLog.html#concept_agf_5jv_sbb" title="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log.">Windows Event Log</a> - Reads data
+          from a Microsoft Windows event log located on a Windows machine. </li>
+
+      </ul>
+</div>
+
+    <div class="p">To help create or test pipelines, you can use the following development origins:<ul class="ul" id="concept_hpr_twm_jq__ul_nr2_c1p_qv">
+        <li class="li">Dev Data Generator </li>
+
+        <li class="li">Dev Random Source</li>
+
+        <li class="li">Dev Raw Data Source </li>
+
+        <li class="li">Dev SDC RPC with Buffering</li>
+
+        <li class="li">Sensor Reader</li>
+
+      </ul>
+</div>
+
+    <p class="p">For more information, see <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Development Stages</a>.</p>
+
+  </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_rsz_cnw_qy">
+ <h2 class="title topictitle2">Comparing HTTP Origins</h2>
+
+ <div class="body conbody">
+  <div class="p">We have several HTTP
+            origins, make sure to use the best one for your needs. Here's a quick breakdown of some
+            key differences: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rsz_cnw_qy__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d346137e576">Origin</th>
+
+                            <th class="entry" valign="top" width="71.42857142857143%" id="d346137e579">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e576 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
+                                    Client</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e579 ">
+                                <ul class="ul" id="concept_rsz_cnw_qy__ul_ixb_t5v_qy">
+                                    <li class="li">Initiates HTTP requests for an external system.</li>
+
+                                    <li class="li">Processes data synchronously.</li>
+
+                                    <li class="li">Processes JSON, text, and XML data. </li>
+
+                                    <li class="li">Can process a range of HTTP requests.</li>
+
+                                    <li class="li">
+                                        <p class="p">Can be used in a pipeline with processors. </p>
+
+                                    </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e576 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                                    Server</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e579 ">
+                                <ul class="ul" id="concept_rsz_cnw_qy__ul_vsb_x5v_qy">
+                                    <li class="li">Listens for incoming HTTP requests and processes them while
+                                        the sender waits for confirmation.</li>
+
+                                    <li class="li">Processes data synchronously. </li>
+
+                                    <li class="li">Creates multithreaded pipelines, thus suitable for high
+                                        throughput of incoming data.</li>
+
+                                    <li class="li">Processes virtually all data formats. Processes HTTP POST
+                                        requests only.</li>
+
+                                    <li class="li">Can be used in a pipeline with processors.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e576 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
+                                    Kafka</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e579 ">
+                                <ul class="ul" id="concept_rsz_cnw_qy__ul_uj1_v5v_qy">
+                                    <li class="li">Listens for incoming HTTP requests and writes them
+                                        immediately to Kafka with no additional processing. </li>
+
+                                    <li class="li">Processes data asynchronously. Suitable for very high
+                                        throughput of incoming data.</li>
+
+                                    <li class="li">Writes all data to Kafka, regardless of the data format. </li>
+
+                                    <li class="li">
+                                        <p class="p">Processes HTTP POST requests only.</p>
+
+                                    </li>
+
+                                    <li class="li">
+                                        <p class="p">Cannot be used in a pipeline with processors. For more
+                                            flexibility, use the HTTP Server origin.</p>
+
+                                    </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ip2_szg_qbb">
+ <h2 class="title topictitle2">Comparing MapR Origins</h2>
+
+ <div class="body conbody">
+        <div class="p">We have several  MapR
+            origins, make sure to use the best one for your needs. Here's a quick breakdown of some
+            key differences: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ip2_szg_qbb__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d346137e720">Origin</th>
+
+                            <th class="entry" valign="top" width="71.42857142857143%" id="d346137e723">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e720 "><a class="xref" href="MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB
+                                    CDC</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e723 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_ixb_t5v_qy">
+                                    <li class="li">Reads change data capture MapR DB data using MapR
+                                        Streams.</li>
+
+                                    <li class="li">
+                                        <p class="p">Includes CDC information in record header attributes.</p>
+
+                                    </li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e720 "><a class="xref" href="MapRDBJSON.html#concept_ywh_k15_3y" title="The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin converts each document into a record.">MapR DB
+                                    JSON</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e723 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_vsb_x5v_qy">
+                                    <li class="li">Reads JSON documents from MapR DB.</li>
+
+                                    <li class="li">Converts each JSON document to a record.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e720 "><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR
+                                FS</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e723 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_uj1_v5v_qy">
+                                    <li class="li">Reads files from MapR FS.</li>
+
+                                    <li class="li">
+                                        <p class="p">Can be used with Kerberos Authentication.</p>
+
+                                    </li>
+
+                                    <li class="li">Use in cluster execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e720 "><a class="xref" href="MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams</a>
+                            </td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e723 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_b1z_31h_qbb">
+                                    <li class="li">Streams data from MapR Streams.</li>
+
+                                    <li class="li">Can use multiple threads to read from multiple topics, thus
+                                        suitable for high throughput of incoming data.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e720 "><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR
+                                    Streams</a></td>
+
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e723 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_syt_31h_qbb">
+                                    <li class="li">Streams data from MapR Streams.</li>
+
+                                    <li class="li">Reads from a single topic using a single thread.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ffh_5vf_5bb">
+    <h2 class="title topictitle2">Comparing UDP Source Origins</h2>
+
+    <div class="body conbody">
+        <p class="p">The UDP Source
+            and UDP Multithreaded Source origins are very similar. The main differentiator is that
+            the UDP Multithreaded Source can use multiple threads to process data within the
+            pipeline. </p>
+
+        <p class="p">The UDP Multithreaded Source has a processing queue that aids multithreaded processing.
+            But use of this queue can slow processing under certain circumstances.</p>
+
+        <div class="p">The following table describes some cases when you might want to use each origin:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ffh_5vf_5bb__table_u5t_zwf_5bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d346137e902">Origin</th>
+
+                            <th class="entry" valign="top" width="70%" id="d346137e905">Ideally Used When</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d346137e902 "><a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded
+                                    Source</a></td>
+
+                            <td class="entry" valign="top" width="70%" headers="d346137e905 ">
+                                <ul class="ul" id="concept_ffh_5vf_5bb__ul_cgc_jxf_5bb">
+                                    <li class="li">Epoll support enables the use of multiple receiver threads
+                                        to pass data to the pipeline.</li>
+
+                                    <li class="li">Complex pipeline requires longer processing time.</li>
+
+                                </ul>
+
+                                <p class="p">or</p>
+
+                                <div class="p">
+                                    <ul class="ul" id="concept_ffh_5vf_5bb__ul_fcv_mxf_5bb">
+                                        <li class="li">Lack of epoll support allows only a single receiver
+                                            thread to pass data to the pipeline.</li>
+
+                                        <li class="li">High volumes of data.</li>
+
+                                    </ul>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d346137e902 "><a class="xref" href="UDP.html#concept_rst_2y5_1s">UDP Source</a>
+                            </td>
+
+                            <td class="entry" valign="top" width="70%" headers="d346137e905 ">
+                                <ul class="ul" id="concept_ffh_5vf_5bb__ul_f2w_2xf_5bb">
+                                    <li class="li">Epoll support enables the use of multiple receiver threads
+                                        to pass data to the pipeline.</li>
+
+                                    <li class="li">Relatively simple pipeline enables speedy <span class="ph">Data Collector</span> processing. </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p"><span class="ph">Data Collector</span>
+            also provides a <a class="xref" href="UDPtoKafka.html#concept_jzq_jcz_pw" title="When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash destination.">UDP to Kafka
+                origin</a> for reading large volumes of data from multiple UDP ports and writing
+            the data immediately to Kafka, without additional processing. </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_wz5_jqm_gbb">
+ <h2 class="title topictitle2">Comparing WebSocket Origins</h2>
+
+ <div class="body conbody">
+  <p class="p">We have two WebSocket origins, make sure to use the best one for your needs. Here's a quick
+            breakdown of some key differences: </p>
+
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_wz5_jqm_gbb__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all">
+                        
+                        
+                        <thead class="thead" align="left">
+                            <tr>
+                                <th class="entry" valign="top" width="28.57142857142857%" id="d346137e1013">Origin</th>
+
+                                <th class="entry" valign="top" width="71.42857142857143%" id="d346137e1016">Description</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr>
+                                <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e1013 "><a class="xref" href="WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">WebSocket Client</a></td>
+
+                                <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e1016 ">
+                                    <ul class="ul" id="concept_wz5_jqm_gbb__ul_ixb_t5v_qy">
+                                        <li class="li">Initiates a connection to a WebSocket server endpoint
+                                    and then waits for the WebSocket server to push data.</li>
+
+                                    </ul>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry" valign="top" width="28.57142857142857%" headers="d346137e1013 "><a class="xref" href="WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a></td>
+
+                                <td class="entry" valign="top" width="71.42857142857143%" headers="d346137e1016 ">
+                                    <ul class="ul" id="concept_wz5_jqm_gbb__ul_vsb_x5v_qy">
+                                        <li class="li">Listens for incoming WebSocket requests and processes
+                                    them while the sender waits for confirmation.</li>
+
+                                        <li class="li">Creates multithreaded pipelines, thus suitable for high
+                                            throughput of incoming data.</li>
+
+                                    </ul>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+</div>
+
+            
+        </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ypd_vgr_5q">
+ <h2 class="title topictitle2">Batch Size and Wait Time</h2>
+
+ <div class="body conbody">
+  <p class="p">For origin stages, the batch size determines
+            the maximum number of records sent through the pipeline at one time. The batch wait time
+            determines the time that the origin waits for data before sending a batch. At the end of
+            the wait time, it sends the batch regardless of how many records the batch contains. </p>
+
+        <p class="p">For example, a File Tail origin is configured for a batch size of 20 records and a batch
+            wait time of 240 seconds. When data arrives quickly, File Tail fills a batch with 20
+            records and sends it through the pipeline immediately, creating a new batch and sending
+            it again as soon as it is full. As incoming data slows, a remaining batch contains a few
+            records, gaining an extra record periodically. 240 seconds after creating the batch,
+            File Tail sends the partially-full batch through the pipeline. It immediately creates a
+            new batch and starts a new countdown.</p>
+
+  <p class="p">Configure the batch wait time based on your processing needs. You might reduce the batch wait
+   time to ensure all data is processed within a specified time frame or to make regular contact
+   with pipeline destinations. Use the default or increase the wait time if you prefer not to
+   process partial or empty batches.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_svg_2zl_d1b">
+ <h2 class="title topictitle2">Maximum Record Size</h2>
+
+ <div class="body conbody">
+  <p class="p">Most data formats
+            have a property that limits the maximum size of the record that an origin can parse. For
+            example, the delimited data format has a Max Record Length property, the JSON data
+            format has Max Object Length, and the text data format has Max Line Length.</p>
+
+        <p class="p">When the origin processes data that is larger than the specified length, the behavior
+            differs based on the origin and the data format. For example, with some data formats,
+            oversized records are handled based on the record error handling configured for the
+            origin. While in other data formats, the origin might truncate the data. For details on
+            how an origin handles size overruns for each data format, see the "Data Formats" section
+            of the origin documentation.</p>
+
+        <p class="p">When available, the maximum record size properties are limited by the <span class="ph">Data Collector</span>
+            parser buffer size, which is <span class="ph">1048576 bytes</span> by default. So, when raising the maximum record size property in the origin does not
+            change the origin's behavior, you might need to increase the <span class="ph">Data Collector</span> parser buffer size by configuring the parser.limit property in the <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties."><span class="ph">Data Collector</span> configuration file.</a></p>
+
+        <p class="p">Note that most of the maximum record size properties are specified in characters, while
+            the <span class="ph">Data Collector</span> limit is defined in bytes. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_uxr_g52_qs">
+ <h2 class="title topictitle2">File Compression Formats</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Origins that read files can read uncompressed, compressed files, archives, and
+    compressed archives. </p>
+
+  <p class="p">Hadoop
+      FS reads compressed files automatically. For all other file-based origins, you indicate the
+      compression format in the origin. </p>
+
+    <div class="p">The following table lists the supported file types by extension:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_uxr_g52_qs__table_fwr_k3s_b5" class="table" frame="border" border="1" rules="all">
+          
+          
+          <thead class="thead" align="left">
+            <tr>
+              <th class="entry" valign="top" width="30%" id="d346137e1205">Compression Format</th>
+
+              <th class="entry" valign="top" width="70%" id="d346137e1208">Description</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody class="tbody">
+            <tr>
+              <td class="entry" valign="top" width="30%" headers="d346137e1205 ">Uncompressed</td>
+
+              <td class="entry" valign="top" width="70%" headers="d346137e1208 ">Processes uncompressed files of the configured data format.</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry" valign="top" width="30%" headers="d346137e1205 ">Compressed</td>
+
+              <td class="entry" valign="top" width="70%" headers="d346137e1208 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+                  <li class="li">gzip</li>
+
+                  <li class="li">bgzip2</li>
+
+                  <li class="li">xz</li>
+
+                  <li class="li">lzma</li>
+
+                  <li class="li">Pack200</li>
+
+                  <li class="li">DEFLATE</li>
+
+                  <li class="li">Z</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry" valign="top" width="30%" headers="d346137e1205 ">Archive</td>
+
+              <td class="entry" valign="top" width="70%" headers="d346137e1208 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+                  <li class="li">7z</li>
+
+                  <li class="li">ar</li>
+
+                  <li class="li">arj</li>
+
+                  <li class="li">cpio</li>
+
+                  <li class="li">dump</li>
+
+                  <li class="li">tar</li>
+
+                  <li class="li">zip</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry" valign="top" width="30%" headers="d346137e1205 ">Compressed Archive</td>
+
+              <td class="entry" valign="top" width="70%" headers="d346137e1208 ">Processes files in compressed archives created by supported compression and
+                archive formats.</td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_jp5_ql1_tq">
+    <h2 class="title topictitle2">Previewing Raw Source Data</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Some origins allow you to preview raw source data. Preview raw source data when
+        reviewing the data might help with origin configuration.</p>
+
+        <div class="section context">
+            <p class="p">When you preview
+                file data, you can use the real directory and actual source file. Or when
+                appropriate, you might use a different file that is similar to the source. </p>
+
+            <p class="p">When you preview Kafka data, you enter the connection information for the Kafka
+                cluster.</p>
+
+            <p class="p">The data used for the raw source preview in an origin stage is not used when
+                previewing data for the pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_jp5_ql1_tq__steps_k14_k41_tq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel for the origin stage, click the <span class="keyword wintitle">Raw
+                        Preview</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Directory or File Tail origin, enter a directory and file name.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Kafka Consumer or Kafka Multitopic Consumer, enter the following
+                    information:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jp5_ql1_tq__table_eh1_q2f_xq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d346137e1388">Kafka Raw Preview Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d346137e1391">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d346137e1388 ">Topic</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d346137e1391 ">Kafka topic to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d346137e1388 ">Partition</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d346137e1391 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d346137e1388 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d346137e1391 ">Broker host name. Use any broker associated with the
+                                        partition.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d346137e1388 ">Broker Port</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d346137e1391 ">Broker port number.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d346137e1388 ">Max Wait Time (secs)</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d346137e1391 ">Maximum amount of time the preview waits to receive data
+                                        from Kafka.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Preview</span>.</span>
+            </li>
+</ol>
+
+        <div class="section result">The Raw Source Preview area displays the preview.</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -1,0 +1,567 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kudu" /><meta name="abstract" content="The Kudu destination writes data to a Kudu cluster." /><meta name="description" content="The Kudu destination writes data to a Kudu cluster." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_chy_xxg_4v" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Kudu</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_chy_xxg_4v">
+ <h1 class="title topictitle1">Kudu </h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
+
+  <p class="p">When
+            you configure the Kudu destination, you specify the connection information for one or
+            more Kudu masters, define the table to use, and optionally define field mappings. By
+            default, the destination writes field data to columns with matching names. </p>
+
+        <p class="p">The Kudu destination <span class="ph">can use CRUD operations defined in the sdc.operation.type
+                        record header attribute to write data. You can define a default operation
+                        for records without the header attribute or value. You can also configure
+                        whether to use multi-row operations for inserts and deletes, and how to
+                        handle records with unsupported operations.</span><span class="ph">For information about <span class="ph">Data Collector</span> change data
+                        processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+        <p class="p">If the destination receives a change data capture log from some origin systems, you must
+            select the format of the change log.</p>
+
+        <p class="p">You can also configure the external consistency mode and the operation timeout for the
+            destination.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dvg_vvj_wx">
+ <h2 class="title topictitle2">Define the CRUD Operation</h2>
+
+ <div class="body conbody">
+  <p class="p">The Kudu
+            destination can insert, update, delete, or upsert data. The destination writes the
+            records based on the CRUD operation defined in a CRUD operation header attribute or in
+            operation-related stage properties. </p>
+
+        <p class="p">You define the CRUD operation in the following ways:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">CRUD record header attribute</dt>
+
+                <dd class="dd">You can define the CRUD operation in a CRUD
+                              operation record header attribute. The destination looks for the CRUD
+                              operation to use in the sdc.operation.type record header attribute. </dd>
+
+                <dd class="dd">The attribute can contain one of the following numeric values:<ul class="ul" id="concept_dvg_vvj_wx__ul_smy_qf3_1y">
+                        <li class="li">1 for INSERT</li>
+
+                        <li class="li">2 for DELETE</li>
+
+                        <li class="li">3 for UPDATE</li>
+
+                        <li class="li">4 for UPSERT </li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">If your pipeline includes a CRUD-enabled
+                              origin that processes changed data, the destination simply reads the
+                              operation type from the sdc.operation.type header attribute that the
+                              origin generates. If your pipeline uses a non-CDC origin, you can use
+                              the Expression Evaluator or a scripting processor to define the record
+                              header attribute. For more information about <span class="ph">Data Collector</span>
+                              changed data processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</dd>
+
+            
+            
+                <dt class="dt dlterm">Operation stage properties</dt>
+
+                <dd class="dd">You define a default operation in the destination
+                              properties. The destination uses the default operation when the
+                              sdc.operation.type record header attribute is not set.</dd>
+
+                <dd class="dd">You can also define how to handle records with
+                              unsupported operations defined in the sdc.operation.type header
+                              attribute. The destination can discard them, send them to error, or
+                              use the default operation. </dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_gjj_dg3_jbb">
+ <h2 class="title topictitle2">Kudu Data Types</h2>
+
+ <div class="body conbody">
+        <p class="p">The Kudu destination
+            converts <span class="ph">Data Collector</span>
+            data types to the following compatible Kudu data types:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gjj_dg3_jbb__table_ljg_nsr_cy" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d134637e169">Data Collector Data Type</th>
+
+                            <th class="entry" valign="top" width="70%" id="d134637e172">Kudu Data Type</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Boolean</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Bool</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Byte</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Int8</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Byte Array</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Double</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Double</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Float</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Float</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Integer</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Int32</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Long</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Int64 or Unixtime_micros<p class="p">The destination determines the data
+                                    type to use based on the mapped Kudu column. </p>
+<p class="p">The <span class="ph">Data Collector</span> Long data type stores millisecond values. The Kudu
+                                    Unixtime_micros data type stores microsecond values. When
+                                    converting to the Unixtime_micros data type, the destination
+                                    multiplies the field value by 1,000 to convert the value to
+                                    microseconds.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">Short</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">Int16</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d134637e169 ">String</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d134637e172 ">String</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+  <div class="p">The destination cannot convert the following <span class="ph">Data Collector</span>
+            data types. Use a Field Type Converter processor earlier in the pipeline to convert
+            these <span class="ph">Data Collector</span>
+            data types to ones that are compatible with Kudu:<ul class="ul" id="concept_gjj_dg3_jbb__ul_hfp_sg3_jbb">
+                <li class="li">Character</li>
+
+                <li class="li">Date</li>
+
+                <li class="li">Datetime</li>
+
+                <li class="li">Decimal</li>
+
+                <li class="li">List</li>
+
+                <li class="li">List-Map</li>
+
+                <li class="li">Map</li>
+
+                <li class="li">Time</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_c4x_tmh_4v">
+    <h2 class="title topictitle2">Configuring a Kudu Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                a Kudu destination to write to a Kudu cluster.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d16805e5598" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d134637e357">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d134637e360">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_c4x_tmh_4v__d16805e5620">
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr id="task_c4x_tmh_4v__d16805e5629">
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_c4x_tmh_4v__d16805e5638">
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_c4x_tmh_4v__d16805e5653" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_c4x_tmh_4v__d16805e5669" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_c4x_tmh_4v__d16805e5681">
+                                    <td class="entry" valign="top" width="30%" headers="d134637e357 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_c4x_tmh_4v__d16805e5687" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e360 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d16805e5691">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Kudu</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__table_rk2_xqh_4v" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d134637e481">Kudu Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d134637e484">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d134637e481 ">Kudu Masters</td>
+
+      <td class="entry" valign="top" width="70%" headers="d134637e484 ">Comma-separated list of connection information for the Kudu masters to use. Use the
+       following format: <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="30%" headers="d134637e481 ">Table Name</td>
+
+      <td class="entry" valign="top" width="70%" headers="d134637e484 ">Table to write to. Enter one of the following: <div class="p">
+        <ul class="ul" id="task_c4x_tmh_4v__d16935e5205">
+         <li class="li">Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
+          start.</li>
+
+         <li class="li">Expression that evaluates to the name of an existing Kudu table. For example, if the
+          table name is stored in the "tableName" record attribute, enter the following
+          expression:<pre class="pre codeblock">${record:attribute('tableName')}</pre>
+If the table doesn't
+          exist, the records are treated as error records.</li>
+
+        </ul>
+
+       </div>
+<div class="p" id="task_c4x_tmh_4v__d16935e5217">
+        <div class="note note"><span class="notetitle">Note:</span> Impala creates Kudu tables with the following naming convention:
+          <pre class="pre codeblock">impala:&lt;database name&gt;.&lt;table name&gt;</pre>
+<p class="p">When using a table
+          created by Impala, be sure to use the entire table name. </p>
+</div>
+
+       </div>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e481 ">Field to Column Mapping</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e484 ">Use to define specific mappings between record fields and
+                                        Kudu columns. By default, the destination writes field data
+                                        to columns with matching names.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e481 ">Default Operation 
+                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
+                                            <img class="image" id="task_c4x_tmh_4v__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e484 ">Default CRUD operation to
+                                        perform if the sdc.operation.type record header attribute is
+                                        not set. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e481 ">Change Log Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e484 ">If the incoming data is a change data capture log read
+                                        from the following source systems, select the source system
+                                        so that the destination can determine the format of the
+                                            log:<ul class="ul" id="task_c4x_tmh_4v__ul_add_3ph_vbb">
+                                            <li class="li">Microsoft SQL Server</li>
+
+                                            <li class="li">Oracle CDC Client</li>
+
+                                            <li class="li">MySQL Binary Log</li>
+
+                                            <li class="li">MongoDB Oplog</li>
+
+                                        </ul>
+<p class="p">For any other source data, set to None.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally, click the <span class="keyword wintitle">Advanced</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__table_idr_prh_4v" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d134637e607">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d134637e610">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e607 ">External Consistency</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e610 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
+                                            <li class="li">Client Propagated - Ensures that writes from a
+                                                single client are automatically externally
+                                                consistent. </li>
+
+
+                                            <li class="li">Commit Wait - An experimental external consistency
+                                                model that tightly synchronizes the clocks on all
+                                                machines in the cluster.</li>
+
+                                        </ul>
+<p class="p">For more information, see the Kudu
+                                            documentation.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e607 ">Mutation Buffer Space</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e610 ">The size of the buffer that Kudu uses to write a single
+                                        batch of data, in records. Should be equal to or greater
+                                        than the number of records in the batch passed from the
+                                            pipeline.<p class="p">Default is 1000 records. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e607 ">Operation Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e610 ">Number of milliseconds the destination waits to allow an
+                                        operation to complete.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d134637e607 ">Unsupported Operation Handling
+                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
+                                            <img class="image" id="task_c4x_tmh_4v__image_m9p_rfp_ov" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d134637e610 ">Action to take when the
+                                        CRUD operation type defined in the sdc.operation.type record
+                                        header attribute is not supported:<ul class="ul" id="task_c4x_tmh_4v__d16805e7976">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Use Default Operation - Writes the record to the
+                                                destination system using the default operation.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

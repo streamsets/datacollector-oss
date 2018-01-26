@@ -1,0 +1,466 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Field Hasher" /><meta name="abstract" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="description" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ivv_c3k_wq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Field Hasher</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ivv_c3k_wq">
+ <h1 class="title topictitle1">Field Hasher</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode
+        highly-sensitive data. For example, you might use Field Hasher to encode social security or
+        credit card numbers.</p>
+
+  <p class="p">Field Hasher provides several methods to enable
+            hashing individual fields or the entire record. You can hash any field that can be
+            converted to a string. The resulting hash is a string value. </p>
+
+        <p class="p">Field Hasher uses MD5, SHA1, SHA2, or MurmurHash3 128 to hash field values. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ssq_5jb_mv">
+ <h2 class="title topictitle2">Hash Methods</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Field Hasher provides several methods to hash data. When you hash a field more than
+        once, Field Hasher uses the existing hash when generating the next hash. </p>
+
+        <div class="p">Field
+            Hasher hashes in the following order. When using multiple hash methods, note that the
+            order can affect how data is hashed:<ol class="ol" id="concept_ssq_5jb_mv__ol_ajh_fyb_mv">
+                <li class="li"><span class="ph uicontrol">Hash in Place</span> - Field Hasher replaces the original data
+                    in a field with hashed values. <p class="p">You can specify multiple fields to be hashed
+                        with the same algorithm. You can also use different algorithms to hash
+                        different sets of fields.</p>
+</li>
+
+                <li class="li"><span class="ph uicontrol">Hash to Target </span>- Field Hasher hashes data in a field and
+                    writes it to the specified field, header attribute, or both. It leaves the
+                    original data in place. <p class="p">If the specified target field or attribute does not
+                        exist, Field Hasher creates it.</p>
+<p class="p">If you specify multiple fields to be
+                        hashed with the same algorithm, Field Hasher hashes the fields
+                        together.</p>
+<p class="p">If any of the fields are already hashed, Field Hasher uses
+                        existing hash values to generate the new hash value.</p>
+</li>
+
+                <li class="li"><span class="ph uicontrol">Hash Record </span>- Field Hasher hashes the record and writes
+                    it to the specified field, header attribute, or both. You can include the record
+                    header in the hash.<p class="p">If the specified target field or attribute does not exist,
+                        Field Hasher creates it.</p>
+<p class="p">If the record includes fields that are
+                        already hashed, Field Hasher uses the hash values when hashing the
+                        record.</p>
+</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_qvs_z4g_4v">
+ <h2 class="title topictitle2">List, Map, and List-Map Fields</h2>
+
+ <div class="body conbody">
+  <p class="p">Field Hasher does not hash list, map, or list-map
+            fields, but can hash field data within the list, map, and list-map fields. To hash data
+            within a list, map, or list-map field, select the field that contains the actual data to
+            be hashed.</p>
+
+        <p class="p">When hashing the entire record, Field Hasher hashes the data within list, map, and
+            list-map fields. </p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_xjd_dlk_wq">
+    <h2 class="title topictitle2">Configuring a Field Hasher</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Field Hasher to
+            encode sensitive data. You can hash the entire record or specific fields. You can also
+            hash fields together to a target field or attribute header.</div>
+
+        <ol class="ol steps" id="task_xjd_dlk_wq__steps_fsf_flk_wq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__d82777e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d440202e154">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d440202e157">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e154 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e157 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e154 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e157 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e154 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_xjd_dlk_wq__d82777e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e157 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e154 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_xjd_dlk_wq__d82777e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e157 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e154 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_xjd_dlk_wq__d82777e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e157 ">Error record handling for the stage: <ul class="ul" id="task_xjd_dlk_wq__d82777e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_xjd_dlk_wq__SelectHashField">
+                <span class="ph cmd">To hash a field, click the <span class="keyword wintitle">Hash Field</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To hash fields in place, configure the following <span class="ph uicontrol">Hash in
+                        Place</span> properties for each hash type that you want to use. Click
+                        <span class="ph uicontrol">Add</span> to use additional hash types.</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_d4v_fz5_lv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d440202e280">Hash in Place Property <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                            <img class="image" id="task_xjd_dlk_wq__image_f3b_khp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
+
+                                    <th class="entry" valign="top" width="70%" id="d440202e290">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e280 ">Fields to Hash</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e290 ">One or more fields to hash with the same hash type.<p class="p"><span class="ph">You can specify individual fields or use a <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb" title="You can use field path expressions in certain processors to determine the set of fields that you want the processor to use.">field path expression</a> to specify a set of fields.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e280 ">Hash Type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e290 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d82899e1735">
+         <li class="li">MD5 - Produces a 128-bit (16-byte) hash value, typically expressed in text format as a
+          32 digit hexadecimal number.</li>
+
+         <li class="li">SHA1 - Produces a 160-bit (20-byte) hash value.</li>
+
+         <li class="li">SHA2 - Based on SHA1, but uses a set of four hash functions: 224, 256, 384, or 512
+          bits.</li>
+
+         <li class="li">MURMUR3_128 - Produces a 128-bit (16 byte) hash value.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To hash one or more fields together and write them to a field or attribute
+                    header, configure the following <span class="ph uicontrol">Hash to Target
+                    </span>properties. Click <span class="ph uicontrol">Add</span> to hash additional
+                    fields.</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d440202e369">Hash to Target Property <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                            <img class="image" id="task_xjd_dlk_wq__image_qvf_wvh_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
+
+                                    <th class="entry" valign="top" width="70%" id="d440202e379">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e369 ">Fields to Hash</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e379 ">One or more fields to hash and write to a target field or
+                                        header attribute.<p class="p">If you enter more than one field, the
+                                            processor hashes them together.</p>
+<p class="p"><span class="ph">You can specify individual fields or use a <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb" title="You can use field path expressions in certain processors to determine the set of fields that you want the processor to use.">field path expression</a> to specify a set of fields.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e369 ">Hash Type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e379 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d82899e1735">
+         <li class="li">MD5 - Produces a 128-bit (16-byte) hash value, typically expressed in text format as a
+          32 digit hexadecimal number.</li>
+
+         <li class="li">SHA1 - Produces a 160-bit (20-byte) hash value.</li>
+
+         <li class="li">SHA2 - Based on SHA1, but uses a set of four hash functions: 224, 256, 384, or 512
+          bits.</li>
+
+         <li class="li">MURMUR3_128 - Produces a 128-bit (16 byte) hash value.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e369 ">Target Field</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e379 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
+        creates the field. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e369 ">Header Attribute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e379 ">Attribute in the record header to use for hashed data. If the attribute does not
+        exist, Field Hasher creates the attribute.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure field-level error handling, configure the following property on
+                    the <span class="keyword wintitle">Hash Field</span> tab:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_kbk_vl3_mv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d440202e475">Field Error Handling Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d440202e478">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e475 ">On Field Issue</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e478 ">Determines the action to take if a specified field to
+                                        hash is missing from the record, contains a null value, or
+                                        is a List, Map, or List-Map data type:<ul class="ul" id="task_xjd_dlk_wq__ul_e4v_fz5_lv">
+                                            <li class="li">Continue - Drops the target field from the record
+                                                and continues processing.</li>
+
+                                            <li class="li">Send to Error - Passes the record to the pipeline
+                                                for error handling.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To hash the entire record, on the <span class="ph uicontrol">Hash Record</span> tab,
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_ibg_cqc_mv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d440202e530">Hash Record Property <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                            <img class="image" id="task_xjd_dlk_wq__image_dlx_wvh_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
+
+                                    <th class="entry" valign="top" width="70%" id="d440202e540">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e530 ">Hash Entire Record</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e540 ">Hashes the entire record and writes it to a target field,
+                                        attribute header, or both.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d440202e530 ">Include Record Header</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d440202e540 ">Includes the record header in the hash.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e530 ">Target Field</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e540 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
+        creates the field. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d440202e530 ">Header Attribute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d440202e540 ">Attribute in the record header to use for hashed data. If the attribute does not
+        exist, Field Hasher creates the attribute.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

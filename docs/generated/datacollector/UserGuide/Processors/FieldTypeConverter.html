@@ -1,0 +1,572 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Field Type Converter" /><meta name="abstract" content="The Field Type Converter converts the data types of fields to compatible data types. You might use the Field Type Converter to convert the data types of fields before performing calculations. You can also use the Field Type Converter to change the scale of decimal data." /><meta name="description" content="The Field Type Converter converts the data types of fields to compatible data types. You might use the Field Type Converter to convert the data types of fields before performing calculations. You can also use the Field Type Converter to change the scale of decimal data." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_is3_zkp_wq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Field Type Converter</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_is3_zkp_wq">
+ <h1 class="title topictitle1">Field Type Converter</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Type Converter converts the data types of fields to compatible data types. You
+    might use the Field Type Converter to convert the data types of fields before performing
+    calculations. You can also use the Field Type Converter to change the scale of decimal
+    data.</p>
+
+  <p class="p">You configure the processor to use one of the
+      following methods to convert data types:</p>
+
+    <dl class="dl">
+      
+        <dt class="dt dlterm">By Field Name</dt>
+
+        <dd class="dd">
+          <p class="p">Convert the data type of a field with the specified name. For example, you can convert
+            a field named dropoff_datetime with the String data type to the Date data type. </p>
+
+        </dd>
+
+      
+      
+        <dt class="dt dlterm">By Data Type</dt>
+
+        <dd class="dd">
+          <p class="p">Convert the data type of all fields with the specified type. For example, you can
+            convert all fields with the Decimal data type to the String data type.</p>
+
+        </dd>
+
+      
+    </dl>
+
+    <p class="p">You can convert data types by field name or by data type. You cannot use both methods in the
+      same stage. </p>
+
+    <p class="p">Configure the conversion for an appropriate, compatible data type. Consider the actual data
+      in the field as well, since even valid conversions can truncate data. For example, converting
+      a field from Integer to Decimal is valid. Converting a field from Decimal to Integer is also
+      valid, but the conversion can truncate any decimal values in the data.</p>
+
+  <div class="p"><div class="note tip"><span class="tiptitle">Tip:</span> You can use data preview to verify the data in the fields.
+      </div>
+When you convert string data to a Date, Datetime, or Time data type or when you convert
+      date, datetime, or time data to the String data type, you specify the date format that you
+      want to use. You can use any valid format.</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ixz_s5q_wq">
+ <h2 class="title topictitle2">Valid Type Conversions</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The following table lists the data types that can be converted to another data type.
+  List, Map, and List-Map data types cannot be converted.</p>
+
+  <div class="p">
+   
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ixz_s5q_wq__table_wgg_wgd_br" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr>
+       <th class="entry" valign="top" width="24.509803921568626%" id="d446295e104">Target Data Type</th>
+
+       <th class="entry" valign="top" width="75.49019607843137%" id="d446295e107">Source Data Type</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Boolean</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Decimal, Double, Float, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Byte</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Decimal, Double, Float, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Byte Array</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Character</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Date</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Datetime, Long, String, Time</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Datetime</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Date, Long, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Decimal</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Double, Float, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Double</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Decimal, Integer, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Float</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Decimal, Double, Integer, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Integer</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Decimal, Double, Float, Long, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Long</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Date, Datetime, Decimal, Double, Float, Integer, Short, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Short</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Byte, Decimal, Double, Float, Integer, Long, String</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">String</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">All supported data types except List, Map, and List-Map</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Time</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">Date, Datetime, String, Long</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="24.509803921568626%" headers="d446295e104 ">Zoned Datetime</td>
+
+       <td class="entry" valign="top" width="75.49019607843137%" headers="d446295e107 ">String</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_sym_c4g_xx">
+ <h2 class="title topictitle2">Changing the Scale of Decimal Fields</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use the Field Type Converter to change the scale of decimal fields. For example,
+        you might have a decimal field with the value 12345.6789115, and you'd like to decrease the
+        scale to 4 so that the value is 12345.6789. </p>
+
+  <p class="p">To
+            change the scale, you configure the processor to convert decimal fields to the Decimal
+            data type, specifying the scale to use. When you decrease the scale, you can also
+            specify the rounding strategy. For example, you can configure the processor to round up
+            or round down.</p>
+
+        <p class="p">You can change the scale of a decimal field by name. Or you can change the scale for all
+            fields with the Decimal data type.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_g23_2tq_wq">
+    <h2 class="title topictitle2">Configuring a Field Type Converter</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Field Type
+            Converter to convert the data types of fields. </div>
+
+        <ol class="ol steps" id="task_g23_2tq_wq__steps_fdt_ttq_wq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g23_2tq_wq__d82777e4982" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d446295e329">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d446295e332">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d446295e329 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d446295e332 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d446295e329 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d446295e332 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d446295e329 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_g23_2tq_wq__d82777e5028" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d446295e332 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d446295e329 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_g23_2tq_wq__d82777e5044" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d446295e332 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d446295e329 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_g23_2tq_wq__d82777e5061" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d446295e332 ">Error record handling for the stage: <ul class="ul" id="task_g23_2tq_wq__d82777e5065">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Conversions</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g23_2tq_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d446295e443">Field Type Converter Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d446295e446">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Conversion Method</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Specifies whether to convert data types by field name or
+                                        by data type.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Fields to Convert</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">One or more fields to convert to the same data type. Used
+                                        when converting by field name only.<p class="p"><span class="ph" id="task_g23_2tq_wq__d82843e737">You can use the asterisk wildcard to represent
+                              <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays.">array indices and map elements</a>.</span>
+            </p>
+<p class="p"><span class="ph">You can specify individual fields or use a <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb" title="You can use field path expressions in certain processors to determine the set of fields that you want the processor to use.">field path expression</a> to specify a set of fields.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Source Type</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Data type of the fields that you want to convert. Used
+                                        when converting by data type only.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Convert to Type <a class="xref" href="FieldTypeConverter.html#concept_ixz_s5q_wq" title="The following table lists the data types that can be converted to another data type. List, Map, and List-Map data types cannot be converted.">
+                                            <img class="image" id="task_g23_2tq_wq__image_sd4_jx2_2r" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Data type for conversion. Select a valid type. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Data Locale </td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Locale of field data. <p class="p">Can determine how the Field Type
+                                            Converter formats converted data, such as a comma or
+                                            period as a decimal separator. </p>
+<p class="p">Available for
+                                            types affected by locale. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Treat Input Field as Date</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Treats the input field as a datetime when converting a
+                                        long field to the String data type. <p class="p">Select when you want
+                                            to convert a timestamp in a long field, such as an epoch
+                                            or UNIX time, to a string such as "2017-02-01 12:00:00".
+                                            The processor first converts the long value to a
+                                            datetime, and then to a string using the specified date
+                                            format.</p>
+<p class="p">When cleared, the processor converts a
+                                            long value such as 1485979200 to the string value
+                                            "1485979200".</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Scale <a class="xref" href="FieldTypeConverter.html#concept_sym_c4g_xx" title="You can use the Field Type Converter to change the scale of decimal fields. For example, you might have a decimal field with the value 12345.6789115, and you'd like to decrease the scale to 4 so that the value is 12345.6789.">
+                                            <img class="image" id="task_g23_2tq_wq__image_sd3_jx8_9r" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Scale to use when converting to the Decimal data type.
+                                            <p class="p">Enter a zero or positive number to indicate the
+                                            number of digits to the right of the decimal point. If
+                                            you enter a negative number, the processor multiplies
+                                            the unscaled value of the number by ten to the power of
+                                            the negation of the scale.</p>
+<p class="p">For more information
+                                            about specifying the scale, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Rounding Strategy</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Rounding strategy to use during the Decimal scale
+                                        conversion. <p class="p">For a description of each rounding strategy,
+                                            see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Date Format </td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Format of the date, datetime, or time data to be
+                                        converted. Use to convert datetime data without time zone or
+                                        UTC offset details to Date, Datetime, or Time. Or to convert
+                                        date, datetime, or time data to String. <p class="p">Select the format
+                                            to use or create a custom format. </p>
+<p class="p">To convert
+                                            datetime data with the time zone or offset information,
+                                            use the Zoned Datetime Format property.</p>
+<div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="task_g23_2tq_wq__d82843e4553">Data preview displays date,
+                        datetime, and time data using the default format of the browser locale. For
+                        example, if the browser uses the en_US locale, preview displays dates using
+                        the following format: MMM d, y h:mm:ss a.</span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Other Date Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Use to enter a custom date format.<p class="p">For more information
+                                            about creating a custom date format, see the <a class="xref" href="https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html" target="_blank">Oracle Java
+                                                documentation</a>. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Zoned Datetime Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Format for the date, datetime, or time data to be
+                                        converted. Use to convert datetime data with time zone or
+                                        offset information to the Zoned Datetime format or to
+                                        convert Zoned Datetime data to String. <div class="p">Select one of the
+                                            following options:<ul class="ul" id="task_g23_2tq_wq__ul_hh5_5gm_kcb">
+                                                <li class="li">yyyy-MM-dd'T'HH:mm:ssX - Use for datetime values
+                                                  with a UTC offset.</li>
+
+                                                <li class="li">yyyy-MM-dd'T'HH:mm:ssX[VV] - Use for datetime
+                                                  values with a UTC offset and time zone. If the
+                                                  datetime value does not include a UTC offset, the
+                                                  stage uses the minimum offset for the specified
+                                                  time stamp.</li>
+
+                                                <li class="li">Other - Use to enter a different zone datetime
+                                                  format.</li>
+
+                                            </ul>
+</div>
+<p class="p">To convert datetime data without time zone
+                                            or offset information, use the Date Format property.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Other Zoned Datetime Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Use to enter a custom zoned datetime format. <p class="p">For more
+                                            information about creating a custom zoned datetime
+                                            format, see the <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html" target="_blank">Oracle Java
+                                                documentation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446295e443 ">Charset</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446295e446 ">Character encoding of the data to be
+                                            converted.<p class="p">Available for types affected by
+                                            encoding.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure additional type conversions, click the <span class="ph uicontrol">Add</span>
+                    icon and then repeat the previous step. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to configure additional conversions.</span>
+                <div class="itemgroup info">You can configure additional conversions by field name or additional
+                    conversions by data type. You cannot use both methods in the same stage. </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

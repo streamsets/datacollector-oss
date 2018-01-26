@@ -1,0 +1,340 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Data Collector can use Vault functions to access information, a.k.a. secrets , stored in Hashicorp Vault. However, the Vault functions are now deprecated and will be removed in a future release. We ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Accessing Vault Secrets with Vault Functions (Deprecated)" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bmq_gl1_mw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Accessing Vault Secrets with Vault Functions (Deprecated)</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration">Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_bmq_gl1_mw">
+ <h1 class="title topictitle1">Accessing Vault Secrets with Vault Functions (Deprecated)</h1>
+
+ <div class="body conbody">
+        <p class="p"><span class="ph">Data Collector</span> can
+            use Vault functions to access information, a.k.a. <dfn class="term">secrets</dfn>, stored in
+            Hashicorp Vault. However, the Vault functions are now deprecated and will be removed in
+            a future release. We recommend using the credential functions available with the Vault
+                <a class="xref" href="CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential store</a>
+            integration.</p>
+
+        <p class="p">You can use Vault secrets in place of username and password properties, similar
+            properties such as AWS access key IDs and secret access keys, and in HTTP headers and
+            bodies when using HTTPS. </p>
+
+        <p class="p">To access Vault secrets using the Vault functions, configure properties for <span class="ph">Data Collector</span> to
+            access Vault. Then, use Vault functions in the pipeline to access Vault at run time.</p>
+
+        <div class="p">To access information stored in Vault, perform the following steps:<ol class="ol" id="concept_bmq_gl1_mw__ol_ahx_z41_mw">
+                <li class="li">Configure the Vault connection properties.</li>
+
+                <li class="li">In the pipeline, use Vault functions to access Vault secrets.</li>
+
+            </ol>
+</div>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> This documentation includes details about Hashicorp Vault to simplify the
+                installation and configuration process. For more information, see the Vault
+                documentation. </div>
+
+        </div>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_c4b_5bb_mw">
+ <h2 class="title topictitle2">Step 1. Configure Vault Properties</h2>
+
+ <div class="body conbody">
+        <p class="p">To enable <span class="ph">Data Collector</span> to
+            connect to Vault, configure the following files located in the
+                <samp class="ph codeph">$SDC_CONF</samp> directory:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Vault properties file</dt>
+
+                <dd class="dd">The <samp class="ph codeph">vault.properties</samp> file contains a single Vault EL property
+                    that you must uncomment to use the deprecated Vault functions.</dd>
+
+            
+            
+                <dt class="dt dlterm">Credential stores properties file</dt>
+
+                <dd class="dd">The <samp class="ph codeph">credential-stores.properties</samp> file contains the remaining
+                    Vault properties. The Vault server URL, Role ID, and Secret ID are required
+                    properties. Configure other properties as needed.<div class="note note"><span class="notetitle">Note:</span> The
+                            <samp class="ph codeph">credentialStore.vault.def</samp> and
+                            <samp class="ph codeph">credentialStore.vault.config.pathKey.separator</samp>
+                        properties are not used by the Vault functions. You can ignore these
+                        properties.</div>
+</dd>
+
+                <dd class="dd">Configure the following properties in the file:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_c4b_5bb_mw__table_tdn_zkx_v1b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="46%" id="d57204e133">Vault Property</th>
+
+                                    <th class="entry" valign="top" width="54%" id="d57204e136">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.addr</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Required. Vault server URL entered in the following
+        format:<pre class="pre codeblock">https://&lt;host name&gt;:&lt;port number&gt;</pre>
+<p class="p">Use HTTPS to avoid
+        unencrypted communication.</p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.role.id</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Required. Vault Role ID that <span class="ph">Data Collector</span> uses to authenticate with Vault.
+       The Role ID is configured within Vault by your Vault administrator. <div class="p">The <span class="ph">Data Collector</span> Vault integration relies on
+        Vault's App Role authentication backend.<div class="note important"><span class="importanttitle">Important:</span> The App ID authentication
+         backend has been deprecated by Hashicorp and will be removed in a future release. As a
+         result, do not configure the <samp class="ph codeph">credentialStore.vault.config.app.id</samp> property
+         for new installations.</div>
+</div>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.secret.id</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Required. Vault Secret ID that <span class="ph">Data Collector</span> uses to authenticate with Vault.
+       The Secret ID is configured within Vault by your Vault administrator. <div class="p">Enter one of the
+         following:<ul class="ul" id="concept_c4b_5bb_mw__d4715e4986">
+         <li class="li">Secret ID value.</li>
+
+         <li class="li">File that contains the Secret ID value. For increased security, store the Secret ID in
+          a separate file and reference the file in the
+           <samp class="ph codeph">$SDC_CONF/credential-stores.properties</samp> file as follows:
+          ${file("&lt;filename&gt;")}. <p class="p">By default, the file name is <samp class="ph codeph">vault-secret-id</samp>
+           and expected in the <samp class="ph systemoutput">$SDC_CONF</samp> directory. For more
+           information, see <a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="For increased security you can store sensitive information, such as a password, in separate files and reference the files in the Data Collector configuration file, $SDC_CONF/sdc.properties, as follows: ${file(&#34;&lt;filename&gt;&#34;)}.">Referencing Sensitive Values in Files</a>.</p>
+</li>
+
+        </ul>
+</div>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.lease.renewal.interval.sec</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Seconds to wait before checking for leases that need renewal. <p class="p">Default is
+        60. </p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.lease.expiration.buffer.sec</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Buffer for expiring leases. <span class="ph">Data Collector</span> renews leases that expire in less
+       than the specified number of seconds.<p class="p">Default is 120. </p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.open.timeout</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Timeout to establish an HTTP connection to Vault in milliseconds. <p class="p">Default
+        is 0 for no limit. </p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.proxy.address</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Proxy URL. Configure to use a proxy to access Vault. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.proxy.port</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Proxy port. Configure to use a proxy to access Vault. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.proxy.username</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Proxy username. Configure to use a proxy to access Vault. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.proxy.password</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Proxy password. Configure to use a proxy to access Vault. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.read.timeout</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Milliseconds to wait for data before timing out. <p class="p">Default is 0 for no
+        limit. </p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.ssl.enabled.protocols</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
+        recommended.<p class="p">Default is TLSv1.2,TLSv1.3.</p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.ssl.truststore.file</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Path to a Java truststore file. Required when using a private CA or
+       certificates not trusted by the Java default truststore. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.ssl.truststore.password</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Password for the truststore file. </td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.ssl.verify</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Whether to verify that the Vault server hostname matches its
+        certificate.<p class="p">Default is true. False is not recommended.</p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.ssl.timeout</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Timeout for the SSL/TLS handshake in milliseconds. <p class="p">Default is 0 for no
+        limit. </p>
+</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="46%" headers="d57204e133 ">credentialStore.vault.config.timeout</td>
+
+      <td class="entry" valign="top" width="54%" headers="d57204e136 ">Optional. Timeout to read from Vault in milliseconds, after a connection has been
+        established.<p class="p">Default is 0 for no limit. </p>
+</td>
+
+     </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</dd>
+
+            
+        </dl>
+
+        <p class="p">Restart <span class="ph">Data Collector</span> to
+            enable the changes to both files. </p>
+
+        
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_h54_skb_mw">
+    <h2 class="title topictitle2">Step 2. Call Vault from the Pipeline</h2>
+
+    <div class="body conbody">
+        <p class="p">After enabling <span class="ph">Data Collector</span> to
+            access Vault, use the Vault functions in pipeline and stage properties to access Vault
+            secrets.</p>
+
+        <p class="p">The expression language provides Vault functions to return Vault secrets. You can use
+            Vault functions in <span class="ph">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the functions in
+                        HTTP headers and bodies when using HTTPS.</span></p>
+
+        <div class="p">You can use the following functions to access Vault secrets:<dl class="dl">
+                
+                    <dt class="dt dlterm">vault:read()</dt>
+
+                    <dd class="dd">Use to return the value for the Vault path and key that you provide.
+                        Typically, you'll use this function to access secrets.</dd>
+
+                
+                
+                    <dt class="dt dlterm">vault:readWithDelay()</dt>
+
+                    <dd class="dd">Use to return the value for the specified Vault path and key with a delay.
+                        Use this function to incorporate a delay in the response to allow time for
+                        other processes to complete. </dd>
+
+                    <dd class="dd">For example, you should use this function when using the Vault AWS secret
+                        backend to generate AWS access credentials based on IAM policies. According
+                        to Vault documentation, you might need a delay of 10 seconds or more before
+                        the credentials can be used successfully.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">For more information, see <a class="xref" href="../Expression_Language/Functions.html#concept_ddw_ld1_1s">Miscellaneous Functions</a>.</p>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

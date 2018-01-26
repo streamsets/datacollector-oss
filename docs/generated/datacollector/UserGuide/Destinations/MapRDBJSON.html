@@ -1,0 +1,534 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MapR DB JSON destination writes data as JSON documents to MapR DB JSON tables. The destination converts each record into a JSON document and writes the document to the JSON table that you specify. ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR DB JSON" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_i4h_2kj_dy" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>MapR DB JSON</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_i4h_2kj_dy">
+ <h1 class="title topictitle1">MapR DB JSON</h1>
+
+ <div class="body conbody">
+  <p class="p">The MapR DB JSON destination writes data as JSON
+            documents to MapR DB JSON tables. The destination converts each record into a JSON
+            document and writes the document to the JSON table that you specify. To write text,
+            binary data, or JSON strings to MapR DB binary tables, use the <a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB destination</a>. </p>
+
+        <p class="p">MapR DB JSON tables are tables in which every row is a JSON document. The JSON documents
+            in a table do not need to have the same structure. For example, a single JSON table can
+            include any number of JSON documents that share only some common fields.</p>
+
+        <p class="p">The MapR DB JSON destination can use CRUD operations defined in the sdc.operation.type
+            record header attribute to write data. When CRUD operations are not specified in a
+            record, the destination treats it like an Insert record. <span class="ph">For information about <span class="ph">Data Collector</span> change data
+                        processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+        <p class="p">When you configure the MapR DB JSON destination, you specify the table name and whether
+            the destination should create the table if it doesn't exist. You specify the row key for
+            the table. And you configure the Insert API and Set API properties, which can affect how
+            the destination writes data to MapR DB JSON tables.</p>
+
+        <p class="p">Before you use any MapR stage in a pipeline, you must perform
+                  additional steps to enable <span class="ph">Data Collector</span> to process MapR
+                  data. <span class="ph">For more information, see <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v" title="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR. Data Collector does not display MapR origins and destinations in stage library lists nor the MapR Streams statistics aggregator in the pipeline properties until you perform these prerequisites.">MapR Prerequisites</a>.</span></p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_mrg_nx3_4y">
+ <h2 class="title topictitle2">Row Key</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is
+        defined by the _id field of the JSON document stored in the row.</p>
+
+        <p class="p">When you configure the MapR DB JSON destination, you
+            define a field in the record to use as the row key. The field must contain a unique
+            value. The destination writes the value of the specified field to the _id field in the
+            JSON document. The destination retains the original field in the JSON document. </p>
+
+        <p class="p">For example, let's say you define the customer_ID field in the record as the row key.
+            When the destination converts a record with a customer_ID of 034667 to a JSON document,
+            the JSON document includes both an _id field and a customer_ID field with the value of
+            034667. MapR DB uses the _id field with the value of 034667 in the JSON document as the
+            row key in the JSON table. </p>
+
+        <p class="p">If the field defined as the row key doesn't exist in the record, the record is sent to the
+            stage for error handling.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_etz_vd3_qy">
+ <h3 class="title topictitle3">Row Key Data Types</h3>
+
+    
+ <div class="body conbody"><p class="shortdesc">You configure the MapR DB JSON destination to process row keys as string or binary
+        data. If necessary, the MapR DB JSON destination converts the data type of the row key field
+        and then writes the converted value to the _id field in the JSON document.</p>
+
+        <div class="note note"><span class="notetitle">Note:</span> The destination cannot convert the List, Map, or List-Map data types. As a result, you
+            cannot define a field with these data types as the row key.</div>
+
+        <p class="p">The destination processes the field defined as the row key as one of the following data
+            types:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">String</dt>
+
+                <dd class="dd">When you configure the destination to process the row key as string data, you
+                    can assign fields with any data type as a row key, except for fields with a
+                    List, Map, or List-Map data type. The origin processes the row key data as
+                    String, converting data types as necessary. A Byte Array field is an exception
+                    to this rule. The destination processes a Byte Array field defined as a row key
+                    as binary data, even if the destination is configured to process the row key as
+                    string data.</dd>
+
+                <dd class="dd">By default, the MapR DB JSON destination processes the row key as string data.
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Binary</dt>
+
+                <dd class="dd">When you configure the destination to process the row key as binary data, you
+                    can assign fields with the following data types as a row key:<ul class="ul" id="concept_etz_vd3_qy__ul_cc4_f23_qy">
+                        <li class="li">Byte Array</li>
+
+                        <li class="li">Date</li>
+
+                        <li class="li">Datetime</li>
+
+                        <li class="li">Integer</li>
+
+                        <li class="li">Long</li>
+
+                        <li class="li">Short</li>
+
+                        <li class="li">String</li>
+
+                        <li class="li">Time</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">If the field defined as the row key is any other data type, the record is sent
+                    to the stage for error handling.</dd>
+
+                <dd class="dd">The origin processes the row key data as Byte Array, converting data types as
+                    necessary. Date, Datetime, and Time fields are first converted to an epoch time
+                    in milliseconds, and then converted to a Byte Array.</dd>
+
+                <dd class="dd">To configure the destination to process the row key as binary data, select the
+                    Process Row Key as Binary property.</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_hy5_3nb_xbb">
+ <h2 class="title topictitle2">Writing to MapR DB JSON</h2>
+
+ <div class="body conbody">
+  <p class="p">When the MapR DB JSON destination writes to MapR DB JSON tables, it uses CRUD operations in
+            record header attributes when available. When records do not include CRUD operations,
+            the destination treats them as Insert records.</p>
+
+        <p class="p">You can also configure the Insert API and the Set API properties that define how records
+            are treated when they already exist in the destination. </p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ab4_gbb_xbb">
+ <h3 class="title topictitle3">Define the CRUD Operation</h3>
+
+    <div class="body conbody">
+        <p class="p">You
+            can use CRUD operations to write to MapR DB JSON. To use CRUD operations, define the
+            CRUD operation record header attribute for each record earlier in the pipeline. Records
+            without the attribute defined are treated as Insert. </p>
+
+        <div class="p">To use CRUD operations to write records, set the following CRUD operation record header attribute:<dl class="dl">
+                
+                    <dt class="dt dlterm">sdc.operation.type</dt>
+
+                    <dd class="dd">When defined, the MapR DB JSON destination uses the CRUD operation in the
+                        sdc.operation.type record header attribute when writing to MapR DB JSON
+                        tables. The destination supports the following values for the
+                        sdc.operation.type attribute: <ul class="ul" id="concept_ab4_gbb_xbb__ul_hg2_44y_ty">
+                            <li class="li">1 for INSERT</li>
+
+                            <li class="li">2 for DELETE</li>
+
+                            <li class="li">3 for UPDATE</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">If your pipeline includes a CRUD-enabled
+                              origin that processes changed data, the destination simply reads the
+                              operation type from the sdc.operation.type header attribute that the
+                              origin generates. If your pipeline uses a non-CDC origin, you can use
+                              the Expression Evaluator or a scripting processor to define the record
+                              header attribute. For more information about <span class="ph">Data Collector</span>
+                              changed data processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_gd5_fwg_xbb">
+ <h3 class="title topictitle3">Insert and Set API Properties</h3>
+
+ <div class="body conbody">
+  <div class="p">The Insert API and Set API properties determine how records are treated when records with the
+            same row key exist in the MapR DB JSON table.<dl class="dl">
+                
+                    <dt class="dt dlterm">Insert API</dt>
+
+                    <dd class="dd">Used for Insert records. This includes records where the CRUD operation
+                        header attribute is set to Insert, and those where the attribute is not set
+                        at all. You can use one of the following MapR APIs:<ul class="ul" id="concept_gd5_fwg_xbb__ul_lpx_lyg_xbb">
+                            <li class="li">
+                                <p class="p">MapR Insert API - The MapR DB JSON destination inserts the record
+                                    into the MapR DB JSON table when no matching row key exists in
+                                    the table. When the table has a matching row key, the
+                                    destination sends the record to error, using the error handling
+                                    configured for the stage. </p>
+
+                            </li>
+
+                            <li class="li">
+                                <p class="p">MapR InsertOrReplace API - The MapR DB JSON destination inserts
+                                    the record into the MapR DB JSON table when no matching row key
+                                    exists in the table. When the table has a matching row key, the
+                                    destination replaces the existing row. This is the default
+                                    API.</p>
+
+                            </li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Set API</dt>
+
+                    <dd class="dd">Used only for Update records. This includes only records where the CRUD
+                        operation header attribute is set to Update. You can use one of the
+                        following MapR APIs:<ul class="ul" id="concept_gd5_fwg_xbb__ul_lvn_n1h_xbb">
+                            <li class="li">MapR Set API - The MapR DB JSON performs updates only when the data
+                                types of the fields in the record match the corresponding fields in
+                                the existing row. When the data types do not match, the destination
+                                sends the record to error, using the error handling configured for
+                                the stage. </li>
+
+                            <li class="li">MapR SetOrReplace API - The MapR DB JSON updates the existing row
+                                regardless of whether the data types in record match those in the
+                                existing row. This is the default API.</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_wq3_wkj_dy">
+    <h2 class="title topictitle2">Configuring a MapR DB JSON Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a MapR DB JSON
+                destination to write data as JSON documents to MapR DB JSON tables.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wq3_wkj_dy__d16805e5598" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d144346e367">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d144346e370">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_wq3_wkj_dy__d16805e5620">
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr id="task_wq3_wkj_dy__d16805e5629">
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_wq3_wkj_dy__d16805e5638">
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_wq3_wkj_dy__d16805e5653" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_wq3_wkj_dy__d16805e5669" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_wq3_wkj_dy__d16805e5681">
+                                    <td class="entry" valign="top" width="30%" headers="d144346e367 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_wq3_wkj_dy__d16805e5687" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e370 ">Error record handling for the stage: <ul class="ul" id="task_wq3_wkj_dy__d16805e5691">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">MapR DB JSON</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wq3_wkj_dy__table_pkx_rnp_4y" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d144346e491">MapR DB JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d144346e494">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Table Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Name of the MapR DB JSON table to write to. Enter one of
+                                        the following:<ul class="ul" id="task_wq3_wkj_dy__ul_il5_wf4_hz">
+                                            <li class="li">Name of a table.</li>
+
+                                            <li class="li">Expression that evaluates to the name of a table.
+                                                For example, if the table name is stored in the
+                                                "tableName" record attribute, enter the following
+                                                expression:<pre class="pre codeblock">${record:attribute('tableName')}</pre>
+</li>
+
+                                        </ul>
+<p class="p">If you do not include a path to the table, the stage assumes that
+        the table exists in the user's home directory. For example, <samp class="ph codeph">/user/&lt;user
+         name&gt;/&lt;table name&gt;</samp>.</p>
+<p class="p">You can include a path relative to the user's home directory or an
+        absolute path when you enter the table name. For tables in a default cluster, specify the
+        absolute path as <samp class="ph codeph">/&lt;table path&gt;</samp>. For tables in a specific cluster,
+        specify the absolute path as <samp class="ph codeph">/mapr/&lt;cluster name&gt;/&lt;table path&gt;</samp>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Create Table</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Determines whether the destination creates the table if
+                                        it doesn't exist.<p class="p">When selected, the destination creates
+                                            the table if it does not exist. When cleared, the
+                                            destination produces an error when it attempts to write
+                                            to a table that does not exist. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Row Key
+                                        <a class="xref" href="MapRDBJSON.html#concept_mrg_nx3_4y" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.">
+                                            <img class="image" id="task_wq3_wkj_dy__image_a7z_jfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Row key for the table. <p class="p">Define which field in the
+                                            record to use as the row key. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Process Row Key as Binary <a class="xref" href="MapRDBJSON.html#concept_etz_vd3_qy" title="You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">
+                                            <img class="image" id="task_wq3_wkj_dy__image_a9z_kfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Determines whether the destination processes the row key
+                                        as string or binary data.<p class="p">When cleared, the destination
+                                            converts the row key field to String. When selected, the
+                                            destination converts the row key field to Byte
+                                            Array.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Insert API <a class="xref" href="MapRDBJSON.html#concept_gd5_fwg_xbb">
+                                            <img class="image" id="task_wq3_wkj_dy__image_c54_mch_xbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Determines how the destination inserts data to the MapR
+                                        DB JSON table:<ul class="ul" id="task_wq3_wkj_dy__ul_ng1_2gq_4y">
+                                            <li class="li">Use MapR InsertOrReplace API - Inserts the record
+                                                into the table if it has a unique row key. If the
+                                                destination finds a matching row key in the table,
+                                                it replaces the row.</li>
+
+                                            <li class="li">Use MapR Insert API - Inserts the record into the
+                                                table if it has a unique row key. If the destination
+                                                finds a matching row key in the table, it sends the
+                                                record to error.</li>
+
+                                        </ul>
+<p class="p">Default is Use MapR InsertOrReplace API.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d144346e491 ">Set API <a class="xref" href="MapRDBJSON.html#concept_gd5_fwg_xbb">
+                                            <img class="image" id="task_wq3_wkj_dy__image_oc1_nch_xbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d144346e494 ">Determines how the destination updates data in the MapR
+                                        DB JSON table:<ul class="ul" id="task_wq3_wkj_dy__ul_fkx_2dh_xbb">
+                                            <li class="li">Use MapR SetOrReplace API - Performs an update for
+                                                all records marked as update, regardless of whether
+                                                the field data types do not match.</li>
+
+                                            <li class="li">Use MapR Set API - Performs an update only when the
+                                                data types in the record and the corresponding row
+                                                match. When they do not match, the destination sends
+                                                the record to error.</li>
+
+                                        </ul>
+<p class="p">Default is Use MapR SetOrReplace API.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
