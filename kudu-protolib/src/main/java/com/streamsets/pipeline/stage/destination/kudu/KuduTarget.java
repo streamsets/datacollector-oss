@@ -62,6 +62,8 @@ import org.apache.kudu.client.SessionConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -129,7 +131,17 @@ public class KuduTarget extends BaseTarget {
         .expireAfterAccess(1, TimeUnit.HOURS);
 
     if(LOG.isDebugEnabled()) {
-      cacheBuilder.recordStats();
+      // recordStats is available only in Guava 12.0 and above, but
+      // CDH still uses guava 11.0. Hence the reflection.
+      try {
+        Method m = CacheBuilder.class.getMethod("recordStats");
+        if (m != null) {
+          m.invoke(cacheBuilder);
+        }
+      } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+        // We're intentionally ignoring any reflection errors as we might be running
+        // with old guava on class path.
+      }
     }
 
     kuduTables = cacheBuilder.build(new CacheLoader<String, KuduTable>() {

@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Jan 26 12:30:30 PST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0161-342a-1b2e-000019459bb0 
+on database directory /Users/jarcec/streamsets/datacollector/cdh_5_14-lib/target/metastore_db with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
+Loaded from file:/Users/jarcec/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_151-b12
+user.dir=/Users/jarcec/streamsets/datacollector/cdh_5_14-lib
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.13.2
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

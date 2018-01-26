@@ -459,6 +459,7 @@
         <cdh_5_12-cluster-cdh_kafka_2_1-lib>cdh_5_12-cluster-cdh_kafka_2_1-lib</cdh_5_12-cluster-cdh_kafka_2_1-lib>
         <cdh_5_12-lib>cdh_5_12-lib</cdh_5_12-lib>
         <cdh_5_13-lib>cdh_5_13-lib</cdh_5_13-lib>
+        <cdh_5_14-lib>cdh_5_14-lib</cdh_5_14-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
@@ -531,6 +532,7 @@
         <module>cdh_5_12-cluster-cdh_kafka_2_1-lib</module>
         <module>cdh_5_12-lib</module>
         <module>cdh_5_13-lib</module>
+        <module>cdh_5_14-lib</module>
         <module>cdh_kafka_1_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>cdh_kafka_2_0-lib</module>
@@ -585,7 +587,7 @@
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_12-cluster-cdh_kafka_2_1-lib>cdh_5_12-cluster-cdh_kafka_2_1-lib</cdh_5_12-cluster-cdh_kafka_2_1-lib>
-        <cdh_5_13-lib>cdh_5_13-lib</cdh_5_13-lib>
+        <cdh_5_14-lib>cdh_5_14-lib</cdh_5_14-lib>
         <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
@@ -615,7 +617,7 @@
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
         <module>cdh_5_12-cluster-cdh_kafka_2_1-lib</module>
-        <module>cdh_5_13-lib</module>
+        <module>cdh_5_14-lib</module>
         <module>cdh_kafka_3_0-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>elasticsearch_5-lib</module>

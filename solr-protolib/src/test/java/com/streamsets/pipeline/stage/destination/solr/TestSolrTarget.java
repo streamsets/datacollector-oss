@@ -69,8 +69,10 @@ public class TestSolrTarget  extends SolrJettyTestBase {
   }
 
   @AfterClass
-  public static void destory() {
-    sdcSolrTestUtil.destroy();
+  public static void destroy() {
+    if(sdcSolrTestUtil != null) {
+      sdcSolrTestUtil.destroy();
+    }
   }
 
   @SuppressWarnings("unchecked")
