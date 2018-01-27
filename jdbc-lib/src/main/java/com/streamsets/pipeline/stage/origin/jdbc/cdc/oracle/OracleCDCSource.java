@@ -1008,6 +1008,13 @@ public class OracleCDCSource extends BaseSource {
 
       schemasAndTables = new ArrayList<>();
       for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+
+        tables.schema = configBean.baseConfigBean.caseSensitive ? tables.schema : tables.schema.toUpperCase();
+        tables.table = configBean.baseConfigBean.caseSensitive ? tables.table : tables.table.toUpperCase();
+        if (tables.excludePattern != null) {
+          tables.excludePattern =
+              configBean.baseConfigBean.caseSensitive ? tables.excludePattern : tables.excludePattern.toUpperCase();
+        }
         Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
 
         try (ResultSet rs =
