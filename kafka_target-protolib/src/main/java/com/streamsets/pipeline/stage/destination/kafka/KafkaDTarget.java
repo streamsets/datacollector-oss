@@ -37,7 +37,7 @@ import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
         ExecutionMode.EDGE
     },
   upgrader = KafkaTargetUpgrader.class,
-  onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/KProducer.html#task_q4d_4yl_zq"
+  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/KProducer.html#task_q4d_4yl_zq"
 )
 @ConfigGroups(value = KafkaDestinationGroups.class)
 @GenerateResourceBundle

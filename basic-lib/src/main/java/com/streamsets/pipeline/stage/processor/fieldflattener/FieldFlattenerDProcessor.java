@@ -27,7 +27,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     label="Field Flattener",
     description="Flattens nested structures.",
     icon="flattener.png",
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/FieldFlattener.html#task_xdv_kkk_fx"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldFlattener.html#task_xdv_kkk_fx"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

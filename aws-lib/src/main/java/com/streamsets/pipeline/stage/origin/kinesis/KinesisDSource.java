@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     recordsByRef = true,
     resetOffset = true,
     upgrader = KinesisSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/KinConsumer.html#task_p4b_vv4_yr"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/KinConsumer.html#task_p4b_vv4_yr"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

@@ -34,7 +34,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = OmnitureSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/Omniture.html#task_of4_wpw_1s"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/Omniture.html#task_of4_wpw_1s"
 )
 
 @ConfigGroups(Groups.class)

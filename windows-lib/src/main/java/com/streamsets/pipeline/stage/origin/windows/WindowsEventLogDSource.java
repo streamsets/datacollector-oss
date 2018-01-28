@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     description = "Reads data from a Windows event log",
     execution = {ExecutionMode.EDGE},
     icon = "winlogo.png",
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/WindowsLog.html#task_lmc_yjv_sbb"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WindowsLog.html#task_lmc_yjv_sbb"
 )
 
 @ConfigGroups(Groups.class)

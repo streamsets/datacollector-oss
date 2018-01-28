@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     icon = "mapr.png",
     recordsByRef = true,
     upgrader = MapRDBCDCSourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#/datacollector/UserGuide/Origins/MapRdbCDC.html#task_mmx_zvm_pbb"
+    onlineHelpRefUrl = "index.html#datacollector/UserGuide/Origins/MapRdbCDC.html#task_mmx_zvm_pbb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     icon = "kafka.png",
     recordsByRef = true,
     upgrader = MultiKafkaSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/KafkaMultiConsumer.html#task_ost_3n4_x1b"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/KafkaMultiConsumer.html#task_ost_3n4_x1b"
 )
 @RawSource(rawSourcePreviewer = MultiKafkaRawSourcePreviewer.class,  mimeType = "*/*")
 @ConfigGroups(Groups.class)

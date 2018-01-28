@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/AmazonSQS.html#task_jxn_nnm_5bb"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonSQS.html#task_jxn_nnm_5bb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

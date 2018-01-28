@@ -29,7 +29,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     icon = "mapr.png",
     privateClassLoader = true,
     upgrader = MapRJsonTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/MapRDBJSON.html#task_wq3_wkj_dy"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MapRDBJSON.html#task_wq3_wkj_dy"
 )
 
 @GenerateResourceBundle

@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     description = "Produce new records for each element of a list or map field",
     icon="pivoter.png",
     upgrader = ListPivotProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Processors/ListPivoter.html#task_dn1_k13_qw"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/ListPivoter.html#task_dn1_k13_qw"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

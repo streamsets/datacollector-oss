@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     label = "Redis",
     description = "Writes data to Redis",
     icon = "redis.png",
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/Redis.html#task_mzk_lw2_gw"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Redis.html#task_mzk_lw2_gw"
 )
 
 @ConfigGroups(Groups.class)

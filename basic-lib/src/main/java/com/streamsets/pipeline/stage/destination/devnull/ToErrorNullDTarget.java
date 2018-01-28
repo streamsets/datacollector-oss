@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.StageDef;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @ErrorStage

@@ -30,7 +30,7 @@ import java.util.Iterator;
     label = "Dev Record Creator",
     description = "It creates 2 records from each original record",
     icon= "dev.png",
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class RecordCreatorProcessor extends SingleLaneProcessor {
 

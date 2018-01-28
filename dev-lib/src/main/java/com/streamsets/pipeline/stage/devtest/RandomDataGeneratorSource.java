@@ -65,7 +65,7 @@ import java.util.concurrent.Future;
   icon= "dev.png",
   producesEvents = true,
   upgrader = RandomDataGeneratorSourceUpgrader.class,
-  onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Pipeline_Design/DevStages.html"
+  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class RandomDataGeneratorSource extends BasePushSource {
 

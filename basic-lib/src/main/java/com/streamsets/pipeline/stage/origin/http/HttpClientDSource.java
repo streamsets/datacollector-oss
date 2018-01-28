@@ -34,7 +34,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     resetOffset = true,
     recordsByRef = true,
     upgrader = HttpClientSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/HTTPClient.html#task_akl_rkz_5r"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HTTPClient.html#task_akl_rkz_5r"
 )
 @HideConfigs(value = {
     "conf.dataFormatConfig.jsonContent",

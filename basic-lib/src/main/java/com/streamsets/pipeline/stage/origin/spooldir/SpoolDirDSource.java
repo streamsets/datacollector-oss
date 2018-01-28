@@ -39,7 +39,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     upgrader = SpoolDirSourceUpgrader.class,
     resetOffset = true,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/Directory.html#task_gfj_ssv_yq"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/Directory.html#task_gfj_ssv_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

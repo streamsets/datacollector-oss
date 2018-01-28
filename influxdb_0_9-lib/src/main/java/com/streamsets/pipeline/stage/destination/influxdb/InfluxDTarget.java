@@ -27,7 +27,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     label = "InfluxDB",
     description = "Writes data to InfluxDB",
     icon = "influxdb.png",
-    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Destinations/InfluxDB.html#task_fgx_vcc_fv"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/InfluxDB.html#task_fgx_vcc_fv"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
