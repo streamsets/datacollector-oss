@@ -55,6 +55,7 @@
           "FILE_AUTH_TYPE": "${http.authentication}",
           "LOGIN_MODULE": "${http.authentication.login.module}",
           "USE_LDAP_FILE_CONFIG": "${use.ldap.login.file}",
+          "LDAP_FILE_SUBSTITUTIONS": "${ldap.login.file.allow.substitutions}",
           "DPM_TOKEN_PATH": "${dpm.authToken.path}",
           "DPM_BASE_URL": "${dpm.base.url}",
           "DPM_USER": "${dpm.user}",
@@ -278,6 +279,9 @@
           },
           {
             "filename": "ldap-login.conf"
+          },
+          {
+            "filename": "generated-ldap-login-append.conf"
           }
         ]
       },
@@ -376,6 +380,13 @@
           "name": "use.ldap.login.file",
           "label": "Use Safety Valve to edit LDAP information",
           "description": "Edit ldap-login.conf directly from Safety Valve instead of entering configuration from Configuration Wizard. If checked, all ldap.* entries are ignored",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "ldap.login.file.allow.substitutions",
+          "label": "LDAP Config File Substitutions",
+          "description": "Enable to perform certain substitutions in the ldap-login.conf file. Place holders _HOST and _KEYTAB_PATH will be replaced with hostname and location of SDC keytab respectively.",
           "type": "boolean",
           "default": "false"
         },

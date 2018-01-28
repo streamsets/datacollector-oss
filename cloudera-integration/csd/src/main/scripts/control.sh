@@ -71,7 +71,7 @@ function update_users {
 
 function generate_ldap_configs {
   if [ ! -z "$USE_LDAP_FILE_CONFIG" ] && [ "$USE_LDAP_FILE_CONFIG" = true ];then
-    log "use.ldap.login.file set to true. Applying the contents in $CONF_DIR/ldap-login.conf"
+    log "use.ldap.login.file set to true. Using the already generated content from $CONF_DIR/ldap-login.conf"
   else
     log "use.ldap.login.file set to false. Applying the configurations from ldap.* entries"
     ldap_configs=`cat "$CONF_DIR"/ldap.properties | grep "ldap" | grep -v "ldap.bindPassword" | sed -e 's/ldap\.\([^=]*\)=\(.*\)/  \1=\"\2\"/g'`
@@ -80,9 +80,21 @@ function generate_ldap_configs {
     bindPassword=\"@ldap-bind-password.txt@\"
     contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"
     $ldap_configs;
-    };" > "$CONF_DIR"/ldap-login.conf
+    };
+    " > "$CONF_DIR"/ldap-login.conf
+
+    # Append any required additions (such as Kafka JAAS config)
+    cat "$CONF_DIR"/generated-ldap-login-append.conf >> "$CONF_DIR"/ldap-login.conf
+
+    # And finally create password file
     ldap_bind_password=`cat "$CONF_DIR"/ldap.properties | grep "ldap.bindPassword"`
     echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
+  fi
+
+  if [ ! -z "$LDAP_FILE_SUBSTITUTIONS" ] && [ "$LDAP_FILE_SUBSTITUTIONS" = true ];then
+    log "Performing LDAP config file substitutions"
+    hostname=`hostname -f`
+    sed -i -e "s|_HOST|$hostname|g" -e "s|_KEYTAB_PATH|$CONF_DIR/streamsets.keytab|g" $CONF_DIR/ldap-login.conf
   fi
 }
 
