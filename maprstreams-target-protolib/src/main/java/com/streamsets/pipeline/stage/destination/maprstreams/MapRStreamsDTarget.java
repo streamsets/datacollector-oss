@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   version = 3,
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
-  icon = "mapr.png",
+  icon = "mapr_es.png",
     upgrader = MapRStreamsTargetUpgrader.class,
   onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MapRStreamsProd.html#task_tbh_nbn_2v"
 )

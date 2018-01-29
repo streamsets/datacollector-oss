@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
     version = 3,
     label = "Write to MapR Streams",
     description = "Writes Pipeline Statistic records to MapR Streams",
-    icon = "mapr.png",
+    icon = "mapr_es.png",
     upgrader = MapRStreamsTargetUpgrader.class,
     onlineHelpRefUrl = ""
 )

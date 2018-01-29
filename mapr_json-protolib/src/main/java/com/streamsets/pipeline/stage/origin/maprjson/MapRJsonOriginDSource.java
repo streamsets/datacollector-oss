@@ -27,7 +27,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     version = 2,
     label = "MapR DB JSON Origin",
     description = "Retrieves Documents from MapR DB JSON Document Database",
-    icon = "mapr.png",
+    icon = "mapr_db.png",
     resetOffset = true,
     privateClassLoader = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MapRDBJSON.html#task_hys_s15_3y",

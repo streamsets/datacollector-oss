@@ -37,7 +37,7 @@ import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
     description = "Reads data from MapR Streams",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_YARN_STREAMING},
     libJarsRegex = {"maprfs-\\d+.*"},
-    icon = "mapr.png",
+    icon = "mapr_es.png",
     recordsByRef = true,
     upgrader = MapRStreamsSourceUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MapRStreamsCons.html#task_bfz_gch_2v"

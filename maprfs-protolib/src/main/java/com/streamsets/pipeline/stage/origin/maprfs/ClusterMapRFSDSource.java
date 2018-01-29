@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHdfsDSource;
     description = "Reads from a MapR filesystem",
     execution = ExecutionMode.CLUSTER_BATCH,
     libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
-    icon = "mapr.png",
+    icon = "mapr_xd.png",
     privateClassLoader = false,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MapRFS.html#task_h2p_mb4_lx"
 )

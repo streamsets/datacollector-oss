@@ -25,7 +25,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
     version = 2,
     label = "MapR FS",
     description = "Writes to a MapR filesystem",
-    icon = "mapr.png",
+    icon = "mapr_xd.png",
     producesEvents = true,
     privateClassLoader = false,
     upgrader = MapRFSTargetUpgrader.class,

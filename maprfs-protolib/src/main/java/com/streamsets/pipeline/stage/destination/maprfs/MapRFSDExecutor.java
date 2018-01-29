@@ -25,7 +25,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsMetad
     version = 1,
     label = "MapR FS File Metadata",
     description = "Changes MapR FS file metadata such as renaming files or changing permissions.",
-    icon = "mapr.png",
+    icon = "mapr_xd.png",
     producesEvents = true,
     privateClassLoader = false,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Executors/MapRFSFileMeta.html#task_v3c_bvh_z1b"

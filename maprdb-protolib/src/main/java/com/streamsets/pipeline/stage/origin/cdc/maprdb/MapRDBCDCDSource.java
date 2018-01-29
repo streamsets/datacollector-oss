@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     label = "MapR DB CDC Consumer",
     description = "Reads MapR DB CDC data from MapR Streams",
     execution = ExecutionMode.STANDALONE,
-    icon = "mapr.png",
+    icon = "mapr_db.png",
     recordsByRef = true,
     upgrader = MapRDBCDCSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#datacollector/UserGuide/Origins/MapRdbCDC.html#task_mmx_zvm_pbb"

@@ -26,7 +26,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     version = 1,
     label = "MapR DB JSON",
     description = "Writes to MapR DB JSON Document Database",
-    icon = "mapr.png",
+    icon = "mapr_db.png",
     privateClassLoader = true,
     upgrader = MapRJsonTargetUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MapRDBJSON.html#task_wq3_wkj_dy"
