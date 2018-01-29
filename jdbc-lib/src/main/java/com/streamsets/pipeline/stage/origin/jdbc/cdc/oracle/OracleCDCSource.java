@@ -355,7 +355,7 @@ public class OracleCDCSource extends BaseSource {
         if (!useLocalBuffering) {
           throw new StageException(JDBC_82);
         }
-        startTimestamp = offset.timestamp;
+        startTimestamp = offset.timestamp.minusSeconds(configBean.txnWindow);
       } else {
         if (useLocalBuffering) {
           throw new StageException(JDBC_83);
@@ -570,7 +570,7 @@ public class OracleCDCSource extends BaseSource {
                   lastCommitSCN = scnDecimal;
                   int bufferedRecordsToBeRemoved = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET).size();
                   LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved);
-                  addRecordsToQueue(scn, xid);
+                  addRecordsToQueue(tsDate, scn, xid);
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
@@ -654,7 +654,6 @@ public class OracleCDCSource extends BaseSource {
   private LocalDateTime adjustStartTime(LocalDateTime startTime) {
     return useLocalBuffering ? startTime : startTime.minusSeconds(configBean.txnWindow);
   }
-
 
   private Record generateRecord(Map<String, String> attributes, int operationCode, ParserRuleContext ruleContext)
       throws StageException {
@@ -746,6 +745,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void addRecordsToQueue(
+      LocalDateTime commitTimestamp,
       String commitScn,
       String xid
   ) throws StageException, ParseException, InterruptedException {
@@ -764,7 +764,7 @@ public class OracleCDCSource extends BaseSource {
           Record record = generateRecord(r.headers, ctxOp.operationCode, ctxOp.context);
           if (record != null && record.getEscapedFieldPaths().size() > 0) {
             recordQueue.put(
-                new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, r.timestamp, commitScn, r.seq)));
+                new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, r.seq)));
           }
         } catch (UnparseableSQLException ex) {
           try {
