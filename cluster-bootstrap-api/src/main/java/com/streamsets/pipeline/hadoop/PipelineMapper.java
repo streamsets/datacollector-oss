@@ -171,7 +171,7 @@ public class PipelineMapper extends Mapper {
 
   private static String getHeaderFromFile(Configuration hadoopConf, Path path) throws IOException {
     String header;
-    try (FileSystem fs = FileSystem.get(hadoopConf);
+    try (FileSystem fs = FileSystem.newInstance(hadoopConf);
          BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(path), StandardCharsets.UTF_8))) {
       // read one line - the header
       header = br.readLine();

@@ -649,7 +649,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @VisibleForTesting
   FileSystem getFileSystemForInitDestroy(Path path) throws IOException {
     try {
-      return getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> (path != null)? path.getFileSystem(hadoopConf): FileSystem.get(new URI(conf.hdfsUri), hadoopConf));
+      return getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> (path != null)? FileSystem.newInstance(path.toUri(), hadoopConf) : FileSystem.newInstance(new URI(conf.hdfsUri), hadoopConf));
     } catch (IOException ex) {
       throw ex;
     } catch (Exception ex) {
