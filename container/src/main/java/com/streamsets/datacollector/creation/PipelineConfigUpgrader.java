@@ -128,7 +128,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     if (isClusterExecutionMode) {
       Config statsAggregatorStageConfig = getStatsAggregatorStageConfig(configs);
       String statsAggregatorStage = (String) statsAggregatorStageConfig.getValue();
-      if (statsAggregatorStage.contains(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
+      if (statsAggregatorStage != null && statsAggregatorStage.contains(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
         LOG.warn(
             "Cluster Pipeline Stats Aggregator is set to {} from {}",
             PipelineConfigBean.STATS_AGGREGATOR_DEFAULT,

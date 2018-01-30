@@ -160,13 +160,12 @@ public class PipelineConfigurationUpgrader {
 
     //Fix: Stats aggregator stage upgrade if needed
     boolean isPipelineClusterMode = PipelineConfigUpgrader.isPipelineClusterMode(pipelineConf.getConfiguration());
-    if (isPipelineClusterMode) {
+    if (isPipelineClusterMode && pipelineConf.getStatsAggregatorStage() != null) {
       final String statsAggregatorStageNameFromStageConfig = PipelineConfigurationValidator.getStageDefQualifiedName(
           pipelineConf.getStatsAggregatorStage().getLibrary(),
           pipelineConf.getStatsAggregatorStage().getStageName(),
           String.valueOf(pipelineConf.getStatsAggregatorStage().getStageVersion())
       );
-      
       if(statsAggregatorStageNameFromStageConfig.equals(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
         String[] stageQualfiedParts = PipelineConfigurationValidator
             .getSpecialStageDefQualifiedNameParts(PipelineConfigBean.STATS_AGGREGATOR_DEFAULT);
