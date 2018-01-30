@@ -123,6 +123,11 @@ public class HttpReceiverServlet extends HttpServlet {
   }
 
   @Override
+  protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    doPost(req, resp);
+  }
+
+  @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String requestor = req.getRemoteAddr() + ":" + req.getRemotePort();
     if (isShuttingDown()) {
