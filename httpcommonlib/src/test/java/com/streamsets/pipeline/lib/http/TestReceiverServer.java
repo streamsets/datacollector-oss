@@ -112,7 +112,7 @@ public class TestReceiverServer {
         ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     try {
       Assert.assertTrue(server.init(context).isEmpty());
-
+      server.startServer();
       // valid ping
       HttpURLConnection conn = (HttpURLConnection) new URL("http://localhost:" + port + "/path").openConnection();
       conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "id");
@@ -256,7 +256,7 @@ public class TestReceiverServer {
     try {
       Assert.assertTrue(configs.init(context).isEmpty());
       Assert.assertTrue(server.init(context).isEmpty());
-
+      server.startServer();
       Future<Boolean> future = executor.submit(new Callable<Boolean>() {
         @Override
         public Boolean call() throws Exception {

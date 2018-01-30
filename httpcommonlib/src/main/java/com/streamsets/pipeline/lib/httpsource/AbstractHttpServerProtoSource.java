@@ -33,7 +33,7 @@ public abstract class AbstractHttpServerProtoSource<R extends HttpReceiver, C ex
   private final HttpConfigs httpConfigs;
 
   private R receiver;
-  private HttpReceiverServer server;
+  protected HttpReceiverServer server;
 
   private BlockingQueue<Exception> errorQueue;
   private List<Exception> errorList;
