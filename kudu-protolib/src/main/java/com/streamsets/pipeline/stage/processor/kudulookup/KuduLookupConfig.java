@@ -56,7 +56,7 @@ public class KuduLookupConfig {
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       label = "Key Columns Mapping",
-      description = "Specify the columns used as keys for the lookup. The mapping must include a primary key column",
+      description = "Specify the columns used as keys for the lookup. For best performance, include primary key columns.",
       displayPosition = 30,
       group = "KUDU"
   )
