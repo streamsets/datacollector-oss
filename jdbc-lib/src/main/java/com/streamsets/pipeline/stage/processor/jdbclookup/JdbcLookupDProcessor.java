@@ -47,9 +47,6 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-@HideConfigs(
-  "cacheConfig.retryOnCacheMiss"
-)
 public class JdbcLookupDProcessor extends DProcessor {
 
   @ConfigDef(
