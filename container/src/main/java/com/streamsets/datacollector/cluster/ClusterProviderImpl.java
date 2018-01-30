@@ -758,6 +758,15 @@ public class ClusterProviderImpl implements ClusterProvider {
           throw new RuntimeException("Failed to create pipeline directory " + pipelineDir.getPath());
         }
       }
+      File pipelineRunInfoDir = new File(new File(new File(rootDataDir, PipelineDirectoryUtil.PIPELINE_BASE_DIR),
+          PipelineUtils.escapedPipelineName(pipelineName)
+      ), "0");
+      if (!pipelineRunInfoDir.mkdirs()) {
+        throw new RuntimeException(Utils.format(
+            "Failed to create pipeline directory: '{}'",
+            pipelineRunInfoDir.getPath()
+        ));
+      }
       File pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
           BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
