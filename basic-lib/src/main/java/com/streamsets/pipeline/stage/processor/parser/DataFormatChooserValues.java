@@ -15,24 +15,22 @@
  */
 package com.streamsets.pipeline.stage.processor.parser;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  PARSER("Parser"),
-  DATA_FORMAT("Data Format"),
-  ;
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  public DataFormatChooserValues() {
+    super(
+        DataFormat.AVRO,
+        DataFormat.DELIMITED,
+        DataFormat.JSON,
+        DataFormat.LOG,
+        DataFormat.NETFLOW,
+        DataFormat.PROTOBUF,
+        DataFormat.SYSLOG,
+        DataFormat.XML
+    );
   }
 
 }

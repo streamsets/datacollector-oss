@@ -20,24 +20,14 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.service.ServiceConfiguration;
-import com.streamsets.pipeline.api.service.ServiceDependency;
-import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version=2,
+    version=1,
     label="Data Parser",
     description = "Parses a field with data",
     // from http://www.flaticon.com/free-icon/coding_408290
     icon="coding.png",
-    services = @ServiceDependency(
-      service = DataFormatParserService.class,
-      configuration = {
-        @ServiceConfiguration(name = "displayFormats", value = "AVRO,DELIMITED,JSON,LOG,NETFLOW,PROTOBUF,SYSLOG,SDC_JSON,XML")
-      }
-    ),
-    upgrader = DataParserUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/DataParser.html#task_cx3_2yk_r1b"
 )
 @ConfigGroups(Groups.class)
