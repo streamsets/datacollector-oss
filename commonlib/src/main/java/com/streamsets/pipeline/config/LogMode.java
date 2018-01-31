@@ -28,7 +28,7 @@ public enum LogMode implements Label {
   REGEX("Regular Expression"),
   GROK("Grok Pattern"),
   LOG4J("Log4j"),
-  CEF("Comment Event Format (CEF)"),
+  CEF("Common Event Format (CEF)"),
   LEEF("Log Event Extended Format (LEEF)"),
   ;
 
