@@ -178,6 +178,10 @@ public class TestClusterProviderImpl {
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+    File configFile = new File(runtimeInfo.getConfigDir(), SDC_TEST_PREFIX + RuntimeInfo.LOG4J_PROPERTIES);
+    File f = new File(runtimeInfo.getConfigDir());
+    Assert.assertTrue(f.mkdirs());
+    Assert.assertTrue(configFile.createNewFile());
     sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, null, null));
     Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_BATCH),

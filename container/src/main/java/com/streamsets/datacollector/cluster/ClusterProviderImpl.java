@@ -76,8 +76,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -734,19 +737,15 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-        try (
-        InputStream clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"), "Cluster Log4J Properties")
-        ) {
-          File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
-          if (!log4jProperty.isFile()) {
-            throw new IllegalStateException(
-              Utils.format("Log4j config file doesn't exist: '{}'", log4jProperty.getAbsolutePath())
-            );
-          }
-          LOG.info("Copying log4j properties for mesos cluster mode");
-          FileUtils.copyInputStreamToFile(clusterLog4jProperties,
-            log4jProperty);
+        List<String> logLines = ClusterLogConfigUtils.getLogContent(runtimeInfo, "/cluster-spark-log4j.properties");
+        File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
+        if (!log4jProperty.isFile()) {
+          throw new IllegalStateException(Utils.format(
+              "Log4j config file doesn't exist: '{}'",
+              log4jProperty.getAbsolutePath()
+          ));
         }
+        Files.write(log4jProperty.toPath(), logLines, Charset.defaultCharset());
       }
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getPipelineId();
@@ -805,27 +804,23 @@ public class ClusterProviderImpl implements ClusterProvider {
       rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.ofNullable
           (mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
-    } catch (RuntimeException ex) {
-      String msg = errorString("serializing etc directory: {}", ex);
+    } catch (IOException | URISyntaxException | RuntimeException ex) {
+      String msg = errorString("Error while preparing for cluster job submission: {}", ex);
       throw new RuntimeException(msg, ex);
     }
     File log4jProperties = new File(stagingDir, "log4j.properties");
     InputStream clusterLog4jProperties = null;
     try {
+      List<String> lines = null;
       if (executionMode == ExecutionMode.CLUSTER_BATCH) {
-        clusterLog4jProperties = Utils.checkNotNull(
-            getClass().getResourceAsStream("/cluster-mr-log4j.properties"), "Cluster Log4J Properties"
-        );
+        lines = ClusterLogConfigUtils.getLogContent(runtimeInfo, "/cluster-mr-log4j.properties");
       } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
-        clusterLog4jProperties =
-            Utils.checkNotNull(
-                getClass().getResourceAsStream("/cluster-spark-log4j.properties"), "Cluster Log4J Properties"
-            );
+        lines = ClusterLogConfigUtils.getLogContent(runtimeInfo, "/cluster-spark-log4j.properties");
       }
-      if (clusterLog4jProperties != null) {
-        FileUtils.copyInputStreamToFile(clusterLog4jProperties, log4jProperties);
+      if (lines != null) {
+        Files.write(log4jProperties.toPath(), lines, Charset.defaultCharset());
       }
-    } catch (IOException ex) {
+    } catch (IOException | URISyntaxException ex) {
       String msg = errorString("copying log4j configuration: {}", ex);
       throw new RuntimeException(msg, ex);
     } finally {
