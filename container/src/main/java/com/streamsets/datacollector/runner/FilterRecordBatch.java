@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -29,6 +28,8 @@ import com.streamsets.pipeline.stage.common.Errors;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Filter record entering stage.
@@ -40,6 +41,7 @@ public class FilterRecordBatch implements Batch {
   private final Batch batch;
   private final Predicate[] predicates;
   private final DefaultErrorRecordHandler errorHandler;
+  private List<Record> filteredRecords;
 
   public interface Predicate {
 
@@ -79,45 +81,31 @@ public class FilterRecordBatch implements Batch {
 
   @Override
   public Iterator<Record> getRecords() {
-    return new RecordIterator(batch.getRecords());
-  }
-
-  private class RecordIterator extends AbstractIterator<Record> {
-    private Iterator<Record> iterator;
-
-    public RecordIterator(Iterator<Record> iterator) {
-      this.iterator = iterator;
-    }
-
-    @Override
-    protected Record computeNext() {
-      Record next = null;
-      while (next == null && iterator.hasNext()) {
+    if (filteredRecords == null) {
+      filteredRecords = new LinkedList<>();
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
         boolean passed = true;
         ErrorMessage rejectedMessage = null;
-        Record record = iterator.next();
+        Record record = it.next();
         for (Predicate predicate : predicates) {
           passed = predicate.evaluate(record);
           if (!passed) {
             rejectedMessage = predicate.getRejectedMessage();
+            try {
+              errorHandler.onError(new OnRecordErrorException(record, Errors.COMMON_0001, rejectedMessage.toString()));
+            } catch (StageException e) {
+              throw new RuntimeException(e.getMessage(), e);
+            }
             break;
           }
         }
         if (passed) {
-          next = record;
-        } else {
-          try {
-            errorHandler.onError(new OnRecordErrorException(record, Errors.COMMON_0001, rejectedMessage.toString()));
-          } catch (StageException e) {
-            throw new RuntimeException(e.getMessage(), e);
-          }
+          filteredRecords.add(record);
         }
       }
-      if (next == null && !iterator.hasNext()) {
-        endOfData();
-      }
-      return next;
     }
-  }
 
+    return filteredRecords.iterator();
+  }
 }
