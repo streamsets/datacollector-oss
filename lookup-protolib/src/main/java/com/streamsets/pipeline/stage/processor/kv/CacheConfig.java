@@ -89,6 +89,7 @@ public class CacheConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Retry on Cache Miss",
+      defaultValue = "false",
       description = "By default, the cache 'remembers' that look up for given key failed and always returns default" +
         " value. This is to avoid doing un-necessary look ups for known missing values. Select this option if new" +
         " values can be inserted later on and the cache should retry the request rather than returning the cached" +
