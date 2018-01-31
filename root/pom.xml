@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-proto</artifactId>
-    <version>3.1.0.0-SNAPSHOT</version>
+    <version>3.2.0.0-SNAPSHOT</version>
     <relativePath>../root-proto</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-root</artifactId>
-  <version>3.1.0.0-SNAPSHOT</version>
+  <version>3.2.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Root POM</description>
   <name>StreamSets Data Collector Root POM</name>
   <packaging>pom</packaging>
@@ -146,27 +146,27 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-basic-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-stats-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-omniture-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-jdbc-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-jms-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
@@ -176,7 +176,7 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-rabbitmq-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
@@ -186,264 +186,264 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_4-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_5-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_7-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_8-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_9-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_10-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_11-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_12-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_13-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_14-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_3-hive1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_4-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_4-hive1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_5-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_5-flume-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_6-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_6_1-hive1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_6_2-hive1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_6-hive2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdp_2_6-flume-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mapr_5_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kudu_1_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kudu_1_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kudu_1_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kudu_1_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kudu_1_4-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_8_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_8_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_9-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_10-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_11-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_1_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_kafka_1_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_kafka_1_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_kafka_2_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_kafka_2_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_kafka_3_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-jython_2_7-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-groovy_2_4-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-kinetica_6_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-elasticsearch_5-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cassandra_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mongodb_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-bigtable-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-google-cloud-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-influxdb_0_9-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-redis-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-aws-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
@@ -488,52 +488,52 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_10-cluster-cdh_kafka_2_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mapr_5_1-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mapr_5_2-lib</artifactId>
-        <version>3.1.0.0-SNAPSHOT</version>
+        <version>3.2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
