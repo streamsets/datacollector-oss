@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.tokafka;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiverWithFragmenterWriter;
@@ -57,6 +58,14 @@ public abstract class HttpServerToKafkaSource extends AbstractHttpServerSource<H
     issues.addAll(getReceiver().getWriter().init(getContext()));
     if (issues.isEmpty()) {
       issues.addAll(super.init());
+    }
+    // Start server
+    if (issues.isEmpty()) {
+      try {
+        server.startServer();
+      } catch (StageException ex) {
+        issues.add(getContext().createConfigIssue("HTTP", "", ex.getErrorCode(), ex.getMessage()));
+      }
     }
     return issues;
   }

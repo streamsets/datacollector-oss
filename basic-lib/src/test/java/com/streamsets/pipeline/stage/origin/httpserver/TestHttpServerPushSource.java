@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.http.HttpConstants;
+import com.streamsets.pipeline.lib.http.HttpReceiverServer;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
+import org.awaitility.Duration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,6 +44,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import static org.awaitility.Awaitility.await;
+import org.mockito.internal.util.reflection.Whitebox;
 
 public class TestHttpServerPushSource {
 
@@ -64,9 +70,18 @@ public class TestHttpServerPushSource {
         public void processBatch(StageRunner.Output output) {
           records.clear();
           records.addAll(output.getRecords().get("a"));
-          runner.setStop();
         }
       });
+
+      // wait for the HTTP server up and running
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+          return httpServer.isRunning();
+        }
+      });
+
       HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:" + httpConfigs.getPort())
           .openConnection();
       connection.setRequestMethod("POST");
@@ -75,8 +90,8 @@ public class TestHttpServerPushSource {
       connection.setRequestProperty(Constants.X_SDC_APPLICATION_ID_HEADER, "id");
       connection.setRequestProperty("customHeader", "customHeaderValue");
       connection.getOutputStream().write("Hello".getBytes());
+
       Assert.assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-      runner.waitOnProduce();
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("Hello", records.get(0).get("/text").getValue());
       Assert.assertEquals(
@@ -94,6 +109,9 @@ public class TestHttpServerPushSource {
           .post(Entity.json("Hello"));
       Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, response.getStatus());
 
+      runner.setStop();
+    } catch (Exception e) {
+      Assert.fail(e.getMessage());
     } finally {
       runner.runDestroy();
     }
@@ -120,7 +138,15 @@ public class TestHttpServerPushSource {
         public void processBatch(StageRunner.Output output) {
           records.clear();
           records.addAll(output.getRecords().get("a"));
-          runner.setStop();
+        }
+      });
+
+      // wait for the HTTP server up and running
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+          return httpServer.isRunning();
         }
       });
 
@@ -130,8 +156,8 @@ public class TestHttpServerPushSource {
           .target(url)
           .request()
           .post(Entity.json("Hello"));
+
       Assert.assertEquals(HttpURLConnection.HTTP_OK, response.getStatus());
-      runner.waitOnProduce();
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("Hello", records.get(0).get("/text").getValue());
 
@@ -144,7 +170,9 @@ public class TestHttpServerPushSource {
           .post(Entity.json("Hello"));
       Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, response.getStatus());
 
-
+      runner.setStop();
+    } catch (Exception e) {
+      Assert.fail(e.getMessage());
     } finally {
       runner.runDestroy();
     }
@@ -172,7 +200,15 @@ public class TestHttpServerPushSource {
         public void processBatch(StageRunner.Output output) {
           records.clear();
           records.addAll(output.getRecords().get("a"));
-          runner.setStop();
+        }
+      });
+
+      // wait for the HTTP server up and running
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+          return httpServer.isRunning();
         }
       });
 
@@ -185,13 +221,15 @@ public class TestHttpServerPushSource {
               .target(url)
               .request()
               .post(Entity.entity(avroData, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+
       Assert.assertEquals(HttpURLConnection.HTTP_OK, response.getStatus());
-      runner.waitOnProduce();
       Assert.assertEquals(3, records.size());
       Assert.assertEquals("a", records.get(0).get("/name").getValue());
       Assert.assertEquals("b", records.get(1).get("/name").getValue());
       Assert.assertEquals("c", records.get(2).get("/name").getValue());
-
+      runner.setStop();
+    } catch (Exception e) {
+      Assert.fail(e.getMessage());
     } finally {
       runner.runDestroy();
     }

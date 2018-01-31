@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -80,63 +81,75 @@ public abstract class AbstractHttpReceiverServer {
 
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    try {
-      int maxThreads = getJettyServerMaxThreads();
-      int minThreads = getJettyServerMinThreads();
-      QueuedThreadPool threadPool =
-          new QueuedThreadPool(maxThreads, minThreads, 60000, new ArrayBlockingQueue<Runnable>(maxThreads));
-      threadPool.setName("http-receiver-server:" + context.getPipelineInfo().get(0).getInstanceName());
-      threadPool.setDaemon(true);
-      Server server = new Server(threadPool);
 
-      ServerConnector connector;
-      if (configs.isTlsEnabled()) {
-        LOG.debug("Configuring HTTPS");
-        HttpConfiguration httpsConf = new HttpConfiguration();
-        httpsConf.addCustomizer(new SecureRequestCustomizer());
-        SslContextFactory sslContextFactory = new SslContextFactory();
+    int maxThreads = getJettyServerMaxThreads();
+    int minThreads = getJettyServerMinThreads();
+    QueuedThreadPool threadPool =
+        new QueuedThreadPool(maxThreads, minThreads, 60000, new ArrayBlockingQueue<Runnable>(maxThreads));
+    threadPool.setName("http-receiver-server:" + context.getPipelineInfo().get(0).getInstanceName());
+    threadPool.setDaemon(true);
+    Server server = new Server(threadPool);
 
-        TlsConfigBean tlsConfig = configs.getTlsConfigBean();
+    ServerConnector connector;
+    if (configs.isTlsEnabled()) {
+      LOG.debug("Configuring HTTPS");
+      HttpConfiguration httpsConf = new HttpConfiguration();
+      httpsConf.addCustomizer(new SecureRequestCustomizer());
+      SslContextFactory sslContextFactory = new SslContextFactory();
+
+      TlsConfigBean tlsConfig = configs.getTlsConfigBean();
+      try {
         sslContextFactory.setKeyStorePath(tlsConfig.keyStoreFilePath);
         sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
         sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
         sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
-
-        connector = new ServerConnector(server,
-            new SslConnectionFactory(sslContextFactory, "http/1.1"),
-            new HttpConnectionFactory(httpsConf)
-        );
-      } else {
-        LOG.debug("Configuring HTTP");
-        connector = new ServerConnector(server);
+      } catch (Exception e) {
+        issues.add(context.createConfigIssue("HTTP", "", HttpServerErrors.HTTP_SERVER_ORIG_12, e.getMessage()));
       }
-      connector.setPort(configs.getPort());
-      server.setConnectors(new Connector[]{connector});
-
-      ServletContextHandler contextHandler = new ServletContextHandler();
-      // CORS Handling
-      FilterHolder crossOriginFilter = new FilterHolder(CrossOriginFilter.class);
-      Map<String, String> params = new HashMap<>();
-      params.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-      params.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
-      crossOriginFilter.setInitParameters(params);
-      contextHandler.addFilter(crossOriginFilter, "/*", EnumSet.of(DispatcherType.REQUEST));
-
-      addReceiverServlet(context, contextHandler);
-
-      contextHandler.setContextPath("/");
-      server.setHandler(contextHandler);
-      server.start();
-
-      LOG.debug("Running, port '{}', TLS '{}'", configs.getPort(), configs.isTlsEnabled());
-
-      httpServer = server;
-    } catch (Exception ex) {
-      issues.add(context.createConfigIssue("HTTP", "", HttpServerErrors.HTTP_SERVER_ORIG_20, ex.toString()));
+      connector = new ServerConnector(server,
+          new SslConnectionFactory(sslContextFactory, "http/1.1"),
+          new HttpConnectionFactory(httpsConf)
+      );
+    } else {
+      LOG.debug("Configuring HTTP");
+      connector = new ServerConnector(server);
     }
+    connector.setPort(configs.getPort());
+    server.setConnectors(new Connector[]{connector});
+
+    ServletContextHandler contextHandler = new ServletContextHandler();
+    // CORS Handling
+    FilterHolder crossOriginFilter = new FilterHolder(CrossOriginFilter.class);
+    Map<String, String> params = new HashMap<>();
+    params.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+    params.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
+    crossOriginFilter.setInitParameters(params);
+    contextHandler.addFilter(crossOriginFilter, "/*", EnumSet.of(DispatcherType.REQUEST));
+
+    addReceiverServlet(context, contextHandler);
+
+    contextHandler.setContextPath("/");
+    server.setHandler(contextHandler);
+
+    httpServer = server;
+
     return issues;
+  }
+
+  public void startServer()  throws StageException {
+    try {
+      httpServer.start();
+      LOG.debug("Running, port '{}', TLS '{}'", configs.getPort(), configs.isTlsEnabled());
+    } catch (Exception e) {
+       throw new StageException(HttpServerErrors.HTTP_SERVER_ORIG_20, e.getMessage());
+    }
+  }
+
+  public boolean isRunning() {
+    LOG.debug("HTTP SERVER status:" + httpServer.getState());
+    return httpServer.isRunning();
   }
 
   public void destroy() {

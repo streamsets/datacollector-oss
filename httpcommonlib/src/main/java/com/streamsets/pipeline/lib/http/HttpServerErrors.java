@@ -28,8 +28,10 @@ public enum HttpServerErrors implements ErrorCode {
   HTTP_SERVER_ORIG_09("File is not readable by the Data Collector"),
   HTTP_SERVER_ORIG_10("Could not load key store: {}"),
   HTTP_SERVER_ORIG_11("Configuration value is empty"),
+  HTTP_SERVER_ORIG_12("Failed to get password for CredentialValue"),
 
-  HTTP_SERVER_ORIG_20("Could not start HTTP server: {}"),;
+  HTTP_SERVER_ORIG_20("Could not start HTTP server: {}"),
+  ;
 
   private final String msg;
 

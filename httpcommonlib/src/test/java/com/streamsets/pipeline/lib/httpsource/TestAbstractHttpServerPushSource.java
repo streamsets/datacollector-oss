@@ -18,9 +18,11 @@ package com.streamsets.pipeline.lib.httpsource;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import com.google.common.collect.ImmutableList;
 
 public class TestAbstractHttpServerPushSource {
 
@@ -46,12 +48,16 @@ public class TestAbstractHttpServerPushSource {
 
     source = Mockito.spy(source);
     PushSource.Context context = Mockito.mock(PushSource.Context.class);
+    Mockito.when(context.getPipelineInfo()).thenReturn(
+        ImmutableList.of(ContextInfoCreator.createInfo("test", 1, "test"))
+    );
     Mockito.doReturn(context).when(source).getContext();
+    source.init();
 
     Mockito.doNothing().when(source).dispatchHttpReceiverErrors(Mockito.anyLong());
 
     Assert.assertEquals(1, source.getNumberOfThreads());
-    Mockito.verify(httpConfigs, Mockito.times(1)).getMaxConcurrentRequests();
+    Mockito.verify(httpConfigs, Mockito.times(3)).getMaxConcurrentRequests();
 
     //stopped
     Mockito.doReturn(true).when(context).isStopped();
@@ -59,6 +65,7 @@ public class TestAbstractHttpServerPushSource {
     Mockito.verify(source, Mockito.never()).dispatchHttpReceiverErrors(Mockito.eq(100L));
 
     //running
+    source.init();  // Need to start the server again
     Mockito.doReturn(false).doReturn(true).when(context).isStopped();
     source.produce(null, 0);
     Mockito.verify(source, Mockito.times(1)).dispatchHttpReceiverErrors(Mockito.eq(100L));

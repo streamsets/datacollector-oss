@@ -19,11 +19,15 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public abstract class AbstractHttpServerPushSource<R extends HttpReceiver>
     extends AbstractHttpServerProtoSource<R, PushSource.Context> implements PushSource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractHttpServerPushSource.class);
 
   public AbstractHttpServerPushSource(HttpConfigs httpConfigs, R receiver) {
     super(httpConfigs, receiver);
@@ -36,9 +40,15 @@ public abstract class AbstractHttpServerPushSource<R extends HttpReceiver>
 
   @Override
   public void produce(Map<String, String> map, int i) throws StageException {
-    while (!getContext().isStopped()) {
-      dispatchHttpReceiverErrors(100);
+    try {
+      server.startServer();
+
+      while (!getContext().isStopped()) {
+        dispatchHttpReceiverErrors(100);
+      }
+    } finally {
+      LOG.trace("Destroying server");
+      server.destroy();
     }
   }
-
 }
