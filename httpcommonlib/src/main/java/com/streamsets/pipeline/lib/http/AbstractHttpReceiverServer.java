@@ -148,7 +148,7 @@ public abstract class AbstractHttpReceiverServer {
   }
 
   public boolean isRunning()  throws StageException {
-    return httpServer.isStarted() || httpServer.isStarting() || httpServer.isRunning();
+    return httpServer.isRunning();
   }
 
   public void destroy() {

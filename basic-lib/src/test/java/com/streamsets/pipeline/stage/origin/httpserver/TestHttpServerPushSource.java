@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.http.HttpConstants;
+import com.streamsets.pipeline.lib.http.HttpReceiverServer;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -43,7 +44,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+
 import static org.awaitility.Awaitility.await;
+import org.mockito.internal.util.reflection.Whitebox;
 
 public class TestHttpServerPushSource {
 
@@ -70,7 +74,8 @@ public class TestHttpServerPushSource {
       });
 
       // wait for the HTTP server up and running
-      await().atMost(Duration.FIVE_SECONDS);
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(isServerRunning(httpServer));
 
       HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:" + httpConfigs.getPort())
           .openConnection();
@@ -130,6 +135,11 @@ public class TestHttpServerPushSource {
         }
       });
 
+      // wait for the HTTP server up and running
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(isServerRunning(httpServer));
+
+
       String url = "http://localhost:" + httpConfigs.getPort() +
           "?" + HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM + "=id";
       Response response = ClientBuilder.newClient()
@@ -182,6 +192,10 @@ public class TestHttpServerPushSource {
         }
       });
 
+      // wait for the HTTP server up and running
+      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      await().atMost(Duration.TEN_SECONDS).until(isServerRunning(httpServer));
+
       String url = "http://localhost:" + httpConfigs.getPort() +
               "?" + HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM + "=id";
       File avroDataFile = SdcAvroTestUtil.createAvroDataFile();
@@ -204,5 +218,12 @@ public class TestHttpServerPushSource {
     }
   }
 
-
+  public static Callable<Boolean> isServerRunning(HttpReceiverServer httpServer ) {
+    return new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return httpServer.isRunning();
+      }
+    };
+  }
 }
