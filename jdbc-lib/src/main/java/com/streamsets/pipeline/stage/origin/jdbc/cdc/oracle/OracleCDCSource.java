@@ -434,7 +434,7 @@ public class OracleCDCSource extends BaseSource {
     // When this is called the first time, Logminer was started either from SCN or from a start date, so we just keep
     // track of the start date etc.
     LOG.info("Attempting to generate records");
-    boolean error = false;
+    boolean error;
     StringBuilder query = new StringBuilder();
     BigDecimal lastCommitSCN = new BigDecimal(startingOffset.scn);
     int sequenceNumber = startingOffset.sequence;
@@ -442,6 +442,7 @@ public class OracleCDCSource extends BaseSource {
     LocalDateTime endTime = getEndTimeForStartTime(startTime);
     ResultSet resultSet = null;
     while (!getContext().isStopped()) {
+      error = false;
       try {
         selectChanges = getSelectChangesStatement();
         if (!useLocalBuffering) {
