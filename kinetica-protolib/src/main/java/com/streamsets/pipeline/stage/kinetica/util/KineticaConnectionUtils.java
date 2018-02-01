@@ -24,13 +24,14 @@ import com.gpudb.GPUdb;
 import com.gpudb.GPUdbBase;
 import com.gpudb.GPUdbException;
 import com.gpudb.protocol.ShowSystemStatusResponse;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.kinetica.KineticaConfigBean;
 
 public class KineticaConnectionUtils {
 
   private final static Logger LOG = LoggerFactory.getLogger(KineticaConnectionUtils.class);
 
-  public GPUdb getGPUdb(KineticaConfigBean conf) throws GPUdbException {
+  public GPUdb getGPUdb(KineticaConfigBean conf) throws GPUdbException, StageException {
 
     GPUdbBase.Options gpudbOptions = new GPUdbBase.Options();
 
@@ -41,8 +42,8 @@ public class KineticaConnectionUtils {
     }
 
     if (conf.username != null && conf.password != null) {
-      gpudbOptions.setUsername(conf.username);
-      gpudbOptions.setPassword(conf.password);
+      gpudbOptions.setUsername(conf.username.get());
+      gpudbOptions.setPassword(conf.password.get());
     }
 
     GPUdb gpudb = new GPUdb(conf.url, gpudbOptions);

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.kinetica;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class KineticaConfigBean {
 
@@ -97,22 +98,22 @@ public class KineticaConfigBean {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.CREDENTIAL,
     defaultValue = "",
     label = "Username",
     displayPosition = 10,
     group = "CREDENTIALS"
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.CREDENTIAL,
     defaultValue = "",
     label = "Password",
     displayPosition = 20,
     group = "CREDENTIALS"
   )
-  public String password;
+  public CredentialValue password;
 
 }

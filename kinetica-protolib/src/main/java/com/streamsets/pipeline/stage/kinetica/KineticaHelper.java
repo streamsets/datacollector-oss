@@ -23,6 +23,7 @@ import com.gpudb.BulkInserter;
 import com.gpudb.GPUdb;
 import com.gpudb.GPUdbException;
 import com.gpudb.Type;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.stage.kinetica.util.KineticaBulkInserterUtils;
@@ -80,7 +81,7 @@ public class KineticaHelper {
         issues.add(context.createConfigIssue(Groups.TABLE.name(), conf.url, Errors.KINERICA_01, e.toString()));
       }
 
-    } catch (GPUdbException e) {
+    } catch (GPUdbException | StageException  e) {
       // Exception connecting to GPUdb
       issues.add(context.createConfigIssue(Groups.CONNECTION.name(), conf.url, Errors.KINETICA_00, e.toString()));
     }
@@ -88,7 +89,7 @@ public class KineticaHelper {
   }
 
   // Connect to the database
-  private GPUdb initConnection(KineticaConfigBean conf) throws GPUdbException {
+  private GPUdb initConnection(KineticaConfigBean conf) throws GPUdbException, StageException {
     KineticaConnectionUtils kineticaConnectionUtils = new KineticaConnectionUtils();
     return kineticaConnectionUtils.getGPUdb(conf);
   }
