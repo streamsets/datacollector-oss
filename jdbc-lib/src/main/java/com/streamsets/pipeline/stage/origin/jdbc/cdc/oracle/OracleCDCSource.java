@@ -80,6 +80,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
@@ -131,7 +132,7 @@ public class OracleCDCSource extends BaseSource {
   // (which means we are executing for the first time), or it is no longer valid, so select
   // only the ones that are > than the cachedSCN.
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE#, STATUS from GV$ARCHIVED_LOG WHERE STATUS = 'A' ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE#, STATUS from GV$ARCHIVED_LOG WHERE STATUS = 'A' AND FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String ROWID = "ROWID";
   private static final String PREFIX = "oracle.cdc.";
@@ -193,6 +194,8 @@ public class OracleCDCSource extends BaseSource {
 
   @GuardedBy(value = "bufferedRecordsLock")
   private final Map<TransactionIdKey, HashQueue<RecordSequence>> bufferedRecords = new HashMap<>();
+
+  private final AtomicReference<BigDecimal> cachedSCNForRedoLogs = new AtomicReference<>(BigDecimal.ZERO);
 
   private BlockingQueue<RecordOffset> recordQueue;
 
@@ -397,7 +400,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   @NotNull
-  private LocalDateTime adjustStartTimeAndStartLogMnr(LocalDateTime startDate) throws SQLException {
+  private LocalDateTime adjustStartTimeAndStartLogMnr(LocalDateTime startDate) throws SQLException, StageException {
     startDate = adjustStartTime(startDate);
     LocalDateTime endTime = getEndTimeForStartTime(startDate);
     startLogMinerUsingGivenDates(startDate.format(DT_FORMATTER),
@@ -647,6 +650,9 @@ public class OracleCDCSource extends BaseSource {
           } catch (StageException e) {
             stageExceptions.add(e);
           }
+        } catch (StageException ex) {
+          LOG.error("Error while attempting to start logminer for redo log dictionary", ex);
+          stageExceptions.add(ex);
         }
       }
     }
@@ -891,8 +897,9 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException {
+  private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException, StageException {
     try {
+      startLogMnrForRedoDict();
       LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
       startLogMnrForData.setString(1, startDate);
       startLogMnrForData.setString(2, endDate);
@@ -1214,11 +1221,24 @@ public class OracleCDCSource extends BaseSource {
     SQLException lastException = null;
     boolean startedLogMiner = false;
 
+    if (cachedSCNForRedoLogs.get().compareTo(BigDecimal.ZERO) > 0) { // There is a cached SCN, let's try that one.
+      try {
+        startLogMinerUsingGivenSCNs(cachedSCNForRedoLogs.get(), endSCN);
+        // Still valid, so return
+        return;
+      } catch (SQLException e) {
+        LOG.debug("Cached SCN {} is no longer valid, retrieving new SCN", cachedSCNForRedoLogs);
+      }
+    }
+
+    // Cached SCN is no longer valid, try to get the next oldest ones and start.
+    getOldestSCN.setBigDecimal(1, cachedSCNForRedoLogs.get());
     try (ResultSet rs = getOldestSCN.executeQuery()) {
       while (rs.next()) {
         BigDecimal oldestSCN = rs.getBigDecimal(1);
         try {
           startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
+          cachedSCNForRedoLogs.set(oldestSCN);
           startedLogMiner = true;
           break;
         } catch (SQLException ex) {
