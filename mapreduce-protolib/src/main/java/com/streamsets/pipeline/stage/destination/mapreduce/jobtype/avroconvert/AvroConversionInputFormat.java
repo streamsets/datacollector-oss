@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
+package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConstants;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -30,7 +31,7 @@ import java.util.List;
 
 /**
  */
-public class AvroParquetInputFormat extends InputFormat {
+public class AvroConversionInputFormat extends InputFormat {
 
   public static class FileSplit extends InputSplit implements Writable {
 
@@ -115,7 +116,8 @@ public class AvroParquetInputFormat extends InputFormat {
   @Override
   public List<InputSplit> getSplits(JobContext jobContext) throws IOException, InterruptedException {
     return ImmutableList.<InputSplit>of(
-      new FileSplit(jobContext.getConfiguration().get(AvroParquetConstants.INPUT_FILE), jobContext.getConfiguration().get(AvroParquetConstants.OUTPUT_DIR))
+      new FileSplit(jobContext.getConfiguration().get(AvroConversionCommonConstants.INPUT_FILE), jobContext.getConfiguration().get(
+          AvroConversionCommonConstants.OUTPUT_DIR))
     );
   }
 

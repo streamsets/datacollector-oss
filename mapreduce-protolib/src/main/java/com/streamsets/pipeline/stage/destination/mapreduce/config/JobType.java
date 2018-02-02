@@ -17,12 +17,14 @@ package com.streamsets.pipeline.stage.destination.mapreduce.config;
 
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.SimpleJobCreator;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc.AvroOrcConvertCreator;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConvertCreator;
 
 public enum JobType implements Label {
   CUSTOM("Custom", ""),
   SIMPLE("From Configuration object", SimpleJobCreator.class.getCanonicalName()),
   AVRO_PARQUET("Convert Avro to Parquet", AvroParquetConvertCreator.class.getCanonicalName()),
+  AVRO_ORC("Convert Avro to ORC", AvroOrcConvertCreator.class.getCanonicalName()),
   ;
 
   private final String klass;

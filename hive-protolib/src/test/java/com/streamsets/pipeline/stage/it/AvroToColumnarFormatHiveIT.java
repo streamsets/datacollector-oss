@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc.AvroOrcConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
@@ -56,6 +57,8 @@ import java.sql.Types;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
+import java.util.LinkedList;
 
 /**
  * Parametrized test for each avro type to make sure that files converted from Avro to Parquet
@@ -63,33 +66,37 @@ import java.util.Collections;
  */
 @Ignore
 @RunWith(Parameterized.class)
-public class AvroToParquetHiveIT extends BaseHiveIT {
+public class AvroToColumnarFormatHiveIT extends BaseHiveIT {
 
-  private static Logger LOG = LoggerFactory.getLogger(AvroToParquetHiveIT.class);
+  private static Logger LOG = LoggerFactory.getLogger(AvroToColumnarFormatHiveIT.class);
 
   private final static Schema DECIMAL = Schema.parse("{\"type\" : \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}");
 
   private final static Schema DATE = Schema.parse("{\"type\" : \"int\", \"logicalType\": \"date\"}");
 
-  @Parameterized.Parameters(name = "type({0})")
+  @Parameterized.Parameters(name = "type({0}), jobType({6})")
   public static Collection<Object[]> data() throws Exception {
-    return Arrays.asList(new Object[][]{
-      // Primitive types
-      {"\"boolean\"", true, true, "BOOLEAN", Types.BOOLEAN, "0"},
-      {"\"int\"", Integer.MIN_VALUE, Integer.MIN_VALUE, "INT", Types.INTEGER, "0"},
-      {"\"long\"", Long.MAX_VALUE, Long.MAX_VALUE, "BIGINT", Types.BIGINT, "0"},
-      // From some reason type is FLOAT, but returned object is double
-      {"\"float\"", Float.NaN, Double.NaN, "FLOAT", Types.FLOAT, "0"},
-      {"\"double\"", Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, "DOUBLE", Types.DOUBLE, "0"},
-      {"\"bytes\"", ByteBuffer.wrap(new byte[]{(byte)0x00, (byte)0xFF}),new byte[]{(byte)0x00, (byte)0xFF}, "BINARY", Types.BINARY, "1.0"},
-      {"\"string\"", new Utf8("StreamSets"), "StreamSets", "STRING", Types.VARCHAR, "1.0"},
+    Collection<Object[]> data = new LinkedList<>();
+    for (JobType type : EnumSet.of(JobType.AVRO_PARQUET, JobType.AVRO_ORC)) {
+      data.addAll(Arrays.asList(new Object[][]{
+          // Primitive types
+          {"\"boolean\"", true, true, "BOOLEAN", Types.BOOLEAN, "0", type},
+          {"\"int\"", Integer.MIN_VALUE, Integer.MIN_VALUE, "INT", Types.INTEGER, "0", type},
+          {"\"long\"", Long.MAX_VALUE, Long.MAX_VALUE, "BIGINT", Types.BIGINT, "0", type},
+          // From some reason type is FLOAT, but returned object is double
+          {"\"float\"", Float.NaN, Double.NaN, "FLOAT", Types.FLOAT, "0", type},
+          {"\"double\"", Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, "DOUBLE", Types.DOUBLE, "0", type},
+          {"\"bytes\"", ByteBuffer.wrap(new byte[]{(byte)0x00, (byte)0xFF}),new byte[]{(byte)0x00, (byte)0xFF}, "BINARY", Types.BINARY, "1.0", type},
+          {"\"string\"", new Utf8("StreamSets"), "StreamSets", "STRING", Types.VARCHAR, "1.0", type},
 
-      // Complex types are skipped for now
+          // Complex types are skipped for now
 
-      // Logical types
-      {DECIMAL.toString(), ByteBuffer.wrap(new byte[]{(byte)0x0F}), new BigDecimal("2"), "DECIMAL", Types.DECIMAL, "0"},
-      {DATE.toString(), 17039, new java.sql.Date(116, 7, 26), "DATE", Types.DATE, "1.2"},
-    });
+          // Logical types
+          {DECIMAL.toString(), ByteBuffer.wrap(new byte[]{(byte)0x0F}), new BigDecimal("2"), "DECIMAL", Types.DECIMAL, "0", type},
+          {DATE.toString(), 17039, new java.sql.Date(116, 7, 26), "DATE", Types.DATE, "1.2", type},
+      }));
+    }
+    return data;
   }
 
   private final String avroType;
@@ -98,14 +105,24 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
   private final String hiveType;
   private final int jdbcType;
   private final String ensureHiveVersion;
+  private final JobType jobType;
 
-  public AvroToParquetHiveIT(String avroType, Object avroValue, Object jdbcValue, String hiveType, int jdbcType, String ensureHiveVersion) {
+  public AvroToColumnarFormatHiveIT(
+      String avroType,
+      Object avroValue,
+      Object jdbcValue,
+      String hiveType,
+      int jdbcType,
+      String ensureHiveVersion,
+      JobType jobType
+  ) {
     this.avroType = avroType;
     this.avroValue = avroValue;
     this.jdbcValue = jdbcValue;
     this.hiveType = hiveType;
     this.jdbcType = jdbcType;
     this.ensureHiveVersion = ensureHiveVersion;
+    this.jobType = jobType;
   }
 
   @Test
@@ -140,9 +157,6 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
     dataFileWriter.append(datum);
     dataFileWriter.close();
 
-    AvroParquetConfig conf = new AvroParquetConfig();
-    conf.inputFile = inputDirectory + "file.avro";
-    conf.outputDirectory = outputDirectory;
 
     MapReduceConfig mapReduceConfig = new MapReduceConfig();
     mapReduceConfig.mapReduceConfDir = getConfDir();
@@ -151,10 +165,30 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
     mapReduceConfig.kerberos = false;
 
     JobConfig jobConfig = new JobConfig();
-    jobConfig.jobType = JobType.AVRO_PARQUET;
     jobConfig.jobConfigs = Collections.emptyMap();
     jobConfig.jobName = "SDC Test Job";
-    jobConfig.avroParquetConfig = conf;
+
+    jobConfig.jobType = jobType;
+    String outputFormat = "";
+    switch (jobType) {
+      case AVRO_PARQUET:
+        AvroParquetConfig avroParquetConf = new AvroParquetConfig();
+        avroParquetConf.inputFile = inputDirectory + "file.avro";
+        avroParquetConf.outputDirectory = outputDirectory;
+        jobConfig.avroParquetConfig = avroParquetConf;
+        outputFormat = "PARQUET";
+        break;
+      case AVRO_ORC:
+        AvroOrcConfig avroOrcConf = new AvroOrcConfig();
+        avroOrcConf.inputFile = inputDirectory + "file.avro";
+        avroOrcConf.outputDirectory = outputDirectory;
+        avroOrcConf.orcBatchSize = 1000;
+        jobConfig.avroOrcConfig = avroOrcConf;
+        outputFormat = "ORC";
+        break;
+      default:
+        throw new UnsupportedOperationException("Only AVRO_* type MapReduce jobs supported from this test case");
+    }
 
     MapReduceExecutor executor = new MapReduceExecutor(mapReduceConfig, jobConfig);
     executor.waitForCompletition = true;
@@ -168,9 +202,14 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
     record.set(Field.create(Collections.<String, Field>emptyMap()));
 
     runner.runWrite(ImmutableList.of(record));
-    Assert.assertTrue(getDefaultFileSystem().exists(new Path(outputDirectory, "file.parquet")));
+    Assert.assertTrue(getDefaultFileSystem().exists(new Path(outputDirectory, "file." + outputFormat.toLowerCase())));
 
-    executeUpdate(Utils.format("CREATE TABLE tbl(value {}) STORED AS PARQUET LOCATION '{}'", hiveType, outputDirectory));
+    executeUpdate(Utils.format(
+        "CREATE TABLE tbl(value {}) STORED AS {} LOCATION '{}'",
+        hiveType,
+        outputFormat,
+        outputDirectory
+    ));
 
     assertTableExists("default.tbl");
     assertQueryResult("select * from tbl", new QueryValidator() {

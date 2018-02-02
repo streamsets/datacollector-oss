@@ -63,17 +63,42 @@ public class AvroToOrcRecordConverter {
 
   private static Logger LOG = LoggerFactory.getLogger(AvroToOrcRecordConverter.class);
 
+  public static final int DEFAULT_ORC_BATCH_SIZE = 100000;
   private static final int MICROS_PER_MILLI = 1000;
   private static final int NANOS_PER_MICRO = 1000;
 
   private final int orcBatchSize;
   private final Properties orcWriterProperties;
   private final Configuration configuration;
+  private TypeDescription orcSchema;
+  private VectorizedRowBatch batch;
+  private Writer writer;
 
   public AvroToOrcRecordConverter(int orcBatchSize, Properties orcWriterProperties, Configuration configuration) {
     this.orcBatchSize = orcBatchSize;
     this.orcWriterProperties = orcWriterProperties;
     this.configuration = configuration;
+  }
+
+  public void initializeWriter(Schema avroSchema, Path orcOutputFile) throws IOException {
+    orcSchema = AvroToOrcSchemaConverter.getOrcSchema(avroSchema);
+    batch = orcSchema.createRowBatch();
+    writer = createOrcWriter(orcWriterProperties, configuration, orcOutputFile, orcSchema);
+  }
+
+  public void closeWriter() throws IOException {
+    if (batch.size != 0) {
+      writer.addRowBatch(batch);
+      batch.reset();
+    }
+
+    writer.close();
+    orcSchema = null;
+    writer = null;
+  }
+
+  public void addAvroRecord(GenericRecord record) throws IOException {
+    addAvroRecord(batch, record, orcSchema, orcBatchSize, writer);
   }
 
   public void convert(String avroInputFile, String orcOutputFile) throws IOException {
@@ -89,24 +114,15 @@ public class AvroToOrcRecordConverter {
     FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroInputFile, reader);
     Schema avroSchema = fileReader.getSchema();
 
-    TypeDescription orcSchema = AvroToOrcSchemaConverter.getOrcSchema(avroSchema);
-
-    Writer writer = createOrcWriter(orcWriterProperties, configuration, orcOutputFile, orcSchema);
-
-    VectorizedRowBatch batch = orcSchema.createRowBatch();
+    initializeWriter(avroSchema, orcOutputFile);
 
     while (fileReader.hasNext()) {
       GenericRecord record = fileReader.next();
 
-      addAvroRecord(batch, record, orcSchema, orcBatchSize, writer);
+      addAvroRecord(record);
     }
 
-    if (batch.size != 0) {
-      writer.addRowBatch(batch);
-      batch.reset();
-    }
-
-    writer.close();
+    closeWriter();
   }
 
   public static Writer createOrcWriter(Properties orcWriterProperties, Configuration configuration, Path orcOutputFile, TypeDescription orcSchema) throws IOException {

@@ -17,51 +17,9 @@ package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseConfig;
 
-public class AvroParquetConfig {
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Input Avro File",
-    description = "Absolute path to the input avro file on HDFS.",
-    defaultValue = "${record:value('/filepath')}",
-    displayPosition = 10,
-    group = "AVRO_PARQUET",
-    dependsOn = "jobType^",
-    triggeredByValue = "AVRO_PARQUET",
-    evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = {RecordEL.class}
-  )
-  public String inputFile;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Output Directory",
-    description = "Absolute path to the destination directory on HDFS.",
-    defaultValue = "",
-    displayPosition = 20,
-    group = "AVRO_PARQUET",
-    dependsOn = "jobType^",
-    triggeredByValue = "AVRO_PARQUET",
-    evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = {RecordEL.class}
-  )
-  public String outputDirectory;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Keep Avro Input File",
-    description = "If checked, the input file will not be removed after the MapReduce converter job ends.",
-    defaultValue = "false",
-    displayPosition = 10,
-    group = "AVRO_PARQUET",
-    dependsOn = "jobType^",
-    triggeredByValue = "AVRO_PARQUET"
-  )
-  public boolean keepInputFile;
+public class AvroParquetConfig extends AvroConversionBaseConfig {
 
   @ConfigDef(
     required = false,
@@ -128,16 +86,4 @@ public class AvroParquetConfig {
   )
   public int maxPaddingSize = -1;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Overwrite Temporary File",
-    description = "If the temporary file exists, overwrite it.",
-    defaultValue = "false",
-    displayPosition = 80,
-    group = "AVRO_PARQUET",
-    dependsOn = "jobType^",
-    triggeredByValue = "AVRO_PARQUET"
-  )
-  public boolean overwriteTmpFile = false;
 }

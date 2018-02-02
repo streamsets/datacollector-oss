@@ -18,21 +18,6 @@ package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 public class AvroParquetConstants {
 
   /**
-   * Full path to input avro file that needs to be converted.
-   */
-  public final static String INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".input";
-
-  /**
-   * Directory into which the converted parquet file should be stored.
-   */
-  public final static String OUTPUT_DIR = AvroParquetConstants.class.getCanonicalName() + ".output";
-
-  /**
-   * Whether or not to keep input file after the conversion is done.
-   */
-  public final static String KEEP_INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".keep_input_file";
-
-  /**
    * Name of the compression codec that should be passed down to Parquet writer.
    */
   public final static String COMPRESSION_CODEC_NAME = AvroParquetConstants.class.getCanonicalName() + ".compression_codec";
@@ -56,11 +41,6 @@ public class AvroParquetConstants {
    * Max padding size that will be passed down to Parquet writer.
    */
   public final static String MAX_PADDING_SIZE = AvroParquetConstants.class.getCanonicalName() + ".max_padding_size";
-
-  /**
-   * Overwrite tmp file - if the tmp file exists it will be removed.
-   */
-  public final static String OVERWRITE_TMP_FILE = AvroParquetConstants.class.getCanonicalName() + ".overwrite_tmp_file";
 
   /**
    * Prefix that will be used for temporary file that is just being converted.

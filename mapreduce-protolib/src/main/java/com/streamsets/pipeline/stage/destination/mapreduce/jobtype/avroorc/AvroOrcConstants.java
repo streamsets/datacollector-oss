@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.mapreduce;
+package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+public class AvroOrcConstants {
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  MAPREDUCE("MapReduce"),
-  JOB("Job"),
-  AVRO_CONVERSION("Avro Conversion"),
-  AVRO_PARQUET("Avro to Parquet"),
-  AVRO_ORC("Avro to ORC"),
-  ;
+  /**
+   * Size of the ORC writer batch
+   */
+  public final static String ORC_BATCH_SIZE = AvroOrcConstants.class.getCanonicalName() + ".orc_batch_size";
 
-  private final String label;
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
 }

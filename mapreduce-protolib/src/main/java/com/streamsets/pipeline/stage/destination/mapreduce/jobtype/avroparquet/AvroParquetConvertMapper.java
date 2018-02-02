@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseMapper;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.FileReader;
@@ -46,15 +48,17 @@ import java.io.IOException;
 /**
  * Mapper that takes input as file path to avro file and converts it into parquet file - all from within this one map task.
  */
-public class AvroParquetConvertMapper extends Mapper<String, String, NullWritable, NullWritable> {
+public class AvroParquetConvertMapper extends AvroConversionBaseMapper {
 
   private static final Logger LOG = LoggerFactory.getLogger(AvroParquetConvertMapper.class);
+
+  private ParquetWriter parquetWriter;
 
   /**
    * Custom Builder to inject our own writer support that can work with logical types in older parquet version(s). The
    * logic is functionally equivalent to AvroParquetWriter.Builder
    */
-  public static class Builder<T> extends org.apache.parquet.hadoop.ParquetWriter.Builder<T, Builder<T>> {
+  public static class Builder<T> extends ParquetWriter.Builder<T, Builder<T>> {
     private Schema schema;
     private GenericData model;
 
@@ -83,48 +87,18 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     }
   }
 
-  public enum Counters {
-    PROCESSED_RECORDS
-  }
-
-  // Return true if and only if given property is defined with non empty non default value
-  private boolean propertyDefined(Configuration conf, String propertyName) {
-    String prop = conf.get(propertyName);
-    // String property will have default empty, integer -1, we'll skip both of them
-    return prop != null && !prop.isEmpty() && !prop.equals("-1");
+  @Override
+  protected String getOutputFileSuffix() {
+    return ".parquet";
   }
 
   @Override
-  protected void map(String input, String output, Context context) throws IOException, InterruptedException {
-    FileSystem fs = FileSystem.get(context.getConfiguration());
-    Configuration conf = context.getConfiguration();
-
-    LOG.info("Converting input file: {}", input);
-    LOG.info("Output directory: {}", output);
-    Path inputPath = new Path(input);
-    Path outputDir = new Path(output);
-    fs.mkdirs(outputDir);
-
-    Path tempFile = new Path(outputDir, AvroParquetConstants.TMP_PREFIX + inputPath.getName());
-    if(fs.exists(tempFile)) {
-      if(conf.getBoolean(AvroParquetConstants.OVERWRITE_TMP_FILE, false)) {
-        fs.delete(tempFile, true);
-      } else {
-        throw new IOException("Temporary file " + tempFile + " already exists.");
-      }
-    }
-    LOG.info("Using temp file: {}", tempFile);
-
-    // Output file is the same as input except of dropping .avro extension if it exists and appending .parquet
-    String outputFileName = inputPath.getName().replaceAll("\\.avro$", "") + ".parquet";
-    Path finalFile = new Path(outputDir, outputFileName);
-    LOG.info("Final path will be: {}", finalFile);
-
-    // Avro reader
-    SeekableInput seekableInput = new FsInput(inputPath, conf);
-    DatumReader<GenericRecord> reader = new GenericDatumReader<>();
-    FileReader<GenericRecord> fileReader = DataFileReader.openReader(seekableInput, reader);
-    Schema avroSchema = fileReader.getSchema() ;
+  protected void initializeWriter(
+      Path tempFile,
+      Schema avroSchema,
+      Configuration conf,
+      Context context
+  ) throws IOException {
 
     // Detect Parquet version to see if it supports logical types
     LOG.info("Detected Parquet version: " + Version.FULL_VERSION);
@@ -172,36 +146,20 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     }
 
     // Parquet writer
-    ParquetWriter parquetWriter = builder
-      .withConf(context.getConfiguration())
-      .build();
+    parquetWriter = builder
+        .withConf(context.getConfiguration())
+        .build();
 
-    LOG.info("Started reading input file");
-    long recordCount = 0;
-    try {
-      while (fileReader.hasNext()) {
-        GenericRecord record = fileReader.next();
-        parquetWriter.write(record);
-
-        context.getCounter(Counters.PROCESSED_RECORDS).increment(1);
-        recordCount++;
-      }
-    } catch(Exception e) {
-      // Various random stuff can happen while converting, so we wrap the underlying exception with more details
-      String message = "Exception at offset " + fileReader.tell() + " (record " + recordCount + "): " + e.toString();
-      throw new IOException(message, e);
-    }
-    LOG.info("Done reading input file");
-    parquetWriter.close();
-
-    LOG.info("Moving temporary file {} to final destination {}", tempFile, finalFile);
-    fs.rename(tempFile, finalFile);
-
-    if(!context.getConfiguration().getBoolean(AvroParquetConstants.KEEP_INPUT_FILE, false)) {
-      LOG.info("Removing input file", inputPath);
-      fs.delete(inputPath, true);
-    }
-
-    LOG.info("Done converting input file {}", output);
   }
+
+  @Override
+  protected void closeWriter() throws IOException {
+    parquetWriter.close();
+  }
+
+  @Override
+  protected void handleAvroRecord(GenericRecord record) throws IOException {
+    parquetWriter.write(record);
+  }
+
 }
