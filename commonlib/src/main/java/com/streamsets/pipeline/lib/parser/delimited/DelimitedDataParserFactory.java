@@ -48,6 +48,14 @@ public class DelimitedDataParserFactory extends DataParserFactory {
       .put(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, true)
       .put(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, false)
       .put(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX)
+      .put(
+          DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG,
+          DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER
+      )
+      .put(
+          DelimitedDataConstants.MULTI_CHARACTER_LINE_DELIMITER_CONFIG,
+          DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER
+      )
       .build();
 
   public static final Set<Class<? extends Enum>> MODES =
@@ -70,23 +78,42 @@ public class DelimitedDataParserFactory extends DataParserFactory {
   private DataParser createParser(String id, OverrunReader reader, long offset) throws DataParserException {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
-    CSVFormat csvFormat = getSettings().getMode(CsvMode.class).getFormat();
 
-    if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
-      csvFormat = CSVFormat.DEFAULT.withDelimiter(getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
-          .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
-          .withQuote((char) getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG))
-          .withIgnoreEmptyLines(getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
+    DelimitedDataParserSettings.Builder builder = DelimitedDataParserSettings.builder();
 
-      if (getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
-        csvFormat = csvFormat.withCommentMarker((char) getSettings().getConfig(
-            DelimitedDataConstants.COMMENT_MARKER_CONFIG)
-        );
-      }
+    CSVFormat csvFormat;
+    switch (getSettings().getMode(CsvMode.class)) {
+      case CUSTOM:
+        csvFormat = CSVFormat.DEFAULT.withDelimiter(getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
+            .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
+            .withQuote((char) getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG))
+            .withIgnoreEmptyLines(getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
+
+        if (getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
+          csvFormat = csvFormat.withCommentMarker((char) getSettings().getConfig(
+              DelimitedDataConstants.COMMENT_MARKER_CONFIG)
+          );
+        }
+        break;
+      case MULTI_CHARACTER:
+        csvFormat = null;
+        builder = builder.withMultiCharacterFieldDelimiter(
+            getSettings().getConfig(DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG)
+        ).withMultiCharEscapeChar(
+            getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG)
+        ).withMultiCharQuoteChar(
+            getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG)
+        ).withMultiCharacterLineDelimiter(
+            getSettings().getConfig(DelimitedDataConstants.MULTI_CHARACTER_LINE_DELIMITER_CONFIG
+        ));
+        break;
+      default:
+        csvFormat = getSettings().getMode(CsvMode.class).getFormat();
+        break;
     }
 
     try {
-      DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+      DelimitedDataParserSettings settings = builder
           .withSkipStartLines(getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES))
           .withFormat(csvFormat)
           .withHeader(getSettings().getMode(CsvHeader.class))

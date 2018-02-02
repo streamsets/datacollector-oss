@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 
-public class CsvParser implements Closeable, AutoCloseable {
+public class CsvParser implements DelimitedDataParser {
   private long currentPos;
   private long skipLinesPosCorrection;
   private final CSVParser parser;
@@ -104,22 +104,6 @@ public class CsvParser implements Closeable, AutoCloseable {
       }
     }
   }
-  private long skipLines(Reader reader, int lines) throws IOException {
-    int count = 0;
-    int skipped = 0;
-    while (skipped < lines) {
-      int c = reader.read();
-      if (c == -1) {
-        throw new IOException(Utils.format("Could not skip '{}' lines, reached EOF", lines));
-      }
-      // this is enough to handle \n and \r\n EOL files
-      if (c == '\n') {
-        skipped++;
-      }
-      count++;
-    }
-    return count;
-  }
 
   protected Reader getReader() {
     return reader;
@@ -141,14 +125,17 @@ public class CsvParser implements Closeable, AutoCloseable {
     }
   }
 
+  @Override
   public String[] getHeaders() throws IOException {
     return headers;
   }
 
+  @Override
   public long getReaderPosition() {
     return currentPos;
   }
 
+  @Override
   public String[] read() throws IOException {
     if (closed) {
       throw new IOException("Parser has been closed");
@@ -183,7 +170,7 @@ public class CsvParser implements Closeable, AutoCloseable {
   }
 
   @Override
-  public void close() {
+  public void close() throws IOException {
     try {
       closed = true;
       parser.close();

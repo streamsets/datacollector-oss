@@ -29,6 +29,10 @@ public class DelimitedDataParserSettings {
   private String nullConstant;
   private boolean allowExtraColumns;
   private String extraColumnPrefix;
+  private char multiCharacterQuoteChar;
+  private char multiCharacterEscapeChar;
+  private String multiCharacterFieldDelimiter;
+  private String multiCharacterLineDelimiter;
 
   public int getSkipStartLines() {
     return skipStartLines;
@@ -70,6 +74,22 @@ public class DelimitedDataParserSettings {
     return extraColumnPrefix;
   }
 
+  public char getMultiCharacterQuoteChar() {
+    return multiCharacterQuoteChar;
+  }
+
+  public char getMultiCharacterEscapeChar() {
+    return multiCharacterEscapeChar;
+  }
+
+  public String getMultiCharacterFieldDelimiter() {
+    return multiCharacterFieldDelimiter;
+  }
+
+  public String getMultiCharacterLineDelimiter() {
+    return multiCharacterLineDelimiter;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -84,6 +104,11 @@ public class DelimitedDataParserSettings {
     private String nullConstant;
     private boolean allowExtraColumns;
     private String extraColumnPrefix;
+
+    private char multiCharacterQuoteChar;
+    private char multiCharacterEscapeChar;
+    private String multiCharacterFieldDelimiter;
+    private String multiCharacterLineDelimiter;
 
     private Builder() {
     }
@@ -133,6 +158,26 @@ public class DelimitedDataParserSettings {
       return this;
     }
 
+    public Builder withMultiCharQuoteChar(char quoteChar) {
+      this.multiCharacterQuoteChar = quoteChar;
+      return this;
+    }
+
+    public Builder withMultiCharEscapeChar(char escapeChar) {
+      this.multiCharacterEscapeChar = escapeChar;
+      return this;
+    }
+
+    public Builder withMultiCharacterFieldDelimiter(String fieldDelimiter) {
+      this.multiCharacterFieldDelimiter = fieldDelimiter;
+      return this;
+    }
+
+    public Builder withMultiCharacterLineDelimiter(String lineDelimiter) {
+      this.multiCharacterLineDelimiter = lineDelimiter;
+      return this;
+    }
+
     public DelimitedDataParserSettings build() {
       DelimitedDataParserSettings delimitedDataParserSettings = new DelimitedDataParserSettings();
       delimitedDataParserSettings.header = this.header;
@@ -144,6 +189,10 @@ public class DelimitedDataParserSettings {
       delimitedDataParserSettings.extraColumnPrefix = this.extraColumnPrefix;
       delimitedDataParserSettings.format = this.format;
       delimitedDataParserSettings.parseNull = this.parseNull;
+      delimitedDataParserSettings.multiCharacterFieldDelimiter = this.multiCharacterFieldDelimiter;
+      delimitedDataParserSettings.multiCharacterLineDelimiter = this.multiCharacterLineDelimiter;
+      delimitedDataParserSettings.multiCharacterQuoteChar = this.multiCharacterQuoteChar;
+      delimitedDataParserSettings.multiCharacterEscapeChar = this.multiCharacterEscapeChar;
       return delimitedDataParserSettings;
     }
   }

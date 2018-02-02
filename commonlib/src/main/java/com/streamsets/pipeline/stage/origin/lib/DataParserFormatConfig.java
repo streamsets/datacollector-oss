@@ -49,6 +49,8 @@ import com.streamsets.pipeline.config.OriginAvroSchemaLookupModeChooserValues;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.lib.el.DataUnitsEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
@@ -330,6 +332,35 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public char csvCustomDelimiter = '|';
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER,
+      label = "Multi Character Field Delimiter",
+      description = "Delimiter between fields in multi-character delimited mode.",
+      displayPosition = 405,
+      group = "DATA_FORMAT",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "MULTI_CHARACTER"
+  )
+  public String multiCharacterFieldDelimiter = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL,
+      label = "Multi Character Line Delimiter",
+      description = "Delimiter between lines (i.e. different records) in multi-character delimited mode.",
+      displayPosition = 406,
+      group = "DATA_FORMAT",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "MULTI_CHARACTER"
+  )
+  public String multiCharacterLineDelimiter = String.format(
+      "${str:unescapeJava('%s')}",
+      DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL
+  );
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\\",
@@ -337,7 +368,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 410,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
-      triggeredByValue = "CUSTOM"
+      triggeredByValue = {"CUSTOM", "MULTI_CHARACTER"}
   )
   public char csvCustomEscape = '\\';
 
@@ -349,7 +380,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 420,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
-      triggeredByValue = "CUSTOM"
+      triggeredByValue = {"CUSTOM", "MULTI_CHARACTER"}
   )
   public char csvCustomQuote = '\"';
 
@@ -1537,7 +1568,13 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, csvIgnoreEmptyLines)
         .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, csvAllowExtraColumns)
         .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, csvExtraColumnPrefix)
-    ;
+        .setConfig(
+            DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG,
+            multiCharacterFieldDelimiter
+        ).setConfig(
+            DelimitedDataConstants.MULTI_CHARACTER_LINE_DELIMITER_CONFIG,
+            multiCharacterLineDelimiter
+        );
   }
 
   private void buildProtobufParser(DataParserFactoryBuilder builder) {

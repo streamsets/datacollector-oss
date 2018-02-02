@@ -342,7 +342,13 @@ public class DataFormatParser {
           .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, dataFormatConfig.csvIgnoreEmptyLines)
           .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, dataFormatConfig.csvAllowExtraColumns)
           .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, dataFormatConfig.csvExtraColumnPrefix)
-          ;
+          .setConfig(
+              DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG,
+              dataFormatConfig.multiCharacterFieldDelimiter
+          ).setConfig(
+              DelimitedDataConstants.MULTI_CHARACTER_LINE_DELIMITER_CONFIG,
+              dataFormatConfig.multiCharacterLineDelimiter
+          );
         break;
       case XML:
         builder.setMaxDataLen(dataFormatConfig.xmlMaxObjectLen);

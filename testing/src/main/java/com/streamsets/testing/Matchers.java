@@ -229,7 +229,12 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
           if (!childFields.containsKey(nestedFieldName)) {
             return false;
           }
-          return expectedValue.equals(valueAccessor.getValue(childFields.get(nestedFieldName)));
+          final VT value = valueAccessor.getValue(childFields.get(nestedFieldName));
+          if (expectedValue == null) {
+            return value == null;
+          } else {
+            return expectedValue.equals(value);
+          }
         }
       }
       return false;

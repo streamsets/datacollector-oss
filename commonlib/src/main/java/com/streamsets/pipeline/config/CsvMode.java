@@ -28,7 +28,8 @@ public enum CsvMode implements Label {
   TDF("Tab Separated Values", CSVFormat.TDF),
   POSTGRES_CSV("PostgreSQL CSV", CSVFormat.POSTGRESQL_CSV),
   POSTGRES_TEXT("PostgreSQL Text", CSVFormat.POSTGRESQL_TEXT),
-  CUSTOM("Custom", null)
+  CUSTOM("Custom", null),
+  MULTI_CHARACTER("Multi Character Delimited", null)
   ;
 
   private final String label;

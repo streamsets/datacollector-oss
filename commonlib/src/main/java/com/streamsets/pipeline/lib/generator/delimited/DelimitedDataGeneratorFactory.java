@@ -81,11 +81,20 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    CSVFormat csvFormat = getSettings().getMode(CsvMode.class).getFormat();
-    if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
-      csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
-        .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
-        .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
+    final CsvMode mode = getSettings().getMode(CsvMode.class);
+    CSVFormat csvFormat = mode.getFormat();
+    switch (mode) {
+      case CUSTOM:
+        csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
+          .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
+          .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
+        break;
+      case MULTI_CHARACTER:
+        // TODO: figure out cleaner way (ex: hiding in UI)?
+        throw new UnsupportedOperationException("Multiple character delimited is not yet supported for generators");
+      default:
+        //nothing to do;
+        break;
     }
     return new DelimitedCharDataGenerator(createWriter(os), csvFormat, header, headerKey, valueKey, replaceNewLines ? replaceNewLinesString : null);
   }
