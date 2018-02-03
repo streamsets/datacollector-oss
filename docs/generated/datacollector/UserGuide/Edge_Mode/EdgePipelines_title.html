@@ -226,9 +226,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d174702e418">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d174819e418">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d174702e421">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d174819e421">Supported Stages</th>
 
                         </tr>
 
@@ -236,14 +236,16 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e418 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e418 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e421 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e421 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_lrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random Record Source</a> - A development
                                         stage.</li>
 
-                                    <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. When you use an origin to read log data, you define the format of the log files to be read. Configure a Directory origin to read data from files in a directory.">Directory</a>
+                                    <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Raw Data Source</a> - A development stage.</li>
+
+                                    <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a>
                                         <p class="p">Edge pipelines do not support multithreaded processing.
                                             In an edge pipeline, the Directory origin always creates
                                             a single thread to read the files even if you configure
@@ -258,7 +260,7 @@
 
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Sensor Reader</a> - A development stage.</li>
 
-                                    <li class="li">Windows Event Log</li>
+                                    <li class="li"><a class="xref" href="../Origins/WindowsLog.html#concept_agf_5jv_sbb" title="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log.">Windows Event Log</a></li>
 
                                 </ul>
 
@@ -267,18 +269,15 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e418 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e418 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e421 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e421 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_mrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></li>
 
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Identity</a> - A development stage.</li>
 
-                                    <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a><p class="p">At this time, you can use a limited number of record,
-                math, and string functions in an Expression Evaluator processor included in an edge
-                pipeline.</p>
-</li>
+                                    <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></li>
 
                                     <li class="li"><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></li>
 
@@ -291,13 +290,15 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e418 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e418 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e421 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e421 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_nrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a></li>
 
                                     <li class="li"><a class="xref" href="../Destinations/HTTPClient.html#concept_khl_sg5_lz" title="The HTTP Client destination writes data to an HTTP endpoint. The destination sends requests to an HTTP resource URL. Use the HTTP Client destination to perform a range of standard requests or use an expression to determine the request for each record.">HTTP Client</a></li>
+
+                                    <li class="li"><a class="xref" href="../Destinations/KProducer.html#concept_oq2_5jl_zq" title="The Kafka Producer destination writes data to a Kafka cluster.">Kafka Producer</a></li>
 
                                     <li class="li"><a class="xref" href="../Destinations/MQTTPublisher.html#concept_odz_txt_lz" title="The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The destination functions as an MQTT client that publishes messages, writing each record as a message.">MQTT Publisher</a></li>
 
@@ -312,9 +313,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e418 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e418 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e421 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e421 ">None</td>
 
                         </tr>
 
@@ -373,9 +374,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d174702e665">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d174819e684">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d174702e668">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d174819e687">Supported Stages</th>
 
                         </tr>
 
@@ -383,13 +384,10 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e665 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e684 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e668 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e687 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_npd_drs_4bb">
-                                    <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random Record Source</a> - A development
-                                        stage.</li>
-
                                     <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a><p class="p">Edge pipelines do not support
                                             multithreaded processing. In an edge pipeline, the HTTP
                                             Server origin always creates a single thread to read the
@@ -407,18 +405,15 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e665 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e684 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e668 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e687 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_opd_drs_4bb">
                                     <li class="li"><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></li>
 
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Identity</a> - A development stage.</li>
 
-                                    <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a><p class="p">At this time, you can use a limited number of record,
-                math, and string functions in an Expression Evaluator processor included in an edge
-                pipeline.</p>
-</li>
+                                    <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></li>
 
                                     <li class="li"><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></li>
 
@@ -431,9 +426,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e665 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e684 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e668 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e687 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_ppd_drs_4bb">
                                     <li class="li"><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a></li>
 
@@ -452,9 +447,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e665 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e684 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e668 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e687 ">None</td>
 
                         </tr>
 
@@ -514,6 +509,9 @@
             </ul>
 </div>
 
+        <div class="note important"><span class="importanttitle">Important:</span> Although some supported stages list additional data formats, configure them to use JSON
+            or Text only.</div>
+
         <p class="p">Configure corresponding stages to use the same data format. For example, if the MQTT
             Publisher destination in an edge sending pipeline uses the JSON data format, then
             configure the MQTT Subscriber origin in the <span class="ph">Data Collector</span>
@@ -536,6 +534,12 @@
                 <li class="li">Email and webhook notifications cannot be sent by edge pipelines.</li>
 
                 <li class="li">Rules and alerts cannot be defined for edge pipelines.</li>
+
+                <li class="li">
+                    <p class="p" id="concept_pbm_q4r_4bb__p_ExpressionLimitation">Edge pipelines support a limited number of
+                        record, math, and string functions.</p>
+
+                </li>
 
                 <li class="li">Edge pipelines do not support dataflow triggers.</li>
 
@@ -601,9 +605,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d174702e1069">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d174819e1089">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d174702e1072">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d174819e1092">Supported Stages</th>
 
                         </tr>
 
@@ -611,9 +615,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1069 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1089 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1072 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1092 ">
                                 <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
                                     <li class="li">CoAP Server</li>
 
@@ -630,23 +634,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1069 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1089 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1072 ">Any</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1069 ">Destinations</td>
-
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1072 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1092 ">Any</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1069 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1089 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1072 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1092 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1089 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1092 ">Any</td>
 
                         </tr>
 
@@ -865,7 +869,7 @@
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">From the <span class="ph">Data Collector</span>
                     <span class="ph uicontrol">Home</span> page, select the edge pipelines that you want to run
-                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d33215e72" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/icon_MonMore.png" height="13" width="18" />), and then click <span class="ph uicontrol">Download Edge
+                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d33144e65" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/icon_MonMore.png" height="13" width="18" />), and then click <span class="ph uicontrol">Download Edge
                         Executable</span>.</span>
             </li>
 <li class="li step stepexpand">
@@ -963,9 +967,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d174702e1833">General Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d174819e1853">General Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d174702e1836">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d174819e1856">Description</th>
 
                         </tr>
 
@@ -973,18 +977,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1833 ">max-batch-size</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1853 ">max-batch-size</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1836 ">Maximum number of records included in a batch when the pipeline
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1856 ">Maximum number of records included in a batch when the pipeline
                                     runs.<p class="p">Default is 1000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1833 ">bind-address</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1853 ">bind-address</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1836 ">Address that <span class="ph">SDC Edge</span> binds to - localhost and the defined port number.<p class="p">Default port
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1856 ">Address that <span class="ph">SDC Edge</span> binds to - localhost and the defined port number.<p class="p">Default port
                                     number is 18633.</p>
 </td>
 
@@ -1007,9 +1011,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d174702e1900"><span class="ph">Control Hub</span> Property</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d174819e1920"><span class="ph">Control Hub</span> Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d174702e1905">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d174819e1925">Description</th>
 
                         </tr>
 
@@ -1017,17 +1021,17 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">enabled</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">enabled</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">base-url</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">base-url</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -1041,16 +1045,16 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">app-auth-token</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">app-auth-token</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Authentication token for this <span class="ph">SDC Edge</span> instance when enabled to work with <span class="ph">Control Hub</span>. </td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Authentication token for this <span class="ph">SDC Edge</span> instance when enabled to work with <span class="ph">Control Hub</span>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">job-labels</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">job-labels</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of
                                 labels. <p class="p">Default is "all", which you can use to run a job on all
                                     registered instances of <span class="ph">SDC Edge</span>. </p>
 </td>
@@ -1058,25 +1062,25 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">events-recipient</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">events-recipient</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">ping-frequency</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">ping-frequency</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 6,000.</p>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 6,000.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174702e1900 ">status-events-interval</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d174819e1920 ">status-events-interval</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174702e1905 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d174819e1925 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are
                                 running on this <span class="ph">SDC Edge</span>.<p class="p">Default is 60,000.</p>
 </td>
 
@@ -1302,23 +1306,7 @@ curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineI
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" title="Multithreaded Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Multithreaded Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

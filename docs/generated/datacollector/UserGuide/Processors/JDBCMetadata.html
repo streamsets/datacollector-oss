@@ -1,0 +1,606 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Postgres Metadata processor determines the PostgreSQL table where each record should be written, compares the record structure against the table structure, then creates or alters the table as ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Postgres Metadata" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_lcp_ssh_qcb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Postgres Metadata</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_lcp_ssh_qcb">
+    <h1 class="title topictitle1">Postgres Metadata</h1>
+
+    <div class="body conbody">
+        <p class="p">The <span class="ph">Postgres Metadata processor</span> determines the PostgreSQL table where each record should be written, compares the
+            record structure against the table structure, then creates or alters the table as
+            needed. </p>
+
+        <p class="p">Use the <span class="ph">Postgres Metadata processor</span> as part of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for Postgres</span></a>. <span class="ph">Since this is a beta release of <span class="ph">Drift Synchronization Solution for Postgres</span>, use the <span class="ph">Postgres Metadata processor</span> for
+                        development or testing only. Do not use the processor in production
+                        pipelines.</span></p>
+
+        <p class="p">When processing data, the <span class="ph">Postgres Metadata processor</span> uses a table name
+                  expression to determine the name of the target table to use for each record. If
+                  the target table is not in the processor's cache, the processor queries the
+                  database for table information and caches the results. When the target table is in
+                  the cache, the processor compares the record structure against cached table
+                  structure. </p>
+
+        <p class="p">When a record includes fields that do not exist in the
+                  table, the <span class="ph">Postgres Metadata processor</span> alters
+                  the table as needed, then updates the table information in the cache. When a
+                  record should be written to a table that does not exist, the processor creates the
+                  table based on the fields in the record.</p>
+
+        <p class="p">Like other database-related stages, when you configure the <span class="ph">Postgres Metadata processor</span>, you can specify custom JDBC properties, enter connection credentials, and configure
+            advanced properties such as an initial query and timeouts.</p>
+
+        <p class="p">For more information about the <span class="ph">Drift Synchronization Solution for Postgres</span> and a case study, see <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for Postgres</span></a>. </p>
+
+        <p class="p"><span class="ph">Support for additional databases is planned for future
+                        releases. To state a preference, leave a comment on <a class="xref" href="https://issues.streamsets.com/browse/SDC-8051" target="_blank">this issue</a>.</span></p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tgg_vxh_qcb">
+    <h2 class="title topictitle2">Installing the JDBC Driver</h2>
+
+    <div class="body conbody">
+        <p class="p">Before you use the <span class="ph">Postgres Metadata processor</span>, <span class="ph">install the JDBC driver for the database. You cannot access
+                        the database until you install the required driver. </span></p>
+
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_qpz_cdx_qcb">
+    <h2 class="title topictitle2">Schema and Table Names</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you configure the schemas and tables where records should be written, you can
+        use the actual schema and table names or expressions that resolve to the schemas and tables
+        to use.</p>
+
+        <p class="p">Use names when all data can be written to the same
+            schema or table. Use expressions to use information in the record to determine the
+            schema or table to write to. </p>
+
+        <p class="p">For example, the <span class="ph">JDBC Multitable Consumer origin writes the
+                        originating table name in the <samp class="ph codeph">jdbc.tables</samp> record header
+                        attribute.</span>
+            <span class="ph">If you want to write records to tables of the
+                        same name, you can use <samp class="ph codeph">${record:attribute('jdbc.tables')}</samp>
+                        for the table name property.</span></p>
+
+        <p class="p">Similarly, the <span class="ph">JDBC Query Consumer writes the originating table name
+                        in a <samp class="ph codeph">&lt;user-defined prefix&gt;.tables</samp> record header
+                        attribute when the origin is configured to create record header
+                        attributes.</span>
+            <span class="ph">So if you want to write records to tables of the
+                        same name, you can use <samp class="ph codeph">${record:attribute('&lt;user defined
+                              prefix&gt;.tables')}</samp> for the table name property.</span>
+        </p>
+
+        <div class="p">Tips for schema and table name expressions:<ul class="ul" id="concept_qpz_cdx_qcb__ul_r1t_rbs_rcb">
+                <li class="li">
+                    <p class="p">If all records are to be written to a single schema or table, you can enter
+                        the schema or table name instead of an expression. </p>
+
+                </li>
+
+                <li class="li">
+                    <p class="p">If the schema or table name can be extrapolated from record data or header
+                        attributes, you can use an expression that evaluates to the schema or table
+                        name. </p>
+
+                </li>
+
+                <li class="li">When necessary, you can use an Expression Evaluator earlier in the pipeline to
+                    perform calculations and write the results to a new field or a header attribute.
+                    Then, configure the <span class="ph">Postgres Metadata processor</span> to use that information.</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_fyr_gdx_qcb">
+    <h2 class="title topictitle2">Decimal Precision and Scale Field Attributes</h2>
+
+    <div class="body conbody">
+        <p class="p">Use the Decimal Precision Attribute and
+            Decimal Scale Attribute properties to specify the precision and scale for the Decimal
+            columns that the <span class="ph">Postgres Metadata processor</span> creates.</p>
+
+        <p class="p">While other data types have hard coded definitions that the processor uses to create
+            columns in database tables, Decimal columns require a specified precision and scale. </p>
+
+        <p class="p">When
+                                    processing data from the JDBC Query Consumer or JDBC Multitable
+                                    Consumer origins, use the default attribute names, "precision"
+                                    and "scale". Both <span class="ph" id="concept_fyr_gdx_qcb__d84071e5648">origins
+                                          store the precision and scale of Decimal columns in
+                                          "precision" and "scale" field attributes for each Decimal
+                                          field.</span></p>
+
+        <p class="p"><span class="ph">When processing data from other origins, you can use the
+                                          Expression Evaluator processor earlier in the pipeline to
+                                          create precision and scale field attributes for Decimal
+                                          fields. </span></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_bfj_vcx_qcb">
+    <h2 class="title topictitle2">Caching Information</h2>
+
+    <div class="body conbody">
+        <p class="p">When processing records, the <span class="ph">Postgres Metadata processor</span> queries the database for the necessary table information and caches the results.
+            After creating or altering a table, it updates the table information in the cache. The
+            processor uses the cache for record comparison when possible, to avoid unnecessary
+            queries.</p>
+
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> <span class="ph">Do not alter any table that might be used by the
+                        pipeline while the pipeline runs. Since the <span class="ph">Postgres Metadata processor</span> caches
+                        information about table structures and creates and alters tables, the
+                        processor must have accurate information about the tables.</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_lpv_zsh_qcb">
+    <h2 class="title topictitle2">Configuring a Postgres Metadata Processor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a <span class="ph">Postgres Metadata processor</span> as part of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for Postgres</span></a>. </p>
+
+            <p class="p"><span class="ph">Since this is a beta release of <span class="ph">Drift Synchronization Solution for Postgres</span>, use the <span class="ph">Postgres Metadata processor</span> for
+                        development or testing only. Do not use the processor in production
+                        pipelines.</span></p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d84005e4991" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d468474e333">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d468474e336">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e333 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e336 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e333 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e336 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e333 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_lpv_zsh_qcb__d84005e5037" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e336 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e333 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_lpv_zsh_qcb__d84005e5053" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e336 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e333 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_lpv_zsh_qcb__d84005e5070" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e336 ">Error record handling for the stage: <ul class="ul" id="task_lpv_zsh_qcb__d84005e5074">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">JDBC</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__table_lcm_yyq_tw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d468474e447">JDBC Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d468474e450">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">JDBC Connection String</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">Connection string to use to connect to the database. Use
+                                        the following
+                                        format:<pre class="pre codeblock">jdbc:postgresql://&lt;host&gt;:&lt;port&gt;/&lt;database&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 "><span class="ph">Enables entering credentials on the Credentials tab. Use
+         when you do not include credentials in the JDBC connection string.</span><p class="p"><span class="ph">The user account used for the connection
+                        credentials <span class="ph" id="task_lpv_zsh_qcb__d84071e5581">must have both the Create Table and
+                              Alter Table permissions on the database.</span></span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Schema <a class="xref" href="JDBCMetadata.html#concept_qpz_cdx_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_pjr_w1s_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">Name of the schema to use. You can enter an expression
+                                        that evaluates to the schema name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Table Name <a class="xref" href="JDBCMetadata.html#concept_qpz_cdx_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_r14_w1s_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">
+                                        <p class="p">Name of the database table to use. </p>
+
+                                        <div class="p">Enter one of the following:<ul class="ul" id="task_lpv_zsh_qcb__ul_ncv_cm4_1w">
+                                                <li class="li">Name of an existing database table. </li>
+
+                                                <li class="li">An expression that evaluates to the table name.
+                                                  For example, to use the table name in a
+                                                  "tableName" record header attribute, enter the
+                                                  following
+                                                  expression:<pre class="pre codeblock">${record:attribute('tableName')}</pre>
+</li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">The processor creates the table if the table does not
+                                            exist and updates the table when needed.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Decimal Scale Attribute <a class="xref" href="JDBCMetadata.html#concept_fyr_gdx_qcb">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">The field attribute that contains the scale for Decimal
+                                        fields. <p class="p">Use the default for data generated by the JDBC
+                                            Query Consumer or the JDBC Multitable Consumer
+                                            origins.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Decimal Precision Attribute <a class="xref" href="JDBCMetadata.html#concept_fyr_gdx_qcb">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_c3x_55r_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">The field attribute that contains the precision for
+                                        Decimal fields. <p class="p">Use the default for data generated by the
+                                            JDBC Query Consumer or the JDBC Multitable Consumer
+                                            origins.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d468474e447 ">Additional JDBC Configuration Properties</td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d468474e450 ">Additional JDBC configuration properties to use. To add properties, click
+         <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
+         names and values as expected by JDBC. </p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enter JDBC credentials separately from the JDBC connection string, on the
+                        <span class="ph uicontrol">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d84005e3615" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d468474e606">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d468474e609">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e606 ">Username</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e609 ">User name for the JDBC connection.</td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d84005e3646">
+                                    <td class="entry" valign="top" width="30%" headers="d468474e606 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e609 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_lpv_zsh_qcb__d84071e4675">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using JDBC versions older than 4.0, on the <span class="ph uicontrol">Legacy
+                        Drivers</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d84005e3671" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d468474e683">Legacy Driver Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d468474e686">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e683 ">JDBC Class Driver Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e686 ">Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d468474e683 ">Connection Health Test Query</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d468474e686 ">Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0.
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_lpv_zsh_qcb__JDBC-Advanced">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure advanced
+                    properties.</span>
+                <div class="itemgroup info">The defaults for these properties should work in most cases:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__table_wnj_hf3_p5" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d468474e738">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d468474e741">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Maximum Pool Size </td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+         1.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Minimum Idle Connections</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">The minimum number of connections to create and maintain. To define a fixed connection
+        pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Connection Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+        the time increment. <div class="p">Default is 30 seconds, defined as follows:
+         <pre class="pre codeblock">${30 * SECONDS}</pre>
+</div>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Idle Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+        define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
+<div class="p">Default is
+         30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
+</div>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Max Connection Lifetime</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+        time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
+<div class="p">Default is 30
+         seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
+</div>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Transaction Isolation</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+         transaction isolation level set for the database. You can override the database default by
+         setting the level to any of the following:</p>
+<ul class="ul" id="task_lpv_zsh_qcb__d84127e2689">
+         <li class="li">Read committed </li>
+
+         <li class="li">Read uncommitted </li>
+
+         <li class="li">Repeatable read</li>
+
+         <li class="li">Serializable</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d468474e738 ">Init Query</td>
+
+       <td class="entry" valign="top" width="70%" headers="d468474e741 ">SQL query to perform immediately after the stage connects to the database. Use to set
+        up the database session as needed. <p class="p">For example, the following query sets the time zone
+         for the session for a MySQL database: <samp class="ph codeph">SET time_zone =
+        timezone;</samp></p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

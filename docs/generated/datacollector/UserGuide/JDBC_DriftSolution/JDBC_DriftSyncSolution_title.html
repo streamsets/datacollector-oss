@@ -1,0 +1,486 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Drift Synchronization Solution for Postgres detects drift in incoming data and automatically creates or alters corresponding PostgreSQL tables as needed before the data is written. For example, ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Drift Synchronization Solution for Postgres" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kgt_pnr_4cb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Drift Synchronization Solution for Postgres</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+<!--
+  Copyright 2018 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution for Hive"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Hive</span></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" title="Multithreaded Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Multithreaded Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_kgt_pnr_4cb">
+    <h1 class="title topictitle1">Drift Synchronization Solution for Postgres</h1>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ljq_knr_4cb">
+    <h2 class="title topictitle2"><span class="ph">Drift Synchronization Solution for Postgres</span></h2>
+
+    <div class="body conbody">
+        <p class="p">The <span class="ph">Drift Synchronization Solution for Postgres</span> detects drift in incoming data and automatically creates or alters corresponding
+            PostgreSQL tables as needed before the data is written.</p>
+
+        <p class="p">For example, say you want to write nationwide inventory data to PostgreSQL tables. As you
+            acquire new stores or as individual stores upgrade their systems, the structure of the
+            data changes. To mandate that every store uses the same data structure is possible, but
+            not practical. You prefer a solution that adapts to this changing environment.</p>
+
+        <p class="p">With the <span class="ph">Drift Synchronization Solution for Postgres</span>, the <span class="ph">Postgres Metadata processor</span> determines when new tables or fields are required and submits create and alter table
+            commands to the database to make those changes. </p>
+
+        <p class="p">The JDBC Producer destination performs the writes. By the time the data reaches the JDBC
+            Producer, the newly created or altered database tables are ready to be used. </p>
+
+        <p class="p"><span class="ph">All columns in the tables created or altered by the
+                              <span class="ph">Postgres Metadata processor</span> allow
+                        nulls. When writing records with missing fields, the database inserts null
+                        values in the corresponding columns.</span>
+        </p>
+
+        <p class="p">By creating and altering tables based on record requirements, the <span class="ph">Drift Synchronization Solution for Postgres</span> enables writing data with changing data structures to PostgreSQL with no additional
+            intervention.</p>
+
+        <p class="p"><span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for Postgres</span>, consider the create and
+                        alter table speed of your database, and the create and alter table
+                        requirements of the incoming data. If the required changes cannot be
+                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for Postgres</span> might not be an appropriate
+                        solution.</span></p>
+
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> Use this beta release of <span class="ph">Drift Synchronization Solution for Postgres</span> for development or testing only. Do not use the solution in a production
+                environment. </div>
+
+        </div>
+
+        <p class="p"><span class="ph">Support for additional databases is planned for future
+                        releases. To state a preference, leave a comment on <a class="xref" href="https://issues.streamsets.com/browse/SDC-8051" target="_blank">this issue</a>.</span></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ztm_pqr_4cb">
+    <h2 class="title topictitle2">Basic Implementation and Processing</h2>
+
+    <div class="body conbody">
+        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for Postgres</span> includes the origin of your choice, the <span class="ph">Postgres Metadata processor</span>, and the JDBC Producer destination:</p>
+
+        <p class="p"><img class="image" id="concept_ztm_pqr_4cb__image_lqh_tfj_qcb" src="../Graphics/JDBCDrift_basic.png" height="83" width="388" /></p>
+
+        <p class="p">The <span class="ph">Drift Synchronization Solution for Postgres</span> uses the <span class="ph">Postgres Metadata processor</span> and JDBC Producer destination as follows:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm"><span class="ph">Postgres Metadata processor</span> for drift detection and table changes</dt>
+
+                    <dd class="dd">When processing records, the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use."><span class="ph">Postgres Metadata processor</span></a> detects the need for new tables and columns. Upon detecting
+                        the need for changes, it executes data definition language (DDL) to create
+                        new database tables or alter existing tables, as needed. This allows the
+                        database to create or alter tables before records reach the JDBC Producer
+                        destination. </dd>
+
+                    <dd class="dd">The processor creates tables and add columns to tables. It does not drop
+                        existing columns from tables. </dd>
+
+                    <dd class="dd">
+                        <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for Postgres</span>, consider the create and
+                        alter table speed of your database, and the create and alter table
+                        requirements of the incoming data. If the required changes cannot be
+                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for Postgres</span> might not be an appropriate
+                        solution.</span></div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">JDBC Producer destination for writes to new and altered tables</dt>
+
+                    <dd class="dd">The <a class="xref" href="../Destinations/JDBCProducer.html#concept_kvs_3hh_ht" title="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log.">JDBC
+                            Producer destination</a> writes data to the database based on the
+                        configuration properties in the stage. </dd>
+
+                    <dd class="dd"><span class="ph">All columns in the tables created or altered by the
+                              <span class="ph">Postgres Metadata processor</span> allow
+                        nulls. When writing records with missing fields, the database inserts null
+                        values in the corresponding columns.</span></dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_yjj_vht_pcb">
+    <h3 class="title topictitle3">Flattening Records</h3>
+
+    <div class="body conbody">
+        <p class="p">At this time, the <span class="ph">Drift Synchronization Solution for Postgres</span> does not process records with nested fields. If necessary, you can use the <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener
+                processor</a> to flatten records with nested fields before passing them to the
+                <span class="ph">Postgres Metadata processor</span>. </p>
+
+        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for Postgres</span> with a Field Flattener looks like this:</p>
+
+        <p class="p"><img class="image" id="concept_yjj_vht_pcb__image_z4c_1kj_qcb" src="../Graphics/JDBCDrift-basic_FieldFlattener.png" height="78" width="528" /></p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_z2v_fp1_scb">
+    <h2 class="title topictitle2">Requirements</h2>
+
+    <div class="body conbody">
+        <div class="p">To use the <span class="ph">Drift Synchronization Solution for Postgres</span>, you need the following:<dl class="dl">
+                
+                    <dt class="dt dlterm">Target table information</dt>
+
+                    <dd class="dd">To write a record to the appropriate table in the database, the <span class="ph">Postgres Metadata processor</span> and JDBC Producer destination must be able to determine the table to use
+                        for each record. </dd>
+
+                    <dd class="dd">If you write all records to one table, you can specify the table name in
+                        stage properties. However, usually records need to be written to different
+                        tables. In this case, the table name must be available within the record, as
+                        in a record field or in a record header attribute. </dd>
+
+                    <dd class="dd">For example, if data in a field can be used as a table name, then you can
+                        use an expression for the Table Name properties, such as
+                            <samp class="ph codeph">${record:value('/&lt;field name&gt;')}</samp>.</dd>
+
+                    <dd class="dd">The <a class="xref" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw">JDBC Query Consumer</a> and the <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xrx_11y_4y">JDBC Multitable Consumer</a> origins can both place the originating
+                        table name in record header attributes. You can use the following expression
+                        to use the attribute value for the table name:
+                            <samp class="ph codeph">${record:attribute('&lt;attribute name&gt;')}</samp>.</dd>
+
+                    <dd class="dd">If the table name does not exist in the record, you can use an <a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression
+                            Evaluator processor</a> to generate that information. That is, if you
+                        can determine the table to use by performing a calculation, you can write
+                        the resulting table name to a field, then use that field for the write.
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Decimal precision and scale information</dt>
+
+                    <dd class="dd">To enable the <span class="ph">Postgres Metadata processor</span> to create Decimal fields with the correct precision and scale, the
+                        processor must be able to determine the precision and scale to use. By
+                        default, the processor looks for the information in "precision" and "scale"
+                        field attributes for every Decimal field. </dd>
+
+                    <dd class="dd">Both the <a class="xref" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw">JDBC Query Consumer</a> and <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xrx_11y_4y">JDBC Multitable Consumer</a>
+                        <span class="ph">origins
+                                          store the precision and scale of Decimal columns in
+                                          "precision" and "scale" field attributes for each Decimal
+                                          field.</span> So when processing data from these origins, you can use the <span class="ph">Postgres Metadata processor</span> defaults. </dd>
+
+                    <dd class="dd"><span class="ph">When processing data from other origins, you can use the
+                                          Expression Evaluator processor earlier in the pipeline to
+                                          create precision and scale field attributes for Decimal
+                                          fields. </span></dd>
+
+                
+                
+                    <dt class="dt dlterm">Database permissions</dt>
+
+                    <dd class="dd">The user account used for connection credentials in the <span class="ph">Postgres Metadata processor</span>
+                        <span class="ph">must have both the Create Table and
+                              Alter Table permissions on the database.</span>
+                    </dd>
+
+                    <dd class="dd">The user account used for connection credentials in the JDBC Producer
+                        destination needs Write permission.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Primary use of the target tables </dt>
+
+                    <dd class="dd"><span class="ph">Do not alter any table that might be used by the
+                        pipeline while the pipeline runs. Since the <span class="ph">Postgres Metadata processor</span> caches
+                        information about table structures and creates and alters tables, the
+                        processor must have accurate information about the tables.</span></dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_s2c_qht_pcb">
+    <h2 class="title topictitle2">Implementation Steps</h2>
+
+    <div class="body conbody">
+        <div class="p">To implement the <span class="ph">Drift Synchronization Solution for Postgres</span>, perform the following steps:<ol class="ol" id="concept_s2c_qht_pcb__ol_zr1_3j3_fw">
+                <li class="li"> Configure the origin and any additional processors that you want to use. <p class="p">If
+                        data includes records with nested fields, add a Field Flattener to flatten
+                        records before passing them to the <span class="ph">Postgres Metadata processor</span>.</p>
+<p class="p">If each record does not include the table where the record should
+                        be written or the precision and scale information required for Decimal
+                        fields, use an Expression Evaluator to generate that information. You can
+                        write the information to a field, record header attribute, or field
+                        attributes, as best suits your needs. For more information, see <a class="xref" href="JDBC_DriftSyncSolution_title.html#concept_z2v_fp1_scb">Requirements</a>.</p>
+</li>
+
+                <li class="li">To capture drift and alter database tables, configure the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use."><span class="ph">Postgres Metadata processor</span></a>:<ol class="ol" type="a" id="concept_s2c_qht_pcb__ol_qsk_5x3_fw">
+                        <li class="li">If you haven't yet, <span class="ph">install the JDBC driver for the database. You cannot access
+                        the database until you install the required driver. </span>
+                            <span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></li>
+
+                        <li class="li">Configure the connection information.<p class="p"><span class="ph">The user account used for the connection
+                        credentials <span class="ph" id="concept_s2c_qht_pcb__d43295e5581">must have both the Create Table and
+                              Alter Table permissions on the database.</span></span>
+                            </p>
+<div class="p">
+                                <div class="note tip"><span class="tiptitle">Tip:</span> You might set up <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">runtime parameters</a> for the JDBC URL to make
+                                    configuring the Postgres Metadata processor and the JDBC
+                                    Producer easier. <span class="ph">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+
+                            </div>
+</li>
+
+                        <li class="li">Configure the schema name and table name. <p class="p">You can enter schema dn
+                                table names or use an expression that evaluates to the schemas and
+                                table names to use. </p>
+<p class="p">When processing data from either of the
+                                JDBC origins, you can use a record header attribute for the table
+                                name. The <span class="ph">JDBC Multitable Consumer origin writes the
+                        originating table name in the <samp class="ph codeph">jdbc.tables</samp> record header
+                        attribute.</span>
+                                <span class="ph">If you want to write records to tables of the
+                        same name, you can use <samp class="ph codeph">${record:attribute('jdbc.tables')}</samp>
+                        for the table name property.</span></p>
+<p class="p">Similarly, the <span class="ph">JDBC Query Consumer writes the originating table name
+                        in a <samp class="ph codeph">&lt;user-defined prefix&gt;.tables</samp> record header
+                        attribute when the origin is configured to create record header
+                        attributes.</span>
+                                <span class="ph">So if you want to write records to tables of the
+                        same name, you can use <samp class="ph codeph">${record:attribute('&lt;user defined
+                              prefix&gt;.tables')}</samp> for the table name property.</span>
+                            </p>
+<p class="p">For data from other origins, when necessary, you can use an
+                                Expression Evaluator earlier in the pipeline to write the
+                                information to a record field or record header attribute.</p>
+</li>
+
+                        <li class="li">Configure the decimal field precision
+                              and scale attribute names.<p class="p" id="concept_s2c_qht_pcb__d43295e5646">When
+                                    processing data from the JDBC Query Consumer or JDBC Multitable
+                                    Consumer origins, use the default attribute names, "precision"
+                                    and "scale". Both <span class="ph" id="concept_s2c_qht_pcb__d43295e5648">origins
+                                          store the precision and scale of Decimal columns in
+                                          "precision" and "scale" field attributes for each Decimal
+                                          field.</span></p>
+<p class="p"><span class="ph" id="concept_s2c_qht_pcb__d43295e5651">When processing data from other origins, you can use the
+                                          Expression Evaluator processor earlier in the pipeline to
+                                          create precision and scale field attributes for Decimal
+                                          fields. </span></p>
+</li>
+
+                        <li class="li">Configure the rest of the processor properties as needed.</li>
+
+                    </ol>
+<p class="p">For more information about the <span class="ph">Postgres Metadata processor</span>, see <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">Postgres Metadata</a>.</p>
+</li>
+
+                <li class="li">Configure the JDBC Producer destination to write to PostgreSQL tables:<ol class="ol" type="a" id="concept_s2c_qht_pcb__ol_k12_ty3_fw">
+                        <li class="li">Configure the connection information. The user account used for the
+                            connection credentials must have Write permission on the database.<div class="note tip"><span class="tiptitle">Tip:</span> You might set up <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">runtime parameters</a> for the JDBC URL to make configuring
+                                the <span class="ph">Postgres Metadata processor</span> and the JDBC Producer easier. <span class="ph">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</li>
+
+                        <li class="li">Configure the Table Name property. Use the same expression used for the
+                            table name in the <span class="ph">Postgres Metadata processor</span>.</li>
+
+                        <li class="li">Use the default INSERT operation. </li>
+
+                        <li class="li">Configure the rest of the destination as needed.</li>
+
+                    </ol>
+<p class="p">For more information about the JDBC Producer destination, see <a class="xref" href="../Destinations/JDBCProducer.html#concept_kvs_3hh_ht" title="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log.">JDBC Producer</a>.</p>
+</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lzy_wb3_qcb">
+    <h2 class="title topictitle2">Case Study</h2>
+
+    <div class="body conbody">
+        <p class="p">Let's say you want to replicate a set of Oracle tables
+            to PostgreSQL, and you need any changes to the Oracle tables to be mirrored in the
+            PostgreSQL tables. </p>
+
+        <p class="p">To do this, you start with the JDBC Multitable Consumer origin and connect it to the <span class="ph">Postgres Metadata processor</span>. Then, use a JDBC Producer destination to write to PostgreSQL. The resulting pipeline
+            looks like this:</p>
+
+        <p class="p"><img class="image" id="concept_lzy_wb3_qcb__image_oyv_2sp_qcb" src="../Graphics/JDBC-CaseStudyPipe.png" /></p>
+
+        <p class="p">Let's take a closer look... </p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_v2l_f4p_qcb">
+    <h3 class="title topictitle3">The JDBC Multitable Consumer Origin</h3>
+
+    <div class="body conbody">
+        <p class="p">The <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC
+                Multitable Consumer origin</a> can use multiple threads to process data from
+            database tables, up to one thread per table, so it is an ideal origin to process data
+            from a large set of database tables.</p>
+
+        <p class="p">The <span class="ph">JDBC Multitable Consumer origin writes the
+                        originating table name in the <samp class="ph codeph">jdbc.tables</samp> record header
+                        attribute.</span> The origin also stores the original precision and scale for Decimal columns in field
+            attributes for each Decimal field in the record.</p>
+
+        <p class="p">The <span class="ph">Postgres Metadata processor</span> uses this information to write records to database tables and to create Decimal
+            fields with the correct precision and scale.</p>
+
+        <p class="p">To use the <span class="ph">Drift Synchronization Solution for Postgres</span> with the JDBC Multitable Consumer origin, you don't need to configure anything
+            special in the origin, simply configure the origin to read from the Oracle tables that
+            you want to process and connect it to the <span class="ph">Postgres Metadata processor</span>.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_vdv_j4p_qcb">
+    <h3 class="title topictitle3">The Postgres Metadata Processor</h3>
+
+    <div class="body conbody">
+        <p class="p">The <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use."><span class="ph">Postgres Metadata processor</span></a> performs the heavy lifting for the <span class="ph">Drift Synchronization Solution for Postgres</span>. </p>
+
+        <p class="p">When processing data, the <span class="ph">Postgres Metadata processor</span> uses a table name
+                  expression to determine the name of the target table to use for each record. If
+                  the target table is not in the processor's cache, the processor queries the
+                  database for table information and caches the results. When the target table is in
+                  the cache, the processor compares the record structure against cached table
+                  structure. </p>
+
+        <p class="p">When a record includes fields that do not exist in the
+                  table, the <span class="ph">Postgres Metadata processor</span> alters
+                  the table as needed, then updates the table information in the cache. When a
+                  record should be written to a table that does not exist, the processor creates the
+                  table based on the fields in the record.</p>
+
+        <p class="p">When you configure the <span class="ph">Postgres Metadata processor</span>, you configure the connection information for the PostgreSQL database and other
+            standard properties. <span class="ph">The user account used for the connection
+                        credentials <span class="ph" id="concept_vdv_j4p_qcb__d43295e5581">must have both the Create Table and
+                              Alter Table permissions on the database.</span></span></p>
+
+        <p class="p">Then, since the JDBC Multitable Consumer writes the table name to the jdbc.tables record
+            header attribute, you use the following expression for the Table Name property to call
+            that information: <samp class="ph codeph">${record:attribute('jdbc.tables')}</samp>.</p>
+
+        <p class="p">The JDBC Multitable Consumer also writes the precision and scale for each Decimal field
+            to "precision" and "scale" attributes for each Decimal field. So you can use the
+            defaults for the Decimal Scale Attribute and Decimal Precision attribute properties. </p>
+
+        <p class="p">The resulting <span class="ph">Postgres Metadata processor</span> looks like this:</p>
+
+        <p class="p"><img class="image" id="concept_vdv_j4p_qcb__image_eq5_5gz_rcb" src="../Graphics/JDBC-CaseStudy-Processor.png" height="443" width="584" /></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_nst_44p_qcb">
+    <h3 class="title topictitle3">The JDBC Producer Destination</h3>
+
+    <div class="body conbody">
+        <p class="p">To write the data to PostgreSQL, you use the <a class="xref" href="../Destinations/JDBCProducer.html#concept_kvs_3hh_ht" title="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log.">JDBC Producer
+                destination</a>. </p>
+
+        <p class="p">When you configure the destination, you configure the connection information, the tables
+            to write to, and the default operation. Because you are replicating tables, all of the
+            field names will match the column names, so you don't need to specify any field to
+            column mappings. Configure other properties as needed.</p>
+
+        <p class="p">For the connection properties, use the same connection string and schema name that you
+            used for the <span class="ph">Postgres Metadata processor</span>. The user account associated with the credentials must have Write permission on the
+            database.</p>
+
+        <p class="p">For the Table Name property, use the same expression that you used in the <span class="ph">Postgres Metadata processor</span>: <samp class="ph codeph">${record:attribute('jdbc.tables')}</samp>. This enables the destination to write each record to the table defined in the
+            jdbc.tables record header attribute. When needed, the <span class="ph">Postgres Metadata processor</span> creates or alters the table to allow the record to be written without errors.</p>
+
+        <p class="p">Then, set the default operation to INSERT.</p>
+
+        <p class="p">The configured destination should look something like this:</p>
+
+        <p class="p"><img class="image" id="concept_nst_44p_qcb__image_cf3_x11_scb" src="../Graphics/JDBC-CaseStudy-Destination.png" height="424" width="577" /></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_y14_dy1_scb">
+    <h3 class="title topictitle3">Running the Pipeline</h3>
+
+    <div class="body conbody">
+        <div class="p">When the pipeline runs, the following actions occur:<ul class="ul" id="concept_y14_dy1_scb__ul_qzc_gy1_scb">
+                <li class="li">The <span class="ph">Postgres Metadata processor</span> assesses each record, checking the jdbc.tables header attribute for the table
+                    each record requires, and comparing the record structure against the cached
+                    table structure. If the table is not cached, the <span class="ph">Postgres Metadata processor</span> pings the database for table information, then performs the comparison.</li>
+
+                <li class="li">When a record includes a new or changed field, the <span class="ph">Postgres Metadata processor</span> sends an alter table command to the database, then updates the table
+                    information in its cache. When a record requires a table that does not exist,
+                    the <span class="ph">Postgres Metadata processor</span> creates the table based on the record structure. </li>
+
+                <li class="li">When creating Decimal columns, the <span class="ph">Postgres Metadata processor</span> uses information in the precision and scale field attributes for the
+                    corresponding Decimal field.</li>
+
+                <li class="li">The JDBC Producer writes the records to tables based on the table name in the
+                    jdbc.tables header attribute. <p class="p"><span class="ph">All columns in the tables created or altered by the
+                              <span class="ph">Postgres Metadata processor</span> allow
+                        nulls. When writing records with missing fields, the database inserts null
+                        values in the corresponding columns.</span></p>
+<p class="p">Since the <span class="ph">Postgres Metadata processor</span> created and altered tables as needed, no write errors should occur from
+                        structural changes in the data.</p>
+</li>
+
+                <li class="li">When the pipeline stops, the <span class="ph">Postgres Metadata processor</span> cache is cleared. </li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution for Hive"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Hive</span></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" title="Multithreaded Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Multithreaded Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

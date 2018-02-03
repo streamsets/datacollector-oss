@@ -39,11 +39,10 @@
         prerequisites.</p>
 
         <p class="p">MapR prerequisites include
-            installing the required client libraries and then running the command to set up MapR. To
-            connect to a secure MapR cluster enabled for wire-level security and username/password
-            authentication, you also must configure <span class="ph">Data Collector</span> to
-            run as the user account that is granted access to the cluster in the MapR user or
-            service ticket. </p>
+            installing the required client libraries and then running the command to set up MapR. If
+            the MapR cluster is enabled with built-in security, you also must configure <span class="ph">Data Collector</span> to
+            connect to a secure MapR cluster and ensure that a valid ticket exists for the <span class="ph">Data Collector</span>
+            user. </p>
 
     </div>
 
@@ -59,9 +58,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d225591e75">Supported MapR Version</th>
+                            <th class="entry" valign="top" width="50%" id="d226321e78">Supported MapR Version</th>
 
-                            <th class="entry" valign="top" width="50%" id="d225591e78">Supported MEP Version</th>
+                            <th class="entry" valign="top" width="50%" id="d226321e81">Supported MEP Version</th>
 
                         </tr>
 
@@ -69,25 +68,25 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d225591e75 ">MapR 5.0.0 and 5.1.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d226321e78 ">MapR 5.1.0</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d225591e78 ">N/A</td>
+                            <td class="entry" valign="top" width="50%" headers="d226321e81 ">N/A</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d225591e75 ">MapR 5.2.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d226321e78 ">MapR 5.2.0</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d225591e78 ">MEP 1.x<p class="p">For the Spark Evaluator processor, also MEP
-                                3.0</p>
+                            <td class="entry" valign="top" width="50%" headers="d226321e81 ">MEP 1.x<p class="p">The Spark Evaluator processor also supports MEP 3.0
+                                    (Spark 2.1)</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d225591e75 ">MapR 6.0.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d226321e78 ">MapR 6.0.0</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d225591e78 ">MEP 4.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d226321e81 ">MEP 4.0</td>
 
                         </tr>
 
@@ -104,62 +103,32 @@
     <h2 class="title topictitle2">Step 1. Install Client Libraries</h2>
 
     <div class="body conbody">
-        <p class="p">Install the required client libraries. If the MapR cluster uses username/password login
-            authentication, you must enable <span class="ph">Data Collector</span> to
-            use username/password authentication.</p>
+        <p class="p">Install <span class="ph">Data Collector</span> on
+            a node in the MapR cluster or on a client machine.</p>
 
-        <ol class="ol" id="concept_wcb_lxp_xz__ol_ir2_4xp_xz">
-            <li class="li">Install <span class="ph">Data Collector</span> on a node in the MapR cluster or on a client machine.<div class="p">To run <span class="ph">Data Collector</span> on a client machine - outside the cluster or on your local machine - the MapR
-                    client package must be installed and configured on the machine. If the MapR
-                    client package is not installed on the machine, download and install the
-                    following files:<ul class="ul" id="concept_wcb_lxp_xz__ul_qcz_x1m_gv">
-                        <li class="li">MapR client library - Typically named
-                                <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can
-                                download the files for your operating system
-                                here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
+        <div class="p">To run <span class="ph">Data Collector</span> on a client machine - outside the cluster or on your local machine - the MapR client
+            package must be installed and configured on the machine. If the MapR client package is
+            not installed on the machine, download and install the following files:<ul class="ul" id="concept_wcb_lxp_xz__ul_qcz_x1m_gv">
+                <li class="li">MapR client library - Typically named
+                        <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can download the
+                        files for your operating system
+                        here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
 </div>
 </li>
 
-                        <li class="li">Kafka client library - Typically named
-                                <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">For MapR
-                                versions 5.0.0 or 5.1.0, you can download the files for your
-                                operating system here:
-                                <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
+                <li class="li">Kafka client library - Typically named
+                        <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">For MapR version
+                        5.1.0, you can download the files for your operating system here:
+                        <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
 For
-                                MapR versions 5.2.0 or 6.0.0, you can download the files for your
-                                operating system here:
-                                <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/MEP/" target="_blank">http://package.mapr.com/releases/MEP/</a>MEP-&lt;version&gt;/</pre>
+                        MapR versions 5.2.0 or 6.0.0, you can download the files for your operating
+                        system here:
+                        <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/MEP/" target="_blank">http://package.mapr.com/releases/MEP/</a>MEP-&lt;version&gt;/</pre>
 </div>
 </li>
 
-                    </ul>
+            </ul>
 </div>
-</li>
-
-            <li class="li">If the MapR cluster uses username/password login
-                    authentication, uncomment the SDC_JAVA_OPTS environment variable line in the <span class="ph">Data Collector</span> environment
-                    variable file.<div class="p"><span class="ph">Data Collector</span>
-                        provides two environment configuration files:<ul class="ul" id="concept_wcb_lxp_xz__ul_n4l_dfc_1cb">
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data Collector</span>
-                              manually from the command line or when you start Data Collector as a
-                              service on operating systems that use the systemd init system -
-                              including <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
-                  LTS</span>. </li>
-
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data Collector</span> as a
-                              service on operating systems that use the SysV init system - including
-                                    <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>.</li>
-
-                  </ul>
-</div>
-<p class="p">The SDC_JAVA_OPTS line in the environment variable file appears
-                        as
-                    follows:</p>
-<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
-</li>
-
-        </ol>
 
     </div>
 
@@ -197,9 +166,9 @@ For
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d225591e273">Environment Variable</th>
+                                <th class="entry" valign="top" width="30%" id="d226321e230">Environment Variable</th>
 
-                                <th class="entry" valign="top" width="70%" id="d225591e276">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d226321e233">Description</th>
 
                             </tr>
 
@@ -207,9 +176,9 @@ For
 
                         <tbody class="tbody">
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e273 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d226321e230 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e276 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d226321e233 "><span class="ph">Data Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
                                         <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball
@@ -222,17 +191,17 @@ For
                     </tr>
 
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e273 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d226321e230 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e276 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d226321e233 "><span class="ph">Data Collector</span>
                             configuration directory.</td>
 
                     </tr>
 
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e273 ">MAPR_MEP_VERSION</td>
+                        <td class="entry" valign="top" width="30%" headers="d226321e230 ">MAPR_MEP_VERSION</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e276 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
+                        <td class="entry" valign="top" width="70%" headers="d226321e233 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
                                 the MapR 6.0 and the MapR 6.0 MEP 4 stage libraries, or to use just
                                 the MapR 6.0 MEP 4 stage library. </p>
 <p class="p">This variable is not
@@ -263,7 +232,7 @@ export MAPR_MEP_VERSION=4</pre>
                 MapR:<pre class="pre codeblock">$SDC_HOME/bin/streamsets setup-mapr</pre>
 </li>
 
-            <li class="li">When prompted, enter 5.0.0, 5.1.0, 5.2.0, or 6.0.0 for the MapR version.</li>
+            <li class="li">When prompted, enter 5.1.0, 5.2.0, or 6.0.0 for the MapR version.</li>
 
             <li class="li" id="concept_sfq_jyp_xz__MapR_absolutepath">When prompted, enter the absolute path to the MapR home
                 directory, usually <samp class="ph codeph">/opt/mapr</samp>.</li>
@@ -276,7 +245,7 @@ export MAPR_MEP_VERSION=4</pre>
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -295,9 +264,9 @@ export MAPR_MEP_VERSION=4</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d225591e434">Environment Variable</th>
+                                    <th class="entry" valign="top" width="30%" id="d226321e387">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d225591e437">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d226321e390">Description</th>
 
                                 </tr>
 
@@ -305,9 +274,9 @@ export MAPR_MEP_VERSION=4</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e434 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d226321e387 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e437 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d226321e390 "><span class="ph">Data Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
                                         <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball
@@ -319,31 +288,31 @@ export MAPR_MEP_VERSION=4</pre>
 
                     </tr>
 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e434 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d226321e387 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e437 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d226321e390 "><span class="ph">Data Collector</span>
                             configuration directory.</td>
 
                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225591e434 ">MAPR_HOME</td>
+                                    <td class="entry" valign="top" width="30%" headers="d226321e387 ">MAPR_HOME</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225591e437 ">MapR home directory, usually /opt/mapr.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225591e434 ">MAPR_VERSION</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d225591e437 ">MapR version: 5.0.0, 5.1.0, 5.2.0, or 6.0.0.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d226321e390 ">MapR home directory, usually /opt/mapr.</td>
 
                                 </tr>
 
                                 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d225591e434 ">MAPR_MEP_VERSION</td>
+                                    <td class="entry" valign="top" width="30%" headers="d226321e387 ">MAPR_VERSION</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d225591e437 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
+                                    <td class="entry" valign="top" width="70%" headers="d226321e390 ">MapR version: 5.1.0, 5.2.0, or 6.0.0.</td>
+
+                                </tr>
+
+                                <tr>
+                        <td class="entry" valign="top" width="30%" headers="d226321e387 ">MAPR_MEP_VERSION</td>
+
+                        <td class="entry" valign="top" width="70%" headers="d226321e390 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
                                 the MapR 6.0 and the MapR 6.0 MEP 4 stage libraries, or to use just
                                 the MapR 6.0 MEP 4 stage library. </p>
 <p class="p">This variable is not
@@ -387,91 +356,182 @@ export MAPR_MEP_VERSION=4</pre>
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
+</div>
+<div class="topic concept nested1" id="concept_rt3_p5p_qcb">
+    <h2 class="title topictitle2">Step 3. Connect to a MapR Cluster Secured with Built-in Security</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">If the MapR cluster is enabled with built-in security, you must configure <span class="ph">Data Collector</span> to
+        connect to a secure MapR cluster.</p>
+
+        <p class="p">Modify the SDC_JAVA_OPTS environment variable to add the
+                <samp class="ph codeph">-Dmaprlogin.password.enabled</samp> configuration property.</p>
+
+        <p class="p">Modify the environment variable in the required file based on how you start <span class="ph">Data Collector</span>.
+            For more information about the required file to edit, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a>.</p>
+
+        <div class="p">
+            <ul class="ul" id="concept_rt3_p5p_qcb__ul_n4l_dfc_1cb">
+                        <li class="li">Manual start - Uncomment the following line in the
+                                    <samp class="ph codeph">sdc-env.sh</samp>
+                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
+</li>
+
+                        <li class="li">Service start on operating systems that use the SysV init system - On
+                                    <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, uncomment the following line in the <samp class="ph codeph">sdcd-env.sh</samp>
+                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
+</li>
+
+                        <li class="li">Service start on operating systems that use the systemd init system - On
+                                    <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, add the following line to the file that overrides the default
+                              settings in the <samp class="ph codeph">sdc.service</samp>
+                                    file:<pre class="pre codeblock">Environment=SDC_JAVA_OPTS=-Dmaprlogin.password.enabled=true</pre>
+<p class="p">Override the default values in the
+                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
+<p class="p">After
+                                    overriding the default values, use the following command to
+                                    reload the systemd manager
+                              configuration:</p>
+<pre class="pre codeblock">systemctl daemon-reload</pre>
+</li>
+
+                  </ul>
+
+        </div>
+
+        <p class="p">After modifying the environment variables, restart <span class="ph">Data Collector</span> to
+            enable the changes.</p>
+
+    </div>
+
 </div>
 <div class="topic concept nested1" id="concept_kpp_4zp_fbb">
- <h2 class="title topictitle2">Step 3. Connect to a Secure MapR Cluster</h2>
+ <h2 class="title topictitle2">Step 4. Run Data Collector as a MapR Ticket User</h2>
 
  
- <div class="body conbody"><p class="shortdesc">To connect to a secure MapR cluster enabled for wire-level security and
-        username/password authentication, you must configure <span class="ph">Data Collector</span> to run
-        as the user account granted access to the cluster in the MapR user or service ticket. </p>
+ <div class="body conbody"><p class="shortdesc">To connect to a secure MapR cluster enabled with built-in security, ensure that a valid
+        user, tenant, or service ticket exists for the <span class="ph">Data Collector</span> user. </p>
 
-        <p class="p">A secure MapR cluster implements authentication with the following types of tickets: </p>
+        <p class="p">To generate tickets, see the <a class="xref" href="https://maprdocs.mapr.com/home/SecurityGuide/Tickets.html" target="_blank">MapR documentation</a>.</p>
 
-        <dl class="dl">
-            
-                <dt class="dt dlterm">User tickets</dt>
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> If the MapR ticket that <span class="ph">Data Collector</span>
+                uses allows impersonation, then you can configure MapR stages in <span class="ph">Data Collector</span>
+                to use <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop impersonation mode</a>.</div>
 
-                <dd class="dd">Each user account uses a generated user ticket to authenticate with the cluster.
-                    To run MapR commands in the cluster, <span class="ph">Data Collector</span> can run as a user account granted access in a MapR user ticket. For example,
-                    if a user ticket is generated for the "myuser" user account, then configure <span class="ph">Data Collector</span> to run as the "myuser" user account.</dd>
+        </div>
 
-            
-            
-                <dt class="dt dlterm">Service tickets</dt>
+        <p class="p">To run MapR commands in the secure cluster, <span class="ph">Data Collector</span>
+            must run as the user account granted access in the MapR ticket. </p>
 
-                <dd class="dd">Applications that run outside of the MapR cluster - such as <span class="ph">Data Collector</span> - can use service tickets to authenticate with the cluster. To run MapR
-                    commands in the cluster, <span class="ph">Data Collector</span> can run as the user account granted access in the MapR service ticket.</dd>
-
-                <dd class="dd">
-                    <div class="p">For example, let's say that you ran the following MapR command to generate
-                        the service ticket for applications running outside of the
-                        cluster:<pre class="pre codeblock">maprlogin generateticket -type service -out /tmp/longlived_ticket -duration 30:0:0 -renewal 90:0:0
+        <p class="p">For example, if you ran the following MapR command to generate the service ticket for
+            applications running outside of the cluster:</p>
+<pre class="pre codeblock">maprlogin generateticket -type service -out /tmp/longlived_ticket -duration 30:0:0 -renewal 90:0:0
 MapR credentials of user 'myappuser' for cluster 'mycluster' are written to '/tmp/longlived_ticket'</pre>
-</div>
-
-                    <p class="p">You then configure <span class="ph">Data Collector</span> to run as the "myappuser" user account.</p>
-
-                </dd>
-
-            
-        </dl>
-
-        <p class="p">For more information about MapR user and service tickets, see the <a class="xref" href="https://maprdocs.mapr.com/home/SecurityGuide/Tickets.html" target="_blank">MapR documentation</a>.</p>
+<p class="p">Then
+                            <span class="ph">Data Collector</span> must run as the "myappuser" user account. </p>
 
         <p class="p">Configure <span class="ph">Data Collector</span> to
-            run as the required user account based on your installation type:</p>
+            run as the required user account based on how you start <span class="ph">Data Collector</span>:</p>
 
         <div class="p">
             <dl class="dl">
                 
-                    <dt class="dt dlterm">Tarball (manual start)</dt>
+                    <dt class="dt dlterm">Manual start</dt>
 
-                    <dd class="dd">When <span class="ph">Data Collector</span> is installed from the tarball and started manually, <span class="ph">Data Collector</span> runs as the system user account logged into the command prompt when you
-                        use the following launch
+                    <dd class="dd">When <span class="ph">Data Collector</span> is started manually, it runs as the system user account logged into the
+                        command prompt when you use the following launch
                         command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
 To connect to a
-                        secure MapR cluster enabled for wire-level security and username/password
-                        authentication, you can log into the command prompt as the user account
-                        granted access in the MapR user or service ticket. Or, you can impersonate
-                        the required user account by using the following launch command, where
-                        &lt;user&gt; is the user account granted access in the MapR user or service
+                        secure MapR cluster, log into the command prompt as the user account granted
+                        access in the MapR ticket. Or, impersonate the required user account by
+                        using the following launch command, where &lt;user&gt; is the user account
+                        granted access in the MapR
                             ticket:<pre class="pre codeblock">sudo -u &lt;user&gt; $SDC_DIST/bin/streamsets dc</pre>
 <div class="p">For
-                            example:<pre class="pre codeblock">sudo -u myappuser /opt/streamsets-datacollector-<span class="ph">3.0.0.0</span>/bin/streamsets dc</pre>
+                            example:<pre class="pre codeblock">sudo -u myappuser /opt/streamsets-datacollector-<span class="ph">3.1.0.0</span>/bin/streamsets dc</pre>
 </div>
 </dd>
 
                 
                 
-                    <dt class="dt dlterm">RPM package or tarball (service start)</dt>
+                    <dt class="dt dlterm">Service start</dt>
 
-                    <dd class="dd">When <span class="ph">Data Collector</span> is installed from the RPM package or from the tarball and started as a
-                        service, <span class="ph">Data Collector</span> runs as the system user account and group defined in environment
-                        variables. The default system user and group are named sdc.</dd>
+                    <dd class="dd">When <span class="ph">Data Collector</span> is started as a service, it runs as the system user account and group
+                        defined in environment variables. The default system user and group are
+                        named "sdc". To use the default "sdc" system user and group, generate a new
+                        MapR user or service ticket for the "sdc" user account, as described in the
+                            <a class="xref" href="https://maprdocs.mapr.com/home/SecurityGuide/Tickets.html" target="_blank">MapR documentation</a>. </dd>
 
-                    <dd class="dd">To connect to a secure MapR cluster enabled for wire-level security and
-                        username/password authentication, set the user environment variable to the
-                        system user account granted access in the MapR user or service ticket. Set
-                        the group environment variable to the system group that the user account
-                        belongs to.</dd>
+                    <dd class="dd">To use another user account granted access to an existing MapR ticket,
+                        change the system user and group used by <span class="ph">Data Collector</span>. Set the <span class="ph">Data Collector</span> user environment variable to the user account granted access in the MapR
+                        ticket. Set the group environment variable to the system group that the user
+                        account belongs to. </dd>
 
-                    <dd class="dd">For instructions on setting the user and group environment variables, see
-                            <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>.</dd>
+                    <dd class="dd">
+                        <p class="p">Modify the environment variable in the file used by your operating
+                            system. For more information about the required file to edit, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a>.</p>
+
+                    </dd>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_kpp_4zp_fbb__ul-SDCenvfiles">
+                            <li class="li">Operating systems that use the SysV init system - On <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, modify the SDC_USER and SDC_GROUP environment variables in the
+                                    <samp class="ph codeph">sdcd-env.sh</samp> file.</li>
+
+                            <li class="li">Operating systems that use the systemd init system - On <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, override the User and Group environment variables in the
+                                    <samp class="ph codeph">sdc.service</samp> file.<p class="p">Override the default values in the
+                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
+<p class="p">After overriding the default values, use the following
+                                    command to reload the systemd manager
+                                    configuration:</p>
+<pre class="pre codeblock">systemctl daemon-reload</pre>
+<p class="p">After
+                                    modifying the environment variables, restart <span class="ph">Data Collector</span> to enable the changes. </p>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                    <dd class="dd">
+                        <div class="p">When you change the system user, you must make that user the owner of all
+                                <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files."><span class="ph">Data Collector</span> directories</a>:<ul class="ul" id="concept_kpp_4zp_fbb__ul_l53_lsk_qcb">
+                                <li class="li"><samp class="ph codeph">$SDC_DIST</samp></li>
+
+                                <li class="li"><samp class="ph codeph">$SDC_CONF</samp></li>
+
+                                <li class="li"><samp class="ph codeph">$SDC_DATA</samp></li>
+
+                                <li class="li"><samp class="ph codeph">$SDC_LOG</samp></li>
+
+                                <li class="li"><samp class="ph codeph">$SDC_RESOURCES</samp></li>
+
+                            </ul>
+</div>
+
+                        <div class="p">For example, if you change the system user and group to "myappuser", use
+                            the following command to change the owner of the configuration
+                            directory, <samp class="ph codeph">$SDC_CONF</samp>, and all files in the directory to
+                                <samp class="ph codeph">myappuser:myappuser</samp>:<pre class="pre codeblock">chown -R myappuser:myappuser /etc/sdc</pre>
+</div>
+
+                    </dd>
+
+                    <dd class="dd">For more information on setting the user and group environment variables,
+                        see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>.</dd>
 
                 
             </dl>
@@ -483,23 +543,7 @@ To connect to a
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

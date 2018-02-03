@@ -50,9 +50,11 @@
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Verify that the new stage library version is installed in <span class="ph">Data Collector</span>.</span>
-                <div class="itemgroup info">For a tarball installation, you can use the Package Manager or the command
-                    line to view or install stage libraries. See <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_h5k_jbl_nx">Installing for Tarball Using the Package Manager</a> or <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_bnl_n3n_s5">Installing for Tarball Using the Command Line</a>.<p class="p">For an RPM installation, you must use the command line to view or
-                        install stage libraries, as described in <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a>.</p>
+                <div class="itemgroup info">For a tarball installation, you can use the <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_h5k_jbl_nx">Package Manager</a> or the <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_bnl_n3n_s5">command line</a> to view or install stage libraries. <p class="p">For an RPM
+                        installation, you must use the <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">command line</a> to view or install stage libraries.</p>
+<p class="p">For a
+                        Cloudera Manager installation, all available stage libraries are
+                        included.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -67,6 +69,83 @@
     </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_o1f_lq1_scb">
+    <h2 class="title topictitle2">Working with Kafka 0.11 or Later</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you upgrade to Kafka version 0.11 or later and your pipelines use Apache Kafka
+        stage libraries, you must enable Kerberos authentication for the Apache Kafka stages in the
+        Java Authentication and Authorization Service (JAAS) configuration file.</p>
+
+        <div class="p"><div class="note note"><span class="notetitle">Note:</span> For any version of a Cloudera or Hortonworks Kafka stage library, you enable
+                Kerberos authentication in the JAAS configuration file. As a result, you do not need
+                to update Kerberos authentication for these stages when you upgrade your Kafka
+                system.</div>
+For an Apache Kafka stage library version 0.10 or earlier, you can
+            enable Kerberos authentication in one of the following ways: <dl class="dl">
+                
+                    <dt class="dt dlterm">Data Collector configuration file</dt>
+
+                    <dd class="dd">Define the following Kerberos properties in the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>:<ul class="ul" id="concept_o1f_lq1_scb__ul_w1d_hpf_55">
+                        <li class="li">kerberos.client.enabled</li>
+
+                        <li class="li">kerberos.client.principal</li>
+
+                        <li class="li">kerberos.client.keytab</li>
+
+                  </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">JAAS configuration file</dt>
+
+                    <dd class="dd">Configure the Kerberos properties in the JAAS configuration file. <span class="ph">Data Collector</span> uses the <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file as the JAAS
+                        configuration file.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">As of Kafka version 0.11, you can no longer enable Kerberos in the <span class="ph">Data Collector</span>
+            configuration file for Apache Kafka stage libraries. Instead, you must configure the
+            Kerberos properties in the JAAS configuration file,
+                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp>.</p>
+
+        <p class="p">If earlier Kafka stages using an Apache Kafka stage library used the <span class="ph">Data Collector</span>
+            configuration file, you must update each <span class="ph">Data Collector</span>
+            that runs Kafka pipelines to add the JAAS configuration properties required for Kafka
+            clients.</p>
+
+        <p class="p">For instructions about using the JAAS configuration properties to enable Kerberos for
+            Kafka stages, see the "Enabling Security" section in the appropriate stage
+            documentation:</p>
+
+        <ul class="ul" id="concept_o1f_lq1_scb__ul_cmw_c2v_scb">
+            <li class="li"><a class="xref" href="../Origins/HTTPtoKafka.html#concept_y1b_pwv_4y">HTTP
+                    to Kafka origin</a></li>
+
+            <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_yg3_k31_t5">Kafka
+                    Consumer origin</a></li>
+
+            <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_yg3_k31_t5">Multitopic Kafka Consumer origin</a></li>
+
+            <li class="li"><a class="xref" href="../Origins/SDCRPCtoKafka.html#concept_vhx_2jc_rw">SDC
+                    RPC to Kafka origin</a></li>
+
+        </ul>
+
+        <ul class="ul" id="concept_o1f_lq1_scb__ul_mmv_32v_scb">
+            <li class="li"><a class="xref" href="../Origins/UDPtoKafka.html#concept_kn3_tjc_rw">UDP to
+                    Kafka origin</a></li>
+
+            <li class="li"><a class="xref" href="../Destinations/KProducer.html#concept_znr_b3c_rw">Kafka Producer destination</a></li>
+
+        </ul>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_spf_2gq_vz">
  <h2 class="title topictitle2">Working with Cloudera CDH 5.11 or Later</h2>
 
@@ -129,38 +208,55 @@ To ensure that file permissions are set as expected, update all properties in
                
                 <li class="li">In the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, add the
                     previous MapR version stage library to the
-                        <samp class="ph systemoutput">system.stagelibs.blacklist</samp> property.<div class="p">For
-                        example, if you upgraded MapR version 5.1 to 5.2, add MapR version 5.1 to
-                        the blacklist property so that the property lists all supported MapR
-                        versions like
+                        <samp class="ph systemoutput">system.stagelibs.blacklist</samp> property.<div class="p">For example, if you upgraded MapR version 5.1 to 5.2, add MapR version 5.1 to the
+                        blacklist property so that the property lists all supported MapR versions
+                        like
                         so:<pre class="pre codeblock">system.stagelibs.blacklist=\
   streamsets-datacollector-mapr_5_0-lib,\
   streamsets-datacollector-mapr_5_1-lib,\
-  streamsets-datacollector-mapr_5_2-lib</pre>
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-mapr_6_0-lib,\
+  streamsets-datacollector-mapr_6_0-mep4-lib,\
+  streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</pre>
 </div>
 </li>
 
                 <li class="li">If the MapR cluster uses username/password login
-                    authentication, uncomment the SDC_JAVA_OPTS environment variable line in the <span class="ph">Data Collector</span> environment
-                    variable file.<div class="p"><span class="ph">Data Collector</span>
-                        provides two environment configuration files:<ul class="ul" id="concept_spt_33c_yy__ul_n4l_dfc_1cb">
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data Collector</span>
-                              manually from the command line or when you start Data Collector as a
-                              service on operating systems that use the systemd init system -
-                              including <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
-                  LTS</span>. </li>
+                    authentication, modify the SDC_JAVA_OPTS environment variable in the required
+                    file based on how you start <span class="ph">Data Collector</span>. <p class="p">For more
+                        information about the required file to edit, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a>.</p>
+<div class="p">
+                        <ul class="ul" id="concept_spt_33c_yy__ul_n4l_dfc_1cb">
+                        <li class="li">Manual start - Uncomment the following line in the
+                                    <samp class="ph codeph">sdc-env.sh</samp>
+                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
+</li>
 
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data Collector</span> as a
-                              service on operating systems that use the SysV init system - including
+                        <li class="li">Service start on operating systems that use the SysV init system - On
                                     <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>.</li>
+                  LTS</span>, uncomment the following line in the <samp class="ph codeph">sdcd-env.sh</samp>
+                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
+</li>
+
+                        <li class="li">Service start on operating systems that use the systemd init system - On
+                                    <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, add the following line to the file that overrides the default
+                              settings in the <samp class="ph codeph">sdc.service</samp>
+                                    file:<pre class="pre codeblock">Environment=SDC_JAVA_OPTS=-Dmaprlogin.password.enabled=true</pre>
+<p class="p">Override the default values in the
+                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
+<p class="p">After
+                                    overriding the default values, use the following command to
+                                    reload the systemd manager
+                              configuration:</p>
+<pre class="pre codeblock">systemctl daemon-reload</pre>
+</li>
 
                   </ul>
-</div>
-<p class="p">The SDC_JAVA_OPTS line in the environment variable file appears
-                        as
-                    follows:</p>
-<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
+
+                    </div>
 </li>
 
                 <li class="li">Run the <samp class="ph codeph">setup-mapr</samp> command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
@@ -175,29 +271,13 @@ To ensure that file permissions are set as expected, update all properties in
  </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

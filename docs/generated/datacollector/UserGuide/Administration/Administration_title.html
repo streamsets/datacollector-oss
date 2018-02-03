@@ -54,7 +54,7 @@
   available space for a directory. </p>
 
   <p class="p"><span class="ph">Data Collector</span>
-   directories are defined in environment variables. For more information, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+   directories are defined in environment variables. For more information, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
 
   <p class="p">To view <span class="ph">Data Collector</span>
    directories, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">SDC Directories</span></span>. </p>
@@ -67,11 +67,11 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="26.666666666666668%" id="d62e179">Directory </th>
+       <th class="entry" valign="top" width="26.666666666666668%" id="d62e175">Directory </th>
 
-       <th class="entry" valign="top" width="40%" id="d62e182">Includes</th>
+       <th class="entry" valign="top" width="40%" id="d62e178">Includes</th>
 
-       <th class="entry" valign="top" width="33.33333333333333%" id="d62e185">Environment Variable</th>
+       <th class="entry" valign="top" width="33.33333333333333%" id="d62e181">Environment Variable</th>
 
       </tr>
 
@@ -79,52 +79,52 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e179 ">Run Time</td>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e175 ">Run Time</td>
 
-       <td class="entry" valign="top" width="40%" headers="d62e182 ">Base directory for <span class="ph">Data Collector</span>
+       <td class="entry" valign="top" width="40%" headers="d62e178 ">Base directory for <span class="ph">Data Collector</span>
         executables and related files.</td>
 
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e185 ">SDC_DIST</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e181 ">SDC_DIST</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e179 ">Configuration</td>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e175 ">Configuration</td>
 
-       <td class="entry" valign="top" width="40%" headers="d62e182 ">The <span class="ph">Data Collector</span>
+       <td class="entry" valign="top" width="40%" headers="d62e178 ">The <span class="ph">Data Collector</span>
         configuration file, <samp class="ph codeph">sdc.properties</samp>, and related realm properties files and
         keystore files. <p class="p">Also includes the logj4 properties file.</p>
 </td>
 
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e185 ">SDC_CONF</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e181 ">SDC_CONF</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e179 ">Data</td>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e175 ">Data</td>
 
-       <td class="entry" valign="top" width="40%" headers="d62e182 ">Pipeline configuration and run details. </td>
+       <td class="entry" valign="top" width="40%" headers="d62e178 ">Pipeline configuration and run details. </td>
 
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e185 ">SDC_DATA</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e181 ">SDC_DATA</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e179 ">Log</td>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e175 ">Log</td>
 
-       <td class="entry" valign="top" width="40%" headers="d62e182 "><span class="ph">Data Collector</span>
+       <td class="entry" valign="top" width="40%" headers="d62e178 "><span class="ph">Data Collector</span>
         log file, <samp class="ph codeph">sdc.log</samp>.</td>
 
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e185 ">SDC_LOG</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e181 ">SDC_LOG</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e179 ">Resources</td>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d62e175 ">Resources</td>
 
-       <td class="entry" valign="top" width="40%" headers="d62e182 ">Directory for runtime resource files. </td>
+       <td class="entry" valign="top" width="40%" headers="d62e178 ">Directory for runtime resource files. </td>
 
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e185 ">SDC_RESOURCES</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d62e181 ">SDC_RESOURCES</td>
 
       </tr>
 
@@ -406,9 +406,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="30%" id="d62e951">Generator</th>
+                        <th class="entry" valign="top" width="30%" id="d62e947">Generator</th>
 
-                        <th class="entry" valign="top" width="70%" id="d62e954">Description</th>
+                        <th class="entry" valign="top" width="70%" id="d62e950">Description</th>
 
                     </tr>
 
@@ -416,9 +416,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62e951 ">SDC Info</td>
+                        <td class="entry" valign="top" width="30%" headers="d62e947 ">SDC Info</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62e954 ">Includes the following information:<ul class="ul" id="concept_ur5_nmw_xz__ul_yg4_x1y_xz">
+                        <td class="entry" valign="top" width="70%" headers="d62e950 ">Includes the following information:<ul class="ul" id="concept_ur5_nmw_xz__ul_yg4_x1y_xz">
                                 <li class="li"><span class="ph">Data Collector</span> configuration files.</li>
 
                                 <li class="li">Permissions granted to users on <span class="ph">Data Collector</span> directories.</li>
@@ -436,9 +436,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62e951 ">Pipelines</td>
+                        <td class="entry" valign="top" width="30%" headers="d62e947 ">Pipelines</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62e954 ">Includes the following JSON files for each pipeline:<ul class="ul" id="concept_ur5_nmw_xz__ul_esz_nby_xz">
+                        <td class="entry" valign="top" width="70%" headers="d62e950 ">Includes the following JSON files for each pipeline:<ul class="ul" id="concept_ur5_nmw_xz__ul_esz_nby_xz">
                                 <li class="li">history.json</li>
 
                                 <li class="li">info.json</li>
@@ -454,9 +454,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62e951 ">Logs</td>
+                        <td class="entry" valign="top" width="30%" headers="d62e947 ">Logs</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62e954 ">Includes the most recent content of the following log files:<ul class="ul" id="concept_ur5_nmw_xz__ul_zg4_zby_xz">
+                        <td class="entry" valign="top" width="70%" headers="d62e950 ">Includes the most recent content of the following log files:<ul class="ul" id="concept_ur5_nmw_xz__ul_zg4_zby_xz">
                                 <li class="li">Garbage collector log - <samp class="ph codeph">gc.log</samp></li>
 
                                 <li class="li"><span class="ph">Data Collector</span> log - <samp class="ph codeph">sdc.log</samp></li>
@@ -467,9 +467,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62e951 ">Snapshots</td>
+                        <td class="entry" valign="top" width="30%" headers="d62e947 ">Snapshots</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62e954 ">Includes snapshots created for each pipeline.</td>
+                        <td class="entry" valign="top" width="70%" headers="d62e950 ">Includes snapshots created for each pipeline.</td>
 
                     </tr>
 
@@ -843,9 +843,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d62e1732">Option</th>
+                            <th class="entry" valign="top" width="30%" id="d62e1728">Option</th>
 
-                            <th class="entry" valign="top" width="70%" id="d62e1735">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d62e1731">Description</th>
 
                         </tr>
 
@@ -853,29 +853,29 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Required. URL of the <span class="ph">Data Collector</span>. <p class="p">The default URL is
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Required. URL of the <span class="ph">Data Collector</span>. <p class="p">The default URL is
                                     <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Optional. HTTP authentication type used by the <span class="ph">Data Collector</span>. </td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Optional. HTTP authentication type used by the <span class="ph">Data Collector</span>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Optional. User name to use to log in. The roles assigned to the
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Optional. User name to use to log in. The roles assigned to the
                                 user account determine the tasks that you can perform.<p class="p">If you omit
                                     this option, the <span class="ph">Data Collector</span> allows admin access.</p>
 </td>
@@ -883,43 +883,43 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Optional. Required when you enter a user name. Password for the
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Optional. Required when you enter a user name. Password for the
                                 user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">-D &lt;dpmURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">-D &lt;dpmURL&gt; <p class="p">or</p>
 --dpmURL &lt;dpmURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Not applicable. Do not use when the <span class="ph">Data Collector</span> is not registered with <span class="ph">Control Hub</span>.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Not applicable. Do not use when the <span class="ph">Data Collector</span> is not registered with <span class="ph">Control Hub</span>.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">&lt;command&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">&lt;command&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Required. Command to perform.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Required. Command to perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">&lt;subcommand&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">&lt;subcommand&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Required for all commands except help. Subcommand to
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Required for all commands except help. Subcommand to
                                 perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1732 ">&lt;args&gt;</td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1728 ">&lt;args&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1735 ">Optional. Include arguments and options as needed.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1731 ">Optional. Include arguments and options as needed.</td>
 
                         </tr>
 
@@ -943,9 +943,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d62e1891">Option</th>
+                            <th class="entry" valign="top" width="30%" id="d62e1887">Option</th>
 
-                            <th class="entry" valign="top" width="70%" id="d62e1894">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d62e1890">Description</th>
 
                         </tr>
 
@@ -953,20 +953,20 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. URL of the <span class="ph">Data Collector</span>. <p class="p">The default URL is
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. URL of the <span class="ph">Data Collector</span>. <p class="p">The default URL is
                                     <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph systemoutput">dpm</samp>.<p class="p">If you omit this
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph systemoutput">dpm</samp>.<p class="p">If you omit this
                                     option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the command
                                     to fail.</p>
 </td>
@@ -974,11 +974,11 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. User account to log in. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. User account to log in. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -991,43 +991,43 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">-D &lt;dpmURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">-D &lt;dpmURL&gt; <p class="p">or</p>
 --dpmURL &lt;dpmURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. Set to:
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. Set to:
                                     <samp class="ph systemoutput">https://cloud.streamsets.com</samp>.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">&lt;command&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">&lt;command&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required. Command to perform.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required. Command to perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">&lt;subcommand&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">&lt;subcommand&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Required for all commands except help. Subcommand to
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Required for all commands except help. Subcommand to
                                 perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d62e1891 ">&lt;args&gt;</td>
+                            <td class="entry" valign="top" width="30%" headers="d62e1887 ">&lt;args&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d62e1894 ">Optional. Include arguments and options as needed.</td>
+                            <td class="entry" valign="top" width="70%" headers="d62e1890 ">Optional. Include arguments and options as needed.</td>
 
                         </tr>
 
@@ -1123,9 +1123,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2148">Start Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2144">Start Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2151">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2147">Description</th>
 
                                     </tr>
 
@@ -1133,12 +1133,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2148 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2144 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2151 ">Required. ID of the pipeline to start. <p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2147 ">Required. ID of the pipeline to start. <p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1147,34 +1147,34 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2148 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2144 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2151 ">Optional. The revision of the pipeline. Use to start
+                                        <td class="entry" valign="top" width="70%" headers="d62e2147 ">Optional. The revision of the pipeline. Use to start
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data Collector</span> starts the most recent version.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2148 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2144 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2151 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot start the pipeline. <p class="p">Use to debug the
+                                        <td class="entry" valign="top" width="70%" headers="d62e2147 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot start the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2148 ">-R &lt;runtimeParametersString&gt;
+                                        <td class="entry" valign="top" width="30%" headers="d62e2144 ">-R &lt;runtimeParametersString&gt;
                                                 <p class="p">or</p>
 <p class="p">--runtimeParameters
                                                 &lt;runtimeParametersString&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2151 ">Optional. Runtime parameter values to start the
+                                        <td class="entry" valign="top" width="70%" headers="d62e2147 ">Optional. Runtime parameter values to start the
                                             pipeline with. Overrides the parameter default values
                                             defined for the pipeline.<div class="p">Enter the runtime parameters
                                                 using the following
@@ -1231,9 +1231,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2300">Stop Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2296">Stop Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2303">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2299">Description</th>
 
                                     </tr>
 
@@ -1241,9 +1241,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2300 ">--forceStop</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2296 ">--forceStop</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2303 ">Optional. Forces the pipeline to stop
+                                        <td class="entry" valign="top" width="70%" headers="d62e2299 ">Optional. Forces the pipeline to stop
                                                 immediately.<p class="p">In some situations, a pipeline can
                                                 remain in a Stopping state for up to five minutes.
                                                 For example, if a scripting processor in the
@@ -1255,12 +1255,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2300 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2296 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2303 ">Required. ID of the pipeline to stop. <p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2299 ">Required. ID of the pipeline to stop. <p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1269,21 +1269,21 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2300 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2296 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2303 ">Optional. The revision of the pipeline. Use to stop
+                                        <td class="entry" valign="top" width="70%" headers="d62e2299 ">Optional. The revision of the pipeline. Use to stop
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data Collector</span> stops the most recent version.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2300 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2296 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2303 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
+                                        <td class="entry" valign="top" width="70%" headers="d62e2299 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
 
@@ -1331,9 +1331,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2448">Status Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2444">Status Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2451">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2447">Description</th>
 
                                     </tr>
 
@@ -1341,12 +1341,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2448 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2444 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2451 ">Required. ID of the pipeline. <p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2447 ">Required. ID of the pipeline. <p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1355,12 +1355,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2448 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2444 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2451 ">Optional. The revision of the pipeline. Use for older
+                                        <td class="entry" valign="top" width="70%" headers="d62e2447 ">Optional. The revision of the pipeline. Use for older
                                             versions of the pipeline. <p class="p">By default, the <span class="ph">Data Collector</span> returns information for the most recent
                                                 version.</p>
 </td>
@@ -1368,9 +1368,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2448 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2444 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2451 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot return the status of the pipeline. <p class="p">Use to
+                                        <td class="entry" valign="top" width="70%" headers="d62e2447 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot return the status of the pipeline. <p class="p">Use to
                                                 debug the problem or pass to StreamSets for
                                                 help.</p>
 </td>
@@ -1418,9 +1418,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2579">Reset Origin Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2575">Reset Origin Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2582">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2578">Description</th>
 
                                     </tr>
 
@@ -1428,12 +1428,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2579 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2575 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2582 ">Required. ID of the pipeline to reset the origin. <p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2578 ">Required. ID of the pipeline to reset the origin. <p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1442,12 +1442,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2579 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2575 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2582 ">Optional. The revision of the pipeline. Use to reset
+                                        <td class="entry" valign="top" width="70%" headers="d62e2578 ">Optional. The revision of the pipeline. Use to reset
                                             the origin for an older version of the pipeline. <p class="p">By
                                                 default, the <span class="ph">Data Collector</span> resets the origin for the most recent
                                                 version.</p>
@@ -1456,9 +1456,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2579 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2575 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2582 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
+                                        <td class="entry" valign="top" width="70%" headers="d62e2578 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
 
@@ -1509,9 +1509,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2712">Get Offset Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2708">Get Offset Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2715">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2711">Description</th>
 
                                     </tr>
 
@@ -1519,12 +1519,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2712 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2708 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2715 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2711 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1533,12 +1533,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2712 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2708 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2715 ">Optional. The revision of the pipeline. Use to reset
+                                        <td class="entry" valign="top" width="70%" headers="d62e2711 ">Optional. The revision of the pipeline. Use to reset
                                             the origin for an older version of the pipeline. <p class="p">By
                                                 default, the <span class="ph">Data Collector</span> uses the most recent version.</p>
 </td>
@@ -1546,9 +1546,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2712 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2708 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2715 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot retrieve the last-saved offset.<p class="p">Use to debug
+                                        <td class="entry" valign="top" width="70%" headers="d62e2711 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot retrieve the last-saved offset.<p class="p">Use to debug
                                                 the problem or pass to StreamSets for
                                             help.</p>
 </td>
@@ -1603,9 +1603,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e2845">Update Offset Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e2841">Update Offset Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e2848">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e2844">Description</th>
 
                                     </tr>
 
@@ -1613,12 +1613,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2845 ">-f &lt;fileName&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2841 ">-f &lt;fileName&gt;<p class="p">or</p>
 <p class="p">--file
                                             &lt;fileName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2848 ">Required. Relative or absolute path to the file that
+                                        <td class="entry" valign="top" width="70%" headers="d62e2844 ">Required. Relative or absolute path to the file that
                                             contains the last-saved offset.<p class="p">The file should
                                                 contain only the last-saved offset retrieved by
                                                 using the <samp class="ph codeph">get-committed-offset</samp>
@@ -1628,12 +1628,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2845 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2841 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2848 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data Collector</span>
+                                        <td class="entry" valign="top" width="70%" headers="d62e2844 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data Collector</span>
                   generates the ID when the pipeline is created. <span class="ph">Data Collector</span> uses the
                   alphanumeric characters entered for the pipeline title as a prefix for the
                   generated pipeline ID.</p>
@@ -1642,12 +1642,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2845 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2841 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2848 ">Optional. The revision of the pipeline. Use to update
+                                        <td class="entry" valign="top" width="70%" headers="d62e2844 ">Optional. The revision of the pipeline. Use to update
                                             the last-saved offset for an older version of the
                                             pipeline. <p class="p">By default, the <span class="ph">Data Collector</span> uses the most recent version.</p>
 </td>
@@ -1655,9 +1655,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e2845 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e2841 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e2848 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot update the last-saved offset.<p class="p">Use to debug
+                                        <td class="entry" valign="top" width="70%" headers="d62e2844 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot update the last-saved offset.<p class="p">Use to debug
                                                 the problem or pass to StreamSets for
                                             help.</p>
 </td>
@@ -1762,9 +1762,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d62e3061">Import Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d62e3057">Import Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d62e3064">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d62e3060">Description</th>
 
                                     </tr>
 
@@ -1772,12 +1772,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e3061 ">-n &lt;pipelineTitle&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e3057 ">-n &lt;pipelineTitle&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineTitle&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e3064 ">Required. Title for the imported pipeline. <p class="p">If the
+                                        <td class="entry" valign="top" width="70%" headers="d62e3060 ">Required. Title for the imported pipeline. <p class="p">If the
                                                 title includes spaces, surround the title in
                                                 quotation marks.</p>
 </td>
@@ -1785,21 +1785,21 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e3061 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d62e3057 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e3064 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot import the pipeline. <p class="p">Use to debug the
+                                        <td class="entry" valign="top" width="70%" headers="d62e3060 ">Optional. Returns additional information when the <span class="ph">Data Collector</span> cannot import the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d62e3061 ">-f &lt;fileName&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d62e3057 ">-f &lt;fileName&gt;<p class="p">or</p>
 <p class="p">--file
                                             &lt;fileName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d62e3064 ">Optional. The location and name of the file to
+                                        <td class="entry" valign="top" width="70%" headers="d62e3060 ">Optional. The location and name of the file to
                                             import. <p class="p">Enter a path relative to the <span class="ph">Data Collector</span> installation directory.</p>
 </td>
 
@@ -1863,23 +1863,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q" title="Pipeline Maintenance"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Maintenance</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

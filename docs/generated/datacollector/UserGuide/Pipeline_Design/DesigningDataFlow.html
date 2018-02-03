@@ -41,12 +41,12 @@
       You can configure required fields for a stage to discard records before they enter the stage,
       but by default all records are passed.</p>
 
-  <p class="p">For example, in the following pipeline, all of the data
-      from the Directory origin passes to both branches of the pipeline for different types of
-      processing. But you might optionally configure required fields for the Field Splitter or Value
-      Replacer to discard any records that are not needed.</p>
+  <p class="p">For example, in the following pipeline, all of
+            the data from the Directory origin passes to both branches of the pipeline for different
+            types of processing. But you might optionally configure required fields for the Field
+            Splitter or Field Replacer to discard any records that are not needed.</p>
 
-    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png" height="155" width="635" /></p>
+    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png" height="192" width="792" /></p>
 
     <p class="p">To route data based on more complex conditions, use a Stream Selector.</p>
 
@@ -70,11 +70,11 @@
   data from all streams to the same stage, but does not perform a join of records in the stream. </p>
 
   <p class="p">For example, in the following pipeline, the Stream Selector
-   stage sends data with null values to the Value Replacer stage:</p>
+   stage sends data with null values to the Field Replacer stage:</p>
 
-  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="135" width="702" /></p>
+  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="149" width="788" /></p>
 
-  <p class="p">The data from the Stream Selector default stream and all data from Value Replacer pass to
+  <p class="p">The data from the Stream Selector default stream and all data from Field Replacer pass to
    Expression Evaluator for further processing, but in no particular order and with no record
    merging.</p>
 
@@ -91,23 +91,7 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
