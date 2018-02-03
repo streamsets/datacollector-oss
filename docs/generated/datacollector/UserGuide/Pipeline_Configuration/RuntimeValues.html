@@ -287,33 +287,40 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_fjx_g31_1s">
- <h2 class="title topictitle2">Using Runtime Properties</h2>
+  <h2 class="title topictitle2">Using Runtime Properties</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data Collector</span> and call
-    from within a pipeline. With runtime properties, you can define different sets of values for
+  
+  <div class="body conbody"><p class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data Collector</span> and call from
+    within a pipeline. With runtime properties, you can define different sets of values for
     different <span class="ph">Data Collector</span>s.</p>
 
-  <p class="p">Use runtime properties
-      to define values for stage and pipeline properties. For example, you can define an error
-      directory runtime property that points to different directories on a test machine and a
+    <p class="p">Use runtime
+      properties to define values for stage and pipeline properties. For example, you can define an
+      error directory runtime property that points to different directories on a test machine and a
       production machine. Similarly, you might create test and production runtime properties for the
       origin and destination stages. </p>
 
-  <div class="p">To implement runtime properties, perform the following steps:<ol class="ol" id="concept_fjx_g31_1s__ol_m24_1bh_1s">
-    <li class="li">Define runtime properties. </li>
+    <p class="p">When defining a runtime property, you can use a static value or an environment variable. </p>
 
-    <li class="li">Use an expression in the pipeline to call a runtime property.</li>
+    <p class="p">When calling the runtime property, you can use it as part of a larger property definition.
+      For example, you can set a runtime property to the HOME environment variable, which would
+      differ on different machines, and then use the runtime property as a base directory for a
+      longer directory.</p>
 
-   </ol>
+    <div class="p">To implement runtime properties, perform the following steps:<ol class="ol" id="concept_fjx_g31_1s__ol_m24_1bh_1s">
+        <li class="li">Define runtime properties. </li>
+
+        <li class="li">Use an expression in the pipeline to call a runtime property.</li>
+
+      </ol>
 </div>
 
- </div>
+  </div>
 
 <div class="topic concept nested2" id="concept_dys_tp1_1s">
- <h3 class="title topictitle3">Step 1. Define Runtime Properties</h3>
+  <h3 class="title topictitle3">Step 1. Define Runtime Properties</h3>
 
- <div class="body conbody">
+  <div class="body conbody">
     <p class="p">You can define
       runtime properties in the <span class="ph">Data Collector</span>
       configuration file, <samp class="ph codeph">sdc.properties</samp>, or in a separate runtime properties file. </p>
@@ -321,25 +328,38 @@
     <p class="p">If you define the properties in a separate runtime properties file, use the required
       procedure for your installation type.</p>
 
-  <div class="p">
-   <dl class="dl">
-    
-     <dt class="dt dlterm"><span class="ph">Data Collector</span>
+    <div class="p">
+      <dl class="dl">
+        
+          <dt class="dt dlterm"><span class="ph">Data Collector</span>
             configuration file</dt>
 
-     <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data Collector</span>
+          <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data Collector</span>
             configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
               <li class="li">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, configure the
                   <strong class="ph b">runtime.conf.location</strong> property as
                 follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
 </li>
 
-              <li class="li">Define the runtime properties in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>
-                file using the following format:
-                <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
-For example, the
-                following runtime property defines a Hadoop FS directory template location:
-                <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+              <li class="li">To define the runtime properties in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>
+                file, use either of the following formats:<ul class="ul" id="concept_dys_tp1_1s__ul_hf5_bwn_scb">
+                  <li class="li">To use a value for a runtime property, use the following format:
+                    <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
+For example,
+                    the following runtime property defines a Hadoop FS directory template:
+                    <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+                  <li class="li">To use an environment variable for a runtime property, use the following
+                      format:<pre class="pre codeblock">runtime.conf_&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
+<div class="p">For
+                      example, the following runtime property defines a base directory, setting it
+                      to the HOME environment
+                      variable:<pre class="pre codeblock">runtime.conf_BaseDir=${env("HOME")}</pre>
+</div>
+</li>
+
+                </ul>
 </li>
 
               <li class="li">Restart <span class="ph">Data Collector</span>
@@ -348,21 +368,37 @@ For example, the
             </ol>
 </dd>
 
-    
-    
-     <dt class="dt dlterm">Separate runtime properties file for RPM and tarball</dt>
+        
+        
+          <dt class="dt dlterm">Separate runtime properties file for RPM and tarball</dt>
 
-     <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties file
-            for an RPM or tarball installation:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
+          <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
+            file for an RPM or tarball installation:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
               <li class="li">Create a text file and save it in a directory relative to the
                   <samp class="ph codeph">$SDC_CONF</samp> directory.</li>
 
-              <li class="li">Define the runtime properties in the text file using the following
-                format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
-For example, the
-                following runtime property defines the same Hadoop FS directory template in a
-                separate runtime properties
-                file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+              <li class="li">To define runtime properties in a separate text file, use either of the following
+                  formats:<ul class="ul" id="concept_dys_tp1_1s__ul_xrw_wzn_scb">
+                        <li class="li">
+                              <div class="p">To use a value for a runtime property, use the following format:
+                                    <pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+For example,
+                                    the following runtime property defines a Hadoop FS directory
+                                    template:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</div>
+
+                        </li>
+
+                        <li class="li">To use an environment variable for a runtime property, use the following
+                                    format:<pre class="pre codeblock">&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
+<div class="p">For
+                                    example, the following runtime property defines a base
+                                    directory, setting it to the HOME environment
+                                    variable:<pre class="pre codeblock">BaseDir=${env("HOME")}</pre>
+</div>
+</li>
+
+                  </ul>
 </li>
 
               <li class="li">In the <span class="ph">Data Collector</span>
@@ -381,18 +417,34 @@ For example, the
             </ol>
 </dd>
 
-    
+        
         
           <dt class="dt dlterm">Separate runtime properties file for Cloudera Manager</dt>
 
           <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
             file for a Cloudera Manager installation:<ol class="ol" id="concept_dys_tp1_1s__ol_crg_jdj_h1b">
-              <li class="li">Create a text file and define the runtime properties in the text file using the
-                following format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+              <li class="li">Create a text file and define the runtime properties in the text file using either
+                of the following formats:<ul class="ul" id="concept_dys_tp1_1s__ul_kzq_b14_scb">
+                        <li class="li">
+                              <div class="p">To use a value for a runtime property, use the following format:
+                                    <pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
 For example,
-                the following runtime property defines the same Hadoop FS directory template in a
-                separate runtime properties
-                file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+                                    the following runtime property defines a Hadoop FS directory
+                                    template:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</div>
+
+                        </li>
+
+                        <li class="li">To use an environment variable for a runtime property, use the following
+                                    format:<pre class="pre codeblock">&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
+<div class="p">For
+                                    example, the following runtime property defines a base
+                                    directory, setting it to the HOME environment
+                                    variable:<pre class="pre codeblock">BaseDir=${env("HOME")}</pre>
+</div>
+</li>
+
+                  </ul>
 </li>
 
               <li class="li">Save the text file in the same directory on every node that runs <span class="ph">Data Collector</span>.</li>
@@ -423,14 +475,14 @@ For example,
 </dd>
 
         
-   </dl>
+      </dl>
 
-  </div>
+    </div>
 
     <p class="p"><span class="ph">
                         <span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a></span>.</span></p>
 
- </div>
+  </div>
 
 </div>
 <div class="topic concept nested2" id="concept_pdh_glg_1s">
@@ -500,10 +552,6 @@ For example,
         <li class="li">For each resource, create a text file and save it in the <samp class="ph codeph">$SDC_RESOURCES</samp>
             directory.<p class="p">A file must contain one piece of information to be used when the resource
             is called. </p>
-<div class="note note"><span class="notetitle">Note:</span> When you call a runtime resource, the <span class="ph">Data Collector</span>
-            replaces the expression with the entire contents of the file. Avoid including
-            unnecessary characters such as spaces or carriage returns. Many text editors add
-            additional characters by default. </div>
 </li>
 
         <li class="li">Optionally, restrict the permissions for the file. <p class="p">Generally, anyone can read a file.
@@ -525,27 +573,28 @@ For example,
  <h3 class="title topictitle3">Step 2. Call the Runtime Resource</h3>
 
  
- <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:loadResource</samp> function to call a runtime resource. You
-  can use runtime resources to represent sensitive information in any stage or pipeline property
-  that allows the use of the expression language. </p>
+ <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:loadResource</samp> or
+            <samp class="ph codeph">runtime:loadResourceRaw</samp> function to call a runtime resource. You can
+        use runtime resources to represent sensitive information in any stage or pipeline property
+        that allows the use of the expression language. </p>
 
-  <p class="p">To call a
-      runtime resource, use the following syntax: </p>
-
-  <pre class="pre codeblock">${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
-
-        <div class="p">
-            <div class="note tip"><span class="tiptitle">Tip:</span> To strip any leading or trailing white space characters from the file,
-                add the <samp class="ph codeph">str:trim</samp> function as
-                follows:<pre class="pre codeblock">${str:trim(runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
-</div>
+  <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> In most cases, you'll use the <samp class="ph codeph">runtime:loadResource</samp> function which
+                trims any leading or trailing whitespace characters from the file. However, if
+                needed, you can also use the <samp class="ph codeph">runtime:loadResourceRaw</samp> function which
+                includes any leading or trailing whitespace characters in the file.</div>
 
         </div>
 
+        <p class="p">To
+            call a runtime resource, use the following syntax: </p>
+
+  <pre class="pre codeblock">${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
+
   <div class="p">For example, the following expression returns the contents of the JDBCpassword.txt file,
-            stripping any leading or trailing white space characters. The file contains a password
-            and is restricted so only the owner can read the
-            file:<pre class="pre codeblock">${str:trim(runtime:loadResource("JDBCpassword.txt", true))}</pre>
+            trimming any leading or trailing whitespace characters. The file contains a password and
+            is restricted so only the owner can read the
+            file:<pre class="pre codeblock">${runtime:loadResource("JDBCpassword.txt", true)}</pre>
 </div>
 
  </div>
@@ -554,23 +603,7 @@ For example,
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

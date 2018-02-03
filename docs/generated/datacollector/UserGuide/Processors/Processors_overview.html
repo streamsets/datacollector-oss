@@ -47,7 +47,7 @@
         <li class="li"><a class="xref" href="Base64Encoder.html#concept_wtr_mpy_kv" title="The Base64 Field Encoder encodes binary data using Base64. Use the processor to encode binary data that must be sent over channels that expect ASCII data.">Base64 Field Encoder</a> - Encodes
           binary data using Base64.</li>
 
-        <li class="li"><a class="xref" href="DataParser.html#concept_xw3_4xk_r1b">Data Parser</a> - Parses NetFlow or
+        <li class="li"><a class="xref" href="DataParser.html#concept_xw3_4xk_r1b" title="The Data Parser processor allows you to parse supported Data Collector data formats embedded in a field. You can parse NetFlow embedded in a byte array field or syslog messages embedded in a string field.">Data Parser</a> - Parses NetFlow or
           syslog data embedded in a field.</li>
 
         <li class="li"><a class="xref" href="Delay.html#concept_ez5_pvf_wbb">Delay</a> - Delays passing a batch to the
@@ -81,6 +81,9 @@
         <li class="li"><a class="xref" href="FieldRenamer.html#concept_vyv_zsg_ht" title="Use the Field Renamer to rename fields in a record. You can specify individual fields to rename or use regular expressions to rename sets of fields.">Field Renamer</a> - Renames fields
           in a record. </li>
 
+        <li class="li"><a class="xref" href="FieldReplacer.html#concept_rw4_2d3_4cb" title="The Field Replacer replaces values in fields with nulls or with new values. Use the Field Replacer to update values or to replace invalid values.">Field Replacer</a> - Replaces
+          field values.</li>
+
         <li class="li"><a class="xref" href="FieldSplitter.html#concept_vlj_vph_yq" title="The Field Splitter splits string data based on a regular expression and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components.">Field Splitter</a> - Splits the
           string values in a field into different fields.</li>
 
@@ -99,8 +102,8 @@
         <li class="li"><a class="xref" href="HBaseLookup.html#concept_mnj_zhq_bw" title="The HBase Lookup processor performs key-value lookups in HBase and passes the lookup values to fields. Use the HBase Lookup to enrich records with additional data.">HBase Lookup</a> - Performs
           key-value lookups in HBase to enrich records with data.</li>
 
-        <li class="li"><a class="xref" href="HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS or MapR FS destinations as part of the Drift Synchronization Solution for Hive.">Hive Metadata</a> - Generates Hive
-          metadata and write information for HDFS. </li>
+        <li class="li"><a class="xref" href="HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries. You can configure the maximum size of the cache. When the cache reaches the specified limit, it uses the LRU eviction policy, which removes the least recently used data to allow for new entries to be written to the cache. You must configure Hive Metadata to use Hive and Hadoop configuration files and individual properties.">Hive Metadata</a> - Works with the
+          Hive Metastore destination as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w"><span class="ph">Drift Synchronization Solution for Hive</span></a>.</li>
 
         <li class="li"><a class="xref" href="HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a> - The HTTP Client
           processor sends requests to an HTTP resource URL and writes the results to a field.</li>
@@ -130,6 +133,10 @@
         <li class="li"><a class="xref" href="LogParser.html#concept_ulm_qdq_fs" title="When you use Log Parser to parse log data, you define the format of the log files to be read.">Log Parser</a> - Parses log data in a
           field based on the specified log format.</li>
 
+        <li class="li"><a class="xref" href="JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">Postgres Metadata</a> - Tracks
+          structural changes in source data then creates and alters PostgreSQL tables as part of the
+            <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for Postgres</span></a>.</li>
+
         <li class="li"><a class="xref" href="RedisLookup.html#concept_ng3_lpr_pv" title="The Redis Lookup processor performs key-value lookups in Redis and passes the lookup values to fields. Use the Redis Lookup to enrich records with additional data.">Redis Lookup</a> - Performs
           key-value lookups in Redis to enrich records with data.</li>
 
@@ -148,8 +155,8 @@
         <li class="li"><a class="xref" href="StreamSelector.html#concept_tqv_t5r_wq" title="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do not match user-defined conditions.">Stream Selector</a> - Routes data
           to different streams based on conditions.</li>
 
-        <li class="li"><a class="xref" href="ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer</a> - Replaces
-          existing nulls or specified values with constants or nulls. </li>
+        <li class="li"><a class="xref" href="ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a> -
+          Replaces existing nulls or specified values with constants or nulls. </li>
 
         <li class="li"><a class="xref" href="XMLFlattener.html#concept_ck4_255_sv" title="Configure an XML Flattener to flatten XML data embedded in a string field.">XML Flattener</a> - Flattens XML
           data in a string field.</li>
@@ -206,23 +213,7 @@
 <div class="related-links"></div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

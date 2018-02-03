@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Data Collector provides two environment configuration files: $SDC_DIST/libexec/sdc-env.sh - Used when you start Data Collector manually from the command line or when you start Data Collector as a ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Environment Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rng_qym_qr" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Data Collector includes several environment variables that you can modify to customize the following areas: Data Collector directories User and group used to start Data Collector as a service Java ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Environment Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rng_qym_qr" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -30,32 +30,8 @@
  <h1 class="title topictitle1">Data Collector Environment Configuration</h1>
 
  <div class="body conbody">
-    <div class="p"><span class="ph">Data Collector</span> provides
-      two environment configuration files:<ul class="ul" id="concept_rng_qym_qr__ul_dmt_cfc_1cb">
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data Collector</span>
-                              manually from the command line or when you start Data Collector as a
-                              service on operating systems that use the systemd init system -
-                              including <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
-                  LTS</span>. </li>
-
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data Collector</span> as a
-                              service on operating systems that use the SysV init system - including
-                                    <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>.</li>
-
-                  </ul>
-</div>
-
-    <p class="p">Use a text editor to edit the appropriate environment configuration file. Some of the
-      environment variables in the <samp class="ph codeph">sdc-env.sh</samp> file are commented out and do not
-      reflect the default values. Be sure to uncomment the line when you change a variable
-      value.</p>
-
-    <p class="p">After you edit the file, restart <span class="ph">Data Collector</span> to enable
-      the changes. </p>
-
-    <div class="p">Modify the <span class="ph">Data Collector</span>
-      environment configuration files to customize the following areas:<ul class="ul" id="concept_rng_qym_qr__ul_ulw_sjr_3v">
+    <div class="p"><span class="ph">Data Collector</span> includes
+      several environment variables that you can modify to customize the following areas:<ul class="ul" id="concept_rng_qym_qr__ul_ulw_sjr_3v">
         <li class="li"><span class="ph">Data Collector</span>
           directories</li>
 
@@ -78,13 +54,105 @@
   </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zhl_rb3_qcb">
+    <h2 class="title topictitle2">Modifying Environment Variables</h2>
+
+    <div class="body conbody">
+        <div class="p">The method that
+            you use to modify environment variables depends on the <span class="ph">Data Collector</span>
+            installation type:<dl class="dl">
+                
+                    <dt class="dt dlterm">Tarball installation started manually from the command line</dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> manually from the command line on any operating system, edit the
+                            <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file to modify environment
+                        variables.</dd>
+
+                    <dd class="dd">
+                        <p class="p">Use a text editor to edit the <samp class="ph codeph">sdc-env.sh</samp> file. Some of
+                            the environment variables in the file are commented out and do not
+                            reflect the default values. Be sure to uncomment the line when you
+                            change a variable value.</p>
+
+                        <p class="p">After you edit the file, restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Tarball or RPM installation started as a service on operating systems that
+                        use the SysV init system </dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> as a service on <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, edit the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file to modify
+                        environment variables.</dd>
+
+                    <dd class="dd">
+                        <p class="p">Use a text editor to edit the <samp class="ph codeph">sdcd-env.sh</samp> file.</p>
+
+                        <p class="p">After you edit the file, restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Tarball or RPM installation started as a service on operating systems that
+                        use the systemd init system</dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> as a service on <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, edit the <samp class="ph codeph">sdc.service</samp> file to modify environment
+                        variables. </dd>
+
+                    <dd class="dd">The location of the <samp class="ph codeph">sdc.service</samp> file depends on how you
+                        installed <span class="ph">Data Collector</span>:<ul class="ul" id="concept_zhl_rb3_qcb__ul_amw_txz_3cb">
+                            <li class="li">From the RPM package -
+                                    <samp class="ph codeph">/usr/lib/systemd/system/sdc.service</samp></li>
+
+                            <li class="li">From the tarball -
+                                <samp class="ph codeph">/etc/systemd/system/sdc.service</samp></li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">
+                        <p class="p">Override the default values in the
+                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
+
+                    </dd>
+
+                    <dd class="dd">After overriding the default values, use the following command to reload the
+                        systemd manager
+                        configuration:<pre class="pre codeblock">systemctl daemon-reload</pre>
+</dd>
+
+                    <dd class="dd">
+                        <p class="p">Then restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">When you install <span class="ph">Data Collector</span> through Cloudera Manager, modify environment variables by configuring the
+                        StreamSets service through Cloudera Manager. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_mnx_j3r_3v">
  <h2 class="title topictitle2">Data Collector Directories</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can edit the <span class="ph">Data Collector</span>
-        environment configuration file to modify the directories used to store configuration, data,
-        log, and resource files.</p>
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        includes environment variables that define the directories used to store configuration,
+        data, log, and resource files.</p>
 
   <p class="p">The
                 <samp class="ph codeph">$SDC_DIST</samp> environment variable defines the <span class="ph">Data Collector</span>
@@ -98,6 +166,9 @@
             a service, the default values of the remaining directory variables are absolute paths
             that are outside of the <samp class="ph codeph">$SDC_DIST</samp> runtime directory. </p>
 
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
+
         <p class="p">You can configure the following environment variables that define directories:</p>
 
         
@@ -106,9 +177,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="35%" id="d51446e195">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d51049e328">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d51446e198">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d51049e331">Description</th>
 
                     </tr>
 
@@ -116,11 +187,11 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d51446e195 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d51049e328 ">SDC_CONF <a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d51446e198 ">
+                        <td class="entry" valign="top" width="65%" headers="d51049e331 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -140,9 +211,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d51446e195 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d51049e328 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d51446e198 ">
+                        <td class="entry" valign="top" width="65%" headers="d51049e331 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -160,9 +231,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d51446e195 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d51049e328 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d51446e198 ">
+                        <td class="entry" valign="top" width="65%" headers="d51049e331 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -179,11 +250,11 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d51446e195 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d51049e328 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d51446e198 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d51049e331 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -214,61 +285,28 @@
      <p class="p">You can modify the
             values of the environment variables to point to another system user or group. </p>
 
-        <div class="p">The file that you modify to define the user and group environment variables depends on
-            your operating system:<dl class="dl">
-                
-                    <dt class="dt dlterm">Operating systems that use the SysV init system </dt>
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
 
-                    <dd class="dd">For <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>, edit the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file which
-                        includes the following user and group environment variables: <ul class="ul" id="concept_htz_t1s_3v__ul_gpg_4jt_3v">
-                            <li class="li">SDC_USER - Defines the system user used to run <span class="ph">Data Collector</span> as a service. Default is sdc.</li>
+        <div class="p">If you change the system user, you must make the new system user the owner of all <a class="xref" href="DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files."><span class="ph">Data Collector</span>
+                directories</a>:<ul class="ul" id="concept_htz_t1s_3v__ul_l53_lsk_qcb">
+                <li class="li"><samp class="ph codeph">$SDC_DIST</samp></li>
 
-                            <li class="li">SDC_GROUP - Defines the system group used to run <span class="ph">Data Collector</span> as a service. Default is sdc.</li>
+                <li class="li"><samp class="ph codeph">$SDC_CONF</samp></li>
 
-                        </ul>
-</dd>
+                <li class="li"><samp class="ph codeph">$SDC_DATA</samp></li>
 
-                
-                
-                    <dt class="dt dlterm">Operating systems that use the systemd init system</dt>
+                <li class="li"><samp class="ph codeph">$SDC_LOG</samp></li>
 
-                    <dd class="dd">For <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
-                  LTS</span>, the <samp class="ph codeph">sdc.service</samp> file includes the following user and
-                        group environment variables:<ul class="ul" id="concept_htz_t1s_3v__ul_bjy_1q5_5bb">
-                            <li class="li">User - Defines the system user used to run <span class="ph">Data Collector</span> as a service. Default is sdc.</li>
+                <li class="li"><samp class="ph codeph">$SDC_RESOURCES</samp></li>
 
-                            <li class="li">Group - Defines the system group used to run <span class="ph">Data Collector</span> as a service. Default is sdc.</li>
+            </ul>
+</div>
 
-                        </ul>
-</dd>
-
-                    <dd class="dd">The location of the <samp class="ph codeph">sdc.service</samp> file depends on how you
-                        installed <span class="ph">Data Collector</span>:<ul class="ul" id="concept_htz_t1s_3v__ul_amw_txz_3cb">
-                            <li class="li">From the RPM package -
-                                    <samp class="ph codeph">/usr/lib/systemd/system/sdc.service</samp></li>
-
-                            <li class="li">From the tarball for a service start -
-                                    <samp class="ph codeph">/etc/systemd/system/sdc.service</samp></li>
-
-                        </ul>
-</dd>
-
-                    <dd class="dd">
-                        <p class="p">Override the default values in the
-                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
-                  override unit configuration files on a systemd init system. For an example, see
-                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
-
-                    </dd>
-
-                    <dd class="dd">After overriding the default values, use the following command to reload the
-                        systemd manager
-                        configuration:<pre class="pre codeblock">systemctl daemon-reload</pre>
-</dd>
-
-                
-            </dl>
+        <div class="p">For example, if you change the system user and group to <samp class="ph codeph">myuser</samp>, use the
+            following command to change the owner of the configuration directory,
+                <samp class="ph codeph">$SDC_CONF</samp>, and all files in the directory to
+                <samp class="ph codeph">myuser:myuser</samp>:<pre class="pre codeblock">chown -R myuser:myuser /etc/sdc</pre>
 </div>
 
         <div class="note note"><span class="notetitle">Note:</span> When you run <span class="ph">Data Collector</span>
@@ -283,11 +321,11 @@
  <h2 class="title topictitle2">Java Configuration Options</h2>
 
  <div class="body conbody">
-  <p class="p">You can define the Java configuration options used by <span class="ph">Data Collector</span>.</p>
+  <p class="p">You define Java configuration options used by <span class="ph">Data Collector</span> in
+      environment variables.</p>
 
     <p class="p">For a tarball or RPM installation, define Java configuration options in the following
-      environment variables in the <span class="ph">Data Collector</span>
-      environment configuration file:</p>
+      environment variables:</p>
 
     <ul class="ul" id="concept_vrx_4fg_qr__ul_xfx_q33_vx">
       <li class="li">SDC_JAVA_OPTS - Includes configuration options for Java.</li>
@@ -346,16 +384,18 @@
           <p class="p">Define the heap size in the SDC_JAVA_OPTS environment variable.</p>
 
           <div class="p">For example, to double the heap size, change the following default settings in the
-            environment configuration
-            file:<pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</pre>
+            environment
+            variable:<pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
           <p class="p">to increase the Xmx and Xms settings as follows:</p>
 
           <div class="p">
             <pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server ${SDC_JAVA_OPTS}"</pre>
+</div>
 
-          </div>
+            <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
 
         </dd>
 
@@ -410,6 +450,9 @@
                             <pre class="pre codeblock">export SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span> -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
+                        <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
+
                     </dd>
 
                 
@@ -462,6 +505,9 @@
 
                     <pre class="pre codeblock">export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseG1GC</span>"}</pre>
 
+                    <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
+
                 </dd>
 
             
@@ -492,12 +538,13 @@
                 
                     <dt class="dt dlterm">Tarball or RPM installation</dt>
 
-                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false in the <span class="ph">Data Collector</span> environment configuration file.</dd>
-
-                    <dd class="dd">For example:</dd>
+                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false. For example:</dd>
 
                     <dd class="dd">
                         <pre class="pre codeblock">export SDC_GC_LOGGING=false</pre>
+
+                        <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
 
                     </dd>
 
@@ -538,9 +585,11 @@
   <p class="p">The security policy is defined in the <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp> file. The
       file syntax is <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html" target="_blank">java standard</a>. </p>
 
-   <p class="p">To disable the Java Security Manager, edit the SDC_SECURITY_MANAGER_ENABLED environment
-      variable in the <span class="ph">Data Collector</span>
-      environment configuration file. </p>
+   <p class="p">To disable the Java Security Manager, modify the SDC_SECURITY_MANAGER_ENABLED environment
+            variable. </p>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
 
  </div>
 
@@ -549,13 +598,15 @@
  <h2 class="title topictitle2">Root Classloader</h2>
 
     
- <div class="body conbody"><p class="shortdesc">You can edit the <span class="ph">Data Collector</span>
-        environment configuration file to configure the path to JAR files to be added to the <span class="ph">Data Collector</span> root
+ <div class="body conbody"><p class="shortdesc">You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR
+        files to be added to the <span class="ph">Data Collector</span> root
         classloader.</p>
 
-     <p class="p">The SDC_ROOT_CLASSPATH environment variable defines the path to JAR files to be added to the
-                <span class="ph">Data Collector</span> root classloader. Use the variable for components that must be in the root
-            classloader, such as Snappy. Default is <samp class="ph codeph">$SDC_DIST/root-lib/'*'</samp>.</p>
+     <p class="p">Use the variable for components that must be in the root classloader, such as Snappy.
+            Default is <samp class="ph codeph">$SDC_DIST/root-lib/'*'</samp>.</p>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
 
  </div>
 
@@ -588,16 +639,15 @@
 
         </div>
 
-        <div class="p">You can configure the following heap dump properties in the environment configuration
-                files:
+        <div class="p">You can configure the following heap dump environment variables:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cy3_r44_z1b__table_rn4_tq4_z1b" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d51446e1083">Heap Dump Property</th>
+                            <th class="entry" valign="top" width="30%" id="d51049e1186">Heap Dump Environment Variable</th>
 
-                            <th class="entry" valign="top" width="70%" id="d51446e1086">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d51049e1189">Description</th>
 
                         </tr>
 
@@ -605,18 +655,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d51446e1083 ">SDC_HEAPDUMP_ON_OOM </td>
+                            <td class="entry" valign="top" width="30%" headers="d51049e1186 ">SDC_HEAPDUMP_ON_OOM </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d51446e1086 ">Specifies whether <span class="ph">Data Collector</span> generates a heap dump upon encountering an out of memory error.
+                            <td class="entry" valign="top" width="70%" headers="d51049e1189 ">Specifies whether <span class="ph">Data Collector</span> generates a heap dump upon encountering an out of memory error.
                                     <p class="p">Default is true.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d51446e1083 ">SDC_HEAPDUMP_PATH</td>
+                            <td class="entry" valign="top" width="30%" headers="d51049e1186 ">SDC_HEAPDUMP_PATH</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d51446e1086 ">Specifies the file name and location to use for heap dump files.
+                            <td class="entry" valign="top" width="70%" headers="d51049e1189 ">Specifies the file name and location to use for heap dump files.
                                     <p class="p">By default, heap dumps are written to
                                         <samp class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</samp>.
                                     </p>
@@ -639,28 +689,15 @@
 </div>
 </div>
 
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your
+                  installation type.</p>
+
     </div>
 
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

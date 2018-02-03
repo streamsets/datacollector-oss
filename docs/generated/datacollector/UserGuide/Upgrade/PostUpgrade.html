@@ -35,6 +35,29 @@
         on-premises installation after you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hxf_3yd_qcb">
+    <h2 class="title topictitle2">Update Value Replacer Pipelines</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">With version 3.1.0.0, <span class="ph">Data Collector</span>
+        introduces a new Field Replacer processor and has deprecated the Value Replacer processor. </p>
+
+        <p class="p">The Field Replacer processor lets you define more complex conditions to replace values.
+            For example, the Field Replacer can replace values that fall within a specified range.
+            The Value Replacer cannot replace values that fall within a specified range.</p>
+
+        <p class="p">You can continue to use the deprecated Value Replacer processor in pipelines. However,
+            the processor will be removed in a future release - so we recommend that you update
+            pipelines to use the Field Replacer as soon as possible.</p>
+
+        <p class="p">To update your pipelines, replace the Value Replacer processor with the <a class="xref" href="../Processors/FieldReplacer.html#concept_rw4_2d3_4cb" title="The Field Replacer replaces values in fields with nulls or with new values. Use the Field Replacer to update values or to replace invalid values.">Field Replacer
+                processor</a>. The Field Replacer replaces values in fields with nulls or with
+            new values. In the Field Replacer, use field path expressions to replace values based on
+            a condition. </p>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_dzn_cdy_1cb">
     <h2 class="title topictitle2">Update <span class="ph">Control Hub</span> On-premises</h2>
 
@@ -52,10 +75,10 @@
             You can customize the <span class="ph">Data Collector</span>
             version range. For example, if you use <span class="ph">Control Hub</span>
             on-premises version 2.7.2 and you upgrade registered <span class="ph">Data Collector</span>s
-            to version <span class="ph">3.0.0.0</span>, you
+            to version <span class="ph">3.1.0.0</span>, you
             must configure the maximum <span class="ph">Data Collector</span>
             version that can work with <span class="ph">Control Hub</span> to
-            version <span class="ph">3.0.0.0</span>.</p>
+            version <span class="ph">3.1.0.0</span>.</p>
 
         <p class="p">To modify the <span class="ph">Data Collector</span>
             version range:</p>
@@ -68,7 +91,7 @@
 
                 <li class="li">Click the <span class="ph uicontrol">Component Version Range</span> icon: <img class="image" id="concept_dzn_cdy_1cb__image_hd3_dfy_1cb" src="../Graphics/icon_OrganizationConfig.png" height="16" width="14" />.</li>
 
-                <li class="li">Enter <span class="ph">3.0.0.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
+                <li class="li">Enter <span class="ph">3.1.0.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
 
             </ol>
 
@@ -530,23 +553,7 @@ For
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

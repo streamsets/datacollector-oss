@@ -49,7 +49,7 @@
 
             <p class="p"><a class="xref" href="Tarball.html#concept_bfv_jyl_5v" title="The instructions that you use to install the new version depend on whether you start Data Collector manually or as a service and on your operating system.">Step 3. Install the New Version</a></p>
 
-            <p class="p"><a class="xref" href="Tarball.html#task_wzl_hst_xv" title="Update the environment configuration file so that the new version of Data Collector uses a new configuration directory but the same working data, log, and resource directories as the previous version.">Step 4. Update the Environment Configuration File</a></p>
+            <p class="p"><a class="xref" href="Tarball.html#task_wzl_hst_xv" title="Update the Data Collector environment variables so that the new version of Data Collector uses a new configuration directory but the same working data, log, and resource directories as the previous version.">Step 4. Update Environment Variables</a></p>
 
             <p class="p"><a class="xref" href="Tarball.html#task_orr_vcg_2y">Step 5. Update the Configuration Files</a></p>
 
@@ -122,7 +122,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -151,7 +151,7 @@
                     <pre class="pre codeblock">export SDC_DIST=&lt;extraction directory&gt;</pre>
 
                     <div class="p">For
-                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-<span class="ph">3.0.0.0</span></pre>
+                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-<span class="ph">3.1.0.0</span></pre>
 </div>
 
                 </div>
@@ -282,10 +282,11 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 </div>
 </div>
 <div class="topic task nested1" id="task_wzl_hst_xv">
-    <h2 class="title topictitle2">Step 4. Update the Environment Configuration File</h2>
+    <h2 class="title topictitle2">Step 4. Update Environment Variables</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Update the environment configuration file so that the new version of <span class="ph">Data Collector</span> uses a
+    <div class="body taskbody"><p class="shortdesc">Update the <span class="ph">Data Collector</span>
+        environment variables so that the new version of <span class="ph">Data Collector</span> uses a
         new configuration directory but the same working data, log, and resource directories as the
         previous version. </p>
 
@@ -296,28 +297,12 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                 files. As a result, the new version has access to the pipelines created in the
                 previous version.</p>
 
-            <p class="p">You also must update the environment configuration file with any other customized
-                property values that you defined in the previous version.</p>
+            <p class="p">Update the environment variables in the required file based on your installation
+                type. For more information about the required file to edit, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a>.</p>
 
         </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">In the new version of <span class="ph">Data Collector</span>, open the appropriate environment configuration file for your
-                    installation:</span>
-                <div class="itemgroup info">
-                    <ul class="ul" id="task_wzl_hst_xv__ul_amx_q35_xv">
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data Collector</span> manually from the command line or when you start Data Collector as a
-                            service on <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
-                  LTS</span>. </li>
-
-                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data Collector</span> as a service on <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>.</li>
-
-                    </ul>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
                 <span class="ph cmd">Update the directory environment variables to use the following values: </span>
                 <div class="itemgroup info">
                     
@@ -326,9 +311,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d498716e730">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d505133e699">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d498716e733">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d505133e702">Value</th>
 
                                 </tr>
 
@@ -336,9 +321,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d498716e730 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d505133e699 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d498716e733 ">New location outside of the base <span class="ph">Data Collector</span> runtime directory and unique from the previous renamed
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d505133e702 ">New location outside of the base <span class="ph">Data Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2700</samp>,
                                         use the value <samp class="ph codeph">/etc/sdc</samp>.</td>
@@ -346,23 +331,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d498716e730 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d505133e699 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d498716e733 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d498716e730 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d498716e733 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d505133e702 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d498716e730 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d505133e699 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d498716e733 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d505133e702 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d505133e699 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d505133e702 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -376,12 +361,12 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">If you installed external libraries or developed custom stages, add the
                     STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable to the
-                    environment configuration file, and set it to the same directory used in the
-                    previous version.</span>
+                    required file, and set it to the same directory used in the previous
+                    version.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Manually update the environment configuration file with any other customized
-                    property values that you defined in the previous version.</span>
+                <span class="ph cmd">Manually update the required file with any other customized environment
+                    variable values that you defined in the previous version.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to create the <span class="ph">Data Collector</span> configuration directory at <samp class="ph codeph">/etc/sdc</samp>: </span>
@@ -417,7 +402,7 @@ chown sdc:sdc /etc/init.d/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -561,23 +546,7 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

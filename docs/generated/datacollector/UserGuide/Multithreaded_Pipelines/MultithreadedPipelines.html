@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A multithreaded pipeline is a pipeline with an origin that supports parallel execution, enabling one pipeline to run in multiple threads. Multithreaded pipelines enable processing high volumes of data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Multithreaded Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wwq_gxc_py" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Multithreaded Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A multithreaded pipeline is a pipeline with an origin that supports parallel execution, enabling one pipeline to run in multiple threads. Multithreaded pipelines enable processing high volumes of data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Multithreaded Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wwq_gxc_py" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Multithreaded Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -25,7 +25,7 @@
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution (a.k.a. Hive Drift Solution)"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution (a.k.a. Hive Drift Solution)</span></a></span>  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  
 <span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_wwq_gxc_py">
  <h1 class="title topictitle1">Multithreaded Pipelines</h1>
@@ -71,7 +71,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d43254e2119">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d44173e2126">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
@@ -132,7 +132,7 @@
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP endpoint and processes
                               the contents of all authorized CoAP requests.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. When you use an origin to read log data, you define the format of the log files to be read. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
+                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
                               directory.</li>
 
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
@@ -147,7 +147,7 @@
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
                               topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data from a Kinesis
@@ -156,7 +156,7 @@
                         <li class="li"><a class="xref" href="../Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed MapR DB data that has been
                               written to MapR Streams.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams Consumer</a> - Reads data from
+                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC Client</a> - Reads data from Microsoft SQL
@@ -354,7 +354,7 @@
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP endpoint and processes
                               the contents of all authorized CoAP requests.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. When you use an origin to read log data, you define the format of the log files to be read. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
+                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
                               directory.</li>
 
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
@@ -369,7 +369,7 @@
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
                               topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data from a Kinesis
@@ -378,7 +378,7 @@
                         <li class="li"><a class="xref" href="../Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed MapR DB data that has been
                               written to MapR Streams.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation. When you use an origin to read log data, you define the format of the log files to be read.">MapR Multitopic Streams Consumer</a> - Reads data from
+                        <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC Client</a> - Reads data from Microsoft SQL
@@ -430,24 +430,8 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution (a.k.a. Hive Drift Solution)"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution (a.k.a. Hive Drift Solution)</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
