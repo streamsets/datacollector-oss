@@ -37,7 +37,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,7 +304,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
     // In this is source pipe, update source-specific metrics
     if(isSource()) {
-      context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
+      if (batchSize > 0) {
+        context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
+      }
+      //Empty batches will increment batch count
       context.getRuntimeStats().incBatchCount();
     }
 
