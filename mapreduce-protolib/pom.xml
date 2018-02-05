@@ -40,6 +40,7 @@
     <snappy.version>0.4</snappy.version>
     <lz4.version>1.3.0</lz4.version>
     <parquet.version>1.8.1</parquet.version>
+    <orc.version>1.4.3</orc.version>
   </properties>
 
   <dependencies>
@@ -47,6 +48,29 @@
       <groupId>org.apache.parquet</groupId>
       <artifactId>parquet-avro</artifactId>
       <version>${parquet.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.orc/orc-core -->
+    <dependency>
+      <groupId>org.apache.orc</groupId>
+      <artifactId>orc-core</artifactId>
+      <version>${orc.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <!-- exclude hadoop-common because we don't want to bring it into mapreduce-protolib -->
+        <!-- each Hadoop disto-specific stage library will have access to its own -->
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hive</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -191,7 +215,7 @@
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-storage-api</artifactId>
-      <version>2.1.1</version>
+      <version>2.2.1</version>
     </dependency>
 
     <dependency>
