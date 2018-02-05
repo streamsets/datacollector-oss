@@ -87,7 +87,6 @@ public class SpoolDirRunnable implements Runnable {
   private final String lastSourceFileName;
   private final DirectorySpooler spooler;
   private final Map<String, Object> gaugeMap;
-  private final ErrorRecordHandler errorRecordHandler;
   private final boolean useLastModified;
 
   private DataParser parser;
@@ -105,6 +104,8 @@ public class SpoolDirRunnable implements Runnable {
   private long perFileRecordCount;
   private long perFileErrorCount;
   private long totalFiles;
+
+  private ErrorRecordHandler errorRecordHandler;
 
   private File currentFile;
 
@@ -126,9 +127,8 @@ public class SpoolDirRunnable implements Runnable {
     this.conf = conf;
     this.parserFactory = conf.dataFormatConfig.getParserFactory();
     this.shouldSendNoMoreDataEvent = false;
-    this.rateLimitElEval = FileRefUtil.createElEvalForRateLimit(context);;
+    this.rateLimitElEval = FileRefUtil.createElEvalForRateLimit(context);
     this.rateLimitElVars = context.createELVars();
-    this.errorRecordHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
     this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
 
     // Metrics
@@ -143,8 +143,10 @@ public class SpoolDirRunnable implements Runnable {
     Offset offset = offsets.get(lastSourceFileName);
 
     while (!context.isStopped()) {
+      BatchContext batchContext = context.startBatch();
+      this.errorRecordHandler = new DefaultErrorRecordHandler(context, batchContext);
       try {
-        offset = produce(offset, context.startBatch());
+        offset = produce(offset, batchContext);
       } catch (StageException ex) {
         handleStageError(ex.getErrorCode(), ex);
       }
@@ -154,6 +156,7 @@ public class SpoolDirRunnable implements Runnable {
   }
 
   private Offset produce(Offset lastSourceOffset, BatchContext batchContext) throws StageException {
+
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = lastSourceOffset.getRawFile();
     String lastSourceFile = file;
@@ -509,7 +512,6 @@ public class SpoolDirRunnable implements Runnable {
   private void handleStageError(ErrorCode errorCode, Exception e) {
     final String errorMessage = "Failure Happened";
     LOG.error(errorMessage, e);
-
     try {
       errorRecordHandler.onError(errorCode, e);
     } catch (StageException se) {
