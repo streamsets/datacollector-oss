@@ -248,10 +248,10 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipeline/foo/rules", Method.POST,AuthzRole.CREATOR, AuthzRole.ADMIN,
                          AuthzRole.MANAGER));
 
-    list.add(new RestApi("/rest/v1/pipeline/foo/preview", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid/status", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid", Method.DELETE, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/preview", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE));
+    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid/status", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE));
+    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE));
+    list.add(new RestApi("/rest/v1/pipeline/foo/preview/uuid", Method.DELETE, AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE));
 
     list.add(new RestApi("/rest/v1/pipeline/foo/rawSourcePreview", Method.GET, AuthzRole.CREATOR,
                          AuthzRole.ADMIN));

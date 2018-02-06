@@ -258,7 +258,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode) && !isEdgePipeline()"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode) && !isEdgePipeline()"
           ng-disabled="!pipelineConfig.previewable"
           ng-click="!pipelineConfig.previewable || previewPipeline()">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
@@ -278,7 +278,7 @@
          tooltip="{{'home.header.validate' | translate}}"
          tooltip-trigger="mouseenter"
          tooltip-popup-delay="500"
-         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !isEdgePipeline()"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !isEdgePipeline()"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="!pipelineConfig.valid"
          ng-click="!pipelineConfig.valid || validatePipeline()">

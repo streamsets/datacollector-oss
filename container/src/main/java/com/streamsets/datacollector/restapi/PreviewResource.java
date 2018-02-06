@@ -114,7 +114,7 @@ public class PreviewResource {
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE,
   })
   public Response previewWithOverride(
       @PathParam("pipelineId") String pipelineId,
@@ -167,7 +167,7 @@ public class PreviewResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
   })
   public Response getPreviewStatus(
       @PathParam("pipelineId") String pipelineId,
@@ -189,7 +189,7 @@ public class PreviewResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
   })
   public Response getPreviewData(
       @PathParam("pipelineId") String pipelineId,
@@ -211,7 +211,7 @@ public class PreviewResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
   })
   public Response stopPreview(
       @PathParam("pipelineId") String pipelineId,
@@ -234,7 +234,7 @@ public class PreviewResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
   })
   public Response rawSourcePreview(
       @PathParam("pipelineId") String pipelineId,
