@@ -257,10 +257,12 @@ public class TestDirectorySpoolerSubDirectories {
     Assert.assertEquals(2, countFilesInTree(spoolDir));
     Assert.assertTrue(logFile2.exists());
     Assert.assertTrue(logFile3.exists());
+    spooler.doPostProcessing(logFile2.toPath());
 
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(1, countFilesInTree(spoolDir));
     Assert.assertTrue(logFile3.exists());
+    spooler.doPostProcessing(logFile3.toPath());
 
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(0, countFilesInTree(spoolDir));
@@ -382,6 +384,7 @@ public class TestDirectorySpoolerSubDirectories {
     Assert.assertTrue(logFile2.exists());
     Assert.assertTrue(logFile3.exists());
     Assert.assertTrue(arch1.exists());
+    spooler.doPostProcessing(logFile2.toPath());
 
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(1, countFilesInTree(spoolDir));
@@ -389,6 +392,7 @@ public class TestDirectorySpoolerSubDirectories {
     Assert.assertTrue(logFile3.exists());
     Assert.assertTrue(arch1.exists());
     Assert.assertTrue(arch2.exists());
+    spooler.doPostProcessing(logFile3.toPath());
 
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(0, countFilesInTree(spoolDir));
@@ -428,7 +432,9 @@ public class TestDirectorySpoolerSubDirectories {
 
     spooler.init("x2.log");
     Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.doPostProcessing(logFile2.toPath());
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.doPostProcessing(logFile3.toPath());
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(0, countFilesInTree(spoolDir));
     Assert.assertEquals(3, countFilesInTree(archiveDir));
@@ -511,7 +517,8 @@ public class TestDirectorySpoolerSubDirectories {
 
 
     for (int i = 0 ;i < 6 ;i++) {
-      spooler.poolForFile(1000, TimeUnit.MILLISECONDS);
+      File file = spooler.poolForFile(1000, TimeUnit.MILLISECONDS);
+      spooler.doPostProcessing(file.toPath());
     }
 
     //All files are pooled, pending files should be 0.
