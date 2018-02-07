@@ -274,7 +274,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                   processing the files.</p>
 
         <div class="p">Output files might remain idle for too long for the following
-                  reasons: <ul class="ul" id="concept_gp5_wcp_vv__d16811e3931">
+                  reasons: <ul class="ul" id="concept_gp5_wcp_vv__d16820e3931">
                         <li class="li">You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -426,9 +426,9 @@ Where
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d136246e553">Record Header Attribute</th>
+       <th class="entry" valign="top" width="30%" id="d136258e553">Record Header Attribute</th>
 
-       <th class="entry" valign="top" width="70%" id="d136246e556">Description</th>
+       <th class="entry" valign="top" width="70%" id="d136258e556">Description</th>
 
       </tr>
 
@@ -436,9 +436,9 @@ Where
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" id="concept_tyc_scc_rx__d16874e2071" valign="top" width="30%" headers="d136246e553 ">sdc.event.type</td>
+       <td class="entry" id="concept_tyc_scc_rx__d16883e2071" valign="top" width="30%" headers="d136258e553 ">sdc.event.type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e556 ">Event type. Uses one of the following types:<ul class="ul" id="concept_tyc_scc_rx__d16874e2076">
+       <td class="entry" valign="top" width="70%" headers="d136258e556 ">Event type. Uses one of the following types:<ul class="ul" id="concept_tyc_scc_rx__d16883e2076">
          <li class="li">file-closed - Generated when the destination closes a file.</li>
 
          <li class="li">wholeFileProcessed - Generated when the destination completes streaming a whole
@@ -449,17 +449,17 @@ Where
 
       </tr>
 
-      <tr id="concept_tyc_scc_rx__d16874e2086">
-       <td class="entry" valign="top" width="30%" headers="d136246e553 ">sdc.event.version</td>
+      <tr id="concept_tyc_scc_rx__d16883e2086">
+       <td class="entry" valign="top" width="30%" headers="d136258e553 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e556 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d136258e556 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
-      <tr id="concept_tyc_scc_rx__d16874e2095">
-       <td class="entry" valign="top" width="30%" headers="d136246e553 ">sdc.event.creation_timestamp</td>
+      <tr id="concept_tyc_scc_rx__d16883e2095">
+       <td class="entry" valign="top" width="30%" headers="d136258e553 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_tyc_scc_rx__d16874e2100" valign="top" width="70%" headers="d136246e556 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_tyc_scc_rx__d16883e2100" valign="top" width="70%" headers="d136258e556 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -482,14 +482,14 @@ Where
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">file-closed</samp> and include the following
                                           fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_tyc_scc_rx__d16811e4258" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_tyc_scc_rx__d16820e4258" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
                                                   <tr>
-                                                  <th class="entry" valign="top" width="30%" id="d136246e634">Field</th>
+                                                  <th class="entry" valign="top" width="30%" id="d136258e634">Field</th>
 
-                                                  <th class="entry" valign="top" width="70%" id="d136246e637">Description</th>
+                                                  <th class="entry" valign="top" width="70%" id="d136258e637">Description</th>
 
                                                   </tr>
 
@@ -497,23 +497,23 @@ Where
 
                                                 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e634 ">filepath</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e634 ">filepath</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e637 ">Absolute path to the closed file. </td>
-
-                                                  </tr>
-
-                                                  <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e634 ">filename</td>
-
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e637 ">File name of the closed file.</td>
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e637 ">Absolute path to the closed file. </td>
 
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e634 ">length</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e634 ">filename</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e637 ">Size of the closed file in bytes.</td>
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e637 ">File name of the closed file.</td>
+
+                                                  </tr>
+
+                                                  <tr>
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e634 ">length</td>
+
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e637 ">Size of the closed file in bytes.</td>
 
                                                   </tr>
 
@@ -532,14 +532,14 @@ Where
                                           <samp class="ph codeph">sdc.event.type</samp> record header attribute
                                     set to <samp class="ph codeph">wholeFileProcessed</samp> and have the
                                     following fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_tyc_scc_rx__d16811e4324" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_tyc_scc_rx__d16820e4324" class="table" frame="border" border="1" rules="all">
                                                 
                                                 
                                                 <thead class="thead" align="left">
                                                   <tr>
-                                                  <th class="entry" valign="top" width="30%" id="d136246e700">Field</th>
+                                                  <th class="entry" valign="top" width="30%" id="d136258e700">Field</th>
 
-                                                  <th class="entry" valign="top" width="70%" id="d136246e703">Description</th>
+                                                  <th class="entry" valign="top" width="70%" id="d136258e703">Description</th>
 
                                                   </tr>
 
@@ -547,11 +547,11 @@ Where
 
                                                 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e700 ">sourceFileInfo</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e700 ">sourceFileInfo</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e703 ">A map of attributes about the original
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e703 ">A map of attributes about the original
                                                   whole file that was processed. The attributes
-                                                  include:<ul class="ul" id="concept_tyc_scc_rx__d16811e4353">
+                                                  include:<ul class="ul" id="concept_tyc_scc_rx__d16820e4353">
                                                   <li class="li">size - Size of the whole file in bytes. </li>
 
                                                   </ul>
@@ -563,11 +563,11 @@ Where
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e700 ">targetFileInfo</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e700 ">targetFileInfo</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e703 ">A map of attributes about the whole file
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e703 ">A map of attributes about the whole file
                                                   written to the destination. The attributes
-                                                  include:<ul class="ul" id="concept_tyc_scc_rx__d16811e4369">
+                                                  include:<ul class="ul" id="concept_tyc_scc_rx__d16820e4369">
                                                   <li class="li">path - An absolute path the processed whole
                                                   file.</li>
 
@@ -576,10 +576,10 @@ Where
 
                                                   </tr>
 
-                                                  <tr id="concept_tyc_scc_rx__d16811e4376">
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e700 ">checksum</td>
+                                                  <tr id="concept_tyc_scc_rx__d16820e4376">
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e700 ">checksum</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e703 ">Checksum generated for the written file.
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e703 ">Checksum generated for the written file.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -587,10 +587,10 @@ Where
 
                                                   </tr>
 
-                                                  <tr id="concept_tyc_scc_rx__d16811e4387">
-                                                  <td class="entry" valign="top" width="30%" headers="d136246e700 ">checksumAlgorithm</td>
+                                                  <tr id="concept_tyc_scc_rx__d16820e4387">
+                                                  <td class="entry" valign="top" width="30%" headers="d136258e700 ">checksumAlgorithm</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d136246e703 ">Algorithm used to generate the checksum.
+                                                  <td class="entry" valign="top" width="70%" headers="d136258e703 ">Algorithm used to generate the checksum.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -626,7 +626,7 @@ Where
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_lww_3b3_kr__d16811e2973">
+                                    <ul class="ul" id="concept_lww_3b3_kr__d16820e2973">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -706,7 +706,7 @@ Where
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d16811e3135">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d16820e3135">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -792,9 +792,9 @@ Where
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1019">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1019">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1022">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1022">Description</th>
 
                                 </tr>
 
@@ -802,34 +802,34 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1019 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d136258e1019 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e1022 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1019 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d136246e1022 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d136258e1022 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1019 ">Produce Events <a class="xref" href="LocalFS.html#concept_in1_fcm_px">
+       <td class="entry" valign="top" width="30%" headers="d136258e1019 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d136258e1022 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1019 ">Produce Events <a class="xref" href="LocalFS.html#concept_in1_fcm_px">
                                             <img class="image" id="task_e33_3v5_1r__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1022 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1022 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_e33_3v5_1r__d16874e1969" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_e33_3v5_1r__d16883e1969" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1019 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_e33_3v5_1r__d16874e1978" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d136258e1019 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_e33_3v5_1r__d16883e1978" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e1022 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d136258e1022 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -838,10 +838,10 @@ Where
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1019 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_e33_3v5_1r__d16874e1995" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d136258e1019 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_e33_3v5_1r__d16883e1995" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e1022 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d136258e1022 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -866,9 +866,9 @@ Where
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d136246e1126">Output Files Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d136258e1126">Output Files Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d136246e1129">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d136258e1129">Description</th>
 
                                 </tr>
 
@@ -876,11 +876,11 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Idle Timeout (secs) <a class="xref" href="LocalFS.html#concept_gp5_wcp_vv">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Idle Timeout (secs) <a class="xref" href="LocalFS.html#concept_gp5_wcp_vv">
                                             <img class="image" id="task_e33_3v5_1r__image_m3p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Maximum time that an output file
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Maximum time that an output file
                                         can remain idle. After no records are written to a file for
                                         this amount of time, the destination closes the file. Enter
                                         a time in seconds or use the <samp class="ph codeph">MINUTES</samp> or
@@ -895,9 +895,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p class="p">Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
                                             to sdc-&lt;<span class="ph">Data Collector</span> ID&gt;. </p>
@@ -909,9 +909,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">File Suffix</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">File Suffix</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Suffix to use for output files, such as txt or json. When
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Suffix to use for output files, such as txt or json. When
                                         used, the destination adds a period and the configured
                                         suffix as follows: &lt;filename&gt;.&lt;suffix&gt;.<p class="p">You can
                                             include periods within the suffix, but do not start the
@@ -924,34 +924,34 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                            <img class="image" id="task_e33_3v5_1r__d16744e7435" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                            <img class="image" id="task_e33_3v5_1r__d16753e7435" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Indicates that the target directory is defined in record
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Indicates that the target directory is defined in record
                                         headers. Use only when the targetDirectory header attribute
                                         is defined for all records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Time zone for the destination system. Used to resolve
                                         datetimes in the directory template and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Time Basis
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Time Basis
                                         <a class="xref" href="LocalFS.html#concept_gkz_smd_br">
                                             <img class="image" id="task_e33_3v5_1r__image_bh5_fgs_9r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Time basis to use for creating
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Time basis to use for creating
                                         output directories and writing records to the directories.
-                                        Use one of the following expressions:<ul class="ul" id="task_e33_3v5_1r__d16744e7475">
+                                        Use one of the following expressions:<ul class="ul" id="task_e33_3v5_1r__d16753e7475">
                                             <li class="li">${time:now()} - Uses the processing time as the time
                                                 basis. </li>
 
@@ -965,9 +965,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Max Records in a File</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Max Records in a File</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Maximum number of records to be written to an output
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p class="p">Use 0
                                             to opt out of this property. </p>
 <p class="p">Not available when
@@ -977,9 +977,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Maximum size of an output file. Additional records are
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Maximum size of an output file. Additional records are
                                         written to a new file. <p class="p">Use 0 to opt out of this property.
                                             </p>
 <p class="p">Not available when using the whole file data
@@ -989,9 +989,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Compression Codec</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Compression type for output files:<ul class="ul" id="task_e33_3v5_1r__d16744e7519">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Compression type for output files:<ul class="ul" id="task_e33_3v5_1r__d16753e7519">
                                             <li class="li">None </li>
 
                                             <li class="li">gzip</li>
@@ -1016,19 +1016,19 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Compression Codec Class</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Compression Codec Class</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Full class name of the other compression codec that you
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Full class name of the other compression codec that you
                                         want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Use Roll Attribute <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Use Roll Attribute <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Checks the record header for the roll header attribute
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Checks the record header for the roll header attribute
                                         and closes the current file when the roll attribute exists.
                                             <p class="p">Can be used with Max Records in a File and Max File
                                             Size to close files.</p>
@@ -1037,18 +1037,18 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Roll Attribute Name</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Roll Attribute Name</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Name of the roll header attribute.<p class="p">Default is
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Name of the roll header attribute.<p class="p">Default is
                                         roll.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Validate HDFS Permissions</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Validate HDFS Permissions</td>
 
-                                    <td class="entry" id="task_e33_3v5_1r__d16744e7622" valign="top" width="72.22222222222221%" headers="d136246e1129 ">When you start the
+                                    <td class="entry" id="task_e33_3v5_1r__d16753e7622" valign="top" width="72.22222222222221%" headers="d136258e1129 ">When you start the
                                         pipeline, the destination tries writing to the configured
                                         directory template to validate permissions. The pipeline
                                         does not start if validation fails.<div class="note note"><span class="notetitle">Note:</span> Do not use this
@@ -1059,10 +1059,10 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136246e1126 ">Skip File Recovery <a class="xref" href="LocalFS.html#concept_s5n_ggc_vy">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d136258e1126 ">Skip File Recovery <a class="xref" href="LocalFS.html#concept_s5n_ggc_vy">
                                         <img class="image" id="task_e33_3v5_1r__image_br4_fgs_2r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136246e1129 ">Determines whether the
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d136258e1129 ">Determines whether the
                                         destination performs file recovery after an unexpected stop
                                         of the pipeline. </td>
 
@@ -1084,17 +1084,17 @@ Where
                         record time limit to one second.</div>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e8509" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e8509" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1432">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
-                                            <img class="image" id="task_e33_3v5_1r__d16744e8525" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <th class="entry" valign="top" width="30%" id="d136258e1432">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
+                                            <img class="image" id="task_e33_3v5_1r__d16753e8525" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a>
                                     </th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1441">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1441">Description</th>
 
                                 </tr>
 
@@ -1102,9 +1102,9 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1432 ">Late Record Time Limit (secs)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1432 ">Late Record Time Limit (secs)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1441 ">Time limit for output directories to accept data. <p class="p">You
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1441 ">Time limit for output directories to accept data. <p class="p">You
                                             can enter a time in seconds, or use the expression to
                                             enter a time in hours. You can also use MINUTES in the
                                             default expression to define the time in minutes.
@@ -1114,9 +1114,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1432 ">Late Record Handling</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1432 ">Late Record Handling</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1441 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d16744e8554">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1441 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d16753e8554">
                                             <li class="li">Send to error - Sends the record to the stage for
                                                 error handling. </li>
 
@@ -1129,10 +1129,10 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1432 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
-                                            <img class="image" id="task_e33_3v5_1r__d16744e8570" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1432 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
+                                            <img class="image" id="task_e33_3v5_1r__d16753e8570" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1441 ">Template for creating late record directories. You can
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1441 ">Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.
                                             <p class="p">Output directories are created based on the smallest
                                             datetime variable in the template.</p>
@@ -1157,9 +1157,9 @@ Where
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1518">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1518">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1521">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1521">Description</th>
 
                                 </tr>
 
@@ -1167,12 +1167,12 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1518 ">Data Format <a class="xref" href="LocalFS.html#concept_lww_3b3_kr">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1518 ">Data Format <a class="xref" href="LocalFS.html#concept_lww_3b3_kr">
                                             <img class="image" id="task_e33_3v5_1r__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1521 ">Format of data to be written.
-                                        Use one of the following options:<ul class="ul" id="task_e33_3v5_1r__d16744e7365">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1521 ">Format of data to be written.
+                                        Use one of the following options:<ul class="ul" id="task_e33_3v5_1r__d16753e7365">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -1186,7 +1186,7 @@ Where
                                             <li class="li">Text</li>
 
                                             <li class="li">Whole File <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">
-                                                  <img class="image" id="task_e33_3v5_1r__d16744e7390" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_e33_3v5_1r__d16753e7390" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                         </ul>
 </td>
@@ -1205,14 +1205,14 @@ Where
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6055" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6055" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1597">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1597">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1600">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1600">Description</th>
 
                                 </tr>
 
@@ -1220,10 +1220,10 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_e33_3v5_1r__d16744e6084">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_e33_3v5_1r__d16753e6084">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1231,7 +1231,7 @@ Where
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_e33_3v5_1r__d16744e6093" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_e33_3v5_1r__d16753e6093" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -1244,9 +1244,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -1255,17 +1255,17 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -1275,10 +1275,10 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_e33_3v5_1r__d16744e6143">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_e33_3v5_1r__d16753e6143">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1291,9 +1291,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -1305,17 +1305,17 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1597 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1597 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1600 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1600 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1334,14 +1334,14 @@ Where
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6551" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6551" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1747">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1747">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1750">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1750">Description</th>
 
                                 </tr>
 
@@ -1349,9 +1349,9 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1747 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1747 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1750 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1750 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -1367,14 +1367,14 @@ Where
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6608" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6608" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1793">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1793">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1796">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1796">Description</th>
 
                                 </tr>
 
@@ -1382,9 +1382,9 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Format for delimited data:<ul class="ul" id="task_e33_3v5_1r__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Format for delimited data:<ul class="ul" id="task_e33_3v5_1r__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1413,16 +1413,16 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1430,9 +1430,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1441,9 +1441,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1458,9 +1458,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1469,9 +1469,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1480,9 +1480,9 @@ Where
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1793 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d136258e1793 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e1796 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d136258e1796 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1498,14 +1498,14 @@ Where
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6747" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6747" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e1964">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e1964">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e1967">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e1967">Description</th>
 
                                 </tr>
 
@@ -1513,9 +1513,9 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e1964 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e1964 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e1967 ">Determines how JSON data is written:<ul class="ul" id="task_e33_3v5_1r__d16744e6776">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e1967 ">Determines how JSON data is written:<ul class="ul" id="task_e33_3v5_1r__d16753e6776">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1530,9 +1530,9 @@ Where
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e1964 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d136258e1964 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e1967 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d136258e1967 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1548,14 +1548,14 @@ Where
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6820" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6820" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e2027">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e2027">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e2030">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e2030">Description</th>
 
                                 </tr>
 
@@ -1563,9 +1563,9 @@ Where
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2027 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2027 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2030 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2030 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -1575,9 +1575,9 @@ Where
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2027 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2027 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2030 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2030 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1598,14 +1598,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e6993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e6993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e2139">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e2139">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e2142">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e2142">Description</th>
 
                                 </tr>
 
@@ -1613,17 +1613,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2139 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2139 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2142 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2142 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2139 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2139 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2142 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2142 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -1632,9 +1632,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2139 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2139 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2142 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2142 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
@@ -1643,9 +1643,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d136246e2139 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d136258e2139 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d136246e2142 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d136258e2142 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1661,24 +1661,24 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16744e7080" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d16753e7080" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d136246e2216">Whole File Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d136258e2216">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d136246e2219">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d136258e2219">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_e33_3v5_1r__d16744e7102">
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2216 ">File Name Expression</td>
+                                <tr id="task_e33_3v5_1r__d16753e7102">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2216 ">File Name Expression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2219 ">
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2219 ">
                                         <p class="p">Expression to use for the file names. </p>
 
                                         <p class="p">For tips on how to name files based on input file names,
@@ -1688,11 +1688,11 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_e33_3v5_1r__d16744e7119">
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2216 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
-                                            <img class="image" id="task_e33_3v5_1r__d16744e7125" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_e33_3v5_1r__d16753e7119">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2216 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
+                                            <img class="image" id="task_e33_3v5_1r__d16753e7125" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2219 ">Expression that defines the access permissions for output
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2219 ">Expression that defines the access permissions for output
                                         files. Expressions should evaluate to a symbolic or
                                         numeric/octal representation of the permissions you want to
                                         use. <p class="p">By default, with no specified expression, files use
@@ -1706,12 +1706,12 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_e33_3v5_1r__d16744e7137">
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2216 ">File Exists</td>
+                                <tr id="task_e33_3v5_1r__d16753e7137">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2216 ">File Exists</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2219 ">Action to take when a file of the same name already
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2219 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_e33_3v5_1r__d16744e7144">
+                                            options:<ul class="ul" id="task_e33_3v5_1r__d16753e7144">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -1722,21 +1722,21 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_e33_3v5_1r__d16744e7154">
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2216 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
-                                            <img class="image" id="task_e33_3v5_1r__d16744e7160" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_e33_3v5_1r__d16753e7154">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2216 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
+                                            <img class="image" id="task_e33_3v5_1r__d16753e7160" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2219 ">Includes checksum information in whole file event
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2219 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event
                                             records. </p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_e33_3v5_1r__d16744e7168">
-                                    <td class="entry" valign="top" width="30%" headers="d136246e2216 ">Checksum Algorithm</td>
+                                <tr id="task_e33_3v5_1r__d16753e7168">
+                                    <td class="entry" valign="top" width="30%" headers="d136258e2216 ">Checksum Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d136246e2219 ">Algorithm to generate the checksum.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d136258e2219 ">Algorithm to generate the checksum.</td>
 
                                 </tr>
 
