@@ -834,7 +834,7 @@ public class TestSpoolDirSource {
           records.addAll(output.getRecords().get("lane"));
         }
 
-        if (records.size() == 50 || batchCount.get() > 999) {
+        if (records.size() == 50 || batchCount.get() > 10) {
           runner.setStop();
         }
       });
@@ -862,13 +862,14 @@ public class TestSpoolDirSource {
       outputStream.close();
     }
 
-    // let the first 2 files, file-0.log and file-2.log, were processed and
-    // file-1.log was processed 1 line/record
+    // let the first 2 files, file-0.log and file-3.log, were processed and
+    // file-2.log was processed 1 line/record
+    // file-1.log will be skipped since is less then file-3.log
     Map<String, String> lastSourceOffsetMap = ImmutableMap.of(
         SpoolDirSource.OFFSET_VERSION, OFFSET_VERSION_ONE,
         "file-0.log", "{\"POS\":\"-1\"}",
-        "file-1.log", "{\"POS\":\"2\"}",
-        "file-2.log", "{\"POS\":\"-1\"}"
+        "file-2.log", "{\"POS\":\"2\"}",
+        "file-3.log", "{\"POS\":\"-1\"}"
     );
 
     SpoolDirConfigBean conf = new SpoolDirConfigBean();
@@ -909,7 +910,7 @@ public class TestSpoolDirSource {
           records.addAll(output.getRecords().get("lane"));
         }
 
-         if (records.size() == 39 || batchCount.get() > 99) {
+         if (records.size() == 34 || batchCount.get() > 10) {
           runner.setStop();
         }
       });
@@ -917,7 +918,7 @@ public class TestSpoolDirSource {
       runner.waitOnProduce();
       Assert.assertTrue(batchCount.get() > 1);
       TestOffsetUtil.compare("file-9.log::-1", runner.getOffsets());
-      Assert.assertEquals(39, records.size());
+      Assert.assertEquals(34, records.size());
     } finally {
       runner.runDestroy();
     }

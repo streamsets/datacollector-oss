@@ -347,9 +347,18 @@ public class SpoolDirSource extends BasePushSource {
           offsetMap.put(offset.getFile(), offset);
 
           if (lastSourceFileName != null) {
-            if ((useLastModified && SpoolDirUtil.compareFiles(new File(spooler.getSpoolDir(), lastSourceFileName), new File(spooler.getSpoolDir(), offset.getFile()))) ||
-                offset.getFile().compareTo(lastSourceFileName) < 0) {
-              lastSourceFileName = offset.getFile();
+            if (useLastModified) {
+              // return the newest file in the offset
+              if (SpoolDirUtil.compareFiles(
+                  new File(spooler.getSpoolDir(), lastSourceFileName),
+                  new File(spooler.getSpoolDir(), offset.getFile())
+              )) {
+                lastSourceFileName = offset.getFile();
+              }
+            } else {
+              if (offset.getFile().compareTo(lastSourceFileName) < 0) {
+                lastSourceFileName = offset.getFile();
+              }
             }
           } else {
             lastSourceFileName = offset.getFile();

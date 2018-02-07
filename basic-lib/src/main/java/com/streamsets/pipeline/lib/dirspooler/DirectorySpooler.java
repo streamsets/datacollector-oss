@@ -436,6 +436,42 @@ public class DirectorySpooler {
     return archiveDir;
   }
 
+  public void doPostProcessing(Path file) {
+    switch (postProcessing) {
+      case NONE:
+        LOG.debug("Previous file '{}' remains in spool directory", file);
+        break;
+      case DELETE:
+        try {
+          if (Files.exists(file)) {
+            LOG.debug("Deleting file '{}'", file);
+            Files.delete(file);
+          } else {
+            LOG.error("failed to delete file '{}'", file);
+          }
+        } catch (IOException ex) {
+          throw new RuntimeException(Utils.format("Could not delete file '{}', {}", file, ex.toString()),
+              ex);
+        }
+        break;
+      case ARCHIVE:
+        try {
+          if (Files.exists(file)) {
+            LOG.debug("Archiving file '{}'", file);
+            moveIt(file, archiveDirPath);
+          } else {
+            LOG.error("failed to Archive file '{}'", file);
+          }
+        } catch (IOException ex) {
+          throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", file,
+              archiveDirPath, ex.toString()), ex);
+        }
+        break;
+      default:
+        LOG.error("poolForFile(): switch failed. postProcesing " + postProcessing.name() + " " + postProcessing.toString());
+    }
+  }
+
   private void addFileToQueue(Path file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
@@ -489,44 +525,7 @@ public class DirectorySpooler {
     }
 
     Preconditions.checkState(running, "Spool directory watcher not running");
-    synchronized (this) {
-      if (previousFile != null && !context.isPreview()) {
-        switch (postProcessing) {
-          case NONE:
-            LOG.debug("Previous file '{}' remains in spool directory", previousFile);
-            break;
-          case DELETE:
-            try {
-              if (Files.exists(previousFile)) {
-                LOG.debug("Deleting previous file '{}'", previousFile);
-                Files.delete(previousFile);
-              } else {
-                LOG.error("failed to delete previous file '{}'", previousFile);
-              }
-            } catch (IOException ex) {
-              throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString()),
-                  ex);
-            }
-            break;
-          case ARCHIVE:
-            try {
-              if (Files.exists(previousFile)) {
-                LOG.debug("Archiving previous file '{}'", previousFile);
-                moveIt(previousFile, archiveDirPath);
-              } else {
-                LOG.error("failed to Archive previous file '{}'", previousFile);
-              }
-            } catch (IOException ex) {
-              throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
-                  archiveDirPath, ex.toString()), ex);
-            }
-            break;
-          default:
-            LOG.error("poolForFile(): switch failed. postProcesing " + postProcessing.name() + " " + postProcessing.toString());
-        }
-        previousFile = null;
-      }
-    }
+
     Path next = null;
     try {
       LOG.debug("Polling for file, waiting '{}' ms", TimeUnit.MILLISECONDS.convert(wait, timeUnit));
@@ -664,9 +663,8 @@ public class DirectorySpooler {
       }
     }
 
-    if (!useLastModified) { // Sorted in the queue, if useLastModified is true.
-      Collections.sort(foundFiles);
-    }
+    Collections.sort(foundFiles, pathComparator);
+
     for (Path file : foundFiles) {
       addFileToQueue(file, checkCurrent);
       if (filesQueue.size() > maxSpoolFiles) {
@@ -675,6 +673,7 @@ public class DirectorySpooler {
         ));
       }
     }
+
     spoolQueueMeter.mark(filesQueue.size());
     pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     LOG.debug("Found '{}' files", filesQueue.size());

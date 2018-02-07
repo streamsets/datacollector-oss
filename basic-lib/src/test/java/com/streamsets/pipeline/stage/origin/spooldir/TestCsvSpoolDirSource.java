@@ -131,8 +131,39 @@ public class TestCsvSpoolDirSource {
       int maxLen,
       CsvRecordType csvRecordType,
       String filePath,
-      String pattern) {
+      String pattern
+  ) {
+    return createSource(
+      mode,
+      header,
+      delimiter,
+      escape,
+      quote,
+      commentsAllowed,
+      comment,
+      ignoreEmptyLines,
+      maxLen,
+      csvRecordType,
+      filePath,
+      pattern,
+      PostProcessingOptions.ARCHIVE
+    );
+  }
 
+  private SpoolDirSource createSource(
+    CsvMode mode,
+    CsvHeader header,
+    char delimiter,
+    char escape,
+    char quote,
+    boolean commentsAllowed,
+    char comment,
+    boolean ignoreEmptyLines,
+    int maxLen,
+    CsvRecordType csvRecordType,
+    String filePath,
+    String pattern,
+    PostProcessingOptions postProcessing) {
     SpoolDirConfigBean conf = new SpoolDirConfigBean();
     conf.dataFormat = DataFormat.DELIMITED;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -148,7 +179,7 @@ public class TestCsvSpoolDirSource {
     conf.dataFormatConfig.compression = Compression.NONE;
     conf.dataFormatConfig.filePatternInArchive = "*";
     conf.errorArchiveDir = null;
-    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.postProcessing = postProcessing;
     conf.archiveDir = createTestDir();
     conf.retentionTimeMins = 10;
     conf.dataFormatConfig.csvFileFormat = mode;
@@ -379,7 +410,7 @@ public class TestCsvSpoolDirSource {
     }
 
     final int maxLen = 8;
-    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, maxLen, CsvRecordType.LIST, sourceFile.getParent(), "*.*");
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, maxLen, CsvRecordType.LIST, sourceFile.getParent(), "*.*", PostProcessingOptions.NONE);
 
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
         .setOnRecordError(OnRecordError.TO_ERROR).build();
