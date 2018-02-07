@@ -20,9 +20,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractWebSocketServerPushSource<R extends WebSocketReceiver>
     extends AbstractWebSocketServerProtoSource<R, PushSource.Context> implements PushSource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractWebSocketServerPushSource.class);
 
   public AbstractWebSocketServerPushSource(HttpConfigs httpConfigs, R receiver) {
     super(httpConfigs, receiver);
@@ -35,8 +39,14 @@ public abstract class AbstractWebSocketServerPushSource<R extends WebSocketRecei
 
   @Override
   public void produce(Map<String, String> map, int i) throws StageException {
-    while (!getContext().isStopped()) {
-      dispatchHttpReceiverErrors(100);
+    try {
+      server.startServer();
+      while (!getContext().isStopped()) {
+        dispatchHttpReceiverErrors(100);
+      }
+    } finally {
+      LOG.trace("Destroying server");
+      server.destroy();
     }
   }
 
