@@ -59,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashMap;
@@ -79,6 +80,8 @@ public class SpoolDirRunnable implements Runnable {
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
   private static final String BASE_DIR = "baseDir";
+
+  public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
   private final PushSource.Context context;
   private final int threadNumber;
@@ -157,7 +160,7 @@ public class SpoolDirRunnable implements Runnable {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = lastSourceOffset.getRawFile();
     String lastSourceFile = file;
-    String fullPath = (file != null) ? spooler.getSpoolDir() + "/" + file : null;
+    String fullPath = (file != null) ? spooler.getSpoolDir() + FILE_SEPARATOR + file : null;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
     String offset = lastSourceOffset.getOffset();
 
@@ -206,8 +209,9 @@ public class SpoolDirRunnable implements Runnable {
           } else if (nextAvailFile.getName().compareTo(file) > 0) {
             pickFileFromSpooler = true;
           }
+
           if (pickFileFromSpooler) {
-            file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + "/", "");
+            file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
             if (offsets.containsKey(file)) {
               offset = offsets.get(file).getOffset();
             } else {
@@ -231,13 +235,13 @@ public class SpoolDirRunnable implements Runnable {
       }
     }
 
-    if (currentFile != null) {
+    if (currentFile != null && !offset.equals(MINUS_ONE)) {
       // we have a file to process (from before or new from spooler)
       try {
         updateGauge(Status.READING, offset);
 
         // we ask for a batch from the currentFile starting at offset
-         offset = generateBatch(currentFile, offset, batchSize, batchContext.getBatchMaker());
+        offset = generateBatch(currentFile, offset, batchSize, batchContext.getBatchMaker());
 
         if (MINUS_ONE.equals(offset)) {
           SpoolDirEvents.FINISHED_FILE.create(context, batchContext)
@@ -291,8 +295,14 @@ public class SpoolDirRunnable implements Runnable {
     if (lastSourceFile != null) {
       context.commitOffset(lastSourceFile, null);
     }
+
     // Process And Commit offsets
     context.processBatch(batchContext, newOffset.getFile(), newOffset.getOffsetString());
+
+    // if this is the end of the file, do post processing
+    if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE)) {
+      spooler.doPostProcessing(Paths.get(spooler.getSpoolDir() + FILE_SEPARATOR + newOffset.getFile()));
+    }
 
     updateGauge(Status.BATCH_GENERATED, offset);
 
@@ -440,11 +450,27 @@ public class SpoolDirRunnable implements Runnable {
       return true;
     }
 
-    String fileName = spoolerFile.toString().replaceFirst(spooler.getSpoolDir() + "/", "");
+    String fileName = spoolerFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
     if (offsets.containsKey(fileName)) {
       offsetInFile = offsets.get(fileName).getOffset();
       if (offsetInFile.equals(MINUS_ONE)) {
         return false;
+      }
+    } else {
+      // check is newer then any other files in the offset
+      for (String offsetFileName : offsets.keySet()) {
+        if (useLastModified) {
+          if (Files.exists(Paths.get(spooler.getSpoolDir() + FILE_SEPARATOR + offsetFileName)) &&
+              SpoolDirUtil.compareFiles(new File(spooler.getSpoolDir(), offsetFileName), spoolerFile)) {
+            LOG.debug("File '{}' is less then offset file {}, ignoring", fileName, offsetFileName);
+            return false;
+          }
+        } else {
+          if (!offsetFileName.equals(Offset.NULL_FILE) && offsetFileName.compareTo(fileName) > 0) {
+            LOG.debug("File '{}' is less then offset file {}, ignoring", fileName, offsetFileName);
+            return false;
+          }
+        }
       }
     }
 
