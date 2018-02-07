@@ -43,8 +43,8 @@
         introduces a new Field Replacer processor and has deprecated the Value Replacer processor. </p>
 
         <p class="p">The Field Replacer processor lets you define more complex conditions to replace values.
-            For example, the Field Replacer can replace values that fall within a specified range.
-            The Value Replacer cannot replace values that fall within a specified range.</p>
+            For example, unlike the Value Replacer, the Field Replacer can replace values that fall
+            within a specified range.</p>
 
         <p class="p">You can continue to use the deprecated Value Replacer processor in pipelines. However,
             the processor will be removed in a future release - so we recommend that you update
@@ -54,6 +54,17 @@
                 processor</a>. The Field Replacer replaces values in fields with nulls or with
             new values. In the Field Replacer, use field path expressions to replace values based on
             a condition. </p>
+
+        <p class="p">For example, let's say that your Value Replacer processor is configured to replace null
+            values in the product_id field with "NA" and to replace the "0289" store ID with "0132"
+            as follows:</p>
+
+        <p class="p"><img class="image" id="concept_hxf_3yd_qcb__image_psh_jby_tcb" src="../Graphics/UpgradeValueReplacer.png" height="171" width="729" /></p>
+
+        <p class="p">In the Field Replacer processor, you can configure the same replacements using field path
+            expressions as follows:</p>
+
+        <p class="p"><img class="image" id="concept_hxf_3yd_qcb__image_uq2_pcy_tcb" src="../Graphics/UpgradeValueReplacerWithFieldReplacer.png" height="127" width="794" /></p>
 
     </div>
 

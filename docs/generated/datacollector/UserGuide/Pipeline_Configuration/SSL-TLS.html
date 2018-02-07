@@ -27,10 +27,10 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_dd1_n3f_5z">
- <h1 class="title topictitle1">SSL/TLS Configuration</h1>
+    <h1 class="title topictitle1">SSL/TLS Configuration</h1>
 
- <div class="body conbody">
-  <p class="p">Some stages allow you use SSL/TLS to connect to
+    <div class="body conbody">
+        <p class="p">Some stages allow you use SSL/TLS to connect to
             the external system. </p>
 
         <div class="p">When you enable TLS, you can generally configure the following properties on the TLS tab
@@ -58,11 +58,11 @@
 
                 <li class="li">Kafka Multitopic Consumer origin</li>
 
-                <li class="li">MongoDB Oplog origin</li>
-
                 <li class="li">MongoDB origin and destination</li>
 
-                <li class="li">MQTT Subscriber origin and MQTT Producer destination</li>
+                <li class="li">MongoDB Oplog origin</li>
+
+                <li class="li">MQTT Subscriber origin and MQTT Publisher destination</li>
 
                 <li class="li">OPC UA Client origin</li>
 
@@ -89,7 +89,7 @@
             on the Advanced tab of the stage. For more information, see "Enabling SSL/TLS" in the
             stage documentation.</p>
 
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_kqb_rqf_5z">
@@ -177,9 +177,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d421184e262">Supported Cipher Suite</th>
+                            <th class="entry" valign="top" width="50%" id="d421231e262">Supported Cipher Suite</th>
 
-                            <th class="entry" valign="top" width="50%" id="d421184e265">Java Secure Socket Extension (JSSE) Name</th>
+                            <th class="entry" valign="top" width="50%" id="d421231e265">Java Secure Socket Extension (JSSE) Name</th>
 
                         </tr>
 
@@ -187,58 +187,58 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-ECDSA-AES256-GCM-SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-ECDSA-AES256-GCM-SHA384</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-RSA-AES256-GCM-SHA384</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-ECDSA-AES128-GCM-SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-RSA-AES256-GCM-SHA384</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-RSA-AES128-GCM-SHA256</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-ECDSA-AES256-SHA384 </td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-ECDSA-AES128-GCM-SHA256</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-RSA-AES256-SHA384 </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-ECDSA-AES128-SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-RSA-AES128-GCM-SHA256</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d421184e262 ">ECDHE-RSA-AES128-SHA256 </td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-ECDSA-AES256-SHA384 </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d421184e265 ">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-RSA-AES256-SHA384 </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-ECDSA-AES128-SHA256</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d421231e262 ">ECDHE-RSA-AES128-SHA256 </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d421231e265 ">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</td>
 
                         </tr>
 
