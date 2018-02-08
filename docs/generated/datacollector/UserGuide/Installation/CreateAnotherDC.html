@@ -37,34 +37,28 @@
         instance uses the same configuration as the original <span class="ph">Data Collector</span>
         instance. You can modify the configuration properties as needed. </p>
 
-        <p class="p">When
+        <div class="p">When
             you want to run another <span class="ph">Data Collector</span>
             instance with the same configuration, using the <samp class="ph codeph">create-dc</samp> command is
-            simpler than downloading and installing another <span class="ph">Data Collector</span>.
-            If you install a new instance, you then must manually make the same modifications to the
-            configuration files.</p>
+            simpler than downloading and installing another <span class="ph">Data Collector</span>. If
+            you install a new instance, you then must manually make the same modifications to the
+            configuration files.<div class="note note"><span class="notetitle">Note:</span> The <samp class="ph codeph">create-dc</samp> command copies the original <span class="ph">Data Collector</span>
+                configuration directory inside the base runtime directory of the additional <span class="ph">Data Collector</span>
+                instance. However, StreamSets recommends that you use directories outside of the
+                runtime directory to enable use of the directories after <span class="ph">Data Collector</span>
+                upgrades. For information on modifying <span class="ph">Data Collector</span>
+                directories, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.">Data Collector Directories</a>.</div>
+</div>
 
-        <p class="p"><span class="ph">Data Collector</span>
-            does not need to be running to use the <samp class="ph codeph">create-dc</samp> command. Call the
-            command from the following location:</p>
+        <p class="p"><span class="ph">Data Collector</span> does
+            not need to be running to use the <samp class="ph codeph">create-dc</samp> command. Call the command
+            from the <samp class="ph codeph">$SDC_DIST</samp> directory as follows:</p>
 
         <div class="p">
-            <pre class="pre codeblock">$SDC_DIST/bin/</pre>
+            <pre class="pre codeblock">bin/streamsets create-dc -home=&lt;SDC_HOME_DIR&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;) \
+[-conf=&lt;SDC_CONF_DIR&gt;]</pre>
 
         </div>
-
-        <div class="note note"><span class="notetitle">Note:</span> The <samp class="ph codeph">create-dc</samp> command copies the original <span class="ph">Data Collector</span>
-            configuration directory inside the base runtime directory of the additional <span class="ph">Data Collector</span>
-            instance. However, StreamSets recommends that you use directories outside of the runtime
-            directory to enable use of the directories after <span class="ph">Data Collector</span>
-            upgrades. For information on modifying <span class="ph">Data Collector</span>
-            directories, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.">Data Collector Directories</a>.</div>
-
-        <p class="p">The <samp class="ph codeph">create-dc</samp> command uses the following syntax:</p>
-
-        <pre class="pre codeblock">create-dc \
--home=&lt;SDC_HOME_DIR&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;) \
-[-conf=&lt;SDC_CONF_DIR&gt;]</pre>
 
         <p class="p">Use the <samp class="ph codeph">-help</samp> option to view additional information for the command, for
             example: <samp class="ph codeph">create-dc -help</samp>.</p>
@@ -75,9 +69,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d223276e119">Create-dc Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d223447e111">Create-dc Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d223276e122">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d223447e114">Description</th>
 
                     </tr>
 
@@ -85,9 +79,9 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223276e119 ">-home=&lt;SDC_HOME_DIR&gt;</td>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-home=&lt;SDC_HOME_DIR&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223276e122 ">Required. Home directory for the additional <span class="ph">Data Collector</span> instance. <div class="p">The root of the specified home directory must exist.
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Required. Home directory for the additional <span class="ph">Data Collector</span> instance. <div class="p">The root of the specified home directory must exist.
                                 However, the home subdirectory cannot exist because the command
                                 creates that directory. For example, say you enter the following for
                                 the home directory
@@ -101,18 +95,18 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223276e119 ">-httpPort=&lt;SDC_HTTP_PORT&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-httpPort=&lt;SDC_HTTP_PORT&gt;<p class="p">or</p>
 <p class="p">-httpsPort=&lt;SDC_HTTPS_PORT&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223276e122 ">Required. HTTP or HTTPS port for the additional <span class="ph">Data Collector</span> instance. Enter a port number that is not in use. </td>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Required. HTTP or HTTPS port for the additional <span class="ph">Data Collector</span> instance. Enter a port number that is not in use. </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223276e119 ">-conf=&lt;SDC_CONF_DIR&gt;</td>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-conf=&lt;SDC_CONF_DIR&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223276e122 ">Optional for tarball installations with a manual start. Required for
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Optional for tarball installations with a manual start. Required for
                             tarball and RPM installations with a service start. The configuration
                             directory of the original <span class="ph">Data Collector</span> instance. <p class="p">For a tarball installation with a manual start, you must
                                 use this option if you changed the default location of the <span class="ph">Data Collector</span> configuration directory, <samp class="ph codeph">$SDC_DIST/etc</samp>. For

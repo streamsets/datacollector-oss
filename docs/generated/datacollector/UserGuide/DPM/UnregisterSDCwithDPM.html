@@ -135,8 +135,8 @@
         <p class="p">Start the <span class="ph">Data Collector</span>,
             and then use the system disableDPM command to unregister the <span class="ph">Data Collector</span>. </p>
 
-        <div class="p">Use the command as
-            follows:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli \
+        <div class="p">Use the command from the <samp class="ph codeph">$SDC_DIST</samp> directory as
+            follows:<pre class="pre codeblock">bin/streamsets cli \
 (-U &lt;sdcURL&gt; | --url &lt;sdcURL&gt;) \
 [(-a &lt;sdcAuthType&gt; | --auth-type &lt;sdcAuthType&gt;)] \
 [(-D &lt;dpmURL&gt; | --dpmURL &lt;dpmURL&gt;)] \ 
@@ -154,9 +154,9 @@ system disableDPM</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d66129e314">Basic Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d66275e317">Basic Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d66129e317">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d66275e320">Description</th>
 
                         </tr>
 
@@ -164,31 +164,31 @@ system disableDPM</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66129e314 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66129e317 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
                                         <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66129e314 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66129e317 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
                                     disableDPM command to fail.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66129e314 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66129e317 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -202,11 +202,11 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66129e314 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66129e317 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -217,12 +217,12 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66129e314 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66129e317 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                         </tr>
 
@@ -234,7 +234,7 @@ system disableDPM</pre>
         </div>
 
         <div class="p">For example, the following command unregisters a <span class="ph">Data Collector</span>
-            with <span class="ph">Control Hub</span>:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli -U http://localhost:18630 -a dpm -D https://cloud.streamsets.com -u alison@MyOrg -p MyPassword system disableDPM</pre>
+            with <span class="ph">Control Hub</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 -a dpm -D https://cloud.streamsets.com -u alison@MyOrg -p MyPassword system disableDPM</pre>
 </div>
 
         <p class="p">Restart the <span class="ph">Data Collector</span> to
