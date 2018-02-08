@@ -92,19 +92,22 @@
 
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to launch <span class="ph">Data Collector</span> so that it runs as
-                    the system user account logged into the command prompt:</span>
-                <div class="itemgroup info"><pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
-<p class="p">Or, use the following
-                        command to launch <span class="ph">Data Collector</span> and run it in the
-                    background:</p>
-<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
-<p class="p">Use
-                    the following command to launch <span class="ph">Data Collector</span> so that it runs as another system user account:</p>
+                <span class="ph cmd">Use the following command from the <samp class="ph codeph">$SDC_DIST</samp> directory to run
+                        <span class="ph">Data Collector</span> as the system user account logged into the command
+                    prompt:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">bin/streamsets dc</pre>
 
-                        <pre class="pre codeblock">sudo -u &lt;user&gt; $SDC_DIST/bin/streamsets dc</pre>
+                    <p class="p">Or, use the following command to run <span class="ph">Data Collector</span> in the
+                        background:</p>
 
-                    </div>
+                    <pre class="pre codeblock">nohup bin/streamsets dc &amp;</pre>
+
+                    <p class="p">Use the following command to run <span class="ph">Data Collector</span> as another system user account:</p>
+
+                    <pre class="pre codeblock">sudo -u &lt;user&gt; bin/streamsets dc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd" id="task_bt1_zcp_kq__AccessDC">To access the <span class="ph">Data Collector</span> UI, enter the following URL
