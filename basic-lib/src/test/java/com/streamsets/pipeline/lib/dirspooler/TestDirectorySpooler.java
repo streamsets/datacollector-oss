@@ -727,7 +727,8 @@ public class TestDirectorySpooler {
         .setMaxSpoolFiles(10);
     DirectorySpooler spooler = builder.build();
 
-    spooler.init("");
+    // if the starting file is archived, should proceed the next file
+    spooler.init("x0.log");
     Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(null, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertTrue(logFile1.exists());

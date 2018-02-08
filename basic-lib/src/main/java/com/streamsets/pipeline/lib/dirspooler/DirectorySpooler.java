@@ -257,6 +257,11 @@ public class DirectorySpooler {
             if (file2.toString().isEmpty()) {
               return 1;
             }
+
+            if (!Files.exists(file1)) {
+              return 1;
+            }
+
             int compares = Files.getLastModifiedTime(file1).compareTo(Files.getLastModifiedTime(file2));
             if (compares != 0) {
               return compares;
@@ -560,6 +565,9 @@ public class DirectorySpooler {
     // why not just check if the file exists? Well, there is a possibility file gets moved/archived/deleted right after
     // that check. In that case we will still fail. So fail, and recover.
     try {
+      if (useLastModified && !Files.exists(path2)) {
+        return 1;
+      }
       return pathComparator.compare(path1, path2);
     } catch (RuntimeException ex) {
       Throwable cause = ex.getCause();
