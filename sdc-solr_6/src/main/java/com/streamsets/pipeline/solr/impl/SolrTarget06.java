@@ -45,6 +45,9 @@ public class SolrTarget06 implements SdcSolrTarget {
   private boolean kerberosAuth;
   private static final String VERSION ="6.1.0";
   private boolean skipValidation;
+  private final boolean waitFlush;
+  private final boolean waitSearcher;
+  private final boolean softCommit;
 
   public SolrTarget06(
       String instanceType,
@@ -52,7 +55,10 @@ public class SolrTarget06 implements SdcSolrTarget {
       String zookeeperConnect,
       String defaultCollection,
       boolean kerberosAuth,
-      boolean skipValidation
+      boolean skipValidation,
+      boolean waitFlush,
+      boolean waitSearcher,
+      boolean softCommit
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -60,6 +66,9 @@ public class SolrTarget06 implements SdcSolrTarget {
     this.defaultCollection = defaultCollection;
     this.kerberosAuth = kerberosAuth;
     this.skipValidation = skipValidation;
+    this.waitFlush = waitFlush;
+    this.waitSearcher = waitSearcher;
+    this.softCommit = softCommit;
   }
 
   public void init() throws Exception {
@@ -130,7 +139,7 @@ public class SolrTarget06 implements SdcSolrTarget {
 
   public void commit() throws StageException {
     try {
-      this.solrClient.commit();
+      this.solrClient.commit(waitFlush, waitSearcher, softCommit);
     } catch (SolrServerException | IOException ex) {
       throw new StageException(Errors.SOLR_05, ex.toString(), ex);
     }
