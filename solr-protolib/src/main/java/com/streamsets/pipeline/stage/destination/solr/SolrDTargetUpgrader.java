@@ -36,6 +36,12 @@ public class SolrDTargetUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -58,4 +64,10 @@ public class SolrDTargetUpgrader implements StageUpgrader {
 
   }
 
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("waitFlush", "true"));
+    configs.add(new Config("waitSearcher", "true"));
+    configs.add(new Config("softCommit", "false"));
+  }
 }

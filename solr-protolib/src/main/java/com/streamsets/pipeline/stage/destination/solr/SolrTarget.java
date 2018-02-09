@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.solr;
 
 import com.esotericsoftware.minlog.Log;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -52,13 +53,21 @@ public class SolrTarget extends BaseTarget {
   private final boolean kerberosAuth;
   private final MissingFieldAction missingFieldAction;
   private final boolean skipValidation;
+  private final boolean waitFlush;
+  private final boolean waitSearcher;
+  private final boolean softCommit;
 
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
                     final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
-                    String defaultCollection, boolean kerberosAuth, MissingFieldAction missingFieldAction, boolean skipValidation) {
+                    String defaultCollection, boolean kerberosAuth, MissingFieldAction missingFieldAction,
+      boolean skipValidation,
+      boolean waitFlush,
+      boolean waitSearcher,
+      boolean softCommit
+  ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
@@ -68,6 +77,9 @@ public class SolrTarget extends BaseTarget {
     this.kerberosAuth = kerberosAuth;
     this.missingFieldAction = missingFieldAction;
     this.skipValidation = skipValidation;
+    this.waitFlush = waitFlush;
+    this.waitSearcher = waitSearcher;
+    this.softCommit = softCommit;
   }
 
   @Override
@@ -97,7 +109,10 @@ public class SolrTarget extends BaseTarget {
           zookeeperConnect,
           defaultCollection,
           kerberosAuth,
-          skipValidation
+          skipValidation,
+          waitFlush,
+          waitSearcher,
+          softCommit
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {

@@ -30,7 +30,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png",
@@ -149,6 +149,41 @@ public class SolrDTarget extends DTarget {
   )
   public boolean skipValidation;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Wait Flush",
+      description = "Block until index changes are flushed to disk",
+      displayPosition = 1000,
+      group = "SOLR"
+  )
+  public boolean waitFlush = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Wait Searcher",
+      description = "Block until a new searcher is opened and registered as the main query searcher, making the" +
+          " changes visible",
+      displayPosition = 1010,
+      group = "SOLR"
+  )
+  public boolean waitSearcher = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Soft Commit",
+      description = "Makes index changes visible while neither fsync-ing index files nor writing a new index" +
+          " descriptor",
+      displayPosition = 1020,
+      group = "SOLR"
+  )
+  public boolean softCommit = false;
+
   @Override
   protected Target createTarget() {
     return new SolrTarget(
@@ -160,7 +195,10 @@ public class SolrDTarget extends DTarget {
         defaultCollection,
         kerberosAuth,
         missingFieldAction,
-        skipValidation
+        skipValidation,
+        waitFlush,
+        waitSearcher,
+        softCommit
     );
   }
 
