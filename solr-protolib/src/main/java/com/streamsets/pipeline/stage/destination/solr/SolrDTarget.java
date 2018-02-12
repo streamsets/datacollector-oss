@@ -119,6 +119,16 @@ public class SolrDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore Optional Fields",
+      displayPosition = 59,
+      group = "SOLR"
+  )
+  public boolean ignoreOptionalFields = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue= "TO_ERROR",
       label = "Missing Fields",
@@ -198,7 +208,8 @@ public class SolrDTarget extends DTarget {
         skipValidation,
         waitFlush,
         waitSearcher,
-        softCommit
+        softCommit,
+        ignoreOptionalFields
     );
   }
 

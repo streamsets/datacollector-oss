@@ -25,6 +25,7 @@ public class TargetFactorySettings {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
+  private boolean ignoreOptionalFields;
 
   public TargetFactorySettings (
       String instanceType,
@@ -35,7 +36,8 @@ public class TargetFactorySettings {
       boolean skipValidation,
       boolean waitFlush,
       boolean waitSearcher,
-      boolean softCommit
+      boolean softCommit,
+      boolean ignoreOptionalFields
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -46,6 +48,7 @@ public class TargetFactorySettings {
     this.waitFlush = waitFlush;
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
+    this.ignoreOptionalFields = ignoreOptionalFields;
   }
 
   public String getInstanceType() {
@@ -82,5 +85,9 @@ public class TargetFactorySettings {
 
   public boolean isSoftCommit() {
     return softCommit;
+  }
+
+  public boolean getIgnoreOptionalFields() {
+    return ignoreOptionalFields;
   }
 }

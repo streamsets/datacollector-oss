@@ -56,17 +56,26 @@ public class SolrTarget extends BaseTarget {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
+  private final boolean ignoreOptionalFields;
 
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
+  private List<String> requiredFieldNamesMap;
 
-  public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
-                    final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
-                    String defaultCollection, boolean kerberosAuth, MissingFieldAction missingFieldAction,
+  public SolrTarget(
+      final InstanceTypeOptions instanceType,
+      final String solrURI,
+      final String zookeeperConnect,
+      final ProcessingMode indexingMode,
+      final List<SolrFieldMappingConfig> fieldNamesMap,
+      String defaultCollection,
+      boolean kerberosAuth,
+      MissingFieldAction missingFieldAction,
       boolean skipValidation,
       boolean waitFlush,
       boolean waitSearcher,
-      boolean softCommit
+      boolean softCommit,
+      boolean ignoreOptionalFields
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -80,6 +89,7 @@ public class SolrTarget extends BaseTarget {
     this.waitFlush = waitFlush;
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
+    this.ignoreOptionalFields = ignoreOptionalFields;
   }
 
   @Override
@@ -98,7 +108,7 @@ public class SolrTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "zookeeperConnect", Errors.SOLR_01));
     }
 
-    if(fieldNamesMap == null || fieldNamesMap.isEmpty()) {
+    if (fieldNamesMap == null || fieldNamesMap.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "fieldNamesMap", Errors.SOLR_02));
     }
 
@@ -112,11 +122,13 @@ public class SolrTarget extends BaseTarget {
           skipValidation,
           waitFlush,
           waitSearcher,
-          softCommit
+          softCommit,
+          ignoreOptionalFields
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {
         sdcSolrTarget.init();
+        this.requiredFieldNamesMap = sdcSolrTarget.getRequiredFieldNamesMap();
       } catch (Exception ex) {
         String configName = "solrURI";
         if(InstanceTypeOptions.SOLR_CLOUD.equals(instanceType.getInstanceType())) {
@@ -145,6 +157,11 @@ public class SolrTarget extends BaseTarget {
         for (SolrFieldMappingConfig fieldMapping : fieldNamesMap) {
           Field field = record.get(fieldMapping.field);
           if (field == null) {
+            if (ignoreOptionalFields) {
+              if (requiredFieldNamesMap == null || !requiredFieldNamesMap.contains(fieldMapping.field)) {
+                continue;
+              }
+            }
             switch (missingFieldAction) {
               case DISCARD:
                 LOG.debug(Errors.SOLR_06.getMessage(), fieldMapping.field);

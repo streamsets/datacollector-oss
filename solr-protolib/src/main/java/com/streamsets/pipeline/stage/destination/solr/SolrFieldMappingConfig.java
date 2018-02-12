@@ -57,4 +57,8 @@ public class SolrFieldMappingConfig {
       displayPosition = 20
   )
   public String solrFieldName;
+
+  public boolean equals(String fieldName) {
+    return this.field.equals(fieldName);
+  }
 }
