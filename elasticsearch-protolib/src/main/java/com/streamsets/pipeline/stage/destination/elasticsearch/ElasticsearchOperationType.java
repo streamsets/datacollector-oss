@@ -47,7 +47,7 @@ public enum ElasticsearchOperationType implements Label {
       case OperationType.DELETE_CODE:
         return "DELETE";
       case OperationType.MERGE_CODE:
-        return "MERGE";
+        return "UPDATE with doc_as_upsert";
       default:
         return null;
     }
