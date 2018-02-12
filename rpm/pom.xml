@@ -159,6 +159,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/edge-binaries</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/edge-binaries</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>${sdc.dir}/bin</directory>
                   <filemode>755</filemode>
                   <username>root</username>
@@ -381,6 +392,17 @@
                   <sources>
                     <source>
                       <location>${sdc.distroot}/sdc-static-web</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/edge-binaries</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/edge-binaries</location>
                     </source>
                   </sources>
                 </mapping>
