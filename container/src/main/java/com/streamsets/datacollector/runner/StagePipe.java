@@ -22,7 +22,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Supplier;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.memory.MemoryMonitor;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
@@ -159,7 +158,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
       }
 
-      if (getStage().getConfiguration().getOutputAndEventLanes().size() > 0) {
+      if (getStage().getConfiguration().getOutputAndEventLanes().isEmpty()) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
         for (String lane : getStage().getConfiguration().getOutputAndEventLanes()) {
@@ -188,15 +187,9 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       if (configuration.get("monitor.memory", false)) {
         LOG.info("Starting memory collector for {}", getStage().getInfo().getInstanceName());
         scheduledExecutorService.submit(
-          new MemoryMonitor(memoryConsumedCounter,
-            new Supplier<MemoryUsageCollector>() {
-              @Override
-              public MemoryUsageCollector get() {
-                return new MemoryUsageCollector.Builder()
-                  .setMemoryUsageCollectorResourceBundle(memoryUsageCollectorResourceBundle)
-                  .setStageRuntime(getStage()).build();
-              }
-            }));
+          new MemoryMonitor(memoryConsumedCounter, () -> new MemoryUsageCollector.Builder()
+            .setMemoryUsageCollectorResourceBundle(memoryUsageCollectorResourceBundle)
+            .setStageRuntime(getStage()).build()));
       }
       createRuntimeStatsGauge(metrics);
 
@@ -215,14 +208,23 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
     EventSink eventSink = pipeBatch.getEventSink();
+    ProcessedSink processedSink = pipeBatch.getProcessedSink();
     String previousOffset = pipeBatch.getPreviousOffset();
 
     // Filter batch by stage's preconditions
-    getStage().setErrorAndEventSink(errorSink, eventSink);
+    getStage().setSinks(errorSink, eventSink, processedSink);
     Batch batch = new FilterRecordBatch(batchImpl, predicates, getStage().getContext());
 
     long start = System.currentTimeMillis();
-    String newOffset = getStage().execute(previousOffset, pipeBatch.getBatchSize(), batch, batchMaker, errorSink, eventSink);
+    String newOffset = getStage().execute(
+        previousOffset,
+        pipeBatch.getBatchSize(),
+        batch,
+        batchMaker,
+        errorSink,
+        eventSink,
+        processedSink
+    );
     if (isSource()) {
       pipeBatch.setNewOffset(newOffset);
     }
@@ -274,7 +276,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     increaseStageErrorMetrics(stageErrorsCount);
 
     Map<String, Integer> outputRecordsPerLane = new HashMap<>();
-    if (getStage().getConfiguration().getOutputLanes().size() > 0) {
+    if (getStage().getConfiguration().getOutputLanes().isEmpty()) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         int outputRecords = batchMaker.getSize(lane);
         outputRecordsPerLane.put(lane, outputRecords);
@@ -283,7 +285,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       }
     }
 
-    if(getStage().getConfiguration().getEventLanes().size() > 0) {
+    if(getStage().getConfiguration().getEventLanes().isEmpty()) {
       String lane = getStage().getConfiguration().getEventLanes().get(0);
       int eventRecords = eventSink.getStageEvents(getStage().getInfo().getInstanceName()).size();
       outputRecordsPerLane.put(lane, eventRecords);
@@ -324,8 +326,9 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   public void destroy(PipeBatch pipeBatch) {
     EventSink eventSink = pipeBatch.getEventSink();
     ErrorSink errorSink = pipeBatch.getErrorSink();
+    ProcessedSink processedSink = pipeBatch.getProcessedSink();
 
-    getStage().destroy(errorSink, eventSink);
+    getStage().destroy(errorSink, eventSink, processedSink);
 
     pipeBatch.completeStage(this);
   }
@@ -342,12 +345,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Gauge<Object> createRuntimeStatsGauge(MetricRegistry metricRegistry) {
     Gauge<Object> runtimeStatsGauge = MetricsConfigurator.getGauge(metricRegistry, RUNTIME_STATS_GAUGE);
     if(runtimeStatsGauge == null) {
-      runtimeStatsGauge = new Gauge<Object>() {
-        @Override
-        public Object getValue() {
-          return context.getRuntimeStats();
-        }
-      };
+      runtimeStatsGauge = () -> context.getRuntimeStats();
       try {
         MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge, name ,rev);
       } catch (Exception e) {
@@ -376,7 +374,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   public interface Context extends Pipe.Context {
 
-    public RuntimeStats getRuntimeStats();
+    RuntimeStats getRuntimeStats();
 
   }
 }

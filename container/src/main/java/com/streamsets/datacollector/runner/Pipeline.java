@@ -418,7 +418,7 @@ public class Pipeline {
     // Lifecycle event handling
     if(startEventStage != null) {
       try {
-        startEventStage.destroy(null, null);
+        startEventStage.destroy(null, null, null);
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline start event handler destroy: {}", ex);
         LOG.error(msg, ex);
@@ -466,7 +466,7 @@ public class Pipeline {
 
       // Destroy
       try {
-        stopEventStage.destroy(null, null);
+        stopEventStage.destroy(null, null, null);
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline stop event handler destroy: {}", ex);
         LOG.error(msg, ex);
@@ -488,7 +488,9 @@ public class Pipeline {
       lineagePublisherTask.publishEvent(event);
     }
 
-    LOG.info("Pipeline finished destroying with final reason={}", stopReason.name());
+    if (LOG.isInfoEnabled()) {
+      LOG.info("Pipeline finished destroying with final reason={}", stopReason.name());
+    }
     // Propagate exception if it was thrown
     if(exception != null) {
       Throwables.propagateIfInstanceOf(exception, StageException.class);

@@ -70,11 +70,7 @@ public class ErrorSink implements ReportErrorDelegate {
   }
 
   private <T> void addError(Map<String, List<T>> map, String stage, T error) {
-    List<T> errors = map.get(stage);
-    if (errors == null) {
-      errors = new ArrayList<>();
-      map.put(stage, errors);
-    }
+    List<T> errors = map.computeIfAbsent(stage, k -> new ArrayList<>());
     errors.add(error);
     size++;
   }
@@ -82,7 +78,7 @@ public class ErrorSink implements ReportErrorDelegate {
   @SuppressWarnings("unchecked")
   private <T> List<T> getErrors(Map<String, List<T>> map, String stage) {
     List<T> errors = map.get(stage);
-    return (errors != null) ? errors : Collections.EMPTY_LIST;
+    return (errors != null) ? errors : Collections.emptyList();
   }
 
   public List<Record> getErrorRecords(String stage) {

@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
+import java.util.Collection;
+
 /**
  * BatchContext implementation keeping all the state for given Batch while the pipeline is running the origin's code.
  */
@@ -107,6 +109,16 @@ public class BatchContextImpl implements BatchContext {
       recordImpl.setInitialRecord(false);
     }
     pipeBatch.getEventSink().addEvent(originStageName, recordImpl);
+  }
+
+  @Override
+  public void complete(Record record) {
+    pipeBatch.getProcessedSink().addRecord(originStageName, record);
+  }
+
+  @Override
+  public void complete(Collection<Record> records) {
+    pipeBatch.getProcessedSink().addRecords(originStageName, records);
   }
 
   @Override

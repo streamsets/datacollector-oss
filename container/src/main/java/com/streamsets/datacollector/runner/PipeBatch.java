@@ -59,6 +59,8 @@ public interface PipeBatch {
 
   EventSink getEventSink();
 
+  ProcessedSink getProcessedSink();
+
   void moveLane(String inputLane, String outputLane);
 
   void moveLaneCopying(String inputLane, List<String> outputLanes);

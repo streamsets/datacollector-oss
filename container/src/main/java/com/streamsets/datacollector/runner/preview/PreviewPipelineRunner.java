@@ -42,6 +42,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.ProcessedSink;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
 import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.RuntimeStats;
@@ -169,14 +170,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
       "Invalid lifecycle event stage type: " + stageRuntime.getDefinition().getType()
     );
-    stageRuntime.execute(
-      null,
-      1000,
-      batch,
-      null,
-      new ErrorSink(),
-      new EventSink()
-    );
+    stageRuntime.execute(null, 1000, batch, null, new ErrorSink(), new EventSink(), new ProcessedSink());
   }
 
   @Override
@@ -187,7 +181,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
-    run(originPipe, pipes, badRecordsHandler, Collections.EMPTY_LIST, statsAggregationHandler);
+    run(originPipe, pipes, badRecordsHandler, Collections.emptyList(), statsAggregationHandler);
   }
 
   @Override

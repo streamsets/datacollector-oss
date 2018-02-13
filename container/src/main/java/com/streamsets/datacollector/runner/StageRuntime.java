@@ -144,10 +144,11 @@ public class StageRuntime implements PushSourceContextDelegate {
     this.context = context;
   }
 
-  public void setErrorAndEventSink(ErrorSink errorSink, EventSink eventSink) {
+  public void setSinks(ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) {
     context.setReportErrorDelegate(reportErrorDelegate == null ? errorSink : reportErrorDelegate);
     context.setErrorSink(errorSink);
     context.setEventSink(eventSink);
+    context.setProcessedSink(processedSink);
   }
 
   @SuppressWarnings("unchecked")
@@ -180,11 +181,11 @@ public class StageRuntime implements PushSourceContextDelegate {
     return issues;
   }
 
-  String execute(Callable<String> callable, ErrorSink errorSink, EventSink eventSink) throws StageException {
+  String execute(Callable<String> callable, ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) throws StageException {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       context.setPushSourceContextDelegate(this);
-      setErrorAndEventSink(errorSink, eventSink);
+      setSinks(errorSink, eventSink, processedSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
 
       try {
@@ -203,7 +204,7 @@ public class StageRuntime implements PushSourceContextDelegate {
       }
 
     } finally {
-      setErrorAndEventSink(null, null);
+      setSinks(null, null, null);
       Thread.currentThread().setContextClassLoader(mainClassLoader);
     }
   }
@@ -222,52 +223,45 @@ public class StageRuntime implements PushSourceContextDelegate {
         }
       };
 
-      execute(callable, null, null);
+      execute(callable, null, null, null);
   }
 
   public String execute(
-    final String previousOffset,
-    final int batchSize,
-    final Batch batch,
-    final BatchMaker batchMaker,
-    ErrorSink errorSink,
-    EventSink eventSink
+      final String previousOffset,
+      final int batchSize,
+      final Batch batch,
+      final BatchMaker batchMaker,
+      ErrorSink errorSink,
+      EventSink eventSink,
+      ProcessedSink processedSink
   ) throws StageException {
-    Callable<String> callable = new Callable<String>() {
-      @Override
-      public String call() throws Exception {
-        String newOffset = null;
-        switch (getDefinition().getType()) {
-          case SOURCE: {
-            newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
-            break;
-          }
-          case PROCESSOR: {
-            ((Processor) getStage()).process(batch, batchMaker);
-            break;
-
-          }
-          case EXECUTOR:
-          case TARGET: {
-            ((Target) getStage()).write(batch);
-            break;
-          }
-          default: {
-            throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
-          }
-        }
-        return newOffset;
+    Callable<String> callable = () -> {
+      String newOffset = null;
+      switch (getDefinition().getType()) {
+        case SOURCE:
+          newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
+          break;
+        case PROCESSOR:
+          ((Processor) getStage()).process(batch, batchMaker);
+          break;
+        case EXECUTOR:
+        case TARGET:
+          ((Target) getStage()).write(batch);
+          break;
+        default:
+          throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
       }
+      return newOffset;
     };
 
-    return execute(callable, errorSink, eventSink);
+    return execute(callable, errorSink, eventSink, processedSink);
   }
 
-  public void destroy(ErrorSink errorSink, EventSink eventSink) {
+  public void destroy(ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
 
     try {
-      setErrorAndEventSink(errorSink, eventSink);
+      setSinks(errorSink, eventSink, processedSink);
 
       // Firstly destroy stage itself
       LambdaUtil.withClassLoader(
@@ -286,7 +280,7 @@ public class StageRuntime implements PushSourceContextDelegate {
       // Do not eventSink and errorSink to null when in preview mode AND current thread
       // is different from the one executing stages because stages might send error to errorSink.
       if (!context.isPreview() || runnerThread == (Thread.currentThread().getId())) {
-        setErrorAndEventSink(null, null);
+        setSinks(null, null, null);
       }
 
       // We release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)

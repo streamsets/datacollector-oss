@@ -67,12 +67,19 @@ public class BadRecordsHandler {
 
     synchronized (errorStage) {
       errorStage.execute(
-        sourceOffset,     // Source offset for this batch
-        -1,     // BatchSize is not used for target
-        new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords),
-        null,  // BatchMaker doesn't make sense for target
-        null,    // Error stage can't generate error records
-        null    // And also can't generate events
+          sourceOffset,
+          // Source offset for this batch
+          -1,
+          // BatchSize is not used for target
+          new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords),
+          null,
+          // BatchMaker doesn't make sense for target
+          null,
+          // Error stage can't generate error records
+          null,
+          // And also can't generate events
+          null
+          // Doesn't yet support user defined metrics
       );
     }
   }

@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 
+import java.util.Collection;
+
 /**
  * SDK implementation of the BatchContext interface
  */
@@ -58,6 +60,16 @@ public class BatchContextSdkImpl implements BatchContext {
   @Override
   public void toEvent(EventRecord record) {
     context.toEvent(record);
+  }
+
+  @Override
+  public void complete(Record record) {
+    context.complete(record);
+  }
+
+  @Override
+  public void complete(Collection<Record> records) {
+    context.complete(records);
   }
 
 }

@@ -5,6 +5,9 @@
 # Maven
 target
 
+# VS Code
+.vscode
+
 # IntelliJ
 *.iml
 *.ipr

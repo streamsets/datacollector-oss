@@ -51,6 +51,7 @@ import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private final OnRecordError onRecordError;
   private ErrorSink errorSink;
   private EventSink eventSink;
+  private ProcessedSink processedSink;
   private long lastBatchTime;
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
@@ -309,6 +311,15 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     this.eventSink = sink;
   }
 
+  // for SDK
+  public ProcessedSink getProcessedSink() {
+    return processedSink;
+  }
+
+  public void setProcessedSink(ProcessedSink sink) {
+    processedSink = sink;
+  }
+
   ReportErrorDelegate reportErrorDelegate;
   public void setReportErrorDelegate(ReportErrorDelegate delegate) {
     this.reportErrorDelegate = delegate;
@@ -465,6 +476,16 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       recordImpl.setInitialRecord(false);
     }
     eventSink.addEvent(stageInfo.getInstanceName(), recordImpl);
+  }
+
+  @Override
+  public void complete(Record record) {
+    processedSink.addRecord(stageInfo.getInstanceName(), record);
+  }
+
+  @Override
+  public void complete(Collection<Record> records) {
+    processedSink.addRecords(stageInfo.getInstanceName(), records);
   }
 
   public void setStop(boolean stop) {

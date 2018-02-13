@@ -55,6 +55,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.ProcessedSink;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
 import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
@@ -338,14 +339,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
       "Invalid lifecycle event stage type: " + stageRuntime.getDefinition().getType()
     );
-    stageRuntime.execute(
-      null,
-      1000,
-      batch,
-      null,
-      errorSink,
-      new EventSink()
-    );
+    stageRuntime.execute(null, 1000, batch, null, errorSink, new EventSink(), new ProcessedSink());
 
     // Pipeline lifecycle stage generating error record is fatal error
     if(!errorSink.getErrorRecords().isEmpty()) {
@@ -915,17 +909,17 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     if (memoryLimit > 0 && totalMemoryConsumed > memoryLimit) {
       String largestConsumer = "unknown";
       long largestConsumed = 0;
-      Map<String, String> humanReadbleMemoryConsumptionByStage = new HashMap<>();
+      Map<String, String> humanReadableMemoryConsumptionByStage = new HashMap<>();
       for(Map.Entry<String, Long> entry : memoryConsumedByStage.entrySet()) {
         if (entry.getValue() > largestConsumed) {
           largestConsumed = entry.getValue();
           largestConsumer = entry.getKey();
         }
-        humanReadbleMemoryConsumptionByStage.put(entry.getKey(), entry.getValue() + " MB");
+        humanReadableMemoryConsumptionByStage.put(entry.getKey(), entry.getValue() + " MB");
       }
-      humanReadbleMemoryConsumptionByStage.remove(largestConsumer);
+      humanReadableMemoryConsumptionByStage.remove(largestConsumer);
       PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0011, totalMemoryConsumed,
-        memoryLimit, largestConsumer, largestConsumed, humanReadbleMemoryConsumptionByStage);
+        memoryLimit, largestConsumer, largestConsumed, humanReadableMemoryConsumptionByStage);
       String msg = "Pipeline memory limit exceeded: " + ex;
       long elapsedTimeSinceLastTriggerMins = TimeUnit.MILLISECONDS.
         toMinutes(System.currentTimeMillis() - lastMemoryLimitNotification);
@@ -951,9 +945,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       observeRequests.put(new PipelineErrorNotificationRequest(throwable));
       offered = true;
     } catch (InterruptedException e) {
+      LOG.warn("Interrupted while sending pipeline error notification request.");
+      Thread.currentThread().interrupt();
     }
     if(!offered) {
-      LOG.error("Could not submit alert request for pipeline ending error: " + throwable, throwable);
+      LOG.error("Could not submit alert request for pipeline ending error: {}", throwable, throwable);
     }
   }
 
@@ -969,13 +965,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     synchronized (stageToErrorMessagesMap) {
       for (Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
-        EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
-        if (errorMessageList == null) {
-          errorMessageList = EvictingQueue.create(
-            configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY, Constants.MAX_PIPELINE_ERRORS_DEFAULT)
-          );
-          stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
-        }
+        EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.computeIfAbsent(e.getKey(),
+            k -> EvictingQueue.create(configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY,
+                Constants.MAX_PIPELINE_ERRORS_DEFAULT
+            ))
+        );
         errorMessageList.addAll(errorMessages.get(e.getKey()));
       }
     }
@@ -989,14 +983,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     synchronized (stageToErrorRecordsMap) {
       for (Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
-        EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
-        if (errorRecordList == null) {
-          //replace with a data structure with an upper cap
-          errorRecordList = EvictingQueue.create(
-            configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT)
-          );
-          stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
-        }
+        EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.computeIfAbsent(e.getKey(),
+            k -> EvictingQueue.create(configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY,
+                Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT
+            ))
+        );
+        // replace with a data structure with an upper cap
         errorRecordList.addAll(errorRecords.get(e.getKey()));
       }
     }

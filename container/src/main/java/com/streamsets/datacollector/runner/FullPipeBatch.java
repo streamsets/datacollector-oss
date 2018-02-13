@@ -44,6 +44,7 @@ public class FullPipeBatch implements PipeBatch {
   private final List<StageOutput> stageOutputSnapshot;
   private final ErrorSink errorSink;
   private final EventSink eventSink;
+  private final ProcessedSink processedSink;
   private String newOffset;
   private int inputRecords;
   private int outputRecords;
@@ -58,6 +59,7 @@ public class FullPipeBatch implements PipeBatch {
     stageOutputSnapshot = (snapshotStagesOutput) ? new ArrayList<StageOutput>() : null;
     errorSink = new ErrorSink();
     eventSink = new EventSink();
+    processedSink = new ProcessedSink();
   }
 
   @VisibleForTesting
@@ -266,6 +268,10 @@ public class FullPipeBatch implements PipeBatch {
     return eventSink;
   }
 
+  @Override
+  public ProcessedSink getProcessedSink() {
+    return processedSink;
+  }
 
   @Override
   public void moveLane(String inputLane, String outputLane) {
