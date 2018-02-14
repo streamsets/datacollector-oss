@@ -86,11 +86,21 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        if (toVersion == 9) {
+          break;
+        }
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV9ToV10(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "spoolingPeriod"), 5));
   }
 
   private void upgradeV8ToV9(List<Config> configs) {

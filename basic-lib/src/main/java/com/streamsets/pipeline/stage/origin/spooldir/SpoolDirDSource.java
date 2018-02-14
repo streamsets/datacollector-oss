@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 9,
+    version = 10,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",

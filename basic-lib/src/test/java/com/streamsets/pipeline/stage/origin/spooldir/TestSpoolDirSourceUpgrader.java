@@ -64,4 +64,16 @@ public class TestSpoolDirSourceUpgrader {
     assertEquals(PathMatcherMode.GLOB, upgraded.get(0).getValue());
     assertEquals("conf.pathMatcherMode", upgraded.get(0).getName());
   }
+
+  @Test
+  public void testV9toV10() throws StageException {
+    SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
+
+    List<Config> configs = new ArrayList<>();
+    List<Config> upgraded = spoolDirSourceUpgrader.upgrade("x", "y", "z", 9, 10, configs);
+
+    assertEquals(1, upgraded.size());
+    assertEquals(5, upgraded.get(0).getValue());
+    assertEquals("conf.spoolingPeriod", upgraded.get(0).getName());
+  }
 }

@@ -71,6 +71,7 @@ public class DirectorySpooler {
   private final boolean useLastModified;
   private final Comparator<Path> pathComparator;
   private final boolean processSubdirectories;
+  private final long spoolingPeriodSec;
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
 
   public enum FilePostProcessing {NONE, DELETE, ARCHIVE}
@@ -92,6 +93,7 @@ public class DirectorySpooler {
     private boolean waitForPathAppearance;
     private boolean useLastModifiedTimestamp;
     private boolean processSubdirectories;
+    private long spoolingPeriodSec = 5;
 
     private Builder() {
       postProcessing = FilePostProcessing.NONE;
@@ -171,6 +173,11 @@ public class DirectorySpooler {
       return this;
     }
 
+    public Builder setSpoolingPeriodSec(long spoolingPeriodSec) {
+      this.spoolingPeriodSec = spoolingPeriodSec;
+      return this;
+    }
+
     public DirectorySpooler build() {
       Preconditions.checkArgument(context != null, "context not specified");
       Preconditions.checkArgument(spoolDir != null, "spool dir not specified");
@@ -191,7 +198,8 @@ public class DirectorySpooler {
           errorArchiveDir,
           waitForPathAppearance,
           useLastModifiedTimestamp,
-          processSubdirectories
+          processSubdirectories,
+          spoolingPeriodSec
       );
     }
   }
@@ -220,7 +228,8 @@ public class DirectorySpooler {
         errorArchiveDir,
         true,
         false,
-        processSubdirectories
+        processSubdirectories,
+        5
     );
   }
 
@@ -236,7 +245,8 @@ public class DirectorySpooler {
       String errorArchiveDir,
       boolean waitForPathAppearance,
       final boolean useLastModified,
-      boolean processSubdirectories
+      boolean processSubdirectories,
+      long spoolingPeriodSec
   ) {
     this.context = context;
     this.spoolDir = spoolDir;
@@ -250,6 +260,7 @@ public class DirectorySpooler {
     this.waitForPathAppearance = waitForPathAppearance;
     this.useLastModified = useLastModified;
     this.processSubdirectories = processSubdirectories;
+    this.spoolingPeriodSec = spoolingPeriodSec;
 
     pathComparator = new Comparator<Path>() {
       @Override
@@ -395,7 +406,7 @@ public class DirectorySpooler {
     findAndQueueFiles(currentFile, true, false);
 
     finder = new FileFinder();
-    scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
+    scheduledExecutor.scheduleAtFixedRate(finder, spoolingPeriodSec, spoolingPeriodSec, TimeUnit.SECONDS);
 
     if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
       // create and schedule file purger only if the retention time is > 0
