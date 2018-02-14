@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.GLOB;
 import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.REGEX;
@@ -69,6 +71,7 @@ public class DirectorySpooler {
   private final boolean useLastModified;
   private final Comparator<Path> pathComparator;
   private final boolean processSubdirectories;
+  private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
 
   public enum FilePostProcessing {NONE, DELETE, ARCHIVE}
 
@@ -494,9 +497,6 @@ public class DirectorySpooler {
       }
     }
     if (!filesQueue.contains(file)) {
-      if (filesQueue.size() >= maxSpoolFiles) {
-        throw new IllegalStateException(Utils.format("Exceeded max number '{}' of queued files", maxSpoolFiles));
-      }
       filesQueue.add(file);
       spoolQueueMeter.mark(filesQueue.size());
     } else {
@@ -532,6 +532,7 @@ public class DirectorySpooler {
     Preconditions.checkState(running, "Spool directory watcher not running");
 
     Path next = null;
+    closeLock.readLock().lock();
     try {
       LOG.debug("Polling for file, waiting '{}' ms", TimeUnit.MILLISECONDS.convert(wait, timeUnit));
       next = filesQueue.poll(wait, timeUnit);
@@ -543,6 +544,7 @@ public class DirectorySpooler {
         currentFile = next;
         previousFile = next;
       }
+      closeLock.readLock().unlock();
     }
     pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     return (next != null) ? next.toFile() : null;
@@ -601,6 +603,11 @@ public class DirectorySpooler {
   private List<Path> findAndQueueFiles(
       final Path startingFile, final boolean includeStartingFile, boolean checkCurrent
   ) throws IOException {
+    if (filesQueue.size() >= maxSpoolFiles) {
+      LOG.debug(Utils.format("Exceeded max number '{}' of spool files in directory", maxSpoolFiles));
+      return null;
+    }
+
     final long scanTime = System.currentTimeMillis();
     DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
       @Override
@@ -648,38 +655,26 @@ public class DirectorySpooler {
       directories.add(spoolDirPath);
     }
 
-    List<Path> foundFiles = new ArrayList<>(maxSpoolFiles);
-    for (Path dir : directories) {
-      try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(dir, filter)) {
-        for (Path file : matchingFile) {
-          if (!running) {
-            return null;
+    closeLock.writeLock().lock();
+    try {
+      for (Path dir : directories) {
+        try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(dir, filter)) {
+          for (Path file : matchingFile) {
+            if (!running) {
+              return null;
+            }
+            if (Files.isDirectory(file)) {
+              continue;
+            }
+            LOG.trace("Found file '{}'", file);
+            addFileToQueue(file, checkCurrent);
           }
-          if (Files.isDirectory(file)) {
-            continue;
-          }
-          LOG.trace("Found file '{}'", file);
-          foundFiles.add(file);
-          if (foundFiles.size() > maxSpoolFiles) {
-            throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
-                maxSpoolFiles
-            ));
-          }
+        } catch (Exception ex) {
+          LOG.error("findAndQueueFiles(): newDirectoryStream failed. " + ex.getMessage(), ex);
         }
-      } catch(Exception ex) {
-        LOG.error("findAndQueueFiles(): newDirectoryStream failed. " + ex.getMessage(), ex);
       }
-    }
-
-    Collections.sort(foundFiles, pathComparator);
-
-    for (Path file : foundFiles) {
-      addFileToQueue(file, checkCurrent);
-      if (filesQueue.size() > maxSpoolFiles) {
-        throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
-            maxSpoolFiles
-        ));
-      }
+    } finally {
+      closeLock.writeLock().unlock();
     }
 
     spoolQueueMeter.mark(filesQueue.size());
@@ -818,5 +813,4 @@ public class DirectorySpooler {
       LOG.debug("Finished archived files purging, deleted '{}' files", purged);
     }
   }
-
 }

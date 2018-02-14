@@ -734,4 +734,69 @@ public class TestDirectorySpooler {
     Assert.assertTrue(logFile1.exists());
     spooler.destroy();
   }
+
+  @Test
+  public void testLargeMaximumFilesConfig() throws Exception {
+    assertTrue(spoolDir.mkdirs());
+
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setUseLastModifiedTimestamp(true)
+        .setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE)
+        .setMaxSpoolFiles(Integer.MAX_VALUE);
+
+    DirectorySpooler spooler = builder.build();
+
+    spooler.init("");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testReachedMaximumFiles() throws Exception {
+    assertTrue(spoolDir.mkdirs());
+
+    final int defaultSpoolingTime = 5000; // 5 sec
+
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setUseLastModifiedTimestamp(true)
+        .setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE)
+        .setMaxSpoolFiles(1);
+
+    DirectorySpooler spooler = builder.build();
+
+    spooler.init("");
+
+    // add 1 more
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+
+    // wait for next findAndQueue()
+    Thread.sleep(defaultSpoolingTime);
+
+    // later added file is being ignored because queue reached the maximum, 1
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(null, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+
+    // wait for next findAndQueue()
+    Thread.sleep(defaultSpoolingTime);
+
+    // put rest of the file since queue <= maximum
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+
+    spooler.destroy();
+  }
 }
