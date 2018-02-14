@@ -762,7 +762,7 @@ public class TestDirectorySpooler {
   public void testReachedMaximumFiles() throws Exception {
     assertTrue(spoolDir.mkdirs());
 
-    final int defaultSpoolingTime = 5000; // 5 sec
+    final int spoolingTime = 1; // 1 sec
 
     File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
@@ -773,7 +773,8 @@ public class TestDirectorySpooler {
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setUseLastModifiedTimestamp(true)
         .setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE)
-        .setMaxSpoolFiles(1);
+        .setMaxSpoolFiles(1)
+        .setSpoolingPeriodSec(spoolingTime);
 
     DirectorySpooler spooler = builder.build();
 
@@ -784,7 +785,7 @@ public class TestDirectorySpooler {
     new FileWriter(logFile3).close();
 
     // wait for next findAndQueue()
-    Thread.sleep(defaultSpoolingTime);
+    Thread.sleep(spoolingTime * 1000);
 
     // later added file is being ignored because queue reached the maximum, 1
     Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
@@ -792,7 +793,7 @@ public class TestDirectorySpooler {
     Assert.assertEquals(null, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
 
     // wait for next findAndQueue()
-    Thread.sleep(defaultSpoolingTime);
+    Thread.sleep(spoolingTime * 1000);
 
     // put rest of the file since queue <= maximum
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));

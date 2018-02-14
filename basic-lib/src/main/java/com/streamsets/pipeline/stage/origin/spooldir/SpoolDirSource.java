@@ -196,7 +196,8 @@ public class SpoolDirSource extends BasePushSource {
               .setMaxSpoolFiles(conf.maxSpoolFiles)
               .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()))
               .waitForPathAppearance(waitForPathToBePresent)
-              .processSubdirectories(conf.processSubdirectories);
+              .processSubdirectories(conf.processSubdirectories)
+              .setSpoolingPeriodSec(conf.spoolingPeriod);
 
       if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
         builder.setArchiveDir(conf.archiveDir);

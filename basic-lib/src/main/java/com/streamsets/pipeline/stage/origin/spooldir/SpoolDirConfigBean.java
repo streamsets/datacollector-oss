@@ -175,6 +175,19 @@ public class SpoolDirConfigBean {
   public int maxSpoolFiles;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5",
+      label = "Spooling Period (secs)",
+      description = "Max time period to spool the files",
+      displayPosition = 61,
+      group = "FILES",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public long spoolingPeriod = 5;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
