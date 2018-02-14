@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -181,6 +182,32 @@ public class BeanHelper {
       return null;
     }
     return stageConfigurationJson.getStageConfiguration();
+  }
+
+  public static List<PipelineFragmentConfiguration> unwrapPipelineFragementConfigurations(
+      List<PipelineFragmentConfigurationJson> fragmentConfigurationJson
+  ) {
+    if (fragmentConfigurationJson == null) {
+      return null;
+    }
+    List<PipelineFragmentConfiguration> configs = new ArrayList<>(fragmentConfigurationJson.size());
+    for (PipelineFragmentConfigurationJson s : fragmentConfigurationJson) {
+      configs.add(s.getFragmentConfiguration());
+    }
+    return configs;
+  }
+
+  public static List<PipelineFragmentConfigurationJson> wrapPipelineFragmentConfigurations(
+      List<PipelineFragmentConfiguration> fragmentConfigurations
+  ) {
+    if(fragmentConfigurations == null) {
+      return null;
+    }
+    List<PipelineFragmentConfigurationJson> configs = new ArrayList<>(fragmentConfigurations.size());
+    for(PipelineFragmentConfiguration s : fragmentConfigurations) {
+      configs.add(new PipelineFragmentConfigurationJson(s));
+    }
+    return configs;
   }
 
   public static List<StageConfigurationJson> wrapStageConfigurations(List<StageConfiguration> stageConfiguration) {

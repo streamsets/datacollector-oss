@@ -41,6 +41,7 @@ public class PipelineConfigurationJson implements Serializable {
     @JsonProperty("uuid") UUID uuid,
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
+    @JsonProperty("fragments") List<PipelineFragmentConfigurationJson> fragments,
     @JsonProperty("stages") List<StageConfigurationJson> stages,
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
     @JsonProperty("info") PipelineInfoJson pipelineInfo,
@@ -59,6 +60,7 @@ public class PipelineConfigurationJson implements Serializable {
         description,
         BeanHelper.unwrapConfigConfiguration(configuration),
         uiInfo,
+        BeanHelper.unwrapPipelineFragementConfigurations(fragments),
         BeanHelper.unwrapStageConfigurations(stages),
         BeanHelper.unwrapStageConfiguration(errorStage),
         BeanHelper.unwrapStageConfiguration(statsAggregatorStage),
@@ -99,6 +101,10 @@ public class PipelineConfigurationJson implements Serializable {
 
   public PipelineInfoJson getInfo() {
     return BeanHelper.wrapPipelineInfo(pipelineConfiguration.getInfo());
+  }
+
+  public List<PipelineFragmentConfigurationJson> getFragments() {
+    return BeanHelper.wrapPipelineFragmentConfigurations(pipelineConfiguration.getFragments());
   }
 
   public List<StageConfigurationJson> getStages() {
