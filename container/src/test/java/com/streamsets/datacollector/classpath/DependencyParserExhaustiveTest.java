@@ -138,6 +138,7 @@ public class DependencyParserExhaustiveTest {
       {"maprfs-5.2.0-mapr.jar", new Dependency("mapr", "5.2.0-mapr")},
       {"maprfs-6.0.0-mapr-beta.jar", new Dependency("mapr", "6.0.0-mapr-beta")},
       {"metrics-core-2.2.0.jar", new Dependency("metrics", "2.2.0")},
+      {"mssql-jdbc-6.2.2.jre8.jar", new Dependency("mssql-jdbc", "6.2.2")},
       {"mysql-connector-java-5.1.40-bin.jar", new Dependency("mysql-connector-java", "5.1.40")},
       {"metrics-graphite-3.1.2.jar", new Dependency("metrics", "3.1.2")},
       {"netty-3.10.5.Final.jar", new Dependency("netty", "3.10.5")},

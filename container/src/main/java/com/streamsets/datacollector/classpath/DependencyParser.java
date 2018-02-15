@@ -38,7 +38,7 @@ public class DependencyParser {
   /**
    * Classifiers that are not interesting.
    */
-  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded|-bin|-api)?";
+  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded|-bin|\\.jre[0-9]|-api)?";
 
   /**
    * Various version suffixes that we support.
