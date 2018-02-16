@@ -81,6 +81,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   private static final List<String> BYTE_TYPES = Collections.singletonList("byte");
   private static final List<String> DATETIME_TYPES = Collections.singletonList("datetime");
   private static final List<String> DATE_TYPES = Collections.singletonList("date");
+  private static final String ANYTYPE = "anyType";
 
   private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
 
@@ -297,8 +298,9 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
       return com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.valueOf(userSpecifiedType.getLabel()), val);
     } else {
-      if(val instanceof Map) {
+      if(val instanceof Map || ANYTYPE.equals(sfdcType)) {
         // Fields like Fiscal on Opportunity show up as Maps from Streaming API
+        // anyType can be String, boolean etc
         try {
           return JsonUtil.jsonToField(val);
         } catch (IOException e) {
