@@ -119,6 +119,10 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     this.metadataCache = recordCreator.metadataCache;
   }
 
+  public String getSobjectType() {
+    return sobjectType;
+  }
+
   public boolean metadataCacheExists() {
     return metadataCache != null;
   }
