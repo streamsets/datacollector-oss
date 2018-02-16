@@ -157,6 +157,8 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       codemirror.setValue(safeViewValue);
     };
 
+    // a map from editor elements to last cursor positions
+    var lastCursorsByElement = {};
 
     // Keep the ngModel in sync with changes from CodeMirror
     codemirror.on('change', function(instance) {
@@ -187,6 +189,19 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         scope.$evalAsync(function() {
           ngModel.$setViewValue(newValue);
         });
+      }
+
+      var cursor = instance.getCursor();
+      var inputElem = instance.getInputField();
+      if (cursor && (cursor.line || cursor.ch)) {
+        // nonzero cursor position to save
+        lastCursorsByElement[inputElem] = cursor;
+      } else if (lastCursorsByElement[inputElem]) {
+        // current cursor was zero, but one was stored for its input element
+        // first, restore the saved cursor
+        instance.setCursor(lastCursorsByElement[inputElem]);
+        // then remove from map
+        lastCursorsByElement[inputElem] = null;
       }
     });
   }
