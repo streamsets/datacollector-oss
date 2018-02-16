@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 
 public class WaveAnalyticsConfigBean extends ForceConfigBean {
+  public static final String APPEND_TIMESTAMP = "appendTimestamp";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -43,13 +45,13 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
+      defaultValue = "false",
       label = "Append timestamp to alias",
       description = "Enable this to append a timestamp to the Edgemart Alias. This will avoid datasets overwriting each other.",
       displayPosition = 52,
       group = "FORCE"
   )
-  public boolean appendTimestamp = true;
+  public boolean appendTimestamp = false;
 
   @ConfigDef(
       required = true,

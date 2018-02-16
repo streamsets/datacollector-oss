@@ -25,11 +25,12 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Einstein Analytics",
     description = "Writes data to Salesforce Einstein Analytics",
     icon = "analytics.png",
     recordsByRef = true,
+    upgrader = WaveAnalyticsUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/WaveAnalytics.html#task_mdt_dv3_rx"
 )
 
@@ -41,6 +42,8 @@ import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
     }
 )
 public class WaveAnalyticsDTarget extends DTarget {
+  public static final String WAVE_ANALYTICS_DESTINATION_CONFIG_BEAN_PREFIX = "conf";
+
   @ConfigDefBean
   public WaveAnalyticsConfigBean conf;
 
