@@ -26,7 +26,7 @@ To build the Data Collector you will need the following software :
  - grunt-cli      (macOS, `npm -g install grunt-cli`  : Linux, `sudo npm -g install grunt-cli`)
 - md5sum          (macOS, `brew install md5sha1sum`)
 
-Prerequisites for Data Collector :
+## Prerequisite Tasks for Building Data Collector
 
 If you're building master branch, then you need to install API and Plugin API modules to your maven cache first before compiling Data Collector. Released versions
 are published to public maven repositories and for them this step can be skipped. While Data Collector runs on Java 7, Java 8 is required for
@@ -34,29 +34,29 @@ running integration tests.
 
 - You can do that by getting the latest code from Github
 
-`git clone http://github.com/streamsets/datacollector-api`
+  `git clone http://github.com/streamsets/datacollector-api`
 
-and
+  and
 
-`git clone http://github.com/streamsets/datacollector-plugin-api`
+  `git clone http://github.com/streamsets/datacollector-plugin-api`
 
 - And install each of these to your local maven repository
 
-`mvn clean install -DskipTests`
+  `mvn clean install -DskipTests`
 
-Also you need to have datacollector-edge to be installed into your local maven repository.
+You also need the artifacts for datacollector-edge installed into your local maven repository.
 
-- First get the latest version of the datacollector-edge from Github
+- Ensure you have the [prerequisites listed for building datacollector-edge](https://github.com/streamsets/datacollector-edge/blob/master/BUILD.md#minimum-requirements)
 
- `git clone https://github.com/streamsets/datacollector-edge.git`
+- Get the latest version of datacollector-edge from Github
+
+  `git clone https://github.com/streamsets/datacollector-edge.git`
 
 - Gradle is used in this project as a build tool, so in order to install it to your local maven repository execute:
 
-  `./gradlew clean release`
+  `./gradlew clean buildAll publish`
 
-Follow these instructions to build the Data Collector :
-
-- Get the latest code from Github
+Finally, get the latest Data Collector code from Github
 
 `git clone http://github.com/streamsets/datacollector`
 
