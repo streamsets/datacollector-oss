@@ -64,6 +64,7 @@ public class ForceBulkWriter extends ForceWriter {
   private static final Logger LOG = LoggerFactory.getLogger(ForceBulkWriter.class);
   private static final int MAX_BYTES_PER_BATCH = 10000000; // 10 million bytes per batch
   private static final int MAX_ROWS_PER_BATCH = 10000; // 10 thousand rows per batch
+  private static final String NA = "#N/A"; // Special value - sets field to null
   private final BulkConnection bulkConnection;
   private final Target.Context context;
   private Map<Integer, OperationEnum> opcodeToOperation = ImmutableMap.of(
@@ -274,7 +275,13 @@ public class ForceBulkWriter extends ForceWriter {
         continue;
       }
 
-      map.put(sFieldName, record.get(fieldPath));
+
+      Field field = record.get(fieldPath);
+      if (field.getValue() == null &&
+          (op == OperationEnum.update || op == OperationEnum.upsert)) {
+        field = Field.create(NA);
+      }
+      map.put(sFieldName, field);
     }
 
     outRecord.set(Field.createListMap(map));

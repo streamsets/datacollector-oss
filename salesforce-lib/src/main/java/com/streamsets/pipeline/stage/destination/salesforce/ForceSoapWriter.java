@@ -234,6 +234,7 @@ public class ForceSoapWriter extends ForceWriter {
         List<SObject> sRecords = sRecordsByOp.computeIfAbsent(opCode, k -> new ArrayList<>());
 
         SortedSet<String> columnsPresent = Sets.newTreeSet(fieldMappings.keySet());
+        List<String> fieldsToNull = new ArrayList<>();
         for (Map.Entry<String, String> mapping : fieldMappings.entrySet()) {
           String sFieldName = mapping.getKey();
           String fieldPath = mapping.getValue();
@@ -246,7 +247,15 @@ public class ForceSoapWriter extends ForceWriter {
 
           final Object value = record.get(fieldPath).getValue();
 
-          so.setField(sFieldName, value);
+          if (value == null &&
+              (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
+            fieldsToNull.add(sFieldName);
+          } else {
+            so.setField(sFieldName, value);
+          }
+        }
+        if (fieldsToNull.size() > 0) {
+          so.setFieldsToNull(fieldsToNull.toArray(new String[0]));
         }
         sRecords.add(so);
         recordMap.put(so, record);
