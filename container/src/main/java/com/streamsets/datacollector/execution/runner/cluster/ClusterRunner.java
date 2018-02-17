@@ -399,7 +399,7 @@ public class ClusterRunner extends AbstractRunner {
   private void retryOrStart(String user) throws PipelineException, StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
-      prepareForStart(user);
+      prepareForStart(user, runtimeParameters);
       start(user);
     } else {
       validateAndSetStateTransition(user, PipelineStatus.RETRY, "Changing the state to RETRY on startup");
@@ -407,7 +407,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
     PipelineState fromState = getState();
     checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(PipelineStatus.STARTING), ContainerError.CONTAINER_0102,
         fromState.getStatus(), PipelineStatus.STARTING);

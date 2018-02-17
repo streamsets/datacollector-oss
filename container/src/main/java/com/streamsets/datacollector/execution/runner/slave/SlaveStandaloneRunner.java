@@ -129,11 +129,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
 
   @Override
-  public void prepareForStart(String user) throws PipelineException {
+  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
     // no need for clear since slaves never run more than one pipeline
     MDC.put(LogConstants.USER, user);
     LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
-    standaloneRunner.prepareForStart(user);
+    standaloneRunner.prepareForStart(user, attributes);
   }
 
   @Override

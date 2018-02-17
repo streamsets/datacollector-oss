@@ -88,7 +88,7 @@ public interface Runner {
   public void forceQuit(String user) throws PipelineException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
-  public void prepareForStart(String user) throws PipelineException;
+  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException;
 
   // Sets the state to STOPPING. Should be called before doing a stop on async runners.
   public void prepareForStop(String user) throws PipelineException;

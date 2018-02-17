@@ -240,7 +240,7 @@ public class TestClusterRunner {
         conf
     ), conf), conf);
     Runner clusterRunner = createRunnerForRetryTest(pipelineStateStore);
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
     clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
@@ -305,7 +305,7 @@ public class TestClusterRunner {
     assertEquals("\"My_dummy_metrics\"", clusterRunner.getState().getMetrics());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes,
       ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     assertNull(clusterRunner.getState().getMetrics());
   }
 
@@ -397,10 +397,10 @@ public class TestClusterRunner {
   public void testPipelineStatusStart() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
     try {
-      clusterRunner.prepareForStart("admin");
+      clusterRunner.prepareForStart("admin", null);
       Assert.fail("Expected exception but didn't get any");
     } catch (PipelineRunnerException e) {
       assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
@@ -415,14 +415,14 @@ public class TestClusterRunner {
   public void testPipelineStartMultipleTimes() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
 
     // call start on the already running pipeline and make sure it doesn't request new resource each time
     for (int counter =0; counter < 10; counter++) {
       try {
-        clusterRunner.prepareForStart("admin");
+        clusterRunner.prepareForStart("admin", null);
         Assert.fail("Expected exception but didn't get any");
       } catch (PipelineRunnerException ex) {
         Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
@@ -436,12 +436,12 @@ public class TestClusterRunner {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
     clusterProvider.submitTimesOut = true;
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.submitTimesOut = false;
     clusterProvider.appId = APPID;
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
@@ -477,7 +477,7 @@ public class TestClusterRunner {
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
     assertEquals("myToken", slaves.get(0).getSdcClusterToken());
     assertEquals("sdc_id", slaves.get(0).getSlaveSdcId());
-    clusterRunner.prepareForStart("admin");
+    clusterRunner.prepareForStart("admin", null);
     clusterRunner.start("admin");
     slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.METRICS));
     assertTrue(slaves.isEmpty());
@@ -657,24 +657,24 @@ public class TestClusterRunner {
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
     Runner runner1 = createClusterRunner("a", pipelineStoreTask, resourceManager);
-    runner1.prepareForStart("admin");
+    runner1.prepareForStart("admin", null);
 
     Runner runner2 = createClusterRunner("b", pipelineStoreTask, resourceManager);
-    runner2.prepareForStart("admin");
+    runner2.prepareForStart("admin", null);
 
     Runner runner3 = createClusterRunner("c", pipelineStoreTask, resourceManager);
-    runner3.prepareForStart("admin");
+    runner3.prepareForStart("admin", null);
 
     Runner runner4 = createClusterRunner("d", pipelineStoreTask, resourceManager);
-    runner4.prepareForStart("admin");
+    runner4.prepareForStart("admin", null);
 
     Runner runner5 = createClusterRunner("e", pipelineStoreTask, resourceManager);
-    runner5.prepareForStart("admin");
+    runner5.prepareForStart("admin", null);
 
     Runner runner6 = createClusterRunner("f", pipelineStoreTask, resourceManager);
 
     try {
-      runner6.prepareForStart("admin");
+      runner6.prepareForStart("admin", null);
       Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
@@ -687,10 +687,10 @@ public class TestClusterRunner {
       Assert.assertEquals(ContainerError.CONTAINER_0158, e.getErrorCode());
     }
 
-    runner6.prepareForStart("admin");
+    runner6.prepareForStart("admin", null);
 
     try {
-      runner5.prepareForStart("admin");
+      runner5.prepareForStart("admin", null);
       Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());

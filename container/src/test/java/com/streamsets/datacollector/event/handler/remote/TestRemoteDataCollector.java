@@ -324,7 +324,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+    public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 
     }

@@ -133,7 +133,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call start() instead.");
   }
 
@@ -147,7 +147,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
       String user,
       Map<String, Object> runtimeParameters
   ) throws PipelineException, StageException {
-    runner.prepareForStart(user);
+    runner.prepareForStart(user, runtimeParameters);
     Callable<Object> callable = () -> {
        runner.start(user, runtimeParameters);
        return null;
@@ -167,7 +167,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    runner.prepareForStart(user);
+    runner.prepareForStart(user, runtimeParameters);
     Callable<Object> callable = () -> {
       runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
       return null;

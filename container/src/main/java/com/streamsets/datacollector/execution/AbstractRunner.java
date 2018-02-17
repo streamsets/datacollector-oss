@@ -169,7 +169,7 @@ public abstract  class AbstractRunner implements Runner {
     LOG.info("Scheduling retry in '{}' milliseconds", delay);
     return runnerExecutor.schedule(() -> {
       LOG.info("Starting the runner now");
-      prepareForStart(user);
+      prepareForStart(user, runtimeParameters);
       start(user, runtimeParameters);
       return null;
     }, delay, TimeUnit.MILLISECONDS);

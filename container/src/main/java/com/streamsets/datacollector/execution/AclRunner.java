@@ -110,8 +110,8 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void prepareForStart(String user) throws PipelineException {
-    runner.prepareForStart(user);
+  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
+    runner.prepareForStart(user, attributes);
   }
 
   @Override
