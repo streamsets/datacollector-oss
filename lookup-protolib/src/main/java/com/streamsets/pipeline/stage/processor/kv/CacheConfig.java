@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.processor.kv;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.concurrent.TimeUnit;
@@ -88,13 +89,14 @@ public class CacheConfig {
     @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Retry on Cache Miss",
+      label = "Retry on Missing Value",
       defaultValue = "false",
-      description = "By default, the cache 'remembers' that look up for given key failed and always returns default" +
-        " value. This is to avoid doing un-necessary look ups for known missing values. Select this option if new" +
-        " values can be inserted later on and the cache should retry the request rather than returning the cached" +
+      description = "By default, the processor remembers that a look up for a given column failed and always returns" +
+        " the default value. This is to avoid doing unnecessary look ups for known missing values. Select this option" +
+        " if new values might be inserted and the processor should retry the request rather than returning the cached" +
         " default value.",
       displayPosition = 150,
+      dependencies = @Dependency(configName = "enabled", triggeredByValues = "true"),
       group = "#0"
   )
   public boolean retryOnCacheMiss = false;
