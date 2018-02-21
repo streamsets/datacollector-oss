@@ -89,6 +89,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -950,6 +951,16 @@ public class ClusterProviderImpl implements ClusterProvider {
               "Submit command {} alive.", elapsedSeconds, (process.isAlive() ? "is" : "is not"));
           if (hostingDir != null) {
             FileUtils.deleteQuietly(hostingDir);
+          }
+          Iterator<String> idIterator = applicationIds.iterator();
+          if (idIterator.hasNext()) {
+            String appId = idIterator.next();
+            SystemProcess logsProcess = systemProcessFactory.create(
+                "yarn",
+                com.google.common.io.Files.createTempDir(),
+                Arrays.asList("logs", "-applicationId", appId)
+            );
+            logOutput(appId, logsProcess);
           }
           throw new IllegalStateException(msg);
         }
