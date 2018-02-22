@@ -54,7 +54,7 @@ public class TextDataParserFactory extends DataParserFactory {
 
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
-  static final String TEXT_FIELD_NAME = "text";
+  public static final String TEXT_FIELD_NAME = "text";
   static final String TRUNCATED_FIELD_NAME = "truncated";
 
   private final GenericObjectPool<StringBuilder> stringBuilderPool;

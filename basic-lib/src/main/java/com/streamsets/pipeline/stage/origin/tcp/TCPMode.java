@@ -24,6 +24,7 @@ public enum TCPMode implements Label {
   SYSLOG("syslog"),
   DELIMITED_RECORDS("Separated records"),
   CHARACTER_BASED_LENGTH_FIELD("Character data with length prefix"),
+  FLUME_AVRO_IPC("Flume Avro IPC Server"),
   ;
 
   private final String label;

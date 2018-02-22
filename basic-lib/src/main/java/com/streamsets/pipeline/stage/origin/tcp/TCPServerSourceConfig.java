@@ -43,7 +43,7 @@ public class TCPServerSourceConfig {
       displayPosition = 1,
       group = "DATA_FORMAT",
       dependsOn = "tcpMode",
-      triggeredByValue = {"DELIMITED_RECORDS", "CHARACTER_BASED_LENGTH_FIELD"}
+      triggeredByValue = {"DELIMITED_RECORDS", "CHARACTER_BASED_LENGTH_FIELD", "FLUME_AVRO_IPC"}
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -64,6 +64,19 @@ public class TCPServerSourceConfig {
       displayPosition = 1
   )
   public List<String> ports; // string so we can listen on multiple ports in the future
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Bind Address",
+      defaultValue = "0.0.0.0",
+      description = "Bind address for opening listener.",
+      dependsOn = "tcpMode",
+      triggeredByValue = "FLUME_AVRO_IPC",
+      group = "TCP",
+      displayPosition = 4
+  )
+  public String bindAddress;
 
   @ConfigDef(
       required = true,

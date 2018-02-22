@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogDecoder;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.origin.tcp.flumeavroipc.SDCFlumeAvroIpcProtocolHandler;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -40,7 +41,10 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.ssl.SslHandler;
+import org.apache.avro.ipc.NettyServer;
+import org.apache.avro.ipc.specific.SpecificResponder;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.flume.source.avro.AvroSourceProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,11 +55,12 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 public class TCPServerSource extends BasePushSource {
@@ -68,12 +73,14 @@ public class TCPServerSource extends BasePushSource {
   private final List<InetSocketAddress> addresses = new LinkedList<>();
 
   private TCPConsumingServer tcpServer;
+  private NettyServer avroIpcServer;
+
   private boolean privilegedPortUsage;
   private DataParserFactory parserFactory;
 
   private final TCPServerSourceConfig config;
 
-  private final Map<String, StageException> pipelineIdsToFail = new HashMap<>();
+  private final ConcurrentMap<String, StageException> pipelineIdsToFail = new ConcurrentHashMap<>();
 
   private static final long PRODUCE_LOOP_INTERVAL_MS = 1000;
 
@@ -135,75 +142,106 @@ public class TCPServerSource extends BasePushSource {
           return issues;
         }
 
-        tcpServer = new TCPConsumingServer(
-            config.enableEpoll,
-            config.numThreads,
-            addresses,
-            new ChannelInitializer<SocketChannel>() {
-              @Override
-              public void initChannel(SocketChannel ch) throws Exception {
-                if (config.tlsConfigBean.isEnabled()) {
-                  // Add TLS handler into pipeline in the first position
-                  ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.getSslEngine()));
-                }
+        if (config.tcpMode == TCPMode.FLUME_AVRO_IPC) {
+          config.dataFormatConfig.init(
+              getContext(),
+              config.dataFormat,
+              Groups.TCP.name(),
+              CONF_PREFIX + "dataFormatConfig",
+              config.maxMessageSize,
+              issues
+          );
+          parserFactory = config.dataFormatConfig.getParserFactory();
 
-                ch.pipeline().addLast(
-                    // first, decode the ByteBuf into some POJO type extending MessageToRecord
-                    buildByteBufToMessageDecoderChain(issues).toArray(new ChannelHandler[0])
-                );
+          final int avroIpcPort = Integer.parseInt(config.ports.get(0));
+          final SpecificResponder avroIpcResponder = new SpecificResponder(
+              AvroSourceProtocol.class,
+              new SDCFlumeAvroIpcProtocolHandler(getContext(), parserFactory, pipelineIdsToFail::put)
+          );
 
-                ch.pipeline().addLast(
-                    // next, handle MessageToRecord instances to build SDC records and errors
-                    new TCPObjectToRecordHandler(
-                        getContext(),
-                        config.batchSize,
-                        config.maxWaitTime,
-                        pipelineIdsToFail::put,
-                        getContext().createELEval(RECORD_PROCESSED_EL_NAME),
-                        getContext().createELVars(),
-                        config.recordProcessedAckMessage,
-                        getContext().createELEval(BATCH_COMPLETED_EL_NAME),
-                        getContext().createELVars(),
-                        config.batchCompletedAckMessage,
-                        config.timeZoneID,
-                        Charset.forName(config.ackMessageCharset)
-                    )
-                );
-              }
-            }
-        );
-        if (issues.isEmpty()) {
-          try {
-            tcpServer.listen();
-            tcpServer.start();
-          } catch (Exception ex) {
-            tcpServer.destroy();
-            tcpServer = null;
+          // this uses Netty 3.x code to help avoid rewriting a lot in our own stage lib
+          // Netty 3.x and 4.x (which we use for the other modes) can coexist on the same classpath, so should be OK
+          avroIpcServer = new NettyServer(
+              avroIpcResponder,
+              new InetSocketAddress(config.bindAddress, avroIpcPort)
+          );
 
-            if (ex instanceof SocketException && privilegedPortUsage) {
-              issues.add(getContext().createConfigIssue(
-                  Groups.TCP.name(),
-                  portsField,
-                  Errors.TCP_04,
-                  config.ports,
-                  ex
-              ));
-            } else {
-              LOG.debug("Caught exception while starting up TCP server: {}", ex);
-              issues.add(getContext().createConfigIssue(
-                  null,
-                  null,
-                  Errors.TCP_00,
-                  addresses.toString(),
-                  ex.toString(),
-                  ex
-              ));
-            }
-          }
+          avroIpcServer.start();
+        } else {
+          createAndStartTCPServer(issues, portsField);
         }
       }
     }
     return issues;
+  }
+
+  private void createAndStartTCPServer(List<ConfigIssue> issues, String portsField) {
+    tcpServer = new TCPConsumingServer(
+        config.enableEpoll,
+        config.numThreads,
+        addresses,
+        new ChannelInitializer<SocketChannel>() {
+          @Override
+          public void initChannel(SocketChannel ch) throws Exception {
+            if (config.tlsConfigBean.isEnabled()) {
+              // Add TLS handler into pipeline in the first position
+              ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.getSslEngine()));
+            }
+
+            ch.pipeline().addLast(
+                // first, decode the ByteBuf into some POJO type extending MessageToRecord
+                buildByteBufToMessageDecoderChain(issues).toArray(new ChannelHandler[0])
+            );
+
+            ch.pipeline().addLast(
+                // next, handle MessageToRecord instances to build SDC records and errors
+                new TCPObjectToRecordHandler(
+                    getContext(),
+                    config.batchSize,
+                    config.maxWaitTime,
+                    pipelineIdsToFail::put,
+                    getContext().createELEval(RECORD_PROCESSED_EL_NAME),
+                    getContext().createELVars(),
+                    config.recordProcessedAckMessage,
+                    getContext().createELEval(BATCH_COMPLETED_EL_NAME),
+                    getContext().createELVars(),
+                    config.batchCompletedAckMessage,
+                    config.timeZoneID,
+                    Charset.forName(config.ackMessageCharset)
+                )
+            );
+          }
+        }
+    );
+    if (issues.isEmpty()) {
+      try {
+        tcpServer.listen();
+        tcpServer.start();
+      } catch (Exception ex) {
+        tcpServer.destroy();
+        tcpServer = null;
+
+        if (ex instanceof SocketException && privilegedPortUsage) {
+          issues.add(getContext().createConfigIssue(
+              Groups.TCP.name(),
+              portsField,
+              Errors.TCP_04,
+              config.ports,
+              ex
+          ));
+        } else {
+          LOG.debug("Caught exception while starting up TCP server: {}", ex);
+          issues.add(getContext().createConfigIssue(
+              null,
+              null,
+              Errors.TCP_00,
+              addresses.toString(),
+              ex.toString(),
+              ex
+          ));
+        }
+      }
+    }
   }
 
   private boolean validateEls(List<ConfigIssue> issues) {
@@ -341,6 +379,23 @@ public class TCPServerSource extends BasePushSource {
           );
         }
         break;
+      case FLUME_AVRO_IPC:
+        if (config.ports.size() != 1) {
+          issues.add(getContext().createConfigIssue(
+              Groups.TCP.name(),
+              CONF_PREFIX + "ports",
+              Errors.TCP_300
+          ));
+        }
+        config.dataFormatConfig.init(
+            getContext(),
+            config.dataFormat,
+            Groups.TCP.name(),
+            CONF_PREFIX + "dataFormatConfig",
+            config.maxMessageSize,
+            issues
+        );
+        break;
       default:
         issues.add(getContext().createConfigIssue(
             Groups.TCP.name(),
@@ -413,6 +468,8 @@ public class TCPServerSource extends BasePushSource {
         parserFactory = config.dataFormatConfig.getParserFactory();
         decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
         break;
+      case FLUME_AVRO_IPC:
+        throw new IllegalStateException("FLUME_AVRO_IPC should not be handled within here");
       default:
         issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.tcpMode", Errors.TCP_01, config.tcpMode));
         break;
@@ -468,7 +525,19 @@ public class TCPServerSource extends BasePushSource {
     if (tcpServer != null) {
       tcpServer.destroy();
     }
+    if (avroIpcServer != null) {
+      avroIpcServer.close();
+      try {
+        avroIpcServer.join();
+      } catch (InterruptedException e) {
+        LOG.warn("InterruptedException attempting to join avroIpcServer after calling stop", e);
+        Thread.currentThread().interrupt();
+      }
+    }
+
     tcpServer = null;
+    avroIpcServer = null;
+
     super.destroy();
   }
 

@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.net.NetTestUtils;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogMessage;
+import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.tls.TlsConfigErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
@@ -44,19 +45,28 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.apache.avro.ipc.NettyTransceiver;
+import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.commons.io.Charsets;
+import org.apache.flume.source.avro.AvroFlumeEvent;
+import org.apache.flume.source.avro.AvroSourceProtocol;
+import org.apache.flume.source.avro.Status;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.KeyPair;
 import java.security.cert.Certificate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -70,6 +80,8 @@ import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasKey;
+import static com.streamsets.testing.Matchers.fieldWithValue;
 
 public class TestTCPServerSource {
 
@@ -347,6 +359,61 @@ public class TestTCPServerSource {
       final StageException stageException = (StageException) runtimeException.getCause();
       assertThat(stageException.getErrorCode().getCode(), equalTo(Errors.TCP_06.getCode()));
     }
+  }
+
+  @Test
+  public void flumeAvroIpc() throws StageException, IOException, ExecutionException, InterruptedException {
+
+    final Charset charset = Charsets.UTF_8;
+    final TCPServerSourceConfig configBean = createConfigBean(charset);
+    configBean.tcpMode = TCPMode.FLUME_AVRO_IPC;
+    configBean.dataFormat = DataFormat.TEXT;
+    configBean.bindAddress = "0.0.0.0";
+
+    final int batchSize = 5;
+    final String outputLane = "output";
+
+    final TCPServerSource source = new TCPServerSource(configBean);
+    final PushSourceRunner runner = new PushSourceRunner.Builder(TCPServerDSource.class, source)
+        .addOutputLane(outputLane)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    runner.runInit();
+
+    runner.runProduce(Collections.emptyMap(), batchSize, out -> {
+      final Map<String, List<Record>> outputMap = out.getRecords();
+      assertThat(outputMap, hasKey(outputLane));
+      final List<Record> records = outputMap.get(outputLane);
+      assertThat(records, hasSize(batchSize));
+      for (int i = 0; i < batchSize; i++) {
+        assertThat(
+            records.get(i).get("/" + TextDataParserFactory.TEXT_FIELD_NAME),
+            fieldWithValue(getFlumeAvroIpcEventName(i))
+        );
+      }
+    });
+
+    final AvroSourceProtocol client = SpecificRequestor.getClient(AvroSourceProtocol.class, new NettyTransceiver(new InetSocketAddress("localhost", Integer.parseInt(configBean.ports.get(0)))));
+
+
+    List<AvroFlumeEvent> events = new LinkedList<>();
+    for (int i = 0; i < batchSize; i++) {
+      AvroFlumeEvent avroEvent = new AvroFlumeEvent();
+
+      avroEvent.setHeaders(new HashMap<CharSequence, CharSequence>());
+      avroEvent.setBody(ByteBuffer.wrap(getFlumeAvroIpcEventName(i).getBytes()));
+      events.add(avroEvent);
+    }
+
+    Status status = client.appendBatch(events);
+
+    assertThat(status, equalTo(Status.OK));
+
+  }
+
+  private static String getFlumeAvroIpcEventName(int index) {
+    return "Avro event " + index;
   }
 
   private void runAndCollectRecords(
