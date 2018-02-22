@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -103,7 +104,7 @@ public class PipelineConfigurationValidator {
 
   private boolean sortStages() {
     boolean ok = true;
-    List<StageConfiguration> original = new ArrayList<>(pipelineConfiguration.getStages());
+    List<StageConfiguration> original = new ArrayList<>(getStagesFromFragment(pipelineConfiguration));
     List<StageConfiguration> sorted = new ArrayList<>();
     Set<String> producedOutputs = new HashSet<>();
     while (ok && !original.isEmpty()) {
@@ -130,6 +131,16 @@ public class PipelineConfigurationValidator {
     sorted.addAll(original);
     pipelineConfiguration.setStages(sorted);
     return ok;
+  }
+
+  private List<StageConfiguration> getStagesFromFragment(PipelineFragmentConfiguration fragmentConfiguration) {
+    List<StageConfiguration> fragmentStages =
+        fragmentConfiguration.getFragments()
+            .stream()
+            .flatMap(fragment -> getStagesFromFragment(fragment).stream())
+            .collect(Collectors.toList());
+    fragmentStages.addAll(fragmentConfiguration.getStages());
+    return fragmentStages;
   }
 
   public PipelineConfiguration validate() {

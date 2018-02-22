@@ -406,4 +406,23 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0106.name(), issues.get(0).getErrorCode());
     Assert.assertEquals(ValidationError.VALIDATION_0106.name(), issues.get(1).getErrorCode());
   }
+
+  @Test
+  public void testFragmentUnrolled() {
+    doTestFragmentUnrolled(MockStages.createPipelineConfigSourceFragmentTarget());
+  }
+
+  @Test
+  public void testNestedFragmentUnrolled() {
+    doTestFragmentUnrolled(MockStages.createPipelineConfigSourceFragmentInsideFragmentTarget());
+  }
+
+  private void doTestFragmentUnrolled(PipelineConfiguration conf) {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate().getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.getOpenLanes().isEmpty());
+  }
 }

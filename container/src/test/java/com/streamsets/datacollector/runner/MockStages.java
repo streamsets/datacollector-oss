@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -1190,6 +1191,131 @@ public class MockStages {
     pipelineConfiguration.setMetadata(metadata);
     return pipelineConfiguration;
   }
+
+  public static PipelineConfiguration createPipelineConfigSourceFragmentTarget() {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+        .withOutputLanes("s")
+        .build();
+    stages.add(source);
+    StageConfiguration processor = new StageConfigurationBuilder("p", "processorName")
+        .withInputLanes("s")
+        .withOutputLanes("p1")
+        .build();
+    StageConfiguration processor2 = new StageConfigurationBuilder("p2", "processorName")
+        .withInputLanes("p1")
+        .withOutputLanes("p")
+        .build();
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+        .withInputLanes("p")
+        .build();
+    stages.add(target);
+    PipelineFragmentConfiguration fragment = new PipelineFragmentConfiguration(
+        UUID.randomUUID(),
+        1,
+        1,
+        "random_title",
+        "random_id",
+        "random_fragment_instance_id",
+        "weird description",
+        null,
+        Arrays.asList(processor, processor2),
+        Collections.emptyMap(),
+        Collections.emptyList()
+    );
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        createPipelineConfigs(),
+        null,
+        Collections.singletonList(fragment),
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
+  public static PipelineConfiguration createPipelineConfigSourceFragmentInsideFragmentTarget() {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+        .withOutputLanes("s")
+        .build();
+    stages.add(source);
+    StageConfiguration processor1 = new StageConfigurationBuilder("p1", "processorName")
+        .withInputLanes("p1")
+        .withOutputLanes("p2")
+        .build();
+    StageConfiguration processor2 = new StageConfigurationBuilder("p2", "processorName")
+        .withInputLanes("p2")
+        .withOutputLanes("p3")
+        .build();
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+        .withInputLanes("p3")
+        .build();
+    stages.add(target);
+    StageConfiguration processor3 = new StageConfigurationBuilder("p0", "processorName")
+        .withInputLanes("s")
+        .withOutputLanes("p1")
+        .build();
+    stages.add(processor3);
+    PipelineFragmentConfiguration nestedFragment = new PipelineFragmentConfiguration(
+        UUID.randomUUID(),
+        1,
+        1,
+        "random_title",
+        "random_id",
+        "random_fragment_instance_id",
+        "weird description",
+        null,
+        Collections.singletonList(processor2),
+        Collections.emptyMap(),
+        Collections.emptyList()
+    );
+    PipelineFragmentConfiguration fragment = new PipelineFragmentConfiguration(
+        UUID.randomUUID(),
+        1,
+        1,
+        "random_title",
+        "random_id",
+        "random_fragment_instance_id",
+        "weird description",
+        Collections.singletonList(nestedFragment),
+        Collections.singletonList(processor1),
+        Collections.emptyMap(),
+        Collections.emptyList()
+    );
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        createPipelineConfigs(),
+        null,
+        Collections.singletonList(fragment),
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
 
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsOpen() {
