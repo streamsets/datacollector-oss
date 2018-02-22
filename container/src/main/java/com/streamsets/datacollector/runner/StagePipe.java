@@ -158,7 +158,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
       }
 
-      if (getStage().getConfiguration().getOutputAndEventLanes().isEmpty()) {
+      if (!getStage().getConfiguration().getOutputAndEventLanes().isEmpty()) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
         for (String lane : getStage().getConfiguration().getOutputAndEventLanes()) {
@@ -276,7 +276,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     increaseStageErrorMetrics(stageErrorsCount);
 
     Map<String, Integer> outputRecordsPerLane = new HashMap<>();
-    if (getStage().getConfiguration().getOutputLanes().isEmpty()) {
+    if (!getStage().getConfiguration().getOutputLanes().isEmpty()) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         int outputRecords = batchMaker.getSize(lane);
         outputRecordsPerLane.put(lane, outputRecords);
@@ -285,7 +285,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       }
     }
 
-    if(getStage().getConfiguration().getEventLanes().isEmpty()) {
+    if(!getStage().getConfiguration().getEventLanes().isEmpty()) {
       String lane = getStage().getConfiguration().getEventLanes().get(0);
       int eventRecords = eventSink.getStageEvents(getStage().getInfo().getInstanceName()).size();
       outputRecordsPerLane.put(lane, eventRecords);
