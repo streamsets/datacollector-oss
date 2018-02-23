@@ -1132,26 +1132,26 @@ angular
       $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
         return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
           stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
-          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
       });
 
       $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
         return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
           stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
-          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
       });
 
       $scope.executors = _.filter($scope.stageLibraries, function (stageLibrary) {
         return (stageLibrary.type === pipelineConstant.EXECUTOR_STAGE_TYPE &&
           stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
-          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
       });
 
       $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
         return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
           !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&
           stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
-          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
       });
 
       //Initialize the pipeline config
