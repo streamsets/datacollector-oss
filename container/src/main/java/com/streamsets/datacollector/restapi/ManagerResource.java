@@ -188,14 +188,7 @@ public class ManagerResource {
 
       try {
         Runner runner = manager.getRunner(pipelineId, rev);
-
-        if (runtimeParameters != null && !runtimeParameters.isEmpty()) {
-          Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
-              Utils.format("Using runtime constants is not supported in {} mode", runner.getState().getExecutionMode()));
-          runner.start(user, runtimeParameters);
-        } else {
-          runner.start(user);
-        }
+        runner.start(user, runtimeParameters);
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
             .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
