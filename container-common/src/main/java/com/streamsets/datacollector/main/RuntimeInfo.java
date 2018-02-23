@@ -183,12 +183,13 @@ public abstract class RuntimeInfo {
 
   public void log(Logger log) {
     log.info("Runtime info:");
-    log.info("  Java version : {}", System.getProperty("java.runtime.version"));
-    log.info("  SDC ID       : {}", getId());
-    log.info("  Runtime dir  : {}", getRuntimeDir());
-    log.info("  Config dir   : {}", getConfigDir());
-    log.info("  Data dir     : {}", getDataDir());
-    log.info("  Log dir      : {}", getLogDir());
+    log.info("  Java version  : {}", System.getProperty("java.runtime.version"));
+    log.info("  SDC ID        : {}", getId());
+    log.info("  Runtime dir   : {}", getRuntimeDir());
+    log.info("  Config dir    : {}", getConfigDir());
+    log.info("  Data dir      : {}", getDataDir());
+    log.info("  Log dir       : {}", getLogDir());
+    log.info("  Extra Libs dir: {}", getLibsExtraDir());
   }
 
   public void setShutdownHandler(ShutdownHandler runnable) {
