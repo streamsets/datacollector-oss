@@ -28,6 +28,7 @@ public class ClusterModeConstants {
   public static final String CLUSTER_PIPELINE_REV = "cluster.pipeline.rev";
   public static final String CLUSTER_PIPELINE_USER = "cluster.pipeline.user";
   public static final String CLUSTER_PIPELINE_REMOTE = "cluster.pipeline.remote";
+  public static final String HADOOP_PROXY_USER = "HADOOP_PROXY_USER";
 
   public static final String SPARK_KAFKA_JAR_REGEX = "spark-streaming-kafka.*";
   public static final String AVRO_MAPRED_JAR_REGEX = "avro-mapred.*";
