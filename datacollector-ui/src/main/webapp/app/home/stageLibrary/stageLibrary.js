@@ -51,7 +51,8 @@ angular
           if (libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
             regex.test(stageLibrary.label) && !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage &&
             stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
-            stageLibrary.executionModes.indexOf($scope.executionMode) !== -1) {
+            ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1)
+          ) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
           }
