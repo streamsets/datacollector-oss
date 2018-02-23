@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -128,6 +128,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private UserGroupInformation userUgi;
   private long recordsProduced;
   private boolean hasHeader;
+  private String proxyUser;
 
   private final Set<String> visitedFiles;
 
@@ -559,12 +560,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     try {
       UserGroupInformation loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
       userUgi = HadoopSecurityUtil.getProxyUser(
-        conf.hdfsUser,
-        getContext(), loginUgi,
-        issues,
-        Groups.HADOOP_FS.name(),
-        CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
-      );
+            conf.hdfsUser,
+            getContext(),
+            loginUgi,
+            issues,
+            Groups.HADOOP_FS.name(),
+            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
+        );
+      if (userUgi != loginUgi) {
+        proxyUser = userUgi.getUserName();
+        LOG.debug("Proxy user submitting cluster batch job is {}", proxyUser);
+      }
       if (conf.hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -896,8 +902,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       // does not have variables expanded
       configsToShip.put(entry.getKey(), hadoopConf.get(entry.getKey()));
     }
+    if (proxyUser != null) {
+      configsToShip.put(ClusterModeConstants.HADOOP_PROXY_USER, proxyUser);
+    }
     return configsToShip;
   }
+
   @Override
   public void postDestroy() {
     countDownLatch.countDown();

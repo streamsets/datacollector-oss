@@ -371,6 +371,13 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
+  private void addProxyUserConfiguration(Map<String, String> environment, String user) {
+    if (user != null) {
+      LOG.info("Will submit MR job as user {}", user);
+      environment.put(ClusterModeConstants.HADOOP_PROXY_USER, user);
+    }
+  }
+
   static File createDirectoryClone(File srcDir, String dirName, File tempDir) throws IOException {
     File tempSrcDir = new File(tempDir, dirName);
     FileUtils.deleteQuietly(tempSrcDir);
@@ -841,6 +848,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         .orElse("");
     LOG.info("Slave Java Opts : {}", slaveJavaOpts);
     if (executionMode == ExecutionMode.CLUSTER_BATCH) {
+      addProxyUserConfiguration(environment, sourceInfo.get(ClusterModeConstants.HADOOP_PROXY_USER));
       LOG.info("Submitting MapReduce Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MAPREDUCE);
       args = generateMRArgs(

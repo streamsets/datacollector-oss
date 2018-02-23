@@ -34,6 +34,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -460,6 +461,8 @@ public class ClusterRunner extends AbstractRunner {
           }
         });
       }
+      UserContext runningUser = new UserContext(user);
+      PipelineEL.setConstantsInContext(pipelineConf, runningUser);
       doStart(user, pipelineConf, getClusterSourceInfo(user, name, rev, pipelineConf), getAcl(name), runtimeParameters);
     } catch (Exception e) {
       validateAndSetStateTransition(user, PipelineStatus.START_ERROR, e.toString(), getAttributes());
