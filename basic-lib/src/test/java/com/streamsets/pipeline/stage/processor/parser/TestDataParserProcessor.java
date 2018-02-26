@@ -154,4 +154,47 @@ public class TestDataParserProcessor {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testErrorHandling() throws Exception {
+    String inputFieldPath = "input";
+    String outputFieldPath = "output";
+
+    DataParserConfig configs = new DataParserConfig();
+    configs.fieldPathToParse = "/" + inputFieldPath;
+    configs.parsedFieldPath = "/" + outputFieldPath;
+    configs.multipleValuesBehavior = MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS;
+
+    DataParserProcessor processor = new DataParserProcessor(configs);
+
+    final String outputLane = "out";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(DataParserDProcessor.class, processor)
+        .addOutputLane(outputLane)
+        // TODO: figure out how to test CSV here instead, since JSON was never broken in this way
+        .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    List<Record> input = new ArrayList<>();
+
+    Map<String, Field> map = new HashMap<>();
+    map.put(inputFieldPath, Field.create("{\"foo\": bar}"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    input.add(record);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(input);
+      assertTrue(output.getRecords().containsKey(outputLane));
+      final List<Record> records = output.getRecords().get(outputLane);
+      assertThat(records, hasSize(0));
+      final List<Record> errors = runner.getErrorRecords();
+      assertThat(errors, notNullValue());
+      assertThat(errors, hasSize(1));
+      Record errorRecord = errors.get(0);
+      assertThat(errorRecord.getHeader().getErrorCode(), equalTo(Errors.DATAPARSER_01.name()));
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }

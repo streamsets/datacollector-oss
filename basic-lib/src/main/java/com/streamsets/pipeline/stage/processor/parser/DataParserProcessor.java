@@ -22,15 +22,13 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.api.service.dataformats.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
+import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -95,6 +93,7 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
             break;
           default:
             throw new OnRecordErrorException(
+                record,
                 Errors.DATAPARSER_02,
                 configs.fieldPathToParse,
                 field.getType().name()
@@ -139,8 +138,9 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
             });
             break;
         }
-      } catch (IOException ex) {
+      } catch (DataParserException | IOException ex) {
         throw new OnRecordErrorException(
+            record,
             Errors.DATAPARSER_01,
             configs.fieldPathToParse,
             record.getHeader().getSourceId(),
