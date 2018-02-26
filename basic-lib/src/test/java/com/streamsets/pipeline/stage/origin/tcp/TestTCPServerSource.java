@@ -146,7 +146,7 @@ public class TestTCPServerSource {
     initSourceAndValidateIssues(configBean, Errors.TCP_03);
 
     // start TLS config tests
-    configBean.ports = Arrays.asList("9876");
+    configBean.ports = randomSinglePort();
     configBean.tlsConfigBean.tlsEnabled = true;
     configBean.tlsConfigBean.keyStoreFilePath = "non-existent-file-path";
     initSourceAndValidateIssues(configBean, TlsConfigErrors.TLS_01);
@@ -392,10 +392,10 @@ public class TestTCPServerSource {
             fieldWithValue(getFlumeAvroIpcEventName(i))
         );
       }
+      runner.setStop();
     });
 
     final AvroSourceProtocol client = SpecificRequestor.getClient(AvroSourceProtocol.class, new NettyTransceiver(new InetSocketAddress("localhost", Integer.parseInt(configBean.ports.get(0)))));
-
 
     List<AvroFlumeEvent> events = new LinkedList<>();
     for (int i = 0; i < batchSize; i++) {
@@ -410,6 +410,7 @@ public class TestTCPServerSource {
 
     assertThat(status, equalTo(Status.OK));
 
+    runner.waitOnProduce();
   }
 
   private static String getFlumeAvroIpcEventName(int index) {
@@ -555,8 +556,12 @@ public class TestTCPServerSource {
     config.syslogFramingMode= SyslogFramingMode.NON_TRANSPARENT_FRAMING;
     config.nonTransparentFramingSeparatorCharStr = "\n";
     config.maxMessageSize = 4096;
-    config.ports = Arrays.asList("9876");
+    config.ports = randomSinglePort();
     config.maxWaitTime = 1000;
     return config;
+  }
+
+  private static List<String> randomSinglePort() {
+    return Arrays.asList(String.valueOf(NetworkUtils.getRandomPort()));
   }
 }
