@@ -405,9 +405,14 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       try {
         switch (fieldType) {
           case LIST:
-            List<Object> unpackedList = unpackList((List<Field>) value);
-            Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-            statement.setArray(paramIdx, array);
+            List<Field> fieldList = field.getValueAsList();
+            if (fieldList.size() > 0) {
+              Field.Type elementFieldType = fieldList.get(0).getType();
+              Array array = connection.createArrayOf(getSQLTypeName(elementFieldType), unpackList(fieldList).toArray());
+              statement.setArray(paramIdx, array);
+            } else {
+              statement.setArray(paramIdx, null);
+            }
             break;
           case DATE:
           case TIME:

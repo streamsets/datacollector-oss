@@ -38,6 +38,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -115,6 +116,9 @@ public class TestJdbcTarget {
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.ARRAY_TABLE (P_ID INT NOT NULL, A1 ARRAY, A2 ARRAY, PRIMARY KEY(P_ID)) "
+      );
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
 
@@ -131,6 +135,7 @@ public class TestJdbcTarget {
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
       statement.execute("DROP TABLE IF EXISTS TEST.DATETIMES;");
+      statement.execute("DROP TABLE IF EXISTS TEST.ARRAY_TABLE;");
       statement.execute("DROP TABLE IF EXISTS \"TEST\".\"test_table@\";");
     }
 
@@ -831,6 +836,76 @@ public class TestJdbcTarget {
       assertEquals(new SimpleDateFormat("HH:mm:ss").format(d), rs.getTime(2).toString());
       assertEquals(new SimpleDateFormat("YYY-MM-dd").format(d), rs.getDate(3).toString());
       assertEquals(d, rs.getTimestamp(4));
+      assertFalse(rs.next());
+    }
+  }
+
+  @Test
+  public void testArrays() throws Exception {
+    String[] strings = {"abc", "def", "ghi"};
+    int[] ints = {1, 2, 3};
+
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "A1"),
+        new JdbcFieldColumnParamMapping("[2]", "A2")
+    );
+
+    Target target = new JdbcTarget(
+        schema,
+        "ARRAY_TABLE",
+        fieldMappings,
+        caseSensitive,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(1));
+
+    List<Field> stringFieldList = new ArrayList<>();
+    for (int i = 0; i < strings.length; i++) {
+      stringFieldList.add(Field.create(strings[i]));
+    }
+    fields1.add(Field.create(stringFieldList));
+
+    List<Field> intFieldList = new ArrayList<>();
+    for (int i = 0; i < ints.length; i++) {
+      intFieldList.add(Field.create(ints[i]));
+    }
+    fields1.add(Field.create(intFieldList));
+
+    record1.set(Field.create(fields1));
+
+    List<Record> records = ImmutableList.of(record1);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.ARRAY_TABLE WHERE P_ID = 1");
+      assertTrue(rs.next());
+
+      Object[] stringArray = (Object[])rs.getArray(2).getArray();
+      assertEquals(strings.length, stringArray.length);
+      for (int i = 0; i < strings.length; i++) {
+        assertEquals(strings[i], stringArray[i]);
+      }
+
+      Object[] intArray = (Object[])rs.getArray(3).getArray();
+      assertEquals(ints.length, intArray.length);
+      for (int i = 0; i < ints.length; i++) {
+        assertEquals(ints[i], intArray[i]);
+      }
+
       assertFalse(rs.next());
     }
   }
