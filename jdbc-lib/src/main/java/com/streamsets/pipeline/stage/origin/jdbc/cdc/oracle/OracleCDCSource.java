@@ -497,7 +497,8 @@ public class OracleCDCSource extends BaseSource {
             }
             Offset offset = null;
             if (LOG.isDebugEnabled()) {
-              LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Redo SQL = {}", commitSCN, scn, op, queryString);
+              LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Txn Id = {}, Timestamp = {}, Redo SQL = {}",
+                  commitSCN, scn, op, xid, tsDate, queryString);
             }
 
             RuleContextAndOpCode ctxOp = null;
@@ -561,7 +562,7 @@ public class OracleCDCSource extends BaseSource {
                 useLocalBuffering &&
                 (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
               // so this commit was previously processed or it is a rollback, so don't care.
-              if (op == ROLLBACK_CODE || scnDecimal.compareTo(lastCommitSCN) <= 0) {
+              if (op == ROLLBACK_CODE || scnDecimal.compareTo(lastCommitSCN) < 0) {
                 bufferedRecordsLock.lock();
                 try {
                   bufferedRecords.remove(key);
@@ -571,8 +572,11 @@ public class OracleCDCSource extends BaseSource {
               } else {
                 bufferedRecordsLock.lock();
                 try {
-                  lastCommitSCN = scnDecimal;
-                  int bufferedRecordsToBeRemoved = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET).size();
+                  HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+                  if (lastCommitSCN.equals(scnDecimal)) {
+                    removeProcessedRecords(records, sequenceNumber);
+                  }
+                  int bufferedRecordsToBeRemoved = records.size();
                   LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved);
                   addRecordsToQueue(tsDate, scn, xid);
                 } finally {
@@ -655,6 +659,13 @@ public class OracleCDCSource extends BaseSource {
           stageExceptions.add(ex);
         }
       }
+    }
+  }
+
+  private void removeProcessedRecords(HashQueue<RecordSequence> records, int sequenceNumber) {
+    Iterator<RecordSequence> recordSequenceIterator = records.iterator();
+    while (recordSequenceIterator.hasNext() && recordSequenceIterator.next().seq <= sequenceNumber) {
+      recordSequenceIterator.remove();
     }
   }
 
