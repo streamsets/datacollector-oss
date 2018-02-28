@@ -1083,11 +1083,11 @@ public class PipelineStoreResource {
     }
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfig, Collections.emptyList(), null);
+        .create(pipelineConfig, new ArrayList<>(), null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         name,
         ruleDefinitions,
-        pipelineConfigBean.constants
+        pipelineConfigBean != null ? pipelineConfigBean.constants : null
     );
     ruleDefinitionValidator.validateRuleDefinition();
 
