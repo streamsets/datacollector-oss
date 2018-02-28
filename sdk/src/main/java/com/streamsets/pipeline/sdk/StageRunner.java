@@ -27,6 +27,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -300,8 +301,8 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
     context.getErrorSink().clear();
   }
 
-  public List<Record> getEventRecords() {
-    return context.getEventSink().getStageEvents(info.getInstanceName());
+  public List<EventRecord> getEventRecords() {
+    return context.getEventSink().getStageEventsAsEventRecords(info.getInstanceName());
   }
 
   public void clearEvents() {

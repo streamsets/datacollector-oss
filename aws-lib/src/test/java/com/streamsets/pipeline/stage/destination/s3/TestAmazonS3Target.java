@@ -24,6 +24,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -124,7 +125,7 @@ public class TestAmazonS3Target {
 
     TestUtil.assertStringRecords(s3client, BUCKET_NAME, prefix);
 
-    List<Record> events = targetRunner.getEventRecords();
+    List<EventRecord> events = targetRunner.getEventRecords();
     Assert.assertNotNull(events);
     Assert.assertEquals(1, events.size());
     Assert.assertEquals(9, events.get(0).get("/recordCount").getValueAsLong());

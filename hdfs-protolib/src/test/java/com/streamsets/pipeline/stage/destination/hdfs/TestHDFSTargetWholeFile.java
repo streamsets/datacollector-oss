@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -484,7 +485,7 @@ public class TestHDFSTargetWholeFile {
       //One whole file event
       Assert.assertEquals(1, runner.getEventRecords().size());
 
-      Iterator<Record> eventRecordIterator = runner.getEventRecords().iterator();
+      Iterator<EventRecord> eventRecordIterator = runner.getEventRecords().iterator();
 
       while (eventRecordIterator.hasNext()) {
         Record eventRecord = eventRecordIterator.next();

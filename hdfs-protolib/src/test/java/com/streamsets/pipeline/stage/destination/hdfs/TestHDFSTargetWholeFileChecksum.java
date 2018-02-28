@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
@@ -117,7 +118,7 @@ public class TestHDFSTargetWholeFileChecksum {
       //One whole file event
       Assert.assertEquals(1, runner.getEventRecords().size());
 
-      Iterator<Record> eventRecordIterator = runner.getEventRecords().iterator();
+      Iterator<EventRecord> eventRecordIterator = runner.getEventRecords().iterator();
       while (eventRecordIterator.hasNext()) {
         Record eventRecord = eventRecordIterator.next();
         String type = eventRecord.getHeader().getAttribute("sdc.event.type");

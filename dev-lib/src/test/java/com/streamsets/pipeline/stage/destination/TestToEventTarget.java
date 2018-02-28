@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -39,7 +40,7 @@ public class TestToEventTarget {
 
       runner.runWrite(ImmutableList.of(record));
 
-      List<Record> events = runner.getEventRecords();
+      List<EventRecord> events = runner.getEventRecords();
       Assert.assertNotNull(events);
       Assert.assertEquals(1, events.size());
       Assert.assertEquals(Field.Type.STRING, events.get(0).get().getType());

@@ -189,7 +189,7 @@ public class HdfsMetadataExecutorIT {
   /**
    * Assert proper event for the changed file.
    */
-  private void assertEvent(String eventType, List<Record> events, Path expectedPath) {
+  private void assertEvent(String eventType, List<EventRecord> events, Path expectedPath) {
     assertNotNull(events);
     Assert.assertEquals(1, events.size());
 

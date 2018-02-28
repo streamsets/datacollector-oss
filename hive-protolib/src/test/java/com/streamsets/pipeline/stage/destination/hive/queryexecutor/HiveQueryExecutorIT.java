@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -75,7 +76,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
           ImmutablePair.of("copy.name", Types.VARCHAR)
       );
 
-      List<Record> events = runner.getEventRecords();
+      List<EventRecord> events = runner.getEventRecords();
       assertNotNull(events);
       assertEquals(1, events.size());
       checkSuccessfulEvent(events.get(0), "CREATE TABLE copy AS SELECT * FROM origin");
@@ -110,7 +111,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
           ImmutablePair.of("el.name", Types.VARCHAR)
       );
 
-      List<Record> events = runner.getEventRecords();
+      List<EventRecord> events = runner.getEventRecords();
       assertNotNull(events);
       assertEquals(1, events.size());
       checkSuccessfulEvent(events.get(0), "CREATE TABLE el AS SELECT * FROM origin");
@@ -142,7 +143,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
       String errorMessageFormat = ".* Failed to execute queries. Details : Failed to execute query 'INVALID'. Reason: org.apache.hive.service.cli.HiveSQLException: Error while compiling statement: FAILED: .* cannot recognize input near .*";
       assertTrue("Error message '" + errorMessage + "' doesn't conform to regexp: " + errorMessageFormat, errorMessage.matches(errorMessageFormat));
 
-      List<Record> events = runner.getEventRecords();
+      List<EventRecord> events = runner.getEventRecords();
       assertNotNull(events);
       assertEquals(1, events.size());
       checkFailureEvent(events.get(0), ImmutablePair.of("INVALID", Collections.<String>emptyList()));
@@ -229,7 +230,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
         ImmutablePair.of("multiplequeriessuccess.new_column2", Types.VARCHAR)
     );
 
-    List<Record> events = runner.getEventRecords();
+    List<EventRecord> events = runner.getEventRecords();
     assertNotNull(events);
     assertEquals(4, events.size());
     checkSuccessfulEvent(events.get(0), "DROP VIEW IF EXISTS multiplequeriessuccess");
@@ -257,7 +258,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
       assertEquals(1, runner.getErrorRecords().size());
       assertNotNull(runner.getEventRecords());
 
-      List<Record> eventRecords = runner.getEventRecords();
+      List<EventRecord> eventRecords = runner.getEventRecords();
       if (stopOnFailure) {
         assertEquals(2, eventRecords.size());
         checkSuccessfulEvent(eventRecords.get(0), "select 1");

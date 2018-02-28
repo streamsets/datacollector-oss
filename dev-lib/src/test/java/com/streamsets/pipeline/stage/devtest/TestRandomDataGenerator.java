@@ -170,7 +170,7 @@ public class TestRandomDataGenerator {
       runner.runProduce(Collections.<String, String>emptyMap(), 1000, output -> runner.setStop());
       runner.waitOnProduce();
 
-      List<Record> records = runner.getEventRecords();
+      List<EventRecord> records = runner.getEventRecords();
       Assert.assertTrue(records.size() > 1);
       for(long i = 0; i < records.size(); i++) {
         Record r = records.get((int)i);

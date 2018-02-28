@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.event.CommonEvents;
@@ -229,7 +230,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
           tablesYetToBeCompletelyRead.remove(tableName);
         }
       }
-      List<Record> eventRecords = pushSourceRunner.getEventRecords();
+      List<EventRecord> eventRecords = pushSourceRunner.getEventRecords();
       if (tablesYetToBeCompletelyRead.isEmpty() && !eventRecords.isEmpty()) {
         pushSourceRunner.setStop();
       }

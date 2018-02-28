@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkDExecutor;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutor;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -152,7 +153,7 @@ public class TestSparkExecutor extends BaseSparkExecutorTest {
     runner.runWrite(ImmutableList.of(RecordCreator.create()));
     verifyMethodCalls();
     verifyAppArgs();
-    List<Record> events = runner.getEventRecords();
+    List<EventRecord> events = runner.getEventRecords();
     runner.runDestroy();
     Assert.assertEquals(1, events.size());
     Assert.assertEquals(events.get(0).get("/app-id").getValueAsString(), "One Ring to Rule Them All");

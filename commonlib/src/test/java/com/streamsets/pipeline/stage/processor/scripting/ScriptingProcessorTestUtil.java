@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
@@ -481,7 +482,7 @@ public class ScriptingProcessorTestUtil {
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
 
-      List<Record> events = runner.getEventRecords();
+      List<EventRecord> events = runner.getEventRecords();
       Assert.assertNotNull(events);
       assertEquals(1, events.size());
 
@@ -888,7 +889,7 @@ public class ScriptingProcessorTestUtil {
     assertEquals("init", records.get(0).get("/initValue").getValueAsString());
 
     // Validate destroy method by getting event that is generated only there
-    List<Record> events = runner.getEventRecords();
+    List<EventRecord> events = runner.getEventRecords();
     assertEquals(1, events.size());
   }
 

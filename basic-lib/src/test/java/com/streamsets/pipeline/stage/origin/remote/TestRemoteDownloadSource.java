@@ -19,6 +19,7 @@ import com.github.fommil.ssh.SshRsaCrypto;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -1526,7 +1527,7 @@ public class TestRemoteDownloadSource {
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
       Assert.assertEquals(2, runner.getEventRecords().size());
-      List<Record> eventRecords = runner.getEventRecords();
+      List<EventRecord> eventRecords = runner.getEventRecords();
       Record newFileEvent = eventRecords.get(0);
       Record finishedFileEvent = eventRecords.get(1);
 
