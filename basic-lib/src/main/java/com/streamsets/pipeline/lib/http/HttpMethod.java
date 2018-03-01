@@ -28,6 +28,7 @@ public enum HttpMethod implements Label {
   POST("POST"),
   DELETE("DELETE"),
   HEAD("HEAD"),
+  PATCH("PATCH"),
   EXPRESSION("Expression...")
   ;
 

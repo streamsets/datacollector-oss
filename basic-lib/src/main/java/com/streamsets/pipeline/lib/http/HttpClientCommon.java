@@ -27,6 +27,7 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.filter.EncodingFilter;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
@@ -227,6 +228,7 @@ public class HttpClientCommon {
       throw new IllegalArgumentException("issues list must be non-null if not throwing exceptions");
     }
     client = clientBuilder.build();
+    client.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
     if (jerseyClientConfig.useOAuth2) {
       try {
         if (clientInitialized) {

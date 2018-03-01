@@ -105,7 +105,7 @@ public class HttpClientTarget extends BaseTarget {
         Invocation.Builder builder = getBuilder(firstRecord);
         HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, firstRecord);
 
-        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+        if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH) {
           StreamingOutput streamingOutput = outputStream -> {
             try (DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream)) {
               Iterator<Record> records = batch.getRecords();
