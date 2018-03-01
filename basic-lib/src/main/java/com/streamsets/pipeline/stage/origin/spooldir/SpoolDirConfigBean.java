@@ -164,9 +164,9 @@ public class SpoolDirConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Max Files in Directory",
-      description = "Max number of files in the directory waiting to be processed. Additional files cause the " +
-          "pipeline to fail.",
+      label = "Max Files Soft Limit",
+      description = "Maximum number of files added to the processing queue at one time. " +
+          "This is a soft limit and can be temporarily exceeded.",
       displayPosition = 60,
       group = "FILES",
       min = 1,
