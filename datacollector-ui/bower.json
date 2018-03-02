@@ -16,7 +16,7 @@
     "angular-translate-storage-cookie": "2.15.2",
     "angular-dynamic-locale": "0.1.21",
     "angular-bootstrap": "0.13.0",
-    "angular-bootstrap-datetimepicker": "latest",
+    "angular-bootstrap-datetimepicker": "1.1.4",
     "underscore": "1.8.3",
     "fontawesome": "~4.2.0",
     "angular-moment": "0.10.2",
