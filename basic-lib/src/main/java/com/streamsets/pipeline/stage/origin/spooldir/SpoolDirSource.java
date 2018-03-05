@@ -16,15 +16,14 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnableBuilder;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnableBuilder;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirUtil;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +43,8 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
+
+import static com.streamsets.pipeline.stage.origin.spooldir.Errors.SPOOLDIR_35;
 
 public class SpoolDirSource extends BasePushSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
@@ -396,29 +396,25 @@ public class SpoolDirSource extends BasePushSource {
 
       ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
-      List<Future> allFutures = new LinkedList<>();
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
         SpoolDirRunnable runnable = getSpoolDirRunnable(threadNumber, batchSize, newSourceOffset);
-        allFutures.add(completionService.submit(runnable, null));
+        completionService.submit(runnable, null);
       });
 
-      while (!getContext().isStopped()) {
-        checkWorkerStatus(completionService);
-      }
-
-      for (Future future : allFutures) {
+      for (int i = 0; i < getNumberOfThreads(); i++) {
         try {
-          future.get();
+          completionService.take().get();
         } catch (ExecutionException e) {
           LOG.error(
-              "ExecutionException when attempting to wait for all table JDBC runnables to complete, after context was" +
+              "ExecutionException when attempting to wait for all runnables to complete, after context was" +
                   " stopped: {}",
               e.getMessage(),
               e
           );
+          throw new StageException(SPOOLDIR_35, e);
         } catch (InterruptedException e) {
           LOG.error(
-              "InterruptedException when attempting to wait for all table JDBC runnables to complete, after context " +
+              "InterruptedException when attempting to wait for all runnables to complete, after context " +
                   "was stopped: {}",
               e.getMessage(),
               e
@@ -438,31 +434,6 @@ public class SpoolDirSource extends BasePushSource {
         executor.shutdown();
       }
     });
-  }
-
-  /**
-   * Checks whether any of the {@link SpoolDirRunnable} workers completed
-   * and whether there is any error that needs to be handled from them.
-   * @param completionService {@link ExecutorCompletionService} used to detect completion
-   * @throws StageException if {@link StageException} is thrown by the workers (if the error handling is stop pipeline)
-   */
-  private void checkWorkerStatus(ExecutorCompletionService<Future> completionService) throws StageException {
-    Future future = completionService.poll();
-    if (future != null) {
-      try {
-        future.get();
-      } catch (InterruptedException e) {
-        LOG.error("Thread interrupted", e);
-      } catch (ExecutionException e) {
-        Throwable cause = Throwables.getRootCause(e);
-        if (cause != null && cause instanceof StageException) {
-          throw (StageException) cause;
-        } else {
-          LOG.error("Internal Error. {}", e);
-          throw new StageException(Errors.SPOOLDIR_35, e.toString(), e);
-        }
-      }
-    }
   }
 
   @VisibleForTesting
