@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -411,7 +412,11 @@ public class SpoolDirSource extends BasePushSource {
               e.getMessage(),
               e
           );
-          throw new StageException(SPOOLDIR_35, e);
+          final Throwable rootCause = Throwables.getRootCause(e);
+          if (rootCause instanceof StageException) {
+            throw (StageException) rootCause;
+          }
+          throw new StageException(SPOOLDIR_35, rootCause);
         } catch (InterruptedException e) {
           LOG.error(
               "InterruptedException when attempting to wait for all runnables to complete, after context " +

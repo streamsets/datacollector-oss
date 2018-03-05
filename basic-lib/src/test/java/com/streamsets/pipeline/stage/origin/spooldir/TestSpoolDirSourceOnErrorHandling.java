@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestSpoolDirSourceOnErrorHandling {
@@ -183,7 +183,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     }
   }
 
-  @Test(expected = StageException.class)
+  @Test(expected = ExecutionException.class)
   public void testOnErrorLenPipelineMaxObjectLen() throws Exception {
     SpoolDirSource source = createSource();
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
