@@ -301,7 +301,6 @@ public class OracleCDCSource extends BaseSource {
       try {
         if (!generationStarted) {
           startGeneratorThread(lastSourceOffset);
-          generationStarted = true;
         }
       } catch (StageException ex) {
         LOG.error("Error while attempting to produce records", ex);
@@ -348,44 +347,49 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void startGeneratorThread(String lastSourceOffset) throws StageException, SQLException {
-    resetDBConnectionsIfRequired();
-    Offset offset;
+    Offset offset = null;
     LocalDateTime startTimestamp;
-    startLogMnrForRedoDict();
-    if (!StringUtils.isEmpty(lastSourceOffset)) {
-      offset = new Offset(lastSourceOffset);
-      if (lastSourceOffset.startsWith("v3")) {
-        if (!useLocalBuffering) {
-          throw new StageException(JDBC_82);
-        }
-        startTimestamp = offset.timestamp.minusSeconds(configBean.txnWindow);
-      } else {
-        if (useLocalBuffering) {
-          throw new StageException(JDBC_83);
-        }
-        startTimestamp = getDateForSCN(new BigDecimal(offset.scn));
-        offset.timestamp = startTimestamp;
-      }
-      adjustStartTimeAndStartLogMnr(startTimestamp);
-    } else { // reset the start date only if it not set.
-      if (configBean.startValue != StartValues.SCN) {
-        LocalDateTime startDate;
-        if (configBean.startValue == StartValues.DATE) {
-          startDate = LocalDateTime.parse(configBean.startDate, DT_FORMATTER);
+    try {
+      startLogMnrForRedoDict();
+      if (!StringUtils.isEmpty(lastSourceOffset)) {
+        offset = new Offset(lastSourceOffset);
+        if (lastSourceOffset.startsWith("v3")) {
+          if (!useLocalBuffering) {
+            throw new StageException(JDBC_82);
+          }
+          startTimestamp = offset.timestamp.minusSeconds(configBean.txnWindow);
         } else {
-          startDate = nowAtDBTz();
+          if (useLocalBuffering) {
+            throw new StageException(JDBC_83);
+          }
+          startTimestamp = getDateForSCN(new BigDecimal(offset.scn));
+          offset.timestamp = startTimestamp;
         }
-        startDate = adjustStartTimeAndStartLogMnr(startDate);
-        offset = new Offset(version, startDate, ZERO, 0);
-      } else {
-        BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
-        startLogMnrSCNToDate.setBigDecimal(1, startCommitSCN);
-        final LocalDateTime start = getDateForSCN(startCommitSCN);
-        LocalDateTime endTime = getEndTimeForStartTime(start);
-        startLogMnrSCNToDate.setString(2, endTime.format(DT_FORMATTER));
-        startLogMnrSCNToDate.execute();
-        offset = new Offset(version, start, startCommitSCN.toPlainString(), 0);
+        adjustStartTimeAndStartLogMnr(startTimestamp);
+      } else { // reset the start date only if it not set.
+        if (configBean.startValue != StartValues.SCN) {
+          LocalDateTime startDate;
+          if (configBean.startValue == StartValues.DATE) {
+            startDate = LocalDateTime.parse(configBean.startDate, DT_FORMATTER);
+          } else {
+            startDate = nowAtDBTz();
+          }
+          startDate = adjustStartTimeAndStartLogMnr(startDate);
+          offset = new Offset(version, startDate, ZERO, 0);
+        } else {
+          BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
+          startLogMnrSCNToDate.setBigDecimal(1, startCommitSCN);
+          final LocalDateTime start = getDateForSCN(startCommitSCN);
+          LocalDateTime endTime = getEndTimeForStartTime(start);
+          startLogMnrSCNToDate.setString(2, endTime.format(DT_FORMATTER));
+          startLogMnrSCNToDate.execute();
+          offset = new Offset(version, start, startCommitSCN.toPlainString(), 0);
+        }
       }
+    } catch (SQLException ex) {
+      LOG.error("SQLException while trying to setup record generator thread", ex);
+      generationStarted = false;
+      return;
     }
     final Offset os = offset;
     final PreparedStatement select = selectFromLogMnrContents;
@@ -446,6 +450,7 @@ public class OracleCDCSource extends BaseSource {
     ResultSet resultSet = null;
     while (!getContext().isStopped()) {
       error = false;
+      generationStarted = true;
       try {
         selectChanges = getSelectChangesStatement();
         if (!useLocalBuffering) {
@@ -618,6 +623,13 @@ public class OracleCDCSource extends BaseSource {
         } else {
           LOG.error("Error while reading data", ex);
           stageExceptions.add(new StageException(JDBC_52, ex));
+        }
+        try {
+          resetDBConnectionsIfRequired();
+        } catch (SQLException sqlEx) {
+          throw new RuntimeException("Connection reset failed", ex);
+        } catch (StageException stageException) {
+          stageExceptions.add(stageException);
         }
       } catch (StageException e) {
         LOG.error("Error while reading data", e);
@@ -911,6 +923,7 @@ public class OracleCDCSource extends BaseSource {
   private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException, StageException {
     try {
       startLogMnrForRedoDict();
+      resetDBConnectionsIfRequired();
       LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
       startLogMnrForData.setString(1, startDate);
       startLogMnrForData.setString(2, endDate);
@@ -1227,6 +1240,7 @@ public class OracleCDCSource extends BaseSource {
     if (configBean.dictionary != DictionaryValues.DICT_FROM_REDO_LOGS) {
       return;
     }
+    resetDBConnectionsIfRequired();
     BigDecimal endSCN = getEndingSCN();
 
     SQLException lastException = null;
