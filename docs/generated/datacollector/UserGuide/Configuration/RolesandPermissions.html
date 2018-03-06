@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration">Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -76,9 +91,9 @@
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="25%" id="d55251e100">Role</th>
+      <th class="entry" valign="top" width="25%" id="d56400e100">Role</th>
 
-      <th class="entry" valign="top" width="75%" id="d55251e103">Tasks</th>
+      <th class="entry" valign="top" width="75%" id="d56400e103">Tasks</th>
 
      </tr>
 
@@ -86,34 +101,34 @@
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="25%" headers="d55251e100 ">admin</td>
+      <td class="entry" valign="top" width="25%" headers="d56400e100 ">admin</td>
 
-      <td class="entry" id="concept_zyl_qld_yy__d5129e3730" valign="top" width="75%" headers="d55251e103 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
+      <td class="entry" id="concept_zyl_qld_yy__d5262e3752" valign="top" width="75%" headers="d56400e103 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
        below, as well as start and stop <span class="ph">Data Collector</span>, view <span class="ph">Data Collector</span> configuration, <span class="ph">Data Collector</span> metrics, and log information.
        Install libraries using the Package Manager. Generate support bundles.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="25%" headers="d55251e100 ">manager</td>
+      <td class="entry" valign="top" width="25%" headers="d56400e100 ">manager</td>
 
-      <td class="entry" id="concept_zyl_qld_yy__d5129e3747" valign="top" width="75%" headers="d55251e103 ">Start and stop pipelines, monitor pipelines, configure and reset
+      <td class="entry" id="concept_zyl_qld_yy__d5262e3769" valign="top" width="75%" headers="d56400e103 ">Start and stop pipelines, monitor pipelines, configure and reset
        alerts. Take, review, and manage snapshots. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="25%" headers="d55251e100 ">creator</td>
+      <td class="entry" valign="top" width="25%" headers="d56400e100 ">creator</td>
 
-      <td class="entry" id="concept_zyl_qld_yy__d5129e3756" valign="top" width="75%" headers="d55251e103 ">Create and configure pipelines and alerts, preview data, and
+      <td class="entry" id="concept_zyl_qld_yy__d5262e3778" valign="top" width="75%" headers="d56400e103 ">Create and configure pipelines and alerts, preview data, and
        monitor the pipeline. Import pipelines.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="25%" headers="d55251e100 ">guest</td>
+      <td class="entry" valign="top" width="25%" headers="d56400e100 ">guest</td>
 
-      <td class="entry" id="concept_zyl_qld_yy__d5129e3765" valign="top" width="75%" headers="d55251e103 ">View pipelines and alerts, and general monitoring information.
+      <td class="entry" id="concept_zyl_qld_yy__d5262e3787" valign="top" width="75%" headers="d56400e103 ">View pipelines and alerts, and general monitoring information.
        Export a pipeline. </td>
 
      </tr>
@@ -171,9 +186,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d55251e221">Permission</th>
+       <th class="entry" valign="top" width="30%" id="d56400e221">Permission</th>
 
-       <th class="entry" valign="top" width="70%" id="d55251e224">Description</th>
+       <th class="entry" valign="top" width="70%" id="d56400e224">Description</th>
 
       </tr>
 
@@ -181,23 +196,23 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d55251e221 ">Read</td>
+       <td class="entry" valign="top" width="30%" headers="d56400e221 ">Read</td>
 
-       <td class="entry" valign="top" width="70%" headers="d55251e224 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="30%" headers="d55251e221 ">Write</td>
-
-       <td class="entry" valign="top" width="70%" headers="d55251e224 ">Edit the pipeline and alerts.</td>
+       <td class="entry" valign="top" width="70%" headers="d56400e224 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d55251e221 ">Execute</td>
+       <td class="entry" valign="top" width="30%" headers="d56400e221 ">Write</td>
 
-       <td class="entry" valign="top" width="70%" headers="d55251e224 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
+       <td class="entry" valign="top" width="70%" headers="d56400e224 ">Edit the pipeline and alerts.</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d56400e221 ">Execute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d56400e224 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
         snapshot</span>.</td>
 
       </tr>
@@ -233,11 +248,11 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d55251e317">Task</th>
+                            <th class="entry" valign="top" width="40%" id="d56400e317">Task</th>
 
-                            <th class="entry" valign="top" width="20%" id="d55251e320">Role </th>
+                            <th class="entry" valign="top" width="20%" id="d56400e320">Role </th>
 
-                            <th class="entry" valign="top" width="40%" id="d55251e323">Pipeline Permissions </th>
+                            <th class="entry" valign="top" width="40%" id="d56400e323">Pipeline Permissions </th>
 
                         </tr>
 
@@ -245,147 +260,147 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">View a pipeline</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">View a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Any</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Any</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Create a pipeline</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">None</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Edit a pipeline</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Create a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read and write</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Preview a pipeline</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read and execute</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">None</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Start and stop a pipeline</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Edit a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Manager or Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read and execute</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">View existing snapshot data</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Manager or Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read and write</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Monitor a pipeline and take snapshots</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Preview a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Manager or Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read and execute</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Duplicate a pipeline</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read and execute</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Import a pipeline to a new pipeline</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Start and stop a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Manager or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">None</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Import a pipeline to an existing pipeline</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Creator or Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read and Write</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read and execute</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Export a pipeline</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">View existing snapshot data</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Any</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Manager or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Share a pipeline and configure permissions</td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">None</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">View pipeline permissions</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Monitor a pipeline and take snapshots</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Any</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Manager or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Read</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Start or stop <span class="ph">Data Collector</span></td>
-
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Admin</td>
-
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Not applicable</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read and execute</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">View log data and <span class="ph">Data Collector</span> metrics</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Duplicate a pipeline</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Not applicable</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d55251e317 ">Install or uninstall stage libraries with the Package
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Import a pipeline to a new pipeline</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">None</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Import a pipeline to an existing pipeline</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Creator or Admin</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read and Write</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Export a pipeline</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Any</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Share a pipeline and configure permissions</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Admin</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">None</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">View pipeline permissions</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Any</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Read</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Start or stop <span class="ph">Data Collector</span></td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Admin</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Not applicable</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">View log data and <span class="ph">Data Collector</span> metrics</td>
+
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Admin</td>
+
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Not applicable</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="40%" headers="d56400e317 ">Install or uninstall stage libraries with the Package
                                 Manager</td>
 
-                            <td class="entry" valign="top" width="20%" headers="d55251e320 ">Admin</td>
+                            <td class="entry" valign="top" width="20%" headers="d56400e320 ">Admin</td>
 
-                            <td class="entry" valign="top" width="40%" headers="d55251e323 ">Not applicable</td>
+                            <td class="entry" valign="top" width="40%" headers="d56400e323 ">Not applicable</td>
 
                         </tr>
 

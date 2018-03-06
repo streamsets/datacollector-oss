@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -131,7 +146,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_r1l_lbr_1bb__d17056e3135">
+                                    the following formats:<ul class="ul" id="concept_r1l_lbr_1bb__d17559e3188">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -153,18 +168,25 @@
          
                         <dt class="dt dlterm">Text</dt>
 
-                        <dd class="dd">The destination writes data from a single text field to the destination
-                              system. When you configure the stage, you select the field to use.
-                              When necessary, merge record data into the field earlier in the
-                              pipeline. </dd>
+                        <dd class="dd">The destination writes data from a single text field to the
+                                    destination system. When you configure the stage, you select the
+                                    field to use. When necessary, merge record data into the field
+                                    earlier in the pipeline.
+                        </dd>
 
                         <dd class="dd">You can configure the characters to use as record separators. By
                               default, the destination uses a UNIX-style line ending (\n) to
                               separate records.</dd>
 
-                        <dd class="dd">When a record contains no data in the text field, you can configure the
-                              destination to write the record separator characters, creating an
-                              empty line. By default, the destination discards the record.</dd>
+                        <dd class="dd">When a record does not contain the selected text field, you can
+                              configure the destination to report the missing field as an error or
+                              to ignore the missing field. By default, the destination reports an
+                              error.</dd>
+
+                        <dd class="dd">When configured to ignore a missing text field, you can configure the
+                              destination to discard the record or to write the record separator
+                              characters to create an empty line for the record. By default, the
+                              destination discards the record.</dd>
 
                   
      </dl>
@@ -188,14 +210,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16989e5484" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d17492e5550" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d80763e297">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d81979e300">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d80763e300">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d81979e303">Description</th>
 
                                 </tr>
 
@@ -203,24 +225,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e297 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e300 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e300 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e297 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d80763e300 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d81979e303 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e297 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_tqc_vkq_1bb__d16989e5530" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e300 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e300 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d81979e303 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e300 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_tqc_vkq_1bb__d17492e5596" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d81979e303 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -232,10 +254,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e297 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_tqc_vkq_1bb__d16989e5546" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e300 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_tqc_vkq_1bb__d17492e5612" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e300 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d81979e303 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -246,10 +268,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e297 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_tqc_vkq_1bb__d16989e5563" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e300 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_tqc_vkq_1bb__d17492e5629" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e300 ">Error record handling for the stage: <ul class="ul" id="task_tqc_vkq_1bb__d16989e5567">
+                                    <td class="entry" valign="top" width="70%" headers="d81979e303 ">Error record handling for the stage: <ul class="ul" id="task_tqc_vkq_1bb__d17492e5633">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -279,9 +301,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d80763e411">IoT Hub Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d81979e414">IoT Hub Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d80763e414">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d81979e417">Description</th>
 
                                 </tr>
 
@@ -289,37 +311,37 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80763e411 ">IoT Hub Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d81979e414 ">IoT Hub Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80763e414 ">Name of your IoT hub.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d81979e417 ">Name of your IoT hub.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80763e411 ">Device ID
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d81979e414 ">Device ID
                                         <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">
                                             <img class="image" id="task_tqc_vkq_1bb__image_ohs_5jk_ex" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80763e414 ">ID for the <span class="ph">Data Collector</span> device registered in your IoT hub. Device IDs are case
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d81979e417 ">ID for the <span class="ph">Data Collector</span> device registered in your IoT hub. Device IDs are case
                                         sensitive.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80763e411 ">Shared Access Key <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d81979e414 ">Shared Access Key <a class="xref" href="AzureIoTHub.html#concept_cwj_dcs_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">
                                             <img class="image" id="task_tqc_vkq_1bb__image_nlx_yjt_1bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80763e414 ">Shared access primary key string for the <span class="ph">Data Collector</span> device registered in your IoT hub. Enter the primary key
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d81979e417 ">Shared access primary key string for the <span class="ph">Data Collector</span> device registered in your IoT hub. Enter the primary key
                                         value for the <span class="ph">Data Collector</span> device created in the Azure portal.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d80763e411 ">Maximum Request Time</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d81979e414 ">Maximum Request Time</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d80763e414 ">Maximum number of seconds to wait for a request to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d81979e417 ">Maximum number of seconds to wait for a request to
                                         complete.</td>
 
                                 </tr>
@@ -341,9 +363,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d80763e519">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d81979e522">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d80763e522">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d81979e525">Description</th>
 
                                 </tr>
 
@@ -351,11 +373,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e519 ">Data Format <a class="xref" href="AzureIoTHub.html#concept_r1l_lbr_1bb">
+                                    <td class="entry" valign="top" width="30%" headers="d81979e522 ">Data Format <a class="xref" href="AzureIoTHub.html#concept_r1l_lbr_1bb">
                                             <img class="image" id="task_tqc_vkq_1bb__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e522 ">Data format for messages:<ul class="ul" id="task_tqc_vkq_1bb__ul_wlj_353_br">
+                                    <td class="entry" valign="top" width="70%" headers="d81979e525 ">Data format for messages:<ul class="ul" id="task_tqc_vkq_1bb__ul_wlj_353_br">
                                             <li class="li">Binary</li>
 
                                             <li class="li">JSON</li>
@@ -382,14 +404,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16989e6551" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d17492e6616" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d80763e597">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d81979e600">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d80763e600">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d81979e603">Description</th>
 
                                 </tr>
 
@@ -397,9 +419,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e597 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e600 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e600 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d81979e603 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -415,14 +437,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16989e6747" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d17492e6813" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d80763e643">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d81979e646">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d80763e646">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d81979e649">Description</th>
 
                                 </tr>
 
@@ -430,9 +452,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e643 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e646 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e646 ">Determines how JSON data is written:<ul class="ul" id="task_tqc_vkq_1bb__d16989e6776">
+                                    <td class="entry" valign="top" width="70%" headers="d81979e649 ">Determines how JSON data is written:<ul class="ul" id="task_tqc_vkq_1bb__d17492e6842">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -447,9 +469,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d80763e643 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d81979e646 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d80763e646 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d81979e649 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -465,14 +487,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d16989e6993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tqc_vkq_1bb__d17492e7059" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d80763e707">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d81979e710">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d80763e710">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d81979e713">Description</th>
 
                                 </tr>
 
@@ -480,17 +502,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e707 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e710 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e710 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d81979e713 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e707 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e710 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e710 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d81979e713 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -499,20 +521,29 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d80763e707 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e710 ">On Missing Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d80763e710 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d81979e713 ">When a record does not include the text field, determines
+                                        whether the destination reports the missing field as an
+                                        error or ignores the missing field.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d81979e710 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d81979e713 ">When configured to ignore a missing text field, inserts
                                         the configured record separator string to create an empty
-                                            line.<p class="p">When not selected, records without the text
-                                            field are discarded.</p>
+                                            line.<p class="p">When not selected, discards records without the
+                                            text field.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d80763e707 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d81979e710 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d80763e710 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d81979e713 ">Character set to use when writing data. </td>
 
       </tr>
 

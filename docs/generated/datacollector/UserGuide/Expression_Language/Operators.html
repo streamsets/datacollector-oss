@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html" title="Expression Language">Expression Language</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -37,9 +52,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="25.510204081632654%" id="d210597e37">Category</th>
+       <th class="entry" valign="top" width="25.510204081632654%" id="d213635e37">Category</th>
 
-       <th class="entry" valign="top" width="74.48979591836735%" id="d210597e40">Description</th>
+       <th class="entry" valign="top" width="74.48979591836735%" id="d213635e40">Description</th>
 
       </tr>
 
@@ -47,9 +62,9 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d210597e37 ">Arithmetic</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d213635e37 ">Arithmetic</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d210597e40 ">
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d213635e40 ">
         <ul class="ul" id="concept_ltp_5mj_wq__ul_ef5_nnj_wq">
          <li class="li">+ </li>
 
@@ -68,9 +83,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d210597e37 ">Logical</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d213635e37 ">Logical</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d210597e40 ">
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d213635e40 ">
         <ul class="ul" id="concept_ltp_5mj_wq__ul_mmb_2rj_wq">
          <li class="li">and</li>
 
@@ -91,9 +106,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d210597e37 ">Relational</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d213635e37 ">Relational</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d210597e40 ">You can use the following operators to compare against other values, or against
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d213635e40 ">You can use the following operators to compare against other values, or against
         boolean, string, integer, or floating point literals. <ul class="ul" id="concept_ltp_5mj_wq__ul_h1c_fwp_1r">
          <li class="li"> ==</li>
 
@@ -125,18 +140,18 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d210597e37 ">Empty</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d213635e37 ">Empty</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d210597e40 "><p class="p"><samp class="ph codeph">empty</samp></p>
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d213635e40 "><p class="p"><samp class="ph codeph">empty</samp></p>
 The <span class="ph">empty</span> operator is a prefix operation that
         can be used to determine whether a value is null or empty.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d210597e37 ">Conditional</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d213635e37 ">Conditional</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d210597e40 "> ?<p class="p">For example, <samp class="ph codeph">A ? B : C</samp> states that if A is true, then B. If A is
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d213635e40 "> ?<p class="p">For example, <samp class="ph codeph">A ? B : C</samp> states that if A is true, then B. If A is
          not true, then C. </p>
 </td>
 

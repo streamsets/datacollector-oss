@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,27 +23,45 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_z2g_q1r_wr">
- <h1 class="title topictitle1">Solr</h1>
+    <h1 class="title topictitle1">Solr</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The Solr destination writes data to a Solr node or cluster. </p>
+    
+    <div class="body conbody"><p class="shortdesc">The Solr destination writes data to a Solr node or cluster. </p>
 
-  <p class="p">When
+        <p class="p">When
             you configure the Solr destination, you configure connection information for the node or
             cluster. You can configure the destination to index records individually or in batches. </p>
 
-        <p class="p">You map incoming fields to Solr fields, and configure the action that the destination
-            takes if any of the incoming fields are missing in the record. </p>
+        <p class="p">You map incoming fields to Solr fields. You can specify the action to take when mapped
+            fields are missing and configure the destination to ignore missing optional fields.</p>
+
+        <p class="p">You can specify whether the destination validates the connection to Solr. And you can
+            configure write properties that determine whether the destination waits for Solr to
+            complete all processing before continuing to write additional data.</p>
 
         <p class="p">When necessary, you can enable the destination to use Kerberos authentication.</p>
 
-        
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_z4y_bgr_wr">
@@ -111,46 +129,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ld1_phr_wr__d16989e5607" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ld1_phr_wr__d17492e5672" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d170704e188">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d172931e191">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d170704e191">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d172931e194">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_ld1_phr_wr__d16989e5629">
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">Name</td>
+                                <tr id="task_ld1_phr_wr__d17492e5694">
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_ld1_phr_wr__d16989e5638">
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_ld1_phr_wr__d16989e5647">
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">Stage Library</td>
+                                <tr id="task_ld1_phr_wr__d17492e5703">
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_ld1_phr_wr__d17492e5712">
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_ld1_phr_wr__d16989e5662" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_ld1_phr_wr__d17492e5727" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -162,10 +180,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_ld1_phr_wr__d16989e5678" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_ld1_phr_wr__d17492e5743" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -175,11 +193,11 @@
 
                                 </tr>
 
-                                <tr id="task_ld1_phr_wr__d16989e5690">
-                                    <td class="entry" valign="top" width="30%" headers="d170704e188 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_ld1_phr_wr__d16989e5696" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_ld1_phr_wr__d17492e5755">
+                                    <td class="entry" valign="top" width="30%" headers="d172931e191 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_ld1_phr_wr__d17492e5761" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d170704e191 ">Error record handling for the stage: <ul class="ul" id="task_ld1_phr_wr__d16989e5700">
+                                    <td class="entry" valign="top" width="70%" headers="d172931e194 ">Error record handling for the stage: <ul class="ul" id="task_ld1_phr_wr__d17492e5765">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -208,9 +226,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d170704e312">Solr Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d172931e315">Solr Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d170704e315">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d172931e318">Description</th>
 
                                 </tr>
 
@@ -218,9 +236,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Instance Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Instance Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Solr instance type to write to:<ul class="ul" id="task_ld1_phr_wr__ul_ymy_ykr_wr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Solr instance type to write to:<ul class="ul" id="task_ld1_phr_wr__ul_ymy_ykr_wr">
                                             <li class="li">Single Node - Writes to a single Solr node.</li>
 
                                             <li class="li">SolrCloud - Writes to a Solr cluster.</li>
@@ -231,9 +249,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Solr URI</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Solr URI</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">When writing to a single node, URI for the node. Use the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">When writing to a single node, URI for the node. Use the
                                         following
                                         format:<pre class="pre codeblock">http://&lt;host&gt;:&lt;port&gt;/solr/&lt;core_name&gt;</pre>
 </td>
@@ -241,9 +259,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">ZooKeeper Connection String</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">ZooKeeper Connection String</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">When writing to a Solr cluster, the ZooKeeper connection
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">When writing to a Solr cluster, the ZooKeeper connection
                                         string. Use the following
                                             format:<pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 <p class="p">If
@@ -255,26 +273,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Default Collection Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Default Collection Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">When writing to a Solr cluster, the default collection
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">When writing to a Solr cluster, the default collection
                                         name for the cluster.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Record Indexing Mode
-                                        <a class="xref" href="Solr.html#concept_z4y_bgr_wr" title="The index mode determines how the Solr destination indexes records when writing to Solr. Index mode also determines how the destination handles errors.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Record Indexing Mode <a class="xref" href="Solr.html#concept_z4y_bgr_wr" title="The index mode determines how the Solr destination indexes records when writing to Solr. Index mode also determines how the destination handles errors.">
                                             <img class="image" id="task_ld1_phr_wr__image_a6x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Determines how records are indexed.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Determines how records are indexed.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Map fields from the record to Solr fields. <p class="p">Mapped
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Map fields from the record to Solr fields. <p class="p">Mapped
                                             fields must have compatible data types. For example, you
                                             must map List and Map fields in the record to Solr
                                             fields that are multi-valued.</p>
@@ -286,10 +303,22 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Missing Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Ignore Optional Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Action to take if any of the mapped fields are missing in
-                                        the record:<ul class="ul" id="task_ld1_phr_wr__ul_xqp_qk5_nz">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Ignores non-required fields that do not exist in the
+                                        record. When selected, records with missing optional fields
+                                        are written without the optional field.<p class="p">When not selected,
+                                            any record with a missing optional field is treated
+                                            based on the Missing Fields property.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Missing Fields</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Action to take if any of the mapped fields are not
+                                        included in the record:<ul class="ul" id="task_ld1_phr_wr__ul_xqp_qk5_nz">
                                             <li class="li">Discard - Discards any missing mapped fields and
                                                 writes the record to Solr without the fields.</li>
 
@@ -299,16 +328,18 @@
                                             <li class="li">Stop Pipeline - Stops the pipeline.</li>
 
                                         </ul>
+<p class="p">When Ignore Optional Fields is selected, this
+                                            property does not apply to missing optional fields.
+                                        </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Kerberos Authentication
-                                        <a class="xref" href="Solr.html#concept_npl_fss_zw" title="You can use Kerberos authentication to connect to a Solr node or cluster. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Solr.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Kerberos Authentication <a class="xref" href="Solr.html#concept_npl_fss_zw" title="You can use Kerberos authentication to connect to a Solr node or cluster. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Solr.">
                                             <img class="image" id="task_ld1_phr_wr__image_a3x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Uses Kerberos credentials to connect to a Solr node or
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Uses Kerberos credentials to connect to a Solr node or
                                         cluster. <p class="p">When selected, uses the Kerberos principal and
                                             keytab defined in the <span class="ph">Data Collector</span> configuration file,
                                                 <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.</p>
@@ -317,13 +348,52 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d170704e312 ">Skip Validation</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Skip Validation</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d170704e315 ">Determines whether the destination validates the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Determines whether the destination validates the
                                         connection to Solr.<p class="p">Configure the destination to skip
                                             validation when the Solr configuration file,
                                                 <samp class="ph codeph">solrconfig.xml</samp>, does not define the
                                             default search field ("df") parameter.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Wait Flush</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Determines whether the destination waits for Solr to
+                                        complete writing a batch of data to disk before processing
+                                        another batch.<p class="p">By default, the destination waits. You can
+                                            disable this property to increase write performance, but
+                                            data can be lost if the Solr server fails to complete
+                                            the write to disk.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Wait Searcher</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Determines whether the destination waits for Solr to make
+                                        a batch of data searchable before processing another batch.
+                                            <p class="p">By default, the destination waits. You can disable
+                                            this property if you don’t need the data to be
+                                            searchable in Solr before the data is committed by <span class="ph">Data Collector</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d172931e315 ">Soft Commit</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d172931e318 ">Determines whether Solr performs a soft or hard commit. A
+                                        soft commit refreshes the view of the index before a batch
+                                        of data is fully available. A hard commit updates the index
+                                        only after the batch is fully available. <p class="p">By default, the
+                                            destination requests a hard commit. You can disable this
+                                            property to increase write performance if data does not
+                                            need to be immediately visible. </p>
 </td>
 
                                 </tr>

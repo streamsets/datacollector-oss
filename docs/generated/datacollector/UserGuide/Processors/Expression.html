@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -116,14 +131,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_x2h_tv4_yq__d84341e4991" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_x2h_tv4_yq__d85429e5056" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d441244e222">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d445771e222">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d441244e225">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d445771e225">Description</th>
 
                                 </tr>
 
@@ -131,24 +146,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d441244e222 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d445771e222 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d441244e225 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d441244e222 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d441244e225 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d445771e225 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d441244e222 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_x2h_tv4_yq__d84341e5037" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d445771e222 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d441244e225 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d445771e225 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d445771e222 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_x2h_tv4_yq__d85429e5102" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d445771e225 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -160,10 +175,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d441244e222 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_x2h_tv4_yq__d84341e5053" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d445771e222 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_x2h_tv4_yq__d85429e5118" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d441244e225 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d445771e225 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -174,10 +189,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d441244e222 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_x2h_tv4_yq__d84341e5070" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d445771e222 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_x2h_tv4_yq__d85429e5135" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d441244e225 ">Error record handling for the stage: <ul class="ul" id="task_x2h_tv4_yq__d84341e5074">
+                                    <td class="entry" valign="top" width="70%" headers="d445771e225 ">Error record handling for the stage: <ul class="ul" id="task_x2h_tv4_yq__d85429e5139">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -208,9 +223,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d441244e336">Field Expression Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d445771e336">Field Expression Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d441244e339">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d445771e339">Description</th>
 
                                 </tr>
 
@@ -218,9 +233,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e336 ">Output Field</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e336 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e339 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e339 ">
                                         <p class="p">The field to pass the results of the expression to the
                                             next stage. Enter the name of a new or existing field as
                                             follows: /FieldName. </p>
@@ -228,7 +243,7 @@
                                         <p class="p">If you use an existing field, the Expression Evaluator
                                             replaces existing values.</p>
 
-                                        <p class="p"><span class="ph" id="task_x2h_tv4_yq__d84407e740">You can use the asterisk wildcard to represent
+                                        <p class="p"><span class="ph" id="task_x2h_tv4_yq__d85495e740">You can use the asterisk wildcard to represent
                               <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays.">array indices and map elements</a>.</span>
             </p>
 
@@ -237,9 +252,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e336 ">Expression</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e336 ">Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e339 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e339 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
                   creating the expression. </p>
 </td>
 
@@ -266,9 +281,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d441244e424">Record Header Attribute Expression Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d445771e424">Record Header Attribute Expression Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d441244e427">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d445771e427">Description</th>
 
                                 </tr>
 
@@ -276,10 +291,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e424 ">Header Attribute <a class="xref" href="Expression.html#concept_qf3_mfq_f5">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e424 ">Header Attribute <a class="xref" href="Expression.html#concept_qf3_mfq_f5">
                                             <img class="image" id="task_x2h_tv4_yq__image_off_qlq_f5" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e427 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e427 ">
                                         <p class="p">The record header attribute to pass the results of the
                                             expression to the next stage. Enter the name of a new or
                                             existing attribute as follows: &lt;attribute name&gt;. </p>
@@ -298,9 +313,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e424 ">Expression</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e424 ">Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e427 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e427 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
                   creating the expression. </p>
 </td>
 
@@ -327,9 +342,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d441244e514">Field Attribute Expression Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d445771e514">Field Attribute Expression Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d441244e517">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d445771e517">Description</th>
 
                                 </tr>
 
@@ -337,10 +352,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e514 ">Field Attribute <a class="xref" href="Expression.html#concept_mb2_fsp_1z">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e514 ">Field Attribute <a class="xref" href="Expression.html#concept_mb2_fsp_1z">
                                             <img class="image" id="task_x2h_tv4_yq__image_bqw_zsr_1z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e517 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e517 ">
                                         <p class="p">The field attribute to pass the results of the expression
                                             to the next stage. Enter the name of a new or existing
                                             attribute as follows: &lt;attribute name&gt;. </p>
@@ -353,9 +368,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d441244e514 ">Expression</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d445771e514 ">Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d441244e517 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d445771e517 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
                   creating the expression. </p>
 </td>
 

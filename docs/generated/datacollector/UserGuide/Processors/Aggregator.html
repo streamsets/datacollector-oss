@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,14 +22,29 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_ofb_svm_5bb">
- <h1 class="title topictitle1">Aggregator</h1>
+    <h1 class="title topictitle1">Aggregator</h1>
 
- <div class="body conbody">
+    <div class="body conbody">
         <p class="p">The
             Aggregator processor performs one or more aggregations within a window of time. The
             Aggregator processor displays the results in Monitor mode and can write the results to
@@ -47,9 +62,9 @@
             the aggregation function to use. You can optionally define a filter expression to
             process a subset of the data, and a group by expression to aggregate based on groups. </p>
 
-        <p class="p">To write the aggregation results to events, enable event generation and specify the type
-            of event records to create. For general information about dataflow triggers and the
-            event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
+        <p class="p">To write the aggregation results to events, enable event generation, configure the type
+            of event records to create, and optionally specify the type of root field to use. For
+            general information about dataflow triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
 
     </div>
 
@@ -161,9 +176,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d433392e173">Sliding Time Window</th>
+                            <th class="entry" valign="top" width="50%" id="d437709e173">Sliding Time Window</th>
 
-                            <th class="entry" valign="top" width="50%" id="d433392e176">Event Generation Occurs... </th>
+                            <th class="entry" valign="top" width="50%" id="d437709e176">Event Generation Occurs... </th>
 
                         </tr>
 
@@ -171,58 +186,58 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">1 minute</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">1 minute</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 5 seconds from the start of the pipeline</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">5 minutes</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 5 seconds from the start of the pipeline</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 5 seconds from the start of the pipeline</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">10 minutes</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">5 minutes</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 10 seconds from the start of the pipeline</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">30 minute</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 30 seconds from the start of the pipeline</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 5 seconds from the start of the pipeline</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">1 hour</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">10 minutes</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 1 minute from the start of the pipeline</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">6 hours</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 5 minutes from the start of the pipeline</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 10 seconds from the start of the pipeline</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">12 hours</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">30 minute</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 10 minutes from the start of the pipeline</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 30 seconds from the start of the pipeline</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d433392e173 ">24 hours</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">1 hour</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d433392e176 ">Every 20 minutes from the start of the pipeline</td>
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 1 minute from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">6 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 5 minutes from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">12 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 10 minutes from the start of the pipeline</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d437709e173 ">24 hours</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d437709e176 ">Every 20 minutes from the start of the pipeline</td>
 
                         </tr>
 
@@ -307,7 +322,7 @@ With
   <p class="p">When you configure an aggregation, you select the aggregate function to use. When appropriate,
             you can select the data type to use for the results of the aggregation. </p>
 
-        <div class="p">You can use the following aggregate functions:<ul class="ul" id="concept_bvw_d2f_wbb__d84407e2551">
+        <div class="p">You can use the following aggregate functions:<ul class="ul" id="concept_bvw_d2f_wbb__d85495e2604">
                         <li class="li">Avg (Integer or Double)</li>
 
                         <li class="li">Count (Integer only)</li>
@@ -327,13 +342,13 @@ With
 
 </div>
 <div class="topic concept nested1" id="concept_ppy_b42_wbb">
- <h2 class="title topictitle2">Event Generation</h2>
+    <h2 class="title topictitle2">Event Generation</h2>
 
- <div class="body conbody">
-        <p class="p">The Aggregator processor can generate events that
-            contain the results of the aggregations. The processor can generate events that include
-            the results of all aggregations. It can also generate events for the results of each
-            individual aggregation.</p>
+    <div class="body conbody">
+        <p class="p">The Aggregator processor can
+            generate events that contain the results of the aggregations. The processor can generate
+            events that include the results of all aggregations. It can also generate events for the
+            results of each individual aggregation.</p>
 
         <div class="p">The Aggregator processor events can be used in any logical way. For example: <ul class="ul">
                 <li class="li">With a destination to store event information.
@@ -355,23 +370,46 @@ With
 <span class="ph">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></div>
 
- </div>
+    </div>
 
+<div class="topic concept nested2" id="concept_dld_z2q_vcb">
+    <h3 class="title topictitle3">Event Record Root Field</h3>
+
+    <div class="body conbody">
+        <p class="p">By default, the Aggregator processor generates event
+            records by writing record data as a JSON string to a String root field. You can
+            configure the processor to generate event records by writing JSON data to a Map root
+            field, like other event records. </p>
+
+        <p class="p">Both record formats provide the same data. When performing additional processing with
+            event records in the same pipeline, using the Map root field should be more efficient.
+            When writing the event record to destinations without additional processing, using the
+            String root field should be more efficient. </p>
+
+        <p class="p">Choose the option that seems more appropriate for your use case. Use the Produce Event
+            Record with Text Field property on the Events tab to specify the root field to use. </p>
+
+        <p class="p">For examples of different types of event records, see the <a class="xref" href="Aggregator.html#concept_ely_jsw_vcb">sample event records</a>.
+        </p>
+
+    </div>
+
+</div>
 <div class="topic concept nested2" id="concept_bc4_c42_wbb">
- <h3 class="title topictitle3">Event Records</h3>
+    <h3 class="title topictitle3">Event Records</h3>
 
- <div class="body conbody">
-  <div class="p">Event records
-            generated by the Aggregator processor have the following event-related record header
-            attributes. Record header attributes are stored as String values:
+    <div class="body conbody">
+        <div class="p">Event records generated by the Aggregator
+            processor have the following event-related record header attributes. Record header
+            attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bc4_c42_wbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d433392e480">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d437709e512">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d433392e483">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d437709e515">Description</th>
 
                         </tr>
 
@@ -379,15 +417,22 @@ With
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d433392e480 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d437709e512 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d433392e483 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_bc4_c42_wbb__ul_m12_mgp_qx">
-                                    <li class="li">SINGLE_AGGREGATOR_EVENT - Contains the results of a single
-                                        aggregation.</li>
+                            <td class="entry" valign="top" width="70%" headers="d437709e515 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_bc4_c42_wbb__ul_m12_mgp_qx">
+                                    <li class="li">&lt;window type&gt;.window.aggregator - Contains the results of
+                                        a single aggregation. <p class="p">For example, for one rolling window
+                                            aggregation, the event type is
+                                            rolling.window.aggregator.</p>
+</li>
 
-                                    <li class="li">ALL_AGGREGATORS_EVENT - Generated when the processor is
-                                        configured to create an event for all aggregations. Contains
-                                        the results from all configured aggregation.</li>
+                                    <li class="li">&lt;window type&gt;.window.all.aggregators - Contains the
+                                        results from all configured aggregations. Generated when the
+                                        processor is configured to include all aggregations in one
+                                        event. <p class="p">For example, for a set of sliding window
+                                            aggregations, the event type is
+                                            sliding.window.all.aggregators.</p>
+</li>
 
                                 </ul>
 </td>
@@ -395,16 +440,16 @@ With
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d433392e480 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d437709e512 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d433392e483 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d437709e515 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d433392e480 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d437709e512 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_bc4_c42_wbb__d84463e2100" valign="top" width="70%" headers="d433392e483 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_bc4_c42_wbb__d85551e2112" valign="top" width="70%" headers="d437709e515 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -458,16 +503,16 @@ With
                     </ul>
 </dd>
 
-                <dd class="dd">Single aggregation events have the sdc.event.type set to SINGLE_AGGREGATOR_EVENT
-                    and include the following fields:
+                <dd class="dd">Single aggregation events have the sdc.event.type set to &lt;window
+                    type&gt;.window.aggregator and include the following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bc4_c42_wbb__table_fcv_xx4_j1b" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d433392e586">Event Record Field</th>
+                                    <th class="entry" valign="top" width="30%" id="d437709e622">Event Record Field</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d433392e589">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d437709e625">Description</th>
 
                                 </tr>
 
@@ -475,25 +520,25 @@ With
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e586 ">name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e622 ">name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e589 ">The name of the aggregation as defined in the
+                                    <td class="entry" valign="top" width="70%" headers="d437709e625 ">The name of the aggregation as defined in the
                                         stage.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e586 ">time</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e622 ">time</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e589 ">The epoch time when the calculations took place and the
+                                    <td class="entry" valign="top" width="70%" headers="d437709e625 ">The epoch time when the calculations took place and the
                                         event was generated. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e586 ">aggregatable</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e622 ">aggregatable</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e589 ">A map field that contains the information used to perform
+                                    <td class="entry" valign="top" width="70%" headers="d437709e625 ">A map field that contains the information used to perform
                                         the aggregation. When the aggregation does not include a
                                         group by expression, the map includes the following fields:
                                             <ul class="ul" id="concept_bc4_c42_wbb__ul_rc3_1cl_ybb">
@@ -529,9 +574,9 @@ With
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d433392e653">Aggregate Function</th>
+                                    <th class="entry" valign="top" width="30%" id="d437709e689">Aggregate Function</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d433392e656">Additional Fields</th>
+                                    <th class="entry" valign="top" width="70%" id="d437709e692">Additional Fields</th>
 
                                 </tr>
 
@@ -539,13 +584,16 @@ With
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Average</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Average</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_a4s_2gd_1cb">
-                                            <li class="li">count</li>
+                                            <li class="li">count - The number of values included in the
+                                                calculation.</li>
 
-                                            <li class="li">total</li>
+                                            <li class="li">total - The total used in the calculation.</li>
+
+                                            <li class="li">average - The result of the calculation. </li>
 
                                         </ul>
 
@@ -554,11 +602,11 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Count</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Count</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_zmk_fgd_1cb">
-                                            <li class="li">count</li>
+                                            <li class="li">count - The result of the calculation. </li>
 
                                         </ul>
 
@@ -567,11 +615,11 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Max</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Max</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_uv4_cgd_1cb">
-                                            <li class="li">max</li>
+                                            <li class="li">max - The result of the calculation. </li>
 
                                         </ul>
 
@@ -580,11 +628,11 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Min</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Min</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_s2x_cgd_1cb">
-                                            <li class="li">min</li>
+                                            <li class="li">min - The result of the calculation. </li>
 
                                         </ul>
 
@@ -593,15 +641,18 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Stddev</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Stddev</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_omq_3gd_1cb">
-                                            <li class="li">total</li>
+                                            <li class="li">total - The total used in the calculation.</li>
 
-                                            <li class="li">count</li>
+                                            <li class="li">count - The number of values used in the
+                                                calculation.</li>
 
-                                            <li class="li">totalSquare</li>
+                                            <li class="li">totalSquare - The square of the total. </li>
+
+                                            <li class="li">stdDev - The result of the calculation. </li>
 
                                         </ul>
 
@@ -610,13 +661,14 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e653 ">Sum</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e689 ">Sum</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e656 ">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e692 ">
                                         <ul class="ul" id="concept_bc4_c42_wbb__ul_r5n_ggd_1cb">
-                                            <li class="li">sum</li>
+                                            <li class="li">sum - The result of the calculation.</li>
 
-                                            <li class="li">count</li>
+                                            <li class="li">count - The number of values included in the
+                                                calculation.</li>
 
                                         </ul>
 
@@ -639,10 +691,10 @@ With
                     generation depends on the selected <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">window type and time
                         window</a>. </dd>
 
-                <dd class="dd">Single aggregation events have the sdc.event.type set to ALL_AGGREGATOR_EVENT
-                    and includes a list of aggregations. Each aggregation list item is a map field
-                    that includes the same fields as the single aggregation event, described
-                    above.</dd>
+                <dd class="dd">Single aggregation events have the sdc.event.type set to &lt;window
+                    type&gt;.window.all.aggregators and includes a list of aggregations. Each
+                    aggregation list item is a map field that includes the same fields as the single
+                    aggregation event, described above.</dd>
 
                 <dd class="dd">To generate an all aggregation event, configure both of the following
                         properties:<ul class="ul" id="concept_bc4_c42_wbb__ul_ns2_thd_1cb">
@@ -656,7 +708,324 @@ With
             
         </dl>
 
- </div>
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_ely_jsw_vcb">
+  <h3 class="title topictitle3">Sample Event Records</h3>
+
+  <div class="body conbody">
+    <div class="p">Below
+      are some sample event records generated by the Aggregator processor. The sample records are in
+      the format they would be in the pipeline, the SDC record format.<dl class="dl">
+        
+          <dt class="dt dlterm">Single aggregation event record - String root field</dt>
+
+          <dd class="dd">The following event record is a single aggregation event record for a "transaction
+            totals" rolling window event. It writes record data to the <samp class="ph codeph">value</samp> String
+            root field:</dd>
+
+          <dd class="dd">
+            <pre class="pre codeblock">{
+      "header" : {
+        "stageCreator" : "Aggregator_01",
+        "sourceId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::transaction totals::1518467295000",
+        "stagesPath" : "Aggregator_01",
+        "trackingId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::transaction totals::1518467295000::Aggregator_01",
+        "previousTrackingId" : null,
+        "raw" : null,
+        "rawMimeType" : null,
+        "errorDataCollectorId" : null,
+        "errorPipelineName" : null,
+        "errorStage" : null,
+        "errorStageLabel" : null,
+        "errorCode" : null,
+        "errorMessage" : null,
+        "errorTimestamp" : 0,
+        "errorStackTrace" : null,
+        "values" : {
+          "sdc.event.version" : "1",
+          "sdc.event.creation_timestamp" : "1518467295006",
+          "sdc.event.type" : "rolling.window.aggregator"
+        }
+      },
+      "value" : {
+        "type" : "STRING",
+        "value" : "{\"name\":\"transaction totals\",\"time\":1518467295000,\"aggregatable\":{\"name\":\"transaction totals\",\"sum\":5000.0,\"count\":5000.0,\"type\":\"DoubleSumAggregatable\"}}",
+        "sqpath" : "",
+        "dqpath" : ""
+      }
+    } </pre>
+
+          </dd>
+
+        
+        
+          <dt class="dt dlterm">Single aggregation event record - Map root field</dt>
+
+          <dd class="dd">The following event record is a single aggregation event record for the same
+            "transaction totals" rolling window event. It writes record data to the
+              <samp class="ph codeph">value</samp> Map root field:</dd>
+
+          <dd class="dd">
+            <pre class="pre codeblock">{
+      "header" : {
+        "stageCreator" : "Aggregator_01",
+        "sourceId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::transaction totals::1518478020000",
+        "stagesPath" : "Aggregator_01",
+        "trackingId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::transaction totals::1518478020000::Aggregator_01",
+        "previousTrackingId" : null,
+        "raw" : null,
+        "rawMimeType" : null,
+        "errorDataCollectorId" : null,
+        "errorPipelineName" : null,
+        "errorStage" : null,
+        "errorStageLabel" : null,
+        "errorCode" : null,
+        "errorMessage" : null,
+        "errorTimestamp" : 0,
+        "errorStackTrace" : null,
+        "values" : {
+          "sdc.event.version" : "1",
+          "sdc.event.creation_timestamp" : "1518478020002",
+          "sdc.event.type" : "rolling.window.aggregator"
+        }
+      },
+      "value" : {
+        "type" : "MAP",
+        "value" : {
+          "name" : {
+            "type" : "STRING",
+            "value" : "transaction totals",
+            "sqpath" : "/name",
+            "dqpath" : "/name"
+          },
+          "time" : {
+            "type" : "LONG",
+            "value" : "1518478020000",
+            "sqpath" : "/time",
+            "dqpath" : "/time"
+          },
+          "aggregatable" : {
+            "type" : "MAP",
+            "value" : {
+              "name" : {
+                "type" : "STRING",
+                "value" : "transaction totals",
+                "sqpath" : "/aggregatable/name",
+                "dqpath" : "/aggregatable/name"
+              },
+              "sum" : {
+                "type" : "DOUBLE",
+                "value" : "5000.0",
+                "sqpath" : "/aggregatable/sum",
+                "dqpath" : "/aggregatable/sum"
+              },
+              "count" : {
+                "type" : "DOUBLE",
+                "value" : "5000.0",
+                "sqpath" : "/aggregatable/count",
+                "dqpath" : "/aggregatable/count"
+              },
+              "type" : {
+                "type" : "STRING",
+                "value" : "DoubleSumAggregatable",
+                "sqpath" : "/aggregatable/type",
+                "dqpath" : "/aggregatable/type"
+              }
+            },
+            "sqpath" : "/aggregatable",
+            "dqpath" : "/aggregatable"
+          }
+        },
+        "sqpath" : "",
+        "dqpath" : ""
+      }
+    },</pre>
+
+          </dd>
+
+        
+        
+          <dt class="dt dlterm">All aggregations event record - String root field</dt>
+
+          <dd class="dd">The following event record is an all-aggregation event record for a two rolling window
+            aggregations: "transaction count" and "transaction totals". It writes the results of
+            both aggregations to the <samp class="ph codeph">value</samp> String root field:</dd>
+
+          <dd class="dd">
+            <pre class="pre codeblock">{
+      "header" : {
+        "stageCreator" : "Aggregator_01",
+        "sourceId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::1518467295000",
+        "stagesPath" : "Aggregator_01",
+        "trackingId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::1518467295000::Aggregator_01",
+        "previousTrackingId" : null,
+        "raw" : null,
+        "rawMimeType" : null,
+        "errorDataCollectorId" : null,
+        "errorPipelineName" : null,
+        "errorStage" : null,
+        "errorStageLabel" : null,
+        "errorCode" : null,
+        "errorMessage" : null,
+        "errorTimestamp" : 0,
+        "errorStackTrace" : null,
+        "values" : {
+          "sdc.event.version" : "1",
+          "sdc.event.creation_timestamp" : "1518467295005",
+          "sdc.event.type" : "rolling.window.all.aggregators"
+        }
+      },
+      "value" : {
+        "type" : "STRING",
+        "value" : "[{\"name\":\"transaction count\",\"time\":1518467295000,\"aggregatable\":{\"name\":\"transaction count\",\"count\":5000,\"type\":\"CounterAggregatable\"}},{\"name\":\"transaction totals\",\"time\":1518467295000,\"aggregatable\":{\"name\":\"transaction totals\",\"sum\":5000.0,\"count\":5000.0,\"type\":\"DoubleSumAggregatable\"}}]",
+        "sqpath" : "",
+        "dqpath" : ""
+      }
+    }</pre>
+
+          </dd>
+
+        
+        
+          <dt class="dt dlterm">All aggregations event record - Map root field</dt>
+
+          <dd class="dd">The following event record is an all-aggregation event record for a two rolling window
+            aggregations: "transaction count" and "transaction totals". It writes the results of
+            both aggregations to the <samp class="ph codeph">value</samp>  Map root field:</dd>
+
+          <dd class="dd">
+            <pre class="pre codeblock">{
+      "header" : {
+        "stageCreator" : "Aggregator_01",
+        "sourceId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::1518478020000",
+        "stagesPath" : "Aggregator_01",
+        "trackingId" : "1b89bcca-05f8-11e8-99b7-2989b82bcc5c::Aggregatorprocessor0292d73b-505f-473e-bca7-06445e38184d::1518478020000::Aggregator_01",
+        "previousTrackingId" : null,
+        "raw" : null,
+        "rawMimeType" : null,
+        "errorDataCollectorId" : null,
+        "errorPipelineName" : null,
+        "errorStage" : null,
+        "errorStageLabel" : null,
+        "errorCode" : null,
+        "errorMessage" : null,
+        "errorTimestamp" : 0,
+        "errorStackTrace" : null,
+        "values" : {
+          "sdc.event.version" : "1",
+          "sdc.event.creation_timestamp" : "1518478020002",
+          "sdc.event.type" : "rolling.window.all.aggregators"
+        }
+      },
+      "value" : {
+        "type" : "LIST",
+        "value" : [ {
+          "type" : "MAP",
+          "value" : {
+            "name" : {
+              "type" : "STRING",
+              "value" : "transaction totals",
+              "sqpath" : "[0]/name",
+              "dqpath" : "[0]/name"
+            },
+            "time" : {
+              "type" : "LONG",
+              "value" : "1518478020000",
+              "sqpath" : "[0]/time",
+              "dqpath" : "[0]/time"
+            },
+            "aggregatable" : {
+              "type" : "MAP",
+              "value" : {
+                "name" : {
+                  "type" : "STRING",
+                  "value" : "transaction totals",
+                  "sqpath" : "[0]/aggregatable/name",
+                  "dqpath" : "[0]/aggregatable/name"
+                },
+                "sum" : {
+                  "type" : "DOUBLE",
+                  "value" : "5000.0",
+                  "sqpath" : "[0]/aggregatable/sum",
+                  "dqpath" : "[0]/aggregatable/sum"
+                },
+                "count" : {
+                  "type" : "DOUBLE",
+                  "value" : "5000.0",
+                  "sqpath" : "[0]/aggregatable/count",
+                  "dqpath" : "[0]/aggregatable/count"
+                },
+                "type" : {
+                  "type" : "STRING",
+                  "value" : "DoubleSumAggregatable",
+                  "sqpath" : "[0]/aggregatable/type",
+                  "dqpath" : "[0]/aggregatable/type"
+                }
+              },
+              "sqpath" : "[0]/aggregatable",
+              "dqpath" : "[0]/aggregatable"
+            }
+          },
+          "sqpath" : "[0]",
+          "dqpath" : "[0]"
+        }, {
+          "type" : "MAP",
+          "value" : {
+            "name" : {
+              "type" : "STRING",
+              "value" : "transaction count",
+              "sqpath" : "[1]/name",
+              "dqpath" : "[1]/name"
+            },
+            "time" : {
+              "type" : "LONG",
+              "value" : "1518478020000",
+              "sqpath" : "[1]/time",
+              "dqpath" : "[1]/time"
+            },
+            "aggregatable" : {
+              "type" : "MAP",
+              "value" : {
+                "name" : {
+                  "type" : "STRING",
+                  "value" : "transaction count",
+                  "sqpath" : "[1]/aggregatable/name",
+                  "dqpath" : "[1]/aggregatable/name"
+                },
+                "count" : {
+                  "type" : "INTEGER",
+                  "value" : "5000",
+                  "sqpath" : "[1]/aggregatable/count",
+                  "dqpath" : "[1]/aggregatable/count"
+                },
+                "type" : {
+                  "type" : "STRING",
+                  "value" : "CounterAggregatable",
+                  "sqpath" : "[1]/aggregatable/type",
+                  "dqpath" : "[1]/aggregatable/type"
+                }
+              },
+              "sqpath" : "[1]/aggregatable",
+              "dqpath" : "[1]/aggregatable"
+            }
+          },
+          "sqpath" : "[1]",
+          "dqpath" : "[1]"
+        } ],
+        "sqpath" : "",
+        "dqpath" : ""
+      }
+    },</pre>
+
+          </dd>
+
+        
+      </dl>
+</div>
+
+  </div>
 
 </div>
 </div>
@@ -738,9 +1107,9 @@ With
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d433392e909">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d437709e1043">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d433392e912">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d437709e1046">Description</th>
 
                                 </tr>
 
@@ -748,34 +1117,34 @@ With
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
                                             <img class="image" id="task_bd3_vvm_5bb__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Generates event records when
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Generates event records when
                                         events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_bd3_vvm_5bb__d84341e5290" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_bd3_vvm_5bb__d85429e5356" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_bd3_vvm_5bb__d84341e5299" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_bd3_vvm_5bb__d85429e5365" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -787,10 +1156,10 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_bd3_vvm_5bb__d84341e5315" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_bd3_vvm_5bb__d85429e5381" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -801,10 +1170,10 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e909 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_bd3_vvm_5bb__d84341e5333" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1043 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_bd3_vvm_5bb__d85429e5399" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e912 ">Error record handling for the stage: <ul class="ul" id="task_bd3_vvm_5bb__d84341e5337">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1046 ">Error record handling for the stage: <ul class="ul" id="task_bd3_vvm_5bb__d85429e5403">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -835,9 +1204,9 @@ With
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d433392e1041">Aggregation Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d437709e1175">Aggregation Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d433392e1044">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d437709e1178">Description</th>
 
                                 </tr>
 
@@ -845,10 +1214,10 @@ With
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Window Type <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Window Type <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_r2h_bhf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Window type to use:<ul class="ul" id="task_bd3_vvm_5bb__ul_dyq_yrf_wbb">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Window type to use:<ul class="ul" id="task_bd3_vvm_5bb__ul_dyq_yrf_wbb">
                                             <li class="li">Rolling - Calculates aggregations at regular
                                                 intervals based on the hour.</li>
 
@@ -861,10 +1230,10 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Time Window <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Time Window <a class="xref" href="Aggregator.html#concept_abn_qyd_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_slv_2hf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Time window of records to include in the aggregations.
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Time window of records to include in the aggregations.
                                                 <p class="p"><a class="xref" href="Aggregator.html#concept_h5b_bf2_wbb">For rolling windows</a>, the time window also
                                             determines when the processor updates charts in Monitor
                                             mode and when the processor generates events.
@@ -878,66 +1247,66 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Time zone to use to establish time windows. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Time zone to use to establish time windows. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Number of Time Windows to Remember <a class="xref" href="Aggregator.html#concept_qxw_k42_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Number of Time Windows to Remember <a class="xref" href="Aggregator.html#concept_qxw_k42_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_gyy_rtd_1cb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">The number of time windows to display in Monitor mode.
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">The number of time windows to display in Monitor mode.
                                         Used only with rolling windows.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Aggregations </td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Aggregations </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Aggregate calculations to perform. To configure
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Aggregate calculations to perform. To configure
                                         additional aggregations, click the
                                             <span class="ph uicontrol">Add</span> icon.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Enabled</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Enabled</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Enables the aggregation. Clear this option to disable the
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Enables the aggregation. Clear this option to disable the
                                         aggregation while retaining it for future use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Aggregation name. Specify a name for the aggregation that
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Aggregation name. Specify a name for the aggregation that
                                         is unique within the processor.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Aggregation Title</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Aggregation Title</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Aggregation title. The title used for the chart generated
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Aggregation title. The title used for the chart generated
                                         for the aggregation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Filter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Filter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Enables creating a filter expression.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Enables creating a filter expression.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Filter Predicate <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Filter Predicate <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_wwm_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Filter condition to reduce the number of records included
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Filter condition to reduce the number of records included
                                         in the calculation. <p class="p">Enter a boolean expression. Records
                                             that evaluate to Yes are included in the
                                             aggregation.</p>
@@ -946,10 +1315,10 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Aggregation Function <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Aggregation Function <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_ly4_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">The aggregate function to use. <div class="p">You can use the following aggregate functions:<ul class="ul" id="task_bd3_vvm_5bb__d84407e2551">
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">The aggregate function to use. <div class="p">You can use the following aggregate functions:<ul class="ul" id="task_bd3_vvm_5bb__d85495e2604">
                         <li class="li">Avg (Integer or Double)</li>
 
                         <li class="li">Count (Integer only)</li>
@@ -969,25 +1338,26 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Aggregation Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Aggregation Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_bty_xrf_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Expression for the selected aggregate function. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Expression for the selected aggregate function. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Group By </td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Group By </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Enables using a group by expression in calculations. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Enables using a group by expression in calculations.
+                                    </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1041 ">Group By Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1175 ">Group By Expression <a class="xref" href="Aggregator.html#concept_scl_5rf_wbb">
                                             <img class="image" id="task_bd3_vvm_5bb__image_hqf_kyz_wbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1044 ">Expression for grouping records before performing the
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1178 ">Expression for grouping records before performing the
                                         calculations.</td>
 
                                 </tr>
@@ -1009,9 +1379,9 @@ With
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d433392e1280">Events Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d437709e1414">Events Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d433392e1283">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d437709e1417">Description</th>
 
                                 </tr>
 
@@ -1019,9 +1389,9 @@ With
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1280 ">All Aggregators Event</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1414 ">All Aggregators Event</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1283 ">Generates events that contain the results of all
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1417 ">Generates events that contain the results of all
                                         configured aggregations each time the processor performs
                                             calculations.<p class="p">For more information about when the
                                             event records are generated, see <a class="xref" href="Aggregator.html#concept_bc4_c42_wbb">Event Records</a>.</p>
@@ -1030,12 +1400,23 @@ With
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d433392e1280 ">Per Aggregator Events</td>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1414 ">Per Aggregator Events</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d433392e1283 ">Generates sets of events, one for each configured
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1417 ">Generates sets of events, one for each configured
                                         aggregation, each time the processor performs
                                             calculations.<p class="p">For more information about when the
                                             event records are generated, see <a class="xref" href="Aggregator.html#concept_bc4_c42_wbb">Event Records</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d437709e1414 ">Produce Event Record with Text Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d437709e1417 ">Determines the data type of the <a class="xref" href="Aggregator.html#concept_dld_z2q_vcb">event record root field</a>. By default, the
+                                        processor writes record data to a String root field. <p class="p">To
+                                            generate a standard event record and write record data
+                                            to a Map root field, clear this option.</p>
 </td>
 
                                 </tr>

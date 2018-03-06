@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub">StreamSets Control Hub</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -162,9 +177,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d63604e401">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d64749e401">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d63604e404">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d64749e404">Description</th>
 
                                 </tr>
 
@@ -172,9 +187,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e401 ">SCH Base URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e401 ">SCH Base URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e404 ">Enter the appropriate URL:<ul class="ul" id="task_a4y_v1g_xw__d10424e4703">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e404 ">Enter the appropriate URL:<ul class="ul" id="task_a4y_v1g_xw__d10948e4725">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -188,9 +203,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e401 ">SCH User ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e401 ">SCH User ID</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e404 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e404 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -199,16 +214,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e401 ">SCH User Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e401 ">SCH User Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e404 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e404 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e401 ">Labels for this <span class="ph">Data Collector</span></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e401 ">Labels for this <span class="ph">Data Collector</span></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e404 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e404 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data Collector</span>, you must modify the configuration file.<p class="p">Use labels to
                                             group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels
@@ -297,9 +312,9 @@ system enableDPM \
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d63604e731">Basic Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d64749e731">Basic Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d63604e734">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d64749e734">Description</th>
 
                     </tr>
 
@@ -307,21 +322,21 @@ system enableDPM \
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e731 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e731 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e734 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e734 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
                                     <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e731 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e731 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e734 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c2n_5kd_j1b">
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e734 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -347,9 +362,9 @@ system enableDPM \
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d63604e814">Enable DPM Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d64749e814">Enable DPM Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d63604e817">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d64749e817">Description</th>
 
                         </tr>
 
@@ -357,9 +372,9 @@ system enableDPM \
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e814 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e814 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e817 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c6n_9jk_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e817 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_js4_2z1_cx__ul_c6n_9jk_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -373,9 +388,9 @@ system enableDPM \
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e814 ">--dpmUser &lt;dpmUserID&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e814 ">--dpmUser &lt;dpmUserID&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e817 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e817 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -384,16 +399,16 @@ system enableDPM \
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e814 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e814 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e817 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e817 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e814 ">--labels &lt;labels&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e814 ">--labels &lt;labels&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e817 ">Optional. Assign a label to this <span class="ph">Data Collector</span>. You can enter multiple labels separated by commas. Labels that
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e817 ">Optional. Assign a label to this <span class="ph">Data Collector</span>. You can enter multiple labels separated by commas. Labels that
                                 you assign here are defined in the <span class="ph">Control Hub</span> configuration file, <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To
                                 remove these labels after you register the <span class="ph">Data Collector</span>, you must modify the configuration file.<p class="p">Use labels to group
                                         <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels in <span class="ph">Control Hub</span> after you register the <span class="ph">Data Collector</span>.</p>
@@ -455,7 +470,7 @@ For example, the following command registers a <span class="ph">Data Collector</
                     click <span class="ph uicontrol">Configuration</span>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Enter <kbd class="ph userinput">SCH</kbd> in the search field to display the <span class="ph">Control Hub</span> configuration properties.</span>
+                <span class="ph cmd">Enter "SCH" in the search field to display the <span class="ph">Control Hub</span> configuration properties.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Configure the following properties:</span>
@@ -466,9 +481,9 @@ For example, the following command registers a <span class="ph">Data Collector</
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d63604e1085">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d64749e1082">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d63604e1088">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d64749e1085">Description</th>
 
                                 </tr>
 
@@ -476,16 +491,16 @@ For example, the following command registers a <span class="ph">Data Collector</
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e1085 ">Enable SCH</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e1082 ">Enable SCH</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e1088 ">Select to enable <span class="ph">Control Hub</span>.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e1085 ">Select to enable <span class="ph">Control Hub</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e1085 ">SCH URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e1082 ">SCH URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e1088 ">Enter the appropriate URL:<ul class="ul" id="task_oxx_y5m_xw__d10424e4703">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e1085 ">Enter the appropriate URL:<ul class="ul" id="task_oxx_y5m_xw__d10948e4725">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -499,9 +514,9 @@ For example, the following command registers a <span class="ph">Data Collector</
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e1085 ">SCH User ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e1082 ">SCH User ID</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e1088 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e1085 ">Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -510,16 +525,16 @@ For example, the following command registers a <span class="ph">Data Collector</
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e1085 ">SCH Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e1082 ">SCH Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e1088 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e1085 ">Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d63604e1085 ">SCH Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d64749e1082 ">SCH Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d63604e1088 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d64749e1085 ">Assign a label to this <span class="ph">Data Collector</span>. Labels that you assign here are defined in the <span class="ph">Control Hub</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data Collector</span>, you must modify the labels through Cloudera
                                             Manager.<p class="p">Use labels to group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. If you know how you want to group your <span class="ph">Data Collector</span>s, you can assign labels now. Or you can assign labels

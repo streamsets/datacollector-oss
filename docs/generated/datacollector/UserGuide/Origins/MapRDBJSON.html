@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -106,14 +121,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hys_s15_3y__d45036e613" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hys_s15_3y__d45827e613" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d318052e164">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d321233e164">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d318052e167">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d321233e167">Description</th>
 
                                 </tr>
 
@@ -121,31 +136,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e164 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e164 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d318052e167 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e164 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d318052e167 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d321233e167 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e164 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e164 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d318052e167 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d321233e167 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e164 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_hys_s15_3y__d45036e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e164 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d318052e167 ">Error record handling for the stage: <ul class="ul" id="task_hys_s15_3y__d45036e672">
+                                    <td class="entry" valign="top" width="70%" headers="d321233e167 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e164 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_hys_s15_3y__d45827e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d321233e167 ">Error record handling for the stage: <ul class="ul" id="task_hys_s15_3y__d45827e672">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -176,9 +191,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d318052e252">MapR DB JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d321233e252">MapR DB JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d318052e255">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d321233e255">Description</th>
 
                                 </tr>
 
@@ -186,9 +201,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e252 ">Table Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e252 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d318052e255 ">Name of the MapR DB JSON table to read from. Enter the
+                                    <td class="entry" valign="top" width="70%" headers="d321233e255 ">Name of the MapR DB JSON table to read from. Enter the
                                         name of a table.<p class="p">If you do not include a path to the table, the stage assumes that
         the table exists in the user's home directory. For example, <samp class="ph codeph">/user/&lt;user
          name&gt;/&lt;table name&gt;</samp>.</p>
@@ -201,9 +216,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d318052e252 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d321233e252 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d318052e255 ">Value of the _id field in the JSON document, or the row
+                                    <td class="entry" valign="top" width="70%" headers="d321233e255 ">Value of the _id field in the JSON document, or the row
                                         key of the table, where you want the origin to start
                                             reading.<p class="p">By default, the origin reads all rows in the
                                             JSON table. You can optionally define an initial offset

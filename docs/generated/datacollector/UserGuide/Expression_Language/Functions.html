@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html" title="Expression Language">Expression Language</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -40,9 +55,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="31.25%" id="d205233e40">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d208221e40">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d205233e43">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d208221e43">Functions</th>
 
       </tr>
 
@@ -50,9 +65,9 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute(&lt;attribute name&gt;) </li>
@@ -93,10 +108,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists(&lt;header&gt;) </li>
 
@@ -119,10 +134,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -147,9 +162,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
          <li class="li">base64:decodeBytes(&lt;string&gt;)</li>
 
@@ -166,10 +181,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_yvc_3qs_r1b">Credential
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_yvc_3qs_r1b">Credential
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_gyz_xps_r1b">
          <li class="li">credential:get(&lt;storeID&gt;, &lt;group&gt;, &lt;credential name&gt;)</li>
 
@@ -183,9 +198,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
          <li class="li">drift:names(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
 
@@ -202,9 +217,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_d53_1ts_kcb">
          <li class="li">f:attribute(&lt;attribute name&gt;)</li>
 
@@ -221,9 +236,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_kxj_nyl_5x">File functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_kxj_nyl_5x">File functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_mmh_mqr_5x">
          <li class="li">file:fileExtension(&lt;filepath&gt;)</li>
 
@@ -245,9 +260,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_ntg_zhf_lw">
          <li class="li">math:abs(&lt;number&gt;)</li>
 
@@ -268,10 +283,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_dvg_nqn_wx">Pipeline functions</a>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_dvg_nqn_wx">Pipeline functions</a>
        </td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_nmc_qpn_wx">
          <li class="li">pipeline:id()</li>
 
@@ -290,9 +305,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r">String functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:concat(&lt;string1&gt;, &lt;string2&gt;)</li>
@@ -350,9 +365,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">Time functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">Time functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_vrl_4rf_sw">
          <li class="li">time:createDateFromStringTZ(&lt;string&gt;, &lt;time zone&gt;, &lt;date format&gt;)</li>
 
@@ -383,10 +398,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d205233e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d208221e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d205233e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d208221e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">alert:info()</li>
 
@@ -1028,12 +1043,15 @@
                             access the CyberArk credential store, "jks" to access the Java keystore
                             credential store, or "vault" to access the Vault credential store.</li>
 
-                        <li class="li">group - Group to which a user must belong before that user can access the
-                credential. Only users that have execute permission on the pipeline and that belong
-                to this group can validate, preview, or run the pipeline that retrieves the
-                credential values. If you specify the default "all" group, then all users with
-                execute permission on the pipeline can validate, preview, or run the pipeline that
-                retrieves the credential values.</li>
+                        <li class="li">group - Group to which a user must belong before that user
+                can access the credential. Only users that have execute permission on the pipeline
+                and that belong to this group can validate, preview, or run the pipeline that
+                retrieves the credential values. <p class="p">If working with <span class="ph">Control Hub</span>, specify the
+                    group using the required naming convention: <samp class="ph codeph">&lt;group
+                        ID&gt;@&lt;organization ID&gt;</samp>. To grant access to all users, specify the
+                    default "all" group when working only with <span class="ph">Data Collector</span> or the default
+                    "all@&lt;organization ID&gt;" group when working with <span class="ph">Control Hub</span>.</p>
+</li>
 
                         <li class="li">credential name - Name of the credential value to retrieve from the
                             credential store. Use the required format for the credential store:<ul class="ul" id="concept_yvc_3qs_r1b__ul_jw3_gyt_51b">
@@ -1098,12 +1116,15 @@
                             access the CyberArk credential store or "vault" to access the Vault
                             credential store.</li>
 
-                        <li class="li">group - Group to which a user must belong before that user can access the
-                credential. Only users that have execute permission on the pipeline and that belong
-                to this group can validate, preview, or run the pipeline that retrieves the
-                credential values. If you specify the default "all" group, then all users with
-                execute permission on the pipeline can validate, preview, or run the pipeline that
-                retrieves the credential values.</li>
+                        <li class="li">group - Group to which a user must belong before that user
+                can access the credential. Only users that have execute permission on the pipeline
+                and that belong to this group can validate, preview, or run the pipeline that
+                retrieves the credential values. <p class="p">If working with <span class="ph">Control Hub</span>, specify the
+                    group using the required naming convention: <samp class="ph codeph">&lt;group
+                        ID&gt;@&lt;organization ID&gt;</samp>. To grant access to all users, specify the
+                    default "all" group when working only with <span class="ph">Data Collector</span> or the default
+                    "all@&lt;organization ID&gt;" group when working with <span class="ph">Control Hub</span>.</p>
+</li>
 
                         <li class="li">credential name - Name of the credential value to retrieve from the
                             credential store. Use the required format for the credential store:<ul class="ul" id="concept_yvc_3qs_r1b__ul_v3d_5qj_fbb">
@@ -1584,7 +1605,7 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
                 
                     <dt class="dt dlterm">math:round(&lt;number&gt;)</dt>
 
-                    <dd class="dd">Returns the closest integer to the argument, rounding up for ties.</dd>
+                    <dd class="dd">Returns the closest number to the argument, rounding up for ties.</dd>
 
                     <dd class="dd">Return type: Double or Long.</dd>
 
@@ -2138,7 +2159,7 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
                         <li class="li">string - String with datetime values, not including the time zone.</li>
 
                         <li class="li">time zone - Time zone associated with the datetime values. The time zone
-                            is used when creating the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d38360e5504">
+                            is used when creating the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d39078e5560">
                         <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
                               see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
 
@@ -2178,7 +2199,7 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
                     <div class="p">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_m5p_4c3_scb">
                             <li class="li">Date object - Date object to use.</li>
 
-                            <li class="li">time zone - Time zone associated with the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d38360e5504">
+                            <li class="li">time zone - Time zone associated with the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d39078e5560">
                         <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
                               see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
 
@@ -2372,7 +2393,7 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
                         Universal Time (UTC).</p>
 
                     <div class="p">Uses the following argument:<ul class="ul" id="concept_qkr_trf_sw__ul_wfy_s23_scb">
-                            <li class="li">time zone - Time zone to use.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d38360e5504">
+                            <li class="li">time zone - Time zone to use.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d39078e5560">
                         <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
                               see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
 
@@ -2714,6 +2735,12 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
         <dd class="dd">Returns a randomly generated UUID. For example, you might use the function in an
           Expression Evaluator processor to generate a UUID for an ID field added to each
           record.</dd>
+
+        <dd class="dd">The uuid:uuid() function uses a lot of entropy on Linux systems and can cause your
+          entropy pools to run dry. When this happens, your pipelines slow to a halt but continue to
+          run. Throughput effectively goes to zero while the system waits for entropy to again
+          become available. As a best practice, we recommend running the haveged daemon on any <span class="ph">Data Collector</span> node
+          where the uuid:uuid() function is used. The haveged daemon regenerates your entropy pools. </dd>
 
         <dd class="dd">Return type: String.</dd>
 

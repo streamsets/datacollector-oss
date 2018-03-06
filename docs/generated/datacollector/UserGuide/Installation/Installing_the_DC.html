@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -51,13 +66,19 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For a production environment, configure the directories used to store
                     configuration, data, log, and resource files so that they are outside of
-                        <samp class="ph codeph">$SDC_DIST</samp>, the base <span class="ph">Data Collector</span> runtime directory. Use directories outside of the runtime directory to enable
-                    use of the directories after <span class="ph">Data Collector</span> upgrades.</span>
-                <div class="itemgroup info">For a development or test environment, you can use the default locations
-                    within the <samp class="ph codeph">$SDC_DIST</samp> runtime directory. However, StreamSets
-                    recommends that you use directories outside of the runtime directory for all
-                    environments. If you use the default values for a development or test
-                    environment, make sure the user who starts <span class="ph">Data Collector</span> has write permission for the base <span class="ph">Data Collector</span> runtime directory.</div>
+                        <samp class="ph codeph">$SDC_DIST</samp>, the location where you extracted the tarball and
+                    the base <span class="ph">Data Collector</span> runtime directory. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use directories outside of the runtime directory to enable use of the
+                        directories after <span class="ph">Data Collector</span> upgrades.</p>
+
+                    <p class="p">For a development or test environment, you can use the default locations
+                        within the <samp class="ph codeph">$SDC_DIST</samp> runtime directory. However, StreamSets
+                        recommends that you use directories outside of the runtime directory for all
+                        environments. If you use the default values for a development or test
+                        environment, make sure the user who starts <span class="ph">Data Collector</span> has write permission on the base <span class="ph">Data Collector</span> runtime directory.</p>
+
+                </div>
                 <ol type="a" class="ol substeps" id="task_bt1_zcp_kq__substeps_ap1_j5p_vv">
                     <li class="li substep substepexpand">
                         <span class="ph cmd">Create directories outside of the <samp class="ph codeph">$SDC_DIST</samp> runtime

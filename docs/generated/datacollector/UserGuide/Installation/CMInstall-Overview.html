@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -77,8 +92,9 @@
                 <span class="ph cmd">Use the following URL to download the CSD from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Copy the <span class="ph">Data Collector</span> CSD file to the<span class="ph uicontrol"> Local Descriptor Repository Path</span>. By
-                    default, the path is <samp class="ph codeph">/opt/cloudera/csd</samp>.</span>
+                <span class="ph cmd">Copy the <span class="ph">Data Collector</span> CSD file
+                    to the<span class="ph uicontrol"> Local Descriptor Repository Path</span>. By default, the
+                    path is <samp class="ph codeph">/opt/cloudera/csd</samp>.</span>
                 <div class="itemgroup info">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the <span class="ph uicontrol">Custom Service
                         Descriptors</span> category. Place the CSD file in the path configured
                     for <span class="ph uicontrol">Local Descriptor Repository Path</span>. </div>
@@ -144,7 +160,7 @@ For Ubuntu
     </div>
 
 </div>
-<div class="topic task nested1" id="unique_1297064476">
+<div class="topic task nested1" id="unique_365818216">
     <h2 class="title topictitle2">Step 3. Distribute and Activate the StreamSets Parcel</h2>
 
     <div class="body taskbody">
@@ -166,7 +182,7 @@ For Ubuntu
 
         </div>
 
-        <ol class="ol steps" id="unique_1297064476__steps_zj3_4sm_25"><li class="li step stepexpand">
+        <ol class="ol steps" id="unique_365818216__steps_zj3_4sm_25"><li class="li step stepexpand">
                 <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
                         <span class="ph uicontrol">Parcels</span> icon. </span>
                 <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't

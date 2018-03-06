@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -54,9 +69,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d417844e65">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d422133e65">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d417844e68">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d422133e68">Description</th>
 
                         </tr>
 
@@ -64,9 +79,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d417844e65 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d422133e65 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d417844e68 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cv3_nqt_51b__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d422133e68 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cv3_nqt_51b__ul_m12_mgp_qx">
                                     <li class="li">start - Generated as the pipeline starts. </li>
 
                                     <li class="li">stop - Generated as the pipeline stops.</li>
@@ -77,16 +92,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d417844e65 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d422133e65 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d417844e68 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d422133e68 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d417844e65 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d422133e65 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_cv3_nqt_51b__d80288e2100" valign="top" width="70%" headers="d417844e68 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_cv3_nqt_51b__d81368e2112" valign="top" width="70%" headers="d422133e68 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -112,9 +127,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d417844e143">Pipeline Start Event Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d422133e143">Pipeline Start Event Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d417844e146">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d422133e146">Description</th>
 
                                     </tr>
 
@@ -122,31 +137,31 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e143 ">pipelineId</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e143 ">pipelineId</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e146 ">The ID of the pipeline that started.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d422133e146 ">The ID of the pipeline that started.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e143 ">pipelineName</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e143 ">pipelineName</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e146 ">The user-defined name of the pipeline that
+                                        <td class="entry" valign="top" width="70%" headers="d422133e146 ">The user-defined name of the pipeline that
                                             started.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e143 ">user</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e143 ">user</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e146 ">The user who started the pipeline.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d422133e146 ">The user who started the pipeline.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e143 ">parameters</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e143 ">parameters</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e146 ">Any parameters used when starting the
+                                        <td class="entry" valign="top" width="70%" headers="d422133e146 ">Any parameters used when starting the
                                             pipeline.</td>
 
                                     </tr>
@@ -177,9 +192,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d417844e221">Pipeline Stop Event Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d422133e221">Pipeline Stop Event Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d417844e224">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d422133e224">Description</th>
 
                                     </tr>
 
@@ -187,24 +202,24 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e221 ">pipelineId</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e221 ">pipelineId</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e224 ">The ID of the pipeline that stopped.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d422133e224 ">The ID of the pipeline that stopped.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e221 ">pipelineName</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e221 ">pipelineName</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e224 ">The user-defined name of the pipeline that
+                                        <td class="entry" valign="top" width="70%" headers="d422133e224 ">The user-defined name of the pipeline that
                                             stopped.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e221 ">reason</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e221 ">reason</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e224 ">The reason why the pipeline stopped. Can be set to
+                                        <td class="entry" valign="top" width="70%" headers="d422133e224 ">The reason why the pipeline stopped. Can be set to
                                             the following reasons:<ul class="ul" id="concept_cv3_nqt_51b__ul_iwt_fxy_t1b">
                                                 <li class="li">Error - An error occurred as the pipeline was
                                                   running.</li>
@@ -220,9 +235,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d417844e221 ">user</td>
+                                        <td class="entry" valign="top" width="30%" headers="d422133e221 ">user</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d417844e224 ">The user who stopped the pipeline, when
+                                        <td class="entry" valign="top" width="70%" headers="d422133e224 ">The user who stopped the pipeline, when
                                             relevant.</td>
 
                                     </tr>

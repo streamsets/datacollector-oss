@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -60,14 +75,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_j3q_tpr_4cb__d16989e5484" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_j3q_tpr_4cb__d17492e5550" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d73667e89">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d74807e89">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d73667e92">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d74807e92">Description</th>
 
                                 </tr>
 
@@ -75,24 +90,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d73667e89 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d74807e89 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d73667e92 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d73667e89 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d73667e92 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d74807e92 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d73667e89 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_j3q_tpr_4cb__d16989e5530" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d74807e89 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d73667e92 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d74807e92 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d74807e89 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_j3q_tpr_4cb__d17492e5596" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d74807e92 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -104,10 +119,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d73667e89 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_j3q_tpr_4cb__d16989e5546" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d74807e89 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_j3q_tpr_4cb__d17492e5612" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d73667e92 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d74807e92 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -118,10 +133,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d73667e89 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_j3q_tpr_4cb__d16989e5563" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d74807e89 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_j3q_tpr_4cb__d17492e5629" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d73667e92 ">Error record handling for the stage: <ul class="ul" id="task_j3q_tpr_4cb__d16989e5567">
+                                    <td class="entry" valign="top" width="70%" headers="d74807e92 ">Error record handling for the stage: <ul class="ul" id="task_j3q_tpr_4cb__d17492e5633">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -151,9 +166,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d73667e203">Aerospike Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d74807e203">Aerospike Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d73667e206">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d74807e206">Description</th>
 
                                 </tr>
 
@@ -161,9 +176,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e203 ">Aerospike Nodes</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e203 ">Aerospike Nodes</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e206 ">Aerospike nodes to use. Use the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e206 ">Aerospike nodes to use. Use the following
                                             format:<pre class="pre codeblock">&lt;host name&gt;:&lt;port number&gt;</pre>
 <p class="p">For
                                             example: <samp class="ph codeph">localhost:3000</samp></p>
@@ -177,9 +192,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e203 ">Retry Attempts</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e203 ">Retry Attempts</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e206 ">Maximum number of times to attempt to connect to the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e206 ">Maximum number of times to attempt to connect to the
                                         Aerospike database.<p class="p">Default is 0, which means that the
                                             destination does not attempt any retries.</p>
 </td>
@@ -203,9 +218,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d73667e275">Mapping Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d74807e275">Mapping Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d73667e278">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d74807e278">Description</th>
 
                                 </tr>
 
@@ -213,35 +228,35 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e275 ">Namespace</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e275 ">Namespace</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e278 ">Aerospike namespace to use. Enter a namespace name or
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e278 ">Aerospike namespace to use. Enter a namespace name or
                                         enter an expression that defines the namespace.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e275 ">Set</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e275 ">Set</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e278 ">Optional Aerospike set within the namespace to use. Enter
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e278 ">Optional Aerospike set within the namespace to use. Enter
                                         a set name or enter an expression that defines the
                                         set.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e275 ">Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e275 ">Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e278 ">Key, or unique identifier, of the Aerospike record to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e278 ">Key, or unique identifier, of the Aerospike record to
                                         use. Enter a key name or enter an expression that defines
                                         the key.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d73667e275 ">Bins</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74807e275 ">Bins</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d73667e278 ">Map fields in the <span class="ph">Data Collector</span> record to bins in the Aerospike record. Enter the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74807e278 ">Map fields in the <span class="ph">Data Collector</span> record to bins in the Aerospike record. Enter the
                                             following:<ul class="ul" id="task_j3q_tpr_4cb__ul_xr5_4xs_4cb">
                                             <li class="li">Bin Name Expression - Expression that defines the
                                                 name of the Aerospike bin to write to.</li>

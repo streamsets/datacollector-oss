@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -69,9 +84,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d223447e111">Create-dc Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d226485e111">Create-dc Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d223447e114">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d226485e114">Description</th>
 
                     </tr>
 
@@ -79,9 +94,9 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-home=&lt;SDC_HOME_DIR&gt;</td>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d226485e111 ">-home=&lt;SDC_HOME_DIR&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Required. Home directory for the additional <span class="ph">Data Collector</span> instance. <div class="p">The root of the specified home directory must exist.
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d226485e114 ">Required. Home directory for the additional <span class="ph">Data Collector</span> instance. <div class="p">The root of the specified home directory must exist.
                                 However, the home subdirectory cannot exist because the command
                                 creates that directory. For example, say you enter the following for
                                 the home directory
@@ -95,18 +110,18 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-httpPort=&lt;SDC_HTTP_PORT&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d226485e111 ">-httpPort=&lt;SDC_HTTP_PORT&gt;<p class="p">or</p>
 <p class="p">-httpsPort=&lt;SDC_HTTPS_PORT&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Required. HTTP or HTTPS port for the additional <span class="ph">Data Collector</span> instance. Enter a port number that is not in use. </td>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d226485e114 ">Required. HTTP or HTTPS port for the additional <span class="ph">Data Collector</span> instance. Enter a port number that is not in use. </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d223447e111 ">-conf=&lt;SDC_CONF_DIR&gt;</td>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d226485e111 ">-conf=&lt;SDC_CONF_DIR&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d223447e114 ">Optional for tarball installations with a manual start. Required for
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d226485e114 ">Optional for tarball installations with a manual start. Required for
                             tarball and RPM installations with a service start. The configuration
                             directory of the original <span class="ph">Data Collector</span> instance. <p class="p">For a tarball installation with a manual start, you must
                                 use this option if you changed the default location of the <span class="ph">Data Collector</span> configuration directory, <samp class="ph codeph">$SDC_DIST/etc</samp>. For

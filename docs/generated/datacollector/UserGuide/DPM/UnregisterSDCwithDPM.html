@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub">StreamSets Control Hub</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -154,9 +169,9 @@ system disableDPM</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d66275e317">Basic Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d67415e317">Basic Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d66275e320">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d67415e320">Description</th>
 
                         </tr>
 
@@ -164,31 +179,31 @@ system disableDPM</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d67415e317 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d67415e320 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
                                         <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d67415e317 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d67415e320 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
                                     disableDPM command to fail.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d67415e317 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d67415e320 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -202,11 +217,11 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d67415e317 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d67415e320 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -217,12 +232,12 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d66275e317 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d67415e317 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d66275e320 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d67415e320 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                         </tr>
 
