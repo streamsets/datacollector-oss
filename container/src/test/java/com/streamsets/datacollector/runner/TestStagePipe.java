@@ -78,6 +78,7 @@ public class TestStagePipe {
 
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("s"));
+    Mockito.when(batchMaker.getSize()).thenReturn(1);
 
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     Mockito.when(pipeBatch.getPreviousOffset()).thenReturn("offset1");
@@ -113,6 +114,7 @@ public class TestStagePipe {
     Mockito.when(batch.getSize()).thenReturn(0);
     //empty batch
     Mockito.when(batch.getRecords()).thenReturn(Collections.emptyIterator());
+    Mockito.when(batchMaker.getSize()).thenReturn(0);
 
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());

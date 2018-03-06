@@ -304,7 +304,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
     // In this is source pipe, update source-specific metrics
     if(isSource()) {
-      if (batchSize > 0) {
+      if (outputRecordsCount > 0) {
         context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
       }
       //Empty batches will increment batch count
