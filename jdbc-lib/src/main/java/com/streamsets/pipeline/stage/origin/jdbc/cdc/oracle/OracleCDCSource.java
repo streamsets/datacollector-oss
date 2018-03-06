@@ -896,9 +896,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
-    LocalDateTime sessionMax = startTime.plusSeconds(configBean.logminerWindow);
-    LocalDateTime now = nowAtDBTz();
-    return (sessionMax.isAfter(now) ? now : sessionMax);
+    return startTime.plusSeconds(configBean.logminerWindow);
   }
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {
