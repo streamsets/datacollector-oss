@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -306,9 +321,9 @@ This is the default time basis. </dd>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d74446e500">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d75586e500">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d74446e503">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d75586e503">Description</th>
 
                         </tr>
 
@@ -316,9 +331,9 @@ This is the default time basis. </dd>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d74446e500 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d75586e500 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d74446e503 ">Event type. Uses one of the following types:<ul class="ul" id="concept_nly_sw2_px__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d75586e503 ">Event type. Uses one of the following types:<ul class="ul" id="concept_nly_sw2_px__ul_m12_mgp_qx">
                                     <li class="li">S3 Object Written - Generated when the destination completes
                                         writing to an object.</li>
 
@@ -331,16 +346,16 @@ This is the default time basis. </dd>
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e500 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e500 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e503 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d75586e503 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e500 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e500 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_nly_sw2_px__d17119e2100" valign="top" width="70%" headers="d74446e503 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_nly_sw2_px__d17622e2112" valign="top" width="70%" headers="d75586e503 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -366,9 +381,9 @@ This is the default time basis. </dd>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d74446e580">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d75586e580">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d74446e583">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d75586e583">Description</th>
 
                                     </tr>
 
@@ -376,23 +391,23 @@ This is the default time basis. </dd>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d74446e580 ">bucket</td>
+                                        <td class="entry" valign="top" width="30%" headers="d75586e580 ">bucket</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d74446e583 ">Bucket where the object is located.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d74446e580 ">objectKey</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d74446e583 ">Object key name that was written.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d75586e583 ">Bucket where the object is located.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d74446e580 ">recordCount</td>
+                                        <td class="entry" valign="top" width="30%" headers="d75586e580 ">objectKey</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d74446e583 ">Number of records written to the object.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d75586e583 ">Object key name that was written.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d75586e580 ">recordCount</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d75586e583 ">Number of records written to the object.</td>
 
                                     </tr>
 
@@ -416,9 +431,9 @@ This is the default time basis. </dd>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d74446e646">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d75586e646">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d74446e649">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d75586e649">Description</th>
 
                                     </tr>
 
@@ -426,9 +441,9 @@ This is the default time basis. </dd>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d74446e646 ">sourceFileInfo</td>
+                                        <td class="entry" valign="top" width="30%" headers="d75586e646 ">sourceFileInfo</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d74446e649 ">A map of attributes about the original whole file
+                                        <td class="entry" valign="top" width="70%" headers="d75586e649 ">A map of attributes about the original whole file
                                             that was processed. <p class="p">The attribute names depend on the
                                                 information provided by the origin
                                             system.</p>
@@ -437,9 +452,9 @@ This is the default time basis. </dd>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d74446e646 ">targetFileInfo</td>
+                                        <td class="entry" valign="top" width="30%" headers="d75586e646 ">targetFileInfo</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d74446e649 ">A map of attributes about the whole file written to
+                                        <td class="entry" valign="top" width="70%" headers="d75586e649 ">A map of attributes about the whole file written to
                                             the destination system. The attributes include:<ul class="ul" id="concept_nly_sw2_px__ul_pcx_lkc_rx">
                                                 <li class="li">bucket - The bucket where the whole file is
                                                   written.</li>
@@ -453,9 +468,9 @@ This is the default time basis. </dd>
                                     </tr>
 
                                     <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d74446e646 ">checksum</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d75586e646 ">checksum</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d74446e649 ">Checksum generated for the written file.
+                                                  <td class="entry" valign="top" width="70%" headers="d75586e649 ">Checksum generated for the written file.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -464,9 +479,9 @@ This is the default time basis. </dd>
                                                   </tr>
 
                                     <tr>
-                                                  <td class="entry" valign="top" width="30%" headers="d74446e646 ">checksumAlgorithm</td>
+                                                  <td class="entry" valign="top" width="30%" headers="d75586e646 ">checksumAlgorithm</td>
 
-                                                  <td class="entry" valign="top" width="70%" headers="d74446e649 ">Algorithm used to generate the checksum.
+                                                  <td class="entry" valign="top" width="70%" headers="d75586e649 ">Algorithm used to generate the checksum.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -556,7 +571,7 @@ This is the default time basis. </dd>
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_k2z_ncx_rt__d17056e2973">
+                                    <ul class="ul" id="concept_k2z_ncx_rt__d17559e3026">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -636,7 +651,7 @@ This is the default time basis. </dd>
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_k2z_ncx_rt__d17056e3135">
+                                    the following formats:<ul class="ul" id="concept_k2z_ncx_rt__d17559e3188">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -669,18 +684,25 @@ This is the default time basis. </dd>
                 
                         <dt class="dt dlterm">Text</dt>
 
-                        <dd class="dd">The destination writes data from a single text field to the destination
-                              system. When you configure the stage, you select the field to use.
-                              When necessary, merge record data into the field earlier in the
-                              pipeline. </dd>
+                        <dd class="dd">The destination writes data from a single text field to the
+                                    destination system. When you configure the stage, you select the
+                                    field to use. When necessary, merge record data into the field
+                                    earlier in the pipeline.
+                        </dd>
 
                         <dd class="dd">You can configure the characters to use as record separators. By
                               default, the destination uses a UNIX-style line ending (\n) to
                               separate records.</dd>
 
-                        <dd class="dd">When a record contains no data in the text field, you can configure the
-                              destination to write the record separator characters, creating an
-                              empty line. By default, the destination discards the record.</dd>
+                        <dd class="dd">When a record does not contain the selected text field, you can
+                              configure the destination to report the missing field as an error or
+                              to ignore the missing field. By default, the destination reports an
+                              error.</dd>
+
+                        <dd class="dd">When configured to ignore a missing text field, you can configure the
+                              destination to discard the record or to write the record separator
+                              characters to create an empty line for the record. By default, the
+                              destination discards the record.</dd>
 
                   
                 
@@ -724,9 +746,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e1034">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e1037">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e1037">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e1040">Description</th>
 
                                 </tr>
 
@@ -734,34 +756,34 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e1034 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e1037 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e1037 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e1034 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d74446e1037 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d75586e1040 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1034 ">Produce Events <a class="xref" href="AmazonS3.html#concept_aqq_tt2_px">
+       <td class="entry" valign="top" width="30%" headers="d75586e1037 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d75586e1040 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1037 ">Produce Events <a class="xref" href="AmazonS3.html#concept_aqq_tt2_px">
                                             <img class="image" id="task_pxb_j3r_rt__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1037 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1040 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_pxb_j3r_rt__d17119e1969" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_pxb_j3r_rt__d17622e1981" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e1034 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_pxb_j3r_rt__d17119e1978" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d75586e1037 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_pxb_j3r_rt__d17622e1990" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e1037 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d75586e1040 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -770,10 +792,10 @@ This is the default time basis. </dd>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e1034 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_pxb_j3r_rt__d17119e1995" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d75586e1037 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_pxb_j3r_rt__d17622e2007" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e1037 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d75586e1040 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -798,9 +820,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d74446e1141">Amazon S3 Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d75586e1144">Amazon S3 Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d74446e1144">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d75586e1147">Description</th>
 
                                 </tr>
 
@@ -808,12 +830,12 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Access Key ID
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Access Key ID
                                         <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector writes data to an Amazon S3 destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_pxb_j3r_rt__image_v69_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -823,12 +845,12 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Secret Access Key
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Secret Access Key
                                         <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector writes data to an Amazon S3 destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_pxb_j3r_rt__image_v84_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -838,26 +860,26 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Region</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Region</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Amazon S3 region. </td>
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Amazon S3 region. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Endpoint</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Endpoint</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
         name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Bucket <a class="xref" href="AmazonS3.html#concept_bnp_gwp_f1b">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Bucket <a class="xref" href="AmazonS3.html#concept_bnp_gwp_f1b">
                                             <img class="image" id="task_pxb_j3r_rt__image_sk5_yzp_f1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Bucket to use when writing records.<p class="p">Enter a bucket name
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Bucket to use when writing records.<p class="p">Enter a bucket name
                                             or define an expression that evaluates to bucket names.
                                             </p>
 <p class="p">When using datetime variables in the expression,
@@ -868,27 +890,27 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Common Prefix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Common Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Common prefix that determines where objects are written. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Common prefix that determines where objects are written. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Delimiter</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Delimiter</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash ( /
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash ( /
          ).</p>
 </td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Partition Prefix <a class="xref" href="AmazonS3.html#concept_qw5_gtq_yv">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Partition Prefix <a class="xref" href="AmazonS3.html#concept_qw5_gtq_yv">
                                             <img class="image" id="task_pxb_j3r_rt__image_v34_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Optional partition prefix to specify the partition to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Optional partition prefix to specify the partition to
                                         use. <p class="p">Use a specific partition prefix or define an
                                             expression that evaluates to a partition prefix.
                                             </p>
@@ -900,11 +922,11 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Data Time Zone <a class="xref" href="AmazonS3.html#concept_qtb_njg_vw">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Data Time Zone <a class="xref" href="AmazonS3.html#concept_qtb_njg_vw">
                                             <img class="image" id="task_pxb_j3r_rt__image_zyk_bd5_5bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">
                                         <p class="p">Time zone for the destination system. Used with the time
                                             basis to resolve datetimes in a time-based bucket or
                                             partition prefix. </p>
@@ -914,11 +936,11 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Time Basis <a class="xref" href="AmazonS3.html#concept_qtb_njg_vw">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Time Basis <a class="xref" href="AmazonS3.html#concept_qtb_njg_vw">
                                             <img class="image" id="task_pxb_j3r_rt__image_d73_kf8_wv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">
                                         <div class="p">Time basis to use for writing to a time-based bucket or
                                             partition prefix. Use one of the following
                                                 expressions:<ul class="ul" id="task_pxb_j3r_rt__ul_wbn_qdt_r5">
@@ -946,11 +968,11 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Object Name Prefix <a class="xref" href="AmazonS3.html#concept_lkp_jd3_yv">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Object Name Prefix <a class="xref" href="AmazonS3.html#concept_lkp_jd3_yv">
                                             <img class="image" id="task_pxb_j3r_rt__image_d34_kf2_wv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Defines a prefix for object names written by the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Defines a prefix for object names written by the
                                         destination. By default, object names start with "sdc" as
                                         follows: <samp class="ph codeph">sdc-&lt;UTC
                                             timestamp&gt;-&lt;counter&gt;</samp>. </td>
@@ -958,9 +980,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Object Name Suffix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Object Name Suffix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Suffix to use for object names, such as txt or json. When
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Suffix to use for object names, such as txt or json. When
                                         used, the destination adds a period and the configured
                                         suffix as follows: &lt;object name&gt;.&lt;suffix&gt;.<p class="p">You can
                                             include periods within the suffix, but do not start the
@@ -973,9 +995,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d74446e1141 ">Compress with Gzip</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d75586e1144 ">Compress with Gzip</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d74446e1144 ">Compresses files with gzip before writing to Amazon
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d75586e1147 ">Compresses files with gzip before writing to Amazon
                                         S3.</td>
 
                                 </tr>
@@ -997,9 +1019,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d74446e1401">SSE Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d75586e1404">SSE Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d74446e1404">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d75586e1407">Description</th>
 
                                 </tr>
 
@@ -1007,20 +1029,20 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">Use Server-Side Encryption
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">Use Server-Side Encryption
                                         <a class="xref" href="AmazonS3.html#concept_adm_kn1_mw">
                                             <img class="image" id="task_pxb_j3r_rt__image_v72_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">Specifies whether to enable server-side
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">Specifies whether to enable server-side
                                         encryption.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">Server-Side Encryption Option</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">Server-Side Encryption Option</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">Option that Amazon S3 uses to manage the encryption
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">Option that Amazon S3 uses to manage the encryption
                                             keys:<ul class="ul" id="task_pxb_j3r_rt__ul_erv_1w1_mw">
                                             <li class="li">SSE-S3 - Use Amazon S3-managed keys.</li>
 
@@ -1036,9 +1058,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">AWS KMS Key ARN</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">AWS KMS Key ARN</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">Amazon resource name (ARN) of the AWS KMS master
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">Amazon resource name (ARN) of the AWS KMS master
                                         encryption key. Use the following
                                             format:<pre class="pre codeblock">&lt;arn&gt;:&lt;aws&gt;:&lt;kms&gt;:&lt;region&gt;:&lt;acct ID&gt;:&lt;key&gt;/&lt;key ID&gt;</pre>
 <p class="p">Used
@@ -1048,9 +1070,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">Encryption Context</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">Encryption Context</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">Key-value pairs to use for the encryption context. Click
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">Key-value pairs to use for the encryption context. Click
                                             <span class="ph uicontrol">Add</span> to add key-value
                                             pairs.<p class="p">Used for SSE-KMS encryption only.</p>
 </td>
@@ -1058,18 +1080,18 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">Customer Encryption Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">Customer Encryption Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">The 256-bit and Base64 encoded encryption key to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">The 256-bit and Base64 encoded encryption key to
                                             use.<p class="p">Used for SSE-C encryption only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74446e1401 ">Customer Encryption Key MD5</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75586e1404 ">Customer Encryption Key MD5</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74446e1404 ">The 128-bit and Base64 encoded MD5 digest of the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75586e1407 ">The 128-bit and Base64 encoded MD5 digest of the
                                         encryption key according to RFC 1321.<p class="p">Used for SSE-C
                                             encryption only.</p>
 </td>
@@ -1093,70 +1115,70 @@ This is the default time basis. </dd>
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d74446e1524">Advanced Property</th>
+      <th class="entry" valign="top" width="30%" id="d75586e1527">Advanced Property</th>
 
-      <th class="entry" valign="top" width="70%" id="d74446e1527">Description</th>
+      <th class="entry" valign="top" width="70%" id="d75586e1530">Description</th>
 
      </tr>
 
     </thead>
 
     <tbody class="tbody">
-     <tr id="task_pxb_j3r_rt__d17119e2792">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Connection Timeout</td>
+     <tr id="task_pxb_j3r_rt__d17622e2804">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Connection Timeout</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Seconds to wait for a response before closing the connection. <p class="p">Default is 10
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Seconds to wait for a response before closing the connection. <p class="p">Default is 10
         seconds.</p>
 </td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d17119e2803">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Socket Timeout</td>
+     <tr id="task_pxb_j3r_rt__d17622e2815">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Socket Timeout</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Seconds to wait for a response to a query.</td>
-
-     </tr>
-
-     <tr id="task_pxb_j3r_rt__d17119e2812">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Retry Count</td>
-
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Maximum number of times to retry requests.</td>
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Seconds to wait for a response to a query.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d17119e2821">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Use Proxy</td>
+     <tr id="task_pxb_j3r_rt__d17622e2824">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Retry Count</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Specifies whether to use a proxy to connect.</td>
-
-     </tr>
-
-     <tr id="task_pxb_j3r_rt__d17119e2830">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Proxy Host</td>
-
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Proxy host.</td>
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Maximum number of times to retry requests.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d17119e2840">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Proxy Port</td>
+     <tr id="task_pxb_j3r_rt__d17622e2833">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Proxy port.</td>
-
-     </tr>
-
-     <tr id="task_pxb_j3r_rt__d17119e2849">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Proxy User</td>
-
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Specifies whether to use a proxy to connect.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d17119e2858">
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Proxy Password</td>
+     <tr id="task_pxb_j3r_rt__d17622e2842">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Proxy Host</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_pxb_j3r_rt__d17056e4675">To
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Proxy host.</td>
+
+     </tr>
+
+     <tr id="task_pxb_j3r_rt__d17622e2852">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Proxy Port</td>
+
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Proxy port.</td>
+
+     </tr>
+
+     <tr id="task_pxb_j3r_rt__d17622e2861">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Proxy User</td>
+
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">User name for proxy credentials.</td>
+
+     </tr>
+
+     <tr id="task_pxb_j3r_rt__d17622e2870">
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_pxb_j3r_rt__d17559e4731">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1164,9 +1186,9 @@ This is the default time basis. </dd>
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Thread Pool Size for Parallel Uploads</td>
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Thread Pool Size for Parallel Uploads</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Size of the thread pool for parallel uploads. Used when writing to multiple partitions
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Size of the thread pool for parallel uploads. Used when writing to multiple partitions
        and writing large objects in multiple parts.<p class="p">When writing to multiple partitions, setting
         this property up to the number of partitions being written to can improve performance.
         </p>
@@ -1177,16 +1199,16 @@ This is the default time basis. </dd>
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Multipart Upload Threshold</td>
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Multipart Upload Threshold</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Minimum batch size in bytes for the destination to use multipart uploads.</td>
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Minimum batch size in bytes for the destination to use multipart uploads.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d74446e1524 ">Minimum Upload Part Size</td>
+      <td class="entry" valign="top" width="30%" headers="d75586e1527 ">Minimum Upload Part Size</td>
 
-      <td class="entry" valign="top" width="70%" headers="d74446e1527 ">Minimum part size in bytes for multipart uploads.</td>
+      <td class="entry" valign="top" width="70%" headers="d75586e1530 ">Minimum part size in bytes for multipart uploads.</td>
 
      </tr>
 
@@ -1207,9 +1229,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e1689">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e1692">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e1692">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e1695">Description</th>
 
                                 </tr>
 
@@ -1217,11 +1239,11 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1689 ">Data Format <a class="xref" href="AmazonS3.html#concept_k2z_ncx_rt">
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1692 ">Data Format <a class="xref" href="AmazonS3.html#concept_k2z_ncx_rt">
                                             <img class="image" id="task_pxb_j3r_rt__image_ivq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1692 ">Data format to write data: <ul class="ul" id="task_pxb_j3r_rt__ul_jvq_1fj_vx">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1695 ">Data format to write data: <ul class="ul" id="task_pxb_j3r_rt__ul_jvq_1fj_vx">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -1257,14 +1279,14 @@ This is the default time basis. </dd>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6055" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e6120" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e1785">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e1788">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e1788">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e1791">Description</th>
 
                                 </tr>
 
@@ -1272,10 +1294,10 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_pxb_j3r_rt__d16989e6084">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_pxb_j3r_rt__d17492e6149">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1283,7 +1305,7 @@ This is the default time basis. </dd>
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_pxb_j3r_rt__d16989e6093" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_pxb_j3r_rt__d17492e6158" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -1296,9 +1318,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -1307,17 +1329,17 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -1327,10 +1349,10 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_pxb_j3r_rt__d16989e6143">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_pxb_j3r_rt__d17492e6208">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1343,9 +1365,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -1357,17 +1379,17 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1785 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1788 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1788 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1791 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1386,14 +1408,14 @@ This is the default time basis. </dd>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6551" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e6616" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e1934">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e1937">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e1937">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e1940">Description</th>
 
                                 </tr>
 
@@ -1401,9 +1423,9 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1934 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1937 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1937 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1940 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -1419,14 +1441,14 @@ This is the default time basis. </dd>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6608" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e6673" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e1980">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e1983">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e1983">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e1986">Description</th>
 
                                 </tr>
 
@@ -1434,9 +1456,9 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Format for delimited data:<ul class="ul" id="task_pxb_j3r_rt__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Format for delimited data:<ul class="ul" id="task_pxb_j3r_rt__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1465,16 +1487,16 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1482,9 +1504,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1493,9 +1515,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1510,9 +1532,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1521,9 +1543,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1532,9 +1554,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e1980 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e1983 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e1983 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d75586e1986 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1550,14 +1572,14 @@ This is the default time basis. </dd>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6747" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e6813" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e2151">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e2154">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e2154">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e2157">Description</th>
 
                                 </tr>
 
@@ -1565,9 +1587,9 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2151 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2154 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2154 ">Determines how JSON data is written:<ul class="ul" id="task_pxb_j3r_rt__d16989e6776">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2157 ">Determines how JSON data is written:<ul class="ul" id="task_pxb_j3r_rt__d17492e6842">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1582,9 +1604,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e2151 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e2154 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e2154 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d75586e2157 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1600,14 +1622,14 @@ This is the default time basis. </dd>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6820" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e6885" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e2214">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e2217">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e2217">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e2220">Description</th>
 
                                 </tr>
 
@@ -1615,9 +1637,9 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2214 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2217 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2217 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2220 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -1627,9 +1649,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2214 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2217 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2217 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2220 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1650,14 +1672,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d16989e6993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d17492e7059" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e2326">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e2329">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e2329">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e2332">Description</th>
 
                                 </tr>
 
@@ -1665,17 +1687,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2326 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2329 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2329 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2332 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2326 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2329 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2329 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2332 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -1684,20 +1706,29 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2326 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2329 ">On Missing Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2329 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2332 ">When a record does not include the text field, determines
+                                        whether the destination reports the missing field as an
+                                        error or ignores the missing field.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2329 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2332 ">When configured to ignore a missing text field, inserts
                                         the configured record separator string to create an empty
-                                            line.<p class="p">When not selected, records without the text
-                                            field are discarded.</p>
+                                            line.<p class="p">When not selected, discards records without the
+                                            text field.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d74446e2326 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d75586e2329 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d74446e2329 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d75586e2332 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1718,9 +1749,9 @@ Use a message type defined in the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d74446e2404">Whole File Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d75586e2416">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74446e2407">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d75586e2419">Description</th>
 
                                 </tr>
 
@@ -1728,9 +1759,9 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2404 ">File Name Expression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2416 ">File Name Expression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2407 ">
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2419 ">
                                         <p class="p">Expression to use for the file names. </p>
 
                                         <p class="p">For tips on how to name files based on input file names,
@@ -1741,11 +1772,11 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2404 ">File Exists</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2416 ">File Exists</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2407 ">Action to take when a file of the same name already
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2419 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_pxb_j3r_rt__d16989e7144">
+                                            options:<ul class="ul" id="task_pxb_j3r_rt__d17492e7218">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -1757,10 +1788,10 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2404 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
-                                            <img class="image" id="task_pxb_j3r_rt__d16989e7160" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2416 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
+                                            <img class="image" id="task_pxb_j3r_rt__d17492e7234" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2407 ">Includes checksum information in whole file event
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2419 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event
                                             records. </p>
 </td>
@@ -1768,9 +1799,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d74446e2404 ">Checksum Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d75586e2416 ">Checksum Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74446e2407 ">Algorithm to generate the checksum.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d75586e2419 ">Algorithm to generate the checksum.</td>
 
                                 </tr>
 

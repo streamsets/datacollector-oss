@@ -3,14 +3,14 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Einstein Analytics" /><meta name="abstract" content="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data." /><meta name="description" content="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hlx_r53_rx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Einstein Analytics</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Einstein Analytics" /><meta name="abstract" content="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to upload external data to a dataset." /><meta name="description" content="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to upload external data to a dataset." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hlx_r53_rx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Einstein Analytics</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,37 +23,49 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_hlx_r53_rx">
- <h1 class="title topictitle1">Einstein Analytics</h1>
+    <h1 class="title topictitle1">Einstein Analytics</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The
-        destination connects to Einstein Analytics to create a dataset with external
-        data.</p>
+    
+    <div class="body conbody"><p class="shortdesc">The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The
+        destination connects to Einstein Analytics to upload external data to a dataset.</p>
 
-  <p class="p">When
-            you configure the Einstein Analytics destination, you define connection information,
-            including the API version that the destination uses to connect to Salesforce Einstein
-            Analytics. </p>
+        <p class="p">When
+            you configure the destination, you define connection information, including the API
+            version that the destination uses to connect to Einstein Analytics. </p>
 
-        <p class="p">You specify the <em class="ph i">edgemart alias</em> or name of the dataset to create. The destination
-            typically creates multiple datasets for the edgemart alias, based on the dataset wait
-            time that you configure for the destination. After no data has arrived for the specified
-            wait time, the destination closes and uploads the dataset to Einstein Analytics. When
-            new data arrives, the destination creates a new dataset. Each dataset is named with the
-            edgemart alias name and appended with the timestamp of when the dataset is uploaded. </p>
+        <p class="p">You specify the <em class="ph i">edgemart alias</em> or name of the dataset to upload data to. You can
+            also optionally define the name of the edgemart container or app that contains the
+            dataset. </p>
 
-        <p class="p">You can optionally configure the destination to use a Einstein Analytics dataflow to
-            combine multiple datasets together. You can also specify the metadata of the external
-            data in a JSON format.</p>
+        <p class="p">The destination can upload external data to a new dataset or to an existing dataset using
+            an append, delete, overwrite, or upsert operation. Based on the operation type, you
+            define the metadata of the data to be uploaded in JSON format.</p>
 
-        <p class="p">You can optionally use an HTTP proxy to connect to Salesforce Einstein Analytics. </p>
+        <p class="p">You can optionally use an HTTP proxy to connect to Salesforce Einstein Analytics. When
+            enabled in Salesforce, you can configure the destination to use mutual authentication to
+            connect to Salesforce.</p>
 
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic task nested1" id="task_kff_4vn_jz">
@@ -75,7 +87,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_kff_4vn_jz__d31917e48">
+                <ul class="ul choices" id="task_kff_4vn_jz__d32430e48">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -113,13 +125,72 @@
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_ryp_g4r_vcb">
+    <h2 class="title topictitle2">Define the Operation</h2>
+
+    <div class="body conbody">
+        <div class="p">Configure the Einstein Analytics destination to
+            perform one of the following operations when it uploads external data to a dataset:<ul class="ul" id="concept_ryp_g4r_vcb__ul_zh1_fkt_vcb">
+                <li class="li">Append - Appends data to the dataset, creating the dataset if it doesn’t
+                    exist.</li>
+
+                <li class="li">Delete - Deletes rows from the dataset. The rows to delete must contain a single
+                    field with a unique identifier.</li>
+
+                <li class="li">Overwrite - Replaces data in the dataset, creating the dataset if it doesn't
+                    exist.</li>
+
+                <li class="li">Upsert - Inserts or updates rows in the dataset, creating the dataset if it
+                    doesn’t exist. The rows to upsert must contain a single field with a unique
+                    identifier.</li>
+
+            </ul>
+</div>
+
+        <p class="p">For more information about unique identifiers, see the <a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_ext_data_format.meta/bi_dev_guide_ext_data_format/bi_ext_data_schema_reference.htm" target="_blank">Salesforce Developer documentation</a>. </p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_qln_pct_vcb">
+    <h3 class="title topictitle3">Metadata JSON</h3>
+
+    <div class="body conbody">
+        <div class="p">Uploading external data to an Einstein
+            Analytics dataset involves using the following files:<ul class="ul" id="concept_qln_pct_vcb__ul_ebs_wft_vcb">
+                <li class="li">Data file that contains the external data.</li>
+
+                <li class="li">Optional metadata file that describes the schema of the data in JSON
+                    format.</li>
+
+            </ul>
+</div>
+
+        <p class="p">The Einstein Analytics destination creates the data file based on the incoming record.
+            You define the metadata in JSON format when you configure the destination.</p>
+
+        <p class="p">You must define metadata for the append, upsert, and delete operations. For append and
+            upsert, the metadata must match the metadata of the dataset being uploaded to. For
+            delete, the metadata must be a subset of the dataset columns.</p>
+
+        <p class="p">You can optionally define metadata for the overwrite operation so that Einstein Analytics
+            can correctly interpret the data type of the data. If you do not enter metadata, then
+            Einstein Analytics treats every field as text. </p>
+
+        <p class="p">For more information about how Einstein Analytics handles JSON metadata for uploaded
+            external data, see the <a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_ext_data_format.meta/bi_dev_guide_ext_data_format/bi_ext_data_schema_overview.htm" target="_blank">Salesforce Developer documentation</a>.</p>
+
+    </div>
+
+</div>
+</div>
 <div class="topic concept nested1" id="concept_d4h_2lj_tx">
- <h2 class="title topictitle2">Dataflow</h2>
+ <h2 class="title topictitle2">Dataflow (Deprecated)</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The Einstein Analytics destination typically creates multiple datasets, based on the
-        configured dataset wait time. You can optionally configure the destination to use a Einstein
-        Analytics dataflow to combine multiple datasets together. </p>
+ <div class="body conbody"><p class="shortdesc">In previous releases, you could configure the destination to use an Einstein Analytics
+        dataflow to combine multiple datasets together. However, using dataflows is now deprecated
+        and will be removed in a future release. We recommend configuring the destination to use the
+        append operation to combine data into a single dataset.</p>
 
         <p class="p">An Einstein Analytics dataflow
             includes instructions and transformations to combine datasets. Create the dataflow in
@@ -151,14 +222,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__d16989e5484" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__d17492e5550" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d171900e229">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d174291e319">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d171900e232">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d174291e322">Description</th>
 
                                 </tr>
 
@@ -166,24 +237,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d171900e229 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d174291e319 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d171900e232 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d171900e229 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d171900e232 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d174291e322 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d171900e229 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_mdt_dv3_rx__d16989e5530" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174291e319 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d171900e232 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d174291e322 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d174291e319 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mdt_dv3_rx__d17492e5596" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d174291e322 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -195,10 +266,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d171900e229 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_mdt_dv3_rx__d16989e5546" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174291e319 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mdt_dv3_rx__d17492e5612" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d171900e232 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d174291e322 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -209,10 +280,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d171900e229 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_mdt_dv3_rx__d16989e5563" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174291e319 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_mdt_dv3_rx__d17492e5629" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d171900e232 ">Error record handling for the stage: <ul class="ul" id="task_mdt_dv3_rx__d16989e5567">
+                                    <td class="entry" valign="top" width="70%" headers="d174291e322 ">Error record handling for the stage: <ul class="ul" id="task_mdt_dv3_rx__d17492e5633">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -242,9 +313,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d171900e343">Analytics Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d174291e433">Analytics Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d171900e346">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d174291e436">Description</th>
 
                                 </tr>
 
@@ -252,17 +323,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Salesforce username in the following email format:
         <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdt_dv3_rx__d17056e4675">To
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Salesforce password.<p class="p">If the machine running <span class="ph">Data Collector</span> is outside the trusted IP range
+        configured in your Salesforce environment, you must generate a security token and then set
+        this property to the password followed by the security token. </p>
+<p class="p">For example, if the
+        password is abcd and the security token is 1234, then set this property to abcd1234. For
+        more information on generating a security token, see <a class="xref" href="https://help.salesforce.com/articleView?id=user_security_token.htm&amp;type=0" target="_blank">Reset Your Security Token</a>.</p>
+
+       <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdt_dv3_rx__d17559e4731">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -270,9 +348,9 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_mdt_dv3_rx__d17119e3574">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_mdt_dv3_rx__d17622e3596">
         <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
@@ -285,10 +363,10 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">API Version <a class="xref" href="WaveAnalytics.html#task_kff_4vn_jz">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">API Version <a class="xref" href="WaveAnalytics.html#task_kff_4vn_jz">
                                             <img class="image" id="task_mdt_dv3_rx__image_weh_nch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Salesforce API version to use to connect to Salesforce.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Salesforce API version to use to connect to Salesforce.
         <p class="p">Default is <span class="ph">39.0</span>. If you change the version, you also must download the relevant JAR files from Salesforce
         Web Services Connector (WSC).</p>
 </td>
@@ -296,70 +374,112 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Edgemart Alias</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Edgemart Alias</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Dataset name. The alias must be unique across an
-                                        organization. <p class="p">Each dataset is named with the edgemart
-                                            alias and appended with the timestamp of when the
-                                            dataset is uploaded. If you use a dataflow to combine
-                                            multiple datasets, the destination uses the edgemart
-                                            alias as the name of the aggregated dataset.</p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Dataset name. The alias must be unique across an
+                                        organization. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Append Timestamp to Alias</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Appends the edgemart alias or dataset name with the
+                                        timestamp of the dataset upload.<p class="p">To create a new dataset
+                                            for each upload of data, select this option. To append,
+                                            delete, overwrite, or upsert data to an existing
+                                            dataset, clear this option. </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Dataset Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Edgemart Container</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Maximum time in seconds to wait for new data to arrive.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Name of the edgemart container or app that contains the
+                                        dataset. Enter the developer name or the ID of the app
+                                        rather than the display label.<p class="p">For example, the developer
+                                            name of an app is "AnalyticsCloudPublicDatasets", but
+                                            the display label of the app is "Analytics Cloud Public
+                                            Datasets".</p>
+<p class="p">To get the developer name or ID, run
+                                            the following query in Salesforce: </p>
+<div class="p">
+                                            <pre class="pre codeblock">SELECT Id,DeveloperName,Name, AccessType,CreatedDate,Type FROM Folder where Type = 'Insights' </pre>
+
+                                        </div>
+<p class="p">If not defined when the destination creates a new
+                                            dataset, the destination uses the user's private app. If
+                                            not defined when the destination uploads to an existing
+                                            dataset, Einstein Analytics resolves the app name.
+                                            </p>
+<p class="p">If defined when the destination uploads to an
+                                            existing dataset, the name must match the name of the
+                                            current app containing the existing dataset.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Operation <a class="xref" href="WaveAnalytics.html#concept_ryp_g4r_vcb">
+                                            <img class="image" id="task_mdt_dv3_rx__image_egh_jcz_mr" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Operation to perform when uploading external data to a
+                                        dataset.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Dataset Wait Time (secs)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Maximum time in seconds to wait for new data to arrive.
                                         After no data has arrived in this amount of time, the
-                                        destination closes and uploads the dataset to Wave
-                                        Analytics. When new data arrives, the destination creates a
-                                        new dataset.<p class="p"> The dataset wait time must be at least as
-                                            long as the Batch Wait Time for the origin in the
-                                            pipeline.</p>
+                                        destination uploads the data to Einstein Analytics.<p class="p">The
+                                            dataset wait time must be at least as long as the Batch
+                                            Wait Time for the origin in the pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Use Dataflow <a class="xref" href="WaveAnalytics.html#concept_d4h_2lj_tx" title="The Einstein Analytics destination typically creates multiple datasets, based on the configured dataset wait time. You can optionally configure the destination to use a Einstein Analytics dataflow to combine multiple datasets together.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Use Dataflow <a class="xref" href="WaveAnalytics.html#concept_d4h_2lj_tx" title="In previous releases, you could configure the destination to use an Einstein Analytics dataflow to combine multiple datasets together. However, using dataflows is now deprecated and will be removed in a future release. We recommend configuring the destination to use the append operation to combine data into a single dataset.">
                                             <img class="image" id="task_mdt_dv3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Determines whether to use a Wave Analytics dataflow to
-                                        combine multiple datasets together. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Dataflow Name</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Name of the existing dataflow. <p class="p">You must create the
-                                            dataflow in Wave Analytics. </p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Determines whether to use an Einstein Analytics dataflow
+                                        to combine multiple datasets together. <div class="note important"><span class="importanttitle">Important:</span> Using dataflows is now deprecated and
+                                            will be removed in a future release. We recommend
+                                            configuring the destination to use the append operation
+                                            to combine data into a single dataset.</div>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Run Dataflow After Upload</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Dataflow Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Determines whether the destination runs the dataflow each
-                                        time that it uploads a dataset to Wave Analytics.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Name of the existing dataflow. <p class="p">You must create the
+                                            dataflow in Einstein Analytics. </p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e343 ">Metadata JSON</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Run Dataflow After Upload</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e346 ">Metadata in JSON format that describes the schema of the
-                                            dataset.<p class="p">Enter metadata so that Wave Analytics can
-                                            correctly interpret the datatype of the data. If you do
-                                            not enter metadata, then Wave Analytics treats every
-                                            field as text. </p>
-<p class="p">For more information about how
-                                            Wave Analytics handles JSON metadata for uploaded
-                                            external data, see the Salesforce Wave Analytics
-                                            developer documentation.</p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Determines whether the destination runs the dataflow each
+                                        time that it uploads a dataset to Einstein
+                                        Analytics.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e433 ">Metadata JSON <a class="xref" href="WaveAnalytics.html#concept_qln_pct_vcb">
+                                            <img class="image" id="task_mdt_dv3_rx__image_djk_ykh_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e436 ">Metadata in JSON format that describes the schema of the
+                                        data to be uploaded.<p class="p">Required for the append, upsert, and
+                                            delete operations. Optional for the overwrite
+                                            operation.</p>
 </td>
 
                                 </tr>
@@ -372,74 +492,140 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                    <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, configure the following
-                        properties:</span>
-                    <div class="itemgroup info">
-                        
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__table_qgc_5l2_kz" class="table" frame="border" border="1" rules="all">
-                                
-                                
-                                <thead class="thead" align="left">
-                                    <tr>
-                                        <th class="entry" valign="top" width="33.33333333333333%" id="d171900e532">Advanced Property</th>
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d174291e683">Advanced Property</th>
 
-                                        <th class="entry" valign="top" width="66.66666666666666%" id="d171900e535">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d174291e686">Description</th>
 
-                                    </tr>
+                                </tr>
 
-                                </thead>
+                            </thead>
 
-                                <tbody class="tbody">
-                                    <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Use Proxy</td>
+                            <tbody class="tbody">
+                                <tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Proxy Hostname</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">Proxy host.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Proxy Port</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Proxy Hostname</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">Proxy port.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Proxy Requires Credentials</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">Specifies whether the proxy requires a user name and password.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Proxy host.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Proxy Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Proxy port.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d171900e532 ">Proxy Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Proxy Requires Credentials</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d171900e535 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdt_dv3_rx__d17056e4675">To
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdt_dv3_rx__d17559e4731">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
 
      </tr>
 
-                                </tbody>
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Use Mutual Authentication</td>
 
-                            </table>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">When enabled in Salesforce, you can use SSL/TLS mutual
+                                        authentication to connect to Salesforce. <p class="p">Mutual
+                                            authentication is not enabled in Salesforce by default.
+                                            To enable mutual authentication, contact Salesforce.
+                                            </p>
+<p class="p">Before enabling mutual authentication, you must
+                                            store a <a class="xref" href="https://help.salesforce.com/articleView?id=security_keys_uploading_mutual_auth_cert.htm&amp;type=0" target="_blank">mutual authentication
+                                                certificate</a> in the Data Collector resources
+                                            directory. For more information, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Keystore and Truststore Configuration</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_mdt_dv3_rx__d17492e3253" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">The path to the keystore file. Enter an absolute path to
+                                        the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no keystore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Keystore Type</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_mdt_dv3_rx__d17492e3275">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Keystore Password</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">Password to the keystore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d174291e683 ">Keystore Key Algorithm</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d174291e686 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                                <span class="ph">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 </div>
 
-                    </div>
-                </li>
+                </div>
+            </li>
 </ol>
 
-        </div>
+    </div>
 
 </div>
 </div>

@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub">StreamSets Control Hub</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -50,9 +65,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="44.44444444444444%" id="d61442e59">General Property</th>
+                        <th class="entry" valign="top" width="44.44444444444444%" id="d62587e59">General Property</th>
 
-                        <th class="entry" valign="top" width="55.55555555555556%" id="d61442e62">Description</th>
+                        <th class="entry" valign="top" width="55.55555555555556%" id="d62587e62">Description</th>
 
                     </tr>
 
@@ -60,17 +75,17 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.enabled</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.enabled</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Specifies whether the <span class="ph">Data Collector</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Specifies whether the <span class="ph">Data Collector</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.base.url</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.base.url</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hrn_zz3_fx__ul_c2n_5kd_j1b">
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hrn_zz3_fx__ul_c2n_5kd_j1b">
         <li class="li">For <span class="ph">Control Hub</span> cloud, use
           <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -84,25 +99,25 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.registration.retry.attempts</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.registration.retry.attempts</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Maximum number of times that <span class="ph">Data Collector</span> attempts to register with <span class="ph">Control Hub</span> before failing the registration.<p class="p">Default is 5.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Maximum number of times that <span class="ph">Data Collector</span> attempts to register with <span class="ph">Control Hub</span> before failing the registration.<p class="p">Default is 5.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.security.validationTokenFrequency.secs</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.security.validationTokenFrequency.secs</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Frequency in seconds that <span class="ph">Data Collector</span> validates authentication and user tokens with <span class="ph">Control Hub</span>.<p class="p">Default is 60.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Frequency in seconds that <span class="ph">Data Collector</span> validates authentication and user tokens with <span class="ph">Control Hub</span>.<p class="p">Default is 60.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.appAuthToken</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.appAuthToken</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">File located within <samp class="ph codeph">$SDC_CONF</samp>, the <span class="ph">Data Collector</span> configuration directory, that includes the authentication token for
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">File located within <samp class="ph codeph">$SDC_CONF</samp>, the <span class="ph">Data Collector</span> configuration directory, that includes the authentication token for
                             this <span class="ph">Data Collector</span> instance.<p class="p">Generally, you should not need to change this value.
                             </p>
 </td>
@@ -110,9 +125,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.remote.control.job.labels</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.remote.control.job.labels</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Labels to assign to this <span class="ph">Data Collector</span>. Use labels to group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of labels.
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Labels to assign to this <span class="ph">Data Collector</span>. Use labels to group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of labels.
                                 <p class="p">Default is "all", which you can use to run a job on all
                                 registered <span class="ph">Data Collector</span>s. </p>
 </td>
@@ -120,34 +135,34 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.remote.control.ping.frequency</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.remote.control.ping.frequency</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 5,000.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 5,000.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.remote.control.events.recipient</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.remote.control.events.recipient</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">Data Collector</span> sends events. <p class="p">Do not change this value.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">Data Collector</span> sends events. <p class="p">Do not change this value.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.remote.control.status.events.interval</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.remote.control.status.events.interval</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are running
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are running
                             on this <span class="ph">Data Collector</span>.<p class="p">Default is 60,000.</p>
 </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d61442e59 ">dpm.remote.deployment.id</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d62587e59 ">dpm.remote.deployment.id</td>
 
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d61442e62 ">For provisioned <span class="ph">Data Collector</span>s, the ID of the deployment that provisioned the <span class="ph">Data Collector</span>.<p class="p">For manually administered <span class="ph">Data Collector</span>s, the value is blank.</p>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d62587e62 ">For provisioned <span class="ph">Data Collector</span>s, the ID of the deployment that provisioned the <span class="ph">Data Collector</span>.<p class="p">For manually administered <span class="ph">Data Collector</span>s, the value is blank.</p>
 <p class="p">Do not change this value.</p>
 </td>
 

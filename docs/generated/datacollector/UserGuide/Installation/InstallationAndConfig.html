@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -62,9 +77,9 @@
         
         <thead class="thead" align="left">
           <tr>
-            <th class="entry" valign="top" width="28.49002849002849%" id="d225430e83">Component</th>
+            <th class="entry" valign="top" width="28.49002849002849%" id="d228468e83">Component</th>
 
-            <th class="entry" valign="top" width="71.5099715099715%" id="d225430e90">Minimum Requirement</th>
+            <th class="entry" valign="top" width="71.5099715099715%" id="d228468e90">Minimum Requirement</th>
 
           </tr>
 
@@ -72,9 +87,9 @@
 
         <tbody class="tbody">
           <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">Operating system</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">Operating system</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
                 <li class="li">Mac OS X</li>
 
                 <li class="li">CentOS 6 or 7</li>
@@ -89,44 +104,44 @@
           </tr>
 
           <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">Cores</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">Cores</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">2</td>
-
-          </tr>
-
-          <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">RAM</td>
-
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">1 GB</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">2</td>
 
           </tr>
 
           <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">Disk space</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">RAM</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">6 GB</td>
-
-          </tr>
-
-          <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">File descriptors</td>
-
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 "><span class="ph">32768</span></td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">1 GB</td>
 
           </tr>
 
           <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">Java</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">Disk space</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">Oracle Java 8 or OpenJDK 8</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">6 GB</td>
 
           </tr>
 
           <tr>
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d225430e83 ">Browser</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">File descriptors</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d225430e90 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 "><span class="ph">32768</span></td>
+
+          </tr>
+
+          <tr>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">Java</td>
+
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">Oracle Java 8 or OpenJDK 8</td>
+
+          </tr>
+
+          <tr>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d228468e83 ">Browser</td>
+
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d228468e90 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
                 <li class="li">Chrome</li>
 
                 <li class="li">Firefox</li>

@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -62,14 +77,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d84341e5375" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d85429e5440" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d446863e90">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d451640e90">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d446863e93">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d451640e93">Description</th>
 
                                 </tr>
 
@@ -77,24 +92,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d446863e90 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d451640e90 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d446863e93 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d446863e90 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d446863e93 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d451640e93 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d446863e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_c1j_btr_wq__d84341e5421" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d451640e90 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d446863e93 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d451640e93 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d451640e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_c1j_btr_wq__d85429e5486" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d451640e93 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -106,10 +121,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d446863e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_c1j_btr_wq__d84341e5437" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d451640e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_c1j_btr_wq__d85429e5502" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d446863e93 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d451640e93 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -136,9 +151,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d446863e180">Field Remover Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d451640e180">Field Remover Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d446863e183">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d451640e183">Description</th>
 
                                 </tr>
 
@@ -146,9 +161,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446863e180 ">Action</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d451640e180 ">Action</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446863e183 ">Action to complete:<ul class="ul" id="task_c1j_btr_wq__ul_clq_bbx_hv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d451640e183 ">Action to complete:<ul class="ul" id="task_c1j_btr_wq__ul_clq_bbx_hv">
                                             <li class="li">Keep listed fields</li>
 
                                             <li class="li">Remove listed fields</li>
@@ -161,9 +176,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d446863e180 ">Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d451640e180 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d446863e183 ">List of fields to keep or remove.<p class="p"><span class="ph" id="task_c1j_btr_wq__d84407e740">You can use the asterisk wildcard to represent
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d451640e183 ">List of fields to keep or remove.<p class="p"><span class="ph" id="task_c1j_btr_wq__d85495e740">You can use the asterisk wildcard to represent
                               <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays.">array indices and map elements</a>.</span>
             </p>
 <p class="p"><span class="ph">You can specify individual fields or use a <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb" title="You can use field path expressions in certain processors to determine the set of fields that you want the processor to use.">field path expression</a> to specify a set of fields.</span></p>

@@ -3,14 +3,14 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 3.1.0.0 includes the following new features and enhancements: Data Synchronization Solution for Postgres This release includes a beta version of the Data Synchronization ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>What's New</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 3.1.1.0 includes the following new features and enhancements: Origins Directory origin enhancements - The origin includes the following enhancements: The Max Files in Directory ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>What's New</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -39,6 +54,82 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_g3c_fn2_ycb">
+    <h2 class="title topictitle2">What's New in 3.1.1.0</h2>
+
+    <div class="body conbody">
+        <div class="p"><span class="ph">Data Collector</span>
+            version 3.1.1.0 includes the following new features and enhancements:<dl class="dl">
+                
+                    <dt class="dt dlterm">Origins</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_g3c_fn2_ycb__ul_v4n_r5q_1db">
+                            <li class="li"><a class="xref" href="../Origins/Directory.html#task_gfj_ssv_yq" title="Configure a Directory origin to read data from files in a directory.">Directory origin enhancements</a> - The origin includes the
+                                following enhancements:<ul class="ul" id="concept_g3c_fn2_ycb__ul_bff_s5q_1db">
+                                    <li class="li">The Max Files in Directory property has been renamed to Max
+                                        Files Soft Limit. As the name indicates, the property is now
+                                        a soft limit rather than a hard limit. As such, if the
+                                        directory contains more files than the configured Max Files
+                                        Soft Limit, the origin can temporarily exceed the soft limit
+                                        and the pipeline can continue running.<p class="p">Previously, this
+                                            property was a hard limit. When the directory contained
+                                            more files, the pipeline failed.</p>
+</li>
+
+                                    <li class="li">The origin includes a new Spooling Period property that
+                                        determines the number of seconds to continue adding files to
+                                        the processing queue after the maximum files soft limit has
+                                        been exceeded.</li>
+
+                                </ul>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Destinations</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_g3c_fn2_ycb__ul_c1b_f5q_1db">
+                            <li class="li">
+                                <a class="xref" href="../Destinations/WaveAnalytics.html#task_mdt_dv3_rx">Einstein Analytics destination enhancement</a> - The Append
+                                Timestamp to Alias property is now disabled by default for new
+                                pipelines. When disabled, the destination can append, delete,
+                                overwrite, or upsert data to an existing dataset. When enabled, the
+                                destination creates a new dataset for each upload of data.<p class="p">The
+                                    property was added in version 3.1.0.0 and was enabled by
+                                    default. Pipelines upgraded from versions earlier than 3.1.0.0
+                                    have the property enabled by default.</p>
+</li>
+
+                            <li class="li"><a class="xref" href="../Destinations/Solr.html#task_ld1_phr_wr">Solr destination enhancements</a> - The destination includes
+                                the following enhancements:<ul class="ul" id="concept_g3c_fn2_ycb__ul_j1k_dt2_ycb">
+                                    <li class="li">The destination now includes an Ignore Optional Fields
+                                        property that allows ignoring null values in optional fields
+                                        when writing records.</li>
+
+                                    <li class="li">The destination allows you to configure Wait Flush, Wait
+                                        Searcher, and Soft Commit properties to tune write
+                                        performance.</li>
+
+                                </ul>
+</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_agl_4tw_scb">
     <h2 class="title topictitle2">What's New in 3.1.0.0</h2>
 
@@ -112,11 +203,13 @@
                                 processing the current page, this pagination type uses a field in
                                 the response body to access the next page. </li>
 
-                            <li class="li">HTTP Server origin enhancement - You can now use the origin to
-                                process the contents of all authorized HTTP PUT requests.</li>
+                            <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP
+                                    Server origin enhancement</a> - You can now use the origin to
+                                process the contents of authorized HTTP PUT requests.</li>
 
-                            <li class="li">Kinesis Consumer origin enhancement - You can now configure Lease
-                                Table Tags to apply to the consumer lease table. </li>
+                            <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_qy4_rky_vcb" title="The Kinesis Consumer origin stores offsets - the location where the origin stops reading - in DynamoDB lease tables. You can optionally define tags to apply to a lease table created by the origin. The origin cannot add tags to existing lease tables.">Kinesis Consumer origin enhancement</a> - You can now define
+                                tags to apply to the DynamoDB lease table that the origin creates to
+                                store offsets.</li>
 
                             <li class="li"><a class="xref" href="../Origins/MQTTSubscriber.html#concept_fwm_2kn_scb">MQTT Subscriber origin enhancement</a> - The origin now
                                 includes a TOPIC_HEADER_NAME record header attribute that includes
@@ -132,16 +225,14 @@
 
                             <li class="li">Salesforce origin enhancements - The origin includes the following
                                     enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_mfg_wvw_scb">
-                                    <li class="li">The origin can now subscribe to Salesforce Platform Events. </li>
+                                    <li class="li">The origin can now subscribe to <a class="xref" href="../Origins/Salesforce.html#concept_cwb_mkg_5cb">Salesforce platform events</a>. </li>
 
-                                    <li class="li">You can now configure the origin to use Salesforce PK
-                                        Chunking. You can also specify the chunk size and parent
-                                        object.</li>
+                                    <li class="li">You can now configure the origin to use <a class="xref" href="../Origins/Salesforce.html#concept_aq1_kd1_5cb">Salesforce PK Chunking</a>.</li>
 
-                                    <li class="li">You can now use Mutual Authentication to connect to
-                                        Salesforce.</li>
+                                    <li class="li">When necessary, you can <a class="xref" href="../Origins/Salesforce.html#task_h1n_bs3_rx">disable query validation</a>.</li>
 
-                                    <li class="li">When necessary, you can disable SOQL query validation.</li>
+                                    <li class="li">You can now use <a class="xref" href="../Origins/Salesforce.html#task_h1n_bs3_rx">Mutual Authentication to connect to
+                                        Salesforce</a>.</li>
 
                                 </ul>
 </li>
@@ -177,28 +268,28 @@
 
                             <li class="li">Aggregator processor enhancements - The processor includes the
                                 following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_e2h_nww_scb">
-                                    <li class="li">Event records now include the results of the aggregation. </li>
+                                    <li class="li"><a class="xref" href="../Processors/Aggregator.html#concept_bc4_c42_wbb">Event records</a> now include the results of the
+                                        aggregation. </li>
 
-                                    <li class="li">You can now configure how event records are generated: write
-                                        all data to a standard event record or write aggregation
-                                        data to a String field within the event record. Upgraded
-                                        pipelines retain the previous behavior, writing aggregation
-                                        data to a String field.</li>
+                                    <li class="li">You can now specify the <a class="xref" href="../Processors/Aggregator.html#concept_dld_z2q_vcb">root field for event records</a>. You can use a
+                                        String or Map root field. Upgraded pipelines retain the
+                                        previous behavior, writing aggregation data to a String root
+                                        field. </li>
 
                                 </ul>
 </li>
 
-                            <li class="li"><a class="xref" href="../Processors/JDBCLookup.html#task_kbr_2cy_hw">JDBC Lookup processor enhancement</a> - The processor
-                                includes the following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_k14_pww_scb">
-                                    <li class="li">You can now configure a Missing Values Behavior property
-                                        that defines processor behavior when a lookup returns no
-                                        value. Upgraded pipelines continue to send records with no
-                                        return value to error.</li>
+                            <li class="li">JDBC Lookup processor enhancement - The processor includes the
+                                following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_k14_pww_scb">
+                                    <li class="li">You can now configure a <a class="xref" href="../Processors/JDBCLookup.html#task_kbr_2cy_hw">Missing Values Behavior property</a> that defines
+                                        processor behavior when a lookup returns no value. Upgraded
+                                        pipelines continue to send records with no return value to
+                                        error.</li>
 
-                                    <li class="li">You can now configure the processor to retry lookups for
-                                        known missing values. By default, the processor always
-                                        returns the default value for known missing values to avoid
-                                        unnecessary lookups.</li>
+                                    <li class="li">You can now enable the <a class="xref" href="../Processors/JDBCLookup.html#concept_jt5_kx2_px">Retry on Cache Miss</a> property so that the
+                                        processor retries lookups for known missing values. By
+                                        default, the processor always returns the default value for
+                                        known missing values to avoid unnecessary lookups.</li>
 
                                 </ul>
 </li>
@@ -208,8 +299,8 @@
                                 Mapping. However, adding only non-primary keys can slow the
                                 performance of the lookup.</li>
 
-                            <li class="li">Salesforce Lookup processor enhancement - You can now use Mutual
-                                Authentication to connect to Salesforce.</li>
+                            <li class="li"><a class="xref" href="../Processors/SalesforceLookup.html#task_fhn_yrk_yx">Salesforce Lookup processor enhancement</a> - You can now
+                                use Mutual Authentication to connect to Salesforce.</li>
 
                         </ul>
 
@@ -231,28 +322,28 @@
 
                             <li class="li">Einstein Analytics destination enhancements - The destination
                                 includes the following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_r3y_xxw_scb">
-                                    <li class="li">You can specify the name of the Edgemart container that
-                                        contains the dataset.</li>
+                                    <li class="li">You can specify the name of the <a class="xref" href="../Destinations/WaveAnalytics.html#task_mdt_dv3_rx">edgemart container</a> that contains the
+                                        dataset.</li>
 
-                                    <li class="li">You can define the operation to perform: Append, Delete,
-                                        Overwrite, or Upsert.</li>
+                                    <li class="li">You can define the <a class="xref" href="../Destinations/WaveAnalytics.html#concept_ryp_g4r_vcb">operation to perform</a>: Append, Delete, Overwrite,
+                                        or Upsert.</li>
 
-                                    <li class="li">You can now use Mutual Authentication to connect to
-                                        Salesforce.</li>
+                                    <li class="li">You can now use <a class="xref" href="../Destinations/WaveAnalytics.html#task_mdt_dv3_rx">Mutual Authentication to connect to
+                                        Salesforce</a>.</li>
 
                                 </ul>
 </li>
 
-                            <li class="li">Elasticsearch destination enhancement - You can now configure the
-                                destination to merge data which performs a document-level upsert. </li>
+                            <li class="li"><a class="xref" href="../Destinations/Elasticsearch.html#concept_w2r_ktb_ry">Elasticsearch destination enhancement</a> - You can now
+                                configure the destination to merge data which performs an update
+                                with <samp class="ph codeph">doc_as_upsert</samp>. </li>
 
                             <li class="li">Salesforce destination enhancement - The destination includes the
                                 following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_rpj_2yw_scb">
-                                    <li class="li">The destination can now publish Salesforce Platform
-                                        Events.</li>
+                                    <li class="li">The destination can now <a class="xref" href="../Destinations/Salesforce.html#concept_rlb_rt3_rx" title="The Salesforce destination writes data to Salesforce objects.">publish Salesforce platform events</a>.</li>
 
-                                    <li class="li">You can now use Mutual Authentication to connect to
-                                        Salesforce.</li>
+                                    <li class="li">You can now use <a class="xref" href="../Destinations/Salesforce.html#task_ncv_153_rx">Mutual Authentication to connect to
+                                        Salesforce</a>.</li>
 
                                 </ul>
 </li>
@@ -349,16 +440,16 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_agl_4tw_scb__ul_idl_31x_scb">
-                            <li class="li">Data Collector classpath validation - Data Collector now performs a
-                                classpath health check upon starting up. The results of the health
-                                check are written to the Data Collector log. When necessary, you can
-                                configure Data Collector to skip the health check or to stop upon
-                                errors.</li>
+                            <li class="li"><a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Data Collector classpath validation</a> - Data Collector now
+                                performs a classpath health check upon starting up. The results of
+                                the health check are written to the Data Collector log. When
+                                necessary, you can configure Data Collector to skip the health check
+                                or to stop upon errors.</li>
 
-                            <li class="li">Support bundle Data Collector property - You can configure the
-                                bundle.upload.on_error property in the Data Collector configuration
-                                file to have Data Collector automatically upload support bundles
-                                when problems occur. The property is disabled by default.</li>
+                            <li class="li"><a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Support bundle Data Collector property</a> - You can
+                                configure a property in the Data Collector configuration file to
+                                have Data Collector automatically upload support bundles when
+                                problems occur. The property is disabled by default.</li>
 
                             <li class="li"><a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors.">Runtime properties enhancement</a> - You can now use
                                 environment variables in runtime properties.</li>
@@ -777,7 +868,7 @@
                                 Salesforce fields. </li>
 
                             <li class="li">Wave Analytics destination rename - With this release, the Wave
-                                Analytics destination is now named the <a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Einstein Analytics destination</a>, following the recent
+                                Analytics destination is now named the <a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to upload external data to a dataset.">Einstein Analytics destination</a>, following the recent
                                 Salesforce rebranding. All of the properties and functionality of
                                 the destination remain the same. </li>
 
@@ -1116,7 +1207,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1084638751">
+<div class="topic concept nested1" id="unique_452095629">
     <h2 class="title topictitle2">What's New in 2.7.1.0</h2>
 
     <div class="body conbody">
@@ -1125,7 +1216,7 @@
                 
                     <dt class="dt dlterm">Stage Libraries</dt>
 
-                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1084638751__ul_s1w_cvr_1bb">
+                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_452095629__ul_s1w_cvr_1bb">
                             <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Jython 2.7.1</a></li>
 
                         </ul>
@@ -1136,7 +1227,7 @@
                     <dt class="dt dlterm">Origins</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1084638751__ul_gr5_hvr_1bb">
+                        <ul class="ul" id="unique_452095629__ul_gr5_hvr_1bb">
                             <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">New
                                     Azure Event Hub Consumer origin</a> - A multithreaded origin
                                 that reads data from Microsoft Azure Event Hub.</li>
@@ -1154,7 +1245,7 @@
                     <dt class="dt dlterm">Processors</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1084638751__ul_rh5_3vr_1bb">
+                        <ul class="ul" id="unique_452095629__ul_rh5_3vr_1bb">
                             <li class="li"><a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">New Schema Generator processor</a> - A processor that
                                 generates a schema for each record and writes the schema to a record
                                 header attribute. </li>
@@ -1168,7 +1259,7 @@
                     <dt class="dt dlterm">Destinations</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1084638751__ul_s22_lvr_1bb">
+                        <ul class="ul" id="unique_452095629__ul_s22_lvr_1bb">
                             <li class="li"><a class="xref" href="../Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">New Azure Event Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure Event Hub.</li>
 
@@ -1186,7 +1277,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1652878528">
+<div class="topic concept nested1" id="unique_1872033749">
  <h2 class="title topictitle2">What's New in 2.7.0.0</h2>
 
  <div class="body conbody">
@@ -1199,7 +1290,7 @@
 
                 <dd class="dd"><span class="ph">Data Collector</span> now has a <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
                         store</a> API that integrates with the following credential store
-                        systems:<ul class="ul" id="unique_1652878528__ul_vgr_3cz_w1b">
+                        systems:<ul class="ul" id="unique_1872033749__ul_vgr_3cz_w1b">
                         <li class="li">Java keystore</li>
 
                         <li class="li">Hashicorp Vault</li>
@@ -1217,7 +1308,7 @@
                 </dd>
 
                 <dd class="dd">
-                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_1652878528__ul_ezm_4cz_w1b">
+                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_1872033749__ul_ezm_4cz_w1b">
                             <li class="li">JDBC Multitable Consumer origin</li>
 
                             <li class="li">JDBC Query Consumer origin</li>
@@ -1260,7 +1351,7 @@
                 <dt class="dt dlterm">Stage Libraries</dt>
 
                 <dd class="dd">
-                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_1652878528__ul_cxp_d2z_w1b">
+                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_1872033749__ul_cxp_d2z_w1b">
                             <li class="li">Apache Kudu version 1.4.0</li>
 
                             <li class="li">Cloudera CDH version 5.12 distribution of Hadoop</li>
@@ -1284,7 +1375,7 @@
                 <dt class="dt dlterm">Data Collector Configuration</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_hc5_q2z_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_hc5_q2z_w1b">
                         <li class="li"><a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Access  Hashicorp Vault secrets</a> - The Data Collector Vault
                             integration now relies on Vault's App Role authentication backend.
                             Previously, Data Collector relied on Vault's App ID authentication
@@ -1321,7 +1412,7 @@
                 <dt class="dt dlterm">Dataflow Triggers</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_fg2_gfz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_fg2_gfz_w1b">
                         <li class="li"><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline events</a> - The event framework now generates pipeline
                             lifecycle events when the pipeline stops and starts. You can pass each
                             pipeline event to an executor or to another pipeline for more complex
@@ -1337,7 +1428,7 @@
                 <dt class="dt dlterm">Origins</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_tpp_sfz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_tpp_sfz_w1b">
                         <li class="li"><a class="xref" href="../Origins/BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">New Google
                                 BigQuery origin</a> - An origin that executes a query job and
                             reads the result from Google BigQuery.</li>
@@ -1383,7 +1474,7 @@
                             configure the behavior for the origin when it encounters data of an
                             unknown data type.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_1652878528__ul_gnl_rhz_w1b">
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_1872033749__ul_gnl_rhz_w1b">
                                 <li class="li">You can now use the origin to perform multithreaded processing
                                     of partitions within a table. Use partition processing to handle
                                     even larger volumes of data. This enhancement also includes new
@@ -1400,7 +1491,7 @@
 </li>
 
                         <li class="li"><a class="xref" href="../Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC
-                                Client origin enhancements</a>:<ul class="ul" id="unique_1652878528__ul_ych_yhz_w1b">
+                                Client origin enhancements</a>:<ul class="ul" id="unique_1872033749__ul_ych_yhz_w1b">
                                 <li class="li">The origin can now buffer data locally rather than utilizing
                                     Oracle LogMiner buffers.</li>
 
@@ -1449,7 +1540,7 @@
                 <dt class="dt dlterm">Processors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_py4_vmz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_py4_vmz_w1b">
                         <li class="li"><a class="xref" href="../Processors/DataParser.html#concept_xw3_4xk_r1b" title="The Data Parser processor allows you to parse supported Data Collector data formats embedded in a field. You can parse NetFlow embedded in a byte array field or syslog messages embedded in a string field.">New Data
                                 Parser processor</a> - Use the new processor to extract NetFlow
                             or syslog messages as well as other supported data formats that are
@@ -1475,7 +1566,7 @@
                 <dt class="dt dlterm">Destinations</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_wdl_lnz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_wdl_lnz_w1b">
                         <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">New Google Pub/Sub Publisher destination</a> - A destination
                             that publishes messages to Google Pub/Sub.</li>
 
@@ -1483,7 +1574,7 @@
                                 JMS Producer destination</a> - A destination that writes data to
                             JMS.</li>
 
-                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_1652878528__ul_ls3_d4z_w1b">
+                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_1872033749__ul_ls3_d4z_w1b">
                                 <li class="li">You can now use expressions in the <a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket property</a> for the Amazon S3 destination. This
                                     enables you to write records dynamically based expression
                                     evaluation.</li>
@@ -1529,7 +1620,7 @@
                 <dt class="dt dlterm">Executors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_gqx_fpz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_gqx_fpz_w1b">
                         <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">New Amazon
                                 S3 executor</a> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
@@ -1547,7 +1638,7 @@
                 <dt class="dt dlterm">Dataflow Performance Manager</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_dwx_lpz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_dwx_lpz_w1b">
                         <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_c4x_vff_p1b">Revert changes to published pipelines</a> - If you update a
                             published pipeline but decide not to publish the updates to DPM as a new
                             version, you can revert the changes made to the pipeline
@@ -1562,8 +1653,8 @@
                 <dt class="dt dlterm">Pipelines</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_ngb_qpz_w1b">
-                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_1652878528__ul_rq1_tpz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_ngb_qpz_w1b">
+                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_1872033749__ul_rq1_tpz_w1b">
                                 <li class="li">Use the new Error Record Policy to specify the version of the
                                     record to include in error records. </li>
 
@@ -1588,14 +1679,14 @@
                 <dt class="dt dlterm">Data Formats</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_btq_yqz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_btq_yqz_w1b">
                         <li class="li"><a class="xref" href="../Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing
                                 XML</a> - You can now use the Google Pub/Sub Publisher, JMS
                             Producer, and Kafka Producer destinations to write XML documents to
                             destination systems. Note the record structure requirement before you
                             use this data format. </li>
 
-                        <li class="li">Avro:<ul class="ul" id="unique_1652878528__ul_k4b_yrz_w1b">
+                        <li class="li">Avro:<ul class="ul" id="unique_1872033749__ul_k4b_yrz_w1b">
                                 <li class="li">Origins now write the Avro schema to an avroSchema record header
                                     attribute.</li>
 
@@ -1620,7 +1711,7 @@
                 <dt class="dt dlterm">Cluster Pipelines</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_1652878528__ul_b14_nsz_w1b">
+                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_1872033749__ul_b14_nsz_w1b">
                             <li class="li">Use a new Worker Count property to limit the number of worker nodes
                                 used in Cluster Yarn Streaming pipelines. By default, a Data
                                 Collector worker is spawned for each partition in the topic. </li>
@@ -1638,7 +1729,7 @@
                 <dt class="dt dlterm">Expression Language</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_1652878528__ul_abf_qsz_w1b">
+                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_1872033749__ul_abf_qsz_w1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential:get()</a> - Returns credential values from a
                                 credential store.</li>
 
@@ -1663,7 +1754,7 @@
 
                 <dd class="dd">
                     <div class="p">
-                        <ul class="ul" id="unique_1652878528__ul_k5c_rg4_z1b">
+                        <ul class="ul" id="unique_1872033749__ul_k5c_rg4_z1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">str:indexOf()</a> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
 
@@ -1678,7 +1769,7 @@
                 <dt class="dt dlterm">Miscellaneous</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1652878528__ul_y2k_htz_w1b">
+                    <ul class="ul" id="unique_1872033749__ul_y2k_htz_w1b">
                         <li class="li"><a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Global bulk edit mode</a> - In any property where you would
                             previously click an Add icon to add additional configurations, you can
                             now switch to bulk edit mode to enter a list of configurations in JSON
@@ -2263,7 +2354,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                 <dd class="dd">
                     <div class="p">The following Salesforce stages include several enhancements:<ul class="ul" id="concept_ddx_bpm_pz__ul_gsv_prm_pz">
-                            <li class="li"><a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin reads data from Salesforce.">Salesforce origin</a> and <a class="xref" href="../Processors/SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup processor</a><ul class="ul" id="concept_ddx_bpm_pz__ul_k1d_5rm_pz">
+                            <li class="li"><a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.If the origin reads custom Salesforce objects or fields, you might want to use a Field Renamer in the pipeline to rename the custom fields.The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce field attributes that provide additional information about each field, such as the data type of the Salesforce field. The origin receives these details from Salesforce.">Salesforce origin</a> and <a class="xref" href="../Processors/SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup processor</a><ul class="ul" id="concept_ddx_bpm_pz__ul_k1d_5rm_pz">
                                     <li class="li">The origin and processor can use a proxy to connect to
                                         Salesforce.</li>
 
@@ -2290,7 +2381,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 perform for each record. You can also configure the destination to
                                 use a proxy to connect to Salesforce. </li>
 
-                            <li class="li"><a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to create a dataset with external data.">Wave Analytics destination</a> - You can now configure the
+                            <li class="li"><a class="xref" href="../Destinations/WaveAnalytics.html#concept_hlx_r53_rx" title="The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The destination connects to Einstein Analytics to upload external data to a dataset.">Wave Analytics destination</a> - You can now configure the
                                 authentication endpoint and the API version that the destination
                                 uses to connect to Salesforce Wave Analytics. You can also configure
                                 the destination to use a proxy to connect to Salesforce.</li>
@@ -2793,7 +2884,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             changes:</p>
 <ul class="ul" id="concept_yym_xqt_5y__ul_slg_mrt_5y">
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                                <p dir="ltr" class="p"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP
                                         Server origin</a> - Listens on an HTTP endpoint and
                                     processes the contents of all authorized HTTP POST requests. Use
                                     the HTTP Server origin to receive high volumes of HTTP POST
@@ -2960,7 +3051,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_ljw_15t_5y">
-                            <li dir="ltr" class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">New HTTP Server origin</a> - A multithreaded origin that
+                            <li dir="ltr" class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">New HTTP Server origin</a> - A multithreaded origin that
                                 listens on an HTTP endpoint and processes the contents of all
                                 authorized HTTP POST requests. Use the HTTP Server origin to read
                                 high volumes of HTTP POST requests using multiple threads. </li>
@@ -3513,7 +3604,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             <li class="li">New <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx" title="The MySQL Binary Log origin can process binary logs from a MySQL server configured to use row-based logging.You can configure the origin to start reading the binary log file from the beginning of the file or from an initial offset in the file.The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">MySQL Binary Log origin</a> - Reads MySQL binary logs to
                                 generate records with change data capture information. </li>
 
-                            <li class="li">New <a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin reads data from Salesforce.">Salesforce origin </a>- Reads data from Salesforce. The
+                            <li class="li">New <a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.If the origin reads custom Salesforce objects or fields, you might want to use a Field Renamer in the pipeline to rename the custom fields.The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce field attributes that provide additional information about each field, such as the data type of the Salesforce field. The origin receives these details from Salesforce.">Salesforce origin </a>- Reads data from Salesforce. The
                                 origin can execute a SOQL query to read existing data from
                                 Salesforce. The origin can also subscribe to the Force.com Streaming
                                 API to receive notifications for changes to Salesforce data. </li>

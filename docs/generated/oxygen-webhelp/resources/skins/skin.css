@@ -409,7 +409,6 @@ span.topic {
 	font-size: 24px;
 }
 
-/* LC added word-wrap removing color #eee - didn't work. reverting. */
 .codeblock {
   background-color: #eee;
   margin: 5px 0 5px 0;

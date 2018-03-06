@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -44,11 +59,11 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="21.428571428571427%" id="d422364e47">Trigger</th>
+                            <th class="entry" valign="top" width="21.428571428571427%" id="d426668e47">Trigger</th>
 
-                            <th class="entry" valign="top" width="57.14285714285714%" id="d422364e50">Description</th>
+                            <th class="entry" valign="top" width="57.14285714285714%" id="d426668e50">Description</th>
 
-                            <th class="entry" valign="top" width="21.428571428571427%" id="d422364e53">Configuration Location</th>
+                            <th class="entry" valign="top" width="21.428571428571427%" id="d426668e53">Configuration Location</th>
 
                         </tr>
 
@@ -56,9 +71,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="21.428571428571427%" headers="d422364e47 ">Alert</td>
+                            <td class="entry" valign="top" width="21.428571428571427%" headers="d426668e47 ">Alert</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d422364e50 ">The pipeline sends all alert webhooks each time an alert is
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d426668e50 ">The pipeline sends all alert webhooks each time an alert is
                                     triggered.<p class="p">For example, if your text message application has a
                                     webhook API, you can have the pipeline send texts when alerts
                                     are triggered. </p>
@@ -66,14 +81,14 @@
                                     webhook, see <a class="xref" href="../Alerts/RulesAlerts_title.html#task_l2p_53t_rz">Configuring an Alert Webhook</a>.</p>
 </td>
 
-                            <td class="entry" valign="top" width="21.428571428571427%" headers="d422364e53 ">Pipeline Rules tab &gt; Webhook tab</td>
+                            <td class="entry" valign="top" width="21.428571428571427%" headers="d426668e53 ">Pipeline Rules tab &gt; Webhook tab</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="21.428571428571427%" headers="d422364e47 ">State notification</td>
+                            <td class="entry" valign="top" width="21.428571428571427%" headers="d426668e47 ">State notification</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d422364e50 ">The pipeline sends all state notification webhooks when the
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d426668e50 ">The pipeline sends all state notification webhooks when the
                                 pipeline transitions to the selected pipeline states.<p class="p">For example,
                                     you can send an HTTP request to the <span class="ph">Data Collector</span> REST API to start a different pipeline when the current
                                     pipeline transitions to a Finished state. </p>
@@ -82,7 +97,7 @@
                                     Notifications properties in <a class="xref" href="ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a>.</p>
 </td>
 
-                            <td class="entry" valign="top" width="21.428571428571427%" headers="d422364e53 ">Pipeline Configuration tab &gt; Notifications tab</td>
+                            <td class="entry" valign="top" width="21.428571428571427%" headers="d426668e53 ">Pipeline Configuration tab &gt; Notifications tab</td>
 
                         </tr>
 

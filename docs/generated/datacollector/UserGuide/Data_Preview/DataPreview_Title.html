@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -147,27 +162,27 @@
       Preview mode:</p>
 
   <div class="p"><img class="image" id="concept_l4q_pbl_sq__image_w2r_ktq_kq" src="../Graphics/CanvasPreview.png" height="449" width="692" /><table cellpadding="4" cellspacing="0" summary="" id="concept_l4q_pbl_sq__simpletable_v4t_zhc_pq" border="1" class="simpletable"><tr class="sthead">
-          <th valign="bottom" align="left" id="d71122e240" class="stentry" width="15.625%">Area/Icon</th>
+          <th valign="bottom" align="left" id="d72262e240" class="stentry" width="15.625%">Area/Icon</th>
 
-          <th valign="bottom" align="left" id="d71122e243" class="stentry" width="24.21875%">Name</th>
+          <th valign="bottom" align="left" id="d72262e243" class="stentry" width="24.21875%">Name</th>
 
-          <th valign="bottom" align="left" id="d71122e246" class="stentry" width="60.15625%">Description</th>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry">1</td>
-
-          <td valign="top" headers="d71122e243" class="stentry">Pipeline canvas</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Displays the pipeline.</td>
+          <th valign="bottom" align="left" id="d72262e246" class="stentry" width="60.15625%">Description</th>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry">2</td>
+          <td valign="top" headers="d72262e240" class="stentry">1</td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Preview panel</td>
+          <td valign="top" headers="d72262e243" class="stentry">Pipeline canvas</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">
+          <td valign="top" headers="d72262e246" class="stentry">Displays the pipeline.</td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry">2</td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Preview panel</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">
             <p class="p">Displays the data that enters and exits the selected stage or group of stages. It can
               also display stage properties and preview configuration.</p>
 
@@ -175,184 +190,184 @@
 
         </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
+     <td valign="top" headers="d72262e243" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> (SCH) and lets you register
+     <td valign="top" headers="d72262e246" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> (SCH) and lets you register
       this <span class="ph">Data Collector</span> with <span class="ph">Control Hub</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Home icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">Home icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
+     <td valign="top" headers="d72262e246" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
       perform pipeline maintenance and navigate to individual pipelines.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Package Manager icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">Package Manager icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
+     <td valign="top" headers="d72262e246" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
       for a core <span class="ph">Data Collector</span>
       installation.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Notifications icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">Notifications icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Displays notifications.</td>
+     <td valign="top" headers="d72262e246" class="stentry">Displays notifications.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Administration icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">Administration icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Provides access to <span class="ph">Data Collector</span>
+     <td valign="top" headers="d72262e246" class="stentry">Provides access to <span class="ph">Data Collector</span>
       configuration properties, directories, and log. Also allows you to shut down <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">User icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">User icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
+     <td valign="top" headers="d72262e246" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
       out of <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Help icon</td>
+     <td valign="top" headers="d72262e243" class="stentry">Help icon</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
+     <td valign="top" headers="d72262e246" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
       configure display settings and to specify whether to use a local or hosted version of the
        help.<p class="p">Provides access to the REST API and the <span class="ph">Data Collector</span> version.</p>
 </td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d16514e209" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PipelineList.png" height="19" width="65" /></td>
+     <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__d17017e209" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PipelineList.png" height="19" width="65" /></td>
 
-     <td valign="top" headers="d71122e243" class="stentry">Link to a pipeline list</td>
+     <td valign="top" headers="d72262e243" class="stentry">Link to a pipeline list</td>
 
-     <td valign="top" headers="d71122e246" class="stentry">Link to a <a class="xref" href="../Getting_Started/GettingStarted_Title.html#concept_wc5_ysp_1w" title="Data Collector displays a list of all available pipelines and related information on the Home page. You can select a category of pipelines, such as Running Pipelines, to view a subset of all available pipelines.">pipeline list on the Home page</a>. Use to view a list of available pipelines, perform
+     <td valign="top" headers="d72262e246" class="stentry">Link to a <a class="xref" href="../Getting_Started/GettingStarted_Title.html#concept_wc5_ysp_1w" title="Data Collector displays a list of all available pipelines and related information on the Home page. You can select a category of pipelines, such as Running Pipelines, to view a subset of all available pipelines.">pipeline list on the Home page</a>. Use to view a list of available pipelines, perform
       pipeline maintenance like starting or sharing a pipeline, and navigate to individual
       pipelines. </td>
 
     </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cf1_lw1_jbb" src="../Graphics/icon_PrevRecords.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cf1_lw1_jbb" src="../Graphics/icon_PrevRecords.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Records icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Records icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Displays data preview records.</td>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_ydt_m1v_cs" src="../Graphics/icon_PrevStageConfig.png" /></td>
-
-          <td valign="top" headers="d71122e243" class="stentry">Stage Configuration icon</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Displays stage properties.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Displays data preview records.</td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_h2c_f1v_cs" src="../Graphics/icon_PrevPreviewConfig.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_ydt_m1v_cs" src="../Graphics/icon_PrevStageConfig.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Preview Configuration icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Stage Configuration icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Displays data preview properties. </td>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_arm_fd5_cs" src="../Graphics/icon_PrevSingle.png" /></td>
-
-          <td valign="top" headers="d71122e243" class="stentry">Single button</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Displays input and output data for a single stage.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Displays stage properties.</td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_hqh_gd5_cs" src="../Graphics/icon_PrevMultiple.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_h2c_f1v_cs" src="../Graphics/icon_PrevPreviewConfig.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Multiple button</td>
+          <td valign="top" headers="d72262e243" class="stentry">Preview Configuration icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Displays input and output data for a group of stages.</td>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_dmf_d25_cs" src="../Graphics/icon_PrevListView.png" /></td>
-
-          <td valign="top" headers="d71122e243" class="stentry">List View icon</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Displays preview data in a list.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Displays data preview properties. </td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_epx_d25_cs" src="../Graphics/icon_PrevTableView.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_arm_fd5_cs" src="../Graphics/icon_PrevSingle.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Table View icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Single button</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Displays preview data in a table. </td>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_usm_kxn_tq" src="../Graphics/icon_PrevPrevStage.png" /></td>
-
-          <td valign="top" headers="d71122e243" class="stentry">Previous Stage icon</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Moves the preview to the previous stage.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Displays input and output data for a single stage.</td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_jf4_3xn_tq" src="../Graphics/icon_PrevNextStage.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_hqh_gd5_cs" src="../Graphics/icon_PrevMultiple.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Next Stage icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Multiple button</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Moves the preview to the next stage.</td>
-
-        </tr>
-<tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cfn_5mr_br" src="../Graphics/icon_PrevRefresh.png" /></td>
-
-          <td valign="top" headers="d71122e243" class="stentry">Refresh Preview icon</td>
-
-          <td valign="top" headers="d71122e246" class="stentry">Provides a fresh set of data from the origin.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Displays input and output data for a group of stages.</td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_nzs_2nr_br" src="../Graphics/icon_PreviewRerun.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_dmf_d25_cs" src="../Graphics/icon_PrevListView.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Run Preview with Changes icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">List View icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Runs the data preview using changed data. Use to see how edited data is processed
+          <td valign="top" headers="d72262e246" class="stentry">Displays preview data in a list.</td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_epx_d25_cs" src="../Graphics/icon_PrevTableView.png" /></td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Table View icon</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">Displays preview data in a table. </td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_usm_kxn_tq" src="../Graphics/icon_PrevPrevStage.png" /></td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Previous Stage icon</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">Moves the preview to the previous stage.</td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_jf4_3xn_tq" src="../Graphics/icon_PrevNextStage.png" /></td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Next Stage icon</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">Moves the preview to the next stage.</td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cfn_5mr_br" src="../Graphics/icon_PrevRefresh.png" /></td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Refresh Preview icon</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">Provides a fresh set of data from the origin.</td>
+
+        </tr>
+<tr class="strow">
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_nzs_2nr_br" src="../Graphics/icon_PreviewRerun.png" /></td>
+
+          <td valign="top" headers="d72262e243" class="stentry">Run Preview with Changes icon</td>
+
+          <td valign="top" headers="d72262e246" class="stentry">Runs the data preview using changed data. Use to see how edited data is processed
             by the pipeline. </td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_xnr_f4r_br" src="../Graphics/icon_PrevRevertChanges.png" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_xnr_f4r_br" src="../Graphics/icon_PrevRevertChanges.png" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Revert Changes icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Revert Changes icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Reverts all changes to preview data and returns the preview to the origin.
+          <td valign="top" headers="d72262e246" class="stentry">Reverts all changes to preview data and returns the preview to the origin.
           </td>
 
         </tr>
 <tr class="strow">
-          <td valign="top" headers="d71122e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cjl_jmr_br" src="../Graphics/icon_PrevClose.png" height="18" width="22" /></td>
+          <td valign="top" headers="d72262e240" class="stentry"><img class="image" id="concept_l4q_pbl_sq__image_cjl_jmr_br" src="../Graphics/icon_PrevClose.png" height="18" width="22" /></td>
 
-          <td valign="top" headers="d71122e243" class="stentry">Close Preview icon</td>
+          <td valign="top" headers="d72262e243" class="stentry">Close Preview icon</td>
 
-          <td valign="top" headers="d71122e246" class="stentry">Closes the data preview.</td>
+          <td valign="top" headers="d72262e246" class="stentry">Closes the data preview.</td>
 
         </tr>
 </table>
@@ -380,69 +395,69 @@
 
   <div class="p">The following table
    describes the color and asterisk coding:<table cellpadding="4" cellspacing="0" summary="" id="concept_qqc_s3h_tq__simpletable_ryj_wjh_tq" border="1" class="simpletable"><tr class="sthead">
-     <th valign="bottom" align="left" id="d71122e631" class="stentry">Preview Code</th>
+     <th valign="bottom" align="left" id="d72262e631" class="stentry">Preview Code</th>
 
-     <th valign="bottom" align="left" id="d71122e634" class="stentry">Description</th>
-
-    </tr>
-<tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Black values</td>
-
-     <td valign="top" headers="d71122e634" class="stentry">Date data</td>
+     <th valign="bottom" align="left" id="d72262e634" class="stentry">Description</th>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Blue values</td>
+     <td valign="top" headers="d72262e631" class="stentry">Black values</td>
 
-     <td valign="top" headers="d71122e634" class="stentry">Numeric data</td>
-
-    </tr>
-<tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Green values</td>
-
-     <td valign="top" headers="d71122e634" class="stentry">String data</td>
+     <td valign="top" headers="d72262e634" class="stentry">Date data</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Red values</td>
+     <td valign="top" headers="d72262e631" class="stentry">Blue values</td>
 
-     <td valign="top" headers="d71122e634" class="stentry">Boolean data</td>
-
-    </tr>
-<tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Asterisk</td>
-
-     <td valign="top" headers="d71122e634" class="stentry">Records that include edited field values</td>
+     <td valign="top" headers="d72262e634" class="stentry">Numeric data</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Red italic field labels</td>
+     <td valign="top" headers="d72262e631" class="stentry">Green values</td>
 
-     <td valign="top" headers="d71122e634" class="stentry">Fields that contain edited data</td>
-
-    </tr>
-<tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Light red background</td>
-
-     <td valign="top" headers="d71122e634" class="stentry">Fields removed by a stage</td>
+     <td valign="top" headers="d72262e634" class="stentry">String data</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Italic values</td>
+     <td valign="top" headers="d72262e631" class="stentry">Red values</td>
 
-     <td valign="top" headers="d71122e634" class="stentry">Edited data</td>
-
-    </tr>
-<tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Green stage</td>
-
-     <td valign="top" headers="d71122e634" class="stentry">First stage in a multiple-stage preview</td>
+     <td valign="top" headers="d72262e634" class="stentry">Boolean data</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d71122e631" class="stentry">Red stage</td>
+     <td valign="top" headers="d72262e631" class="stentry">Asterisk</td>
 
-     <td valign="top" headers="d71122e634" class="stentry">Last stage in a multiple-stage preview</td>
+     <td valign="top" headers="d72262e634" class="stentry">Records that include edited field values</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d72262e631" class="stentry">Red italic field labels</td>
+
+     <td valign="top" headers="d72262e634" class="stentry">Fields that contain edited data</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d72262e631" class="stentry">Light red background</td>
+
+     <td valign="top" headers="d72262e634" class="stentry">Fields removed by a stage</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d72262e631" class="stentry">Italic values</td>
+
+     <td valign="top" headers="d72262e634" class="stentry">Edited data</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d72262e631" class="stentry">Green stage</td>
+
+     <td valign="top" headers="d72262e634" class="stentry">First stage in a multiple-stage preview</td>
+
+    </tr>
+<tr class="strow">
+     <td valign="top" headers="d72262e631" class="stentry">Red stage</td>
+
+     <td valign="top" headers="d72262e634" class="stentry">Last stage in a multiple-stage preview</td>
 
     </tr>
 </table>
@@ -465,7 +480,7 @@
 
         <ol class="ol steps" id="task_cxd_p25_qq__steps_gqh_zf5_qq"><li class="li step stepexpand">
                 <span class="ph cmd">Above the pipeline canvas, click the <span class="ph uicontrol">Preview</span> icon:
-                        <img class="image" id="task_cxd_p25_qq__d16735e183" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_Preview.png" height="13" width="17" />.</span>
+                        <img class="image" id="task_cxd_p25_qq__d17238e183" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_Preview.png" height="13" width="17" />.</span>
                 <div class="itemgroup info">If the Preview icon is disabled, check the Issues list for unconnected stages
                     and required properties that are not defined.</div>
             </li>
@@ -474,14 +489,14 @@
                     following properties, then click <span class="ph uicontrol">Run Preview</span>.</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cxd_p25_qq__d16735e204" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cxd_p25_qq__d17238e204" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71122e792">Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d72262e792">Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71122e795">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d72262e795">Description</th>
 
                                 </tr>
 
@@ -489,9 +504,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Preview Source</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Preview Source</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Source data for the preview:<ul class="ul" id="task_cxd_p25_qq__d16735e233">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Source data for the preview:<ul class="ul" id="task_cxd_p25_qq__d17238e233">
                                             <li class="li">Configured Source - Provides data from the origin
                                                 system.</li>
 
@@ -503,27 +518,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Preview Batch Size</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Preview Batch Size</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Number of records to use in the preview. Honors values up
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Number of records to use in the preview. Honors values up
                                         to the <span class="ph">Data Collector</span> preview batch size. <p class="p">Default is 10. The <span class="ph">Data Collector</span> default is 10.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Preview Timeout</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Preview Timeout</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Milliseconds to wait for preview data. Use to limit the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Milliseconds to wait for preview data. Use to limit the
                                         time data preview waits for data to arrive at the origin.
                                         Relevant for transient origins only. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Write to Destinations and Executors</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Write to Destinations and Executors</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Determines whether the preview passes data to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Determines whether the preview passes data to
                                         destinations or executors.<p class="p">By default, does not pass data
                                             to destination or executor stages.</p>
 </td>
@@ -531,9 +546,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Execute Pipeline Lifecycle Events</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Execute Pipeline Lifecycle Events</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Triggers the generation of any appropriate pipeline
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Triggers the generation of any appropriate pipeline
                                         events, typically the Start event. If the event is
                                         configured to be used, event consumption is also
                                         triggered.</td>
@@ -541,38 +556,38 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Show Record/Field Header</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Show Record/Field Header</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Displays record header attributes and field attributes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Displays record header attributes and field attributes
                                         when in List view. Attributes do not display in Table
                                         view.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Show Field Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Show Field Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Displays the data type for fields in List view. Field
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Displays the data type for fields in List view. Field
                                         types do not display in Table view.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Snapshot Data</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Snapshot Data</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">When using a snapshot for source data, select the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">When using a snapshot for source data, select the
                                         snapshot to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e792 ">Remember the Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e792 ">Remember the Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e795 ">Stores the current preview configuration for use every
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e795 ">Stores the current preview configuration for use every
                                         time you request a preview for this pipeline. <p class="p">After you
                                             run data preview, you can change this option in the
                                             Preview panel by selecting the Preview Configuration
-                                            icon (<img class="image" id="task_cxd_p25_qq__d16735e324" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevPreviewConfig.png" height="16" width="19" />) and clearing the
+                                            icon (<img class="image" id="task_cxd_p25_qq__d17238e324" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevPreviewConfig.png" height="16" width="19" />) and clearing the
                                             option. The change takes effect the next time you run
                                             data preview.</p>
 </td>
@@ -588,7 +603,7 @@
                 <div class="itemgroup stepresult">The Preview panel highlights the origin stage and displays preview data
                     in table view. Since this is the origin of the pipeline, no input data displays.
                         <p class="p">To view preview data in list view, click the <span class="ph uicontrol">List
-                            View</span> icon: <img class="image" id="task_cxd_p25_qq__d16735e339" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevListView.png" height="12" width="15" />.</p>
+                            View</span> icon: <img class="image" id="task_cxd_p25_qq__d17238e339" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevListView.png" height="12" width="15" />.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -602,7 +617,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To refresh the preview, click the <span class="ph uicontrol">Refresh Preview</span> icon:
-                        <img class="image" id="task_cxd_p25_qq__d16735e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
+                        <img class="image" id="task_cxd_p25_qq__d17238e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
                 <div class="itemgroup info">Based on the origin, refreshing the preview either provides a new set of data
                     or reverts any changes to the existing data.</div>
             </li>
@@ -634,7 +649,7 @@
 
         <ol class="ol steps" id="task_svd_dvz_sq__steps_vsq_4vz_sq"><li class="li step stepexpand">
                 <span class="ph cmd">Above the pipeline canvas, click the <span class="ph uicontrol">Preview</span> icon:
-                        <img class="image" id="task_svd_dvz_sq__d16735e183" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_Preview.png" height="13" width="17" />.</span>
+                        <img class="image" id="task_svd_dvz_sq__d17238e183" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_Preview.png" height="13" width="17" />.</span>
                 <div class="itemgroup info">If the Preview icon is disabled, check the Issues list for unconnected stages
                     and required properties that are not defined.</div>
             </li>
@@ -643,14 +658,14 @@
                     following properties, then click <span class="ph uicontrol">Run Preview</span>.</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_svd_dvz_sq__d16735e204" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_svd_dvz_sq__d17238e204" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71122e1034">Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d72262e1034">Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71122e1037">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d72262e1037">Description</th>
 
                                 </tr>
 
@@ -658,9 +673,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Preview Source</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Preview Source</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Source data for the preview:<ul class="ul" id="task_svd_dvz_sq__d16735e233">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Source data for the preview:<ul class="ul" id="task_svd_dvz_sq__d17238e233">
                                             <li class="li">Configured Source - Provides data from the origin
                                                 system.</li>
 
@@ -672,27 +687,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Preview Batch Size</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Preview Batch Size</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Number of records to use in the preview. Honors values up
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Number of records to use in the preview. Honors values up
                                         to the <span class="ph">Data Collector</span> preview batch size. <p class="p">Default is 10. The <span class="ph">Data Collector</span> default is 10.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Preview Timeout</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Preview Timeout</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Milliseconds to wait for preview data. Use to limit the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Milliseconds to wait for preview data. Use to limit the
                                         time data preview waits for data to arrive at the origin.
                                         Relevant for transient origins only. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Write to Destinations and Executors</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Write to Destinations and Executors</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Determines whether the preview passes data to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Determines whether the preview passes data to
                                         destinations or executors.<p class="p">By default, does not pass data
                                             to destination or executor stages.</p>
 </td>
@@ -700,9 +715,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Execute Pipeline Lifecycle Events</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Execute Pipeline Lifecycle Events</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Triggers the generation of any appropriate pipeline
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Triggers the generation of any appropriate pipeline
                                         events, typically the Start event. If the event is
                                         configured to be used, event consumption is also
                                         triggered.</td>
@@ -710,38 +725,38 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Show Record/Field Header</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Show Record/Field Header</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Displays record header attributes and field attributes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Displays record header attributes and field attributes
                                         when in List view. Attributes do not display in Table
                                         view.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Show Field Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Show Field Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Displays the data type for fields in List view. Field
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Displays the data type for fields in List view. Field
                                         types do not display in Table view.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Snapshot Data</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Snapshot Data</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">When using a snapshot for source data, select the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">When using a snapshot for source data, select the
                                         snapshot to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71122e1034 ">Remember the Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d72262e1034 ">Remember the Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71122e1037 ">Stores the current preview configuration for use every
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d72262e1037 ">Stores the current preview configuration for use every
                                         time you request a preview for this pipeline. <p class="p">After you
                                             run data preview, you can change this option in the
                                             Preview panel by selecting the Preview Configuration
-                                            icon (<img class="image" id="task_svd_dvz_sq__d16735e324" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevPreviewConfig.png" height="16" width="19" />) and clearing the
+                                            icon (<img class="image" id="task_svd_dvz_sq__d17238e324" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevPreviewConfig.png" height="16" width="19" />) and clearing the
                                             option. The change takes effect the next time you run
                                             data preview.</p>
 </td>
@@ -757,7 +772,7 @@
                 <div class="itemgroup stepresult">The Preview panel highlights the origin stage and displays preview data
                     in table view. Since this is the origin of the pipeline, no input data displays.
                         <p class="p">To view preview data in list view, click the <span class="ph uicontrol">List
-                            View</span> icon: <img class="image" id="task_svd_dvz_sq__d16735e339" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevListView.png" height="12" width="15" />.</p>
+                            View</span> icon: <img class="image" id="task_svd_dvz_sq__d17238e339" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevListView.png" height="12" width="15" />.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -778,7 +793,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To refresh the preview, click the <span class="ph uicontrol">Refresh Preview</span> icon:
-                        <img class="image" id="task_svd_dvz_sq__d16735e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
+                        <img class="image" id="task_svd_dvz_sq__d17238e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
                 <div class="itemgroup info">Based on the origin, refreshing the preview either provides a new set of data
                     or reverts any changes to the existing data.</div>
             </li>
@@ -839,7 +854,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To refresh the preview, click the <span class="ph uicontrol">Refresh Preview</span> icon:
-                        <img class="image" id="task_nyy_13l_5s__d16735e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
+                        <img class="image" id="task_nyy_13l_5s__d17238e359" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PrevRefresh.png" height="12" width="11" />.</span>
                 <div class="itemgroup info">Based on the origin, refreshing the preview either provides a new set of data
                     or reverts any changes to the existing data.</div>
             </li>

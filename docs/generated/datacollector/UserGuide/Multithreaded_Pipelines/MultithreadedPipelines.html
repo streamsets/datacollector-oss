@@ -7,9 +7,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,6 +22,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -71,7 +86,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d44508e2126">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d45299e2179">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
@@ -85,8 +100,9 @@
                         batches are written to destinations is not ensured.</span></p>
 
         <p class="p">For example, take the following multithreaded pipeline. The HTTP Server origin processes
-            HTTP POST requests passed from HTTP clients. When you configure the origin, you specify
-            the number of threads to use - in this case, the Max Concurrent Requests property:</p>
+            HTTP POST and PUT requests passed from HTTP clients. When you configure the origin, you
+            specify the number of threads to use - in this case, the Max Concurrent Requests
+            property:</p>
 
         <p class="p"><img class="image" id="concept_xl3_ncd_py__image_mxx_5sd_ry" src="../Graphics/Multithread-HTTPPipeline.png" height="263" width="470" /></p>
 
@@ -141,8 +157,8 @@
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
-                              the contents of all authorized HTTP POST requests. </li>
+                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
+                              the contents of all authorized HTTP POST and PUT requests. </li>
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
@@ -363,8 +379,8 @@
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
-                              the contents of all authorized HTTP POST requests. </li>
+                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
+                              the contents of all authorized HTTP POST and PUT requests. </li>
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>

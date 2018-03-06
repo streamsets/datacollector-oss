@@ -8,9 +8,9 @@
           var prefix = "../../../index.html";
           
           --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-<!--
+  <!--
   Copyright 2018 StreamSets Inc.
-
+  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -23,6 +23,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub">StreamSets Control Hub</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
@@ -167,10 +182,10 @@
         </p>
 
         <p class="p">As a DevOps or site reliability engineer - the person responsible for ensuring that all
-            services and systems are scalable and reliable - you register both authoring and
+            services and systems are scalable and reliable - you register both development and
             execution <span class="ph">Data Collector</span>s
-            with <span class="ph">Control Hub</span>. You register <span class="ph">Data Collector</span>s
-            by manually administering them or by automatically provisioning them on a container
+            with <span class="ph">Control Hub</span>. You register <span class="ph">Data Collector</span>s by
+            manually administering them or by automatically provisioning them on a container
             orchestration framework such as Kubernetes. All registered <span class="ph">Data Collector</span>s -
             either manually administered or automatically provisioned - function in the same
             way.</p>
@@ -238,13 +253,15 @@
  <h2 class="title topictitle2">Measure Dataflow Quality</h2>
 
  
- <div class="body conbody"><p class="shortdesc"><span class="ph">Control Hub</span>
-        provides the same level of detailed monitoring for topologies and jobs that you are
-        accustomed to seeing for pipelines within <span class="ph">Data Collector</span>. </p>
+ <div class="body conbody"><p class="shortdesc">As a data architect or as a DevOps or site reliability engineer, you can measure the
+        health of the topology and the performance of all jobs and connecting systems included in
+        the topology. </p>
 
-        <p class="p">As a data architect or
-            as a DevOps or site reliability engineer, you can measure the health of the topology and
-            the performance of all jobs and connecting systems included in the topology. <span class="ph">Control Hub</span>
+        <p class="p">
+            
+        </p>
+
+        <p class="p"><span class="ph">Control Hub</span>
             monitoring provides real-time statistics and error information about the running
             pipelines. </p>
 
