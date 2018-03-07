@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.aggregation;
 
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -33,6 +34,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
@@ -131,6 +133,49 @@ public class TestAggregationProcessor {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testGetEventRecordsQueue() {
+    AggregationConfigBean aggregationConfigBean = new AggregationConfigBean();
+    aggregationConfigBean.windowType = WindowType.ROLLING;
+    aggregationConfigBean.timeWindow = TimeWindow.TW_5S;
+    aggregationConfigBean.timeWindowsToRemember = 1;
+    aggregationConfigBean.timeZoneID = "x";
+    AggregatorConfig aggregatorConfig1 = getAggregatorConfig("a");
+    AggregatorConfig aggregatorConfig2 = getAggregatorConfig("b");
+    aggregationConfigBean.aggregatorConfigs = Arrays.asList(aggregatorConfig1, aggregatorConfig2);
+
+    aggregationConfigBean.perAggregatorEvents = true;
+    aggregationConfigBean.allAggregatorsEvent = false;
+
+    AggregationProcessor aggregationProcessor = new AggregationProcessor(aggregationConfigBean);
+    BlockingQueue<EventRecord> eventRecordsQueue = aggregationProcessor.createEventRecordsQueue();
+    Assert.assertEquals(
+        2*3 /*3 times the total events per close interval*/,
+        eventRecordsQueue.remainingCapacity()
+    );
+
+    aggregationConfigBean.perAggregatorEvents = true;
+    aggregationConfigBean.allAggregatorsEvent = true;
+
+    aggregationProcessor = new AggregationProcessor(aggregationConfigBean);
+    eventRecordsQueue = aggregationProcessor.createEventRecordsQueue();
+    Assert.assertEquals(
+        3*3 /*3 times the total events per close interval*/,
+        eventRecordsQueue.remainingCapacity()
+    );
+
+    aggregationConfigBean.perAggregatorEvents = false;
+    aggregationConfigBean.allAggregatorsEvent = true;
+
+    aggregationProcessor = new AggregationProcessor(aggregationConfigBean);
+    eventRecordsQueue = aggregationProcessor.createEventRecordsQueue();
+    Assert.assertEquals(
+        1*3 /*3 times the total events per close interval*/,
+        eventRecordsQueue.remainingCapacity()
+    );
+  }
+
 
   @NotNull
   private AggregatorConfig getAggregatorConfig(String name) {

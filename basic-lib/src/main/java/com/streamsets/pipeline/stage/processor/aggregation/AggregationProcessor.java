@@ -25,25 +25,17 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class AggregationProcessor extends SingleLaneProcessor {
   private final static String EVALUATORS = "evaluators";
-  public static final int EVENT_RECORD_QUEUE_CAPACITY = 100;
+  private final static String EVENT_RECORDS_QUEUE = "event.records.queue";
 
   private final AggregationConfigBean config;
   private AggregationEvaluators evaluators;
-
-  /*
-   * A separate thread monitors the time window and creates event records when window is rolled over.
-   * Therefore those event records cannot be sent to event sink from that thread (as the stage runtime may have been
-   * destroyed by then).
-   *
-   * hence this blocking queue ensures that records are sent to event sink only from within the process method.
-   */
-  private final BlockingQueue<EventRecord> eventRecordsQueue = new ArrayBlockingQueue<>(EVENT_RECORD_QUEUE_CAPACITY);
-
+  private BlockingQueue<EventRecord> eventRecordsQueue;
 
   public AggregationProcessor(AggregationConfigBean config) {
     this.config = config;
@@ -56,11 +48,16 @@ public class AggregationProcessor extends SingleLaneProcessor {
       configIssues.addAll(config.init(getContext()));
       if (configIssues.isEmpty()) {
         // we are using the stage context to make sure we have one per pipeline even if multithreaded origin
-        synchronized (getClass()) {
-          evaluators = (AggregationEvaluators) getContext().getStageRunnerSharedMap().get(EVALUATORS);
+        Map<String, Object> stageRunnerSharedMap = getContext().getStageRunnerSharedMap();
+        synchronized (stageRunnerSharedMap) {
+          evaluators = (AggregationEvaluators) stageRunnerSharedMap.get(EVALUATORS);
+          eventRecordsQueue = (BlockingQueue<EventRecord>)stageRunnerSharedMap.get(EVENT_RECORDS_QUEUE);
           if (evaluators == null) {
+            eventRecordsQueue = createEventRecordsQueue();
+            stageRunnerSharedMap.put(EVENT_RECORDS_QUEUE, eventRecordsQueue);
             evaluators = new AggregationEvaluators(getContext(), config, eventRecordsQueue);
             evaluators.init();
+            stageRunnerSharedMap.put(EVALUATORS, evaluators);
           }
         }
       }
@@ -98,14 +95,40 @@ public class AggregationProcessor extends SingleLaneProcessor {
     return evaluators;
   }
 
-  private void publishEventRecordsIfAny() {
+  private synchronized void publishEventRecordsIfAny() {
     if (eventRecordsQueue.size() > 0) {
-      List<EventRecord> eventList = new ArrayList<>(EVENT_RECORD_QUEUE_CAPACITY);
+      List<EventRecord> eventList = new ArrayList<>();
       eventRecordsQueue.drainTo(eventList);
       for (EventRecord r : eventList) {
         getContext().toEvent(r);
       }
     }
+  }
+
+  @VisibleForTesting
+  BlockingQueue<EventRecord> createEventRecordsQueue() {
+    /*
+     * A separate thread monitors the time window and creates event records when window is rolled over.
+     * Therefore those event records cannot be sent to event sink from that thread (as the stage runtime may have been
+     * destroyed by then).
+     *
+     * hence this blocking queue ensures that records are sent to event sink only from within the process method.
+     */
+
+    int size = 0;
+    if (config.perAggregatorEvents) {
+      size += config.aggregatorConfigs.size();
+    }
+    if (config.allAggregatorsEvent) {
+      size += 1;
+    }
+    /*
+     * It is possible that the window size is small and the batch processing time is larger. In that case the more event
+     * records can be added to the event queue before it is drained. Therefore multiple size by 3 to account for
+     * 3 event rolls before the event is drained
+     */
+    size = size > 0 ? size*3 : 1;
+    return new ArrayBlockingQueue<>(size);
   }
 
 }
