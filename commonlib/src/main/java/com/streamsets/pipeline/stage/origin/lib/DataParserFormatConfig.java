@@ -37,6 +37,8 @@ import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.config.DatagramModeChooserValues;
+import com.streamsets.pipeline.config.ExcelHeader;
+import com.streamsets.pipeline.config.ExcelHeaderChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
@@ -78,11 +80,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
-import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
-import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
-import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
-import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.*;
 import static com.streamsets.pipeline.stage.common.DataFormatErrors.DATA_FORMAT_11;
 
 /**
@@ -1031,6 +1029,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public boolean verifyChecksum = false;
 
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.MODEL,
+          label = "Excel Header Option",
+          description = "Excel headers",
+          displayPosition = 1000,
+          group = "DATA_FORMAT",
+          dependsOn = "dataFormat^",
+          triggeredByValue = "EXCEL"
+  )
+  @ValueChooserModel(ExcelHeaderChooserValues.class)
+  public ExcelHeader excelHeader;
+
   // Size of StringBuilder pool maintained by Text and Log Data Parser Factories.
   // The default value is 1 for regular origins. Multithreaded origins should override this value as required.
   public int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
@@ -1159,6 +1170,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
             templateCacheTimeoutMs
         );
         break;
+      case EXCEL:
+        valid = validateWorkbook(context, configPrefix, issues);
+        break;
       case SDC_JSON:
       case BINARY:
       case AVRO:
@@ -1186,6 +1200,21 @@ public class DataParserFormatConfig implements DataFormatConfig {
         issues
     );
 
+    return valid;
+  }
+
+  private boolean validateWorkbook(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (excelHeader == null) {
+      valid = false;
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.DATA_FORMAT.name(),
+              configPrefix + "excelHeader",
+              DataFormatErrors.DATA_FORMAT_200
+          )
+      );
+    }
     return valid;
   }
 
@@ -1461,6 +1490,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       case NETFLOW:
         buildNetflowParser(builder);
         break;
+      case EXCEL:
+        buildWorkbookParser(builder);
+        break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);
     }
@@ -1557,6 +1589,12 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, netflowOutputValuesMode)
         .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, maxTemplateCacheSize)
         .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, templateCacheTimeoutMs);
+  }
+
+  private void buildWorkbookParser(DataParserFactoryBuilder builder) {
+    builder
+        .setMode(excelHeader)
+        .setMaxDataLen(-1);
   }
 
   /**

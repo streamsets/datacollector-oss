@@ -26,6 +26,7 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
       DataFormat.BINARY,
       DataFormat.DATAGRAM,
       DataFormat.DELIMITED,
+      DataFormat.EXCEL,
       DataFormat.JSON,
       DataFormat.LOG,
       DataFormat.NETFLOW,

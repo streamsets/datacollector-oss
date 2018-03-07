@@ -35,6 +35,7 @@ public enum DataFormat implements Label {
   WHOLE_FILE("Whole File", DataParserFormat.WHOLE_FILE, DataGeneratorFormat.WHOLE_FILE),
   SYSLOG("Syslog", DataParserFormat.SYSLOG, null),
   NETFLOW("Netflow", DataParserFormat.NETFLOW, null),
+  EXCEL("Excel", DataParserFormat.EXCEL, null),
   ;
 
   private final String label;

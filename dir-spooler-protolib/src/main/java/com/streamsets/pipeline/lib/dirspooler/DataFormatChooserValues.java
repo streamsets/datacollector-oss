@@ -25,6 +25,7 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
       DataFormat.AVRO,
       DataFormat.DELIMITED,
       DataFormat.JSON,
+      DataFormat.EXCEL,
       DataFormat.LOG,
       DataFormat.PROTOBUF,
       DataFormat.SDC_JSON,

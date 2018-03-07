@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
+import com.streamsets.pipeline.lib.parser.excel.WorkbookParserConstants;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
@@ -280,6 +281,9 @@ public class DataFormatParser {
       case SYSLOG:
         // nothing to validate
         break;
+      case EXCEL:
+        // nothing to validate
+        break;
       default:
         issues.add(
             context.createConfigIssue(
@@ -388,6 +392,11 @@ public class DataFormatParser {
           .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, dataFormatConfig.netflowOutputValuesMode)
           .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, dataFormatConfig.maxTemplateCacheSize)
           .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, dataFormatConfig.templateCacheTimeoutMs);
+        break;
+      case EXCEL:
+        builder
+            .setMaxDataLen(-1)
+            .setConfig(WorkbookParserConstants.HEADER, dataFormatConfig.excelHeader);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));
