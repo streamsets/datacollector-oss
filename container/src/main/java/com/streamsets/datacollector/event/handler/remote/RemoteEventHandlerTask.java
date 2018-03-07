@@ -270,7 +270,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       try {
         callRemoteControl();
       } catch (Exception ex) {
+        // only log a warning with error message to avoid filling up the logs in case SDC cannot connect to SCH
         LOG.warn("Cannot connect to send/receive events: {}", ex.toString());
+        LOG.trace("Entire error message", ex);
       } finally {
         executorService.schedule(new EventHandlerCallable(remoteDataCollector,
             eventClient,
