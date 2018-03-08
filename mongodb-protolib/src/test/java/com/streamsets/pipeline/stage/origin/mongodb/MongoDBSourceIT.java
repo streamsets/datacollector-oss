@@ -232,7 +232,7 @@ public class MongoDBSourceIT {
     parsedRecords = output.getRecords().get("lane");
     assertEquals(1, parsedRecords.size());
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
-    assertEquals("no-more-data", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+    assertEquals("no-more-data", runner.getEventRecords().get(0).getEventType());
   }
 
   @Test
@@ -284,7 +284,7 @@ public class MongoDBSourceIT {
     parsedRecords = output.getRecords().get("lane");
     assertEquals(1, parsedRecords.size());
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
-    assertEquals("no-more-data", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+    assertEquals("no-more-data", runner.getEventRecords().get(0).getEventType());
   }
 
   @Test

@@ -168,7 +168,7 @@ public class TestAggregationEvaluators {
 
     Assert.assertEquals(
         WindowType.ROLLING + AggregationEvaluators.ALL_AGGREGATORS_EVENT,
-        event.getHeader().getAttribute(EventRecord.TYPE)
+        event.getEventType()
     );
     evaluators.destroy();
   }
@@ -219,13 +219,13 @@ public class TestAggregationEvaluators {
     EventRecord event = queue.take();
     Assert.assertEquals(
         WindowType.ROLLING + AggregationEvaluators.SINGLE_AGGREGATOR_EVENT,
-        event.getHeader().getAttribute(EventRecord.TYPE)
+        event.getEventType()
     );
 
     event = queue.take();
     Assert.assertEquals(
         WindowType.ROLLING + AggregationEvaluators.SINGLE_AGGREGATOR_EVENT,
-        event.getHeader().getAttribute(EventRecord.TYPE)
+        event.getEventType()
     );
     evaluators.destroy();
   }

@@ -232,9 +232,9 @@ public class TestStageContext {
 
     EventRecord event = context.createEventRecord("custom_type", 2, "eventSourceId");
     Assert.assertNotNull(event);
-    Assert.assertEquals("custom_type", event.getHeader().getAttribute(EventRecord.TYPE));
-    Assert.assertEquals("2", event.getHeader().getAttribute(EventRecord.VERSION));
-    Assert.assertNotNull(event.getHeader().getAttribute(EventRecord.CREATION_TIMESTAMP));
+    Assert.assertEquals("custom_type", event.getEventType());
+    Assert.assertEquals("2", event.getEventVersion());
+    Assert.assertNotNull(event.getEventCreationTimestamp());
   }
 
   @Test
@@ -286,11 +286,11 @@ public class TestStageContext {
     event.set(Field.create(ImmutableMap.of("key", Field.create("value"))));
     context.toEvent(event);
     Assert.assertEquals(1, sink.getStageEvents("stage").size());
-    Record retrieved = sink.getStageEvents("stage").get(0);
+    EventRecord retrieved = sink.getStageEventsAsEventRecords("stage").get(0);
 
     // Header is properly propagated
-    Assert.assertEquals("custom-type", retrieved.getHeader().getAttribute(EventRecord.TYPE));
-    Assert.assertEquals("1", retrieved.getHeader().getAttribute(EventRecord.VERSION));
+    Assert.assertEquals("custom-type", retrieved.getEventType());
+    Assert.assertEquals("1", retrieved.getEventVersion());
 
     // Data
     Field rootField = retrieved.get();

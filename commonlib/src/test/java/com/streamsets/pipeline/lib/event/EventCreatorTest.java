@@ -89,6 +89,20 @@ public class EventCreatorTest {
       return null;
     }
 
+    @Override
+    public String getEventType() {
+      return null;
+    }
+
+    @Override
+    public String getEventVersion() {
+      return null;
+    }
+
+    @Override
+    public String getEventCreationTimestamp() {
+      return null;
+    }
   }
 
   Target.Context context;

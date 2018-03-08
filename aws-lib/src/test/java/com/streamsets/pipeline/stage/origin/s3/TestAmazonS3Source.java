@@ -281,8 +281,8 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
 
       Assert.assertEquals(1, runner.getEventRecords().size());
 
-      Record eventRecord = runner.getEventRecords().get(0);
-      Assert.assertEquals("no-more-data", eventRecord.getHeader().getAttribute(EventRecord.TYPE));
+      EventRecord eventRecord = runner.getEventRecords().get(0);
+      Assert.assertEquals("no-more-data", eventRecord.getEventType());
       Assert.assertEquals("3", eventRecord.get("/file-count").getValueAsString());
       Assert.assertEquals("3", eventRecord.get("/record-count").getValueAsString());
       Assert.assertEquals("0", eventRecord.get("/error-count").getValueAsString());

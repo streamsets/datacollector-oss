@@ -1054,7 +1054,7 @@ public class TestJdbcSource {
       output = runner.runProduce(null, 10);
       Assert.assertEquals(4, output.getRecords().get("lane").size());
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
       runner.clearEvents();
 
@@ -1062,9 +1062,9 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(0, output.getRecords().get("lane").size());
       Assert.assertEquals(2, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
       runner.clearEvents();
 
@@ -1072,7 +1072,7 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(0, output.getRecords().get("lane").size());
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
     } finally {
       runner.runDestroy();
@@ -1116,9 +1116,9 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Assert.assertEquals(2, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
       runner.clearEvents();
 
@@ -1127,9 +1127,9 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(4, output.getRecords().get("lane").size());
       Assert.assertEquals(2, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
     } finally {
       runner.runDestroy();
@@ -1173,9 +1173,9 @@ public class TestJdbcSource {
       Assert.assertEquals(0, output.getRecords().get("lane").size());     // no records.
       Assert.assertEquals(2, runner.getEventRecords().size());            // two events.
 
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
 
       runner.clearEvents();
@@ -1185,9 +1185,9 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(0, output.getRecords().get("lane").size());
       Assert.assertEquals(2, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
 
     } finally {
@@ -1232,7 +1232,7 @@ public class TestJdbcSource {
 
       // First batch's event is successful query.
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
 
       runner.clearEvents();
@@ -1242,9 +1242,9 @@ public class TestJdbcSource {
 
       // Second batch's events are successful query and no-more-data.
       Assert.assertEquals(2, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
 
       runner.clearEvents();
@@ -1254,7 +1254,7 @@ public class TestJdbcSource {
 
       // Third batch's event is successful query.
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
 
     } finally {
@@ -1294,7 +1294,7 @@ public class TestJdbcSource {
       output = runner.runProduce(null, 10);
       Assert.assertEquals(4, output.getRecords().get("lane").size());
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getEventType());
       Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
       List<LineageEvent> events = runner.getLineageEvents();
 

@@ -171,7 +171,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare(NULL_FILE_OFFSET, runner2.getOffsets());
 
       Assert.assertEquals(1, runner2.getEventRecords().size());
-      Assert.assertEquals("no-more-data", runner2.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner2.getEventRecords().get(0).getEventType());
 
       Assert.assertTrue(f.mkdirs());
 
@@ -200,7 +200,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("file-0.log::1", runner3.getOffsets());
 
       Assert.assertEquals(1, runner3.getEventRecords().size());
-      Assert.assertEquals("new-file", runner3.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("new-file", runner3.getEventRecords().get(0).getEventType());
 
       runner3.runDestroy();
 
@@ -225,7 +225,7 @@ public class TestSpoolDirSource {
       Assert.assertFalse(source.produceCalled);
 
       Assert.assertEquals(1, runner.getEventRecords().size());
-      Assert.assertEquals("no-more-data", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(0).getEventType());
 
     } finally {
       runner.runDestroy();
@@ -401,7 +401,7 @@ public class TestSpoolDirSource {
           Assert.assertTrue(runnable.produceCalled);
 
           Assert.assertEquals(1, runner.getEventRecords().size());
-          Assert.assertEquals("new-file", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+          Assert.assertEquals("new-file", runner.getEventRecords().get(0).getEventType());
 
           runnable.produceCalled = false;
           runnable.offsetIncrement = -1;
@@ -410,9 +410,9 @@ public class TestSpoolDirSource {
           Assert.assertEquals("{\"POS\":\"-1\"}", output.getNewOffset());
           Assert.assertTrue(runnable.produceCalled);
           Assert.assertEquals(2, runner.getEventRecords().size());
-          Assert.assertEquals("new-file", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+          Assert.assertEquals("new-file", runner.getEventRecords().get(0).getEventType());
 
-          Assert.assertEquals("finished-file", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+          Assert.assertEquals("finished-file", runner.getEventRecords().get(1).getEventType());
           Assert.assertEquals(0, runner.getEventRecords().get(1).get("/error-count").getValueAsInteger());
           Assert.assertEquals(0, runner.getEventRecords().get(1).get("/record-count").getValueAsInteger());
 
@@ -623,12 +623,12 @@ public class TestSpoolDirSource {
           // two no-more-data events.
           Assert.assertEquals(20, runner.getEventRecords().size());
           Map<String, Integer> map = new HashMap<>();
-          for(Record rec : runner.getEventRecords()) {
-            if(map.get(rec.getHeader().getAttribute(EventRecord.TYPE)) != null) {
-              map.put(rec.getHeader().getAttribute(EventRecord.TYPE),
-                  map.get(rec.getHeader().getAttribute(EventRecord.TYPE)) + 1);
+          for(EventRecord rec : runner.getEventRecords()) {
+            if(map.get(rec.getEventType()) != null) {
+              map.put(rec.getEventType(),
+                  map.get(rec.getEventType()) + 1);
             } else {
-              map.put(rec.getHeader().getAttribute(EventRecord.TYPE), 1);
+              map.put(rec.getEventType(), 1);
             }
           }
 

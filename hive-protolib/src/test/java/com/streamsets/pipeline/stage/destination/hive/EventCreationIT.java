@@ -125,8 +125,8 @@ public class EventCreationIT extends BaseHiveIT {
     Assert.assertNotNull(events);
     Assert.assertEquals(1, events.size());
 
-    Record event = events.get(0);
-    Assert.assertEquals("new-table", event.getHeader().getAttribute(EventRecord.TYPE));
+    EventRecord event = events.get(0);
+    Assert.assertEquals("new-table", event.getEventType());
     Assert.assertEquals("`default`.`tbl`", event.get("/table").getValueAsString());
 
     // Validate proper columns
@@ -166,7 +166,7 @@ public class EventCreationIT extends BaseHiveIT {
 
     Assert.assertNotNull(events);
     Assert.assertEquals(1, events.size());
-    Assert.assertEquals("new-columns", events.get(0).getHeader().getAttribute(EventRecord.TYPE));
+    Assert.assertEquals("new-columns", events.get(0).getEventType());
     Assert.assertEquals("`default`.`tbl`", events.get(0).get("/table").getValueAsString());
   }
 
@@ -177,7 +177,7 @@ public class EventCreationIT extends BaseHiveIT {
 
     Assert.assertNotNull(events);
     Assert.assertEquals(1, events.size());
-    Assert.assertEquals("new-partition", events.get(0).getHeader().getAttribute(EventRecord.TYPE));
+    Assert.assertEquals("new-partition", events.get(0).getEventType());
     Assert.assertEquals("`default`.`tbl`", events.get(0).get("/table").getValueAsString());
   }
 

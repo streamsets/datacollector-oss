@@ -50,4 +50,18 @@ public class EventRecordImpl extends RecordImpl implements EventRecord {
   }
 
 
+  @Override
+  public String getEventType() {
+    return getHeader().getAttribute(EventRecord.TYPE);
+  }
+
+  @Override
+  public String getEventVersion() {
+    return getHeader().getAttribute(EventRecord.VERSION);
+  }
+
+  @Override
+  public String getEventCreationTimestamp() {
+    return getHeader().getAttribute(EventRecord.CREATION_TIMESTAMP);
+  }
 }
