@@ -135,6 +135,7 @@ angular
         var relativeYPos = options.relativeYPos;
         var configuration = options.configuration;
         var insertBetweenEdge = options.insertBetweenEdge;
+        var producingEventsConfigValue = options.producingEventsConfigValue;
         var stageInstance;
         var edges = $scope.edges;
         var edge;
@@ -180,6 +181,10 @@ angular
           configuration: configuration,
           insertBetweenEdge: insertBetweenEdge
         });
+
+        if (producingEventsConfigValue) {
+          stageInstance.eventLanes = [stageInstance.instanceName + '_EventLane'];
+        }
 
         $scope.changeStageSelection({
           selectedObject: stageInstance,
@@ -1980,14 +1985,16 @@ angular
 
 
     $scope.$on('onPasteNode', function (event, stageInstance) {
-      var stageLibraries = $scope.stageLibraries,
-        newStage = _.find(stageLibraries, function(stage) {
-          return stage.library === stageInstance.library && stage.name === stageInstance.stageName;
-        });
+      var stageLibraries = $scope.stageLibraries;
+      var newStage = _.find(stageLibraries, function (stage) {
+        return stage.library === stageInstance.library && stage.name === stageInstance.stageName;
+      });
+      var producingEventsConfigValue = (stageInstance.eventLanes && stageInstance.eventLanes.length > 0);
 
       $scope.addStageInstance({
         stage: newStage,
-        configuration: angular.copy(stageInstance.configuration)
+        configuration: angular.copy(stageInstance.configuration),
+        producingEventsConfigValue: producingEventsConfigValue
       });
     });
 
