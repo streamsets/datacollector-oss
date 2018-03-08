@@ -23,11 +23,15 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.LocalFileSystem;
+import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,13 +62,13 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
   private final static String LINE1 = "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326";
   private final static String LINE2 = "127.0.0.2 ss m [10/Oct/2000:13:55:36 -0800] \"GET /apache_pb.gif HTTP/2.0\" 200 2326";
 
-  private File createLogFile() throws Exception {
+  private WrappedFile createLogFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     IOUtils.write(LINE1 + "\n", writer);
     IOUtils.write(LINE2, writer);
     writer.close();
-    return f;
+    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
   }
 
   private SpoolDirSource createSource() {

@@ -23,7 +23,10 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.LocalFileSystem;
+import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -78,7 +81,7 @@ public class TestProtobufSpoolDirSource {
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
-      assertEquals("-1", runnable.generateBatch(new File(TEST_PROTOBUF_FILE), null, 10, batchMaker));
+      assertEquals("-1", runnable.generateBatch(new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(TEST_PROTOBUF_FILE), null, 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       assertNotNull(records);

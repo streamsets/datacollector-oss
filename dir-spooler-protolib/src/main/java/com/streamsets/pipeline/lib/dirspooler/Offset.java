@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.lib.dirspooler;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.StageException;

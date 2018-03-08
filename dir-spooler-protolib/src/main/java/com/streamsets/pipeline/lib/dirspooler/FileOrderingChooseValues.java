@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.lib.dirspooler;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-
-import static com.streamsets.pipeline.stage.origin.spooldir.FileOrdering.LEXICOGRAPHICAL;
-import static com.streamsets.pipeline.stage.origin.spooldir.FileOrdering.TIMESTAMP;
 
 public class FileOrderingChooseValues extends BaseEnumChooserValues<FileOrdering> {
 
   public FileOrderingChooseValues() {
-    super(TIMESTAMP, LEXICOGRAPHICAL);
+    super(FileOrdering.TIMESTAMP, FileOrdering.LEXICOGRAPHICAL);
   }
 }
