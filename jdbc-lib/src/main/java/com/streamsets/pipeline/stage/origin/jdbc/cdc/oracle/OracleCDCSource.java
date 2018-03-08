@@ -694,7 +694,7 @@ public class OracleCDCSource extends BaseSource {
     attributes.put(OPERATION, operation);
     // Walk it and attach our sqlListener
     sqlListener.reset();
-    if (configBean.allowNulls && !table.isNotEmpty()) {
+    if (configBean.allowNulls && table.isNotEmpty()) {
       sqlListener.setColumns(tableSchemas.get(table).keySet());
     }
 
