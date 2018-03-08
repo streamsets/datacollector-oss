@@ -38,8 +38,8 @@
                name="dpmUserID"
                class="form-control"
                required
-               pattern="[a-zA-Z_0-9\.]+@[a-zA-Z_0-9\.]+$"
-               title="User ID must be <ID>@<Organization ID>, IDs must be a alphanumeric characters, underscores and dots"
+               pattern="[a-zA-Z_-0-9\.]+@[a-zA-Z_-0-9\.]+$"
+               title="User ID must be <ID>@<Organization ID>, IDs must be a alphanumeric characters, underscores, hyphens and dots"
                placeholder="{{'home.enableDPM.dpmUserNamePlaceholder' | translate}}"
                ng-model="dpmInfoModel.userID">
       </div>
