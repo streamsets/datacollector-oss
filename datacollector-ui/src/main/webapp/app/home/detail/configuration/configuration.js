@@ -669,7 +669,6 @@ angular
       },
 
       producingEventsConfigChange: function() {
-        console.log($scope.producingEventsConfig);
         if ($scope.producingEventsConfig.value && $scope.detailPaneConfigDefn.producingEvents &&
           (!$scope.detailPaneConfig.eventLanes || $scope.detailPaneConfig.eventLanes.length === 0)) {
           $scope.detailPaneConfig.eventLanes = [$scope.detailPaneConfig.instanceName + '_EventLane'];
