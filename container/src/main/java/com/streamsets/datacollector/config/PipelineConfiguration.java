@@ -68,7 +68,7 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
       List<StageConfiguration> startEventStages,
       List<StageConfiguration> stopEventStages
   ) {
-    super(uuid, version, schemaVersion, title, pipelineId, description, fragments, stages, uiInfo, configuration);
+    super(uuid, version, schemaVersion, title, pipelineId, null, description, fragments, stages, uiInfo, configuration);
     this.errorStage = errorStage;
     this.statsAggregatorStage = statsAggregatorStage;
     memoryLimitConfiguration = new MemoryLimitConfiguration();

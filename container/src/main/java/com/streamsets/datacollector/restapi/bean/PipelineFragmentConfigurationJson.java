@@ -34,7 +34,8 @@ public class PipelineFragmentConfigurationJson implements Serializable {
   public PipelineFragmentConfigurationJson(
       @JsonProperty("schemaVersion") int schemaVersion,
       @JsonProperty("version") int version,
-      @JsonProperty("pipelineId") String pipelineId,
+      @JsonProperty("fragmentId") String fragmentId,
+      @JsonProperty("fragmentInstanceId") String fragmentInstanceId,
       @JsonProperty("title") String title,
       @JsonProperty("description") String description,
       @JsonProperty("uuid") UUID uuid,
@@ -48,7 +49,8 @@ public class PipelineFragmentConfigurationJson implements Serializable {
         version,
         schemaVersion,
         title,
-        pipelineId,
+        fragmentId,
+        fragmentInstanceId,
         description,
         BeanHelper.unwrapPipelineFragementConfigurations(fragments),
         BeanHelper.unwrapStageConfigurations(stages),
@@ -65,8 +67,12 @@ public class PipelineFragmentConfigurationJson implements Serializable {
     return fragmentConfiguration.getSchemaVersion();
   }
 
-  public String getPipelineId() {
+  public String getFragmentId() {
     return fragmentConfiguration.getPipelineId();
+  }
+
+  public String getFragmentInstanceId() {
+    return fragmentConfiguration.getFragmentInstanceId();
   }
 
   public int getVersion() {

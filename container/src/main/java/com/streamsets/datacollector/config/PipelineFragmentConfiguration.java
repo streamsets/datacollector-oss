@@ -37,6 +37,7 @@ public class PipelineFragmentConfiguration implements Serializable {
   protected int schemaVersion;
   protected int version;
   protected String pipelineId;
+  protected String fragmentInstanceId;
   protected UUID uuid = null;
   protected String title;
   protected String description;
@@ -54,11 +55,13 @@ public class PipelineFragmentConfiguration implements Serializable {
       int schemaVersion,
       String title,
       String pipelineId,
+      String fragmentInstanceId,
       String description,
       List<PipelineFragmentConfiguration> fragments,
       List<StageConfiguration> stages,
       Map<String, Object> uiInfo,
-      List<Config> configuration) {
+      List<Config> configuration
+  ) {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.version = version;
     issues = new Issues();
@@ -104,6 +107,15 @@ public class PipelineFragmentConfiguration implements Serializable {
 
   public void setPipelineId(String pipelineId) {
     this.pipelineId = pipelineId;
+  }
+
+  public String getFragmentInstanceId() {
+    return fragmentInstanceId;
+  }
+
+  public PipelineFragmentConfiguration setFragmentInstanceId(String fragmentInstanceId) {
+    this.fragmentInstanceId = fragmentInstanceId;
+    return this;
   }
 
   public String getTitle() {
