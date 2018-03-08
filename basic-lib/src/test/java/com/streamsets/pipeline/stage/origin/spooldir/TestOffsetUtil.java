@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.lib.util.OffsetUtil;
+import com.streamsets.pipeline.lib.dirspooler.Offset;
 import org.junit.Assert;
 
 import java.util.Map;

@@ -23,8 +23,10 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.FileOrdering;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import org.junit.Assert;
 import org.junit.Test;
 

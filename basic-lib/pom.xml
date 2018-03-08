@@ -255,6 +255,13 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dir-spooler-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>

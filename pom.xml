@@ -149,6 +149,8 @@
     <module>mapr_json-6_0-protolib</module>
     <module>hive-protolib</module>
 
+    <module>dir-spooler-protolib</module>
+
     <module>sdc-kafka-api</module>
     <module>sdc-kafka_0_8</module>
     <module>sdc-kafka_0_9-common</module>

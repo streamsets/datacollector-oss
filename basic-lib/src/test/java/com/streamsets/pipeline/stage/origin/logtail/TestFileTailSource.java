@@ -945,7 +945,7 @@ public class TestFileTailSource {
 
       writeFileInDirectoryStructure(testDataDir, suffixDirPath, 3);
 
-      //Give about 10 secs for the directory watcher and FileFinder thread to detect the file appearance.
+      //Give about 10 secs for the directory findDirectoryPathCreationWatcher and FileFinder thread to detect the file appearance.
       Thread.sleep(10000);
 
       output = runner.runProduce(output.getNewOffset(), 10);

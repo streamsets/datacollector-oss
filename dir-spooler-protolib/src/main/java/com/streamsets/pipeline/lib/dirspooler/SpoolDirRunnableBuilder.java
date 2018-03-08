@@ -16,8 +16,6 @@
 package com.streamsets.pipeline.lib.dirspooler;
 
 import com.streamsets.pipeline.api.PushSource;
-import com.streamsets.pipeline.stage.origin.spooldir.Offset;
-import com.streamsets.pipeline.stage.origin.spooldir.SpoolDirConfigBean;
 
 import java.util.Map;
 
@@ -29,6 +27,7 @@ public class SpoolDirRunnableBuilder {
   private String lastSourcFileName;
   private DirectorySpooler spooler;
   private SpoolDirConfigBean conf;
+  private WrappedFileSystem fs;
 
   public SpoolDirRunnableBuilder() {}
 
@@ -67,7 +66,12 @@ public class SpoolDirRunnableBuilder {
     return this;
   }
 
+  public SpoolDirRunnableBuilder wrappedFileSystem(WrappedFileSystem fs) {
+    this.fs = fs;
+    return this;
+  }
+
   public SpoolDirRunnable build() {
-    return new SpoolDirRunnable(context, threadNumber, batchSize, offsets, lastSourcFileName, spooler, conf);
+    return new SpoolDirRunnable(context, threadNumber, batchSize, offsets, lastSourcFileName, spooler, conf, fs);
   }
 }

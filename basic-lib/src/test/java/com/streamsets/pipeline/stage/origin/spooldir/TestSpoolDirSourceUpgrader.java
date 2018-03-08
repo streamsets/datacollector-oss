@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.dirspooler.FileOrdering;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import org.junit.Test;
 
