@@ -69,13 +69,13 @@ public class AggregationProcessor extends SingleLaneProcessor {
   public void process(
       Batch batch, SingleLaneBatchMaker singleLaneBatchMaker
   ) throws StageException {
-    publishEventRecordsIfAny();
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
       evaluators.evaluate(record);
       singleLaneBatchMaker.addRecord(record);
     }
+    publishEventRecordsIfAny();
   }
 
   @Override
