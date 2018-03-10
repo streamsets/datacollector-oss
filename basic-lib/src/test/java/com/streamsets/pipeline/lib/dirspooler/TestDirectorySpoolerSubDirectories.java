@@ -159,16 +159,19 @@ public class TestDirectorySpoolerSubDirectories {
 
     File logFile3 = new File(dir2, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
-    long baseTime = 1461867389000L;
-    Assert.assertTrue(logFile3.setLastModified(baseTime + 1000));
+
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
 
     File logFile1 = new File(dir1, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    Assert.assertTrue(logFile1.setLastModified(baseTime + 2000));
+
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
 
     File logFile2 = new File(dir1, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    Assert.assertTrue(logFile2.setLastModified(baseTime + 3000));
+
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .processSubdirectories(true)
         .setMaxSpoolFiles(3);
@@ -193,20 +196,21 @@ public class TestDirectorySpoolerSubDirectories {
 
     File logFile3 = new File(dir2, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
-    long baseTime = 1461867389000L;
-    Assert.assertTrue(logFile3.setLastModified(baseTime + 1000));
+
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
 
     File logFile1 = new File(dir1, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    Assert.assertTrue(logFile1.setLastModified(baseTime + 2000));
 
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(500L);
+
+    // logFile2 and logFile4 have the same timestamp
     File logFile2 = new File(dir1, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    Assert.assertTrue(logFile2.setLastModified(baseTime + 3000));
-
     File logFile4 = new File(dir2, "x4.log").getAbsoluteFile();
     new FileWriter(logFile4).close();
-    Assert.assertTrue(logFile4.setLastModified(baseTime + 3000));
 
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(4)

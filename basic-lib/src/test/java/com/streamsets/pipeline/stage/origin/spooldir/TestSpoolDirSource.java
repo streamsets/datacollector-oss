@@ -547,6 +547,9 @@ public class TestSpoolDirSource {
       Assert.assertTrue(current.setLastModified(timestamp));
     }
 
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
+
     File current = new File(conf.spoolDir,"a.log");
     try(FileOutputStream outputStream = new FileOutputStream(current)) {
       IOUtils.writeLines(ImmutableList.of("A,B", "Gollum,Sauron", "Aragorn,Boromir"), "\n", outputStream);
