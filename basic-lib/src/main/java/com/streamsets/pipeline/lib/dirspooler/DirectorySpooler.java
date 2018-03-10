@@ -40,9 +40,9 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
@@ -276,11 +276,23 @@ public class DirectorySpooler {
               return 1;
             }
 
-            int compares = Files.getLastModifiedTime(file1).compareTo(Files.getLastModifiedTime(file2));
+            FileTime mtime1 = Files.getLastModifiedTime(file1);
+            FileTime mtime2 = Files.getLastModifiedTime(file2);
+            // SDC-8566: if last modified timestamp is less, compare the creation timestamp
+            // for example, mv command will update the creation timestamp only not last modified timestamp
+            FileTime ctime1 = (FileTime) Files.getAttribute(file1, "unix:ctime");
+            FileTime ctime2 = (FileTime) Files.getAttribute(file2, "unix:ctime");
+
+            long time1 = Math.max(mtime1.toMillis(), ctime1.toMillis());
+            long time2 = Math.max(mtime2.toMillis(), ctime2.toMillis());
+
+            int compares = Long.compare(time1, time2);
+
             if (compares != 0) {
               return compares;
             }
           }
+
           return file1.getFileName().compareTo(file2.getFileName());
         } catch (NoSuchFileException ex) {
           // Logged later, so don't log here.

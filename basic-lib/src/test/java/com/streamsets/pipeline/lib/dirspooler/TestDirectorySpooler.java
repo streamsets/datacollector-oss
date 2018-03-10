@@ -243,15 +243,18 @@ public class TestDirectorySpooler {
     assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
-    long baseTime = 1461867389000L;
-    assertTrue(logFile3.setLastModified(baseTime + 1000));
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
+
     File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    assertTrue(logFile1.setLastModified(baseTime + 2000));
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
+
     System.out.println("Last Modified: " + logFile1.lastModified());
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    assertTrue(logFile2.setLastModified(baseTime + 3000));
+
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(3);
     DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
@@ -268,18 +271,22 @@ public class TestDirectorySpooler {
     assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
-    long baseTime = 1461867389000L;
-    assertTrue(logFile3.setLastModified(baseTime + 1000));
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
+
     File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    assertTrue(logFile1.setLastModified(baseTime + 2000));
-    System.out.println("Last Modified: " + logFile1.lastModified());
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(500L);
+
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    assertTrue(logFile2.setLastModified(baseTime + 3000));
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(500L);
+
     File logFile4 = new File(spoolDir, "x4.log").getAbsoluteFile();
     new FileWriter(logFile4).close();
-    assertTrue(logFile4.setLastModified(baseTime + 3000));
+
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(4);
     DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
@@ -297,15 +304,19 @@ public class TestDirectorySpooler {
     assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
-    long baseTime = 1461867389000L;
-    assertTrue(logFile3.setLastModified(baseTime + 1000));
+
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(1000L);
+
     File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    assertTrue(logFile1.setLastModified(baseTime + 2000));
-    System.out.println("Last Modified: " + logFile1.lastModified());
+
+    // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
+    Thread.sleep(100L);
+
     File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
-    assertTrue(logFile2.setLastModified(baseTime + 3000));
+
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(4);
     DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
@@ -317,10 +328,9 @@ public class TestDirectorySpooler {
     //x4 and x5 have same timestamp, so order should be exactly the same.
     File logFile5 = new File(spoolDir, "x5.log").getAbsoluteFile();
     new FileWriter(logFile5).close();
-    assertTrue(logFile5.setLastModified(baseTime + 3000));
     File logFile4 = new File(spoolDir, "x4.log").getAbsoluteFile();
     new FileWriter(logFile4).close();
-    assertTrue(logFile4.setLastModified(baseTime + 3000));
+
     spooler.finder.run();
     Assert.assertEquals(logFile4, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(logFile5, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
@@ -784,16 +794,14 @@ public class TestDirectorySpooler {
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
     new FileWriter(logFile3).close();
 
-    // wait for next findAndQueue()
-    Thread.sleep(spoolingTime * 1000);
+    spooler.finder.run();
 
     // later added file is being ignored because queue reached the maximum, 1
     Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(null, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
 
-    // wait for next findAndQueue()
-    Thread.sleep(spoolingTime * 1000);
+    spooler.finder.run();
 
     // put rest of the file since queue <= maximum
     Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
