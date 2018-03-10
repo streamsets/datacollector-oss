@@ -828,13 +828,13 @@ public class PipelineConfigurationValidator {
       return true;
     }
 
-    if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
+    if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer || conf.getValue() instanceof Double)) {
       issues.add(issueCreator.create(confDef.getGroup(),
           confDef.getName(), ValidationError.VALIDATION_0009,
           confDef.getType()));
       return false;
     }
-    Long value = ((Number) conf.getValue()).longValue();
+    Double value = ((Number) conf.getValue()).doubleValue();
     if(value > confDef.getMax()) {
       issues.add(issueCreator.create(confDef.getGroup(),
           confDef.getName(), ValidationError.VALIDATION_0034, confDef.getName(), confDef.getMax()));
