@@ -45,10 +45,12 @@ import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.ServiceRuntime;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
@@ -88,6 +90,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   public static final String IGNORE_STAGE_DEFINITIONS = "ignore.stage.definitions";
   public static final String JAVA_UNSUPPORTED_REGEXP = "java.unsupported.regexp";
+  public static final String MIN_SDC_VERSION = "min.sdc.version";
 
   private static final String CONFIG_LIBRARY_ALIAS_PREFIX = "library.alias.";
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
@@ -103,6 +106,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private final Map<String,String> libraryNameAliases;
   private final Map<String,String> stageNameAliases;
   private final Configuration configuration;
@@ -119,9 +123,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
 
   @Inject
-  public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, Configuration configuration) {
+  public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, BuildInfo buildInfo, Configuration configuration) {
     super("stageLibrary");
     this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
     this.configuration = configuration;
     Map<String, String> aliases = new HashMap<>();
     for (Map.Entry<String,String> entry
@@ -391,6 +396,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @SuppressWarnings("unchecked")
   void loadStages() {
     String javaVersion = System.getProperty("java.version");
+    Version sdcVersion = new Version(buildInfo.getVersion());
 
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {
@@ -424,6 +430,19 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               continue;
             } else {
               LOG.debug("Stage lib {} passed java compatibility test for '{}'", StageLibraryUtils.getLibraryName(cl), unsupportedJvmVersion);
+            }
+          }
+
+          // And that this SDC is at least on requested version
+          String minSdcVersion = getPropertyFromLibraryProperties(cl, MIN_SDC_VERSION, null);
+          if(!StringUtils.isEmpty(minSdcVersion)) {
+            if(!sdcVersion.isGreaterOrEqualTo(minSdcVersion)) {
+              throw new IllegalArgumentException(
+                  Utils.format("Can't load stage library '{}' as it requires at least SDC version {} whereas current version is {}",
+                  StageLibraryUtils.getLibraryName(cl),
+                  minSdcVersion,
+                  buildInfo.getVersion()
+                ));
             }
           }
 
