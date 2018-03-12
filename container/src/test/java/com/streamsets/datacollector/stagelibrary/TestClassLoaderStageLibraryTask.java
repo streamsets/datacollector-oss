@@ -21,8 +21,11 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 
@@ -32,8 +35,13 @@ import com.streamsets.pipeline.SystemPackage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.core.transformers.MockTransformer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +53,7 @@ public class TestClassLoaderStageLibraryTask {
 
   @Test
   public void testValidateStageVersionsOK() {
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     StageDefinition stage1 = Mockito.mock(StageDefinition.class);
     Mockito.when(stage1.getName()).thenReturn("s");
@@ -62,7 +70,7 @@ public class TestClassLoaderStageLibraryTask {
 
   @Test(expected = RuntimeException.class)
   public void testValidateStageVersionsFail() {
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     StageDefinition stage1 = Mockito.mock(StageDefinition.class);
     Mockito.when(stage1.getName()).thenReturn("s");
@@ -88,7 +96,7 @@ public class TestClassLoaderStageLibraryTask {
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
 
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, new DataCollectorBuildInfo(), new Configuration());
     library.initTask();
 
     Assert.assertEquals(1, library.getStages().size());
@@ -115,8 +123,32 @@ public class TestClassLoaderStageLibraryTask {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
+  public void testIncorrectSdcMinVersion() {
+    File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    ClassLoader cl = Mockito.mock(ClassLoader.class);
+    Answer<InputStream> answer = invocation -> new ByteArrayInputStream("min.sdc.version=3.1.0.0\n".getBytes());
+    Mockito.when(cl.getResourceAsStream(StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES)).thenAnswer(answer);
+
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.0.0");
+
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, buildInfo, new Configuration());
+    try {
+      library.initTask();
+      Assert.fail("Expected exception to be thrown");
+    } catch (IllegalArgumentException e) {
+      Assert.assertEquals("Can't load stage library 'default' as it requires at least SDC version 3.1.0.0 whereas current version is 3.0.0", e.getMessage());
+    }
+  }
+
+  @Test
   public void testIgnoreStages() throws Exception {
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     StageLibraryDefinition libDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
@@ -133,7 +165,7 @@ public class TestClassLoaderStageLibraryTask {
 
   @Test(expected = RuntimeException.class)
   public void testDuplicateServices() throws Exception {
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     ServiceDefinition definition = Mockito.mock(ServiceDefinition.class);
     Mockito.when(definition.getProvides()).thenReturn(Runnable.class);
