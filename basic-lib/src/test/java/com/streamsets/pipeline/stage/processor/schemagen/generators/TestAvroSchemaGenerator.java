@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -240,6 +241,32 @@ public class TestAvroSchemaGenerator {
       record,
       "{\"name\":\"map\",\"type\":{\"type\":\"map\",\"values\":{\"type\":\"string\",\"defaultValue\":\"defaultValue\"}}}"
     );
+  }
+
+  @Test(expected = OnRecordErrorException.class)
+  public void testGenerateMapNull() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "map", Field.create(Field.Type.MAP, null
+    ))));
+
+    this.config.avroDefaultTypes = ImmutableList.of(new AvroDefaultConfig(AvroType.STRING, "defaultValue"));
+    this.generator.init(config, mock(Stage.Context.class));
+
+    generateAndValidateSchema(record,null);
+  }
+
+  @Test(expected = OnRecordErrorException.class)
+  public void testGenerateMapEmpty() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "map", Field.create(Field.Type.MAP, Collections.emptyMap()
+    ))));
+
+    this.config.avroDefaultTypes = ImmutableList.of(new AvroDefaultConfig(AvroType.STRING, "defaultValue"));
+    this.generator.init(config, mock(Stage.Context.class));
+
+    generateAndValidateSchema(record,null);
   }
 
   @Test

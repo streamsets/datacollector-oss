@@ -224,8 +224,8 @@ public class AvroSchemaGenerator extends SchemaGenerator {
         // In avro maps must have key of string (same as us) and value must be the same for all items - which
         // is different then our records.
 
-        // We can't generate the map value type from empty map
-        if(field.getValueAsMap().isEmpty()) {
+        // We can't generate the map value type from null or empty map
+        if(field.getValueAsMap() == null || field.getValueAsMap().isEmpty()) {
           throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0008, fieldPath);
         }
 

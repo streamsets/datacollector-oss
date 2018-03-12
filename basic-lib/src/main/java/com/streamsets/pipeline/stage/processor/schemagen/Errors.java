@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   SCHEMA_GEN_0005("List '{}' have different schemas for items. First schema: '{}', Second schema: '{}'"),
   SCHEMA_GEN_0006("Can't generate Avro schema for empty list '{}'"),
   SCHEMA_GEN_0007("Map '{}' have different schemas for items. First schema: '{}', Second schema: '{}'"),
-  SCHEMA_GEN_0008("Can't generate Avro schema for empty map '{}'"),
+  SCHEMA_GEN_0008("Can't generate Avro schema for null or empty map '{}'"),
   SCHEMA_GEN_0009("Multiple default values for type: {}"),
   ;
 
