@@ -24,7 +24,7 @@ public class AvroOrcConfig extends AvroConversionBaseConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.NUMBER,
     label = "ORC Batch Size",
     description = "Number of records that will be written per ORC writer batch.",
     defaultValue = "" + AvroToOrcRecordConverter.DEFAULT_ORC_BATCH_SIZE,
@@ -33,5 +33,5 @@ public class AvroOrcConfig extends AvroConversionBaseConfig {
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_ORC"
   )
-  public int orcBatchSize;
+  public int orcBatchSize = AvroToOrcRecordConverter.DEFAULT_ORC_BATCH_SIZE;
 }
