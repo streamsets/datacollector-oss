@@ -193,20 +193,7 @@ public class TestNetflowDecoder {
     byte[] bytes = getV9MessagesBytes7Flows();
 
     final boolean randomlySlice = RandomTestUtils.getRandom().nextBoolean();
-    if (randomlySlice) {
-      long bytesWritten = 0;
-      List<List<Byte>> slices = NetTestUtils.getRandomByteSlices(bytes);
-      for (int s = 0; s<slices.size(); s++) {
-        List<Byte> slice = slices.get(s);
-        byte[] sliceBytes = Bytes.toArray(slice);
-        ch.writeInbound(Unpooled.wrappedBuffer(sliceBytes));
-        bytesWritten += sliceBytes.length;
-      }
-
-      assertThat(bytesWritten, equalTo((long)bytes.length));
-    } else {
-      ch.writeInbound(Unpooled.wrappedBuffer(bytes));
-    }
+    writeBytesToChannel(ch, bytes, randomlySlice);
 
     final int expectedNumMsgs = 7;
 
@@ -343,6 +330,46 @@ public class TestNetflowDecoder {
     }
   }
 
+  private void writeBytesToChannel(EmbeddedChannel ch, byte[] bytes, boolean randomlySlice) {
+    if (randomlySlice) {
+      long bytesWritten = 0;
+      List<List<Byte>> slices = NetTestUtils.getRandomByteSlices(bytes);
+      for (int s = 0; s<slices.size(); s++) {
+        List<Byte> slice = slices.get(s);
+        byte[] sliceBytes = Bytes.toArray(slice);
+        ch.writeInbound(Unpooled.wrappedBuffer(sliceBytes));
+        bytesWritten += sliceBytes.length;
+      }
+
+      assertThat(bytesWritten, equalTo((long)bytes.length));
+    } else {
+      ch.writeInbound(Unpooled.wrappedBuffer(bytes));
+    }
+  }
+
+  @Test
+  public void ciscoAsa() throws Exception {
+    EmbeddedChannel ch = new EmbeddedChannel(makeNetflowDecoder());
+
+    boolean randomlySlice = RandomTestUtils.getRandom().nextBoolean();
+    byte[] tplBytes = getMessagesBytes("ciscoasa/netflow9_test_cisco_asa_1_tpl.dat");
+    writeBytesToChannel(ch, tplBytes, randomlySlice);
+
+    byte[] msgBytes = getMessagesBytes("ciscoasa/netflow9_test_cisco_asa_1_data.dat");
+    randomlySlice = RandomTestUtils.getRandom().nextBoolean();
+    writeBytesToChannel(ch, msgBytes, randomlySlice);
+
+    final int expectedNumMsgs = 9;
+
+    List<NetflowV9Message> messages = new ArrayList<>();
+    List<Record> records = collectNetflowV9MessagesFromChannel(ch, expectedNumMsgs, messages);
+
+    ch.finish();
+
+    assertThat(messages, hasSize(expectedNumMsgs));
+    assertThat(records, hasSize(expectedNumMsgs));
+
+  }
   public static void assertNetflowV9MessageAndRecord(
       FlowKind kind,
       NetflowV9Message message,

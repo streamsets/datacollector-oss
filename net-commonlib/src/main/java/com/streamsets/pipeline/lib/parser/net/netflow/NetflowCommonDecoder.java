@@ -171,12 +171,18 @@ public class NetflowCommonDecoder extends ReplayingDecoder<Void> {
 
     try {
       out.addAll(versionSpecificNetflowDecoder.parse(version, packetLength, packetLengthCheck, buf, sender, recipient));
-    } catch (Exception e) {
+      // if the version specific decoder successfully parsed the buffer (i.e. we made it here), it means we have
+      // completed an entire packet, and hence it is time to reset state
       resetStateVariables();
-      // this is not in a finally block, because we do NOT want to reset after each invocation, since
-      // ReplayingDecoder can call this multiple times
+    } catch (Exception e) {
+      // ReplayingDecoder can call this multiple times by way of the special io.netty.util.Signal class, which
+      // extends java.lang.Error
+      // so on a Signal, we do NOT want to reset state, and hence a finally block will not suffice (since it will also
+      // execute for unchecked exceptions like Signal
+      resetStateVariables();
       throw e;
     }
+
   }
 
   public static String ipV4ToString(int ip) {
