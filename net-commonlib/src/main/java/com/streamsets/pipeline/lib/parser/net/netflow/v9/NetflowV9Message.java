@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.parser.net.netflow.BaseNetflowMessage;
 import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,6 +42,9 @@ public class NetflowV9Message extends BaseNetflowMessage {
   public static final String FIELD_INTERPRETED_VALUES = "values";
   public static final String FIELD_FLOW_TEMPLATE_ID = "flowTemplateId";
 
+  public static final String FIELD_SENDER = "sender";
+  public static final String FIELD_RECIPIENT = "recipient";
+
   private OutputValuesMode outputValuesMode;
   private int flowRecordCount = 0;
   private long systemUptimeMs = 0;
@@ -49,6 +53,8 @@ public class NetflowV9Message extends BaseNetflowMessage {
   private byte[] sourceIdBytes;
   private long sourceId = 0;
   private FlowKind flowKind;
+  private InetSocketAddress sender;
+  private InetSocketAddress recipient;
 
   private final List<NetflowV9Field> fields = new ArrayList<>();
   private int flowTemplateId;
@@ -117,10 +123,33 @@ public class NetflowV9Message extends BaseNetflowMessage {
     this.flowKind = flowKind;
   }
 
+  public InetSocketAddress getSender() {
+    return sender;
+  }
+
+  public void setSender(InetSocketAddress sender) {
+    this.sender = sender;
+  }
+
+  public InetSocketAddress getRecipient() {
+    return recipient;
+  }
+
+  public void setRecipient(InetSocketAddress recipient) {
+    this.recipient = recipient;
+  }
+
   @Override
   public void populateRecord(Record record) {
     LinkedHashMap<String, Field> rootMap = new LinkedHashMap<>();
     rootMap.put(FIELD_FLOW_KIND, Field.create(getFlowKind().name()));
+
+    if (getSender() != null) {
+      rootMap.put(FIELD_SENDER, Field.create(getSender().toString()));
+    }
+    if (getRecipient() != null) {
+      rootMap.put(FIELD_RECIPIENT, Field.create(getRecipient().toString()));
+    }
 
     LinkedHashMap<String, Field> headerFields = new LinkedHashMap<>();
     headerFields.put(FIELD_VERSION, Field.create(getNetflowVersion()));

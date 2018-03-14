@@ -388,6 +388,8 @@ public class NetflowV9Decoder implements VersionSpecificNetflowDecoder<NetflowV9
           // done reading a flow record
 
           NetflowV9Message msg = new NetflowV9Message();
+          msg.setSender(sender);
+          msg.setRecipient(recipient);
           msg.setFlowKind(FlowKind.FLOWSET);
           msg.setOutputValuesMode(outputValuesMode);
 
