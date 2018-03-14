@@ -48,6 +48,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.avro.ipc.NettyTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.commons.io.Charsets;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flume.source.avro.AvroFlumeEvent;
 import org.apache.flume.source.avro.AvroSourceProtocol;
 import org.apache.flume.source.avro.Status;
@@ -262,14 +263,24 @@ public class TestTCPServerSource {
     workerGroup.shutdownGracefully();
 
     assertThat(records, hasSize(batchSize));
+
+    final List<String> expectedAcks = new LinkedList<>();
     for (int i = 0; i < records.size(); i++) {
       // validate the output record value
       assertThat(records.get(i).get("/text").getValueAsString(), equalTo(expectedRecords[i]));
       // validate the record-level ack
-      assertThat(responses.get(i), equalTo(String.format("record_ack_%s", records.get(i).getHeader().getSourceId())));
+      expectedAcks.add(String.format("record_ack_%s", records.get(i).getHeader().getSourceId()));
     }
     // validate the batch-level ack
-    assertThat(responses.get(10), equalTo(String.format("batch_ack_%d", batchSize)));
+    expectedAcks.add(String.format("batch_ack_%d", batchSize));
+
+    // because of the vagaries of TCP, we can't be sure that a single ack is returned in each discrete read
+    // this is due to the fact that the server can choose to flush the buffer in different ways, and the client
+    // can choose if/how to buffer on its side when reading from the channel
+    // therefore, we will simply combine all acks in the expected order into a single String and assert at that
+    // level, rather than at an individual read/expected ack level
+    final String combinedAcks = StringUtils.join(responses, "");
+    assertThat(combinedAcks, equalTo(StringUtils.join(expectedAcks, "")));
   }
 
   @Test
