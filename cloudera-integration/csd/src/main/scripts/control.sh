@@ -212,20 +212,20 @@ function dpm_login {
   dpmSession=$(echo $output | grep SS-SSO-LOGIN | sed -e 's/[^=]*=//' -e 's/;.*//')
 
   if [ -z "$dpmSession" ]; then
-    log "Can't open SCH session: $output"
+    log "Can't open Control Hub session: $output"
     exit 1
   fi
 
-  log "Opened SCH session: $dpmSession"
+  log "Opened Control Hub session: $dpmSession"
 }
 
-# Log out SCH session
+# Log out Control Hub session
 function dpm_logout {
   log "Logging out session: $dpmSession"
   run_curl "GET" "$(dpm_url_logout)" "" "--header X-SS-User-Auth-Token:$dpmSession"
 }
 
-# Generate new SCH application token and fill it into token variable
+# Generate new Control Hub application token and fill it into token variable
 function dpm_generate_token {
   log "Generating new token in session $dpmSession and in org $dpmOrg"
   run_curl "PUT" "$(dpm_url_token_gen)" "{\"organization\": \"$dpmOrg\", \"componentType\" : \"dc\", \"numberOfComponents\" : 1, \"active\" : true}" "-H X-SS-REST-CALL:true -H X-SS-User-Auth-Token:$dpmSession"
@@ -237,7 +237,7 @@ function dpm_generate_token {
   fi
 }
 
-# Regenerate existing SCH application token and fill it into token variable
+# Regenerate existing Control Hub application token and fill it into token variable
 function dpm_regenerate_token {
   log "Regenerating token in session $dpmSession and in org $dpmOrg"
 
@@ -259,10 +259,10 @@ function dpm_regenerate_token {
 }
 
 
-# Validate that we have all variables that are required for SCH (to register and such)
+# Validate that we have all variables that are required for Control Hub (to register and such)
 function dpm_verify_config {
   die="false"
-  log "Validating SCH configuration"
+  log "Validating Control Hub configuration"
 
   if [ -z "$DPM_BASE_URL" ]; then
     log "Configuration 'dpm.base.url' is not properly set."
@@ -277,24 +277,24 @@ function dpm_verify_config {
     die="true"
   fi
 
-  # Calculate SCH organization
+  # Calculate Control Hub organization
   dpmOrg=`echo $DPM_USER | cut -f2 -d@`
   if [ -z "$dpmOrg" ]; then
     log "Configuration 'dpm.user' doesn't properly contain organization."
     die="true"
   fi
-  log "SCH organization is $dpmOrg"
+  log "Control Hub organization is $dpmOrg"
 
   if [ $die = "true" ]; then
-    log "Invalid configuration for SCH"
+    log "Invalid configuration for Control Hub"
     exit 1
   fi
 }
 
-# Register auth token for this SDC instance in SCH
+# Register auth token for this SDC instance in Control Hub
 function dpm {
   if [[ -f "$DPM_TOKEN_FILE" ]]; then
-    log "SCH token already exists, skipping for now."
+    log "Control Hub token already exists, skipping for now."
     return
   fi
 
@@ -302,7 +302,7 @@ function dpm {
   dpm_generate_or_regenerate
 }
 
-# Either generate new or re-generate existing SCH token
+# Either generate new or re-generate existing Control Hub token
 function dpm_generate_or_regenerate {
   dpm_verify_config
   dpm_login
@@ -355,17 +355,17 @@ if [ -f $SDC_PROPERTIES ]; then
   grep "^stage.alias.streamsets" $SDC_PROP_FILE >> $SDC_PROPERTIES
   grep "^library.alias.streamsets" $SDC_PROP_FILE >> $SDC_PROPERTIES
 
-  # Detect if this is a SCH enabled deployment
+  # Detect if this is a Control Hub enabled deployment
   if grep -q "dpm.enabled=true" $SDC_PROPERTIES; then
-    log "Detected SCH environment"
+    log "Detected Control Hub environment"
     DPM_ENABLED="true"
   else
-    log "Running in non-SCH environment"
+    log "Running in non-Control Hub environment"
   fi
 
-  # CM exposes SCH token config as path to file, so we need to convert it to
+  # CM exposes Control Hub token config as path to file, so we need to convert it to
   # the actual value that is expected by SDC. We will append it to the config
-  # only if we're actually running with SCH enabled, otherwise SDC can fail
+  # only if we're actually running with Control Hub enabled, otherwise SDC can fail
   # to start if given file doesn't exists.
   if [[ $DPM_ENABLED = "true" ]]; then
     echo "dpm.appAuthToken=@$DPM_TOKEN_FILE@" >> $SDC_PROPERTIES

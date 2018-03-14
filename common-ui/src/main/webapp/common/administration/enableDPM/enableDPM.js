@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Controller for Enable SCH Modal Dialog.
+ * Controller for Enable Control Hub Modal Dialog.
  */
 
 angular

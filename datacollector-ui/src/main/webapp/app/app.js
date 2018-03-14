@@ -182,7 +182,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the SCH Information Dialog
+       * Open the Control Hub Information Dialog
        */
       onDPMButtonClick: function() {
         $modalStack.dismissAll();
@@ -195,7 +195,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the Enable SCH Modal Dialog
+       * Open the Enable Control Hub Modal Dialog
        */
       onEnableDPMClick: function() {
         if (configuration.isManagedByClouderaManager()) {
@@ -222,7 +222,7 @@ angular.module('dataCollectorApp')
       },
 
       /**
-       * Open the Disable SCH Modal Dialog
+       * Open the Disable Control Hub Modal Dialog
        */
       onDisableDPMClick: function() {
         if (configuration.isManagedByClouderaManager()) {

@@ -31,8 +31,8 @@
   "commands" : [
     {
       "name" : "DPMTokenRegen",
-      "label" : "(Re)generate SCH tokens",
-      "description" : "(Re)generate SCH tokens for all SDC instances.",
+      "label" : "(Re)generate Control Hub tokens",
+      "description" : "(Re)generate Control Hub tokens for all SDC instances.",
       "roleCommand" : "DPMTokenRegen",
       "roleName" : "DATACOLLECTOR",
       "runMode" : "all"
@@ -107,8 +107,8 @@
         },
         {
           "name": "DPMTokenRegen",
-          "label" : "(Re)generate SCH token",
-          "description" : "(Re)generate SCH token for this SDC instances.",
+          "label" : "(Re)generate Control Hub token",
+          "description" : "(Re)generate Control Hub token for this SDC instances.",
           "expectedExitCodes": [0],
           "requiredRoleState": "stopped",
           "commandRunner": {
@@ -947,7 +947,7 @@
           "name": "dpm.enabled",
           "type": "boolean",
           "default": "false",
-          "label": "Enable SCH",
+          "label": "Enable Control Hub",
           "description": "Enable StreamSets Enterprise",
           "required": "false"
         },
@@ -955,8 +955,8 @@
           "name": "dpm.base.url",
           "type": "uri",
           "default": "",
-          "label": "SCH URL",
-          "description": "Base URL for SCH.",
+          "label": "Control Hub URL",
+          "description": "Base URL for Control Hub.",
           "required": "false",
           "conformRegex" : "^.*[^/]$"
         },
@@ -964,7 +964,7 @@
           "name": "dpm.user",
           "type": "string",
           "default": "",
-          "label": "SCH User ID",
+          "label": "Control Hub User ID",
           "description": "User ID of organization admin that have privileges to register new SDCs.",
           "required": "false"
         },
@@ -972,30 +972,30 @@
           "name": "dpm.password",
           "type": "password",
           "default": "",
-          "label": "SCH Password",
+          "label": "Control Hub Password",
           "description": "Password of organization admin that have privileges to register new SDCs.",
           "required": "false"
         },
         {
           "name": "dpm.remote.control.job.labels",
           "type": "string_array",
-          "label": "SCH labels",
-          "description": "Labels that will be reported to SCH.",
+          "label": "Control Hub labels",
+          "description": "Labels that will be reported to Control Hub.",
           "default": ["all"],
           "required": "false"
         },
         {
           "name": "dpm.remote.control.ping.frequency",
           "type": "long",
-          "label": "SCH Ping Frequency",
-          "description": "Data Collector Ping Frequency to SCH (in milliseconds)",
+          "label": "Control Hub Ping Frequency",
+          "description": "Data Collector Ping Frequency to Control Hub (in milliseconds)",
           "default": "5000",
           "required": "false"
         },
         {
           "name": "dpm.remote.control.events.recipient",
           "type": "string",
-          "label": "SCH Remote control App",
+          "label": "Control Hub Remote control App",
           "description": "App to send remote control events",
           "default": "jobrunner-app",
           "required": "false"
@@ -1005,8 +1005,8 @@
           "type": "path",
           "pathType": "localDataDir",
           "default": "/etc/cm-sdc-dpm/",
-          "label": "SCH token location",
-          "description": "Location on each machine's local drive where SCH authentication token for SDC will be kept.",
+          "label": "Control Hub token location",
+          "description": "Location on each machine's local drive where Control Hub authentication token for SDC will be kept.",
           "required": "false"
         },
         {
@@ -1030,7 +1030,7 @@
           "type": "string",
           "default": "--tlsv1.2",
           "label": "Curl options",
-          "description": "Additional arguments that should be passed to curl when registering data collectors with SCH.",
+          "description": "Additional arguments that should be passed to curl when registering data collectors with Control Hub.",
           "required": "false"
         },
         {

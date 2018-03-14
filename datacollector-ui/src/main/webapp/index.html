@@ -237,14 +237,14 @@
             <li ng-if="isAuthorized([userRoles.admin]) && !common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onEnableDPMClick()">
                 <i class="fa fa-file-text"></i>
-                <span translate="global.menu.admin.enableDPM">Enable SCH</span>
+                <span translate="global.menu.admin.enableDPM">Enable Control Hub</span>
               </a>
             </li>
 
             <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onDisableDPMClick()">
                 <i class="fa fa-file-text"></i>
-                <span translate="global.menu.admin.disableDPM">Disable SCH</span>
+                <span translate="global.menu.admin.disableDPM">Disable Control Hub</span>
               </a>
             </li>
 

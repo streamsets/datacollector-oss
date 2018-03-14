@@ -208,7 +208,7 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Enable SCH
+       * Enable Control Hub
        * @param dpmInfo
        */
       enableDPM: function(dpmInfo) {
@@ -221,7 +221,7 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Disable SCH
+       * Disable Control Hub
        */
       disableDPM: function() {
         var url = apiBase + '/system/disableDPM';
@@ -232,7 +232,7 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Create SCH Groups & Users
+       * Create Control Hub Groups & Users
        * @param dpmInfo
        * @returns {*}
        */

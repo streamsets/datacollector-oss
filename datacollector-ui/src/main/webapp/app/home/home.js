@@ -370,7 +370,7 @@ angular
       exportSelectedPipelines: function(includeDefinitions) {
         var selectedPipelineList = $scope.selectedPipelineList;
         if (includeDefinitions) {
-          // Export for SCH supports only for valid pipelines
+          // Export for Control Hub supports only for valid pipelines
           var validationIssues = [];
           angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
             if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1 && !pipelineInfo.valid) {
@@ -744,7 +744,7 @@ angular
       },
 
       /**
-       * Returns true if pipeline is SCH controlled system pipeline
+       * Returns true if pipeline is Control Hub controlled system pipeline
        * @param pipelineInfo
        */
       isSystemPipeline: function(pipelineInfo) {
@@ -757,7 +757,7 @@ angular
       },
 
       /**
-       * Returns true if pipeline is SCH controlled pipeline
+       * Returns true if pipeline is Control Hub controlled pipeline
        * @param pipelineInfo
        */
       isDpmControlledPipeline: function(pipelineInfo) {

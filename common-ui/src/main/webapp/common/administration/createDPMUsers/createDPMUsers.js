@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Controller for Creating SCH Users Modal Dialog.
+ * Controller for Creating Control Hub Users Modal Dialog.
  */
 
 angular
