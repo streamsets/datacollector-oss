@@ -19,6 +19,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Bytes;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.net.NetTestUtils;
 import com.streamsets.pipeline.lib.parser.net.netflow.v5.NetflowV5Message;
 import com.streamsets.pipeline.lib.parser.net.netflow.v9.FlowKind;
@@ -37,17 +38,20 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.testing.Matchers.fieldWithValue;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasKey;
 import static com.streamsets.testing.Matchers.mapFieldWithEntry;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class TestNetflowDecoder {
   private static final int PROTOCOL_UDP = 17;
@@ -504,6 +508,36 @@ public class TestNetflowDecoder {
     } else {
       assertThat(fieldsByType, not(hasKey(fieldType)));
     }
+  }
+
+  @Test
+  public void senderAndReceiver() throws IOException, OnRecordErrorException {
+    final NetflowCommonDecoder decoder = makeNetflowDecoder();
+
+    final byte[] bytes = getV9MessagesBytes7Flows();
+    final List<BaseNetflowMessage> messages = new LinkedList<>();
+    final InetSocketAddress senderAddr = InetSocketAddress.createUnresolved("hostA", 1234);
+    final InetSocketAddress recipientAddr = InetSocketAddress.createUnresolved("hostB", 5678);
+    decoder.decodeStandaloneBuffer(
+        Unpooled.copiedBuffer(bytes),
+        messages,
+        senderAddr, recipientAddr
+    );
+
+    assertThat(messages, hasSize(7));
+    final BaseNetflowMessage firstBaseMsg = messages.get(0);
+    assertThat(firstBaseMsg, instanceOf(NetflowV9Message.class));
+    final NetflowV9Message firstMsg = (NetflowV9Message) firstBaseMsg;
+    assertThat(firstMsg.getSender(), notNullValue());
+    assertThat(firstMsg.getRecipient(), notNullValue());
+    assertThat(firstMsg.getSender().toString(), equalTo(senderAddr.toString()));
+    assertThat(firstMsg.getRecipient().toString(), equalTo(recipientAddr.toString()));
+
+    Record record = RecordCreator.create();
+    firstMsg.populateRecord(record);
+
+    assertThat(record.get("/" + NetflowV9Message.FIELD_SENDER), fieldWithValue(senderAddr.toString()));
+    assertThat(record.get("/" + NetflowV9Message.FIELD_RECIPIENT), fieldWithValue(recipientAddr.toString()));
   }
 
 }
