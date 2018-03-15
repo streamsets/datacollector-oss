@@ -110,31 +110,31 @@ public class RulesEvaluator {
         value,
         ruleDefinition
       );
+
+      if(ruleDefinition.isSendEmail()) {
+        try {
+          URL url = Resources.getResource(EmailConstants.METRIC_EMAIL_TEMPLATE);
+          String emailBody = Resources.toString(url, Charsets.UTF_8);
+          java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
+          emailBody = emailBody.replace(EmailConstants.ALERT_VALUE_KEY, String.valueOf(value))
+              .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(System.currentTimeMillis())))
+              .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineName)
+              .replace(EmailConstants.CONDITION_KEY, ruleDefinition.getCondition())
+              .replace(EmailConstants.URL_KEY, pipelineUrl);
+          if(ruleDefinition instanceof DataRuleDefinition) {
+            emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ((DataRuleDefinition)ruleDefinition).getLabel());
+          } else {
+            emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ruleDefinition.getAlertText());
+          }
+          ContextExtensions ext = (ContextExtensions) context;
+          ext.notify(emails, EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
+        } catch (IOException | StageException e) {
+          LOG.error("Error sending alert email, reason: {}", e.toString(), e);
+          //Log error and move on. This should not stop the pipeline.
+        }
+      }
     } else {
       AlertManagerHelper.updateAlertGauge(gauge, value, ruleDefinition);
-    }
-
-    if(ruleDefinition.isSendEmail()) {
-      try {
-        URL url = Resources.getResource(EmailConstants.METRIC_EMAIL_TEMPLATE);
-        String emailBody = Resources.toString(url, Charsets.UTF_8);
-        java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
-        emailBody = emailBody.replace(EmailConstants.ALERT_VALUE_KEY, String.valueOf(value))
-          .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(System.currentTimeMillis())))
-          .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineName)
-          .replace(EmailConstants.CONDITION_KEY, ruleDefinition.getCondition())
-          .replace(EmailConstants.URL_KEY, pipelineUrl);
-        if(ruleDefinition instanceof DataRuleDefinition) {
-          emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ((DataRuleDefinition)ruleDefinition).getLabel());
-        } else {
-          emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ruleDefinition.getAlertText());
-        }
-        ContextExtensions ext = (ContextExtensions) context;
-        ext.notify(emails, EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
-      } catch (IOException | StageException e) {
-        LOG.error("Error sending alert email, reason: {}", e.toString(), e);
-        //Log error and move on. This should not stop the pipeline.
-      }
     }
   }
 
