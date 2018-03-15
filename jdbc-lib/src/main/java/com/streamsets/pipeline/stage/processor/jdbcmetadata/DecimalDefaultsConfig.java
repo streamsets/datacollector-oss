@@ -22,7 +22,7 @@ public class DecimalDefaultsConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = HeaderAttributeConstants.ATTR_PRECISION,
+      defaultValue = HeaderAttributeConstants.ATTR_SCALE,
       label = "Decimal Scale Attribute",
       description = "Name of the field attribute that stores precision for decimal fields.",
       displayPosition = 80,
@@ -33,7 +33,7 @@ public class DecimalDefaultsConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = HeaderAttributeConstants.ATTR_SCALE,
+      defaultValue = HeaderAttributeConstants.ATTR_PRECISION,
       label = "Decimal Precision Attribute",
       description = "Name of the field attribute that stores scale for decimal fields.",
       displayPosition = 90,
