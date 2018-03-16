@@ -21,6 +21,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.SimpleJobCreator;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -61,15 +62,24 @@ abstract public class BaseMapReduceIT {
     }
   }
 
-  public MapReduceExecutor generateExecutor(AvroParquetConfig avroParquetConfig, Map<String, String> jobConfigs) {
-    return generateExecutor(avroParquetConfig, JobType.AVRO_PARQUET, jobConfigs);
+  public MapReduceExecutor generateExecutor(
+      AvroConversionCommonConfig commonConfig,
+      AvroParquetConfig avroParquetConfig,
+      Map<String, String> jobConfigs
+  ) {
+    return generateExecutor(commonConfig, avroParquetConfig, JobType.AVRO_PARQUET, jobConfigs);
   }
 
   public MapReduceExecutor generateExecutor(Map<String, String> jobConfigs) {
-    return generateExecutor(null, JobType.CUSTOM, jobConfigs);
+    return generateExecutor(null, null, JobType.CUSTOM, jobConfigs);
   }
 
-  public MapReduceExecutor generateExecutor(AvroParquetConfig avroParquetConfig, JobType jobType, Map<String, String> jobConfigs) {
+  public MapReduceExecutor generateExecutor(
+      AvroConversionCommonConfig commonConfig,
+      AvroParquetConfig avroParquetConfig,
+      JobType jobType,
+      Map<String, String> jobConfigs
+  ) {
     MapReduceConfig mapReduceConfig = new MapReduceConfig();
     mapReduceConfig.mapReduceConfDir = getConfDir();
     mapReduceConfig.mapreduceConfigs = Collections.emptyMap();
@@ -81,6 +91,7 @@ abstract public class BaseMapReduceIT {
     jobConfig.jobConfigs = jobConfigs;
     jobConfig.customJobCreator = SimpleJobCreator.class.getCanonicalName();
     jobConfig.jobName = "SDC Test Job";
+    jobConfig.avroConversionCommonConfig = commonConfig;
     jobConfig.avroParquetConfig = avroParquetConfig;
 
     MapReduceExecutor executor = new MapReduceExecutor(mapReduceConfig, jobConfig);

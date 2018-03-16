@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc.AvroOrcConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
 import org.apache.avro.Schema;
@@ -172,18 +173,21 @@ public class AvroToColumnarFormatHiveIT extends BaseHiveIT {
     String outputFormat = "";
     switch (jobType) {
       case AVRO_PARQUET:
-        AvroParquetConfig avroParquetConf = new AvroParquetConfig();
-        avroParquetConf.inputFile = inputDirectory + "file.avro";
-        avroParquetConf.outputDirectory = outputDirectory;
-        jobConfig.avroParquetConfig = avroParquetConf;
+        AvroConversionCommonConfig avroParquetCommon = new AvroConversionCommonConfig();
+        avroParquetCommon.inputFile = inputDirectory + "file.avro";
+        avroParquetCommon.outputDirectory = outputDirectory;
+        jobConfig.avroConversionCommonConfig = avroParquetCommon;
+        jobConfig.avroParquetConfig = new AvroParquetConfig();
         outputFormat = "PARQUET";
         break;
       case AVRO_ORC:
-        AvroOrcConfig avroOrcConf = new AvroOrcConfig();
-        avroOrcConf.inputFile = inputDirectory + "file.avro";
-        avroOrcConf.outputDirectory = outputDirectory;
-        avroOrcConf.orcBatchSize = 1000;
-        jobConfig.avroOrcConfig = avroOrcConf;
+        AvroConversionCommonConfig avroOrcCommon = new AvroConversionCommonConfig();
+        avroOrcCommon.inputFile = inputDirectory + "file.avro";
+        avroOrcCommon.outputDirectory = outputDirectory;
+        AvroOrcConfig avroOrcConfig = new AvroOrcConfig();
+        avroOrcConfig.orcBatchSize = 1000;
+        jobConfig.avroConversionCommonConfig = avroOrcCommon;
+        jobConfig.avroOrcConfig = new AvroOrcConfig();
         outputFormat = "ORC";
         break;
       default:

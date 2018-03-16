@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
 
-public class AvroConversionBaseConfig {
+public class AvroConversionCommonConfig {
 
   @ConfigDef(
     required = true,

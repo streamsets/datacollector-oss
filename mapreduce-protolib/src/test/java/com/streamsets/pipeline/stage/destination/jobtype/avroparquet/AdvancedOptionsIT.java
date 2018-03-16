@@ -24,6 +24,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceDExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.util.Utf8;
@@ -75,12 +76,13 @@ public class AdvancedOptionsIT extends BaseAvroParquetConvertIT {
 
     generateAvroFile(AVRO_SCHEMA, inputFile, data);
 
+    AvroConversionCommonConfig commonConfig = new AvroConversionCommonConfig();
     AvroParquetConfig conf = new AvroParquetConfig();
-    conf.inputFile = inputFile.getAbsolutePath();
-    conf.outputDirectory = getOutputDir();
+    commonConfig.inputFile = inputFile.getAbsolutePath();
+    commonConfig.outputDirectory = getOutputDir();
     conf.compressionCodec = codec;
 
-    MapReduceExecutor executor = generateExecutor(conf, Collections.<String, String>emptyMap());
+    MapReduceExecutor executor = generateExecutor(commonConfig, conf, Collections.emptyMap());
 
     ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
       .setOnRecordError(OnRecordError.TO_ERROR)

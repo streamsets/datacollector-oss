@@ -16,11 +16,9 @@
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.util.avroorc.AvroToOrcRecordConverter;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseConfig;
 
-public class AvroOrcConfig extends AvroConversionBaseConfig {
+public class AvroOrcConfig {
 
   @ConfigDef(
     required = true,

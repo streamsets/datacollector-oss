@@ -16,10 +16,8 @@
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseConfig;
 
-public class AvroParquetConfig extends AvroConversionBaseConfig {
+public class AvroParquetConfig {
 
   @ConfigDef(
     required = false,

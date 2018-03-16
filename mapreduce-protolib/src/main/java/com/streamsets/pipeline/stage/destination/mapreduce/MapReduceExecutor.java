@@ -146,21 +146,21 @@ public class MapReduceExecutor extends BaseExecutor {
         // For build-in job creators, evaluate their properties and persist them in the MR config
         switch (jobConfig.jobType) {
           case AVRO_PARQUET:
-            jobConfiguration.set(AvroConversionCommonConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroParquetConfig.inputFile, true));
-            jobConfiguration.set(AvroConversionCommonConstants.OUTPUT_DIR, eval.evaluateToString("outputDirectory", jobConfig.avroParquetConfig.outputDirectory, true));
-            jobConfiguration.setBoolean(AvroConversionCommonConstants.KEEP_INPUT_FILE, jobConfig.avroParquetConfig.keepInputFile);
+            jobConfiguration.set(AvroConversionCommonConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroConversionCommonConfig.inputFile, true));
+            jobConfiguration.set(AvroConversionCommonConstants.OUTPUT_DIR, eval.evaluateToString("outputDirectory", jobConfig.avroConversionCommonConfig.outputDirectory, true));
+            jobConfiguration.setBoolean(AvroConversionCommonConstants.KEEP_INPUT_FILE, jobConfig.avroConversionCommonConfig.keepInputFile);
             jobConfiguration.set(AvroParquetConstants.COMPRESSION_CODEC_NAME, eval.evaluateToString("compressionCodec", jobConfig.avroParquetConfig.compressionCodec, false));
             jobConfiguration.setInt(AvroParquetConstants.ROW_GROUP_SIZE, jobConfig.avroParquetConfig.rowGroupSize);
             jobConfiguration.setInt(AvroParquetConstants.PAGE_SIZE, jobConfig.avroParquetConfig.pageSize);
             jobConfiguration.setInt(AvroParquetConstants.DICTIONARY_PAGE_SIZE, jobConfig.avroParquetConfig.dictionaryPageSize);
             jobConfiguration.setInt(AvroParquetConstants.MAX_PADDING_SIZE, jobConfig.avroParquetConfig.maxPaddingSize);
-            jobConfiguration.setBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, jobConfig.avroParquetConfig.overwriteTmpFile);
+            jobConfiguration.setBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, jobConfig.avroConversionCommonConfig.overwriteTmpFile);
             break;
           case AVRO_ORC:
-            jobConfiguration.set(AvroConversionCommonConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroOrcConfig.inputFile, true));
-            jobConfiguration.set(AvroConversionCommonConstants.OUTPUT_DIR, eval.evaluateToString("outputDirectory", jobConfig.avroOrcConfig.outputDirectory, true));
-            jobConfiguration.setBoolean(AvroConversionCommonConstants.KEEP_INPUT_FILE, jobConfig.avroOrcConfig.keepInputFile);
-            jobConfiguration.setBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, jobConfig.avroOrcConfig.overwriteTmpFile);
+            jobConfiguration.set(AvroConversionCommonConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroConversionCommonConfig.inputFile, true));
+            jobConfiguration.set(AvroConversionCommonConstants.OUTPUT_DIR, eval.evaluateToString("outputDirectory", jobConfig.avroConversionCommonConfig.outputDirectory, true));
+            jobConfiguration.setBoolean(AvroConversionCommonConstants.KEEP_INPUT_FILE, jobConfig.avroConversionCommonConfig.keepInputFile);
+            jobConfiguration.setBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, jobConfig.avroConversionCommonConfig.overwriteTmpFile);
             jobConfiguration.setInt(AvroOrcConstants.ORC_BATCH_SIZE, jobConfig.avroOrcConfig.orcBatchSize);
             break;
           case CUSTOM:
