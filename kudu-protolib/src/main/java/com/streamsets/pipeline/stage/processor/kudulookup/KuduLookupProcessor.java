@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import com.streamsets.pipeline.stage.lib.kudu.KuduUtils;
@@ -213,8 +214,13 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
         KuduLookupKey key = generateLookupKey(record, tableName);
         List<Map<String, Field>> values = cache.get(key);
         if (values.isEmpty()) {
-          // No results
-          errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_31));
+          // No record found
+          if (conf.missingLookupBehavior == MissingValuesBehavior.SEND_TO_ERROR) {
+            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_31));
+          } else {
+            // Configured to 'Send to next stage' and 'pass as it is'
+            batchMaker.addRecord(record);
+          }
         } else {
           switch (conf.multipleValuesBehavior) {
             case FIRST_ONLY:

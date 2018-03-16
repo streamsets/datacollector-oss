@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
@@ -85,15 +87,26 @@ public class KuduLookupConfig {
   public boolean caseSensitive;
 
   @ConfigDef(required = false,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Ignore Missing Value",
-      description = "If set, process records even if column values are missing. If not set, send records to error",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SEND_TO_ERROR",
+      label = "Missing Lookup Behavior",
+      description = "Behavior when lookup did not find a matching record. ",
       displayPosition = 60,
       group = "KUDU"
   )
-  @ListBeanModel
-  public boolean ignoreMissing;
+  @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
+  public MissingValuesBehavior missingLookupBehavior = MissingValuesBehavior.SEND_TO_ERROR;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Ignore Missing Value in Matching Record",
+      description = "Ignore when matching record does not have value in the column " +
+          "specified in Column to Output Field Mapping. Otherwise send to error.",
+      displayPosition = 70,
+      group = "KUDU"
+  )
+  public boolean ignoreMissing = true;
 
   @ConfigDef(
       required = true,
