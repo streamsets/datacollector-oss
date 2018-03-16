@@ -115,6 +115,12 @@
       <artifactId>streamsets-datacollector-container-common</artifactId>
       <scope>compile</scope>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
