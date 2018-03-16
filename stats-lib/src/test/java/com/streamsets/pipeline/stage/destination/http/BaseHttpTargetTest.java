@@ -89,12 +89,20 @@ public abstract class BaseHttpTargetTest extends JerseyTest {
       Assert.assertTrue(record.isAggregated());
     }
   }
+
   private List<Record> createRecords() throws IOException {
     List<Record> list = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
       Map<String, Object> m = new HashMap<>();
       m.put("a", "b");
-      Record record = AggregatorUtil.createMetricJsonRecord(String.valueOf(i), "masterSDC", m, true, "{}");
+      Record record = AggregatorUtil.createMetricJsonRecord(
+          String.valueOf(i),
+          "masterSDC",
+          m,
+          true,
+          true,
+          "{}"
+      );
       list.add(record);
     }
     return list;

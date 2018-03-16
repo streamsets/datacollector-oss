@@ -240,6 +240,11 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       }
       metadata.put(DPM_PIPELINE_COMMIT_ID, pipelineCommitId);
       metadata.put(DPM_JOB_ID, jobId);
+
+      Field timeSeriesAnalysisField =  currentRecord.get("/" + AggregatorUtil.TIME_SERIES_ANALYSIS);
+      if (timeSeriesAnalysisField != null) {
+        metadata.put(AggregatorUtil.TIME_SERIES_ANALYSIS, timeSeriesAnalysisField.getValueAsString());
+      }
       sdcMetricsJson.setMetadata(metadata);
     }
     String metricRegistryJson = currentRecord.get("/" + AggregatorUtil.METRIC_JSON_STRING).getValueAsString();
@@ -255,6 +260,5 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       sdcIdToRecordMap.put(record.get("/" + AggregatorUtil.SDC_ID).getValueAsString(), record);
     }
   }
-
 
 }
