@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hdfs;
+package com.streamsets.pipeline.lib.hdfs.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   HADOOPFS_00("Hadoop UserGroupInformation reports '{}' authentication, it should be '{}'"),
-  HADOOPFS_01("Failed to configure or connect to the '{}' Hadoop file system: {}"),
+  HADOOPFS_01("Validation Error: Failed to configure or connect to the '{}' Hadoop file system: {}"),
   HADOOPFS_02("Invalid dir path template '{}', {}"),
 
   HADOOPFS_03("The sequence file key expression '{}' is invalid: {}"),

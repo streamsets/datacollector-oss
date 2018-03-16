@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Matcher;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
-import com.streamsets.pipeline.stage.destination.hdfs.Errors;
+import com.streamsets.pipeline.lib.hdfs.common.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;

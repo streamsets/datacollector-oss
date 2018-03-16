@@ -35,7 +35,7 @@ public class LocalFileSystemConfigBean extends HdfsTargetConfigBean {
   }
 
   @Override
-  protected String getTargetConfigBeanPrefix() {
+  protected String getConfigBeanPrefix() {
     return "configs.";
   }
 
