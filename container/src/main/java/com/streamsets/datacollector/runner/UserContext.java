@@ -20,13 +20,29 @@ import com.streamsets.pipeline.api.Stage;
 public class UserContext implements Stage.UserContext {
 
   private final String user;
+  private boolean isDpmEnabled;
+  private boolean isAliasEnabled;
 
-  public UserContext(String user) {
+  public UserContext(String user, boolean isDpmEnabled, boolean isAliasEnabled) {
     this.user = user;
+    this.isDpmEnabled = isDpmEnabled;
+    this.isAliasEnabled = isAliasEnabled;
   }
 
   @Override
   public String getUser() {
     return user;
   }
+
+  @Override
+  public String getAliasName() {
+    String userId = getUser();
+    if (isDpmEnabled && isAliasEnabled) {
+      return userId.substring(0, userId.indexOf("@"));
+    } else {
+      return userId;
+    }
+  }
+
+
 }

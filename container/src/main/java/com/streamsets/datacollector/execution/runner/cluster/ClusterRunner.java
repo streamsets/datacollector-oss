@@ -77,6 +77,7 @@ import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ProtoSource;
@@ -461,7 +462,13 @@ public class ClusterRunner extends AbstractRunner {
           }
         });
       }
-      UserContext runningUser = new UserContext(user);
+      UserContext runningUser = new UserContext(user,
+          runtimeInfo.isDPMEnabled(),
+          configuration.get(
+              RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
+              RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
+          )
+      );
       PipelineEL.setConstantsInContext(pipelineConf, runningUser);
       doStart(user, pipelineConf, getClusterSourceInfo(user, name, rev, pipelineConf), getAcl(name), runtimeParameters);
     } catch (Exception e) {
@@ -764,12 +771,13 @@ public class ClusterRunner extends AbstractRunner {
       null,
       lineagePublisherTask
     );
-    return builder.build(
-      new UserContext(user),
-      pipelineConfiguration,
-      getState().getTimeStamp(),
-      null
-    );
+    return builder.build(new UserContext(user,
+        runtimeInfo.isDPMEnabled(),
+        configuration.get(
+            RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
+            RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
+        )
+    ), pipelineConfiguration, getState().getTimeStamp(), null);
   }
 
   static class ManagerRunnable implements Runnable {

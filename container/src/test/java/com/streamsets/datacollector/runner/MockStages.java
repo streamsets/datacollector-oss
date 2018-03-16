@@ -612,7 +612,7 @@ public class MockStages {
   }
 
   public static UserContext userContext() {
-    return new UserContext("test-user");
+    return new UserContext("test-user", false, false);
   }
 
   public static class MockStageLibraryTask implements StageLibraryTask {

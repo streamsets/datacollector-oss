@@ -33,6 +33,7 @@ import com.streamsets.datacollector.main.SlavePipelineTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
@@ -71,6 +72,7 @@ public class TestPipelineManagerModule {
     ObjectGraph objectGraph = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     Assert.assertTrue(taskWrapper.getTask() instanceof PipelineTask);
+    Assert.assertNotNull(objectGraph.get(Configuration.class));
 
     //Get an instance of manager
     taskWrapper.init();

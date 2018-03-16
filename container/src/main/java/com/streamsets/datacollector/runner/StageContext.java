@@ -30,6 +30,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -136,7 +137,13 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
         return instanceName;
       }
     };
-    this.userContext = new UserContext("sdk-user");
+    this.userContext = new UserContext("sdk-user",
+        runtimeInfo.isDPMEnabled(),
+        configuration.get(
+            RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
+            RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
+        )
+    );
     pipelineInfo = ImmutableList.of(stageInfo);
     this.runnerId = runnerId;
     this.isPreview = isPreview;

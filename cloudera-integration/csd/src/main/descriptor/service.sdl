@@ -194,6 +194,7 @@
               "dpm.remote.control.job.labels",
               "dpm.remote.control.ping.frequency",
               "dpm.remote.control.events.recipient",
+              "dpm.alias.name.enabled",
               "pipeline.access.control.enabled",
               "vault.addr",
               "vault.app.id",
@@ -998,6 +999,14 @@
           "label": "SCH Remote control App",
           "description": "App to send remote control events",
           "default": "jobrunner-app",
+          "required": "false"
+        },
+        {
+          "name": "dpm.alias.name.enabled",
+          "type": "boolean",
+          "label": "Enable alias name for Control Hub enabled Datacollector",
+          "description": "Alias name to use for Hadoop proxy user when stage impersonation is enabled",
+          "default": "false",
           "required": "false"
         },
         {

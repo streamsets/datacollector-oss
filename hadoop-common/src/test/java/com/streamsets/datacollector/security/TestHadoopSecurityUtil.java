@@ -56,6 +56,15 @@ public class TestHadoopSecurityUtil {
     Assert.assertEquals("proxy", ugi.getUserName());
   }
 
+  Stage.UserContext userContext = new Stage.UserContext() {
+    public String getUser() {
+      return "FOO@bar";
+    }
+    public String getAliasName() {
+      return "FOO";
+    }
+  };
+
   @Test
   public void testGetProxyUserEnforceCurrentUser() throws Exception {
     final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[] { "all" });
@@ -63,7 +72,7 @@ public class TestHadoopSecurityUtil {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
     when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
-    when(context.getUserContext()).thenReturn(() -> "test-user");
+    when(context.getUserContext()).thenReturn(userContext);
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
       "",
@@ -73,7 +82,7 @@ public class TestHadoopSecurityUtil {
       "config",
       "userName"
     );
-    Assert.assertEquals("test-user", ugi.getUserName());
+    Assert.assertEquals("FOO", ugi.getUserName());
   }
 
   @Test
@@ -83,7 +92,7 @@ public class TestHadoopSecurityUtil {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
     when(context.getConfig(anyString())).thenReturn("true");
-    when(context.getUserContext()).thenReturn(() -> "test-user");
+    when(context.getUserContext()).thenReturn(userContext);
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
       "employee-of-the-year",
@@ -105,7 +114,7 @@ public class TestHadoopSecurityUtil {
 
     when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
     when(context.getConfig(eq(HadoopConfigConstants.LOWERCASE_USER))).thenReturn("true");
-    when(context.getUserContext()).thenReturn(() -> "REAL_BRYAN");
+    when(context.getUserContext()).thenReturn(userContext);
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
       "",
@@ -115,6 +124,6 @@ public class TestHadoopSecurityUtil {
       "config",
       "userName"
     );
-    Assert.assertEquals("real_bryan", ugi.getUserName());
+    Assert.assertEquals("foo", ugi.getUserName());
   }
 }
