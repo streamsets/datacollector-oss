@@ -51,6 +51,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
 
@@ -102,13 +103,19 @@ public class SyncPreviewer implements Previewer {
     PreviewerListener previewerListener,
     ObjectGraph objectGraph
   ) {
+    objectGraph.inject(this);
     this.id = id;
-    this.userContext = new UserContext(user);
+    boolean aliasNameEnabled = this.configuration.get(RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
+        RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT);
+    this.userContext = new UserContext(
+        user,
+        runtimeInfo.isDPMEnabled(),
+        aliasNameEnabled
+    );
     this.name = name;
     this.rev = rev;
     this.previewerListener = previewerListener;
     this.previewStatus = PreviewStatus.CREATED;
-    objectGraph.inject(this);
   }
 
   @Override

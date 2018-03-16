@@ -20,11 +20,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.zookeeper.server.util.KerberosUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public class HadoopSecurityUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HadoopSecurityUtil.class);
 
   public static UserGroupInformation getLoginUser(Configuration hdfsConfiguration) throws IOException {
     return LoginUgiProviderFactory.getLoginUgiProvider().getLoginUgi(hdfsConfiguration);
@@ -58,8 +63,7 @@ public class HadoopSecurityUtil {
       if(!StringUtils.isEmpty(user)) {
         issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOP_00001));
       }
-
-      user = context.getUserContext().getUser();
+      user = context.getUserContext().getAliasName();
     }
 
     // If impersonated user is empty, simply return login UGI (no impersonation performed)
@@ -74,7 +78,6 @@ public class HadoopSecurityUtil {
     if(Boolean.parseBoolean(lowercasedString)) {
       user = user.toLowerCase();
     }
-
     return UserGroupInformation.createProxyUser(user, loginUser);
   }
 

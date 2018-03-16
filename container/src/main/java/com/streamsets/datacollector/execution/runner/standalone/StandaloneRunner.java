@@ -82,6 +82,7 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -762,7 +763,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     synchronized (this) {
       try {
         LOG.info("Starting pipeline {} {}", name, rev);
-        UserContext runningUser = new UserContext(user);
+        UserContext runningUser = new UserContext(user,
+            runtimeInfo.isDPMEnabled(),
+            configuration.get(
+                RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
+                RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
+            )
+        );
       /*
        * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -
        * - - - - - - - - - - - - - - - - - - - RulesConfigLoader ProductionObserver MetricObserver
