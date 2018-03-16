@@ -53,6 +53,69 @@ public class HeaderAttributeConstants {
   public static final String LAST_MODIFIED_TIME = "mtime";
 
   /**
+   * Last accessed time of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String LAST_ACCESS_TIME = "atime";
+
+  /**
+   * Is the file the directory.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String IS_DIRECTORY = "isDirectory";
+
+  /**
+   * Is the file the symbolic link.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String IS_SYMBOLIC_LINK = "isSymbolicLink";
+
+  /**
+   * Size of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String SIZE = "size";
+
+  /**
+   * Owner of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String OWNER = "owner";
+
+  /**
+   * Group of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String GROUP = "group";
+
+  /**
+   * Block Size of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String BLOCK_SIZE = "blockSize";
+
+  /**
+   * Replication of the file.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String REPLICATION = "replication";
+
+  /**
+   * Is the file encrypted.
+   *
+   * Applicable for Hdfs Spooling Origin, ...
+   */
+  public static final String IS_ENCRYPTED = "isEncrypted";
+
+  /**
    * Offset in the source.
    *
    * Can be file offset in directory spooling, log tail or for example partition offset
