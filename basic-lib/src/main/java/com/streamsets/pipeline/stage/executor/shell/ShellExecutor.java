@@ -80,7 +80,7 @@ public class ShellExecutor extends BaseExecutor {
 
     switch (impersonationMode) {
       case CURRENT_USER:
-        user = getContext().getUserContext().getUser();
+        user = getContext().getUserContext().getAliasName();
         break;
       case DISABLED:
         break;
