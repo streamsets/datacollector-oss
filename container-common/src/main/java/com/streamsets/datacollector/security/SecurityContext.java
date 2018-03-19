@@ -32,7 +32,6 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,48 +85,29 @@ public class SecurityContext {
     return System.currentTimeMillis();
   }
 
-  /**
-   * Get the Kerberos TGT, it purges old expired tickets from Subject
-   * @return the user's TGT or null if none was found
-   */
   @VisibleForTesting
-  synchronized KerberosTicket getKerberosTicket() {
-    KerberosTicket found = null;
-    Set<KerberosTicket> expiredTickets = new HashSet<>();
-    SortedSet<KerberosTicket> tickets = new TreeSet<>(new Comparator<KerberosTicket>() {
-      @Override
-      public int compare(KerberosTicket ticket1, KerberosTicket ticket2) {
-        return Long.compare(ticket1.getEndTime().getTime(), ticket2.getEndTime().getTime());
-      }
-    });
+  KerberosTicket getNewestTGT() {
+    KerberosTicket tgt = null;
     for (KerberosTicket ticket : getSubject().getPrivateCredentials(KerberosTicket.class)) {
       KerberosPrincipal principal = ticket.getServer();
       String principalName = Utils.format("krbtgt/{}@{}", principal.getRealm(), principal.getRealm());
       if (principalName.equals(principal.getName())) {
-        if (ticket.getEndTime().getTime() < getTimeNow()) {
-          // the ticket in question expired, we should remove it from the subject as it is useless
-          expiredTickets.add(ticket);
-          LOG.debug("Found expired Kerberos ticket '{}', will remove it", ticket.getServer().getName());
+        if (LOG.isTraceEnabled()) {
+          String ticketString =
+              "Found ticket: \n" +
+                  "Ticket Server: " + ticket.getServer().getName() + "\n" +
+                  "Auth Time: " + ticket.getAuthTime() + "\n" +
+                  "Expiry Time: " + ticket.getEndTime();
+          LOG.trace(ticketString);
+        } else {
+          LOG.debug("Found Kerberos ticket '{}'", ticket.getServer().getName());
         }
-        tickets.add(ticket);
+        if (tgt == null || ticket.getEndTime().after(tgt.getEndTime())) {
+          tgt = ticket;
+        }
       }
     }
-    if (!tickets.isEmpty()) {
-      // lets get the most recent ticket
-      found = tickets.last();
-      // take out the last ticket from expired tickets as we don' want to purge it as we want to renew that one
-      // this should not really happen as we renew before the expire
-      if (expiredTickets.contains(found)) {
-        LOG.warn("Last Kerberos ticket '{}' already expired", found.getServer().getName());
-        found = null;
-      }
-    }
-    if (!expiredTickets.isEmpty()) {
-      // removing expired tickets from subject
-      getSubject().getPrivateCredentials().removeAll(expiredTickets);
-      LOG.debug("Removed '{}' expired Kerberos tickets from SDC subject", expiredTickets.size());
-    }
-    return found;
+    return tgt;
   }
 
   private synchronized long calculateRenewalTime(KerberosTicket kerberosTicket) {
@@ -197,8 +175,8 @@ public class SecurityContext {
             while (true) {
               LOG.trace("Renewal check starts");
               try {
-                KerberosTicket kerberosTicket = getKerberosTicket();
-                if (kerberosTicket == null) {
+                KerberosTicket lastExpiringTGT = getNewestTGT();
+                if (lastExpiringTGT == null) {
                   LOG.warn(
                       "Could not obtain kerberos ticket, it may have expired already or it was logged out, will wait" +
                       "30 secs to attempt a relogin"
@@ -209,7 +187,7 @@ public class SecurityContext {
                     return;
                   }
                 } else {
-                  long renewalTimeMs = calculateRenewalTime(kerberosTicket) - THIRTY_SECONDS_MS;
+                  long renewalTimeMs = calculateRenewalTime(lastExpiringTGT) - THIRTY_SECONDS_MS;
                   LOG.trace("Ticket found time to renewal '{}ms', sleeping that time", renewalTimeMs);
                   if (renewalTimeMs > 0) {
                     if (!SecurityContext.this.sleep(renewalTimeMs)) {
@@ -219,7 +197,10 @@ public class SecurityContext {
                   }
                 }
                 LOG.debug("Triggering relogin");
+                Set<KerberosTicket> oldTickets = getSubject().getPrivateCredentials(KerberosTicket.class);
                 relogin();
+                // Remove all old private credentials, since we only need the new one we just added
+                getSubject().getPrivateCredentials().removeAll(oldTickets);
               } catch (Exception exception) {
                 LOG.error("Stopping renewal thread because of exception: " + exception, exception);
                 return;
