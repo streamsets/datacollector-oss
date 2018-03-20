@@ -18,6 +18,8 @@
                path="datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_wc5_ysp_1w"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_ozm_kxk_fdb"
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_ozm_kxk_fdb"/>
    <appContext helpID="concept_g3c_fn2_ycb"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_g3c_fn2_ycb"/>
    <appContext helpID="concept_agl_4tw_scb"
@@ -35,9 +37,9 @@
    <appContext helpID="concept_rr2_mbz_w1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_452095629"/>
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1819739933"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1872033749"/>
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_135504982"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -105,7 +107,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_365818216"/>
+               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_509049158"/>
    <appContext helpID="task_u1v_nkt_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -202,6 +204,8 @@
                path="datacollector/UserGuide/Configuration/DCConfig.html#concept_pmr_sy5_nz"/>
    <appContext helpID="concept_dcq_mpk_f1b"
                path="datacollector/UserGuide/Configuration/DCConfig.html#concept_dcq_mpk_f1b"/>
+   <appContext helpID="concept_rcn_gqk_fdb"
+               path="datacollector/UserGuide/Configuration/DCConfig.html#concept_rcn_gqk_fdb"/>
    <appContext helpID="concept_acd_x1z_y1b"
                path="datacollector/UserGuide/Configuration/DCConfig.html#concept_acd_x1z_y1b"/>
    <appContext helpID="concept_gfx_rvf_qv"
@@ -2602,6 +2606,8 @@
                path="datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz"/>
    <appContext helpID="concept_n2w_txv_vz"
                path="datacollector/UserGuide/Executors/Shell.html#concept_n2w_txv_vz"/>
+   <appContext helpID="concept_rcn_gqk_fdb"
+               path="datacollector/UserGuide/Executors/Shell.html#concept_rcn_gqk_fdb"/>
    <appContext helpID="concept_av4_pnm_z1b"
                path="datacollector/UserGuide/Executors/Shell.html#concept_av4_pnm_z1b"/>
    <appContext helpID="task_hyc_3zw_tz"
@@ -2950,6 +2956,8 @@
                path="datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fk4_gd4_1s"/>
    <appContext helpID="task_gmd_msw_yr"
                path="datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#task_gmd_msw_yr"/>
+   <appContext helpID="concept_al2_cxh_cdb"
+               path="datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_al2_cxh_cdb"/>
    <appContext helpID="task_hhk_bfv_cy"
                path="datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#task_hhk_bfv_cy"/>
    <appContext helpID="task_kf1_fgv_cy"
@@ -3088,6 +3096,8 @@
                path="datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_obz_cml_wx"/>
    <appContext helpID="task_dtz_4tr_5q"
                path="datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#task_dtz_4tr_5q"/>
+   <appContext helpID="task_emc_p42_fx"
+               path="datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#task_emc_p42_fx"/>
    <appContext helpID="task_nhf_bvr_5q"
                path="datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#task_nhf_bvr_5q"/>
    <appContext helpID="task_a35_pwr_5q"
@@ -3211,7 +3221,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_1271850772"/>
+               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_1769922009"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

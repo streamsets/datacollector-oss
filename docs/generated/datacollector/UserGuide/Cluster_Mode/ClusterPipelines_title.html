@@ -72,25 +72,24 @@
  </div>
 
 <div class="topic concept nested2" id="concept_rjc_4m5_lx">
- <h3 class="title topictitle3">Cluster Batch and Streaming Execution Modes</h3>
+    <h3 class="title topictitle3">Cluster Batch and Streaming Execution Modes</h3>
 
- 
- <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
-        can run a cluster pipeline using the cluster batch or the cluster streaming execution
+    
+    <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        can run a cluster pipeline using cluster batch or cluster streaming execution
         mode.</p>
 
-  <p class="p">The execution mode that <span class="ph">Data Collector</span>
-            can use depends on the origin system that the cluster pipeline reads from:</p>
+        <p class="p">The execution mode that <span class="ph">Data Collector</span> can
+            use depends on the origin system that the cluster pipeline reads from:</p>
 
-     <dl class="dl">
-         
-             <dt class="dt dlterm">Kafka cluster</dt>
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Kafka cluster</dt>
 
-             <dd class="dd"><span class="ph">Data Collector</span> can
-                 process data from a Kafka cluster in cluster streaming mode. In cluster streaming mode, <span class="ph">Data Collector</span> processes
-                 data continuously until you stop the pipeline. </dd>
+                <dd class="dd"><span class="ph">Data Collector</span> can process data from a Kafka cluster in cluster streaming mode. In cluster
+                    streaming mode, <span class="ph">Data Collector</span> processes data continuously until you stop the pipeline. </dd>
 
-             <dd class="dd"><span class="ph">Data Collector</span> runs as an application within Spark Streaming, an open source
+                <dd class="dd"><span class="ph">Data Collector</span> runs as an application within Spark Streaming, an open source
                     cluster-computing application. </dd>
 
                 <dd class="dd">Spark Streaming runs on either the Mesos or YARN cluster manager to process data
@@ -102,13 +101,14 @@
                         in cluster streaming mode.</p>
 </dd>
 
-         
-     </dl>
-<dl class="dl">
-         
-             <dt class="dt dlterm">MapR cluster</dt>
+            
+        </dl>
 
-             <dd class="dd"><span class="ph">Data Collector</span> can process data from a MapR cluster in both execution modes: <ul class="ul" id="concept_rjc_4m5_lx__ul_ay3_lzt_lx">
+        <dl class="dl">
+            
+                <dt class="dt dlterm">MapR cluster</dt>
+
+                <dd class="dd"><span class="ph">Data Collector</span> can process data from a MapR cluster in both execution modes: <ul class="ul" id="concept_rjc_4m5_lx__ul_ay3_lzt_lx">
                         <li class="li">Cluster batch mode - In cluster batch mode, <span class="ph">Data Collector</span> processes all available data and then stops the pipeline. <span class="ph">Data Collector</span> runs as an application on top of MapReduce, an open-source
                             cluster-computing framework. MapReduce runs on a YARN cluster manager.
                             YARN and MapReduce generate additional worker nodes as needed. MapReduce
@@ -130,23 +130,23 @@
                     </ul>
 </dd>
 
-         
-         
-             <dt class="dt dlterm">HDFS</dt>
+            
+            
+                <dt class="dt dlterm">HDFS</dt>
 
-             <dd class="dd"><span class="ph">Data Collector</span> can process data from HDFS in cluster batch mode. In cluster batch mode, <span class="ph">Data Collector</span> processes all available data and then stops the pipeline. </dd>
+                <dd class="dd"><span class="ph">Data Collector</span> can process data from HDFS in cluster batch mode. In cluster batch mode, <span class="ph">Data Collector</span> processes all available data and then stops the pipeline. </dd>
 
-             <dd class="dd"><span class="ph">Data Collector</span> runs
-                 as an application on top of MapReduce, an open-source cluster-computing framework. MapReduce
-                 runs on a YARN cluster manager. YARN and MapReduce generate additional worker nodes as needed.
-                 MapReduce creates one map task for each HDFS block. <p class="p">Use the Hadoop FS origin to process
-                     data from HDFS in cluster batch mode.</p>
+                <dd class="dd"><span class="ph">Data Collector</span> runs as an application on top of MapReduce, an open-source cluster-computing
+                    framework. MapReduce runs on a YARN cluster manager. YARN and MapReduce generate
+                    additional worker nodes as needed. MapReduce creates one map task for each HDFS
+                    block. <p class="p">Use the Hadoop FS origin to process data from HDFS in cluster batch
+                        mode.</p>
 </dd>
 
-         
-     </dl>
+            
+        </dl>
 
- </div>
+    </div>
 
 </div>
 <div class="topic concept nested2" id="concept_rmd_hgp_cw">
@@ -272,9 +272,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d35232e491">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d35228e492">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d35232e494">Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d35228e495">Requirement</th>
 
                             </tr>
 
@@ -282,16 +282,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35232e491 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35228e492 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35232e494 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35228e495 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35232e491 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35228e492 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35232e494 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35228e495 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -311,6 +311,35 @@
 
     </div>
 
+<div class="topic concept nested2" id="concept_al2_cxh_cdb">
+    <h3 class="title topictitle3">Kafka Consumer Maximum Batch Size</h3>
+
+    <div class="body conbody">
+        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer
+                origin</a> in cluster mode, the Max Batch Size property is ignored. Instead, the
+            effective batch size is &lt;Batch Wait Time&gt; x &lt;Rate Limit Per Partition&gt;. </p>
+
+        <p class="p">For example, if Batch Wait Time is 60 seconds and Rate Limit Per Partition is 1000
+            messages/second, then the effective batch size from the Spark Streaming perspective is
+            60 x 1000 = 60000 messages/second. In this example, there is only one partition so only
+            one cluster pipeline is spawned and the batch size for that pipeline is 60000.</p>
+
+        <p class="p">If there are two partitions, then the effective batch size from the Spark Streaming
+            perspective is 60 x 1000 x 2 = 120000 messages/second. By default, two cluster pipelines
+            are created. If the number of messages in each partition are equal, then each pipeline
+            receives 60000 messages in one batch. If, however, all 120000 messages are in a single
+            partition, then the cluster pipeline processing that partition receives all 120000
+            messages. </p>
+
+        <p class="p">To reduce the maximum batch size, either reduce the wait time or reduce the rate limit
+            per partition. Similarly, to increase the maximum batch size, either increase the wait
+            time or increase the rate limit per partition. </p>
+
+        <p class="p"> </p>
+
+    </div>
+
+</div>
 <div class="topic task nested2" id="task_hhk_bfv_cy">
     <h3 class="title topictitle3">Configuring Cluster YARN Streaming for Kafka</h3>
 
@@ -333,38 +362,38 @@
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9414">The user environment variable defines the system
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9414">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9419">For example, say the user environment
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9419">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2830e9424">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2795e9424">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2830e9466">If necessary, specify the location of the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2795e9466">If necessary, specify the location of the
                     spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9469"><span class="ph">Data Collector</span> assumes that the
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9469"><span class="ph">Data Collector</span> assumes that the
                     spark-submit script used to submit job requests to Spark Streaming is located in
                     the following directory: <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9475">If the script is not in this directory, use
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9475">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9478">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9478">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9481"><span class="ph" id="task_hhk_bfv_cy__d2830e9482">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9481"><span class="ph" id="task_hhk_bfv_cy__d2795e9482">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2830e9486">=/usr/bin/spark2-submit</span></pre>
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2795e9486">=/usr/bin/spark2-submit</span></pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2830e9490">
-                    <div class="note note" id="task_hhk_bfv_cy__d2830e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9490">
+                    <div class="note note" id="task_hhk_bfv_cy__d2795e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -404,7 +433,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2830e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2795e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -425,7 +454,10 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline, use a Kafka Consumer origin.</span>
                 <div class="itemgroup info">If necessary, select a cluster mode stage library on the
-                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+                        <span class="keyword wintitle">General</span> tab of the origin. <div class="note note"><span class="notetitle">Note:</span> Batch Wait Time is
+                        ignored for the Kafka Consumer origin in cluster mode. For more information,
+                        see <a class="xref" href="ClusterPipelines_title.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a>.</div>
+</div>
             </li>
 </ol>
 
@@ -488,7 +520,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2830e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d2795e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -506,7 +538,10 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline, use a Kafka Consumer origin for cluster mode.</span>
                 <div class="itemgroup info">If necessary, select a cluster mode stage library on the
-                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+                        <span class="keyword wintitle">General</span> tab of the origin. <div class="note note"><span class="notetitle">Note:</span> Batch Wait Time is
+                        ignored for the Kafka Consumer origin in cluster mode. For more information,
+                        see <a class="xref" href="ClusterPipelines_title.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a>.</div>
+</div>
             </li>
 </ol>
 
@@ -530,9 +565,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d35232e990">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d35228e1036">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d35232e993">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d35228e1039">Requirement</th>
 
                         </tr>
 
@@ -540,16 +575,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35232e990 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35228e1036 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35232e993 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35228e1039 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35232e990 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35228e1036 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35232e993 ">MapR version 5.1, 5.2, or 6.0</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35228e1039 ">MapR version 5.1, 5.2, or 6.0</td>
 
                         </tr>
 
@@ -640,7 +675,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2830e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2795e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -690,15 +725,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2830e9414">The user environment variable defines the system
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9414">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2830e9419">For example, say the user environment
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9419">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2830e9424">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2795e9424">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
@@ -720,7 +755,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2830e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d2795e9492"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -764,7 +799,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2830e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2795e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -874,7 +909,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2830e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2795e9540"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -919,7 +954,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
         <div class="p">Please note the
             following limitations in cluster pipelines:<ul class="ul" id="concept_pdf_r5y_fz__ul_rrk_s5y_fz">
                 <li class="li">Non-cluster origins - Do not use non-cluster origins in cluster pipelines. For a
-                    description of the origins to use, see <a class="xref" href="ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Batch and Streaming Execution Modes</a>.</li>
+                    description of the origins to use, see <a class="xref" href="ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Batch and Streaming Execution Modes</a>.</li>
 
                 <li class="li">Pipeline events - You cannot use pipeline events in cluster pipelines.</li>
 

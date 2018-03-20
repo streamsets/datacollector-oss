@@ -309,16 +309,20 @@
                 <li class="li">Windows Event Log</li>
 
             </ul>
-<p class="p">For these origins, when you stop the pipeline, the <span class="ph">Data Collector</span> notes where it stopped processing data. When you restart the pipeline, it
-                continues from where it left off by default. When you want the <span class="ph">Data Collector</span> to process all available data instead of continuing from where it stopped, reset
-                the origin.</p>
-<p class="p">You can configure the Kafka and MapR Streams origins to process
-                all available data by specifying  an additional Kafka configuration property. For
-                more information, see "Processing All Unread Data" in the stage documentation. The
-                remaining origin stages process transient data where resetting the origin has no
-                effect.</p>
-<p class="p">You can reset the origin for multiple pipelines at the same time from
-                the <span class="ph uicontrol">Home</span> page. Or, you can reset the origin for a single
+<p class="p">For these origins, when you stop the pipeline, the <span class="ph">Data Collector</span>
+                notes where it stopped processing data. When you restart the pipeline, it continues
+                from where it left off by default. When you want the <span class="ph">Data Collector</span>
+                to process all available data instead of continuing from where it stopped, reset the
+                origin.</p>
+<p class="p">You can configure the Kafka and MapR Streams origins to process all
+                available data by specifying an additional Kafka configuration property. For more
+                information, see "Processing All Unread Data" in the stage documentation. You can
+                reset the Azure IoT/Event Hub Consumer origin by <a class="xref" href="../Origins/AzureEventHub.html#concept_zbd_tsf_bbb">deleting
+                    offset details</a> in the Microsoft Azure portal. The remaining origin stages
+                process transient data where resetting the origin has no effect.</p>
+<p class="p">You can reset
+                the origin for multiple pipelines at the same time from the
+                    <span class="ph uicontrol">Home</span> page. Or, you can reset the origin for a single
                 pipeline from the pipeline canvas.</p>
 <p class="p">To reset the origin:</p>
 </div>
@@ -478,9 +482,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d433992e884">Permission</th>
+       <th class="entry" valign="top" width="30%" id="d434628e888">Permission</th>
 
-       <th class="entry" valign="top" width="70%" id="d433992e887">Description</th>
+       <th class="entry" valign="top" width="70%" id="d434628e891">Description</th>
 
       </tr>
 
@@ -488,23 +492,23 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d433992e884 ">Read</td>
+       <td class="entry" valign="top" width="30%" headers="d434628e888 ">Read</td>
 
-       <td class="entry" valign="top" width="70%" headers="d433992e887 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="30%" headers="d433992e884 ">Write</td>
-
-       <td class="entry" valign="top" width="70%" headers="d433992e887 ">Edit the pipeline and alerts.</td>
+       <td class="entry" valign="top" width="70%" headers="d434628e891 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d433992e884 ">Execute</td>
+       <td class="entry" valign="top" width="30%" headers="d434628e888 ">Write</td>
 
-       <td class="entry" valign="top" width="70%" headers="d433992e887 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
+       <td class="entry" valign="top" width="70%" headers="d434628e891 ">Edit the pipeline and alerts.</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d434628e888 ">Execute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d434628e891 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
         snapshot</span>.</td>
 
       </tr>
@@ -648,15 +652,20 @@ For example, you
             <p class="p">Export pipelines to
                 create backups or to use the pipelines with another <span class="ph">Data Collector</span>. You can export a single pipeline or a set of pipelines at one time.</p>
 
-            <p class="p">When you export a single pipeline, <span class="ph">Data Collector</span> generates a JSON file named after the pipeline, as follows: <samp class="ph codeph">&lt;pipeline
+            <p class="p">When you export a single pipeline, <span class="ph">Data Collector</span>
+                generates a JSON file named after the pipeline, as follows: <samp class="ph codeph">&lt;pipeline
                     name&gt;.json</samp>. </p>
 
-            <p class="p">When you export a set of pipelines, <span class="ph">Data Collector</span> creates a ZIP file named <samp class="ph codeph">pipelines.zip</samp>.</p>
+            <p class="p">When you export a set of pipelines, <span class="ph">Data Collector</span>
+                creates a ZIP file named <samp class="ph codeph">pipelines.zip</samp>.</p>
 
             <p class="p"><span class="ph">Data Collector</span>
                 saves the files to your default downloads directory.</p>
 
-            <p class="p">To export pipelines for use in <span class="ph">StreamSets Control Hub</span>, see <a class="xref" href="../DPM/PipelineManagement.html#task_emc_p42_fx" title="If you develop pipelines in a Data Collector that is not registered with Control Hub, you can export the pipelines and then import the pipelines into Control Hub. When a Data Collector is registered with Control Hub, it's simplest to publish the pipelines directly to Control Hub.">Exporting Pipelines for Control Hub</a>.</p>
+            <div class="p">
+                <div class="note note"><span class="notetitle">Note:</span> To export pipelines for use with <span class="ph">Control Hub</span>, see <a class="xref" href="PipelineMaintenance_title.html#task_emc_p42_fx" title="If you develop pipelines in a Data Collector that is not registered with Control Hub, you can export the pipelines and then import the pipelines into Control Hub. When a Data Collector is registered with Control Hub, it's simplest to publish the pipelines directly to Control Hub.">Exporting Pipelines for Control Hub</a>.</div>
+
+            </div>
 
         </div>
 
@@ -675,6 +684,57 @@ For example, you
                 <span class="ph cmd">Or, to export a single pipeline from the pipeline canvas, click the
                         <span class="ph uicontrol">More</span> icon for the pipeline and then click
                         <span class="ph uicontrol">Export</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_emc_p42_fx">
+    <h2 class="title topictitle2">Exporting Pipelines for <span class="ph">Control Hub</span></h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If you develop pipelines in a <span class="ph">Data Collector</span> that
+        is not registered with <span class="ph">Control Hub</span>, you
+        can export the pipelines and then import the pipelines into <span class="ph">Control Hub</span>. When a
+            <span class="ph">Data Collector</span> is
+        registered with <span class="ph">Control Hub</span>, it's
+        simplest to publish the pipelines directly to <span class="ph">Control Hub</span>.</p>
+
+        <div class="section context">
+            <p class="p">You
+                can export a pipeline for use in <span class="ph">Control Hub</span>
+                when the pipeline is valid. You can export a single pipeline or a set of pipelines
+                at one time.</p>
+
+            <p class="p">When you export a single pipeline, <span class="ph">Data Collector</span> generates a JSON file named after the pipeline, as follows:
+                    <samp class="ph systemoutput">&lt;pipeline name&gt;.json</samp>. The generated JSON file
+                includes the definition of each stage library used in the pipeline.</p>
+
+            <p class="p">When you export a set of pipelines, <span class="ph">Data Collector</span> creates a ZIP file named <samp class="ph codeph">pipelines.zip</samp>.</p>
+
+            <p class="p"><span class="ph">Data Collector</span>
+                saves the files to your default downloads directory.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> To export pipelines for use in another <span class="ph">Data Collector</span>, see <a class="xref" href="PipelineMaintenance_title.html#task_dtz_4tr_5q">Exporting Pipelines</a>.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To export a single pipeline, from the <span class="ph uicontrol">Home</span> page, select
+                    the pipeline from the list, click the <span class="ph uicontrol">More</span> icon, and then
+                    click <span class="ph uicontrol">Export for SCH</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">To export a set of pipelines, select multiple pipelines, click the
+                            <span class="ph uicontrol">More</span> icon, and then click <span class="ph uicontrol">Export for
+                            SCH</span>.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Or, to export a pipeline in the pipeline canvas, click the
+                        <span class="ph uicontrol">More</span> icon for the pipeline and then click
+                        <span class="ph uicontrol">Export for SCH</span>.</span>
             </li>
 </ol>
 
