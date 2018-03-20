@@ -523,7 +523,7 @@ public class DirectorySpooler {
       filesQueue.add(file);
       spoolQueueMeter.mark(filesQueue.size());
     } else {
-      LOG.warn("File '{}' already in queue, ignoring", file);
+      LOG.debug("File '{}' already in queue, ignoring", file);
     }
   }
 
