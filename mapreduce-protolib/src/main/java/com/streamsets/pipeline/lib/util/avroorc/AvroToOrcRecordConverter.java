@@ -16,7 +16,6 @@
 
 package com.streamsets.pipeline.lib.util.avroorc;
 
-import com.google.common.base.Charsets;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
@@ -49,7 +48,6 @@ import org.apache.orc.Writer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -210,7 +208,7 @@ public class AvroToOrcRecordConverter {
         byte[] bytes = null;
 
         if (value instanceof String) {
-          bytes = ((String) value).getBytes(Charsets.UTF_8);
+          bytes = ((String) value).getBytes(StandardCharsets.UTF_8);
         } else if (value instanceof Utf8) {
           final Utf8 utf8 = (Utf8) value;
           bytes = utf8.getBytes();
