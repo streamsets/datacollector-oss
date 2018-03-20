@@ -66,9 +66,10 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_n2w_txv_vz">
- <h2 class="title topictitle2">Data Collector Shell Impersonation Mode</h2>
+    <h2 class="title topictitle2"><span class="ph">Data Collector</span>
+        Shell Impersonation Mode</h2>
 
- <div class="body conbody">
+    <div class="body conbody">
         <p class="p">Enable the <span class="ph">Data Collector</span>
             shell impersonation mode to enable the secure use of shell scripts. You enable the
             impersonation mode by configuring the shell impersonation mode property in the <span class="ph">Data Collector</span>
@@ -111,8 +112,45 @@
         <p class="p"><span class="ph">
                         <span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a></span>.</span></p>
 
- </div>
+    </div>
 
+<div class="topic concept nested2" id="concept_rcn_gqk_fdb">
+    <h3 class="title topictitle3">Using a Partial <span class="ph">Control Hub</span> User
+        ID</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">When <span class="ph">Data Collector</span> is
+        registered with <span class="ph">Control Hub</span>, you
+        can configure <span class="ph">Data Collector</span> to use
+        an abbreviated version of the <span class="ph">Control Hub</span> user ID
+        for shell impersonation mode.</p>
+
+        <div class="p">By
+            default, when using shell impersonation mode, a <span class="ph">Data Collector</span>
+            registered with <span class="ph">Control Hub</span>
+            uses the full <span class="ph">Control Hub</span>
+            user ID as the user who starts the pipeline, as
+            follows:<pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
+</div>
+
+        <p class="p">You can configure <span class="ph">Data Collector</span>
+            <span class="ph">to use only the ID, ignoring "<samp class="ph codeph">@&lt;organization
+                              ID&gt;</samp>". For example, using <samp class="ph codeph">myname</samp> instead of
+                              <samp class="ph codeph">myname@org</samp> as the user name.</span></p>
+
+        <p class="p">You might need to use a partial <span class="ph">Control Hub</span>
+            user ID when the target operating system uses Kerberos, LDAP, or other user
+            authentication methods with user name formats that conflict with the <span class="ph">Control Hub</span>
+            format.</p>
+
+        <p class="p">To enable using a partial <span class="ph">Control Hub</span>
+            user ID for a registered <span class="ph">Data Collector</span>,
+            uncomment the dpm.alias.name.enabled property in the <span class="ph">Control Hub</span>
+            configuration file. For more information, see <a class="xref" href="../DPM/DPMConfiguration.html#concept_hrn_zz3_fx" title="You can customize how a Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, dpm.properties.">Control Hub Configuration</a>.</p>
+
+    </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_av4_pnm_z1b">
  <h2 class="title topictitle2">Script Configuration</h2>
@@ -165,14 +203,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hyc_3zw_tz__d36101e5056" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hyc_3zw_tz__d36291e5056" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d202918e249">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203236e360">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d202918e252">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203236e363">Description</th>
 
                                 </tr>
 
@@ -180,24 +218,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e249 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e360 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e252 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e249 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d202918e252 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d203236e363 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e249 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_hyc_3zw_tz__d36101e5102" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e360 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e252 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d203236e363 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e360 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_hyc_3zw_tz__d36291e5102" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d203236e363 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -209,10 +247,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e249 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_hyc_3zw_tz__d36101e5118" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e360 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_hyc_3zw_tz__d36291e5118" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e252 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d203236e363 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -223,10 +261,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e249 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_hyc_3zw_tz__d36101e5135" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e360 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_hyc_3zw_tz__d36291e5135" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e252 ">Error record handling for the stage: <ul class="ul" id="task_hyc_3zw_tz__d36101e5139">
+                                    <td class="entry" valign="top" width="70%" headers="d203236e363 ">Error record handling for the stage: <ul class="ul" id="task_hyc_3zw_tz__d36291e5139">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -257,9 +295,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d202918e363">Environment Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203236e474">Environment Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d202918e366">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203236e477">Description</th>
 
                                 </tr>
 
@@ -267,9 +305,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e363 ">Environment Variables</td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e474 ">Environment Variables</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e366 ">Environment variables to use when executing the shell
+                                    <td class="entry" valign="top" width="70%" headers="d203236e477 ">Environment variables to use when executing the shell
                                         script. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add environment
                                             variables.<p class="p">You can use <span class="ph">Data Collector</span> expressions as needed.</p>
@@ -278,9 +316,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d202918e363 ">Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d203236e474 ">Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d202918e366 ">Milliseconds to allow the script to run. The executor
+                                    <td class="entry" valign="top" width="70%" headers="d203236e477 ">Milliseconds to allow the script to run. The executor
                                         stops executing scripts after the specified timeout.</td>
 
                                 </tr>
