@@ -170,8 +170,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String DISCARDING_RECORD_AS_CONFIGURED = ". Discarding record as configured";
   private static final String UNSUPPORTED_DISCARD = JDBC_85.getMessage() + DISCARDING_RECORD_AS_CONFIGURED;
   private static final String UNSUPPORTED_SEND_TO_PIPELINE = JDBC_85.getMessage() + ". Sending to pipeline as configured";
-  private static final String GENERATED_RECORD = "Generated Record: '{}'";
-  public static final String FOUND_RECORDS_IN_TRANSACTION = "Found {} records in transaction";
+  private static final String GENERATED_RECORD = "Generated Record: '{}' in transaction Id {}";
+  public static final String FOUND_RECORDS_IN_TRANSACTION = "Found {} records in transaction ID {}";
   public static final String STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN = "Started LogMiner with start SCN: {} and end SCN: {}";
   public static final String REDO_SELECT_QUERY = "Redo select query for selectFromLogMnrContents = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
@@ -582,7 +582,7 @@ public class OracleCDCSource extends BaseSource {
                     removeProcessedRecords(records, sequenceNumber);
                   }
                   int bufferedRecordsToBeRemoved = records.size();
-                  LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved);
+                  LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved, xid);
                   addRecordsToQueue(tsDate, scn, xid);
                 } finally {
                   bufferedRecordsLock.unlock();
@@ -731,7 +731,7 @@ public class OracleCDCSource extends BaseSource {
     }
     attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
     record.set(Field.create(fields));
-    LOG.debug(GENERATED_RECORD, record);
+    LOG.debug(GENERATED_RECORD, record, attributes.get(XID));
     Joiner errorStringJoiner = Joiner.on(", ");
     List<String> errorColumns = Collections.emptyList();
     if (!fieldTypeExceptions.isEmpty()) {
