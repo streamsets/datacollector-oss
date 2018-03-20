@@ -23,10 +23,49 @@ This product includes components of the following software:
 -----------------------------------------------------------------------
   Amazon AWS Java SDK             Apache License 2.0
   Amazon Kinesis Client           Amazon Software License
-  Ant                             Apache License 2.0
   Ant LR                          BSD License
   AOPAlliance                     Public Domain
+  Apache Ant                      Apache License 2.0
+  Apache Commons Beanutils        Apache License 2.0
+  Apache Commons CLI              Apache License 2.0
+  Apache Commons Codec            Apache License 2.0
+  Apache Commons Collections      Apache License 2.0
+  Apache Commons Compress         Apache License 2.0
+  Apache Commons Configuration    Apache License 2.0
+  Apache Commons CSV              Apache License 2.0
+  Apache Commons DBCP             Apache License 2.0
+  Apache Commons Digester         Apache License 2.0
+  Apache Commons EL               Apache License 2.0
+  Apache Commons HttpClient       Apache License 2.0
+  Apache Commons IO               Apache License 2.0
+  Apache Commons Lang             Apache License 2.0
+  Apache Commons Lang3            Apache License 2.0
+  Apache Commons Logging          Apache License 2.0
+  Apache Commons Math3            Apache License 2.0
+  Apache Commons Net              Apache License 2.0
+  Apache Commons Pool             Apache License 2.0
+  Apache Commons Pool2            Apache License 2.0
+  Apache Curator                  Apache License 2.0
+  Apache Derby                    Apache License 2.0
   Apache Directory                Apache License 2.0
+  Apache Flume                    Apache License 2.0
+  Apache Geronimo                 Apache License 2.0
+  Apache Hadoop                   Apache License 2.0
+  Apache HBase                    Apache License 2.0
+  Apache Hive                     Apache License 2.0
+  Apache HTrace                   Apache License 2.0
+  Apache HttpComponents           Apache License 2.0
+  Apache Ivy                      Apache License 2.0
+  Apache Kafka                    Apache License 2.0
+  Apache Log4j                    Apache License 2.0
+  Apache Lucene                   Apache License 2.0
+  Apache Parquet                  Apache License 2.0
+  Apache Solr                     Apache License 2.0
+  Apache Spark                    Apache License 2.0
+  Apache Thrift                   Apache License 2.0
+  Apache Velocity                 Apache License 2.0
+  Apache Xerces                   Apache License 2.0
+  Apache ZooKeeper                Apache License 2.0
   ASM                             BSD License
   Automaton                       BSD License
   Avro                            Apache License 2.0
@@ -35,36 +74,13 @@ This product includes components of the following software:
   Bouncy Castle                   MIT License
   Calcite                         Apache License 2.0
   Cassandra                       Apache License 2.0
-  Commons Beanutils               Apache License 2.0
-  Commons CLI                     Apache License 2.0
-  Commons Codec                   Apache License 2.0
-  Commons Collections             Apache License 2.0
-  Commons Compress                Apache License 2.0
-  Commons Configuration           Apache License 2.0
-  Commons CSV                     Apache License 2.0
-  Commons DBCP                    Apache License 2.0
-  Commons Digester                Apache License 2.0
-  Commons EL                      Apache License 2.0
-  Commons HttpClient              Apache License 2.0
-  Commons IO                      Apache License 2.0
-  Commons Lang                    Apache License 2.0
-  Commons Lang3                   Apache License 2.0
-  Commons Logging                 Apache License 2.0
-  Commons Math3                   Apache License 2.0
-  Commons Net                     Apache License 2.0
-  Commons Pool                    Apache License 2.0
-  Commons Pool2                   Apache License 2.0
-  Curator                         Apache License 2.0
   Dagger                          Apache License 2.0
   Data Nucleus                    Apache License 2.0
-  Derby                           Apache License 2.0
   Dropwizzard Metrics             Apache License 2.0
   eigenbase-properties            Apache License 2.0
   Elasticsearch                   Apache License 2.0
   Fast Serialization (fst)        Apache License 2.0
-  Flume                           Apache License 2.0
   Force.com WSC                   New BSD License
-  Geronimo                        Apache License 2.0
   Google Http-Client              Apache License 2.0
   Google Protocol Buffers         Apache License 2.0
   Grovy                           Apache License 2.0
@@ -72,15 +88,9 @@ This product includes components of the following software:
   Guava                           Apache License 2.0
   Guid                            Apache License 2.0
   H2                              Eclipse Public License 1.0
-  Hadoop                          Apache License 2.0
-  Hbase                           Apache License 2.0
   Hikari CP                       Apache License 2.0
-  Hive                            Apache License 2.0
   HK2                             CDDL
-  HTrace                          Apache License 2.0
-  HttpComponents                  Apache License 2.0
   iq80 Snappy                     Apache License 2.0
-  Ivy                             Apache License 2.0
   Jackson FasterXML               Apache License 2.0
   Java Assist                     Apache License 2.0
   Java Protobuf                   New BSD License
@@ -110,11 +120,8 @@ This product includes components of the following software:
   JSR-305                         Apache License 2.0
   jtar                            Apache License 2.0
   Jython                          Jython Software License
-  Kafka                           Apache License 2.0
   Kryo                            New BSD License
   LevelDB JNI                     BSD 3-Clause License
-  Log4J                           Apache License 2.0
-  Lucene                          Apache License 2.0
   LZ4 Java                        Apache License 2.0
   MaxMind DB                      Apache License 2.0
   MaxMind Geoip2                  Apache License 2.0
@@ -127,28 +134,21 @@ This product includes components of the following software:
   Objenesis                       Apache License 2.0
   Open CSV                        Apache License 2.0
   Paranamer                       BSD License
-  Parquet                         Apache License 2.0
   Pentaho                         Apache License 2.0
   ReflectASM                      New BSD License
   Reflections                     New BSD License
   Scala                           BSD-like License
   SLF4J                           MIT License
-  Solr                            Apache License 2.0
-  Spark                           Apache License 2.0
   Spatial4J                       Apache License 2.0
   Stax2 API                       BSD License
   Swagger                         Apache License 2.0
-  Thrift                          Apache License 2.0
   UnboundID LDAP SDK              UnboundID LDAP SDK Free Use License
-  Velocity                        Apache License 2.0
   Windows Azure Storage SDK       Apache License 2.0
   WSTX ASL                        Apache License 2.0
-  Xerces                          Apache License 2.0
   XML APIs                        Apache License 2.0
   xmlenc                          BSD License
   XZ                              Public Domain
   ZkClient                        Apache License 2.0
-  Zookeeper                       Apache License 2.0
 -----------------------------------------------------------------------
 
 
