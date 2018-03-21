@@ -18,6 +18,7 @@ package com.streamsets.datacollector.email;
 
 import com.streamsets.datacollector.util.Configuration;
 
+import javax.activation.DataHandler;
 import javax.inject.Inject;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -26,7 +27,10 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +112,10 @@ public class EmailSender {
   }
 
   public void send(List<String> addresses, String subject, String body) throws EmailException {
+    this.send(addresses, subject, body, null);
+  }
+
+  public void send(List<String> addresses, String subject, String body, List<Attachment> attachments) throws EmailException {
     try {
       session = (session == null) ? createSession() : session;
       Message message = new MimeMessage(session);
@@ -116,7 +124,26 @@ public class EmailSender {
       List<InternetAddress> toAddrs = toAddress(addresses);
       message.addRecipients(Message.RecipientType.TO, toAddrs.toArray(new InternetAddress[toAddrs.size()]));
       message.setSubject(subject);
-      message.setContent(body, "text/html; charset=UTF-8");
+
+      if(attachments != null && !attachments.isEmpty()) {
+        MimeMultipart multipart = new MimeMultipart();
+        MimeBodyPart htmlBodyPart = new MimeBodyPart();
+        htmlBodyPart.setContent(body, "text/html; charset=UTF-8");
+        multipart.addBodyPart(htmlBodyPart);
+
+        for(Attachment attachment: attachments) {
+          MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+          ByteArrayDataSource dataSource = new ByteArrayDataSource(attachment.getInputStream(), attachment.getContentType());
+          attachmentBodyPart.setDataHandler(new DataHandler(dataSource));
+          attachmentBodyPart.setFileName(attachment.getFilename());
+          multipart.addBodyPart(attachmentBodyPart);
+        }
+
+        message.setContent(multipart);
+      } else {
+        message.setContent(body, "text/html; charset=UTF-8");
+      }
+
       Transport transport = session.getTransport(protocol);
       transport.connect(host, user, password);
       transport.sendMessage(message, message.getAllRecipients());
@@ -126,5 +153,4 @@ public class EmailSender {
       throw new EmailException(ex);
     }
   }
-
 }

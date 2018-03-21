@@ -25,8 +25,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.mail.internet.MimeMultipart;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Arrays;
 
 public class TestEmailSender {
   private static GreenMail server;
@@ -58,12 +62,43 @@ public class TestEmailSender {
     conf.set("mail.smtp.port", Integer.toString(server.getSmtp().getPort()));
     EmailSender sender = new EmailSender(conf);
     sender.send(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
-    String headers =GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers.contains("To: foo, bar"));
     Assert.assertTrue(headers.contains("Subject: SUBJECT"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertTrue(headers.contains("Content-Type: text/html; charset=UTF-8"));
     Assert.assertEquals("BODY", GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+    server.reset();
   }
 
+  @Test
+  public void testSentEmailWithAttachment() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set("mail.smtp.host", "localhost");
+    conf.set("mail.smtp.port", Integer.toString(server.getSmtp().getPort()));
+    conf.set("mail.transport.protocol", "smtp");
+    conf.set("mail.smtp.auth", "false");
+    EmailSender sender = new EmailSender(conf);
+    sender.send(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY",
+        Arrays.asList(
+            new Attachment("hello.txt", new ByteArrayInputStream("hello world".getBytes()), "text/*"),
+            new Attachment("world.txt", new ByteArrayInputStream("world hello".getBytes()), "text/*")
+        )
+    );
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: SUBJECT"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertTrue(headers.contains("Content-Type: multipart/mixed"));
+    Assert.assertEquals("BODY", ((MimeMultipart)(server.getReceivedMessages()[0]).getContent()).getBodyPart(0).getContent());
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    ((MimeMultipart)(server.getReceivedMessages()[0]).getContent()).getBodyPart(1).getDataHandler().writeTo(os);
+    Assert.assertEquals("hello world", os.toString());
+    Assert.assertEquals("hello.txt", ((MimeMultipart)(server.getReceivedMessages()[0]).getContent()).getBodyPart(1).getDataHandler().getDataSource().getName());
+    os.reset();
+    ((MimeMultipart)(server.getReceivedMessages()[0]).getContent()).getBodyPart(2).getDataHandler().writeTo(os);
+    Assert.assertEquals("world hello", os.toString());
+    Assert.assertEquals("world.txt", ((MimeMultipart)(server.getReceivedMessages()[0]).getContent()).getBodyPart(2).getDataHandler().getDataSource().getName());
+    server.reset();
+  }
 }
