@@ -26,7 +26,10 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -36,10 +39,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -48,6 +53,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -79,6 +85,7 @@ public class LogResource {
   private static long MAX_EXCEPTION = 10 * 1024; // 10 KB
   private final RuntimeInfo runtimeInfo;
   private final PipelineStoreTask store;
+  private final Configuration config;
 
   @Inject
   public LogResource(
@@ -86,9 +93,11 @@ public class LogResource {
       Principal principal,
       PipelineStoreTask store,
       AclStoreTask aclStore,
-      UserGroupManager userGroupManager
+      UserGroupManager userGroupManager,
+      Configuration config
   ) {
     this.runtimeInfo = runtimeInfo;
+    this.config = config;
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {
@@ -121,7 +130,8 @@ public class LogResource {
       @QueryParam("extraMessage") String extraMessage,
       @QueryParam("pipeline") String pipeline,
       @QueryParam("severity") String severity,
-      @Context SecurityContext context
+      @Context SecurityContext context,
+      @Context HttpServletRequest request
   ) throws IOException, DataParserException, PipelineException {
 
     // Required for showing logs per pipeline in Pipeline page
@@ -132,8 +142,21 @@ public class LogResource {
 
     if (!StringUtils.isEmpty(pipeline)) {
       // Validates Pipeline ACL Permission
-      PipelineInfo pipelineInfo = store.getInfo(pipeline);
-      pipeline = pipelineInfo.getTitle() + "/" + pipelineInfo.getPipelineId();
+
+      try {
+        PipelineInfo pipelineInfo = store.getInfo(pipeline);
+        pipeline = pipelineInfo.getTitle() + "/" + pipelineInfo.getPipelineId();
+      } catch (PipelineException e) {
+        // To support viewing logs of pipeline controlled by Control Hub after job is stopped
+        // check if job is accessible for the user (ACL check)
+        String[] strArr = pipeline.split(":");
+        if (strArr.length == 3 && runtimeInfo.isDPMEnabled() &&
+            isJobAccessibleFromControlHub(request, strArr[1] + ":" + strArr[2])) {
+          pipeline = strArr[0] + "/" + pipeline;
+        } else {
+          throw e;
+        }
+      }
     }
 
     String logFile = LogUtils.getLogFile(runtimeInfo);
@@ -158,13 +181,13 @@ public class LogResource {
     streamer.close();
 
     if((severity != null || pipeline != null) && logData.size() < 50) {
-      //For filtering try to fetch more log data until it we get at least 50 lines of log data or it reaches top
+      // For filtering try to fetch more log data until it we get at least 50 lines of log data or it reaches top
       while (offset != 0 && logData.size() < 50) {
         streamer = new LogStreamer(logFile, offset, 50 * 1024);
         outputStream = new ByteArrayOutputStream();
         streamer.stream(outputStream);
 
-        //merge last message if it is part of new messages
+        // merge last message if it is part of new messages
         if (!logData.isEmpty() && logData.get(0).get("timestamp") == null && logData.get(0).get(EXCEPTION) != null) {
           outputStream.write(logData.get(0).get(EXCEPTION).getBytes(StandardCharsets.UTF_8));
           logData.remove(0);
@@ -339,6 +362,37 @@ public class LogResource {
       payload.close();
     }
     return Response.ok().build();
+  }
+
+  private boolean isJobAccessibleFromControlHub(HttpServletRequest request, String jobId) {
+    String dpmBaseURL = config.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
+    if (dpmBaseURL.endsWith("/")) {
+      dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
+    }
+
+    // Get DPM user auth token from request cookie
+    SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
+    String userAuthToken = ssoPrincipal.getTokenStr();
+    String componentId = runtimeInfo.getId();
+
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/jobrunner/rest/v1/job/" + jobId)
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+          .header(SSOConstants.X_REST_CALL, true)
+          .get();
+      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+        return true;
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+    return false;
   }
 
 }
