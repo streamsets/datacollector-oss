@@ -23,8 +23,8 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
 
 @StageDef(
     version = 1,
-    label = "Write to SCH directly",
-    description = "Writes pipeline statistics to SCH directly without any aggregation",
+    label = "Write to Control Hub directly",
+    description = "Writes pipeline statistics to Control Hub directly without any aggregation",
     icon="",
     execution = {
         ExecutionMode.STANDALONE,
