@@ -180,6 +180,7 @@ public class OracleCDCSource extends BaseSource {
   private static final int TIMESTAMP_TZ_TYPE = -101;
   // https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/constant-values.html#oracle_jdbc_OracleTypes_TIMESTAMPLTZ
   private static final int TIMESTAMP_LTZ_TYPE = -102;
+  public static final int LOGMINER_START_MUST_BE_CALLED = 1306;
   private DateTimeColumnHandler dateTimeColumnHandler;
 
   private boolean sentInitialSchemaEvent = false;
@@ -620,6 +621,8 @@ public class OracleCDCSource extends BaseSource {
           LOG.warn("SQL Exception while retrieving records", ex);
         } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
           LOG.warn("LogMiner select query timed out");
+        } else if (ex.getErrorCode() == LOGMINER_START_MUST_BE_CALLED) {
+          LOG.warn("Last LogMiner session did not start successfully. Will retry", ex);
         } else {
           LOG.error("Error while reading data", ex);
           stageExceptions.add(new StageException(JDBC_52, ex));
@@ -652,7 +655,15 @@ public class OracleCDCSource extends BaseSource {
           if (selectChanges != null && !selectChanges.isClosed()) {
             selectChanges.close();
           }
+        } catch (SQLException ex) {
+          LOG.warn("Error while attempting to close SQL statements", ex);
+        }
+        try {
           endLogMnr.execute();
+        } catch (SQLException ex) {
+          LOG.warn("Error while trying to close logminer session", ex);
+        }
+        try {
           if (!error) {
             discardOldUncommitted(startTime);
             startTime = adjustStartTime(endTime);
