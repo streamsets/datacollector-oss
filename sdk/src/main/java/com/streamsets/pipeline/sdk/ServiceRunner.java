@@ -67,6 +67,7 @@ public class ServiceRunner<S> extends ProtoRunner {
       new MetricRegistry(),
       "myPipeline",
       "0",
+      0,
       "stageName",
       "serviceName",
       resourcesDir

@@ -964,6 +964,7 @@ public class Pipeline {
         pipelineRunner.getMetrics(),
         pipelineName,
         pipelineRev,
+        runnerId,
         stageBean.getConfiguration().getInstanceName(),
         runtime,
         serviceBean.getDefinition().getClassName(),

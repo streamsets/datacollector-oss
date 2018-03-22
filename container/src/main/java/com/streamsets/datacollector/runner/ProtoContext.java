@@ -85,6 +85,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   private final EmailSender emailSender;
   protected final MetricRegistry metrics;
   protected final String pipelineId;
+  protected final int runnerId;
   protected final String rev;
   private final Sampler sampler;
   protected final String stageInstanceName;
@@ -99,6 +100,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
       MetricRegistry metrics,
       String pipelineId,
       String rev,
+      int runnerId,
       String stageInstanceName,
       StageType stageType,
       String serviceInstanceName,
@@ -111,6 +113,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     this.metrics = metrics;
     this.pipelineId = pipelineId;
     this.rev = rev;
+    this.runnerId = runnerId;
     this.stageInstanceName = stageInstanceName;
     this.serviceInstanceName = serviceInstanceName;
     this.resourcesDir = resourcesDir;
@@ -184,6 +187,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
     return new ConfigIssueImpl(stageInstanceName, serviceInstanceName, configGroup, configName, errorCode, args);
   }
+
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
@@ -191,57 +195,57 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, pipelineId,
       rev);
   }
 
   public Timer getTimer(String name) {
-    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId);
   }
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, pipelineId,
       rev);
   }
 
   public Meter getMeter(String name) {
-    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId);
   }
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId,
+    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, pipelineId,
       rev);
   }
 
   public Counter getCounter(String name) {
-    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId);
   }
 
   @Override
   public Histogram createHistogram(String name) {
-    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, pipelineId, rev);
+    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, pipelineId, rev);
   }
 
   @Override
   public Histogram getHistogram(String name) {
-    return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+    return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId);
   }
 
   @Override
   public Gauge<Map<String, Object>> createGauge(String name) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, null, pipelineId, rev);
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, null, pipelineId, rev);
   }
 
   @Override
   public Gauge<Map<String, Object>> createGauge(String name, Comparator<String> comparator) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name, comparator, pipelineId, rev);
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId, comparator, pipelineId, rev);
   }
 
   @Override
   public Gauge<Map<String, Object>> getGauge(String name) {
-    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name);
+    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInstanceName + "." + name + "." + runnerId);
   }
 
   // ELContext
