@@ -71,7 +71,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0155("Instance '{}' required fields configuration must be a list instead of a '{}'"),
   CONTAINER_0156("Invalid instance '{}'"),
   CONTAINER_0157("Cannot do a preview stage run on an origin, instance '{}'"),
-  CONTAINER_0158("Cannot run the pipeline: {}"),
+  CONTAINER_0158("Cannot run the pipeline due to validation issues ({} issues)"),
   CONTAINER_0159("Cannot perform raw source preview because pipeline '{}' is empty"),
   CONTAINER_0160("Cannot perform raw source preview until the following required parameters are configured: '{}'"),
   CONTAINER_0161("Stage '{}', instance '{}', variable '{}', configuration injection error: Value List has non-string elements"),

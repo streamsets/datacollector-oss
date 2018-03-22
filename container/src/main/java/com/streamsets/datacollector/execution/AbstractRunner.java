@@ -31,6 +31,8 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.ValidationUtil;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.StageException;
@@ -63,8 +65,11 @@ public abstract  class AbstractRunner implements Runner {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, load);
     PipelineConfiguration validate = validator.validate();
     if(validator.getIssues().hasIssues()) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
-        validator.getIssues()));
+      LOG.error("Can't run pipeline due to issues: {}", validator.getIssues().getIssueCount());
+      for(Issue issue : validator.getIssues().getIssues()) {
+        LOG.error("Pipeline validation error: {}", issue);
+      }
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0158, validator.getIssues().getIssues().size());
     }
     return validate;
   }

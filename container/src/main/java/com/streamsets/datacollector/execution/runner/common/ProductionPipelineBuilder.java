@@ -89,8 +89,7 @@ public class ProductionPipelineBuilder {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     pipelineConf = validator.validate();
     if (validator.getIssues().hasIssues()) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
-        validator.getIssues()));
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, validator.getIssues().getIssues().size());
     }
     Pipeline pipeline = new Pipeline.Builder(
         stageLib,
