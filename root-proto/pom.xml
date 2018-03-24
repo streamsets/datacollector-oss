@@ -75,6 +75,8 @@
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <hive-storage-api.version>2.2.1</hive-storage-api.version>
   </properties>
 
   <!-- API dependencies ONLY -->
@@ -241,6 +243,26 @@
         <artifactId>netty-codec-http</artifactId>
         <version>${netty.version}</version>
       </dependency>
+
+      <!--
+          The necessary classes from this dependency (for ORC file writing) might also be provided under separate Hive
+          1.x dependencies (ex: hive-serde, hive-exec, etc.)
+
+          These were consolidated into hive-storage-api under https://issues.apache.org/jira/browse/HIVE-10171
+
+          Hadoop distros (ex: CDH) might provide the individual Hive 1.x libs instead, which we will assume should
+          provide the same set of required classes for ORC writing
+
+          So for purposes of compliation only, we will rely on hive-storage-api and hope that at runtime, the Hadoop
+          environment provides the same classes
+      -->
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-storage-api</artifactId>
+        <version>${hive-storage-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

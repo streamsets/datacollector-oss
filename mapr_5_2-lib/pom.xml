@@ -375,6 +375,12 @@
       </exclusions>
     </dependency>
 
+    <!-- provided scope; see root-proto/pom.xml -->
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-storage-api</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-api</artifactId>
