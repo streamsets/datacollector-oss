@@ -57,16 +57,16 @@ export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"-XX:+UseConcMarkSweepGC -XX:+UseParNewG
 
 # Enables/disables the JVM security manager
 #
-export SDC_SECURITY_MANAGER_ENABLED=true
+export SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:-true}
 
 # Produce heap dump when SDC will die on OutOfMemoryError
-export SDC_HEAPDUMP_ON_OOM=true
+export SDC_HEAPDUMP_ON_OOM=${SDC_HEAPDUMP_ON_OOM:-true}
 
 # Optional path for the heap dump file, default is $SDC_LOG/sdc_heapdump_${timestamp}.hprof
 #export SDC_HEAPDUMP_PATH=
 
 # Enable GC logging automatically
-export SDC_GC_LOGGING=true
+export SDC_GC_LOGGING=${SDC_GC_LOGGING:-true}
 
 # SDC will by default only run on Oracle JDK, any other JDK has to be explicitly enabled
 export SDC_ALLOW_UNSUPPORTED_JDK=${SDC_ALLOW_UNSUPPORTED_JDK:-false}
