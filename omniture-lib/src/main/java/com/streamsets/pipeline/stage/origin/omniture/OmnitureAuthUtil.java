@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +32,7 @@ public class OmnitureAuthUtil {
   private static final String SHA1 = "SHA-1";
   private static final String AUTH_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-  private static BASE64Encoder b64 = new BASE64Encoder();
+  private static Base64.Encoder b64 = Base64.getEncoder();
 
   private OmnitureAuthUtil() {}
 
@@ -81,6 +81,6 @@ public class OmnitureAuthUtil {
   }
 
   private static String base64Encode(byte[] bytes) {
-    return b64.encode(bytes);
+    return b64.encodeToString(bytes);
   }
 }
