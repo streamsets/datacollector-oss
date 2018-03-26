@@ -66,6 +66,8 @@ public class AvroOrcConvertMapper extends AvroConversionBaseMapper {
       LOG.info("Using ORC batch size: {}", batchSize);
     }
 
+    LOG.info("Classpath: \n{}", System.getProperty("java.class.path"));
+
     avroOrcRecordConverter = new AvroToOrcRecordConverter(batchSize, new Properties(), conf);
     avroOrcRecordConverter.initializeWriter(avroSchema, tempFile);
   }

@@ -134,7 +134,7 @@ public abstract class AvroConversionBaseMapper extends Mapper<String, String, Nu
       fs.delete(inputPath, true);
     }
 
-    LOG.info("Done converting input file {}", output);
+    LOG.info("Done converting input file into output directory {}", output);
   }
 
 

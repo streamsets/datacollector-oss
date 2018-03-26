@@ -21,53 +21,38 @@ import com.streamsets.pipeline.lib.util.avroorc.AvroToOrcSchemaConverter;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapreduceUtils;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseCreator;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionInputFormat;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConvertMapper;
 import io.airlift.compress.Decompressor;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.mapred.FsInput;
 import org.apache.avro.util.Utf8;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.common.type.HiveDecimal;
-import org.apache.hadoop.hive.ql.exec.vector.ColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.TimestampColumnVector;
-import org.apache.hadoop.hive.serde2.io.DateWritable;
-import org.apache.hadoop.hive.serde2.io.HiveDecimalWritable;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.orc.Writer;
-import org.apache.parquet.SemanticVersion;
-import org.apache.parquet.avro.AvroParquetWriter;
-import org.apache.parquet.bytes.BytesInput;
-import org.apache.parquet.column.ParquetProperties;
-import org.apache.parquet.format.CompressionCodec;
-import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.orc.impl.OrcCodecPool;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
 public class AvroOrcConvertCreator extends AvroConversionBaseCreator {
+  private static final Logger LOG = LoggerFactory.getLogger(AvroOrcConvertCreator.class);
 
   @Override
   protected void addNecessaryJarsToJob(Configuration conf) {
+    // add jars for classes that are NOT in hive-exec 1.x jar, which will screw up ORC conversion because it
+    // contains ancient versions of various Hive classes that ORC uses under the covers
     MapreduceUtils.addJarsToJob(
         conf,
         AvroToOrcRecordConverter.class,
         AvroToOrcSchemaConverter.class,
-        Writer.class,
-        FsInput.class,
-        Utf8.class,
-        ColumnVector.class,
-        DateWritable.class,
         AvroTypeUtil.class,
         Log4jLoggerAdapter.class,
-        TimestampColumnVector.class,
-        HiveDecimal.class,
-        HiveDecimalWritable.class,
-        GenericDatumReader.class,
-        DataFileReader.class,
         Logger.class,
         Decompressor.class
     );
+    // add all other required dependencies
+    MapreduceUtils.addJarsToJob(conf, true, "hive-storage-api", "orc-core", "avro");
   }
 
   @Override

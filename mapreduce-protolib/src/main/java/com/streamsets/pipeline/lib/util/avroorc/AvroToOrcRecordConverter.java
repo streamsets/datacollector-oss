@@ -41,7 +41,6 @@ import org.apache.hadoop.hive.ql.exec.vector.TimestampColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.UnionColumnVector;
 import org.apache.hadoop.hive.ql.exec.vector.VectorizedRowBatch;
 import org.apache.hadoop.hive.serde2.io.DateWritable;
-import org.apache.hadoop.hive.serde2.io.HiveDecimalWritable;
 import org.apache.orc.OrcFile;
 import org.apache.orc.TypeDescription;
 import org.apache.orc.Writer;
@@ -56,6 +55,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.nio.ByteBuffer;
 
 public class AvroToOrcRecordConverter {
 
@@ -151,7 +151,7 @@ public class AvroToOrcRecordConverter {
 
     batch.size++;
 
-    if (batch.size % orcBatchSize == 0) {
+    if (batch.size % orcBatchSize == 0 || batch.size == batch.getMaxSize()) {
       writer.addRowBatch(batch);
       batch.reset();
       batch.size = 0;
@@ -287,12 +287,55 @@ public class AvroToOrcRecordConverter {
         break;
       case BINARY:
         BytesColumnVector binaryColVec = (BytesColumnVector) colVector;
-        binaryColVec.vector[vectorPos] = (byte[]) value;
+
+        byte[] binaryBytes;
+        if (value instanceof ByteBuffer) {
+          final ByteBuffer byteBuffer = (ByteBuffer) value;
+          binaryBytes = new byte[byteBuffer.remaining()];
+          byteBuffer.get(binaryBytes);
+        } else if (value instanceof byte[]) {
+          binaryBytes = (byte[]) value;
+        } else {
+          throw new IllegalStateException(String.format(
+              "Unrecognized type for Avro BINARY field value, which has type %s, value %s",
+              value.getClass().getName(),
+              value.toString()
+          ));
+        }
+        binaryColVec.setRef(vectorPos, binaryBytes, 0, binaryBytes.length);
         break;
       case DECIMAL:
         DecimalColumnVector decimalColVec = (DecimalColumnVector) colVector;
-        final BigDecimal dec = (BigDecimal) value;
-        decimalColVec.vector[vectorPos] = new HiveDecimalWritable(HiveDecimal.create(dec));
+        HiveDecimal decimalValue;
+        if (value instanceof BigDecimal) {
+          final BigDecimal decimal = (BigDecimal) value;
+          decimalValue = HiveDecimal.create(decimal);
+        } else if (value instanceof ByteBuffer) {
+          final ByteBuffer byteBuffer = (ByteBuffer) value;
+          if (byteBuffer.hasArray()) {
+          }
+          final byte[] decimalBytes = new byte[byteBuffer.remaining()];
+          byteBuffer.get(decimalBytes);
+          decimalValue = HiveDecimal.create(decimalBytes);
+          if (decimalValue == null && LOG.isWarnEnabled()) {
+            LOG.warn(
+                "byteBuffer with position {}, limit {}, remaining {}",
+                byteBuffer.position(),
+                byteBuffer.limit(),
+                byteBuffer.remaining());
+          }
+        } else {
+          throw new IllegalStateException(String.format(
+              "Unexpected type for decimal (%s), cannot convert from Avro value",
+              value.getClass().getCanonicalName()
+          ));
+        }
+        if (decimalValue == null) {
+          decimalColVec.isNull[vectorPos] = true;
+          decimalColVec.noNulls = false;
+        } else {
+          decimalColVec.set(vectorPos, decimalValue);
+        }
         break;
       case LIST:
         List<?> list = (List<?>) value;

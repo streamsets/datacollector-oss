@@ -36,6 +36,7 @@
   <properties>
     <hadoop.version>2.5.0-cdh5.2.8</hadoop.version>
     <hbase.version>0.98.6-cdh5.2.8</hbase.version>
+    <hive.version>0.13.1-cdh5.2.8</hive.version>
     <solr.version>4.4.0-cdh5.2.8</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
     <flume.version>1.5.0-cdh5.2.8</flume.version>
@@ -192,12 +193,6 @@
       <artifactId>streamsets-datacollector-mapreduce-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
-    </dependency>
-
-    <!-- provided scope; see root-proto/pom.xml -->
-    <dependency>
-      <groupId>org.apache.hive</groupId>
-      <artifactId>hive-storage-api</artifactId>
     </dependency>
 
     <dependency>

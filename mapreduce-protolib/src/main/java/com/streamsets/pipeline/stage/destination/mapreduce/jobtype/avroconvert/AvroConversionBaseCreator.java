@@ -49,6 +49,10 @@ public abstract class AvroConversionBaseCreator implements Configurable, Callabl
     conf.set("mapreduce.map.speculative", "false");
     conf.set("mapreduce.map.maxattempts", "1");
 
+    conf.set("mapreduce.job.user.classpath.first", "true");
+    conf.set("mapreduce.task.classpath.user.precedence", "true");
+    conf.set("mapreduce.task.classpath.first", "true");
+
     addNecessaryJarsToJob(conf);
 
     Job job = Job.getInstance(conf);
@@ -67,6 +71,7 @@ public abstract class AvroConversionBaseCreator implements Configurable, Callabl
 
     // General configuration
     job.setJarByClass(getClass());
+
 
     return job;
   }

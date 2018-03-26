@@ -39,6 +39,10 @@ public class AvroToOrcSchemaConverter {
             // scale is optional, so this may be null
             final int scale = scaleAttr.getIntValue();
             decimalType = decimalType.withScale(scale);
+          } else {
+            // the default scale in Avro is 0, whereas in Orc it is 10 (apparently)
+            // since we are converting from Avro, need to explicitly set the scale
+            decimalType = decimalType.withScale(0);
           }
           return decimalType;
         case AvroTypeUtil.LOGICAL_TYPE_DATE:
