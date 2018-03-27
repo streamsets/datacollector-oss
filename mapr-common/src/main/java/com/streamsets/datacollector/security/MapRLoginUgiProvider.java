@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ public class MapRLoginUgiProvider extends LoginUgiProvider {
     boolean isMapRLogin = Boolean.parseBoolean(maprLoginEnabled);
     AccessControlContext accessControlContext = AccessController.getContext();
     Subject subject = Subject.getSubject(accessControlContext);
+    //HADOOP-13805
+    HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(hdfsConfiguration);
     // SDC-4015 As privateclassloader is false for MapR, UGI is shared and it also needs to be under jvm lock
     UserGroupInformation.setConfiguration(hdfsConfiguration);
     UserGroupInformation loginUgi;

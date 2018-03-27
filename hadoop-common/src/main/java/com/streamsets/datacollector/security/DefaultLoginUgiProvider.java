@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class DefaultLoginUgiProvider extends LoginUgiProvider {
     AccessControlContext accessContext = AccessController.getContext();
     Subject subject = Subject.getSubject(accessContext);
     UserGroupInformation loginUgi;
+    //HADOOP-13805
+    HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(hdfsConfiguration);
     UserGroupInformation.setConfiguration(hdfsConfiguration);
     if (UserGroupInformation.isSecurityEnabled()) {
       loginUgi = UserGroupInformation.getUGIFromSubject(subject);
