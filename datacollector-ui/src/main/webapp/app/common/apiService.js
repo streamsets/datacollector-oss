@@ -797,6 +797,21 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Publish Pipelines to Data Collector Edge
+       *
+       * @param pipelineIds
+       * @returns {*}
+       */
+      publishPipelinesToEdge: function(pipelineIds) {
+        var url = apiBase + '/pipelines/publishToEdge' ;
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineIds
+        });
+      },
+
+      /**
        * Start Preview for given Pipeline name
        *
        * @param name

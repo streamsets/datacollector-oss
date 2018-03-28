@@ -143,6 +143,7 @@
       "processor": "Processor",
       "processors": "Processors",
       "publish": "Publish Pipeline",
+      "publishToEdge": "Publish Pipeline to Data Collector Edge",
       "record": "Record",
       "recordHeader": "Record Header",
       "records": "Records",

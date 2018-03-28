@@ -57,9 +57,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
-        //fall through
+        // fall through
       case 7:
         upgradeV7ToV8(configs);
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -154,5 +157,15 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         .filter(config -> config.getName().equals("statsAggregatorStage"))
         .collect(Collectors.toList());
     return (!statsAggregatorConfigList.isEmpty())? statsAggregatorConfigList.get(0): null;
+  }
+
+  private void upgradeV8ToV9(List<Config> configs) {
+    Config edgeHttpUrlConfig = configs.stream()
+        .filter(config -> config.getName().equals("edgeHttpUrl"))
+        .findFirst()
+        .orElse(null);
+    if (edgeHttpUrlConfig == null) {
+      configs.add(new Config("edgeHttpUrl", "http://localhost:18633"));
+    }
   }
 }

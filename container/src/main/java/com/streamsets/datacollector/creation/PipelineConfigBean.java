@@ -57,13 +57,15 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 8;
+  public static final int VERSION = 9;
 
   public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
 
   public static final String STATS_DPM_DIRECTLY_TARGET = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
+
+  public static final String EDGE_HTTP_URL_DEFAULT = "http://localhost:18633";
 
   @ConfigDef(
       required = true,
@@ -74,6 +76,17 @@ public class PipelineConfigBean implements Stage {
   )
   @ValueChooserModel(ExecutionModeChooserValues.class)
   public ExecutionMode executionMode;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Data Collector Edge URL",
+      defaultValue = EDGE_HTTP_URL_DEFAULT,
+      displayPosition = 15,
+      dependsOn = "executionMode",
+      triggeredByValue = {"EDGE"}
+  )
+  public String edgeHttpUrl = EDGE_HTTP_URL_DEFAULT;
 
   @ConfigDef(
       required = true,

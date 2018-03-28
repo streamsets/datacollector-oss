@@ -173,6 +173,16 @@
 
       <a class="btn btn-link icon-button"
          tooltip-placement="bottom"
+         tooltip="{{'global.form.publishToEdge' | translate}}"
+         tooltip-popup-delay="500"
+         ng-hide="previewMode || snapshotMode"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+         ng-click="publishToEdge()">
+        <span class="fa fa-upload fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
          tooltip="{{'global.form.viewLogs' | translate}}"
          tooltip-popup-delay="500"
          ng-hide="previewMode || snapshotMode"

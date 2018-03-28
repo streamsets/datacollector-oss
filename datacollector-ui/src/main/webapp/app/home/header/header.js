@@ -301,10 +301,10 @@ angular
       resetOffset: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Reset Offset', 1);
 
-        var originStageInstance = $scope.pipelineConfig.stages[0],
-            originStageDef = _.find($scope.stageLibraries, function(stageDef) {
-              return stageDef.name === originStageInstance.stageName;
-            });
+        var originStageInstance = $scope.pipelineConfig.stages[0];
+        var originStageDef = _.find($scope.stageLibraries, function (stageDef) {
+          return stageDef.name === originStageInstance.stageName;
+        });
 
         $modal.open({
           templateUrl: 'app/home/resetOffset/resetOffset.tpl.html',
@@ -471,6 +471,21 @@ angular
        */
       isEdgePipeline: function() {
         return $scope.executionMode === 'EDGE'
+      },
+
+      publishToEdge: function () {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Publish Pipeline to Edge', 1);
+        api.pipelineAgent.publishPipelinesToEdge([$scope.activeConfigInfo.pipelineId])
+          .then(
+            function (res) {
+              $rootScope.common.successList.push({
+                message: 'Successfully published pipeline to Data Collector Edge'
+              });
+            },
+            function (res) {
+              $rootScope.common.errors = [res.data];
+            }
+          );
       }
     });
 

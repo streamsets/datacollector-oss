@@ -32,7 +32,7 @@ public class TestPipelineConfigUpgrader {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
 
     List<Config> upgrade = pipelineConfigUpgrader.upgrade("x", "y", "z", 1, 3, new ArrayList<>());
-    Assert.assertEquals(8, upgrade.size());
+    Assert.assertEquals(9, upgrade.size());
     Assert.assertEquals("executionMode", upgrade.get(0).getName());
     Assert.assertEquals(ExecutionMode.STANDALONE, upgrade.get(0).getValue());
 
@@ -65,7 +65,7 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals(1, statsAggregatorConfigList.size());
     Assert.assertEquals(PipelineConfigBean.STATS_AGGREGATOR_DEFAULT, statsAggregatorConfigList.get(0).getValue());
 
-    //check Non Write to DPM Straightly is not affected
+    // check Non Write to DPM Straightly is not affected
     String STATS_SDC_RPC = "streamsets-datacollector-basic-lib::com.streamsets.pipeline.stage.destination.sdcipc.StatsSdcIpcDTarget::2";
     configs = new ArrayList<>();
     configs.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING));
@@ -78,5 +78,24 @@ public class TestPipelineConfigUpgrader {
 
     Assert.assertEquals(1, statsAggregatorConfigList.size());
     Assert.assertEquals(STATS_SDC_RPC, statsAggregatorConfigList.get(0).getValue());
+  }
+
+  @Test
+  public void testPipelineConfigUpgradeV8ToV9() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+
+    //check Write to dpm straightly correctly upgraded
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING));
+    configs.add(new Config("statsAggregatorStage", PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET));
+
+    List<Config> upgraded = pipelineConfigUpgrader.upgrade("x", "y", "z", 8, 9, configs);
+
+    List<Config> edgeHttpUrlConfigList = upgraded.stream()
+        .filter(config -> config.getName().equals("edgeHttpUrl"))
+        .collect(Collectors.toList());
+
+    Assert.assertEquals(1, edgeHttpUrlConfigList.size());
+    Assert.assertEquals(PipelineConfigBean.EDGE_HTTP_URL_DEFAULT, edgeHttpUrlConfigList.get(0).getValue());
   }
 }
