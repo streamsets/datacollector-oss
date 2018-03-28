@@ -333,6 +333,7 @@ public class JdbcSource extends BaseSource {
 
   @Override
   public void destroy() {
+    closeQuietly(resultSet);
     closeQuietly(connection);
     closeQuietly(dataSource);
     super.destroy();
@@ -351,14 +352,13 @@ public class JdbcSource extends BaseSource {
       LOG.debug("{}ms remaining until next fetch.", delay);
       ThreadUtil.sleep(Math.min(delay, 1000));
     } else {
-      Statement statement;
+      Statement statement = null;
       Hasher hasher = HF.newHasher();
       try {
         if (null == resultSet || resultSet.isClosed()) {
           // The result set got closed outside of us, so we also clean up the connection (if any)
-          if(connection != null) {
-            closeQuietly(connection);
-          }
+          closeQuietly(connection);
+
           connection = dataSource.getConnection();
 
           if (!txnColumnName.isEmpty()) {
@@ -430,7 +430,13 @@ public class JdbcSource extends BaseSource {
         LOG.debug("Processed rows: " + rowCount);
 
         if (!haveNext || rowCount == 0) {
-          // We didn't have any data left in the cursor.
+          // We didn't have any data left in the cursor. Close everything
+          // We may not have the statement here if we're not producing the
+          // same batch as when we got it, so get it from the result set
+          // Get it before we close the result set, just to be safe!
+          statement = resultSet.getStatement();
+          closeQuietly(resultSet);
+          closeQuietly(statement);
           closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
@@ -467,6 +473,13 @@ public class JdbcSource extends BaseSource {
         }
         String formattedError = JdbcUtil.formatSqlException(e);
         LOG.error(formattedError, e);
+        try {
+          statement = resultSet.getStatement();
+        } catch (SQLException e1) {
+          LOG.debug("Error while getting statement from result set: {}", e1.toString(), e1);
+        }
+        closeQuietly(resultSet);
+        closeQuietly(statement);
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         QUERY_FAILURE.create(getContext())
