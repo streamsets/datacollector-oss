@@ -88,6 +88,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.ClientBuilder;
@@ -101,6 +102,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -1245,7 +1247,13 @@ public class PipelineStoreResource {
             .request()
             .post(Entity.json(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)));
 
-      } finally {
+      } catch (ProcessingException ex) {
+        if (ex.getCause() instanceof ConnectException) {
+          throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
+        }
+        throw ex;
+      }
+      finally {
         if (response != null) {
           response.close();
         }
