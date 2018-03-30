@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -27,10 +29,11 @@ import org.junit.Test;
 import java.util.List;
 
 public class TestELEvaluator {
+  private ELDefinitionExtractor elDefinitionExtractor = ConcreteELDefinitionExtractor.get();
 
   @Test
   public void testNULL() throws ELEvalException {
-    ELEval elEval = new ELEvaluator(null, false);
+    ELEval elEval = new ELEvaluator(null, false, elDefinitionExtractor);
     ELVars variables = elEval.createVariables();
     Object result = elEval.eval(variables, "${NULL}", Object.class);
     Assert.assertNull(result);
@@ -38,7 +41,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElFunction() throws ELEvalException {
-    ELEval elEval = new ELEvaluator("testElFunction",false, ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElFunction", false, elDefinitionExtractor, ValidTestEl.class);
     ELVars variables = elEval.createVariables();
     Boolean result = elEval.eval(variables, "${location:city() eq CITY}", Boolean.class);
     Assert.assertTrue(result);
@@ -46,7 +49,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElFunctionMetadata() {
-    ELEval elEval = new ELEvaluator("testElFunctionMetadata",false, ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElFunctionMetadata",false, elDefinitionExtractor, ValidTestEl.class);
 
     Assert.assertEquals(elEval.getConfigName(), "testElFunctionMetadata");
 
@@ -67,17 +70,17 @@ public class TestELEvaluator {
 
   @Test(expected = RuntimeException.class)
   public void testNonStaticFunctionEl() {
-    new ELEvaluator("testNonStaticFunctionEl",false, NonStaticFunctionEl.class);
+    new ELEvaluator("testNonStaticFunctionEl",false, elDefinitionExtractor, NonStaticFunctionEl.class);
   }
 
   @Test(expected = RuntimeException.class)
   public void testEmptyNameFunctionEl() {
-    new ELEvaluator("testEmptyNameFunctionEl",false, EmptyNameFunctionEl.class);
+    new ELEvaluator("testEmptyNameFunctionEl",false, elDefinitionExtractor, EmptyNameFunctionEl.class);
   }
 
   @Test
   public void testElConstant() throws ELEvalException {
-    ELEval elEval = new ELEvaluator("testElConstant",false, ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElConstant",false, elDefinitionExtractor, ValidTestEl.class);
     ELVars variables = elEval.createVariables();
     Boolean result = elEval.eval(variables, "${CITY eq \"San Francisco\"}", Boolean.class);
     Assert.assertTrue(result);
@@ -85,7 +88,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElConstantMetadata() {
-    ELEval elEval = new ELEvaluator("testElConstantMetadata",false, ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElConstantMetadata",false, elDefinitionExtractor, ValidTestEl.class);
     List<ElConstantDefinition> elConstantDefinitions = ((ELEvaluator) elEval).getElConstantDefinitions();
 
     ElConstantDefinition constDef = null;
@@ -103,12 +106,12 @@ public class TestELEvaluator {
 
   @Test(expected = RuntimeException.class)
   public void testNonStaticConstEl() {
-    new ELEvaluator("testNonStaticConstEl",false, NonStaticConstEl.class);
+    new ELEvaluator("testNonStaticConstEl",false, elDefinitionExtractor, NonStaticConstEl.class);
   }
 
   @Test(expected = RuntimeException.class)
   public void testEmptyNameConstEl() {
-    new ELEvaluator("testEmptyNameConstEl",false, EmptyNameConstEl.class);
+    new ELEvaluator("testEmptyNameConstEl",false, elDefinitionExtractor, EmptyNameConstEl.class);
   }
 
   @Test
@@ -182,19 +185,19 @@ public class TestELEvaluator {
 
   @Test
   public void testExplicitModeWithNonImplicitOnly() throws ELEvalException {
-    ELEval elEval = new ELEvaluator("implicit",true, ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("implicit",true, elDefinitionExtractor, ValidTestEl.class);
     elEval.eval(elEval.createVariables(), "${location:city()}", String.class);
   }
 
   @Test(expected = ELEvalException.class)
   public void testExplicitModeWithImplicitOnly() throws Exception {
-    ELEval elEval = new ELEvaluator("implicit",true, ImplicitOnlyEl.class);
+    ELEval elEval = new ELEvaluator("implicit",true, elDefinitionExtractor, ImplicitOnlyEl.class);
     elEval.eval(elEval.createVariables(), "${implicitOnly:f()}", String.class);
   }
 
   @Test
   public void testImplicitModeWithImplicitOnly() throws Exception {
-    ELEval elEval = new ELEvaluator("implicit",false, ImplicitOnlyEl.class);
+    ELEval elEval = new ELEvaluator("implicit",false, elDefinitionExtractor, ImplicitOnlyEl.class);
     elEval.eval(elEval.createVariables(), "${implicitOnly:f()}", String.class);
   }
 

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.pipeline.lib.el.MathEL;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class TestMathEL {
 
   @Before
   public void setUpELs() {
-    eval = new ELEvaluator("test", MathEL.class);
+    eval = new ELEvaluator("test", ConcreteELDefinitionExtractor.get(), MathEL.class);
     variables = new ELVariables();
   }
 

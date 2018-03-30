@@ -24,7 +24,7 @@ import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
-import com.streamsets.datacollector.definition.ELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.ElConstantDefinition;
@@ -65,7 +65,7 @@ public class DataRuleEvaluator {
 
 
   private static List<String> createElFunctionIdx(String setName) {
-    List<ElFunctionDefinition> defs = ELDefinitionExtractor.get().extractFunctions(
+    List<ElFunctionDefinition> defs = ConcreteELDefinitionExtractor.get().extractFunctions(
         RuleELRegistry.getRuleELs(setName),
         Utils.formatL("DataRules set '{}'", setName)
     );
@@ -77,7 +77,7 @@ public class DataRuleEvaluator {
   }
 
   private static List<String> createElConstantIdx(String setName) {
-    List<ElConstantDefinition> defs = ELDefinitionExtractor.get().extractConstants(
+    List<ElConstantDefinition> defs = ConcreteELDefinitionExtractor.get().extractConstants(
         RuleELRegistry.getRuleELs(setName),
         Utils.formatL("DataRules set '{}'", setName)
     );
@@ -300,7 +300,7 @@ public class DataRuleEvaluator {
         record,
         el,
         elVars,
-        new ELEvaluator("el",false, RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
+        new ELEvaluator("el",false, ConcreteELDefinitionExtractor.get(), RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
       );
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
@@ -322,7 +322,7 @@ public class DataRuleEvaluator {
         alertText = "";
       }
 
-      ELEvaluator elEval = new ELEvaluator("alertInfo",false, RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
+      ELEvaluator elEval = new ELEvaluator("alertInfo",false, ConcreteELDefinitionExtractor.get(), RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
       RecordEL.setRecordInContext(elVars, record);
 
       return elEval.eval(elVars, alertText, String.class);

@@ -98,8 +98,8 @@ public abstract class StageLibraryDefinitionExtractor {
 
       Class[] elClassesArr = elClasses.toArray(new Class[elClasses.size()]);
       Object contextMsg = Utils.formatL("Stage library [{}] EL definitions", classLoader);
-      List<ElFunctionDefinition> functionDefs = ELDefinitionExtractor.get().extractFunctions(elClassesArr, contextMsg);
-      List<ElConstantDefinition> constantDefs = ELDefinitionExtractor.get().extractConstants(elClassesArr, contextMsg);
+      List<ElFunctionDefinition> functionDefs = ConcreteELDefinitionExtractor.get().extractFunctions(elClassesArr, contextMsg);
+      List<ElConstantDefinition> constantDefs = ConcreteELDefinitionExtractor.get().extractConstants(elClassesArr, contextMsg);
 
       return new StageLibraryDefinition(classLoader, libraryName, libraryLabel, libraryProps, elClassesArr,
                                         functionDefs, constantDefs);

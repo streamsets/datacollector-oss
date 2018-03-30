@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.configupgrade.RuleDefinitionsUpgrader;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuleELRegistry;
@@ -72,7 +73,7 @@ public class RuleDefinitionValidator {
     this.ruleDefinitions = Preconditions.checkNotNull(ruleDefinitions, "ruleDefinitions cannot be null");
     this.pipelineParameters = pipelineParameters;
     variables = new ELVariables();
-    elEvaluator = new ELEvaluator("RuleDefinitionValidator", false, RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
+    elEvaluator = new ELEvaluator("RuleDefinitionValidator", false, ConcreteELDefinitionExtractor.get(), RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
   }
 
   public boolean validateRuleDefinition() {

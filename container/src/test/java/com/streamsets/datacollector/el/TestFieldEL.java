@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -28,7 +29,7 @@ public class TestFieldEL {
 
   @Test
   public void testFieldFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testRecordFunctions", FieldEL.class);
+    ELEvaluator eval = new ELEvaluator("testRecordFunctions", ConcreteELDefinitionExtractor.get(), FieldEL.class);
     ELVariables variables = new ELVariables();
 
     final int expectedIntFieldValue = 1;

@@ -31,6 +31,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.config.UserConfigurable;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.StageConfigBean;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.record.PathElement;
@@ -848,7 +849,8 @@ public class PipelineFragmentConfigurationValidator {
           ELVariables elVars = new ELVariables();
           RecordEL.setRecordInContext(elVars, PRECONDITION_RECORD);
           try {
-            ELEval elEval = new ELEvaluator(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, false, constants, confDef.getElDefs());
+            ELEval elEval = new ELEvaluator(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, false, constants,
+                ConcreteELDefinitionExtractor.get(), confDef.getElDefs());
             elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
             issues.add(

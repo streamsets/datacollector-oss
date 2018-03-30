@@ -24,6 +24,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuleELRegistry;
@@ -41,7 +42,7 @@ public class MetricRuleEvaluatorHelper {
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
   private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator(
-    "condition", false,
+    "condition", false, ConcreteELDefinitionExtractor.get(),
     RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL)
   );
 
