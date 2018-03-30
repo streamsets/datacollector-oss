@@ -30,7 +30,7 @@
     <artifactId>streamsets-datacollector-cdh_5_9-lib</artifactId>
     <version>3.2.0.0-SNAPSHOT</version>
     <description>StreamSets Data Collector CDH 5.9.2 Lib</description>
-    <name>StreamSets Data Collector 5.9.0 Lib</name>
+    <name>StreamSets Data Collector CDH 5.9.0 Lib</name>
     <packaging>jar</packaging>
 
     <properties>
