@@ -491,7 +491,6 @@ angular
        */
       startMonitoring: function() {
         refreshPipelineMetrics();
-        //initializeAlertWebSocket();
       },
 
       /**
@@ -834,15 +833,16 @@ angular
           var clickedAlert = $rootScope.common.clickedAlert;
 
           $rootScope.common.pipelineMetrics = results[2].data;
-          if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
-            refreshPipelineMetrics();
-          }
 
           if ($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
             updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
           }
 
           updateGraph(config, rules, undefined, undefined, true);
+
+          if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
+            refreshPipelineMetrics();
+          }
 
           if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.pipelineId) {
             var edges = $scope.edges,
@@ -1133,6 +1133,10 @@ angular
         return c.name === 'executionMode';
       });
       $scope.executionMode = executionModeConfig.value;
+
+      if ($scope.executionMode === 'EDGE') {
+        isWebSocketSupported = false;
+      }
 
       $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
         return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
@@ -1560,7 +1564,7 @@ angular
           metricsWebSocket.close();
         }
 
-        //WebSocket to get Pipeline Metrics
+        // WebSocket to get Pipeline Metrics
         metricsWebSocket = new WebSocket(webSocketMetricsURL);
 
         metricsWebSocket.onmessage = function (evt) {

@@ -177,8 +177,7 @@ public class ManagerResource {
 
       PipelineState pipelineState = manager.getPipelineState(pipelineId, rev);
 
-      if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE ||
-          pipelineState.getExecutionMode() == ExecutionMode.EDGE) {
+      if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE) {
         throw new PipelineException(
             ContainerError.CONTAINER_01601,
             pipelineId,
@@ -232,8 +231,7 @@ public class ManagerResource {
 
         PipelineState pipelineState = manager.getPipelineState(pipelineId, "0");
 
-        if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE ||
-            pipelineState.getExecutionMode() == ExecutionMode.EDGE) {
+        if (pipelineState.getExecutionMode() == ExecutionMode.SLAVE) {
           errorMessages.add(Utils.format(
               ContainerError.CONTAINER_01601.getMessage(),
               pipelineId,
@@ -519,16 +517,14 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if(pipelineId != null) {
       PipelineState pipelineState = manager.getPipelineState(pipelineId, rev);
-      if (pipelineState.getExecutionMode() != ExecutionMode.EDGE) {
-        Runner runner = manager.getRunner(pipelineId, rev);
-        if (runner != null && runner.getState().getStatus().isActive()) {
-          return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
-        }
-        if (runner != null) {
-          LOG.debug("Status is " + runner.getState().getStatus());
-        } else {
-          LOG.debug("Runner is null");
-        }
+      Runner runner = manager.getRunner(pipelineId, rev);
+      if (runner != null && runner.getState().getStatus().isActive()) {
+        return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
+      }
+      if (runner != null) {
+        LOG.debug("Status is " + runner.getState().getStatus());
+      } else {
+        LOG.debug("Runner is null");
       }
     }
     return Response.noContent().build();

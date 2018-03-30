@@ -211,7 +211,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public Object getMetrics() throws PipelineStoreException {
+  public Object getMetrics() throws PipelineException {
     return runner.getMetrics();
   }
 

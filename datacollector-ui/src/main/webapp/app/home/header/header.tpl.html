@@ -299,7 +299,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode) && !isEdgePipeline()"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode)"
           ng-disabled="!pipelineConfig.valid"
           ng-click="!pipelineConfig.valid || startPipeline(); ">
         <span class="glyphicon glyphicon-play fa-14x"></span>

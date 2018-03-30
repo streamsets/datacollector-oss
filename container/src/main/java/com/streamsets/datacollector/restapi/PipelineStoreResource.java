@@ -61,6 +61,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
@@ -88,11 +89,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -102,7 +100,6 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -1208,56 +1205,7 @@ public class PipelineStoreResource {
   public Response uploadToEdge(List<String> pipelineIds) throws PipelineException {
     for (String pipelineId: pipelineIds) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
-      PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, new ArrayList<>(), null);
-      if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
-        throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
-      }
-
-      Response response = null;
-      try {
-        UUID uuid;
-        response = ClientBuilder.newClient()
-            .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
-            .request()
-            .get();
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-          // Pipeline with same pipelineId already exist, update pipeline
-          PipelineConfigurationJson pipelineConfigurationJson = response.readEntity(PipelineConfigurationJson.class);
-          uuid = pipelineConfigurationJson.getUuid();
-        } else {
-          // Pipeline Doesn't exist, create new pipeline
-          response.close();
-          response = ClientBuilder.newClient()
-              .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
-              .queryParam("description", pipelineConfiguration.getDescription())
-              .request()
-              .put(Entity.json(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)));
-          PipelineConfigurationJson pipelineConfigurationJson = response.readEntity(PipelineConfigurationJson.class);
-          uuid = pipelineConfigurationJson.getUuid();
-        }
-
-        // update pipeline Configuration
-        response.close();
-        pipelineConfiguration.setUuid(uuid);
-        response = ClientBuilder.newClient()
-            .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
-            .queryParam("pipelineTitle", pipelineConfiguration.getPipelineId())
-            .queryParam("description", pipelineConfiguration.getDescription())
-            .request()
-            .post(Entity.json(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)));
-
-      } catch (ProcessingException ex) {
-        if (ex.getCause() instanceof ConnectException) {
-          throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
-        }
-        throw ex;
-      }
-      finally {
-        if (response != null) {
-          response.close();
-        }
-      }
+      EdgeUtil.publishEdgePipeline(pipelineConfiguration);
     }
     return Response.ok().build();
   }

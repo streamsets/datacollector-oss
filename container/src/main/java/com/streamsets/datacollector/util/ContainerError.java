@@ -177,6 +177,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01601("Start operation is not supported for pipeline '{}' with execution mode: '{}'"),
   CONTAINER_01602("Data Collector cannot connect to Data Collector Edge URL '{}'. Verify that Data Collector Edge is " +
       "running and that the URL is correctly configured in the pipeline general properties."),
+  CONTAINER_01603("Starting Edge pipeline failed, status code '{}': {}"),
   ;
 
   private final String msg;

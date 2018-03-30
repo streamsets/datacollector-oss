@@ -190,7 +190,7 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public Object getMetrics() throws PipelineStoreException {
+  public Object getMetrics() throws PipelineException {
     return runner.getMetrics();
   }
 
