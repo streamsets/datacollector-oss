@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
+    <artifactId>streamsets-datacollector-hdp-stagelib-base</artifactId>
     <version>3.2.0.0-SNAPSHOT</version>
-    <relativePath>../stage-lib-parent</relativePath>
+    <relativePath>../hdp-stagelib-base</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-hdp_2_2-lib</artifactId>
@@ -74,13 +74,8 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
+      <version>${project.version}</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -115,13 +110,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-client</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -141,14 +129,7 @@
       <groupId>org.apache.avro</groupId>
       <artifactId>avro-mapred</artifactId>
       <version>${avro.version}</version>
-      <scope>compile</scope>
       <classifier>hadoop2</classifier>
-      <exclusions>
-        <exclusion>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -169,41 +150,6 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
       <version>${hadoop.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.dropwizard.metrics</groupId>
-          <artifactId>metrics-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-yarn-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-app</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -211,12 +157,6 @@
       <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -235,21 +175,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hive-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hive.hcatalog</groupId>
-          <artifactId>hive-hcatalog-streaming</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hive.hcatalog</groupId>
-          <artifactId>hive-hcatalog-core</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -257,12 +182,6 @@
       <artifactId>hive-jdbc</artifactId>
       <version>${hive.version}</version>
       <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -276,13 +195,6 @@
       <groupId>org.apache.hive.hcatalog</groupId>
       <artifactId>hive-hcatalog-core</artifactId>
       <version>${hive.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.jettison</groupId>
-          <artifactId>jettison</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- HBase related -->
@@ -290,26 +202,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase-client</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-client</artifactId>
       <version>${hbase.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.github.stephenc.findbugs</groupId>
-          <artifactId>findbugs-annotations</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -325,13 +223,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-flume-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.flume</groupId>
-          <artifactId>flume-ng-sdk</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- Kafka related -->
@@ -339,49 +230,16 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdc-kafka-08</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -419,12 +277,6 @@
       <artifactId>flume-ng-core</artifactId>
       <version>${flume.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -471,6 +323,14 @@
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>${protobuf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- needed for various tests in Kafka protolibs that are copied in;
+     other HDP versions already include Netty at test scope -->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.0.23.Final</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

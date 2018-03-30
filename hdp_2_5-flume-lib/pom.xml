@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
+    <artifactId>streamsets-datacollector-hdp-stagelib-base</artifactId>
     <version>3.2.0.0-SNAPSHOT</version>
-    <relativePath>../stage-lib-parent</relativePath>
+    <relativePath>../hdp-stagelib-base</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-hdp_2_5-flume-lib</artifactId>
   <version>3.2.0.0-SNAPSHOT</version>
@@ -70,17 +70,8 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
+      <version>${project.version}</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-client</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -101,13 +92,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-flume-protolib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.flume</groupId>
-          <artifactId>flume-ng-sdk</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- Explicitly add dependency on thrift version 0.9.0 -->
     <dependency>
@@ -131,12 +115,6 @@
       <artifactId>flume-ng-core</artifactId>
       <version>${flume.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.flume</groupId>
@@ -174,12 +152,6 @@
       <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
