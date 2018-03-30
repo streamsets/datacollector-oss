@@ -22,7 +22,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.definition.ELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -165,9 +165,9 @@ public class StageLibraryResource {
 
     Map<String, Object> map = new HashMap<>();
     map.put(EL_FUNCTION_DEFS,
-        BeanHelper.wrapElFunctionDefinitionsIdx(ELDefinitionExtractor.get().getElFunctionsCatalog()));
+        BeanHelper.wrapElFunctionDefinitionsIdx(ConcreteELDefinitionExtractor.get().getElFunctionsCatalog()));
     map.put(EL_CONSTANT_DEFS,
-        BeanHelper.wrapElConstantDefinitionsIdx(ELDefinitionExtractor.get().getELConstantsCatalog()));
+        BeanHelper.wrapElConstantDefinitionsIdx(ConcreteELDefinitionExtractor.get().getELConstantsCatalog()));
     definitions.setElCatalog(map);
 
     definitions.setRuntimeConfigs(RuntimeEL.getRuntimeConfKeys());

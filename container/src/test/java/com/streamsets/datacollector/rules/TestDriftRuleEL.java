@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.rules;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
@@ -163,7 +164,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:size('/', true)}", Boolean.TYPE));
     Assert.assertEquals("", elEval.eval(vars, "${alert:info()}", String.class));
@@ -186,7 +187,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:names('/', true)}", Boolean.TYPE));
     Assert.assertEquals("", elEval.eval(vars, "${alert:info()}", String.class));
@@ -210,7 +211,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:names('/', true)}", Boolean.TYPE));
     Assert.assertThat(elEval.eval(vars, "${alert:info()}", String.class), JUnitMatchers.containsString("Field / have unsupported type of INTEGER."));
@@ -230,7 +231,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:order('/', true)}", Boolean.TYPE));
     Assert.assertEquals("", elEval.eval(vars, "${alert:info()}", String.class));
@@ -256,7 +257,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:order('/', true)}", Boolean.TYPE));
     Assert.assertThat(elEval.eval(vars, "${alert:info()}", String.class), JUnitMatchers.containsString("Field / have unsupported type of INTEGER."));
@@ -274,7 +275,7 @@ public class TestDriftRuleEL {
     vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
     vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
 
-    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), DriftRuleEL.class, AlertInfoEL.class);
 
     Assert.assertFalse(elEval.eval(vars, "${drift:type('/', true)}", Boolean.TYPE));
     Assert.assertEquals("", elEval.eval(vars, "${alert:info()}", String.class));

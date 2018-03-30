@@ -24,6 +24,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
@@ -281,7 +282,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
       Collections.addAll(classes, elDefClasses);
     }
     // assert non of the EL functions is implicit only
-    return new ELEvaluator(configName, true, constants, classes.toArray(new Class[classes.size()]));
+    return new ELEvaluator(configName, true, constants, ConcreteELDefinitionExtractor.get(), classes.toArray(new Class[classes.size()]));
   }
 
   // ContextExtensions

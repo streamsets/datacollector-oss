@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.EventRecord;
@@ -36,10 +38,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestRecordEL {
+  private ELDefinitionExtractor elDefinitionExtractor = ConcreteELDefinitionExtractor.get();
 
   @Test
   public void testRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testRecordFunctions", RecordEL.class);
+    ELEvaluator eval = new ELEvaluator("testRecordFunctions", elDefinitionExtractor, RecordEL.class);
     ELVariables variables = new ELVariables();
 
     Record.Header header = Mockito.mock(Record.Header.class);
@@ -74,7 +77,7 @@ public class TestRecordEL {
 
   @Test
   public void testErrorRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", RecordEL.class);
+    ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", elDefinitionExtractor, RecordEL.class);
 
     ELVariables variables = new ELVariables();
 
@@ -106,7 +109,7 @@ public class TestRecordEL {
 
   @Test
   public void testDFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testDFunctions", RecordEL.class);
+    ELEvaluator eval = new ELEvaluator("testDFunctions", elDefinitionExtractor, RecordEL.class);
 
     ELVariables variables = new ELVariables();
 
@@ -180,7 +183,7 @@ public class TestRecordEL {
 
   @Test
   public void testFieldAttributeFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testFieldAttributeFunctions", RecordEL.class);
+    ELEvaluator eval = new ELEvaluator("testFieldAttributeFunctions", elDefinitionExtractor, RecordEL.class);
 
     ELVariables vars = new ELVariables();
 
@@ -238,7 +241,7 @@ public class TestRecordEL {
 
   @Test
   public void testEventMethods() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testEventMethods", RecordEL.class);
+    ELEvaluator eval = new ELEvaluator("testEventMethods", elDefinitionExtractor, RecordEL.class);
     ELVariables vars = new ELVariables();
 
     EventRecord event = new EventRecordImpl("custom-type", 1, "stage", "id", null, null);

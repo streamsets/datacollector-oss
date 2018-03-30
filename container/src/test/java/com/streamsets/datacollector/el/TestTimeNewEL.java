@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -31,7 +32,7 @@ import java.util.Locale;
 
 public class TestTimeNewEL {
 
-  ELEvaluator eval = new ELEvaluator("testTimeNowELFunctions", TimeNowEL.class, RecordEL.class);
+  ELEvaluator eval = new ELEvaluator("testTimeNowELFunctions", ConcreteELDefinitionExtractor.get(), TimeNowEL.class, RecordEL.class);
   ELVariables variables = new ELVariables();
 
   Date date;
@@ -39,7 +40,7 @@ public class TestTimeNewEL {
   @Before
   public void setUp() {
     date = new Date();
-    eval = new ELEvaluator("test", TimeNowEL.class, RecordEL.class);
+    eval = new ELEvaluator("test", ConcreteELDefinitionExtractor.get(), TimeNowEL.class, RecordEL.class);
     variables = new ELVariables();
     variables.addContextVariable(TimeNowEL.TIME_NOW_CONTEXT_VAR, date);
     TimeNowEL.setTimeNowInContext(variables, date);

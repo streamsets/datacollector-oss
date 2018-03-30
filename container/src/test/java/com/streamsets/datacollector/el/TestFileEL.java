@@ -15,15 +15,18 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.lib.el.FileEL;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestFileEL {
+  private ELDefinitionExtractor elDefinitionExtractor = ConcreteELDefinitionExtractor.get();
 
   @Test
   public void testFileName() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testFileName", FileEL.class);
+    ELEvaluator eval = new ELEvaluator("testFileName", elDefinitionExtractor, FileEL.class);
     ELVariables variables = new ELVariables();
     // Normal file
     Assert.assertEquals("file", eval.eval(variables, "${file:fileName(\"/absolute/path/file\")}", String.class));
@@ -37,7 +40,7 @@ public class TestFileEL {
 
   @Test
   public void testParentPath() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testParentPath", FileEL.class);
+    ELEvaluator eval = new ELEvaluator("testParentPath", elDefinitionExtractor, FileEL.class);
     ELVariables variables = new ELVariables();
     // Normal file
     Assert.assertEquals("/absolute/path", eval.eval(variables, "${file:parentPath(\"/absolute/path/file\")}", String.class));
@@ -53,7 +56,7 @@ public class TestFileEL {
 
   @Test
   public void testFileExtension() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testFileExtension", FileEL.class);
+    ELEvaluator eval = new ELEvaluator("testFileExtension", elDefinitionExtractor, FileEL.class);
     ELVariables variables = new ELVariables();
     // No extension on absolute path
     Assert.assertEquals("", eval.eval(variables, "${file:fileExtension(\"/absolute/path/file\")}", String.class));
@@ -69,7 +72,7 @@ public class TestFileEL {
 
   @Test
   public void testRemoveExtension() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testRemoveExtension", FileEL.class);
+    ELEvaluator eval = new ELEvaluator("testRemoveExtension", elDefinitionExtractor, FileEL.class);
     ELVariables variables = new ELVariables();
     // No extension on absolute path
     Assert.assertEquals("/absolute/path/file", eval.eval(variables, "${file:removeExtension(\"/absolute/path/file\")}", String.class));
@@ -85,7 +88,7 @@ public class TestFileEL {
 
   @Test
   public void testPathElement() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testPathElement", FileEL.class);
+    ELEvaluator eval = new ELEvaluator("testPathElement", elDefinitionExtractor, FileEL.class);
     ELVariables variables = new ELVariables();
 
     // Absolute path

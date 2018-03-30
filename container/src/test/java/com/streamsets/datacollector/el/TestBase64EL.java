@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -31,7 +32,7 @@ public class TestBase64EL {
 
   @Before
   public void setUp() {
-    eval = new ELEvaluator("testBase64Encode", Base64EL.class, RecordEL.class);
+    eval = new ELEvaluator("testBase64Encode", ConcreteELDefinitionExtractor.get(), Base64EL.class, RecordEL.class);
     variables = new ELVariables();
 
     Record record = new RecordImpl("test", "test", null, null);
@@ -54,7 +55,7 @@ public class TestBase64EL {
 
   @Test
   public void testBase64Decode() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testBase64Decode", Base64EL.class);
+    ELEvaluator eval = new ELEvaluator("testBase64Decode", ConcreteELDefinitionExtractor.get(), Base64EL.class);
     ELVariables variables = new ELVariables();
 
     Assert.assertEquals(testString, eval.eval(

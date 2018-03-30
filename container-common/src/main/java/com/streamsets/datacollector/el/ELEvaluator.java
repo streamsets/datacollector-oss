@@ -16,11 +16,11 @@
 package com.streamsets.datacollector.el;
 
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
+import com.streamsets.datacollector.util.ContainerCommonError;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.el.LruExpressionEvaluatorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,41 +42,43 @@ public class ELEvaluator extends ELEval {
   private final FunctionMapperImpl functionMapper;
   private final List<ElFunctionDefinition> elFunctionDefinitions;
   private final List<ElConstantDefinition> elConstantDefinitions;
+  private final ELDefinitionExtractor elDefinitionExtractor;
 
   // ExpressionEvaluatorImpl can be used as a singleton
   private static final LruExpressionEvaluatorImpl EVALUATOR = new LruExpressionEvaluatorImpl();
 
-  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, List<Class> elFuncConstDefClasses) {
-    this(configName, explicit, constants, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
+  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, ELDefinitionExtractor elDefinitionExtractor, List<Class> elFuncConstDefClasses) {
+    this(configName, explicit, constants, elDefinitionExtractor, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
   }
 
-  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
+  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, ELDefinitionExtractor elDefinitionExtractor, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
     this.constants = new HashMap<>(constants);
     functionsByNamespace = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
     elConstantDefinitions = new ArrayList<>();
+    this.elDefinitionExtractor = elDefinitionExtractor;
     populateConstantsAndFunctions(explicit, elFuncConstDefClasses);
     this.functionMapper = new FunctionMapperImpl();
   }
 
-  public ELEvaluator(String configName, Class<?>... elFuncConstDefClasses) {
-    this(configName, true, elFuncConstDefClasses);
+  public ELEvaluator(String configName, ELDefinitionExtractor elDefinitionExtractor, Class<?>... elFuncConstDefClasses) {
+    this(configName, true, elDefinitionExtractor, elFuncConstDefClasses);
   }
 
-  public ELEvaluator(String configName, boolean explicit, Class<?>... elFuncConstDefClasses) {
-    this(configName, explicit, new HashMap<String, Object>(), elFuncConstDefClasses);
+  public ELEvaluator(String configName, boolean explicit, ELDefinitionExtractor elDefinitionExtractor, Class<?>... elFuncConstDefClasses) {
+    this(configName, explicit, new HashMap<String, Object>(), elDefinitionExtractor, elFuncConstDefClasses);
   }
 
   private void populateConstantsAndFunctions(boolean explicit, Class<?>... elFuncConstDefClasses) {
     if(elFuncConstDefClasses != null) {
-      for (ElFunctionDefinition function : ELDefinitionExtractor.get().extractFunctions(elFuncConstDefClasses, "")) {
+      for (ElFunctionDefinition function : elDefinitionExtractor.extractFunctions(elFuncConstDefClasses, "")) {
         if (!(function.isImplicitOnly() && explicit)) {
           elFunctionDefinitions.add(function);
           registerFunction(function);
         }
       }
-      for (ElConstantDefinition constant : ELDefinitionExtractor.get().extractConstants(elFuncConstDefClasses, "")) {
+      for (ElConstantDefinition constant : elDefinitionExtractor.extractConstants(elFuncConstDefClasses, "")) {
         elConstantDefinitions.add(constant);
         constants.put(constant.getName(), constant.getValue());
       }
@@ -119,7 +121,7 @@ public class ELEvaluator extends ELEval {
       EVALUATOR.parseExpressionString(el);
     } catch (ELException e) {
       LOG.debug("Error parsering EL '{}': {}", el, e.toString(), e);
-      throw new ELEvalException(CommonError.CMN_0105, el, e.toString(), e);
+      throw new ELEvalException(ContainerCommonError.CTRCMN_0101, el, e.toString(), e);
     }
   }
 
@@ -155,7 +157,7 @@ public class ELEvaluator extends ELEval {
         }
       }
       LOG.debug("Error valuating EL '{}': {}", expression, e.toString(), e);
-      throw new ELEvalException(CommonError.CMN_0104, expression, t.toString(), e);
+      throw new ELEvalException(ContainerCommonError.CTRCMN_0100, expression, t.toString(), e);
     }
   }
 

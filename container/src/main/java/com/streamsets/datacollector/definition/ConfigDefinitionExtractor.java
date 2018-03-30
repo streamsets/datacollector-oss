@@ -455,7 +455,7 @@ public abstract class ConfigDefinitionExtractor {
         int displayPosition = annotation.displayPosition();
         List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
         List<ElConstantDefinition> elConstantDefinitions = getELConstants(annotation, model ,contextMsg);
-        ImmutableList.Builder<Class> builder = new ImmutableList.Builder().add(annotation.elDefs()).add(ELDefinitionExtractor.DEFAULT_EL_DEFS);
+        ImmutableList.Builder<Class> builder = new ImmutableList.Builder().add(annotation.elDefs()).add(ConcreteELDefinitionExtractor.DEFAULT_EL_DEFS);
         if (annotation.type() == ConfigDef.Type.CREDENTIAL) {
           builder.add(CredentialEL.class);
         }
@@ -569,7 +569,7 @@ public abstract class ConfigDefinitionExtractor {
     List<ErrorMessage> errors;
     if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
-      errors = ELDefinitionExtractor.get().validateFunctions(annotation.elDefs(), contextMsg);
+      errors = ConcreteELDefinitionExtractor.get().validateFunctions(annotation.elDefs(), contextMsg);
       if (errors.isEmpty() && annotation.evaluation() == ConfigDef.Evaluation.EXPLICIT) {
         List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
         for (ElFunctionDefinition def : elFunctionDefinitions) {
@@ -596,7 +596,7 @@ public abstract class ConfigDefinitionExtractor {
           .add(VaultEL.class)
           .build();
       }
-      functions = ELDefinitionExtractor.get().extractFunctions(elClasses.toArray(new Class[elClasses.size()]), contextMsg);
+      functions = ConcreteELDefinitionExtractor.get().extractFunctions(elClasses.toArray(new Class[elClasses.size()]), contextMsg);
     }
     return functions;
   }
@@ -605,7 +605,7 @@ public abstract class ConfigDefinitionExtractor {
     List<ErrorMessage> errors;
     if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
-      errors = ELDefinitionExtractor.get().validateConstants(annotation.elDefs(), contextMsg);
+      errors = ConcreteELDefinitionExtractor.get().validateConstants(annotation.elDefs(), contextMsg);
     } else {
       errors = new ArrayList<>();
     }
@@ -616,7 +616,7 @@ public abstract class ConfigDefinitionExtractor {
     List<ElConstantDefinition> functions = Collections.emptyList();
     if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
-      functions = ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
+      functions = ConcreteELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
     }
     return functions;
   }

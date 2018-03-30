@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.rules;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.pipeline.api.ElFunction;
@@ -36,10 +37,10 @@ public class TestAlertInfoEL {
     ELVars vars = new ELVariables();
 
     // setting the alert:info via a dummy EL 'setInfo' which has an ELVars in context
-    ELEval elEval = new ELEvaluator("", TestAlertInfoEL.class);
+    ELEval elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), TestAlertInfoEL.class);
     elEval.eval(vars, "${setInfo()}", String.class);
 
-    elEval = new ELEvaluator("", AlertInfoEL.class);
+    elEval = new ELEvaluator("", ConcreteELDefinitionExtractor.get(), AlertInfoEL.class);
     Assert.assertEquals("Hello", elEval.eval(vars, "${alert:info()}", String.class));
   }
 

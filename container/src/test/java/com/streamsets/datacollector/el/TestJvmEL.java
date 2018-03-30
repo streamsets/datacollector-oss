@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,17 +26,18 @@ import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.RuleELRegistry;
 
 public class TestJvmEL {
+  private ELDefinitionExtractor elDefinitionExtractor = ConcreteELDefinitionExtractor.get();
 
   @Test
   public void testMaxMemory() throws Exception {
-    ELEvaluator eval = new ELEvaluator("x", JvmEL.class);
+    ELEvaluator eval = new ELEvaluator("x", elDefinitionExtractor, JvmEL.class);
     ELVariables variables = new ELVariables();
     Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
   }
 
   @Test
   public void testJvmELAvailViaRuleELRegistry() throws Exception {
-    ELEvaluator eval = new ELEvaluator("x", RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
+    ELEvaluator eval = new ELEvaluator("x", elDefinitionExtractor, RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
     ELVariables variables = new ELVariables();
     Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
   }

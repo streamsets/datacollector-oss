@@ -79,39 +79,39 @@ public class TestELDefinitionExtractor {
 
   @Test
   public void testExtractionEmpty() {
-    Assert.assertTrue(ELDefinitionExtractor.get().extractFunctions(ImmutableSet.<Class>of(Empty.class), "").isEmpty());
-    Assert.assertTrue(ELDefinitionExtractor.get().extractConstants(ImmutableSet.<Class>of(Empty.class), "").isEmpty());
+    Assert.assertTrue(ConcreteELDefinitionExtractor.get().extractFunctions(ImmutableSet.<Class>of(Empty.class), "").isEmpty());
+    Assert.assertTrue(ConcreteELDefinitionExtractor.get().extractConstants(ImmutableSet.<Class>of(Empty.class), "").isEmpty());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail1Function() {
-    ELDefinitionExtractor.get().extractFunctions(new Class[]{Fail1.class}, "x");
+    ConcreteELDefinitionExtractor.get().extractFunctions(new Class[]{Fail1.class}, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail2Function() {
-    ELDefinitionExtractor.get().extractFunctions(new Class[]{Fail2.class}, "x");
+    ConcreteELDefinitionExtractor.get().extractFunctions(new Class[]{Fail2.class}, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail1Constant() {
-    ELDefinitionExtractor.get().extractConstants(new Class[]{Fail1.class}, "x");
+    ConcreteELDefinitionExtractor.get().extractConstants(new Class[]{Fail1.class}, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail2Constant() {
-    ELDefinitionExtractor.get().extractConstants(new Class[]{Fail2.class}, "x");
+    ConcreteELDefinitionExtractor.get().extractConstants(new Class[]{Fail2.class}, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail3MissingElParam() {
-    ELDefinitionExtractor.get().extractFunctions(new Class[]{Fail3.class}, "x");
+    ConcreteELDefinitionExtractor.get().extractFunctions(new Class[]{Fail3.class}, "x");
   }
 
   @Test
   public void testExtractionFunctions() {
     List<ElFunctionDefinition> functions =
-        ELDefinitionExtractor.get().extractFunctions(ImmutableSet.<Class>of(Ok.class), "x");
+        ConcreteELDefinitionExtractor.get().extractFunctions(ImmutableSet.<Class>of(Ok.class), "x");
     Assert.assertEquals(1, functions.size());
     Assert.assertEquals("p:f", functions.get(0).getName());
     Assert.assertEquals("p", functions.get(0).getGroup());
@@ -127,7 +127,7 @@ public class TestELDefinitionExtractor {
   @Test
   public void testExtractionConstants() {
     List<ElConstantDefinition> constants =
-        ELDefinitionExtractor.get().extractConstants(ImmutableSet.<Class>of(Ok.class), "x");
+        ConcreteELDefinitionExtractor.get().extractConstants(ImmutableSet.<Class>of(Ok.class), "x");
     Assert.assertEquals(1, constants.size());
     Assert.assertEquals("C", constants.get(0).getName());
     Assert.assertEquals("CC", constants.get(0).getDescription());

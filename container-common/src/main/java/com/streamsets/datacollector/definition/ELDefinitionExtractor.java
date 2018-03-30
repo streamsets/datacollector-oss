@@ -19,18 +19,11 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
-import com.streamsets.datacollector.el.JvmEL;
-import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.Base64EL;
-import com.streamsets.pipeline.lib.el.FileEL;
-import com.streamsets.pipeline.lib.el.MathEL;
-import com.streamsets.datacollector.el.PipelineEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -45,30 +38,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public abstract class ELDefinitionExtractor {
-  static final Class[] DEFAULT_EL_DEFS = {
-      Base64EL.class, FileEL.class,  JvmEL.class, MathEL.class, RuntimeEL.class, StringEL.class, PipelineEL.class
-  };
-
-  private static final ELDefinitionExtractor EXTRACTOR = new ELDefinitionExtractor() {};
-
-  public static ELDefinitionExtractor get() {
-    return EXTRACTOR;
-  }
+  private final Class[] defaultElDefs;
 
   public List<ErrorMessage> validateConstants(Class[] classes, Object contextMsg) {
-    return validateConstants(ImmutableSet.<Class>builder().add(DEFAULT_EL_DEFS).add(classes).build(), contextMsg);
+    return validateConstants(ImmutableSet.<Class>builder().add(defaultElDefs).add(classes).build(), contextMsg);
   }
 
   public List<ElConstantDefinition> extractConstants(Class[] classes, Object contextMsg) {
-    return extractConstants(ImmutableSet.<Class>builder().add(DEFAULT_EL_DEFS).add(classes).build(), contextMsg);
+    return extractConstants(ImmutableSet.<Class>builder().add(defaultElDefs).add(classes).build(), contextMsg);
   }
 
   public List<ErrorMessage> validateFunctions(Class[] classes, Object contextMsg) {
-    return validateFunctions(ImmutableSet.<Class>builder().add(DEFAULT_EL_DEFS).add(classes).build(), contextMsg);
+    return validateFunctions(ImmutableSet.<Class>builder().add(defaultElDefs).add(classes).build(), contextMsg);
   }
 
   public List<ElFunctionDefinition> extractFunctions(Class[] classes, Object contextMsg) {
-    return extractFunctions(ImmutableSet.<Class>builder().add(DEFAULT_EL_DEFS).add(classes).build(), contextMsg);
+    return extractFunctions(ImmutableSet.<Class>builder().add(defaultElDefs).add(classes).build(), contextMsg);
   }
 
   public Map<String, ElFunctionDefinition> getElFunctionsCatalog() {
@@ -85,7 +70,8 @@ public abstract class ELDefinitionExtractor {
   private final Map<String, ElFunctionDefinition> elFunctionsIdx;
   private final Map<String, ElConstantDefinition> elConstantsIdx;
 
-  private ELDefinitionExtractor() {
+  protected ELDefinitionExtractor(Class[] defaultElDefs) {
+    this.defaultElDefs = defaultElDefs;
     indexCounter = new AtomicInteger();
     elFunctions = new ConcurrentHashMap<>();
     elConstants = new ConcurrentHashMap<>();
@@ -101,7 +87,7 @@ public abstract class ELDefinitionExtractor {
       for (Method method : klass.getDeclaredMethods()) {
         if (method.getAnnotation(ElFunction.class) != null) {
           if (!Modifier.isPublic(method.getModifiers())) {
-            errors.add(new ErrorMessage(DefinitionError.DEF_050, contextMsg, klass.getSimpleName(), method.getName()));
+            errors.add(new ErrorMessage(ELDefinitionError.ELDEF_000, contextMsg, klass.getSimpleName(), method.getName()));
           }
         }
       }
@@ -112,28 +98,28 @@ public abstract class ELDefinitionExtractor {
           if (fAnnotation != null) {
             String fName = fAnnotation.name();
             if (fName.isEmpty()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_051, contextMsg, klass.getSimpleName(), method.getName()));
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_001, contextMsg, klass.getSimpleName(), method.getName()));
             }
             if (!VALID_NAME.matcher(fName).matches()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_053, contextMsg, klass.getSimpleName(), method.getName(),
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_003, contextMsg, klass.getSimpleName(), method.getName(),
                                           fName));
             }
             String fPrefix = fAnnotation.prefix();
             if (!VALID_NAME.matcher(fPrefix).matches()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_054, contextMsg, klass.getSimpleName(), method.getName(),
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_004, contextMsg, klass.getSimpleName(), method.getName(),
                                           fPrefix));
             }
             if (!fPrefix.isEmpty()) {
               fName = fPrefix + ":" + fName;
             }
             if (!Modifier.isStatic(method.getModifiers())) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_052, contextMsg, klass.getSimpleName(), fName));
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_002, contextMsg, klass.getSimpleName(), fName));
             }
             Annotation[][] pAnnotations = method.getParameterAnnotations();
             Class<?>[] pTypes = method.getParameterTypes();
             for (int i = 0; i < pTypes.length; i++) {
               if (getParamAnnotation(pAnnotations[i]) == null) {
-                errors.add(new ErrorMessage(DefinitionError.DEF_055, contextMsg, klass.getSimpleName(), fName, i));
+                errors.add(new ErrorMessage(ELDefinitionError.ELDEF_005, contextMsg, klass.getSimpleName(), fName, i));
               }
             }
           }
@@ -198,7 +184,7 @@ public abstract class ELDefinitionExtractor {
       for (Field field : klass.getDeclaredFields()) {
         if (field.getAnnotation(ElConstant.class) != null) {
           if (!Modifier.isPublic(field.getModifiers())) {
-            errors.add(new ErrorMessage(DefinitionError.DEF_060, contextMsg, klass.getSimpleName(), field.getName()));
+            errors.add(new ErrorMessage(ELDefinitionError.ELDEF_010, contextMsg, klass.getSimpleName(), field.getName()));
           }
         }
       }
@@ -209,14 +195,14 @@ public abstract class ELDefinitionExtractor {
           if (cAnnotation != null) {
             String cName = cAnnotation.name();
             if (cName.isEmpty()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_061, contextMsg, klass.getSimpleName(), field.getName()));
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_011, contextMsg, klass.getSimpleName(), field.getName()));
             }
             if (!VALID_NAME.matcher(cName).matches()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_063, contextMsg, klass.getSimpleName(), field.getName(),
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_013, contextMsg, klass.getSimpleName(), field.getName(),
                                           cName));
             }
             if (!Modifier.isStatic(field.getModifiers())) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_062, contextMsg, klass.getSimpleName(), cName));
+              errors.add(new ErrorMessage(ELDefinitionError.ELDEF_012, contextMsg, klass.getSimpleName(), cName));
             }
           }
         }
