@@ -58,27 +58,31 @@ public class ProductionObserver implements Observer {
     Maintain a record counter per lane that counts the records that flows through it.
     If the counter matches a generated number, that record is picked uo, cloned and sent for evaluation.
     This map holds the n generated numbers for the rule with max sampling % */
-  private final Map<String, Set<Integer>> laneToMaxRecordIndexMap;
+  private final ThreadLocal<Map<String, Set<Integer>>> laneToMaxRecordIndexMap;
   /*This map holds the generated numbers for each rule, which is selected from the n generated numbers for the rule
   with max sampling %.*/
-  private final Map<String, Set<Integer>> ruleIdToRecordIndexMap;
+  private final ThreadLocal<Map<String, Set<Integer>>> ruleIdToRecordIndexMap;
   /*This map holds the count of records that have flown though that lane. The counter is reset when it reaches 100*/
-  private final Map<String, Integer> laneToRecordCounterMap;
+  private final ThreadLocal<Map<String, Integer>> laneToRecordCounterMap;
   /*Contains integers between 0 and 99 and n random numbers are selected by shuffling this list and picking the first
   n*/
-  private final List<Integer> randomNumberSampleSpace;
+  private final ThreadLocal<List<Integer>> randomNumberSampleSpace;
 
   @Inject
   public ProductionObserver(Configuration configuration, MetricsObserverRunner metricsObserverRunner) {
     this.configuration = configuration;
     this.metricsObserverRunner = metricsObserverRunner;
-    this.laneToMaxRecordIndexMap = new HashMap<>();
-    this.ruleIdToRecordIndexMap = new HashMap<>();
-    this.laneToRecordCounterMap = new HashMap<>();
-    randomNumberSampleSpace = new ArrayList<>(100);
-    for(int i = 0; i < 100; i++) {
-      randomNumberSampleSpace.add(i);
-    }
+    this.laneToMaxRecordIndexMap = ThreadLocal.withInitial(HashMap::new);
+    this.ruleIdToRecordIndexMap = ThreadLocal.withInitial(HashMap::new);
+    this.laneToRecordCounterMap = ThreadLocal.withInitial(HashMap::new);
+    this.randomNumberSampleSpace = ThreadLocal.withInitial(() -> {
+      List<Integer> randomNumberSampleSpace = new ArrayList<>(100);
+      for(int i = 0; i < 100; i++) {
+        randomNumberSampleSpace.add(i);
+      }
+
+      return randomNumberSampleSpace;
+    });
   }
 
   public void setObserveRequests(BlockingQueue<Object> observeRequests) {
@@ -201,10 +205,10 @@ public class ProductionObserver implements Observer {
 
     //record counter for this lane, reset when the count reaches 100
     int recordCounter = 0;
-    if(laneToRecordCounterMap.containsKey(lane)) {
-      recordCounter = laneToRecordCounterMap.get(lane);
+    if(laneToRecordCounterMap.get().containsKey(lane)) {
+      recordCounter = laneToRecordCounterMap.get().get(lane);
     } else {
-      laneToRecordCounterMap.put(lane, recordCounter);
+      laneToRecordCounterMap.get().put(lane, recordCounter);
     }
     Map<String, List<Record>> sampledRecordsMap = new HashMap<>();
 
@@ -212,11 +216,11 @@ public class ProductionObserver implements Observer {
     //Generates a set n random integers, where n is max percentage for this lane [say n = 50] between 0 and 99
     //The set of integers generated is cached on a per lane basis.
     Set<Integer> recordIndexToPickup;
-    if(laneToMaxRecordIndexMap.containsKey(lane)) {
-      recordIndexToPickup = laneToMaxRecordIndexMap.get(lane);
+    if(laneToMaxRecordIndexMap.get().containsKey(lane)) {
+      recordIndexToPickup = laneToMaxRecordIndexMap.get().get(lane);
     } else {
       recordIndexToPickup = getRecordsToPickUp(dataRuleDefinitions);
-      laneToMaxRecordIndexMap.put(lane, recordIndexToPickup);
+      laneToMaxRecordIndexMap.get().put(lane, recordIndexToPickup);
     }
 
     //Go over all records for this lane and determine if it needs to be cloned.
@@ -228,14 +232,14 @@ public class ProductionObserver implements Observer {
           //for every rule in this lane, check the integers generated for it to see if this record needs to be
           //sampled
           Set<Integer> recordsToPickup;
-          if (ruleIdToRecordIndexMap.containsKey(d.getId())) {
-            recordsToPickup = ruleIdToRecordIndexMap.get(d.getId());
+          if (ruleIdToRecordIndexMap.get().containsKey(d.getId())) {
+            recordsToPickup = ruleIdToRecordIndexMap.get().get(d.getId());
           } else {
             //the integers generated to pick up records for sampling is shared between all rules for that lane.
             //the rule with least percentage contains records which are subset of rule with max percentage.
             //this is to minimize cloning of records.
             recordsToPickup = getRecordsToPickUp(recordIndexToPickup, (int)d.getSamplingPercentage());
-            ruleIdToRecordIndexMap.put(d.getId(), recordsToPickup);
+            ruleIdToRecordIndexMap.get().put(d.getId(), recordsToPickup);
           }
           if (recordsToPickup.contains(recordCounter)) {
             //this record must be picked up by this rule
@@ -255,12 +259,12 @@ public class ProductionObserver implements Observer {
         //It will also pick up any changes done to sampling percentages of rules in the next iteration.
         recordCounter = 0;
         for(DataRuleDefinition d : dataRuleDefinitions) {
-          ruleIdToRecordIndexMap.remove(d.getId());
+          ruleIdToRecordIndexMap.get().remove(d.getId());
         }
-        laneToMaxRecordIndexMap.remove(lane);
+        laneToMaxRecordIndexMap.get().remove(lane);
       }
     }
-    laneToRecordCounterMap.put(lane, recordCounter);
+    laneToRecordCounterMap.get().put(lane, recordCounter);
     return sampledRecordsMap;
   }
 
@@ -273,8 +277,8 @@ public class ProductionObserver implements Observer {
       }
     }
     Set<Integer> recordsToPickup = new HashSet<>();
-    Collections.shuffle(randomNumberSampleSpace);
-    recordsToPickup.addAll(randomNumberSampleSpace.subList(0, (int) percentage));
+    Collections.shuffle(randomNumberSampleSpace.get());
+    recordsToPickup.addAll(randomNumberSampleSpace.get().subList(0, (int) percentage));
     return recordsToPickup;
   }
 
