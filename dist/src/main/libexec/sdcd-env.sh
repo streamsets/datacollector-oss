@@ -55,7 +55,7 @@ export SDC_FILE_LIMIT="${SDC_FILE_LIMIT:-32768}"
 
 # JVM options for the data collector process
 #
-export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server -XX:-OmitStackTraceInFastThrow -Doracle.jdbc.javaNetNio=true ${SDC_JAVA_OPTS}"
+export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server -XX:-OmitStackTraceInFastThrow ${SDC_JAVA_OPTS}"
 
 # Indicate that MapR Username/Password security is enabled
 #export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"
