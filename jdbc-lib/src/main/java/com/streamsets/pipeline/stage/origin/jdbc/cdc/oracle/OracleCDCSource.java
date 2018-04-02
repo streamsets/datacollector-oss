@@ -191,7 +191,7 @@ public class OracleCDCSource extends BaseSource {
   private static final int QUERY_TIMEOUT = 1013;
 
   private final Lock bufferedRecordsLock = new ReentrantLock();
-  private final BlockingQueue<StageException> stageExceptions = new LinkedBlockingQueue<>();
+  private final BlockingQueue<StageException> stageExceptions = new LinkedBlockingQueue<>(1);
 
   @GuardedBy(value = "bufferedRecordsLock")
   private final Map<TransactionIdKey, HashQueue<RecordSequence>> bufferedRecords = new HashMap<>();
@@ -514,7 +514,7 @@ public class OracleCDCSource extends BaseSource {
               try {
                 errorRecordHandler.onError(JDBC_43, queryString);
               } catch (StageException stageException) {
-                stageExceptions.add(stageException);
+                addToStageExceptionsQueue(stageException);
               }
               continue;
             }
@@ -616,7 +616,7 @@ public class OracleCDCSource extends BaseSource {
         // force a restart from the same timestamp.
         if (ex.getErrorCode() == MISSING_LOG_FILE) {
           LOG.warn("SQL Exception while retrieving records", ex);
-          stageExceptions.add(new StageException(JDBC_86, ex));
+          addToStageExceptionsQueue(new StageException(JDBC_86, ex));
         } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
           LOG.warn("SQL Exception while retrieving records", ex);
         } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
@@ -625,26 +625,19 @@ public class OracleCDCSource extends BaseSource {
           LOG.warn("Last LogMiner session did not start successfully. Will retry", ex);
         } else {
           LOG.error("Error while reading data", ex);
-          stageExceptions.add(new StageException(JDBC_52, ex));
-        }
-        try {
-          resetDBConnectionsIfRequired();
-        } catch (SQLException sqlEx) {
-          throw new RuntimeException("Connection reset failed", ex);
-        } catch (StageException stageException) {
-          stageExceptions.add(stageException);
+          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
         }
       } catch (StageException e) {
         LOG.error("Error while reading data", e);
         error = true;
-        stageExceptions.add(e);
+        addToStageExceptionsQueue(e);
       } catch (InterruptedException ex) {
         LOG.error("Interrupted while waiting to add data");
         Thread.currentThread().interrupt();
       } catch (Exception ex) {
         LOG.error("Error while reading data", ex);
         error = true;
-        stageExceptions.add(new StageException(JDBC_52, ex));
+        addToStageExceptionsQueue(new StageException(JDBC_52, ex));
       } finally {
         // If an incomplete batch is seen, it means we are going to move the window forward
         // Ending this session and starting a new one helps reduce PGA memory usage.
@@ -664,7 +657,16 @@ public class OracleCDCSource extends BaseSource {
           LOG.warn("Error while trying to close logminer session", ex);
         }
         try {
-          if (!error) {
+          if (error) {
+            try {
+              resetDBConnectionsIfRequired();
+            } catch (SQLException sqlEx) {
+              LOG.error("Error while connecting to DB", sqlEx);
+              addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
+            } catch (StageException stageException) {
+              addToStageExceptionsQueue(stageException);
+            }
+          } else {
             discardOldUncommitted(startTime);
             startTime = adjustStartTime(endTime);
             endTime = getEndTimeForStartTime(startTime);
@@ -675,11 +677,11 @@ public class OracleCDCSource extends BaseSource {
           try {
             errorRecordHandler.onError(JDBC_52, ex);
           } catch (StageException e) {
-            stageExceptions.add(e);
+            addToStageExceptionsQueue(e);
           }
         } catch (StageException ex) {
           LOG.error("Error while attempting to start logminer for redo log dictionary", ex);
-          stageExceptions.add(ex);
+          addToStageExceptionsQueue(ex);
         }
       }
     }
@@ -796,6 +798,9 @@ public class OracleCDCSource extends BaseSource {
       HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
       records.completeInserts();
       while (!records.isEmpty()) {
+        if (getContext().isStopped()) {
+          return;
+        }
         RecordSequence r = records.remove();
         try {
           if (configBean.keepOriginalQuery) {
@@ -804,14 +809,23 @@ public class OracleCDCSource extends BaseSource {
           RuleContextAndOpCode ctxOp = getRuleContextAndCode(r.sqlString, r.opCode);
           Record record = generateRecord(r.headers, ctxOp.operationCode, ctxOp.context);
           if (record != null && record.getEscapedFieldPaths().size() > 0) {
-            recordQueue.put(
-                new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, r.seq)));
+            final RecordOffset recordOffset =
+                new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, r.seq)
+            );
+            // If produce is not called because pipeline was stopped and the queue is full,
+            // we simply return
+            while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
+              // if pipeline was stopped just return last added offset.
+              if (getContext().isStopped()) {
+                return;
+              }
+            }
           }
         } catch (UnparseableSQLException ex) {
           try {
             errorRecordHandler.onError(JDBC_43, r.sqlString);
           } catch (StageException stageException) {
-            stageExceptions.add(stageException);
+            addToStageExceptionsQueue(stageException);
           }
         }
       }
@@ -892,6 +906,15 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
+  private void addToStageExceptionsQueue(StageException ex) {
+    try {
+      while(!stageExceptions.offer(ex, 1, TimeUnit.SECONDS) && !getContext().isStopped());
+    } catch (InterruptedException iEx) {
+      LOG.error("Interrupted while adding stage exception to queue");
+      Thread.currentThread().interrupt();
+    }
+  }
+
   private LocalDateTime getDateForSCN(BigDecimal commitSCN) throws SQLException {
     startLogMinerUsingGivenSCNs(commitSCN, getEndingSCN());
     getTimestampsFromLogMnrContents.setMaxRows(1);
@@ -907,7 +930,9 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
-    return startTime.plusSeconds(configBean.logminerWindow);
+    LocalDateTime sessionMax = startTime.plusSeconds(configBean.logminerWindow);
+    LocalDateTime now = nowAtDBTz();
+    return (sessionMax.isAfter(now) ? now : sessionMax);
   }
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {
@@ -932,13 +957,20 @@ public class OracleCDCSource extends BaseSource {
   private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException, StageException {
     try {
       startLogMnrForRedoDict();
-      resetDBConnectionsIfRequired();
       LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
       startLogMnrForData.setString(1, startDate);
       startLogMnrForData.setString(2, endDate);
       startLogMnrForData.execute();
     } catch (SQLException ex) {
       LOG.debug("SQLException while starting LogMiner", ex);
+      try {
+        resetDBConnectionsIfRequired();
+      } catch (SQLException sqlEx) {
+        LOG.error("Error while connecting to DB", sqlEx);
+        addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
+      } catch (StageException stageException) {
+        addToStageExceptionsQueue(stageException);
+      }
       throw ex;
     }
   }
