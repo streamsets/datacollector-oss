@@ -584,7 +584,8 @@ public class OracleCDCSource extends BaseSource {
                   }
                   int bufferedRecordsToBeRemoved = records.size();
                   LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved);
-                  addRecordsToQueue(tsDate, scn, xid);
+                  lastCommitSCN = scnDecimal;
+                  sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
@@ -787,19 +788,20 @@ public class OracleCDCSource extends BaseSource {
     return date.atZone(zoneId).toEpochSecond();
   }
 
-  private void addRecordsToQueue(
+  private int addRecordsToQueue(
       LocalDateTime commitTimestamp,
       String commitScn,
       String xid
   ) throws StageException, ParseException, InterruptedException {
     TransactionIdKey key = new TransactionIdKey(xid);
+    int seq = 0;
     bufferedRecordsLock.lock();
     try {
       HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
       records.completeInserts();
       while (!records.isEmpty()) {
         if (getContext().isStopped()) {
-          return;
+          return seq;
         }
         RecordSequence r = records.remove();
         try {
@@ -817,10 +819,11 @@ public class OracleCDCSource extends BaseSource {
             while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
               // if pipeline was stopped just return last added offset.
               if (getContext().isStopped()) {
-                return;
+                return seq;
               }
             }
           }
+          seq = r.seq;
         } catch (UnparseableSQLException ex) {
           try {
             errorRecordHandler.onError(JDBC_43, r.sqlString);
@@ -834,6 +837,7 @@ public class OracleCDCSource extends BaseSource {
     } finally {
       bufferedRecordsLock.unlock();
     }
+    return seq;
   }
 
   private EventRecord createEventRecord(
