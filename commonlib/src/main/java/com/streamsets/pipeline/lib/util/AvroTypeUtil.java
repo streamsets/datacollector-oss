@@ -175,10 +175,7 @@ public class AvroTypeUtil {
           int precision = schema.getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).asInt();
           if (value instanceof ByteBuffer) {
             byte[] decimalBytes = ((ByteBuffer)value).array();
-            //Unscaled value
-            BigInteger unscaledBigInteger = new BigInteger(decimalBytes);
-            //Set scale
-            value = new BigDecimal(unscaledBigInteger, scale);
+            value = bigDecimalFromBytes(decimalBytes, scale);
           }
           returnField = Field.create(Field.Type.DECIMAL, value);
           returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
@@ -823,5 +820,23 @@ public class AvroTypeUtil {
         || type == Schema.Type.UNION
         || type == Schema.Type.RECORD
         || type == Schema.Type.MAP);
+  }
+
+  /**
+   * Returns a {@link BigDecimal} from the given bytes and scale.  The bytes must adhere to the format that Avro
+   * stores decimals in.
+   * <br>
+   * Avro stores decimal values as two's complement, big-endian for the integral portion, then the decimal place
+   * separately (via the scale).
+   *
+   * @see <a href="https://avro.apache.org/docs/1.8.1/spec.html#Decimal">Avro documentation</a>
+   *
+   * @param decimalBytes the bytes of the decimal value's integral value, assumed to be two's complement, big-endian
+   * @param scale the scale of the decimal value
+   * @return a {@link BigDecimal} constructed from the decimalBytes and scale
+   */
+  public static BigDecimal bigDecimalFromBytes(byte[] decimalBytes, int scale) {
+    final BigInteger bigInt = new BigInteger(decimalBytes);
+    return new BigDecimal(bigInt, scale);
   }
 }

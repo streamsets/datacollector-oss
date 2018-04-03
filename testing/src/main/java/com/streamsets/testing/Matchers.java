@@ -56,6 +56,14 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> fieldWithValue(final double value) {
+    return new FieldMatcher(Field.Type.DOUBLE, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsDouble();
+      }
+    };
+  }
 
   public static Matcher<Field> fieldWithValue(final long value) {
     return new FieldMatcher(Field.Type.LONG, value) {

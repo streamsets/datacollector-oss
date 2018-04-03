@@ -49,8 +49,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -109,22 +111,25 @@ public class AvroToOrcRecordConverter {
 
   public void convert(SeekableInput avroInputFile, Path orcOutputFile) throws IOException {
     DatumReader<GenericRecord> reader = new GenericDatumReader<>();
-    FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroInputFile, reader);
-    Schema avroSchema = fileReader.getSchema();
+    try (FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroInputFile, reader)) {
+      Schema avroSchema = fileReader.getSchema();
 
-    initializeWriter(avroSchema, orcOutputFile);
+      initializeWriter(avroSchema, orcOutputFile);
 
-    while (fileReader.hasNext()) {
-      GenericRecord record = fileReader.next();
+      while (fileReader.hasNext()) {
+        GenericRecord record = fileReader.next();
 
-      addAvroRecord(record);
+        addAvroRecord(record);
+      }
+
+      closeWriter();
     }
-
-    closeWriter();
   }
 
   public static Writer createOrcWriter(Properties orcWriterProperties, Configuration configuration, Path orcOutputFile, TypeDescription orcSchema) throws IOException {
-    LOG.info("Creating ORC writer at: {}", orcOutputFile.getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Creating ORC writer at: {}", orcOutputFile.toString());
+    }
     return OrcFile.createWriter(
         orcOutputFile,
         OrcFile.writerOptions(orcWriterProperties, configuration).setSchema(orcSchema)
@@ -312,17 +317,18 @@ public class AvroToOrcRecordConverter {
           decimalValue = HiveDecimal.create(decimal);
         } else if (value instanceof ByteBuffer) {
           final ByteBuffer byteBuffer = (ByteBuffer) value;
-          if (byteBuffer.hasArray()) {
-          }
           final byte[] decimalBytes = new byte[byteBuffer.remaining()];
           byteBuffer.get(decimalBytes);
-          decimalValue = HiveDecimal.create(decimalBytes);
-          if (decimalValue == null && LOG.isWarnEnabled()) {
+
+          final int scale = type.getScale();
+          BigDecimal bigDecVal = AvroTypeUtil.bigDecimalFromBytes(decimalBytes, scale);
+
+          decimalValue = HiveDecimal.create(bigDecVal);
+          if (decimalValue == null && decimalBytes.length > 0 && LOG.isWarnEnabled()) {
             LOG.warn(
-                "byteBuffer with position {}, limit {}, remaining {}",
-                byteBuffer.position(),
-                byteBuffer.limit(),
-                byteBuffer.remaining());
+                "Unexpected read null HiveDecimal from bytes (base-64 encoded): {}",
+                Base64.getEncoder().encodeToString(decimalBytes)
+            );
           }
         } else {
           throw new IllegalStateException(String.format(

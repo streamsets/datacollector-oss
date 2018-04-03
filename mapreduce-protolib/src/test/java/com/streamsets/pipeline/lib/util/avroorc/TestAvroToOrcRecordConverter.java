@@ -73,6 +73,29 @@ public class TestAvroToOrcRecordConverter {
   }
 
   @Test
+  public void numericTypes() throws IOException {
+    AvroToOrcRecordConverter converter = new AvroToOrcRecordConverter(1000, new Properties(), new Configuration());
+
+    Path outputFilePath = new Path(createTempFile());
+    converter.convert(
+        new SeekableFileInput(new File(TestAvroToOrcRecordConverter.class.getResource("numeric-types.avro").getFile())),
+        outputFilePath
+    );
+
+    try (OrcToSdcRecordConverter sdcRecordConverter = new OrcToSdcRecordConverter(outputFilePath)) {
+      Record record1 = RecordCreator.create();
+      boolean populated = sdcRecordConverter.populateRecord(record1);
+      assertThat(populated, equalTo(true));
+
+      assertThat(record1.get("/int"), fieldWithValue(42));
+      assertThat(record1.get("/long"), fieldWithValue(478924424442112l));
+      assertThat(record1.get("/float"), fieldWithValue(3.4f));
+      assertThat(record1.get("/double"), fieldWithValue(4244875567.233d));
+      assertThat(record1.get("/decimal"), fieldWithValue(new BigDecimal("1445.335")));
+    }
+  }
+
+  @Test
   public void recordConversion() throws IOException {
     Path outputFilePath = new Path(createTempFile());
 
