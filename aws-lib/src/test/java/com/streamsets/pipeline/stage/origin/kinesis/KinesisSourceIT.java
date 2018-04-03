@@ -43,6 +43,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.awaitility.Duration;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -72,6 +73,7 @@ import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
+@Ignore
 public class KinesisSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisSourceIT.class);
   private static final int DYNAMO_DB_PORT = 8000;
