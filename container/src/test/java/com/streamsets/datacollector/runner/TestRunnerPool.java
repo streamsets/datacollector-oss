@@ -48,4 +48,38 @@ public class TestRunnerPool {
     runnerPool.destroy();
     runnerPool.getRunner();
   }
+
+  @Test
+  public void testGetIdleRunner() throws Exception {
+    // There shouldn't be really any runner that hasn't been active for last 60 minutes.
+    Assert.assertNull(runnerPool.getIdleRunner(60*60*1000));
+
+    // We should be able to get all the runners as idle as they were all inserted around the same time and the idle
+    // time is less then the wait time.
+    Thread.sleep(10);
+    Assert.assertNotNull(runnerPool.getIdleRunner(5));
+    Assert.assertNotNull(runnerPool.getIdleRunner(5));
+    Assert.assertNull(runnerPool.getIdleRunner(5));
+
+    // Then we return back "a", followed by 10 ms difference and "b", only the first runner should be really considered
+    // idle and it should only be "a". But we should still be able to get "b" using normal path.
+    runnerPool.returnRunner("a");
+    Thread.sleep(10);
+    runnerPool.returnRunner("b");
+
+    String runner = runnerPool.getIdleRunner(5);
+    Assert.assertNull(runnerPool.getIdleRunner(5));
+    Assert.assertEquals("a", runner);
+    Assert.assertEquals("b", runnerPool.getRunner());
+
+    // Same order as last time with the same time spacing - but this time we will ask for runner with more idle time
+    // then we waiting, the order should not change.
+    runnerPool.returnRunner("a");
+    Thread.sleep(10);
+    runnerPool.returnRunner("b");
+
+    Assert.assertNull(runnerPool.getIdleRunner(60*60*1000));
+    Assert.assertEquals("a", runnerPool.getRunner());
+    Assert.assertEquals("b", runnerPool.getRunner());
+  }
 }
