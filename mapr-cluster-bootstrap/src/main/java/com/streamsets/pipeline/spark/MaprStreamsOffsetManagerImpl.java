@@ -17,8 +17,8 @@ package com.streamsets.pipeline.spark;
 
 import org.apache.kafka.common.TopicPartition;
 import org.apache.spark.rdd.RDD;
-import org.apache.spark.streaming.kafka.v09.HasOffsetRanges;
-import org.apache.spark.streaming.kafka.v09.OffsetRange;
+import org.apache.spark.streaming.kafka09.HasOffsetRanges;
+import org.apache.spark.streaming.kafka09.OffsetRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,12 @@ public final class MaprStreamsOffsetManagerImpl implements KafkaOffsetManager {
   @Override
   @SuppressWarnings("unchecked")
   public void saveOffsets(RDD<?> rdd) {
-    MapRStreamingBinding.offsetHelper.saveOffsets(getOffsetToSave(((HasOffsetRanges) rdd).offsetRanges()));
+    Map<Integer, Long> offset = getOffsetToSave(((HasOffsetRanges) rdd).offsetRanges());
+    if (!offset.isEmpty()) {
+      SparkStreamingBinding.offsetHelper.saveOffsets(offset);
+    } else {
+      LOG.trace("Offset is empty");
+    }
   }
 
   private Map<Integer, Long> readOffsets(int numberOfPartitions) {

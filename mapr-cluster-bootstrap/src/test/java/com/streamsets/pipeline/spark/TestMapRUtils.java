@@ -28,13 +28,13 @@ public class TestMapRUtils {
     Properties properties = new Properties();
     properties.put(Utils.MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "topic", "topic");
     properties.put(Utils.MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxWaitTime", "4000");
-    properties.put(AbstractStreamingBinding.AUTO_OFFSET_RESET, "smallest");
+    properties.put(SparkStreamingBinding.AUTO_OFFSET_RESET, "smallest");
     properties.put(Utils.MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "consumerGroup", "consumerGroup");
     properties.put(Utils.MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxBatchSize", "2000");
     MapRStreamingBinding mapRStreamingBinding = new MapRStreamingBinding(properties);
     Assert.assertEquals("topic",mapRStreamingBinding.getTopic());
     Assert.assertEquals(4000, Utils.getMaprStreamsWaitTime(properties));
-    Assert.assertEquals("smallest", Utils.getPropertyOrEmptyString(properties, AbstractStreamingBinding
+    Assert.assertEquals("smallest", Utils.getPropertyOrEmptyString(properties, SparkStreamingBinding
         .AUTO_OFFSET_RESET));
     Assert.assertEquals("consumerGroup", Utils.getMaprStreamsConsumerGroup(properties));
     Assert.assertEquals(2000, Utils.getMaprStreamsMaxBatchSize(properties));

@@ -295,7 +295,7 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
             "<masked>/spark-streaming-kafka-1.2" +
-            ".jar,<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
+            ".jar,<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"));
   }
 
   @Test
@@ -400,9 +400,9 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/maprfs-5.1" +
             ".0.jar," +
-            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-mapr-cluster-bootstrap-1.7.0.0.jar"));
     Assert.assertTrue(MockSystemProcess.args.contains(
-        "<masked>/bootstrap-lib/cluster/streamsets-datacollector-mapr-cluster-bootstrap-1.7.0.0.jar"));
+        "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
   }
 
   @Test
@@ -505,14 +505,14 @@ public class TestClusterProviderImpl {
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
             "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
-                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
+                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar",
             "--conf", "spark" +
             ".executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar ",
             "--conf", "a=b",
             "--name", "StreamSets Data Collector: label",
             "--class", "com" +
             ".streamsets.pipeline.BootstrapClusterStreaming",
-            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"},
         MockSystemProcess.args.toArray()
     );
   }
@@ -565,7 +565,7 @@ public class TestClusterProviderImpl {
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
             "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
-                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
+                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar",
             "--keytab", "<masked>/resources-src/sdc.keytab", "--principal", principal,
             "--conf", "spark.driver.extraJavaOptions=-Djava.security.auth.login.config=/etc/kafka-client-jaas.conf",
             "--conf", "spark.executor.extraJavaOptions=" +
@@ -574,7 +574,7 @@ public class TestClusterProviderImpl {
             "--name", "StreamSets Data Collector: label",
             "--class", "com" +
             ".streamsets.pipeline.BootstrapClusterStreaming",
-            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"},
         MockSystemProcess.args.toArray()
     );
   }

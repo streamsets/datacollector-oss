@@ -188,7 +188,8 @@
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
     <module>cluster-bootstrap-api</module>
-    <module>cluster-bootstrap</module>
+    <module>cluster-bootstrap-kafka-08</module>
+    <module>cluster-bootstrap-kafka-010</module>
     <module>mapr-cluster-bootstrap</module>
     <module>mesos-bootstrap</module>
     <module>client-api</module>
@@ -444,10 +445,7 @@
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
-        <cdh_5_4-cluster-cdh_kafka_1_2-lib>cdh_5_4-cluster-cdh_kafka_1_2-lib</cdh_5_4-cluster-cdh_kafka_1_2-lib>
-        <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
-        <cdh_5_5-cluster-cdh_kafka_1_3-lib>cdh_5_5-cluster-cdh_kafka_1_3-lib</cdh_5_5-cluster-cdh_kafka_1_3-lib>
         <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
@@ -520,16 +518,13 @@
         <module>cassandra_3-lib</module>
         <module>cdh_5_2-lib</module>
         <module>cdh_5_3-lib</module>
-        <module>cdh_5_4-cluster-cdh_kafka_1_2-lib</module>
-        <module>cdh_5_4-cluster-cdh_kafka_1_3-lib</module>
         <module>cdh_5_4-lib</module>
-        <module>cdh_5_5-cluster-cdh_kafka_1_3-lib</module>
         <module>cdh_5_5-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_7-lib</module>
         <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_8-lib</module>
-        <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_9-cluster-cdh_kafka_2_1-lib</module>
         <module>cdh_5_9-lib</module>
         <module>cdh_5_10-cluster-cdh_kafka_2_1-lib</module>
         <module>cdh_5_10-lib</module>

@@ -35,8 +35,8 @@
 
   <properties>
     <kafka.version>0.9.0-kafka-2.0.2</kafka.version>
-    <scala.version>2.10.6</scala.version>
-    <spark.version>1.6.0-cdh5.7.6</spark.version>
+    <scala.version>2.11.8</scala.version>
+    <spark.version>2.1.0.cloudera1</spark.version>
     <zookeeper.version>3.4.5-cdh5.7.6</zookeeper.version>
     <h2.version>1.4.187</h2.version>
   </properties>
@@ -44,7 +44,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming-kafka_2.10</artifactId>
+      <artifactId>spark-streaming-kafka-0-8_2.11</artifactId>
       <version>${spark.version}</version>
       <scope>compile</scope>
     </dependency>
@@ -196,7 +196,7 @@
     <!--  Part of spark assembly, so scope it out as test -->
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming_2.10</artifactId>
+      <artifactId>spark-streaming_2.11</artifactId>
       <version>${spark.version}</version>
       <scope>test</scope>
     </dependency>

@@ -599,7 +599,8 @@
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-api</include>
-        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
+        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-kafka-08</include>
+        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-kafka-010</include>
         <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-spark-api</include>

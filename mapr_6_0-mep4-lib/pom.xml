@@ -39,7 +39,7 @@
     <hadoop.version>2.7.0-mapr-1710</hadoop.version>
     <hive.version>2.1.1-mapr-1710</hive.version>
     <zookeeper.version>3.4.5-mapr-1710</zookeeper.version>
-    <spark.version>1.6.1-mapr-1707</spark.version>
+    <spark.version>2.1.0-mapr-1707</spark.version>
  </properties>
 
   <dependencies>
@@ -341,7 +341,7 @@
 
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
+      <artifactId>spark-core_2.11</artifactId>
       <version>${spark.version}</version>
       <exclusions>
         <exclusion>

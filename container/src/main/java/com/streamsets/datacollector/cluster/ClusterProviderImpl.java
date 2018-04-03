@@ -754,6 +754,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     String mesosURL = null;
     Pattern clusterBootstrapJarFile = findClusterBootstrapJar(executionMode, pipelineConfiguration, stageLibrary);
     clusterBootstrapJar = getBootstrapClusterJar(bootstrapDir, clusterBootstrapJarFile);
+    String clusterBootstrapApiJar = getBootstrapClusterJar(bootstrapDir, CLUSTER_BOOTSTRAP_API_JAR_PATTERN).getAbsolutePath();
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       String topic = sourceConfigs.get(TOPIC);
       String pipelineName = sourceInfo.get(ClusterModeConstants.CLUSTER_PIPELINE_NAME);
@@ -761,7 +762,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       mesosURL = runtimeInfo.getBaseHttpUrl() + File.separatorChar + mesosHostingJarDir + File.separatorChar
                  + clusterBootstrapJar.getName();
     } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
-      jarsToShip.add(getBootstrapClusterJar(bootstrapDir, CLUSTER_BOOTSTRAP_API_JAR_PATTERN).getAbsolutePath());
+      jarsToShip.add(clusterBootstrapJar.getAbsolutePath());
     }
 
     try {
@@ -903,7 +904,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           bootstrapJar.getAbsolutePath(),
           jarsToShip,
           pipelineConfiguration.getTitle(),
-          clusterBootstrapJar.getAbsolutePath()
+          clusterBootstrapApiJar
       );
     } else if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       LOG.info("Submitting Spark Job on Mesos");

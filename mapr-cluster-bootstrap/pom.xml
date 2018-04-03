@@ -33,7 +33,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <spark.mapr.version>1.6.1-mapr-1607</spark.mapr.version>
+    <spark.mapr.version>2.1.0-mapr-1703</spark.mapr.version>
   </properties>
 
   <dependencies>
@@ -44,13 +44,13 @@
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming_2.10</artifactId>
+      <artifactId>spark-streaming_2.11</artifactId>
       <version>${spark.mapr.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming-kafka-v09_2.10</artifactId>
+      <artifactId>spark-streaming-kafka-0-9_2.11</artifactId>
       <version>${spark.mapr.version}</version>
       <scope>provided</scope>
     </dependency>

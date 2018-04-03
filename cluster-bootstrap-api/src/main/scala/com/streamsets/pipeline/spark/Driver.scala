@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.streamsets.pipeline.{BootstrapCluster, ClusterFunctionProvider}
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.DStream
-
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -43,9 +43,24 @@ object Driver {
   private var offsetManager: KafkaOffsetManager = _
   private var partitionCount = -1
 
-  def foreach(dstream: DStream[(Array[Byte], Array[Byte])], kafkaOffsetManager: KafkaOffsetManager) {
-    dstream.foreachRDD(rdd => process(rdd))
+  def foreach(dstream: DStream[ConsumerRecord[Array[Byte], Array[Byte]]], kafkaOffsetManager: KafkaOffsetManager) {
     offsetManager = kafkaOffsetManager
+    dstream.foreachRDD(rdd => {
+      process(
+        rdd.map(c => {
+          (c.key(), c.value())
+        })
+      )
+      offsetManager.saveOffsets(rdd)
+    })
+  }
+
+  def foreachTuple(dstream: DStream[(Array[Byte], Array[Byte])], kafkaOffsetManager: KafkaOffsetManager) {
+    offsetManager = kafkaOffsetManager
+    dstream.foreachRDD(rdd => {
+       process(rdd)
+       offsetManager.saveOffsets(rdd)
+     })
   }
 
   def process(rdd: RDD[(Array[Byte], Array[Byte])]): Unit = synchronized {
@@ -129,7 +144,6 @@ object Driver {
 
     })
     nextResult.count()
-    offsetManager.saveOffsets(rdd)
   }
 
   def extractArchives(mesosHomeDir: String): Boolean = {
