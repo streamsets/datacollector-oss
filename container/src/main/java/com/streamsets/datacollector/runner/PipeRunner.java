@@ -95,6 +95,10 @@ public class PipeRunner {
     return pipes.get(i);
   }
 
+  public int getRunnerId() {
+    return runnerId;
+  }
+
   public int size() {
     return pipes.size();
   }

@@ -50,6 +50,7 @@ import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.DataObserverRunnable;
 import com.streamsets.datacollector.execution.runner.common.MetricObserverRunnable;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.ProduceEmptyBatchesForIdleRunnersRunnable;
 import com.streamsets.datacollector.execution.runner.common.ProductionObserver;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
@@ -867,6 +868,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
+        // Create runnable that will periodically check idle runners and run empty batches through them
+        ProduceEmptyBatchesForIdleRunnersRunnable idleRunnersRunnable = new ProduceEmptyBatchesForIdleRunnersRunnable();
+        idleRunnersRunnable.setPipelineRunner(runner);
+
         PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser);
         prodPipeline = builder.build(
           runningUser,
@@ -900,6 +905,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
             TimeUnit.SECONDS);
 
+        ScheduledFuture<?> idleRunnersFuture = runnerExecutor.scheduleWithFixedDelay(
+          idleRunnersRunnable,
+          // TODO: The unites here should be configurable as well (future patch)
+          10,
+          10,
+          TimeUnit.SECONDS
+        );
+
         // update checker
         updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
         ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
@@ -910,11 +923,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         List<Future<?>> list;
         if (metricsFuture != null) {
-          list =
-              ImmutableList
-                  .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
+          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture, idleRunnersFuture);
         } else {
-          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture);
+          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture, idleRunnersFuture);
         }
         pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
       } catch (Exception e) {
