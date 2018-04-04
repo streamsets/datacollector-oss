@@ -36,6 +36,7 @@ import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
@@ -1534,7 +1535,11 @@ public class PipelineConfigurationValidator {
     for(StageBean stageBean : pipelineBean.getPipelineStageBeans().getStages()) {
       for(ServiceDependencyDefinition serviceDependency: stageBean.getDefinition().getServices()) {
 
-        ServiceConfiguration serviceConfiguration = stageBean.getService(serviceDependency.getService()).getConf();
+        ServiceBean stageService = stageBean.getService(serviceDependency.getService());
+        if (stageService == null){
+          continue;
+        }
+        ServiceConfiguration serviceConfiguration = stageService.getConf();
         List<Config> configs = serviceConfiguration.getConfiguration();
 
         // Simply remove all RUNTIME configs
