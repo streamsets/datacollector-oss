@@ -1280,6 +1280,15 @@ angular
             $scope.detailPaneConfig = $scope.selectedObject = selectedStageInstance;
             $scope.stageSelected = true;
             $scope.selectedType = pipelineConstant.STAGE_INSTANCE;
+
+            // Re-crate list of services where each item have both the definition and actual configuration values
+            $scope.detailPaneServices = [];
+            _.each($scope.detailPaneConfig.services, function(serviceConfig) {
+              var service = {};
+              service.definition = pipelineService.getServiceDefinition(serviceConfig.service);
+              service.config = serviceConfig;
+              $scope.detailPaneServices.push(service);
+            });
           } else {
             $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
             $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
