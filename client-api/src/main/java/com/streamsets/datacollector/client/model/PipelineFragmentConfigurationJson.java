@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,23 @@ import java.util.List;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PipelineConfigurationJson   {
+public class PipelineFragmentConfigurationJson {
 
   private Integer schemaVersion = null;
   private Integer version = null;
-  private String pipelineId = null;
+  private String fragmentId = null;
+  private String fragmentInstanceId = null;
   private String uuid = null;
   private String title = null;
   private String description = null;
   private List<ConfigConfigurationJson> configuration = new ArrayList<>();
   private Map<String, Object> uiInfo = new HashMap<>();
   private List<StageConfigurationJson> stages = new ArrayList<>();
-  private StageConfigurationJson errorStage = null;
   private PipelineInfoJson info = null;
   private IssuesJson issues = null;
   private Boolean valid = null;
   private Boolean previewable = null;
-  private StageConfigurationJson statsAggregatorStage = null;
   private Map<String, Object> metadata = new HashMap<>();
-  private List<StageConfigurationJson> startEventStages;
-  private List<StageConfigurationJson> stopEventStages;
   private List<PipelineFragmentConfigurationJson> fragments = new ArrayList<>();
 
   public Integer getSchemaVersion() {
@@ -61,12 +58,20 @@ public class PipelineConfigurationJson   {
     this.version = version;
   }
 
-  public String getPipelineId() {
-    return pipelineId;
+  public String getFragmentId() {
+    return fragmentId;
   }
 
-  public void setPipelineId(String pipelineId) {
-    this.pipelineId = pipelineId;
+  public void setFragmentId(String fragmentId) {
+    this.fragmentId = fragmentId;
+  }
+
+  public String getFragmentInstanceId() {
+    return fragmentInstanceId;
+  }
+
+  public void setFragmentInstanceId(String fragmentInstanceId) {
+    this.fragmentInstanceId = fragmentInstanceId;
   }
 
   public String getUuid() {
@@ -117,14 +122,6 @@ public class PipelineConfigurationJson   {
     this.stages = stages;
   }
 
-  public StageConfigurationJson getErrorStage() {
-    return errorStage;
-  }
-
-  public void setErrorStage(StageConfigurationJson errorStage) {
-    this.errorStage = errorStage;
-  }
-
   public PipelineInfoJson getInfo() {
     return info;
   }
@@ -157,36 +154,12 @@ public class PipelineConfigurationJson   {
     this.previewable = previewable;
   }
 
-  public StageConfigurationJson getStatsAggregatorStage() {
-    return statsAggregatorStage;
-  }
-
-  public void setStatsAggregatorStage(StageConfigurationJson statsAggregatorStage) {
-    this.statsAggregatorStage = statsAggregatorStage;
-  }
-
   public Map<String, Object> getMetadata() {
     return metadata;
   }
 
   public void setMetadata(Map<String, Object> metadata) {
     this.metadata = metadata;
-  }
-
-  public List<StageConfigurationJson> getStartEventStages() {
-    return startEventStages;
-  }
-
-  public void setStartEventStages(List<StageConfigurationJson> startEventStages) {
-    this.startEventStages = startEventStages;
-  }
-
-  public List<StageConfigurationJson> getStopEventStages() {
-    return stopEventStages;
-  }
-
-  public void setStopEventStages(List<StageConfigurationJson> stopEventStages) {
-    this.stopEventStages = stopEventStages;
   }
 
   public List<PipelineFragmentConfigurationJson> getFragments() {
