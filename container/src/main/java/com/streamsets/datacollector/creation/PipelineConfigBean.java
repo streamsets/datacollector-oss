@@ -346,6 +346,20 @@ public class PipelineConfigBean implements Stage {
   )
   public boolean shouldCreateFailureSnapshot;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "60",
+    label = "Runner Idle Time (sec)",
+    description = "When pipeline runners are idle for at least this time, run an empty batch through the runner to" +
+      " process any events or other time-driven functionality. Value -1 will disable this functionality completely.",
+    dependencies = @Dependency(
+      configName = "executionMode", triggeredByValues = "STANDALONE"
+    ),
+    displayPosition = 210
+  )
+  public long runnerIdleTIme = 60;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[]",

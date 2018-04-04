@@ -832,6 +832,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         observerRunnable = objectGraph.get(DataObserverRunnable.class);
         metricsEventRunnable = objectGraph.get(MetricsEventRunnable.class);
 
+        ImmutableList.Builder<Future<?>> taskBuilder = ImmutableList.builder();
+
         ProductionObserver productionObserver = (ProductionObserver) objectGraph.get(Observer.class);
         RulesConfigLoader rulesConfigLoader = objectGraph.get(RulesConfigLoader.class);
         RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
@@ -868,10 +870,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
-        // Create runnable that will periodically check idle runners and run empty batches through them
-        ProduceEmptyBatchesForIdleRunnersRunnable idleRunnersRunnable = new ProduceEmptyBatchesForIdleRunnersRunnable();
-        idleRunnersRunnable.setPipelineRunner(runner);
-
         PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser);
         prodPipeline = builder.build(
           runningUser,
@@ -887,9 +885,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         int refreshInterval = configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
             MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
         if(refreshInterval > 0) {
-          metricsFuture =
-              runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
-                  TimeUnit.MILLISECONDS);
+          metricsFuture = runnerExecutor.scheduleAtFixedRate(
+            metricsEventRunnable,
+            0,
+            metricsEventRunnable.getScheduledDelay(),
+            TimeUnit.MILLISECONDS
+          );
+          taskBuilder.add(metricsFuture);
         }
         //Schedule Rules Config Loader
         rulesConfigLoader.setStatsQueue(statsQueue);
@@ -898,36 +900,52 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         } catch (InterruptedException e) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.toString(), e);
         }
-        ScheduledFuture<?> configLoaderFuture =
-            runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
-                TimeUnit.SECONDS);
-
-        ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
-            TimeUnit.SECONDS);
-
-        ScheduledFuture<?> idleRunnersFuture = runnerExecutor.scheduleWithFixedDelay(
-          idleRunnersRunnable,
-          // TODO: The unites here should be configurable as well (future patch)
-          10,
-          10,
+        ScheduledFuture<?> configLoaderFuture = runnerExecutor.scheduleWithFixedDelay(
+          rulesConfigLoaderRunnable,
+          1,
+          RulesConfigLoaderRunnable.SCHEDULED_DELAY,
           TimeUnit.SECONDS
         );
+        taskBuilder.add(configLoaderFuture);
+
+        ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(
+          metricObserverRunnable,
+          1,
+          2,
+          TimeUnit.SECONDS
+        );
+        taskBuilder.add(metricObserverFuture);
+
+        // Schedule a task to run empty batches for idle runners
+        if(pipelineConfigBean.runnerIdleTIme > 0) {
+          ProduceEmptyBatchesForIdleRunnersRunnable idleRunnersRunnable = new ProduceEmptyBatchesForIdleRunnersRunnable(
+            runner,
+            pipelineConfigBean.runnerIdleTIme * 1000 // The value inside the runnable is in milliseconds whereas user config is in seconds
+          );
+
+          // We'll schedule the task to run every 1/10 of the interval (really an arbitrary number)
+          long period = (pipelineConfigBean.runnerIdleTIme * 1000 )/ 10;
+
+          ScheduledFuture<?> idleRunnersFuture = runnerExecutor.scheduleWithFixedDelay(
+            idleRunnersRunnable,
+            period,
+            period,
+            TimeUnit.MILLISECONDS
+          );
+          taskBuilder.add(idleRunnersFuture);
+        }
 
         // update checker
         updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
         ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
+        taskBuilder.add(updateCheckerFuture);
 
         observerRunnable.setRequestQueue(productionObserveRequests);
         observerRunnable.setStatsQueue(statsQueue);
         Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
+        taskBuilder.add(observerFuture);
 
-        List<Future<?>> list;
-        if (metricsFuture != null) {
-          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture, idleRunnersFuture);
-        } else {
-          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture, idleRunnersFuture);
-        }
-        pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
+        pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, taskBuilder.build());
       } catch (Exception e) {
         validateAndSetStateTransition(user, PipelineStatus.START_ERROR, e.toString(), null);
         throw e;

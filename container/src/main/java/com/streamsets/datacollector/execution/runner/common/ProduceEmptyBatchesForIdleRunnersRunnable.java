@@ -27,23 +27,32 @@ public class ProduceEmptyBatchesForIdleRunnersRunnable implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProduceEmptyBatchesForIdleRunnersRunnable.class);
 
-  private ProductionPipelineRunner pipelineRunner = null;
+  /**
+   * Pipeline Runner responsible for running this pipeline.
+   */
+  private final ProductionPipelineRunner pipelineRunner;
 
-  public void setPipelineRunner(ProductionPipelineRunner pipelineRunner) {
+  /**
+   * Idle time in ms.
+   */
+  private final long idleTime;
+
+  public ProduceEmptyBatchesForIdleRunnersRunnable(
+    ProductionPipelineRunner pipelineRunner,
+    long idleTime
+  ) {
     this.pipelineRunner = pipelineRunner;
+    this.idleTime = idleTime;
   }
 
   @Override
   public void run() {
     String originalName = Thread.currentThread().getName();
     Thread.currentThread().setName("Pipeline Idle Runner");
-    if(pipelineRunner != null) {
-      try {
-        // TODO: The config value needs to be taken from pipeline config (to be accomplished in a future patch)
-        pipelineRunner.produceEmptyBatchesForIdleRunners(60*1000);
-      } catch (Exception e) {
-        LOG.error("Error when producing empty batch for idle runner: " + e.toString(), e);
-      }
+    try {
+      pipelineRunner.produceEmptyBatchesForIdleRunners(idleTime);
+    } catch (Exception e) {
+      LOG.error("Error when producing empty batch for idle runner: " + e.toString(), e);
     }
     Thread.currentThread().setName(originalName);
   }
