@@ -939,6 +939,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
           }
 
           LOG.debug("Generating empty batch for runner: {}", runner.getRunnerId());
+          pipeContext.getRuntimeStats().incIdleBatchCount();
 
           // Pipe batch to keep the batch info
           FullPipeBatch pipeBatch = new FullPipeBatch(null, null, 0, false);

@@ -524,7 +524,8 @@
       "summaryTab": {
         "alertsTitle": "Alerts",
         "batchThroughput": "Batch Throughput",
-        "batchCount": "Batch Count",
+        "batchCount": "Data Batch Count",
+        "idleBatchCount": "Idle Batch Count",
         "chartsLabel": "Charts",
         "chartsPlaceholder": "Select Chart",
         "currentSourceOffset": "Current Source Offset",

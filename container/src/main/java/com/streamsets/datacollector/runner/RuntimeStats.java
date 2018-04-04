@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RuntimeStats implements GaugeValue {
 
   private AtomicLong batchCount;
+  private AtomicLong idleBatchCount;
   private long timeOfLastReceivedRecord;
   private long lastBatchInputRecordsCount;
   private long lastBatchOutputRecordsCount;
@@ -37,14 +38,23 @@ public class RuntimeStats implements GaugeValue {
     // pipeline is started.
     timeOfLastReceivedRecord = System.currentTimeMillis();
     batchCount = new AtomicLong(0);
+    idleBatchCount = new AtomicLong(0);
   }
 
   public long getBatchCount() {
     return batchCount.get();
   }
 
+  public long getIdleBatchCount() {
+    return idleBatchCount.get();
+  }
+
   public void incBatchCount() {
     batchCount.incrementAndGet();
+  }
+
+  public void incIdleBatchCount() {
+    idleBatchCount.incrementAndGet();
   }
 
   public long getTimeOfLastReceivedRecord() {
@@ -107,6 +117,7 @@ public class RuntimeStats implements GaugeValue {
   public void serialize(JsonGenerator jg) throws IOException {
     jg.writeStartObject();
     jg.writeObjectField("batchCount", batchCount.get());
+    jg.writeObjectField("idleBatchCount", idleBatchCount.get());
     jg.writeObjectField("timeOfLastReceivedRecord", timeOfLastReceivedRecord);
     jg.writeObjectField("lastBatchInputRecordsCount", lastBatchInputRecordsCount);
     jg.writeObjectField("lastBatchOutputRecordsCount", lastBatchOutputRecordsCount);
