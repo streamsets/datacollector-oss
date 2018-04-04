@@ -402,6 +402,12 @@ public class Pipeline {
 
   public void destroy(boolean productionExecution, PipelineStopReason stopReason) throws StageException, PipelineRuntimeException {
     LOG.info("Destroying pipeline with reason={}", stopReason.name());
+
+    // Ensure that all stages are properly stopped. This method is usually called by the framework when a pipeline
+    // stops properly (in order to force the pipeline to stop). However if the pipeline is failing (random runtime
+    // exception), then we need to make sure of that ourselves here.
+    stop();
+
     Throwable exception = null;
 
     try {
