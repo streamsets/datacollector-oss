@@ -155,6 +155,11 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
 
   private static final Object[] NULL_ONE_ARG = {null};
 
+  @Override
+  public String getConfig(String configName) {
+    return configuration.get(STAGE_CONF_PREFIX + configName, null);
+  }
+
 
   @Override
   public String getResourcesDirectory() {

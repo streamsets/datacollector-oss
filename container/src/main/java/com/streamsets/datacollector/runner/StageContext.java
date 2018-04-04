@@ -267,11 +267,6 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     return stageInfo;
   }
 
-  @Override // TODO: Candidate to be moved to ProtoConfigurableEntity.Context
-  public String getConfig(String configName) {
-    return configuration.get(STAGE_CONF_PREFIX + configName, null);
-  }
-
   @Override
   public ExecutionMode getExecutionMode() {
     return executionMode;
