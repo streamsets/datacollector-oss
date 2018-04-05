@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,6 +33,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,6 +41,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasKey;
+import static com.streamsets.testing.Matchers.fieldWithValue;
 public class TestFieldValueReplacer {
 
   @Test
@@ -877,14 +889,7 @@ public class TestFieldValueReplacer {
     runner.runInit();
 
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("name", Field.create(Field.Type.STRING, "Steve"));
-      map.put("money", Field.create(Field.Type.INTEGER, 200));
-      map.put("streetAddress", Field.create(Field.Type.STRING, "123 Street"));
-      map.put("stateTax", Field.create(Field.Type.DOUBLE,  7.5));
-      map.put("fedTax", Field.create(Field.Type.DOUBLE, 30.34));
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
+      Record record = getConditionallyReplaceRecord();
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(1, output.getRecords().get("a").size());
@@ -911,6 +916,19 @@ public class TestFieldValueReplacer {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @NotNull
+  protected static Record getConditionallyReplaceRecord() {
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "Steve"));
+    map.put("money", Field.create(Field.Type.INTEGER, 200));
+    map.put("streetAddress", Field.create(Field.Type.STRING, "123 Street"));
+    map.put("stateTax", Field.create(Field.Type.DOUBLE,  7.5));
+    map.put("fedTax", Field.create(Field.Type.DOUBLE, 30.34));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    return record;
   }
 
 
@@ -1238,4 +1256,59 @@ public class TestFieldValueReplacer {
     }
   }
 
+  @Test
+  public void testPreserveExceptionCauseReplacementValue() throws StageException {
+
+    FieldValueConditionalReplacerConfig replacement1 = new FieldValueConditionalReplacerConfig();
+    replacement1.operator = "LESS_THAN";
+    replacement1.comparisonValue = "40.0";
+    replacement1.replacementValue = "invalidNumber";
+    replacement1.fieldNames = new ArrayList<>();
+    replacement1.fieldNames.add("/stateTax");
+    replacement1.fieldNames.add("/fedTax");
+
+    assertNumberFormatExceptionCause(replacement1);
+  }
+
+  @Test
+  public void testPreserveExceptionCauseComparisonValue() throws StageException {
+    FieldValueConditionalReplacerConfig replacement1 = new FieldValueConditionalReplacerConfig();
+    replacement1.operator = "LESS_THAN";
+    replacement1.comparisonValue = "stillInvalidNumber";
+    replacement1.replacementValue = "25.0";
+    replacement1.fieldNames = new ArrayList<>();
+    replacement1.fieldNames.add("/stateTax");
+    replacement1.fieldNames.add("/fedTax");
+
+    assertNumberFormatExceptionCause(replacement1);
+  }
+
+  public static void assertNumberFormatExceptionCause(FieldValueConditionalReplacerConfig config) throws StageException {
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
+        .addConfiguration("nullReplacerConditionalConfigs", null)
+        .addConfiguration("fieldsToReplaceIfNull", null)
+        .addConfiguration("fieldsToConditionallyReplace", Collections.singletonList(config))
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addOutputLane("a")
+        .build();
+    runner.runInit();
+
+    try {
+      Record record = getConditionallyReplaceRecord();
+
+      try {
+        StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+        Assert.fail("Exception should have been thrown");
+      } catch (Exception e) {
+        // IllegalArgumentException is the type we throw
+        assertThat(e, instanceOf(IllegalArgumentException.class));
+        assertThat(e.getCause(), notNullValue());
+        // in the case of exception during comparison, there is another wrapped IllegalArgumentException
+        assertThat(e.getCause(), instanceOf(NumberFormatException.class));
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
