@@ -350,7 +350,7 @@ public class DirectorySpooler {
 
     scheduledExecutor = new SafeScheduledExecutorService(1, "directory-dirspooler");
 
-    findAndQueueFiles(true, false);
+    findAndQueueFiles(currentFile, true, false);
 
     finder = new FileFinder();
     scheduledExecutor.scheduleAtFixedRate(finder, spoolingPeriodSec, spoolingPeriodSec, TimeUnit.SECONDS);
@@ -529,8 +529,7 @@ public class DirectorySpooler {
   }
 
   private List<WrappedFile> findAndQueueFiles(
-      final boolean includeStartingFile,
-      boolean checkCurrent
+      final WrappedFile startingFile, final boolean includeStartingFile, boolean checkCurrent
   ) throws IOException {
     if (filesQueue.size() >= maxSpoolFiles) {
       LOG.debug(Utils.format("Exceeded max number '{}' of spool files in directory", maxSpoolFiles));
@@ -543,14 +542,7 @@ public class DirectorySpooler {
       try {
         fs.addDirectory(spoolDirPath, directories);
       } catch (Exception ex) {
-        throw new IOException(
-            String.format(
-                "findAndQueueFiles(): walkFileTree error. currentFile: '%s' %n error message: %s",
-                currentFile,
-                ex.getMessage()
-            ),
-            ex
-        );
+        throw new IOException("findAndQueueFiles(): walkFileTree error. startingFile " + startingFile + ex.getMessage(), ex);
       }
     } else {
       directories.add(spoolDirPath);
@@ -561,7 +553,7 @@ public class DirectorySpooler {
       for (WrappedFile dir : directories) {
         try {
           List<WrappedFile> matchingFile = new ArrayList<>();
-          fs.addFiles(dir, currentFile, matchingFile, includeStartingFile, useLastModified);
+          fs.addFiles(dir, startingFile, matchingFile, includeStartingFile, useLastModified);
 
           //WrappedFile archiveDirPath, List<WrappedFile> toProcess, long timeThreshold
           for (WrappedFile file : matchingFile) {
@@ -648,7 +640,7 @@ public class DirectorySpooler {
       // by using current we give a chance to have unprocessed files out of order
       LOG.debug("Starting file finder from '{}'", currentFile);
       try {
-        findAndQueueFiles(false, true);
+        findAndQueueFiles(currentFile, false, true);
       } catch (Exception ex) {
         LOG.warn("Error while scanning directory '{}' for files newer than '{}': {}", archiveDirPath, currentFile,
             ex.toString(), ex);
