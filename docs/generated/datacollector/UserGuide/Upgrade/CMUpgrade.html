@@ -140,6 +140,11 @@ To upgrade <span class="ph">Data Collector</span>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the CSD from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                <div class="itemgroup info">Or, you can use the GNU Wget program to download the CSD from the command line
+                    by running the following
+                    commands:<pre class="pre codeblock">export VERSION="<span class="ph">3.1.0.0</span>"
+wget https://archives.streamsets.com/datacollector/$VERSION/csd/STREAMSETS-$VERSION.jar</pre>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Remove the previous StreamSets CSD file from Cloudera Manager.</span>
