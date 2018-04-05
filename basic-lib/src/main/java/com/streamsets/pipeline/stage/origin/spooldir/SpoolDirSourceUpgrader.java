@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
-import com.streamsets.pipeline.lib.dirspooler.FileOrdering;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 
 import java.util.ArrayList;

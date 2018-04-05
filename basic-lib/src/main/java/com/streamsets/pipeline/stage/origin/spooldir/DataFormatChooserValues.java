@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.dirspooler;
+package com.streamsets.pipeline.stage.origin.spooldir;
 
-public class BadSpoolFileException extends Exception {
-  private final String file;
-  private final String pos;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-  public BadSpoolFileException(String file, String pos, Exception ex) {
-    super(ex);
-    this.file = file;
-    this.pos = pos;
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+
+  public DataFormatChooserValues() {
+    super(
+      DataFormat.AVRO,
+      DataFormat.DELIMITED,
+      DataFormat.JSON,
+      DataFormat.LOG,
+      DataFormat.PROTOBUF,
+      DataFormat.SDC_JSON,
+      DataFormat.TEXT,
+      DataFormat.WHOLE_FILE,
+      DataFormat.XML
+    );
   }
 
-  public String getFile() {
-    return file;
-  }
-
-  public String getPos() {
-    return pos;
-  }
 }

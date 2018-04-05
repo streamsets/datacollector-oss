@@ -26,17 +26,14 @@ import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.dirspooler.LocalFileSystem;
-import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
-import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -67,25 +64,25 @@ public class TestCsvSpoolDirSource {
   private final static String LINE2 = "a,b";
   private final static String LINE3 = "e,f";
 
-  private WrappedFile createDelimitedFile() throws Exception {
+  private File createDelimitedFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write(LINE1 + "\n");
     writer.write(LINE2 + "\n");
     writer.write(LINE3 + "\n");
     writer.close();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
-  private WrappedFile createCustomDelimitedFile() throws Exception {
+  private File createCustomDelimitedFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write("A^!B !^$^A\n");
     writer.close();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
-  private WrappedFile createSomeRecordsTooLongFile() throws Exception {
+  private File createSomeRecordsTooLongFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write("a,b,c,d\n");
@@ -99,27 +96,27 @@ public class TestCsvSpoolDirSource {
     writer.write("aa3,bb3,cc3,dd3\n");
     writer.write("aa4,bb5,cc5,dd5\n");
     writer.close();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
-  private WrappedFile createCommentFile() throws Exception {
+  private File createCommentFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write("a,b\n");
     writer.write("# This is comment\n");
     writer.write("c,d\n");
     writer.close();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
-  private WrappedFile createEmptyLineFile() throws Exception {
+  private File createEmptyLineFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write("a,b\n");
     writer.write("\n");
     writer.write("c,d\n");
     writer.close();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
   private SpoolDirSource createSource(
@@ -209,7 +206,7 @@ public class TestCsvSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      WrappedFile testFile = createDelimitedFile();
+      File testFile = createDelimitedFile();
       SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
       Assert.assertEquals("-1", runnable.generateBatch(testFile, "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
@@ -218,7 +215,7 @@ public class TestCsvSpoolDirSource {
       Assert.assertEquals(3, records.size());
       Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("B", records.get(0).get("[1]/value").getValueAsString());
-      Assert.assertEquals(testFile.getAbsolutePath(), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE));
+      Assert.assertEquals(testFile.getPath(), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE));
       Assert.assertEquals("test.log", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
       Assert.assertEquals("0", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
       Assert.assertFalse(records.get(0).has("[0]/header"));
@@ -398,7 +395,7 @@ public class TestCsvSpoolDirSource {
 
   @Test
   public void testRecordOverrunOnBatchBoundary() throws Exception {
-    final File csvFile = new File(createSomeRecordsTooLongFile().getAbsolutePath());
+    final File csvFile = createSomeRecordsTooLongFile();
     runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {2, 1}, new int[] {1, 2});
     runRecordOverrunOnBatchBoundaryHelper(csvFile, 4, new int[] {3, 2}, new int[] {1, 2});
     runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {3, 2}, new int[] {2, 3});

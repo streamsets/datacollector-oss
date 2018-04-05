@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
-import com.streamsets.pipeline.lib.dirspooler.Offset;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

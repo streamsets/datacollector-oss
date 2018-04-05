@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.dirspooler;
+package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 
-public enum  FileOrdering implements Label{
-  TIMESTAMP("Last Modified Timestamp"),
-  LEXICOGRAPHICAL("Lexicographically Ascending File Names")
-  ;
-
-  private final String label;
-
-  FileOrdering(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+public class PathMatcherModeChooserValues extends BaseEnumChooserValues<PathMatcherMode> {
+  public PathMatcherModeChooserValues() {
+    super(PathMatcherMode.class);
   }
 }

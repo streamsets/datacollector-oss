@@ -23,14 +23,11 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.dirspooler.LocalFileSystem;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
-import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
@@ -65,7 +62,7 @@ public class TestAvroSpoolDirSource {
     +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
     +"]}";
 
-  private WrappedFile createAvroDataFile() throws Exception {
+  private File createAvroDataFile() throws Exception {
     File f = new File(createTestDir(), "file-0.avro");
     Schema schema = new Schema.Parser().parse(AVRO_SCHEMA);
     GenericRecord boss = new GenericData.Record(schema);
@@ -102,7 +99,7 @@ public class TestAvroSpoolDirSource {
     dataFileWriter.flush();
     dataFileWriter.close();
 
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    return f;
   }
 
   private SpoolDirSource createSource() {

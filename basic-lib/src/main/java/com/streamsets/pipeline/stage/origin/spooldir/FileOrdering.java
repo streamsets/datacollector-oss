@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.dirspooler;
+package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.Label;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+public enum  FileOrdering implements Label{
+  TIMESTAMP("Last Modified Timestamp"),
+  LEXICOGRAPHICAL("Lexicographically Ascending File Names")
+  ;
 
-  public DataFormatChooserValues() {
-    super(
-      DataFormat.AVRO,
-      DataFormat.DELIMITED,
-      DataFormat.JSON,
-      DataFormat.LOG,
-      DataFormat.PROTOBUF,
-      DataFormat.SDC_JSON,
-      DataFormat.TEXT,
-      DataFormat.WHOLE_FILE,
-      DataFormat.XML
-    );
+  private final String label;
+
+  FileOrdering(String label) {
+    this.label = label;
   }
 
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }
