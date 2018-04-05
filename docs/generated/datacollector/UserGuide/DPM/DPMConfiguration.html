@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Control Hub Configuration" /><meta name="abstract" content="You can customize how a Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, dpm.properties." /><meta name="description" content="You can customize how a Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, dpm.properties." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hrn_zz3_fx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Control Hub Configuration</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Control Hub Configuration File" /><meta name="abstract" content="You can customize how a registered Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, $SDC_CONF/dpm.properties, located in the Data Collector installation." /><meta name="description" content="You can customize how a registered Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, $SDC_CONF/dpm.properties, located in the Data Collector installation." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hrn_zz3_fx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Control Hub Configuration File</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -44,18 +44,20 @@
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">StreamSets Control Hub</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_hrn_zz3_fx">
     <h1 class="title topictitle1"><span class="ph">Control Hub</span>
-        Configuration</h1>
+        Configuration File</h1>
 
     
-    <div class="body conbody"><p class="shortdesc">You can customize how a <span class="ph">Data Collector</span> works
+    <div class="body conbody"><p class="shortdesc">You can customize how a registered <span class="ph">Data Collector</span> works
         with <span class="ph">StreamSets Control Hub</span> by editing the <span class="ph">Control Hub</span>
-        configuration file, dpm.properties.</p>
+        configuration file, <samp class="ph systemoutput">$SDC_CONF/dpm.properties</samp>, located in the
+            <span class="ph">Data Collector</span>
+        installation.</p>
 
-        <p class="p">Use a text editor to edit the <span class="ph">Control Hub</span>
-            configuration file, <samp class="ph systemoutput">$SDC_CONF/dpm.properties</samp>. To enable the
-            changes, restart <span class="ph">Data Collector</span>.</p>
+        <p class="p">Use a text editor
+            to edit the <samp class="ph systemoutput">dpm.properties</samp> configuration file. To enable
+            the changes, restart <span class="ph">Data Collector</span>.</p>
 
-        <p class="p">The <span class="ph">Data Collector</span>
+        <p class="p">The <span class="ph">Control Hub</span>
             configuration file includes the following general properties:</p>
 
         
@@ -64,9 +66,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="30%" id="d62769e59">General Property</th>
+                        <th class="entry" valign="top" width="40%" id="d62760e70">General Property</th>
 
-                        <th class="entry" valign="top" width="70%" id="d62769e62">Description</th>
+                        <th class="entry" valign="top" width="60%" id="d62760e73">Description</th>
 
                     </tr>
 
@@ -74,116 +76,141 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.enabled</td>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.enabled</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Specifies whether the <span class="ph">Data Collector</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Specifies whether the <span class="ph">Data Collector</span> is
+                                    enabled to work with <span class="ph">Control Hub</span>.
+                                        <p class="p">Default is false.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.base.url</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.base.url</td>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Base URL to access <span class="ph">Control Hub</span>.
+                                    Enter the appropriate URL: <ul class="ul" id="concept_hrn_zz3_fx__ul_ijm_fmx_fdb">
+                                    <li class="li">For <span class="ph">Control Hub</span> cloud, use
+                                            <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hrn_zz3_fx__ul_c2n_5kd_j1b">
-        <li class="li">For <span class="ph">Control Hub</span> cloud, use
-          <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+                                    <li class="li">For <span class="ph">Control Hub</span> on-premises, use the URL provided by your system
+                                        administrator. For example,
+                                            <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
 
-        <li class="li">For <span class="ph">Control Hub</span> on-premises, use the
-         URL provided by your system administrator. For example,
-          <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
-
-       </ul>
+                                </ul>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.registration.retry.attempts</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.registration.retry.attempts</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Maximum number of times that <span class="ph">Data Collector</span> attempts to register with <span class="ph">Control Hub</span> before failing the registration.<p class="p">Default is 5.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Maximum number of times that <span class="ph">Data Collector</span>
+                                    attempts to register with <span class="ph">Control Hub</span>
+                                    before failing the registration.<p class="p">Default is 5.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.security.validationTokenFrequency.secs</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.security.validationTokenFrequency.secs</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Frequency in seconds that <span class="ph">Data Collector</span> validates authentication and user tokens with <span class="ph">Control Hub</span>.<p class="p">Default is 60.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Frequency in seconds that <span class="ph">Data Collector</span>
+                                    validates authentication and user tokens with <span class="ph">Control Hub</span>.<p class="p">Default is 60.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.appAuthToken</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.appAuthToken</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">File located within <samp class="ph codeph">$SDC_CONF</samp>, the <span class="ph">Data Collector</span> configuration directory, that includes the authentication token for
-                            this <span class="ph">Data Collector</span> instance.<p class="p">Generally, you should not need to change this value.
-                            </p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">File located within <samp class="ph codeph">$SDC_CONF</samp>, the <span class="ph">Data Collector</span>
+                                    configuration directory, that includes the authentication token
+                                    for this <span class="ph">Data Collector</span>
+                                        instance.<p class="p">Generally, you should not need to change this
+                                        value. </p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.remote.control.job.labels</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.remote.control.job.labels</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Labels to assign to this <span class="ph">Data Collector</span>. Use labels to group <span class="ph">Data Collector</span>s registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of labels.
-                                <p class="p">Default is "all", which you can use to run a job on all
-                                registered <span class="ph">Data Collector</span>s. </p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Labels to assign to this <span class="ph">Data Collector</span>. Use
+                                    labels to group <span class="ph">Data Collector</span>s
+                                    registered with <span class="ph">Control Hub</span>. To
+                                    assign multiple labels, enter a comma-separated list of labels.
+                                        <p class="p">Default is "all", which you can use to run a job on all
+                                        registered <span class="ph">Data Collector</span>s.
+                                    </p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.remote.control.ping.frequency</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.remote.control.ping.frequency</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 5,000.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Frequency in milliseconds that <span class="ph">Data Collector</span>
+                                    notifies <span class="ph">Control Hub</span> that
+                                    it is running. <p class="p">Default is 5,000.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.remote.control.events.recipient</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.remote.control.events.recipient</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">Data Collector</span> sends events. <p class="p">Do not change this value.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Name of the internal <span class="ph">Control Hub</span>
+                                    messaging queue to which <span class="ph">Data Collector</span> sends
+                                    events. <p class="p">Do not change this value.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.remote.control.status.events.interval</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.remote.control.status.events.interval</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">Frequency in milliseconds that <span class="ph">Data Collector</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are running
-                            on this <span class="ph">Data Collector</span>.<p class="p">Default is 60,000.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Frequency in milliseconds that <span class="ph">Data Collector</span>
+                                    informs <span class="ph">Control Hub</span> of the status of all local and published pipelines
+                                    that are running on this <span class="ph">Control Hub</span>.<p class="p">Default is 60,000.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.remote.deployment.id</td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.remote.deployment.id</td>
-
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">For provisioned <span class="ph">Data Collector</span>s, the ID of the deployment that provisioned the <span class="ph">Data Collector</span>.<p class="p">For manually administered <span class="ph">Data Collector</span>s, the value is blank.</p>
-<p class="p">Do not change this value.</p>
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">For provisioned <span class="ph">Data Collector</span>s, the
+                                    ID of the deployment that provisioned the <span class="ph">Data Collector</span>.<p class="p">For manually administered <span class="ph">Data Collector</span>s,
+                                        the value is blank.</p>
+<p class="p">Do not change this
+                                    value.</p>
 </td>
 
-                    </tr>
+                        </tr>
+<tr>
+                            <td class="entry" valign="top" width="40%" headers="d62760e70 ">http.meta.redirect.to.sso</td>
+
+                            <td class="entry" valign="top" width="60%" headers="d62760e73 ">Enables the redirect of <span class="ph">Data Collector</span> user
+                                    logins to <span class="ph">Control Hub</span>
+                                    using the HTML meta refresh method. Set to true only if the
+                                    registered <span class="ph">Data Collector</span> is
+                                    installed as on application on Microsoft Azure
+                                        HDInsight.<p class="p">Default is false, which means that <span class="ph">Data Collector</span>
+                                        uses HTTP redirect headers to redirect logins. Use the
+                                        default for all other <span class="ph">Data Collector</span>
+                                        installation types.</p>
+</td>
+
+                        </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d62769e59 ">dpm.alias.name.enabled</td>
+                        <td class="entry" valign="top" width="40%" headers="d62760e70 ">dpm.alias.name.enabled</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d62769e62 ">
-                            <p class="p">Enables using an abbreviated <span class="ph">Control Hub</span> user ID when Hadoop impersonation mode or shell impersonation
-                                mode are used.</p>
-
-                            <div class="p">By default, when using Hadoop impersonation mode or shell
-                                impersonation mode, a <span class="ph">Data Collector</span> registered with <span class="ph">Control Hub</span> uses the full <span class="ph">Control Hub</span> user ID as the user name, as
-                                follows:<pre class="pre codeblock" id="concept_hrn_zz3_fx__HImpMode-userid">&lt;ID&gt;@&lt;organization ID&gt;</pre>
+                        <td class="entry" valign="top" width="60%" headers="d62760e73 ">
+                            <p class="p">Enables using an abbreviated <span class="ph">Control Hub</span> user ID when Hadoop impersonation mode or shell
+                                        impersonation mode are used.</p>
+<div class="p">By default, when using Hadoop impersonation mode or shell
+                                        impersonation mode, a <span class="ph">Data Collector</span>
+                                        registered with <span class="ph">Control Hub</span> uses the full <span class="ph">Control Hub</span> user ID as the user name, as
+                                        follows:<pre class="pre codeblock" id="concept_hrn_zz3_fx__d11402e346">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 </div>
-
-                            <p class="p">Enable this property <span class="ph">to use only the ID, ignoring "<samp class="ph codeph">@&lt;organization
-                              ID&gt;</samp>". For example, using <samp class="ph codeph">myname</samp> instead of
-                              <samp class="ph codeph">myname@org</samp> as the user name.</span></p>
-
-                            <p class="p">To use a partial <span class="ph">Control Hub</span> user ID, uncomment the property and set it to true.</p>
+<p class="p">Enable this property <span class="ph">to use only the ID, ignoring "<samp class="ph codeph">@&lt;organization
+                        ID&gt;</samp>". For example, using <samp class="ph codeph">myname</samp> instead of
+                        <samp class="ph codeph">myname@org</samp> as the user name.</span></p>
+<p class="p">To use a partial <span class="ph">Control Hub</span>
+                                        user ID, uncomment the property and set it to true.</p>
 
                             <p class="p">When using Hadoop impersonation mode, the Hadoop system, <span class="ph">Data Collector</span>, and the pipeline stages must be properly configured. For more
                                 information, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop Impersonation Mode</a>.</p>

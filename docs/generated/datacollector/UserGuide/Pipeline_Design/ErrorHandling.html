@@ -79,7 +79,8 @@
       deliberately dropped from the pipeline such as records without required fields.</p>
 
     <p class="p">The pipeline handles error records based on the Error Records property on the Error Records
-      tab. When <span class="ph">Data Collector</span> encounters an unexpected error, it stops the pipeline and logs the error.</p>
+      tab. When <span class="ph">Data Collector</span>
+      encounters an unexpected error, it stops the pipeline and logs the error.</p>
 
     <div class="p"> The pipeline provides the following error record handling options:<dl class="dl">
         
@@ -104,6 +105,16 @@
             pipeline. </dd>
 
           <dd class="dd">For more information about SDC RPC pipelines, see <a class="xref" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" title="Data Collector Remote Protocol Call pipelines, a.k.a. SDC RPC pipelines, are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system.">SDC RPC Pipeline Overview</a>.</dd>
+
+        
+        
+          <dt class="dt dlterm">Write to Azure Event Hub</dt>
+
+          <dd class="dd">The pipeline writes error records and related details to Microsoft Azure Event Hub.
+              <span class="ph">Data Collector</span>
+            includes the records in error record counts and metrics.</dd>
+
+          <dd class="dd">You define the configuration properties for the Azure Event Hub to use. </dd>
 
         
         
