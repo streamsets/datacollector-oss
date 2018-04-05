@@ -100,7 +100,7 @@ public class MultiKafkaBeanConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Max Match Size (records)",
+      label = "Max Batch Size (records)",
       description = "Maximum number of records per batch",
       displayPosition = 60,
       group = "KAFKA"
