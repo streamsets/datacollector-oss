@@ -817,9 +817,10 @@ angular
 
         $rootScope.common.pipelineStatusMap = pipelineStatusMap;
 
-        return $q.all([api.pipelineAgent.getPipelineConfig(routeParamPipelineName),
-          api.pipelineAgent.getPipelineRules(routeParamPipelineName),
-          api.pipelineAgent.getPipelineMetrics(routeParamPipelineName, 0)]);
+        return $q.all([
+          api.pipelineAgent.getPipelineConfig(routeParamPipelineName),
+          api.pipelineAgent.getPipelineRules(routeParamPipelineName)
+        ]);
       },function(resp) {
         $scope.showLoading = false;
         $rootScope.common.errors = [resp.data];
@@ -832,7 +833,12 @@ angular
           var rules = results[1].data;
           var clickedAlert = $rootScope.common.clickedAlert;
 
-          $rootScope.common.pipelineMetrics = results[2].data;
+          api.pipelineAgent.getPipelineMetrics(routeParamPipelineName, 0)
+            .then(
+              function(res) {
+                $rootScope.common.pipelineMetrics = res.data;
+              }
+            );
 
           if ($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
             updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
