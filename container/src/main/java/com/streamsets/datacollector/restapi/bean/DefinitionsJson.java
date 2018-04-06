@@ -15,12 +15,16 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DefinitionsJson {
   private List<PipelineDefinitionJson> pipeline;
+  private List<PipelineFragmentDefinitionJson> pipelineFragment;
   private List<PipelineRulesDefinitionJson> pipelineRules;
   private List<StageDefinitionJson> stages;
   private List<ServiceDefinitionJson> services;
@@ -35,6 +39,14 @@ public class DefinitionsJson {
 
   public void setPipeline(List<PipelineDefinitionJson> pipeline) {
     this.pipeline = pipeline;
+  }
+
+  public List<PipelineFragmentDefinitionJson> getPipelineFragment() {
+    return pipelineFragment;
+  }
+
+  public void setPipelineFragment(List<PipelineFragmentDefinitionJson> pipelineFragment) {
+    this.pipelineFragment = pipelineFragment;
   }
 
   public List<StageDefinitionJson> getStages() {

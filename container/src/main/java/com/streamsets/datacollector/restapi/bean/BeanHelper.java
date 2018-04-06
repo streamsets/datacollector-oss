@@ -28,6 +28,7 @@ import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -314,6 +315,24 @@ public class BeanHelper {
       return null;
     }
     return pipelineConfigurationJson.getPipelineConfiguration();
+  }
+
+  public static PipelineFragmentConfigurationJson wrapPipelineFragmentConfiguration(
+      PipelineFragmentConfiguration pipelineFragmentConfiguration
+  ) {
+    if(pipelineFragmentConfiguration == null) {
+      return null;
+    }
+    return new PipelineFragmentConfigurationJson(pipelineFragmentConfiguration);
+  }
+
+  public static PipelineFragmentConfiguration unwrapPipelineFragmentConfiguration(
+      PipelineFragmentConfigurationJson pipelineFragmentConfigurationJson
+  ) {
+    if(pipelineFragmentConfigurationJson == null) {
+      return null;
+    }
+    return pipelineFragmentConfigurationJson.getFragmentConfiguration();
   }
 
   public static PipelineInfo unwrapPipelineInfo(PipelineInfoJson pipelineInfoJson) {
@@ -646,6 +665,15 @@ public class BeanHelper {
       return null;
     }
     return new PipelineDefinitionJson(pipelineDefinition);
+  }
+
+  public static PipelineFragmentDefinitionJson wrapPipelineFragmentDefinition(
+      PipelineFragmentDefinition pipelineFragmentDefinition
+  ) {
+    if(pipelineFragmentDefinition == null) {
+      return null;
+    }
+    return new PipelineFragmentDefinitionJson(pipelineFragmentDefinition);
   }
 
   public static PipelineRulesDefinitionJson wrapPipelineRulesDefinition(

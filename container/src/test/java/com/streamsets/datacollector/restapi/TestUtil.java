@@ -17,6 +17,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.el.ElConstantDefinition;
@@ -146,6 +147,7 @@ public class TestUtil {
     Mockito.when(lib.getStages()).thenReturn(stages);
 
     Mockito.when(lib.getPipeline()).thenReturn(PipelineDefinition.getPipelineDef());
+    Mockito.when(lib.getPipelineFragment()).thenReturn(PipelineFragmentDefinition.getPipelineFragmentDef());
     Mockito.when(lib.getPipelineRules()).thenReturn(PipelineRulesDefinition.getPipelineRulesDef());
     return lib;
   }

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.validation.Issues;
-import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
+import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -47,7 +47,7 @@ public class PipelineFragmentConfiguration implements Serializable {
   protected List<Config> configuration;
   protected Map<String, Object> metadata;
   private PipelineInfo info;
-  private boolean previewable;
+  protected boolean previewable;
 
   public PipelineFragmentConfiguration(
       UUID uuid,
@@ -166,7 +166,7 @@ public class PipelineFragmentConfiguration implements Serializable {
     //NOP, just for jackson
   }
 
-  public void setValidation(PipelineConfigurationValidator validation) {
+  public void setValidation(PipelineFragmentConfigurationValidator validation) {
     issues = validation.getIssues();
     previewable = validation.canPreview();
   }

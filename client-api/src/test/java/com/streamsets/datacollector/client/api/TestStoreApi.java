@@ -20,6 +20,7 @@ import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.model.MetricsRuleDefinitionJson;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
+import com.streamsets.datacollector.client.model.PipelineFragmentEnvelopeJson;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
@@ -61,6 +62,7 @@ public class TestStoreApi {
 
       testStoreAPI(storeApi);
       testStoreAPINegativeCases(storeApi);
+      testPipelineFragmentAPI(storeApi);
 
       TestUtil.stopServer(server);
     } catch (Exception e) {
@@ -84,7 +86,7 @@ public class TestStoreApi {
   private void testStoreAPI(StoreApi storeApi) throws ApiException {
     String pipelineName = "testGetPipeline";
 
-    //Create Pipeline
+    // Create Pipeline
     PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
         pipelineName,
       "Testing getPipeline test case",
@@ -92,18 +94,18 @@ public class TestStoreApi {
     );
     Assert.assertNotNull(pipelineConfig);
 
-    //Fetch Pipeline Configuration
+    // Fetch Pipeline Configuration
     pipelineConfig = storeApi.getPipelineInfo(pipelineName, "0", "pipeline", false);
     Assert.assertNotNull(pipelineConfig);
 
-    //Update Pipeline Configuration
+    // Update Pipeline Configuration
     PipelineConfigurationJson updatedPipelineConfig = storeApi.savePipeline(pipelineName, pipelineConfig, "0",
       "Change description");
     Assert.assertNotNull(updatedPipelineConfig);
     Assert.assertNotEquals(pipelineConfig.getInfo().getUuid(), updatedPipelineConfig.getInfo().getUuid());
 
 
-    //Fetch Pipeline Rules
+    // Fetch Pipeline Rules
     RuleDefinitionsJson pipelineRules = storeApi.getPipelineRules(pipelineName, "0");
     Assert.assertNotNull(pipelineRules);
     List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsonList = pipelineRules.getMetricsRuleDefinitions();
@@ -117,6 +119,25 @@ public class TestStoreApi {
     RuleDefinitionsJson updatedPipelineRules = storeApi.savePipelineRules(pipelineName, pipelineRules, "0");
     Assert.assertNotNull(updatedPipelineRules);
     Assert.assertNotEquals(pipelineRules.getUuid(), updatedPipelineRules.getUuid());
+  }
+
+  private void testPipelineFragmentAPI(StoreApi storeApi) throws ApiException {
+    String pipelineName = "testGetPipelineFragment";
+
+    // Create Pipeline Fragment
+    PipelineFragmentEnvelopeJson fragmentEnvelope = storeApi.createDraftPipelineFragment(
+        pipelineName,
+        "Testing Fragment"
+    );
+    Assert.assertNotNull(fragmentEnvelope);
+
+    // Update Pipeline Fragment Configuration
+    PipelineFragmentEnvelopeJson updatedFragmentEnvelope = storeApi.importPipelineFragment(
+        fragmentEnvelope.getPipelineFragmentConfig().getFragmentId(),
+        true,
+        fragmentEnvelope
+    );
+    Assert.assertNotNull(updatedFragmentEnvelope);
   }
 
   private void testStoreAPINegativeCases(StoreApi storeApi) {

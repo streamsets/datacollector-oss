@@ -43,17 +43,17 @@ public class PipelineConfigurationUtil {
 
   public static Map<String, String> getFlattenedStringMap(String mapName, PipelineConfiguration pipelineConf) {
     Map<String, String> result = new HashMap<>();
-    for (Map.Entry<String, Object> entry : getFlattenedMap(mapName, pipelineConf).entrySet()) {
+    for (Map.Entry<String, Object> entry : getFlattenedMap(mapName, pipelineConf.getConfiguration()).entrySet()) {
       result.put(entry.getKey(), String.valueOf(entry.getValue()));
     }
     return result;
   }
 
   @SuppressWarnings("unchecked")
-  public static Map<String, Object> getFlattenedMap(String mapName, PipelineConfiguration pipelineConf) {
+  public static Map<String, Object> getFlattenedMap(String mapName, List<Config> pipelineConf) {
     Map<String, Object> constants = new HashMap<>();
-    if(pipelineConf != null && pipelineConf.getConfiguration() != null) {
-      for (Config config : pipelineConf.getConfiguration()) {
+    if(pipelineConf != null) {
+      for (Config config : pipelineConf) {
         if (mapName.equals(config.getName()) && config.getValue() != null) {
           for (Map<String, String> map : (List<Map<String, String>>) config.getValue()) {
             constants.put(map.get(KEY), map.get(VALUE));

@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -62,7 +63,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -653,6 +653,52 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         .get(RemoteDataCollector.IS_REMOTE_PIPELINE);
     // remote attribute will be null for pipelines with version earlier than 1.3
     return isRemote != null && (boolean) isRemote;
+  }
+
+  @Override
+  public PipelineFragmentConfiguration createPipelineFragment(
+      String user,
+      String pipelineId,
+      String pipelineTitle,
+      String description,
+      boolean draft
+  ) {
+    // Supporting only draft version now - not storing in disk
+    synchronized (lockCache.getLock(pipelineId)) {
+      Date date = new Date();
+      UUID uuid = UUID.randomUUID();
+      PipelineInfo info = new PipelineInfo(
+          pipelineId,
+          pipelineTitle,
+          description,
+          date,
+          date,
+          user,
+          user,
+          REV,
+          uuid,
+          false,
+          null,
+          buildInfo.getVersion(),
+          runtimeInfo.getId()
+      );
+
+      PipelineFragmentConfiguration pipelineFragmentConfiguration = new PipelineFragmentConfiguration(
+          uuid,
+          PipelineConfigBean.VERSION,
+          SCHEMA_VERSION,
+          pipelineTitle,
+          pipelineId,
+          pipelineId,
+          description,
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyMap(),
+          stageLibrary.getPipeline().getPipelineDefaultConfigs()
+      );
+      pipelineFragmentConfiguration.setPipelineInfo(info);
+      return pipelineFragmentConfiguration;
+    }
   }
 
 }

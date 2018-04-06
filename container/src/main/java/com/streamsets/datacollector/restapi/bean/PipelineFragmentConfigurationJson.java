@@ -30,6 +30,9 @@ public class PipelineFragmentConfigurationJson implements Serializable {
 
   private final PipelineFragmentConfiguration fragmentConfiguration;
 
+  @JsonProperty("fragments")
+  private List<PipelineFragmentConfigurationJson> fragments;
+
   @SuppressWarnings("unchecked")
   public PipelineFragmentConfigurationJson(
       @JsonProperty("schemaVersion") int schemaVersion,
@@ -41,8 +44,9 @@ public class PipelineFragmentConfigurationJson implements Serializable {
       @JsonProperty("uuid") UUID uuid,
       @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
       @JsonProperty("uiInfo") Map<String, Object> uiInfo,
-      @JsonProperty("fragments") List<PipelineFragmentConfigurationJson> fragments,
-      @JsonProperty("stages") List<StageConfigurationJson> stages
+      @JsonProperty("stages") List<StageConfigurationJson> stages,
+      @JsonProperty("info") PipelineInfoJson pipelineInfo,
+      @JsonProperty("metadata") Map<String, Object> metadata
   ) {
     fragmentConfiguration = new PipelineFragmentConfiguration(
         uuid,
@@ -57,6 +61,8 @@ public class PipelineFragmentConfigurationJson implements Serializable {
         uiInfo,
         BeanHelper.unwrapConfigConfiguration(configuration)
     );
+    this.fragmentConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
+    this.fragmentConfiguration.setMetadata(metadata);
   }
 
   public PipelineFragmentConfigurationJson(PipelineFragmentConfiguration pipelineFragmentConfiguration) {
@@ -92,6 +98,14 @@ public class PipelineFragmentConfigurationJson implements Serializable {
 
   public PipelineInfoJson getInfo() {
     return BeanHelper.wrapPipelineInfo(fragmentConfiguration.getInfo());
+  }
+
+  public List<PipelineFragmentConfigurationJson> getFragments() {
+    return BeanHelper.wrapPipelineFragmentConfigurations(fragmentConfiguration.getFragments());
+  }
+
+  public void setFragments(List<PipelineFragmentConfigurationJson> fragments) {
+    this.fragments = fragments;
   }
 
   public List<StageConfigurationJson> getStages() {

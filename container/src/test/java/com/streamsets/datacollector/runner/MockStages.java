@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -655,6 +656,11 @@ public class MockStages {
     @Override
     public PipelineDefinition getPipeline() {
       return PipelineDefinition.getPipelineDef();
+    }
+
+    @Override
+    public PipelineFragmentDefinition getPipelineFragment() {
+      return PipelineFragmentDefinition.getPipelineFragmentDef();
     }
 
     @Override

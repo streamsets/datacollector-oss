@@ -30,6 +30,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
@@ -132,19 +133,24 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getDefinitions() {
-    //The definitions to be returned
+    // The definitions to be returned
     DefinitionsJson definitions = new DefinitionsJson();
 
-    //Populate the definitions with all the stage definitions
+    // Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     List<StageDefinitionJson> stages = new ArrayList<>(stageDefinitions.size());
     stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
     definitions.setStages(stages);
 
-    //Populate the definitions with the PipelineDefinition
+    // Populate the definitions with the PipelineDefinition
     List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
     definitions.setPipeline(pipeline);
+
+    // Populate the definitions with the PipelineFragmentDefinition
+    List<PipelineFragmentDefinitionJson> pipelineFragment = new ArrayList<>(1);
+    pipelineFragment.add(BeanHelper.wrapPipelineFragmentDefinition(stageLibrary.getPipelineFragment()));
+    definitions.setPipelineFragment(pipelineFragment);
 
     // Populate service definitions
     List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();

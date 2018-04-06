@@ -19,6 +19,7 @@ import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -41,6 +42,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public static final String SERVICE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.SERVICES_FILE;
 
   public PipelineDefinition getPipeline();
+
+  public PipelineFragmentDefinition getPipelineFragment();
 
   public PipelineRulesDefinition getPipelineRules();
 

@@ -18,6 +18,7 @@ package com.streamsets.datacollector.event.handler.remote;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.execution.Manager;
@@ -834,6 +835,17 @@ public class TestRemoteDataCollector {
     @Override
     public void registerStateListener(StateEventListener stateListener) {
 
+    }
+
+    @Override
+    public PipelineFragmentConfiguration createPipelineFragment(
+        String user,
+        String pipelineId,
+        String pipelineTitle,
+        String description,
+        boolean draft
+    ) throws PipelineException {
+      return null;
     }
 
     @Override

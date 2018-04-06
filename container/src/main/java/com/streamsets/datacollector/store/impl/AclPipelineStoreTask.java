@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.restapi.bean.UserJson;
@@ -215,5 +216,16 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
         return false;
       }
     });
+  }
+
+  @Override
+  public PipelineFragmentConfiguration createPipelineFragment(
+      String user,
+      String pipelineId,
+      String pipelineTitle,
+      String description,
+      boolean draft
+  ) throws PipelineException {
+    return pipelineStore.createPipelineFragment(user, pipelineId, pipelineTitle, description, draft);
   }
 }

@@ -21,6 +21,7 @@ import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuntimeEL;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -116,7 +117,7 @@ public class ElUtil {
     return new ELEvaluator(name, false, constants, elDefs);
   }
 
-  public static Map<String, Object> getConstants(PipelineConfiguration pipelineConf) {
+  public static Map<String, Object> getConstants(List<Config> pipelineConf) {
     return PipelineConfigurationUtil.getFlattenedMap(CONSTANTS, pipelineConf);
   }
 

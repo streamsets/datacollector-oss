@@ -15,15 +15,15 @@
  */
 package com.streamsets.datacollector.client.api;
 
-import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.ApiClient;
+import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.Configuration;
 import com.streamsets.datacollector.client.Pair;
 import com.streamsets.datacollector.client.TypeRef;
-
 import com.streamsets.datacollector.client.model.Order;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineEnvelopeJson;
+import com.streamsets.datacollector.client.model.PipelineFragmentEnvelopeJson;
 import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.PipelineOrderByFields;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
@@ -154,6 +154,55 @@ public class StoreApi {
     TypeRef returnType = new TypeRef<PipelineConfigurationJson>() {};
     return apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
         contentType, authNames, returnType);
+  }
+
+
+  /**
+   * Add a new Pipeline Fragment Configuration to the store
+   *
+   * @param fragmentId Frgament Id
+   * @param description Description
+   * @return PipelineFragmentEnvelopeJson
+   */
+  public PipelineFragmentEnvelopeJson createDraftPipelineFragment (
+      String fragmentId,
+      String description
+  ) throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'pipelineId' is set
+    if (fragmentId == null) {
+      throw new ApiException(400, "Missing the required parameter 'fragmentId' when calling createPipelineFragment");
+    }
+
+    // create path and map variables
+    String path = "/v1/fragment/{fragmentId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "fragmentId" + "\\}", apiClient.escapeString(fragmentId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "description", description));
+    queryParams.addAll(apiClient.parameterToPairs("", "draft", true));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<PipelineFragmentEnvelopeJson>() {};
+    return apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams,
+        accept, contentType, authNames, returnType);
   }
 
   /**
@@ -571,6 +620,63 @@ public class StoreApi {
     TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};
     return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
         contentType, authNames, returnType);
+  }
+
+
+  /**
+   * Import Pipeline Fragment Configuration & Rules
+   *
+   * @param fragmentId Fragment  Id
+   * @return fragmentEnvelope
+   */
+  public PipelineFragmentEnvelopeJson importPipelineFragment (
+      String fragmentId,
+      boolean draft,
+      PipelineFragmentEnvelopeJson fragmentEnvelope
+  ) throws ApiException {
+    Object postBody = fragmentEnvelope;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'fragmentId' is set
+    if (fragmentId == null) {
+      throw new ApiException(400, "Missing the required parameter 'fragmentId' when calling importPipelineFragment");
+    }
+
+    // verify the required parameter 'fragmentEnvelope' is set
+    if (fragmentEnvelope == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'pipelineEnvelope' when calling importPipelineFragment"
+      );
+    }
+
+    // create path and map variables
+    String path = "/v1/fragment/{fragmentId}/import".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "fragmentId" + "\\}", apiClient.escapeString(fragmentId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "draft", draft));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+        "application/json"
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+
+    TypeRef returnType = new TypeRef<PipelineFragmentEnvelopeJson>() {};
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams,
+        accept, contentType, authNames, returnType);
   }
 
   /**

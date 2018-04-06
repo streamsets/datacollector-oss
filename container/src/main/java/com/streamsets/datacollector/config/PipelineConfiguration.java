@@ -17,6 +17,7 @@ package com.streamsets.datacollector.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
@@ -115,6 +116,11 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
 
   public void setStopEventStages(List<StageConfiguration> stopEventStages) {
     this.stopEventStages = stopEventStages;
+  }
+
+  public void setValidation(PipelineConfigurationValidator validation) {
+    issues = validation.getIssues();
+    previewable = validation.canPreview();
   }
 
   @VisibleForTesting
