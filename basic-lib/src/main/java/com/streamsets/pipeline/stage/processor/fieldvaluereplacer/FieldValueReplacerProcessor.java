@@ -198,14 +198,10 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
                 }
 
               } catch (Exception e) {
-                if (e instanceof IllegalArgumentException) {
-                  throw (IllegalArgumentException)e;
-                } else {
-                  throw new IllegalArgumentException(Utils.format(
-                      Errors.VALUE_REPLACER_03.getMessage(),
-                      field.getType(), matchingField
-                  ), e);
-                }
+                throw new IllegalArgumentException(Utils.format(
+                    Errors.VALUE_REPLACER_03.getMessage(),
+                    field.getType(), matchingField
+                ), e);
               }
             }
           }
@@ -340,7 +336,11 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
           throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), field.getType(), matchingField));
       }
     } catch (Exception e) {
-      throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), field.getType()), e);
+      if (e instanceof IllegalArgumentException) {
+        throw (IllegalArgumentException)e;
+      } else {
+        throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), field.getType()), e);
+      }
     }
   }
 
