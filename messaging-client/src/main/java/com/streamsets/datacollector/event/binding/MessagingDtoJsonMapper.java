@@ -24,6 +24,7 @@ import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
+import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
@@ -36,6 +37,7 @@ import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
+import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
@@ -58,7 +60,13 @@ public abstract class MessagingDtoJsonMapper {
 
   public abstract PipelineBaseEventJson toPipelineBaseEventJson(PipelineBaseEvent event);
 
+  public abstract PipelineStopAndDeleteEventJson toPipelineStopAndDeleteEventJson(PipelineStopAndDeleteEvent event);
+
   public abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
+
+  public abstract PipelineStopAndDeleteEvent asPipelineStopAndDeleteEventDto(
+      PipelineStopAndDeleteEventJson pipelineStopAndDeleteEventJson
+  );
 
   public abstract DisconnectedSsoCredentialsEvent.Entry asDisconectedSsoCredentialsDto(
       DisconnectedSsoCredentialsEventJson.EntryJson json

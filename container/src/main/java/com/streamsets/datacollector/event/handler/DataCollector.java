@@ -18,9 +18,11 @@ package com.streamsets.datacollector.event.handler;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.util.PipelineException;
@@ -54,7 +56,8 @@ public interface DataCollector {
 
   void validateConfigs(String user, String name, String rev) throws PipelineException;
 
-  void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException;
+  Future<AckEvent> stopAndDelete(String user, String name, String rev,
+                                 long forceStopMillis) throws PipelineException, StageException;
 
   Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException, IOException;
 

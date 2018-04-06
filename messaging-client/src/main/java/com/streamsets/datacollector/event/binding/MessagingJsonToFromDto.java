@@ -37,6 +37,7 @@ import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
+import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
@@ -50,6 +51,7 @@ import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
+import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
@@ -109,13 +111,15 @@ public class MessagingJsonToFromDto {
       case SYNC_ACL:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toSyncAclEventJson((SyncAclEvent)event);
         break;
+      case STOP_DELETE_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStopAndDeleteEventJson((PipelineStopAndDeleteEvent) event);
+        break;
       case START_PIPELINE:
       case STOP_PIPELINE:
       case VALIDATE_PIPELINE:
       case RESET_OFFSET_PIPELINE:
       case DELETE_HISTORY_PIPELINE:
       case DELETE_PIPELINE:
-      case STOP_DELETE_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
         break;
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
@@ -205,13 +209,23 @@ public class MessagingJsonToFromDto {
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSyncAclEventDto(syncAclEventJson));
         break;
       }
+      case STOP_DELETE_PIPELINE: {
+        TypeReference<PipelineStopAndDeleteEventJson> typeRef = new TypeReference<PipelineStopAndDeleteEventJson>() {
+        };
+        PipelineStopAndDeleteEventJson pipelineStopAndDeleteEventJson = deserialize(
+            serverEventJson.getPayload(),
+            typeRef
+        );
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStopAndDeleteEventDto(
+            pipelineStopAndDeleteEventJson));
+        break;
+      }
       case DELETE_HISTORY_PIPELINE:
       case DELETE_PIPELINE:
       case START_PIPELINE:
       case STOP_PIPELINE:
       case VALIDATE_PIPELINE:
-      case RESET_OFFSET_PIPELINE:
-      case STOP_DELETE_PIPELINE: {
+      case RESET_OFFSET_PIPELINE: {
         TypeReference<PipelineBaseEventJson> typeRef = new TypeReference<PipelineBaseEventJson>() {
         };
         PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);

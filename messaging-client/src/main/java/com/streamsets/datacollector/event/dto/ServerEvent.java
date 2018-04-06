@@ -15,6 +15,9 @@
  */
 package com.streamsets.datacollector.event.dto;
 
+import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.pipeline.api.impl.Utils;
+
 public class ServerEvent {
 
   private String eventId;
@@ -79,4 +82,10 @@ public class ServerEvent {
   public void setOrgId(String orgId) {
     this.orgId = orgId;
   }
+
+  public String toString() {
+    return Utils.format("Server Event id: {}, type: {}, isRequiresAck: {}, isAckEvent: {}, from: {}",
+        eventId, eventType, requiresAck, isAckEvent, from);
+  }
+
 }

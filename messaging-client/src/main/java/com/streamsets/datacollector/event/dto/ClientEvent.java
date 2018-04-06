@@ -75,5 +75,4 @@ public class ClientEvent {
   public int getEventTypeId() {
     return eventTypeId;
   }
-
 }

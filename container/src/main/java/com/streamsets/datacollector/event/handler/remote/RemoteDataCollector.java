@@ -22,6 +22,9 @@ import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.AckEventStatus;
+import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.Manager;
@@ -41,6 +44,7 @@ import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
+import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
@@ -51,6 +55,7 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,6 +64,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +74,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class RemoteDataCollector implements DataCollector {
 
@@ -83,6 +91,7 @@ public class RemoteDataCollector implements DataCollector {
   private final AclCacheHelper aclCacheHelper;
   private final RuntimeInfo runtimeInfo;
   private final StageLibraryTask stageLibrary;
+  private final SafeScheduledExecutorService eventHandlerExecutor;
 
   @Inject
   public RemoteDataCollector(
@@ -93,7 +102,8 @@ public class RemoteDataCollector implements DataCollector {
       RemoteStateEventListener stateEventListener,
       RuntimeInfo runtimeInfo,
       AclCacheHelper aclCacheHelper,
-      StageLibraryTask stageLibrary
+      StageLibraryTask stageLibrary,
+      @Named("eventHandlerExecutor")  SafeScheduledExecutorService eventHandlerExecutor
   ) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
@@ -104,6 +114,7 @@ public class RemoteDataCollector implements DataCollector {
     this.aclStoreTask = aclStoreTask;
     this.aclCacheHelper = aclCacheHelper;
     this.stageLibrary = stageLibrary;
+    this.eventHandlerExecutor = eventHandlerExecutor;
   }
 
   public void init() {
@@ -239,47 +250,116 @@ public class RemoteDataCollector implements DataCollector {
     validatorIdList.add(previewer.getId());
   }
 
-  @Override
-  public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
-    validateIfRemote(name, rev, "STOP_AND_DELETE");
-    if (!pipelineStore.hasPipeline(name)) {
-      LOG.warn("Pipeline {}:{} is already deleted", name, rev);
-    } else {
-      PipelineState pipelineState = pipelineStateStore.getState(name, rev);
-      if (pipelineState.getStatus().isActive()) {
-        try {
-          manager.getRunner(name, rev).stop(user);
-        } catch (Exception e) {
-          LOG.warn("Error while stopping the pipeline {}", e, e);
-        }
-      }
+  static class StopAndDeleteCallable implements Callable<AckEvent> {
+    private final RemoteDataCollector remoteDataCollector;
+    private final String pipelineName;
+    private final String rev;
+    private final String user;
+    private final long forceStopMillis;
+
+    public StopAndDeleteCallable(
+        RemoteDataCollector remoteDataCollector, String user, String pipelineName, String rev, long forceStopMillis
+    ) {
+      this.remoteDataCollector = remoteDataCollector;
+      this.pipelineName = pipelineName;
+      this.rev = rev;
+      this.user = user;
+      this.forceStopMillis = forceStopMillis;
+    }
+
+    private boolean waitForInactiveState(
+        PipelineStateStore pipelineStateStore, long time
+    ) throws PipelineStoreException {
       long now = System.currentTimeMillis();
-      // wait for 10 secs for a graceful stop
-      while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < 10000) {
+      PipelineState pipelineState = pipelineStateStore.getState(pipelineName, rev);
+      while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < time) {
         try {
-          Thread.sleep(500);
+          Thread.sleep(1000);
         } catch (InterruptedException e) {
           throw new IllegalStateException("Interrupted while waiting for pipeline to stop " + e, e);
         }
-        pipelineState = pipelineStateStore.getState(name, rev);
+        pipelineState = pipelineStateStore.getState(pipelineName, rev);
       }
-      // If still active, force stop of this pipeline as we are deleting this anyways
-      if (pipelineState.getStatus().isActive()) {
-        pipelineStateStore.saveState(
-            user,
-            name,
-            rev,
-            PipelineStatus.STOPPED,
-            "Stopping pipeline forcefully as we are performing a delete afterwards",
-            pipelineState.getAttributes(),
-            pipelineState.getExecutionMode(),
-            pipelineState.getMetrics(),
-            pipelineState.getRetryAttempt(),
-            pipelineState.getNextRetryTimeStamp()
-        );
-      }
-      delete(name, rev);
+      return pipelineStateStore.getState(pipelineName, rev).getStatus().isActive();
     }
+
+    @Override
+    public AckEvent call() {
+      long startTime = System.currentTimeMillis();
+      AckEventStatus ackStatus = AckEventStatus.SUCCESS;
+      String ackEventMessage = null;
+      try {
+        if (!remoteDataCollector.pipelineStore.hasPipeline(pipelineName)) {
+          LOG.warn("Pipeline {}:{} is already deleted", pipelineName, rev);
+          return new AckEvent(ackStatus, ackEventMessage);
+        }
+        remoteDataCollector.validateIfRemote(pipelineName, rev, "STOP_AND_DELETE");
+        PipelineStateStore pipelineStateStore = remoteDataCollector.pipelineStateStore;
+        Manager manager = remoteDataCollector.manager;
+        PipelineState pipelineState = pipelineStateStore.getState(pipelineName, rev);
+        if (pipelineState.getStatus().isActive()) {
+          try {
+            manager.getRunner(pipelineName, rev).stop(user);
+          } catch (Exception e) {
+            LOG.warn("Error while stopping the pipeline {}", e, e);
+          }
+        }
+
+        // wait for forceTimeoutMillis before a force quit
+        boolean isActive = waitForInactiveState(pipelineStateStore, forceStopMillis);
+
+
+        // If still active, force stop of this pipeline as we are deleting this anyways
+        if (isActive) {
+          try {
+            manager.getRunner(pipelineName, rev).forceQuit(user);
+          } catch (Exception e) {
+            LOG.warn("Cannot issue force quit on pipeline {}", pipelineName);
+          }
+        }
+        // wait for few secs before terminating a force quit
+        isActive = waitForInactiveState(pipelineStateStore, 10000);
+
+        // If still active, force change state
+        if (isActive) {
+          pipelineStateStore.saveState(
+              user,
+              pipelineName,
+              rev,
+              PipelineStatus.STOPPED,
+              "Stopping pipeline forcefully as we are performing a delete afterwards",
+              pipelineState.getAttributes(),
+              pipelineState.getExecutionMode(),
+              pipelineState.getMetrics(),
+              pipelineState.getRetryAttempt(),
+              pipelineState.getNextRetryTimeStamp()
+          );
+        }
+        remoteDataCollector.delete(pipelineName, rev);
+      } catch (Exception ex) {
+        ackStatus = AckEventStatus.ERROR;
+        ackEventMessage = Utils.format("Remote event type {} encountered error {}", EventType.STOP_DELETE_PIPELINE,
+            ex);
+      }
+      long endTime = System.currentTimeMillis();
+      LOG.debug("Time in secs to stop and delete pipeline {} is {}", pipelineName, (endTime - startTime)/1000);
+      AckEvent ackEvent = new AckEvent(ackStatus, ackEventMessage);
+      return ackEvent;
+    }
+  }
+
+  @Override
+  public Future<AckEvent> stopAndDelete(
+      String user, String name, String rev, long forceTimeoutMillis
+  ) throws PipelineException, StageException {
+    LOG.info("Pipeline will be stopped and deleted, force timeout is {}", forceTimeoutMillis);
+    Future<AckEvent> ackEventFuture = eventHandlerExecutor.submit(new StopAndDeleteCallable(this,
+        user,
+        name,
+        rev,
+        forceTimeoutMillis
+    ));
+    return ackEventFuture;
   }
 
   // Returns info about remote pipelines that have changed since the last sending of events

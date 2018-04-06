@@ -87,6 +87,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
 
@@ -516,8 +517,10 @@ public class TestRemoteEventHandler {
     }
 
     @Override
-    public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
+    public Future<AckEvent> stopAndDelete(String user, String name, String rev, long forceStopTimeout) throws PipelineException,
+        StageException {
       stopDeletePipelineCalled = true;
+      return null;
     }
   }
 
@@ -539,12 +542,13 @@ public class TestRemoteEventHandler {
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        null,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(7, ackEventList.size());
+    assertEquals(6, ackEventList.size());
     assertEquals(id1.toString(), ackEventList.get(0).getEventId());
     assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
     AckEvent ackEvent = (AckEvent) ackEventList.get(0).getEvent();
@@ -573,11 +577,6 @@ public class TestRemoteEventHandler {
     assertEquals(id6.toString(), ackEventList.get(5).getEventId());
     assertTrue(ackEventList.get(5).getEvent() instanceof AckEvent);
     ackEvent = (AckEvent) ackEventList.get(5).getEvent();
-    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
-
-    assertEquals(id7.toString(), ackEventList.get(6).getEventId());
-    assertTrue(ackEventList.get(6).getEvent() instanceof AckEvent);
-    ackEvent = (AckEvent) ackEventList.get(6).getEvent();
     assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
 
     assertEquals(1, mockRemoteDataCollector.startCalled);
@@ -613,7 +612,8 @@ public class TestRemoteEventHandler {
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
-        dataStore
+        dataStore,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
@@ -643,14 +643,15 @@ public class TestRemoteEventHandler {
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        null,
+        new HashMap<>()
     );
     // start event in error
     mockRemoteDataCollector.errorInjection = true;
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(7, ackEventList.size());
+    assertEquals(6, ackEventList.size());
     assertEquals(id1.toString(), ackEventList.get(0).getEventId());
     assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
     AckEvent ackEvent = (AckEvent) ackEventList.get(0).getEvent();
@@ -670,10 +671,11 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
-        new HashMap<String, String>(),
+        new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        null,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(PING_FREQUENCY, remoteEventHandler.getDelay());
@@ -705,10 +707,11 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
-        new HashMap<String, String>(),
+        new HashMap<>(),
         stopwatch,
         60000,
-        null
+        null,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -730,10 +733,11 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
-        new HashMap<String, String>(),
+        new HashMap<>(),
         stopwatch,
         5,
-        null
+        null,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -794,10 +798,11 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
-        new HashMap<String, String>(),
+        new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        null,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
@@ -845,10 +850,11 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
-        new HashMap<String, String>(),
+        new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
-        dataStore
+        dataStore,
+        new HashMap<>()
     );
     remoteEventHandler.callRemoteControl();
     Mockito.verify(dataStore, Mockito.times(1)).commit(Mockito.any(OutputStream.class));
@@ -872,7 +878,8 @@ public class TestRemoteEventHandler {
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        null,
+        new HashMap<>()
     );
     ServerEventJson serverEventJson = new ServerEventJson();
     serverEventJson.setRequiresAck(true);

@@ -65,6 +65,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Rule;
@@ -879,7 +880,8 @@ public class TestRemoteDataCollector {
           new RemoteStateEventListener(new Configuration()),
           null,
           Mockito.mock(AclCacheHelper.class),
-          Mockito.mock(StageLibraryTask.class)
+          Mockito.mock(StageLibraryTask.class),
+          new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
@@ -902,14 +904,17 @@ public class TestRemoteDataCollector {
           new RemoteStateEventListener(new Configuration()),
           null,
           Mockito.mock(AclCacheHelper.class),
-          Mockito.mock(StageLibraryTask.class)
+          Mockito.mock(StageLibraryTask.class),
+          new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
-      dataCollector.stopAndDelete("user", "ns:name", "rev");
-      dataCollector.stopAndDelete("user", "ns:name", "rev");
+      RemoteDataCollector.StopAndDeleteCallable stopAndDeleteCallable = new RemoteDataCollector.StopAndDeleteCallable(
+          dataCollector, "user", "ns:name", "rev", 600000
+      );
+      stopAndDeleteCallable.call();
+
       assertEquals(1, MockRunner.stopCalled);
       assertEquals(1, MockPipelineStoreTask.deleteCalled);
       assertEquals(1, MockPipelineStoreTask.deleteRulesCalled);
-      assertEquals(2, MockPipelineStateStore.getStateCalled);
     } finally {
       MockRunner.stopCalled = 0;
       MockPipelineStateStore.getStateCalled = 0;
@@ -940,7 +945,8 @@ public class TestRemoteDataCollector {
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo,
           Mockito.mock(AclCacheHelper.class),
-          Mockito.mock(StageLibraryTask.class)
+          Mockito.mock(StageLibraryTask.class),
+          new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
       dataCollector.init();
       dataCollector.validateConfigs("user", "ns:name", "rev");
@@ -992,7 +998,8 @@ public class TestRemoteDataCollector {
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
         Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class)
+        Mockito.mock(StageLibraryTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -1018,7 +1025,8 @@ public class TestRemoteDataCollector {
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
         Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class)
+        Mockito.mock(StageLibraryTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -1041,7 +1049,8 @@ public class TestRemoteDataCollector {
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
         Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class)
+        Mockito.mock(StageLibraryTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -1071,7 +1080,8 @@ public class TestRemoteDataCollector {
         remoteStateEventListener,
         runtimeInfo,
         Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class)
+        Mockito.mock(StageLibraryTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
     );
     List<PipelineState> pipelineStates = new ArrayList<>();
     pipelineStates.add(new PipelineStateImpl("user",
@@ -1126,7 +1136,8 @@ public class TestRemoteDataCollector {
         Mockito.mock(RemoteStateEventListener.class),
         Mockito.mock(RuntimeInfo.class),
         Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class)
+        Mockito.mock(StageLibraryTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
     ));
     PipelineState pipelineStatus1 = new PipelineStateImpl("user",
         "ns:name",

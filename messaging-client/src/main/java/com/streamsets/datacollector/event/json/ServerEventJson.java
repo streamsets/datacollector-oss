@@ -91,4 +91,5 @@ public class ServerEventJson {
   public void setOrgId(String orgId) {
     this.orgId = orgId;
   }
+
 }
