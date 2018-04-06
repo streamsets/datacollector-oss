@@ -98,6 +98,16 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
     return new DataGeneratorWraper(dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(os));
   }
 
+  @Override
+  public boolean isPlainTextCompatible() {
+    return dataFormat == DataFormat.TEXT || dataFormat == DataFormat.JSON || dataFormat == DataFormat.DELIMITED || dataFormat == DataFormat.XML;
+  }
+
+  @Override
+  public String getCharset() {
+    return dataGeneratorFormatConfig.charset;
+  }
+
   /**
    * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
    * service world. This will be removed once all stages gets migrated off the older code to services.

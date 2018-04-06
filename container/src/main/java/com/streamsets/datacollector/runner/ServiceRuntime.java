@@ -107,6 +107,22 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
     );
   }
 
+  @Override
+  public boolean isPlainTextCompatible() {
+     return LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> ((DataFormatGeneratorService)serviceBean.getService()).isPlainTextCompatible()
+    );
+  }
+
+  @Override
+  public String getCharset() {
+    return LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> ((DataFormatGeneratorService)serviceBean.getService()).getCharset()
+    );
+  }
+
   @Override // From DataFormatParserService
   public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
     ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();

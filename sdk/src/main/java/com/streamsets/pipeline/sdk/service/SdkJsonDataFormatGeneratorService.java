@@ -46,6 +46,16 @@ public class SdkJsonDataFormatGeneratorService extends BaseService implements Da
     return new DataGeneratorImpl(recordWriter);
   }
 
+  @Override
+  public boolean isPlainTextCompatible() {
+    return true;
+  }
+
+  @Override
+  public String getCharset() {
+    return "UTF-8";
+  }
+
   private static class DataGeneratorImpl implements DataGenerator {
 
     private final JsonRecordWriter recordWriter;
