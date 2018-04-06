@@ -27,17 +27,15 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,11 +63,10 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   private static final String CONN_FACTORY_CONFIG_NAME = "jmsTargetConfig.connectionFactory";
   private final InitialContext initialContext;
   private final ConnectionFactory connectionFactory;
-  private final DataFormat dataFormat;
-  private final DataGeneratorFormatConfig dataFormatConfig;
   private final CredentialsConfig credentialsConfig;
   private final JmsTargetConfig jmsTargetConfig;
   private final Stage.Context context;
+  private final DataFormatGeneratorService generatorService;
   private ELEval destinationEval;
   private ErrorRecordHandler errorHandler;
   private Connection connection;
@@ -80,19 +77,16 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   public JmsMessageProducerImpl(
     InitialContext initialContext,
     ConnectionFactory connectionFactory,
-    DataFormat dataFormat,
-    DataGeneratorFormatConfig dataFormatConfig,
     CredentialsConfig credentialsConfig,
     JmsTargetConfig jmsTargetConfig,
     Stage.Context context
   ) {
     this.initialContext = initialContext;
     this.connectionFactory = connectionFactory;
-    this.dataFormat = dataFormat;
-    this.dataFormatConfig = dataFormatConfig;
     this.credentialsConfig = credentialsConfig;
     this.jmsTargetConfig = jmsTargetConfig;
     this.context = context;
+    this.generatorService = context.getService(DataFormatGeneratorService.class);
   }
 
   @Override
@@ -171,7 +165,7 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   }
 
   @Override
-  public int put(Batch batch, DataGeneratorFactory generatorFactory) throws StageException {
+  public int put(Batch batch) throws StageException {
     Iterator<Record> records = batch.getRecords();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -180,7 +174,7 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
       baos.reset();
       Record record = records.next();
 
-      try (DataGenerator generator = generatorFactory.getGenerator(baos)) {
+      try (DataGenerator generator = generatorService.getGenerator(baos)) {
         generator.write(record);
       } catch (IOException e) {
         LOG.error("Failed to write Records: {}", e);
@@ -198,25 +192,12 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     Message message;
     String destinationName = null;
     try {
-      switch (this.dataFormat) {
-        case DELIMITED:
-        case DATAGRAM:
-        case JSON:
-        case TEXT:
-        case XML:
-          message = session.createTextMessage(new String(payload, this.dataFormatConfig.charset));
-          break;
-        case PROTOBUF:
-        case AVRO:
-        case BINARY:
-        case SDC_JSON:
-          BytesMessage bytesMessage = session.createBytesMessage();
-          bytesMessage.writeBytes(payload);
-          message = bytesMessage;
-          break;
-        default:
-          LOG.error("Unsupported data format type: {}", this.dataFormat);
-          throw new StageException(JmsErrors.JMS_10, this.dataFormat);
+      if(generatorService.isPlainTextCompatible()) {
+        message = session.createTextMessage(new String(payload, generatorService.getCharset()));
+      } else {
+        BytesMessage bytesMessage = session.createBytesMessage();
+        bytesMessage.writeBytes(payload);
+        message = bytesMessage;
       }
 
       // Resolve
@@ -230,8 +211,8 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
       LOG.error("Could not produce message: {}", e);
       throw new StageException(JmsErrors.JMS_13, e.getMessage(), e);
     } catch (UnsupportedEncodingException e) {
-      LOG.error("Unsupported charset: {}", this.dataFormatConfig.charset);
-      throw new StageException(DataFormatErrors.DATA_FORMAT_05, this.dataFormatConfig.charset, e);
+      LOG.error("Unsupported charset: {}", generatorService.getCharset());
+      throw new StageException(DataFormatErrors.DATA_FORMAT_05, generatorService.getCharset(), e);
     } catch (ExecutionException e) {
       // The ExecutionException is a wrapper that guava cache will use to wrap any exception. We have handling for
       // some of the causes (like invalid destination name).

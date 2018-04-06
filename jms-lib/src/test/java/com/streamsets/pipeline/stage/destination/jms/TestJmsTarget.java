@@ -23,24 +23,18 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.AvroCompression;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.lib.jms.config.DestinationType;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.service.SdkJsonDataFormatGeneratorService;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.security.AuthenticationUser;
 import org.apache.activemq.security.SimpleAuthenticationPlugin;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,12 +55,8 @@ import javax.jms.TextMessage;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TestJmsTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestJmsTarget.class);
@@ -88,9 +78,7 @@ public class TestJmsTarget {
   private Connection connection;
   private BrokerService broker;
   private CredentialsConfig credentialsConfig;
-  private DataGeneratorFormatConfig dataFormatConfig;
   private JmsTargetConfig jmsTargetConfig;
-  private DataFormat dataFormat;
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -116,7 +104,6 @@ public class TestJmsTarget {
     broker.start();
 
     credentialsConfig = new CredentialsConfig();
-    dataFormatConfig = new DataGeneratorFormatConfig();
     jmsTargetConfig = new JmsTargetConfig();
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = () -> USERNAME;
@@ -171,18 +158,16 @@ public class TestJmsTarget {
     JmsTarget destination = new JmsTarget(
         credentialsConfig,
         jmsTargetConfig,
-        dataFormat,
-        dataFormatConfig,
         new JmsMessageProducerFactoryImpl(),
         new InitialContextFactory()
     );
     return new TargetRunner.Builder(JmsDTarget.class, destination)
       .setOnRecordError(OnRecordError.TO_ERROR)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
       .build();
   }
 
   private void runInit(String expectedError) {
-    dataFormat = DataFormat.BINARY;
     TargetRunner runner = createRunner();
     try {
       runner.runInit();
@@ -219,9 +204,6 @@ public class TestJmsTarget {
 
   @Test
   public void testNonExistingDestination() throws Exception {
-    dataFormat = DataFormat.TEXT;
-    dataFormatConfig.textFieldPath = "/text";
-    dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
     jmsTargetConfig.destinationName = "guess-what-i-dont-exists";
 
     Record record = generateRecordPayload("text", Field.Type.STRING);
@@ -241,9 +223,6 @@ public class TestJmsTarget {
 
   @Test
   public void testDestinationExpression() throws Exception {
-    dataFormat = DataFormat.TEXT;
-    dataFormatConfig.textFieldPath = "/text";
-    dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
     jmsTargetConfig.destinationName = "${record:attribute('destination')}";
 
     Record record = generateRecordPayload("text", Field.Type.STRING);
@@ -260,206 +239,29 @@ public class TestJmsTarget {
     }
 
     Assert.assertNotNull(rows);
-    Assert.assertEquals(ImmutableList.of(record.get("/text").getValueAsString() + RECORD_SEPERATOR), rows);
+    Assert.assertEquals(ImmutableList.of("{\"text\":\"hello\"}"), rows);
   }
 
   @Test
   public void testTextSuccess() throws Exception {
-    dataFormat = DataFormat.TEXT;
-    dataFormatConfig.textFieldPath = "/text";
-    dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
-
-    List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
-    List<String> rows, expected;
-    TargetRunner runner = createRunner();
-    runner.runInit();
-    try {
-      runner.runWrite(recordsList);
-
-      rows = getQueue();
-      expected = recordsList
-          .stream()
-          .map(x -> x.get("/text").getValueAsString() + RECORD_SEPERATOR)
-          .collect(Collectors.toList());
-    } finally {
-      runner.runDestroy();
-    }
-
-    Assert.assertNotNull(rows);
-    Assert.assertEquals(expected, rows);
-  }
-
-  @Test
-  public void testByteSuccess() throws Exception {
-    dataFormat = DataFormat.BINARY;
-    dataFormatConfig.binaryFieldPath = "/bin";
-
-    List<Record> recordsList = ImmutableList.of(generateRecordPayload("bin", Field.Type.BYTE_ARRAY));
-    List<String> rows, expected;
-    TargetRunner runner = createRunner();
-    runner.runInit();
-    try {
-      runner.runWrite(recordsList);
-      rows = getQueue();
-      expected = recordsList
-          .stream()
-          .map(x -> new String(x.get("/bin").getValueAsByteArray()) + RECORD_SEPERATOR)
-          .collect(Collectors.toList());
-    } finally {
-      runner.runDestroy();
-    }
-
-    Assert.assertNotNull(rows);
-    Assert.assertEquals(expected, rows);
-  }
-
-  @Test
-  public void testAvroSuccess() throws Exception {
-    String avroSchema = "{\"type\":\"record\",\"name\":\"abcd\",\"fields\":[{\"name\":\"text\",\"type\":\"string\"}]}";
-    String testValue = "test string";
-    dataFormat = DataFormat.AVRO;
-    dataFormatConfig.avroSchemaSource = DestinationAvroSchemaSource.INLINE;
-    dataFormatConfig.avroCompression = AvroCompression.NULL;
-    dataFormatConfig.includeSchema = true;
-    dataFormatConfig.registerSchema = false;
-    dataFormatConfig.avroSchema = avroSchema;
-
-    LinkedHashMap<String, Field> r1 = new LinkedHashMap<>();
-    r1.put("text", Field.create(Field.Type.STRING, testValue));
-    Record record1 = RecordCreator.create("s", "s:1");
-    record1.set(Field.createListMap(r1));
-
-    String result;
-    TargetRunner runner = createRunner();
-    runner.runInit();
-    try {
-      runner.runWrite(Arrays.asList(record1));
-      List<String> rows = getQueue();
-      result = rows.get(0);
-    } finally {
-      runner.runDestroy();
-    }
-
-    Assert.assertNotNull(result);
-    Assert.assertTrue(result.contains(testValue));
-  }
-
-  @Test
-  public void testJsonSuccess() throws Exception {
-    dataFormat = DataFormat.JSON;
-    dataFormatConfig.charset = "UTF-8";
-    dataFormatConfig.jsonMode = JsonMode.ARRAY_OBJECTS;
-    ObjectMapper objectMapper = new ObjectMapper();
-
     List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
     List<String> rows;
     TargetRunner runner = createRunner();
     runner.runInit();
     try {
       runner.runWrite(recordsList);
+
       rows = getQueue();
     } finally {
       runner.runDestroy();
     }
 
     Assert.assertNotNull(rows);
-    try {
-      objectMapper.writeValueAsString(rows.get(0));
-    } catch (Exception e) {
-      Assert.fail();
-    }
-  }
-
-  @Test
-  public void testDelimitedSuccess() throws Exception {
-    dataFormat = DataFormat.DELIMITED;
-    dataFormatConfig.csvFileFormat = CsvMode.CSV;
-    dataFormatConfig.csvHeader = CsvHeader.IGNORE_HEADER;
-    dataFormatConfig.csvReplaceNewLines = false;
-    dataFormatConfig.csvReplaceNewLinesString = "";
-    dataFormatConfig.charset = "UTF-8";
-
-    List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
-    List<String> rows;
-    TargetRunner runner = createRunner();
-    runner.runInit();
-    try {
-      runner.runWrite(recordsList);
-      rows = getQueue();
-    } finally {
-      runner.runDestroy();
-    }
-
-    Assert.assertNotNull(rows);
-    Assert.assertTrue(rows.get(0).contains(","));
-  }
-
-  @Test
-  public void testXmlSuccess() throws Exception {
-    dataFormat = DataFormat.XML;
-    dataFormatConfig.xmlPrettyPrint = false;
-    dataFormatConfig.xmlValidateSchema = true;
-    dataFormatConfig.xmlSchema =
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<xs:schema id=\"testdataset\" xmlns=\"\"\n" +
-            "  xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
-            "  xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">\n" +
-            "  <xs:element name=\"person\">\n" +
-            "    <xs:complexType>\n" +
-            "      <xs:all>\n" +
-            "        <xs:element name=\"name\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
-            "        <xs:element name=\"age\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
-            "        <xs:element name=\"address\" minOccurs=\"0\" maxOccurs=\"1\">\n" +
-            "          <xs:complexType>\n" +
-            "            <xs:all>\n" +
-            "              <xs:element name=\"street\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
-            "              <xs:element name=\"state\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
-            "            </xs:all>\n" +
-            "          </xs:complexType>\n" +
-            "        </xs:element>\n" +
-            "      </xs:all>\n" +
-            "    </xs:complexType>\n" +
-            "  </xs:element>\n" +
-            "  <xs:element name=\"testdataset\" msdata:IsDataSet=\"true\" msdata:UseCurrentLocale=\"true\">\n" +
-            "    <xs:complexType>\n" +
-            "      <xs:choice minOccurs=\"0\" maxOccurs=\"1\">\n" +
-            "        <xs:element ref=\"person\"/>\n" +
-            "      </xs:choice>\n" +
-            "    </xs:complexType>\n" +
-            "  </xs:element>\n" +
-            "</xs:schema>";
-
-    Map<String, Field> root = new HashMap<>();
-    Map<String, Field> person = new HashMap<>();
-    Map<String, Field> address = new HashMap<>();
-    address.put("street", Field.create("123 blueberry ln"));
-    address.put("state", Field.create("aruba"));
-    person.put("address", Field.create(address));
-    person.put("name", Field.create("joe schmoe"));
-    person.put("age", Field.create(32));
-    root.put("person", Field.create(person));
-
-    Record r1 = RecordCreator.create("s", "s:1");
-    r1.set(Field.create(root));
-
-    List<String> rows;
-    TargetRunner runner = createRunner();
-    runner.runInit();
-    try {
-      runner.runWrite(Arrays.asList(r1));
-      rows = getQueue();
-    } finally {
-      runner.runDestroy();
-    }
-
-    Assert.assertNotNull(rows);
-    Assert.assertEquals(1, rows.size());
+    Assert.assertEquals(ImmutableList.of("{\"text\":\"hello\"}"), rows);
   }
 
   @Test
   public void testAllDestinationTypes() throws Exception {
-    dataFormat = DataFormat.BINARY;
-
     jmsTargetConfig.destinationType = DestinationType.QUEUE;
     TargetRunner runner = createRunner();
     runner.runInit();
@@ -478,13 +280,9 @@ public class TestJmsTarget {
 
   private Record generateRecordPayload(String fieldName, Field.Type type) {
     Object val1 = (type == Field.Type.STRING ? "hello" : "hello".getBytes());
-    Object val2 = (type == Field.Type.STRING ? "world" : "world".getBytes());
-    Object val3 = (type == Field.Type.STRING ? "!?.:;" : "!?.:;".getBytes());
 
     LinkedHashMap<String, Field> r1 = new LinkedHashMap<>();
     r1.put(fieldName, Field.create(type, val1));
-    r1.put(fieldName + "2", Field.create(type, val2));
-    r1.put(fieldName + "3", Field.create(type, val3));
     Record record1 = RecordCreator.create("s", "s:1");
     record1.set(Field.createListMap(r1));
 

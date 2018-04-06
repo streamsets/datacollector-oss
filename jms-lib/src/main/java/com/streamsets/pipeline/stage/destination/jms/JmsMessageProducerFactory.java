@@ -16,9 +16,7 @@
 package com.streamsets.pipeline.stage.destination.jms;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import javax.jms.ConnectionFactory;
 import javax.naming.InitialContext;
@@ -31,8 +29,6 @@ public interface JmsMessageProducerFactory {
   JmsMessageProducer create(
       InitialContext initialContext,
       ConnectionFactory connectionFactory,
-      DataFormat dataFormat,
-      DataGeneratorFormatConfig dataFormatConfig,
       CredentialsConfig credentialsConfig,
       JmsTargetConfig jmsTargetConfig,
       Stage.Context context

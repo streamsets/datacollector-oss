@@ -15,46 +15,38 @@
  */
 package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JMS Producer",
     description = "Write data to a JMS MQ.",
     icon = "jms.png",
     upgrader = JmsTargetUpgrader.class,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/JMSProducer.html#task_udk_yw5_n1b\n"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/JMSProducer.html#task_udk_yw5_n1b\n",
+    services = @ServiceDependency(
+      service = DataFormatGeneratorService.class,
+      configuration = {
+        @ServiceConfiguration(name = "displayFormats", value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,SDC_JSON,TEXT,XML")
+      }
+    )
 )
 @ConfigGroups(JmsTargetGroups.class)
 @GenerateResourceBundle
 public class JmsDTarget extends DTarget {
   @ConfigDefBean(groups = {"JMS"})
   public CredentialsConfig credentialsConfig;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Data Format",
-      displayPosition = 1,
-      group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DestinationDataFormatChooserValues.class)
-  public DataFormat dataFormat = DataFormat.TEXT;
-
-  @ConfigDefBean(groups = {"JMS"})
-  public DataGeneratorFormatConfig dataFormatConfig = new DataGeneratorFormatConfig();
 
   @ConfigDefBean
   public JmsTargetConfig jmsTargetConfig;
@@ -64,8 +56,6 @@ public class JmsDTarget extends DTarget {
     return new JmsTarget(
         credentialsConfig,
         jmsTargetConfig,
-        dataFormat,
-        dataFormatConfig,
         new JmsMessageProducerFactoryImpl(),
         new InitialContextFactory()
     );

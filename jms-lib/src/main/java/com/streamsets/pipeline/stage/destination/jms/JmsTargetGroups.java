@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.Label;
 public enum JmsTargetGroups implements Label {
   JMS("JMS"),
   CREDENTIALS("Credentials"),
-  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

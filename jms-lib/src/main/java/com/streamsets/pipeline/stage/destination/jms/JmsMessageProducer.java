@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 
 import java.util.List;
 
@@ -37,11 +36,10 @@ public interface JmsMessageProducer {
   /**
    * Converts Batch of Records to appropriate JMS Message type and produces message to configured destination.
    * @param batch Batch of Records to produce
-   * @param generatorFactory Data Generator Factory instance used to convert Record contents to JMS Message payload
    * @return Number of Records successfully produced
    * @throws StageException
    */
-  int put(Batch batch, DataGeneratorFactory generatorFactory) throws StageException;
+  int put(Batch batch) throws StageException;
 
   /**
    * Commits transactional JMS Session to perform pending produce operation

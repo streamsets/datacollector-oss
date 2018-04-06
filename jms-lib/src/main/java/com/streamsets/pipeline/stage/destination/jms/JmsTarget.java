@@ -45,9 +45,6 @@ public class JmsTarget extends BaseTarget {
   private final JmsTargetConfig jmsTargetConfig;
   private final JmsMessageProducerFactory jmsMessageProducerFactory;
   private final InitialContextFactory initialContextFactory;
-  private final DataFormat dataFormat;
-  private final DataGeneratorFormatConfig dataFormatConfig;
-  private DataGeneratorFactory generatorFactory;
   private JmsMessageProducer jmsMessageProducer;
   private ConnectionFactory connectionFactory;
   private int messagesSent;
@@ -55,15 +52,11 @@ public class JmsTarget extends BaseTarget {
   public JmsTarget(
       CredentialsConfig credentialsConfig,
       JmsTargetConfig jmsTargetConfig,
-      DataFormat dataFormat,
-      DataGeneratorFormatConfig dataFormatConfig,
       JmsMessageProducerFactory jmsMessageProducerFactory,
       InitialContextFactory initialContextFactory)
   {
     this.credentialsConfig = credentialsConfig;
     this.jmsTargetConfig = jmsTargetConfig;
-    this.dataFormat = dataFormat;
-    this.dataFormatConfig = dataFormatConfig;
     this.jmsMessageProducerFactory = jmsMessageProducerFactory;
     this.initialContextFactory = initialContextFactory;
     this.messagesSent = 0;
@@ -118,8 +111,6 @@ public class JmsTarget extends BaseTarget {
       jmsMessageProducer = jmsMessageProducerFactory.create(
           initialContext,
           connectionFactory,
-          dataFormat,
-          dataFormatConfig,
           credentialsConfig,
           jmsTargetConfig,
           getContext()
@@ -127,21 +118,12 @@ public class JmsTarget extends BaseTarget {
       issues.addAll(jmsMessageProducer.init(getContext()));
     }
 
-    this.dataFormatConfig.init(
-        getContext(),
-        dataFormat,
-        JmsTargetGroups.JMS.name(),
-        JMS_TARGET_DATA_FORMAT_CONFIG_PREFIX,
-        issues
-    );
-
-    generatorFactory = this.dataFormatConfig.getDataGeneratorFactory();
     return issues;
   }
 
   @Override
   public void write(Batch batch) throws StageException {
-    messagesSent += this.jmsMessageProducer.put(batch, generatorFactory);
+    messagesSent += this.jmsMessageProducer.put(batch);
     jmsMessageProducer.commit();
     LOG.debug("{}::{}", this.jmsTargetConfig.destinationName, messagesSent);
   }
