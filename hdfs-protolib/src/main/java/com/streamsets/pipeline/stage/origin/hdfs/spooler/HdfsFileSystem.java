@@ -189,6 +189,9 @@ public class HdfsFileSystem implements WrappedFileSystem {
   }
 
   public WrappedFile getFile(String filePath) {
+    if (StringUtils.isEmpty(filePath)) {
+      return new HdfsFile(fs, null);
+    }
     Path path = new Path(filePath);
     return new HdfsFile(fs, path);
   }
