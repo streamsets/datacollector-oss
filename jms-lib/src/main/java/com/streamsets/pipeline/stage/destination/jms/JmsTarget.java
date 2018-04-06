@@ -148,7 +148,9 @@ public class JmsTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    this.jmsMessageProducer.close();
+    if(this.jmsMessageProducer != null) {
+      this.jmsMessageProducer.close();
+    }
     super.destroy();
   }
 }
