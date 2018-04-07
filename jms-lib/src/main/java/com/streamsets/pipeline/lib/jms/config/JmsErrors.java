@@ -36,6 +36,11 @@ public enum JmsErrors implements ErrorCode {
   JMS_12("Could not write record: {}"),
   JMS_13("Could not produce message: {}"),
   JSM_14("Can't create producer: {}"),
+
+  // Parsing related issues specific to JMS
+  JMS_20("After error '{}' parsing message, another error '{}' was encountered while trying to serialize message '{}' of container '{}'"),
+  JMS_21("Cannot parse record from message '{}': {}"),
+  JMS_22("Unsupported charset '{}'"),
   ;
   private final String msg;
 

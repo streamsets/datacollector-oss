@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class JmsSourceUpgrader implements StageUpgrader {
 }
 
   private static void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("dataFormatConfig.compression", Compression.NONE));
+    configs.add(new Config("dataFormatConfig.compression", "NONE"));
     configs.add(new Config("dataFormatConfig.filePatternInArchive", "*"));
   }
   private static void upgradeV2ToV3(List<Config> configs) {

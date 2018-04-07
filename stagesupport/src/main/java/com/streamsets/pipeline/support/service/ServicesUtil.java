@@ -58,7 +58,7 @@ public final class ServicesUtil {
     try (DataParser parser = stageContext.getService(DataFormatParserService.class).getParser(messageId, payload)) {
       Record record = null;
       do {
-// TODO: Recoverable exceptions are not yet properly propagated (sub-classed)
+// TODO(SDC-8736): Recoverable exceptions are not yet properly propagated (sub-classed)
 //        try {
           record = parser.parse();
 //        } catch (RecoverableDataParserException e) {

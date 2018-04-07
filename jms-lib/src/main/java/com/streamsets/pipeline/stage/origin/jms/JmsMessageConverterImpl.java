@@ -24,9 +24,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
-import com.streamsets.pipeline.lib.util.ServicesUtil;
+import com.streamsets.pipeline.support.service.ServicesUtil;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
-import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -127,8 +126,14 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
       out.writeObject(message);
       return bos.toByteArray();
     } catch (IOException e) {
-      throw new StageException(ParserErrors.PARSER_08, originalEx.toString(), e.toString(),
-        messageId, message.getClass().getName(), e);
+      throw new StageException(
+        JmsErrors.JMS_20,
+        originalEx.toString(),
+        e.toString(),
+        messageId,
+        message.getClass().getName(),
+        e
+      );
     } finally {
       if (out != null) {
         try { out.close(); } catch (IOException e) {}
@@ -145,13 +150,13 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
       case DISCARD:
         break;
       case TO_ERROR:
-        context.reportError(ParserErrors.PARSER_03, messageId, ex.toString(), ex);
+        context.reportError(JmsErrors.JMS_21, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(ParserErrors.PARSER_03, messageId, ex.toString(), ex);
+          throw new StageException(JmsErrors.JMS_21, messageId, ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("Unknown On Error Value '{}'",

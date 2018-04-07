@@ -33,9 +33,15 @@
 
   <properties>
     <activemq.version>5.13.4</activemq.version>
+    <guava.version>24.1-jre</guava.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
@@ -58,13 +64,8 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <version>${project.version}</version>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.confluent</groupId>
-      <artifactId>kafka-schema-registry-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>

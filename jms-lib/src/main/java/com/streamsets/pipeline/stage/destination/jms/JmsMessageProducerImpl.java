@@ -33,7 +33,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -212,7 +211,7 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
       throw new StageException(JmsErrors.JMS_13, e.getMessage(), e);
     } catch (UnsupportedEncodingException e) {
       LOG.error("Unsupported charset: {}", generatorService.getCharset());
-      throw new StageException(DataFormatErrors.DATA_FORMAT_05, generatorService.getCharset(), e);
+      throw new StageException(JmsErrors.JMS_22, generatorService.getCharset(), e);
     } catch (ExecutionException e) {
       // The ExecutionException is a wrapper that guava cache will use to wrap any exception. We have handling for
       // some of the causes (like invalid destination name).

@@ -19,13 +19,10 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
