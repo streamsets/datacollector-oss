@@ -15,37 +15,40 @@
  */
 package com.streamsets.pipeline.stage.origin.jms;
 
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "JMS Consumer",
     description = "Reads data from a JMS source.",
     icon = "jms.png",
     execution = ExecutionMode.STANDALONE,
     upgrader = JmsSourceUpgrader.class,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/JMS.html#task_zp1_4ck_dt"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/JMS.html#task_zp1_4ck_dt",
+      services = @ServiceDependency(
+      service = DataFormatParserService.class,
+      configuration = {
+        @ServiceConfiguration(name = "displayFormats", value = "AVRO,BINARY,DELIMITED,JSON,LOG,PROTOBUF,SDC_JSON,TEXT,XML")
+      }
+    )
 )
 @ConfigGroups(value = JmsGroups.class)
-@HideConfigs(value = {"dataFormatConfig.compression"})
 @GenerateResourceBundle
 public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener {
 
@@ -54,19 +57,6 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
 
   @ConfigDefBean(groups = {"JMS"})
   public CredentialsConfig credentialsConfig;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    label = "Data Format",
-    displayPosition = 1,
-    group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDefBean(groups = {"JMS"})
-  public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDefBean(groups = {"JMS"})
   public MessageConfig messageConfig;
@@ -77,7 +67,7 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   @Override
   protected Source createSource() {
     return new JmsSource(basicConfig, credentialsConfig, jmsConfig,
-      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormat, dataFormatConfig, messageConfig),
+      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(messageConfig),
       new InitialContextFactory());
   }
 

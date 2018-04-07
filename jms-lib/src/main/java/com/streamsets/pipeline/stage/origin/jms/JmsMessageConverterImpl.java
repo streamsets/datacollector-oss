@@ -22,11 +22,9 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
-import com.streamsets.pipeline.lib.jms.config.JmsGroups;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import com.streamsets.pipeline.lib.util.ServicesUtil;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
 
@@ -37,23 +35,25 @@ import javax.jms.TextMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
 public class JmsMessageConverterImpl implements JmsMessageConverter {
 
-  private final DataFormatParser parser;
+  private DataFormatParserService parserService;
+  private MessageConfig messageConfig;
 
-  public JmsMessageConverterImpl(DataFormat dataFormat, DataParserFormatConfig dataFormatConfig, MessageConfig messageConfig) {
-    this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormat, dataFormatConfig, messageConfig);
+  public JmsMessageConverterImpl(MessageConfig messageConfig) {
+    this.messageConfig = messageConfig;
   }
 
   @Override
   public List<Stage.ConfigIssue> init(Source.Context context) {
-    List<Stage.ConfigIssue> issues = new ArrayList<>();
-    issues.addAll(parser.init(context));
-    return issues;
+    this.parserService = context.getService(DataFormatParserService.class);
+
+    return Collections.emptyList();
   }
 
   @Override
@@ -63,8 +63,8 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
     if (message instanceof TextMessage) {
       TextMessage textMessage = (TextMessage) message;
       try {
-        payload = textMessage.getText().getBytes(parser.getCharset());
-      } catch (JMSException ex) {
+        payload = textMessage.getText().getBytes(parserService.getCharset());
+      } catch (JMSException|UnsupportedEncodingException ex) {
         Record record = context.createRecord(messageId);
         record.set(Field.create(attemptSerializationUnderErrorCondition(messageId, message, ex)));
         handleException(context, messageId, ex, record);
@@ -90,21 +90,6 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
         record.set(Field.create(attemptSerializationUnderErrorCondition(messageId, message, ex)));
         handleException(context, messageId, ex, record);
       }
-//      TODO handle ObjectMessage's which are Java Serialized objects
-//    } else if (message instanceof ObjectMessage) {
-//      ObjectMessage objectMessage = (ObjectMessage)message;
-//      try {
-//        Object object = objectMessage.getObject();
-//        if(object != null) {
-//          ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//          try (ObjectOutput out = new ObjectOutputStream(bos)) {
-//            out.writeObject(object);
-//            payload = bos.toByteArray();
-//          }
-//        }
-//      } catch (JMSException | IOException ex) {
-//        handleException(context, messageId, ex);
-//      }
     } else {
       StageException ex = new StageException(JmsErrors.JMS_10, message.getClass().getName());
       Record record = context.createRecord(messageId);
@@ -114,7 +99,7 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
     int count = 0;
     if (payload != null) {
       try {
-        for (Record record : parser.parse(context, messageId, payload)) {
+        for (Record record : ServicesUtil.parseAll(context, context, messageConfig.produceSingleRecordPerMessage, messageId, payload)) {
           Enumeration propertyNames = message.getPropertyNames();
           while (propertyNames.hasMoreElements()) {
             String name = String.valueOf(propertyNames.nextElement());

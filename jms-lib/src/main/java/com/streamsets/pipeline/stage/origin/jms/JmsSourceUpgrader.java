@@ -19,40 +19,47 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JmsSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-                              List<Config> configs) throws StageException {
-    switch(fromVersion) {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs);
-        if (toVersion == 2) {
+        if (context.getToVersion() == 2) {
           break;
         }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
-        if (toVersion == 3) {
+        if (context.getToVersion() == 3) {
           break;
         }
         // fall through
       case 3:
         upgradeV3ToV4(configs);
-        if (toVersion == 4) {
+        if (context.getToVersion() == 4) {
           break;
         }
         // fall through
       case 4:
+        if (context.getToVersion() == 5) {
+          break;
+        }
         upgradeV4ToV5(configs);
+      // fall through
+      case 5:
+        upgradeV5ToV6(configs, context);
         break;
       default:
-        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
     return configs;
   }
@@ -75,5 +82,23 @@ public class JmsSourceUpgrader implements StageUpgrader {
     // is a MAP config, the UI renders it as a list of maps, so new ArrayList gets
     // us what we want.
     configs.add(new Config("jmsConfig.contextProperties", new ArrayList<>()));
+  }
+
+  // Transition to services
+  private static void upgradeV5ToV6(List<Config> configs, Context context) {
+    List<Config> dataFormatConfigs = configs.stream()
+      .filter(c -> c.getName().startsWith("dataFormat"))
+      .collect(Collectors.toList());
+
+    // Remove those configs
+    configs.removeAll(dataFormatConfigs);
+
+    // Provide proper prefix
+    dataFormatConfigs = dataFormatConfigs.stream()
+      .map(c -> new Config(c.getName().replace("dataFormatConfig.", "dataFormatConfig."), c.getValue()))
+      .collect(Collectors.toList());
+
+    // And finally register new service
+    context.registerService(DataFormatParserService.class, dataFormatConfigs);
   }
 }
