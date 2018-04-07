@@ -119,7 +119,15 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   public String getCharset() {
     return LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),
-        () -> ((DataFormatGeneratorService)serviceBean.getService()).getCharset()
+        () -> {
+          if(serviceBean.getService() instanceof DataFormatGeneratorService) {
+            return ((DataFormatGeneratorService)serviceBean.getService()).getCharset();
+          } else if(serviceBean.getService() instanceof  DataFormatParserService) {
+            return ((DataFormatParserService) serviceBean.getService()).getCharset();
+          } else {
+            throw new IllegalStateException("Called on wrong service: " + serviceBean.getService().getClass().getCanonicalName());
+          }
+        }
     );
   }
 

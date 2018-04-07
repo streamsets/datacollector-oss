@@ -116,6 +116,11 @@ public class DataParserServiceImpl extends BaseService implements DataFormatPars
     }
   }
 
+  @Override
+  public String getCharset() {
+    return dataFormatConfig.charset;
+  }
+
   /**
    * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
    * service world. This will be removed once all stages gets migrated off the older code to services.

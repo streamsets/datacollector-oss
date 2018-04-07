@@ -73,6 +73,11 @@ public class SdkJsonDataFormatParserService extends BaseService implements DataF
     throw new UnsupportedOperationException("WholeFileFormat is not supported");
   }
 
+  @Override
+  public String getCharset() {
+    return "UTF-8";
+  }
+
   private static class DataParserImpl implements DataParser {
 
     private final JsonObjectReader recordReader;
