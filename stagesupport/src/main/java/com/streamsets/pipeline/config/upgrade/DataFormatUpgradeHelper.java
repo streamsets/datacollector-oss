@@ -15,15 +15,11 @@
  */
 package com.streamsets.pipeline.config.upgrade;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.config.AvroSchemaLookupMode;
-import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
-import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utility class for extracting common data format upgrade code
@@ -31,7 +27,6 @@ import java.util.List;
  * is possible.
  */
 public class DataFormatUpgradeHelper {
-  private static final Joiner PERIOD = Joiner.on(".");
 
   private DataFormatUpgradeHelper() {
   }
@@ -56,20 +51,20 @@ public class DataFormatUpgradeHelper {
     // we're making the same decision that they selected in the past.
     if (schemaInMessage.isPresent()) {
       if ((boolean) schemaInMessage.get().getValue()) {
-        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
+        toAdd.add(new Config(prefix + ".avroSchemaSource", "SOURCE"));
       } else {
-        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.INLINE));
+        toAdd.add(new Config(prefix + ".avroSchemaSource", "INLINE"));
       }
       toRemove.add(schemaInMessage.get());
     } else {
-      toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
+      toAdd.add(new Config(prefix + ".avroSchemaSource", "SOURCE"));
     }
 
     // New configs added
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrls"), new ArrayList<>()));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaLookupMode"), AvroSchemaLookupMode.AUTO));
-    toAdd.add(new Config(PERIOD.join(prefix, "subject"), ""));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaId"), 0));
+    toAdd.add(new Config(prefix + ".schemaRegistryUrls", new ArrayList<>()));
+    toAdd.add(new Config(prefix + ".schemaLookupMode", "AUTO"));
+    toAdd.add(new Config(prefix + ".subject", ""));
+    toAdd.add(new Config(prefix + ".schemaId", 0));
 
     configs.removeAll(toRemove);
     configs.addAll(toAdd);
@@ -92,22 +87,22 @@ public class DataFormatUpgradeHelper {
     Optional<Config> avroSchemaInHeader = findByName(configs, "avroSchemaInHeader");
     if (avroSchemaInHeader.isPresent()) {
       if ((boolean) avroSchemaInHeader.get().getValue()) {
-        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), DestinationAvroSchemaSource.HEADER));
+        toAdd.add(new Config(prefix + ".avroSchemaSource", "HEADER"));
       } else {
-        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), DestinationAvroSchemaSource.INLINE));
+        toAdd.add(new Config(prefix + ".avroSchemaSource", "INLINE"));
       }
       toRemove.add(avroSchemaInHeader.get());
     } else {
-      toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), DestinationAvroSchemaSource.INLINE));
+      toAdd.add(new Config(prefix + ".avroSchemaSource", "INLINE"));
     }
 
-    toAdd.add(new Config(PERIOD.join(prefix, "registerSchema"), false));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrlsForRegistration"), new ArrayList<>()));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrls"), new ArrayList<>()));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaLookupMode"), AvroSchemaLookupMode.AUTO));
-    toAdd.add(new Config(PERIOD.join(prefix, "subject"), ""));
-    toAdd.add(new Config(PERIOD.join(prefix, "subjectToRegister"), ""));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaId"), 0));
+    toAdd.add(new Config(prefix + ".registerSchema", false));
+    toAdd.add(new Config(prefix + ".schemaRegistryUrlsForRegistration", new ArrayList<>()));
+    toAdd.add(new Config(prefix + ".schemaRegistryUrls", new ArrayList<>()));
+    toAdd.add(new Config(prefix + ".schemaLookupMode", "AUTO"));
+    toAdd.add(new Config(prefix + ".subject", ""));
+    toAdd.add(new Config(prefix + ".subjectToRegister", ""));
+    toAdd.add(new Config(prefix + ".schemaId", 0));
 
     configs.removeAll(toRemove);
     configs.addAll(toAdd);
@@ -128,7 +123,7 @@ public class DataFormatUpgradeHelper {
   public static void ensureAvroSchemaExists(List<Config> configs, String prefix) {
     Optional<Config> avroSchema = findByName(configs, "avroSchema");
     if (!avroSchema.isPresent()) {
-      configs.add(new Config(PERIOD.join(prefix, "avroSchema"), null));
+      configs.add(new Config(prefix + ".avroSchema", null));
     }
   }
 
@@ -138,6 +133,6 @@ public class DataFormatUpgradeHelper {
         return Optional.of(config);
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 }
