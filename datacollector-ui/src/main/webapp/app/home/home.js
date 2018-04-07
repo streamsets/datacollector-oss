@@ -775,10 +775,8 @@ angular
        */
       isEdgePipeline: function(pipelineInfo) {
         var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
-        return (
-          pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
-         pipelineStatus.executionMode === 'EDGE'
-        );
+        return (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
+          pipelineStatus.executionMode === 'EDGE');
       },
 
       /**

@@ -178,6 +178,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01602("Data Collector cannot connect to Data Collector Edge URL '{}'. Verify that Data Collector Edge is " +
       "running and that the URL is correctly configured in the pipeline general properties."),
   CONTAINER_01603("Starting Edge pipeline failed, status code '{}': {}"),
+  CONTAINER_01604("Reset Offset for Edge pipeline failed, status code '{}': {}"),
   ;
 
   private final String msg;

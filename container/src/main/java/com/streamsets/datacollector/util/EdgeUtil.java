@@ -235,4 +235,37 @@ public class EdgeUtil {
     }
   }
 
+  public static void resetOffset(PipelineConfiguration pipelineConfiguration) throws PipelineException {
+    String pipelineId = pipelineConfiguration.getPipelineId();
+    PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
+        .create(pipelineConfiguration, new ArrayList<>(), null);
+    if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
+      throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
+    }
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId + "/resetOffset")
+          .request()
+          .post(null);
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new PipelineException(
+            ContainerError.CONTAINER_01604,
+            response.getStatus(),
+            response.readEntity(String.class)
+        );
+      }
+    } catch (ProcessingException ex) {
+      if (ex.getCause() instanceof ConnectException) {
+        throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
+      }
+      throw ex;
+    }
+    finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+  }
+
 }

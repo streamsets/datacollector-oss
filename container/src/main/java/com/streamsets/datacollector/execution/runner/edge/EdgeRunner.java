@@ -26,11 +26,9 @@ import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
-import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -39,7 +37,6 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
@@ -55,7 +52,6 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
 
-  private final ObjectGraph objectGraph;
   private final String pipelineId;
   private String pipelineTitle = null;
   private final String rev;
@@ -63,7 +59,6 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   public EdgeRunner(String name, String rev, ObjectGraph objectGraph) {
     this.pipelineId = name;
     this.rev = rev;
-    this.objectGraph = objectGraph;
     objectGraph.inject(this);
   }
 
@@ -78,22 +73,23 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public String getPipelineTitle() throws PipelineException {
+  public String getPipelineTitle() {
     return pipelineTitle;
   }
 
   @Override
   public void resetOffset(String user) throws PipelineException {
-
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
+    EdgeUtil.resetOffset(pipelineConfiguration);
   }
 
   @Override
-  public SourceOffset getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() {
     return null;
   }
 
   @Override
-  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
+  public void updateCommittedOffsets(SourceOffset sourceOffset) {
 
   }
 
@@ -103,17 +99,17 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForDataCollectorStart(String user) throws PipelineException {
+  public void prepareForDataCollectorStart(String user) {
 
   }
 
   @Override
-  public void onDataCollectorStart(String user) throws PipelineException, StageException {
+  public void onDataCollectorStart(String user) {
 
   }
 
   @Override
-  public void onDataCollectorStop(String user) throws PipelineException {
+  public void onDataCollectorStop(String user) {
 
   }
 
@@ -158,7 +154,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void forceQuit(String user) throws PipelineException {
+  public void forceQuit(String user) {
 
   }
 
@@ -204,13 +200,13 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForStop(String user) throws PipelineException {
+  public void prepareForStop(String user) {
 
   }
 
   @Override
-  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException {
-
+  public void start(String user, Map<String, Object> runtimeParameters) {
+    // We are Edge pipeline in prepareForStart call
   }
 
   @Override
@@ -221,7 +217,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       String snapshotLabel,
       int batches,
       int batchSize
-  ) throws PipelineException, StageException {
+  ) {
 
   }
 
@@ -232,37 +228,37 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       String snapshotLabel,
       int batches,
       int batchSize
-  ) throws PipelineException {
+  ) {
     return null;
   }
 
   @Override
-  public String updateSnapshotLabel(String snapshotName, String snapshotLabel) throws PipelineException {
+  public String updateSnapshotLabel(String snapshotName, String snapshotLabel) {
     return null;
   }
 
   @Override
-  public Snapshot getSnapshot(String id) throws PipelineException {
+  public Snapshot getSnapshot(String id) {
     return null;
   }
 
   @Override
-  public List<SnapshotInfo> getSnapshotsInfo() throws PipelineException {
+  public List<SnapshotInfo> getSnapshotsInfo() {
     return null;
   }
 
   @Override
-  public void deleteSnapshot(String id) throws PipelineException {
+  public void deleteSnapshot(String id) {
 
   }
 
   @Override
-  public List<PipelineState> getHistory() throws PipelineStoreException {
+  public List<PipelineState> getHistory() {
     return null;
   }
 
   @Override
-  public void deleteHistory() throws PipelineException {
+  public void deleteHistory() {
 
   }
 
@@ -273,7 +269,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
+  public List<Record> getErrorRecords(String stage, int max) {
     return null;
   }
 
@@ -281,7 +277,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   public List<ErrorMessage> getErrorMessages(
       String stage,
       int max
-  ) throws PipelineRunnerException, PipelineStoreException {
+  ) {
     return null;
   }
 
@@ -289,17 +285,17 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   public List<SampledRecord> getSampledRecords(
       String sampleId,
       int max
-  ) throws PipelineRunnerException, PipelineStoreException {
+  ) {
     return null;
   }
 
   @Override
-  public List<AlertInfo> getAlerts() throws PipelineException {
+  public List<AlertInfo> getAlerts() {
     return null;
   }
 
   @Override
-  public boolean deleteAlert(String alertId) throws PipelineException {
+  public boolean deleteAlert(String alertId) {
     return false;
   }
 
@@ -338,6 +334,6 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       PipelineStatus pipelineStatus,
       String message,
       Map<String, Object> attributes
-  ) throws PipelineRuntimeException {
+  ) {
   }
 }

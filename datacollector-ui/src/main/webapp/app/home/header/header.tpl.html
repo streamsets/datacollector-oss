@@ -176,7 +176,7 @@
          tooltip="{{'global.form.publishToEdge' | translate}}"
          tooltip-popup-delay="500"
          ng-hide="previewMode || snapshotMode"
-         ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && isEdgePipeline()"
          ng-click="publishToEdge()">
         <span class="fa fa-upload fa-14x"></span>
       </a>
