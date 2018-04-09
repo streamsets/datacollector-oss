@@ -29,6 +29,8 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -116,8 +118,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -604,9 +610,11 @@ public class PipelineStoreResource {
         try {
           PipelineConfiguration pipelineConfig = store.load(pipelineId, "0");
           RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, "0");
+          List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
           PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelope(
               pipelineConfig,
               ruleDefinitions,
+              serviceDefinitions,
               includeLibraryDefinitions
           );
           pipelineZip.putNextEntry(new ZipEntry(pipelineConfig.getPipelineId() + ".json"));
@@ -738,7 +746,7 @@ public class PipelineStoreResource {
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
-          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, true))
+          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), true))
           .build();
     } else {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
@@ -973,6 +981,7 @@ public class PipelineStoreResource {
     PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelope(
         pipelineConfig,
         ruleDefinitions,
+        stageLibrary.getServiceDefinitions(),
         includeLibraryDefinitions
     );
 
@@ -1017,6 +1026,7 @@ public class PipelineStoreResource {
   private PipelineEnvelopeJson getPipelineEnvelope(
       PipelineConfiguration pipelineConfig,
       RuleDefinitions ruleDefinitions,
+      List<ServiceDefinition> serviceDefinitions,
       boolean includeLibraryDefinitions
   ) {
     PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
@@ -1064,6 +1074,20 @@ public class PipelineStoreResource {
       List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
       pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
       definitions.setPipelineRules(pipelineRules);
+
+
+      Map<Class, ServiceDefinition> serviceByClass = serviceDefinitions.stream()
+          .collect(Collectors.toMap(ServiceDefinition::getProvides, Function.identity()));
+
+      List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
+          .flatMap(stageDefinition -> stageDefinition.getServices().stream())
+          .map(ServiceDependencyDefinition::getService)
+          .distinct()
+          .map(serviceClass -> serviceByClass.get(serviceClass))
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      definitions.setServices(BeanHelper.wrapServiceDefinitions(pipelineServices));
 
       pipelineEnvelope.setLibraryDefinitions(definitions);
     }
@@ -1193,7 +1217,7 @@ public class PipelineStoreResource {
       ruleDefinitions = store.storeRules(name, rev, ruleDefinitions, false);
     }
 
-    return getPipelineEnvelope(pipelineConfig, ruleDefinitions, draft);
+    return getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), draft);
   }
 
   @Path("/fragment/{fragmentId}/import")
