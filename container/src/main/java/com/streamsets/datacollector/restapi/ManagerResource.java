@@ -648,10 +648,12 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        BeanHelper.wrapSnapshotInfoNewAPI(runner.getSnapshot(snapshotName).getInfo())).build();
+      final SnapshotInfoJson snapshot = BeanHelper.wrapSnapshotInfoNewAPI(runner.getSnapshot(snapshotName).getInfo());
+      if (snapshot != null) {
+        return Response.ok().type(MediaType.APPLICATION_JSON).entity(snapshot).build();
+      }
     }
-    return Response.noContent().build();
+    return Response.status(Response.Status.NOT_FOUND).build();
   }
 
   @Path("/pipeline/{pipelineId}/snapshot/{snapshotName}")
