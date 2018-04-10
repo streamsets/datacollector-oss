@@ -47,10 +47,16 @@ public class HdfsFile implements WrappedFile {
   }
 
   public String getAbsolutePath() {
+    if (filePath == null) {
+      return "";
+    }
     return filePath.toUri().getPath();
   }
 
   public String getParent() {
+    if (filePath == null) {
+      return "";
+    }
     return filePath.getParent().toUri().getPath();
   }
 
