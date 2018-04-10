@@ -245,6 +245,18 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       if (timeSeriesAnalysisField != null) {
         metadata.put(AggregatorUtil.TIME_SERIES_ANALYSIS, timeSeriesAnalysisField.getValueAsString());
       }
+      // SDC's from 3.2 will have the last record field
+      Field isLastRecord = currentRecord.get("/" + AggregatorUtil.LAST_RECORD);
+      if (isLastRecord != null) {
+        if (Boolean.valueOf(isLastRecord.getValueAsString())) {
+          LOG.info(
+              "Got last metric record from {} running job {}",
+              sdcMetricsJson.getSdcId(),
+              jobId
+          );
+        }
+        metadata.put(AggregatorUtil.LAST_RECORD, isLastRecord.getValueAsString());
+      }
       sdcMetricsJson.setMetadata(metadata);
     }
     String metricRegistryJson = currentRecord.get("/" + AggregatorUtil.METRIC_JSON_STRING).getValueAsString();

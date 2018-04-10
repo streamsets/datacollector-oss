@@ -101,6 +101,7 @@ public abstract class BaseHttpTargetTest extends JerseyTest {
           m,
           true,
           true,
+          false,
           "{}"
       );
       list.add(record);

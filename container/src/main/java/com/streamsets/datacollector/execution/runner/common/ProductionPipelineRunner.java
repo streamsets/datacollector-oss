@@ -36,6 +36,8 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.SnapshotStore;
+import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
@@ -905,6 +907,26 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     if (isStatsAggregationEnabled()) {
       List<Record> stats = new ArrayList<>();
       statsAggregatorRequests.drainTo(stats);
+      if (stop) { // add last batch metrics here as metric runnable runs after prod runnable
+        Object timeSeriesString = pipelineConfigBean.constants.get(MetricsEventRunnable.TIME_SERIES_ANALYSIS);
+        boolean timeSeriesAnalysis = (timeSeriesString != null) ? (Boolean) timeSeriesString: true;
+        String metricRegistryStr;
+        try {
+          metricRegistryStr = ObjectMapperFactory.get().writer().writeValueAsString(metrics);
+        } catch (Exception e) {
+          throw new RuntimeException(Utils.format("Error converting metric json to string: {}", e), e);
+        }
+        LOG.info("Queueing last batch of record to be sent to stats aggregator");
+        stats.add(AggregatorUtil.createMetricJsonRecord(
+            runtimeInfo.getId(),
+            runtimeInfo.getMasterSDCId(),
+            pipelineConfiguration.getMetadata(),
+            false,
+            timeSeriesAnalysis,
+            true,
+            metricRegistryStr
+        ));
+      }
       statsAggregationHandler.handle(entityName, previousOffset, stats);
     }
   }

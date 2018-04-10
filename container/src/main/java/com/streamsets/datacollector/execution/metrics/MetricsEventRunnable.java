@@ -79,7 +79,7 @@ public class MetricsEventRunnable implements Runnable {
   private static final String PIPELINE_COMMIT_ID = "PIPELINE_COMMIT_ID";
   private static final String JOB_ID = "JOB_ID";
   private static final String UPDATE_WAIT_TIME_MS = "UPDATE_WAIT_TIME_MS";
-  private static final String TIME_SERIES_ANALYSIS = "TIME_SERIES_ANALYSIS";
+  public static final String TIME_SERIES_ANALYSIS = "TIME_SERIES_ANALYSIS";
   private static final String SDC = "sdc";
   private static final String X_REQUESTED_BY = "X-Requested-By";
   private static final String X_SS_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
@@ -108,6 +108,7 @@ public class MetricsEventRunnable implements Runnable {
   private Integer waitTimeBetweenUpdates;
   private final int retryAttempts = 5;
   private boolean timeSeriesAnalysis = true;
+  private boolean isPipelineStopped = false;
   private WebTarget webTarget;
   private Stopwatch stopwatch = null;
 
@@ -141,6 +142,7 @@ public class MetricsEventRunnable implements Runnable {
     if (isDPMPipeline) {
       // Send final metrics to DPM on stop
       this.stopwatch = null;
+      this.isPipelineStopped = true;
       this.run();
     }
   }
@@ -183,7 +185,8 @@ public class MetricsEventRunnable implements Runnable {
         if (hasMetricEventListeners(state)) {
           eventListenerManager.broadcastMetrics(name, metricsJSONStr);
         }
-        if (isStatAggregationEnabled()) {
+        // don't queue stats record when pipeline is stopped as runner is not going to process any more batches
+        if (isStatAggregationEnabled() && !isPipelineStopped) {
           AggregatorUtil.enqueStatsRecord(
             AggregatorUtil.createMetricJsonRecord(
                 runtimeInfo.getId(),
@@ -191,6 +194,7 @@ public class MetricsEventRunnable implements Runnable {
                 pipelineConfiguration.getMetadata(),
                 false, // isAggregated - no its not aggregated
                 timeSeriesAnalysis,
+                false,
                 metricsJSONStr
             ),
             statsQueue,
