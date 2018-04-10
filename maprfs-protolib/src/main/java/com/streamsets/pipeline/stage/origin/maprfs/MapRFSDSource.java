@@ -29,7 +29,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     version = 1,
     label = "MapR FS Standalone",
     description = "Reads files from a MapR filesystem",
-    icon="mapr_xd.png",
+    icon="mapr_xd-multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,

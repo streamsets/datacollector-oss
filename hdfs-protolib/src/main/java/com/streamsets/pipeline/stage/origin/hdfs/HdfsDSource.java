@@ -34,7 +34,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     version = 1,
     label = "Hadoop FS Standalone",
     description = "Reads files from a Hadoop file system",
-    icon="hdfs.png",
+    icon="hdfs-multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
