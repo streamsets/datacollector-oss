@@ -145,7 +145,7 @@ public class EmailNotifier implements StateEventListener {
         try {
           emailSender.send(emails, subject, emailBody);
         } catch (EmailException e) {
-          LOG.error("Error sending email : '{}'", e.toString());
+          LOG.error("Error sending email : '{}'", e.toString(), e);
         }
       }
     }
