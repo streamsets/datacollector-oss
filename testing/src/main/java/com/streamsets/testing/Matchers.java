@@ -19,7 +19,9 @@ package com.streamsets.testing;
 import com.streamsets.pipeline.api.Field;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -182,5 +184,36 @@ public class Matchers {
           nestedFieldName
       )).appendValue(expectedValue);
     }
+  }
+
+  /**
+   * Similar to {@link org.hamcrest.core.StringContains#containsString(String)} but case-insensitive
+   *
+   * Adapted from
+   * <a href="https://gist.github.com/spuklo/660c4504d088a1d7f38f#file-caseinsensitivesubstringmatcher-java">
+   *   https://gist.github.com/spuklo/660c4504d088a1d7f38f#file-caseinsensitivesubstringmatcher-java
+   *   </a>
+   */
+  private static class CaseInsensitiveSubstringMatcher extends TypeSafeMatcher<String> {
+    private final String subString;
+
+    private CaseInsensitiveSubstringMatcher(final String subString) {
+      this.subString = subString;
+    }
+
+    @Override
+    protected boolean matchesSafely(final String actualString) {
+      return actualString.toLowerCase().contains(this.subString.toLowerCase());
+    }
+
+    @Override
+    public void describeTo(final Description description) {
+      description.appendText("containing substring \"" + this.subString + "\" (case-insensitive)");
+    }
+  }
+
+  @Factory
+  public static Matcher<String> containsIgnoringCase(final String subString) {
+    return new CaseInsensitiveSubstringMatcher(subString);
   }
 }

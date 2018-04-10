@@ -323,6 +323,12 @@
       <groupId>org.eclipse.milo</groupId>
       <artifactId>sdk-server</artifactId>
       <version>${milo.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.javassist</groupId>
+          <artifactId>javassist</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>test</scope>
     </dependency>
     <dependency>

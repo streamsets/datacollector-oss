@@ -60,7 +60,7 @@
     <junit.version>4.12</junit.version>
     <hamcrest.version>1.3</hamcrest.version>
     <mockito.version>1.10.19</mockito.version>
-    <powermock.version>1.6.3</powermock.version>
+    <powermock.version>1.7.3</powermock.version>
     <jackson.version>2.8.9</jackson.version>
     <jacoco.version>0.7.7.201606060606</jacoco.version>
     <hikaricp.version>2.4.1</hikaricp.version>
@@ -142,6 +142,12 @@
         <groupId>org.glassfish.jersey.core</groupId>
         <artifactId>jersey-client</artifactId>
         <version>${jersey.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.glassfish.jersey.core</groupId>

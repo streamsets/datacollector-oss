@@ -37,6 +37,7 @@
     <kudu.version>1.0.1</kudu.version>
     <guava.version>18.0</guava.version>
     <joda.version>2.8</joda.version>
+    <powermock.version>1.6.3</powermock.version>
   </properties>
 
   <dependencies>

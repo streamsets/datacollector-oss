@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kudu;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
@@ -58,6 +59,7 @@ import org.apache.kudu.client.OperationResponse;
 import org.apache.kudu.client.PartialRow;
 import org.apache.kudu.client.RowError;
 import org.apache.kudu.client.SessionConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +197,7 @@ public class KuduTarget extends BaseTarget {
       );
     }
 
-    kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(configBean.operationTimeout).build();
+    kuduClient = buildKuduClient();
     if (issues.isEmpty()) {
       kuduSession = openKuduSession(issues);
     }
@@ -260,6 +262,12 @@ public class KuduTarget extends BaseTarget {
         createKuduRecordConverter(issues, table);
       }
     }
+  }
+
+  @NotNull
+  @VisibleForTesting
+  KuduClient buildKuduClient() {
+    return new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(configBean.operationTimeout).build();
   }
 
   private KuduSession openKuduSession(List<ConfigIssue> issues) {
