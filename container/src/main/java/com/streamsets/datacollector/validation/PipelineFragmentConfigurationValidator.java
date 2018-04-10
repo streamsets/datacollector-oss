@@ -74,7 +74,7 @@ public class PipelineFragmentConfigurationValidator {
   boolean validated;
   protected boolean canPreview;
   protected final Map<String, Object> constants;
-
+  private boolean isPipelineFragment = false;
 
   public PipelineFragmentConfigurationValidator(
       StageLibraryTask stageLibrary,
@@ -135,6 +135,7 @@ public class PipelineFragmentConfigurationValidator {
 
   public PipelineFragmentConfiguration validate() {
     Preconditions.checkState(!validated, "Already validated");
+    isPipelineFragment = true;
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
     canPreview = resolveLibraryAliases();
@@ -557,7 +558,7 @@ public class PipelineFragmentConfigurationValidator {
           }
           break;
         case PROCESSOR:
-          if (stageConf.getInputLanes().isEmpty()) {
+          if (stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
             // processor stage must have at least one input lane
             issues.add(
                 issueCreator.create(
@@ -588,7 +589,7 @@ public class PipelineFragmentConfigurationValidator {
         case EXECUTOR:
         case TARGET:
           // Normal target stage must have at least one input lane
-          if (!noInputAndEventLanes && stageConf.getInputLanes().isEmpty()) {
+          if (!noInputAndEventLanes && stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
             issues.add(
                 issueCreator.create(
                     stageConf.getInstanceName(),
@@ -945,7 +946,7 @@ public class PipelineFragmentConfigurationValidator {
   boolean validateStageConfiguration() {
     boolean preview = true;
     Set<String> stageNames = new HashSet<>();
-    boolean shouldBeSource = true;
+    boolean shouldBeSource = !isPipelineFragment;
     for (StageConfiguration stageConf : pipelineFragmentConfiguration.getStages()) {
       if (stageNames.contains(stageConf.getInstanceName())) {
         // duplicate stage instance name in the pipeline
@@ -1270,7 +1271,7 @@ public class PipelineFragmentConfigurationValidator {
         openOutputs.removeAll(downStreamStageConf.getInputLanes());
         openEvents.removeAll(downStreamStageConf.getInputLanes());
       }
-      if (!openOutputs.isEmpty()) {
+      if (!openOutputs.isEmpty() && !isPipelineFragment) {
         openLanes.addAll(openOutputs);
         // the stage has open output lanes
         Issue issue = IssueCreator.getStage(stageConf.getInstanceName()).create(ValidationError.VALIDATION_0011);
