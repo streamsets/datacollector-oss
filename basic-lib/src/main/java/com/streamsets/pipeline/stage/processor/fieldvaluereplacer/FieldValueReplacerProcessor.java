@@ -85,14 +85,6 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
 
-    ELEval fieldPathEval = getContext().createELEval(String.format(
-        "%s---%s---%s",
-        getContext().getPipelineId(),
-        getContext().getStageInfo().getInstanceName(),
-        "fieldPathEval"
-    ), RecordEL.class, FieldEL.class);
-    ELVars fieldPathVars = getContext().createELVars();
-
     RecordEL.setRecordInContext(nullConditionELVars, record);
 
     if(nullReplacerConditionalConfigs != null && !nullReplacerConditionalConfigs.isEmpty()) {
