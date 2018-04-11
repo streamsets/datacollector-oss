@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.StringEL;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.fs.Path;
@@ -51,7 +50,6 @@ public class HiveConfigBean {
       defaultValue = "jdbc:hive2://<host>:<port>/default",
       displayPosition= 10,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
-      elDefs = {StringEL.class},
       group = "HIVE"
   )
   public String hiveJDBCUrl;

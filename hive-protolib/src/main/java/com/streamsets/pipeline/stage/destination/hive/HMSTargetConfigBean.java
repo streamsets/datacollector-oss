@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
@@ -75,7 +74,7 @@ public class HMSTargetConfigBean {
       group = "ADVANCED",
       defaultValue = ".schemas",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, StringEL.class, TimeEL.class},
+      elDefs = {RecordEL.class, TimeEL.class},
       dependsOn = "storedAsAvro",
       triggeredByValue = "false"
   )

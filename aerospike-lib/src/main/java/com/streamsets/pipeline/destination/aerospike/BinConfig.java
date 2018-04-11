@@ -19,7 +19,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class BinConfig {
@@ -31,7 +30,7 @@ public class BinConfig {
       description = "Expression language to obtain bin name from record",
       defaultValue = "${record:value('/bin_name_1')}",
       displayPosition = 10,
-      elDefs = {RecordEL.class, StringEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String binName;
@@ -43,7 +42,7 @@ public class BinConfig {
       description = "Expression language to obtain bin value from record",
       defaultValue = "${record:value('/bin_val_1')}",
       displayPosition = 20,
-      elDefs = {RecordEL.class, StringEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
 
   )

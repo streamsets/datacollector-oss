@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.processor.kv;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 public class LookupParameterConfig {
   @ConfigDef(
@@ -26,7 +25,7 @@ public class LookupParameterConfig {
       type = ConfigDef.Type.STRING,
       label = "Key Expression",
       description = "An EL expression defining the key to use for a lookup.",
-      elDefs = {StringEL.class, RecordEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "#0"

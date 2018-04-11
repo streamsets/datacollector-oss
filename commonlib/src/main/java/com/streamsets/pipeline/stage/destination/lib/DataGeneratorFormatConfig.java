@@ -44,7 +44,6 @@ import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.config.WholeFileExistsActionChooserValues;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
@@ -445,8 +444,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     displayPosition = 420,
     group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
-    triggeredByValue = "BINARY",
-    elDefs = {StringEL.class}
+    triggeredByValue = "BINARY"
   )
   @FieldSelectorModel(singleValued = true)
   public String binaryFieldPath = "/";
@@ -483,7 +481,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      elDefs = {RecordEL.class, StringEL.class, MathEL.class},
+      elDefs = {RecordEL.class, MathEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "",
       description = "File Name Expression",

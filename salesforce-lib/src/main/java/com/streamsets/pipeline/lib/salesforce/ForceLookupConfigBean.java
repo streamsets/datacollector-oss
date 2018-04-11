@@ -21,7 +21,6 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       label = "SOQL Query",
       description =
           "SELECT <field>, ... FROM <object name> WHERE <field> <operator> <expression>",
-      elDefs = {StringEL.class, RecordEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "lookupMode",
       triggeredByValue = "QUERY",

@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class HiveQueryExecutorConfig {
       displayPosition = 40,
       group = "QUERY",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, StringEL.class}
+      elDefs = {RecordEL.class}
   )
   public List<String> queries;
 

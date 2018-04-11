@@ -33,7 +33,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
@@ -358,7 +357,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      elDefs = {RecordEL.class, StringEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       label = "Permissions Expression",
       description = "Expression that determines the target file permissions." +

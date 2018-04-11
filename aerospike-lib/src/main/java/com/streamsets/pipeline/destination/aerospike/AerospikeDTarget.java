@@ -19,7 +19,6 @@ package com.streamsets.pipeline.destination.aerospike;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public class AerospikeDTarget extends DTarget {
       description = "Expression to get namespace",
       displayPosition = 30,
       group = "MAPPING",
-      elDefs = {RecordEL.class, StringEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String namespaceEL;
@@ -58,7 +57,7 @@ public class AerospikeDTarget extends DTarget {
       description = "Expression to get set name",
       displayPosition = 40,
       group = "MAPPING",
-      elDefs = {RecordEL.class, StringEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String setEL;
@@ -70,7 +69,7 @@ public class AerospikeDTarget extends DTarget {
       description = "Expression to get key",
       displayPosition = 50,
       group = "MAPPING",
-      elDefs = {RecordEL.class, StringEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String keyEL;

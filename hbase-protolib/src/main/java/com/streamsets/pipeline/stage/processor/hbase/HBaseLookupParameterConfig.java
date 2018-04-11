@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.processor.hbase;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 public class HBaseLookupParameterConfig {
   @ConfigDef(
@@ -26,7 +25,7 @@ public class HBaseLookupParameterConfig {
       type = ConfigDef.Type.STRING,
       label = "Row Expression",
       description = "An EL expression defining the row to use for a lookup.",
-      elDefs = {StringEL.class, RecordEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "#0"
@@ -39,7 +38,7 @@ public class HBaseLookupParameterConfig {
       label = "Column Expression",
       description = "An EL expression defining the column. Use format <COLUMNFAMILY>:<QUALIFIER>. " +
       "The column family must exist",
-      elDefs = {StringEL.class, RecordEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "#0"
@@ -51,7 +50,7 @@ public class HBaseLookupParameterConfig {
       type = ConfigDef.Type.STRING,
       label = "TimeStamp Expression",
       description = "An EL expression defining the timestamp to use for a lookup.",
-      elDefs = {StringEL.class, RecordEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 15,
       group = "#0"
