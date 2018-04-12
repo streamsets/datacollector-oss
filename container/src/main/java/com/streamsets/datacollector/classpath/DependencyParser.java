@@ -43,7 +43,7 @@ public class DependencyParser {
   /**
    * Various version suffixes that we support.
    */
-  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m";
+  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m|-jre";
 
   /**
    * Various supported version specifications

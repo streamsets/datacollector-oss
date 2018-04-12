@@ -97,6 +97,7 @@ public class DependencyParserExhaustiveTest {
       {"groovy-2.4.11-indy.jar", new Dependency("groovy", "2.4.11-indy")},
       {"groovy-all-2.4.4.jar", new Dependency("groovy", "2.4.4")},
       {"grpc-auth-1.5.0.jar", new Dependency("grpc", "1.5.0")},
+      {"guava-24.1-jre.jar", new Dependency("guava", "24.1-jre")},
       {"grpc-context-1.6.1.jar", new Dependency("grpc", "1.6.1")},
       {"grpc-google-cloud-pubsub-v1-0.1.20.jar", new Dependency("grpc-google-cloud-pubsub-v1", "0.1.20")},
       {"grpc-google-common-protos-0.1.9.jar", new Dependency("grpc-google-common-protos", "0.1.9")},
