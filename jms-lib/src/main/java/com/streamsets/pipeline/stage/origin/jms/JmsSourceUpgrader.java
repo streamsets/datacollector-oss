@@ -92,10 +92,8 @@ public class JmsSourceUpgrader implements StageUpgrader {
     // Remove those configs
     configs.removeAll(dataFormatConfigs);
 
-    // Provide proper prefix
-    dataFormatConfigs = dataFormatConfigs.stream()
-      .map(c -> new Config(c.getName().replace("dataFormatConfig.", "dataFormatConfig."), c.getValue()))
-      .collect(Collectors.toList());
+    // Compression was originally hidden and hence we have to re-add it
+    dataFormatConfigs.add(new Config("dataFormatConfig.compression", "NONE"));
 
     // And finally register new service
     context.registerService(DataFormatParserService.class, dataFormatConfigs);
