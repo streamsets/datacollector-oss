@@ -264,6 +264,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dir-spooler-protolib</artifactId>
+      <type>test-jar</type>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <!--  protobuf needs to be compile scope but we have protobuf-java-2.x as part of hive-exec jar.
             Therefore we use test scope in HDP 2.5 -->
       <groupId>com.google.protobuf</groupId>
