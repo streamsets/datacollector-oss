@@ -494,7 +494,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
-      LOG.debug(
+      LOG.info(
         "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services and '{}' credentialStores in '{}ms'",
         libs,
         stages,
@@ -669,6 +669,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   public List<ClasspathValidatorResult> validateStageLibClasspath() {
+    long startTime = System.currentTimeMillis();
     List<ClasspathValidatorResult> validators = new LinkedList<>();
 
     for (ClassLoader cl : stageClassLoaders) {
@@ -683,6 +684,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
     }
 
+    LOG.info("Finished classpath validation in {} ms", System.currentTimeMillis() - startTime);
     return validators;
   }
 
