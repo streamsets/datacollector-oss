@@ -515,15 +515,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             LOG.warn(ackEventMessage);
             break;
         }
-      } catch (PipelineException | StageException ex) {
-        ackEventMessage = Utils.format(
-            "Remote event type: '{}' encountered exception '{}'",
-            serverEvent.getEventType(),
-            ex.getMessage()
-        );
-        LOG.warn(ackEventMessage, ex);
-      } catch (IOException ex) {
-        ackEventMessage = Utils.format("Remote event type: '{}' encountered exception while being deserialized '{}'",
+      } catch (Exception ex) {
+        ackEventMessage = Utils.format("Remote event type: '{}' encountered exception '{}'",
             serverEvent.getEventType(),
             ex.getMessage()
         );

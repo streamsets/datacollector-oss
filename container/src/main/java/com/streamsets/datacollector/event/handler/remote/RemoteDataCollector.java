@@ -143,7 +143,12 @@ public class RemoteDataCollector implements DataCollector {
         return null;
       });
     } catch (Exception ex) {
-      ExceptionUtils.throwUndeclared(ex.getCause());
+      LOG.warn(Utils.format("Error while starting pipeline: {} is {}", name, ex), ex);
+      if (ex.getCause() != null) {
+        ExceptionUtils.throwUndeclared(ex.getCause());
+      } else {
+        ExceptionUtils.throwUndeclared(ex);
+      }
     }
   }
 
