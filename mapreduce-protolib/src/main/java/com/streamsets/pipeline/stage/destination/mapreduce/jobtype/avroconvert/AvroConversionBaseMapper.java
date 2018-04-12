@@ -15,30 +15,19 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert;
 
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.FileReader;
 import org.apache.avro.file.SeekableInput;
-import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.mapred.FsInput;
-import org.apache.avro.specific.SpecificData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.parquet.SemanticVersion;
-import org.apache.parquet.Version;
-import org.apache.parquet.avro.AvroParquetWriter;
-import org.apache.parquet.avro.AvroSchemaConverterLogicalTypesPre19;
-import org.apache.parquet.avro.AvroWriteSupport;
-import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.hadoop.api.WriteSupport;
-import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +48,7 @@ public abstract class AvroConversionBaseMapper extends Mapper<String, String, Nu
     return prop != null && !prop.isEmpty() && !prop.equals("-1");
   }
 
+  protected abstract String getTempFilePrefix();
   protected abstract String getOutputFileSuffix();
   protected abstract void closeWriter() throws IOException;
   protected abstract void handleAvroRecord(GenericRecord record) throws IOException;
@@ -80,7 +70,7 @@ public abstract class AvroConversionBaseMapper extends Mapper<String, String, Nu
     Path outputDir = new Path(output);
     fs.mkdirs(outputDir);
 
-    Path tempFile = new Path(outputDir, AvroParquetConstants.TMP_PREFIX + inputPath.getName());
+    Path tempFile = new Path(outputDir, getTempFilePrefix() + inputPath.getName());
     if(fs.exists(tempFile)) {
       if(conf.getBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, false)) {
         fs.delete(tempFile, true);
@@ -90,7 +80,7 @@ public abstract class AvroConversionBaseMapper extends Mapper<String, String, Nu
     }
     LOG.info("Using temp file: {}", tempFile);
 
-    // Output file is the same as input except of dropping .avro extension if it exists and appending .parquet
+    // Output file is the same as input except of dropping .avro extension if it exists and appending .parquet or .orc
     String outputFileName = inputPath.getName().replaceAll("\\.avro$", "") + getOutputFileSuffix();
     Path finalFile = new Path(outputDir, outputFileName);
     LOG.info("Final path will be: {}", finalFile);

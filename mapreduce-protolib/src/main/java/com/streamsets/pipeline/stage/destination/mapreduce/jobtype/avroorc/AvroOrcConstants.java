@@ -22,4 +22,8 @@ public class AvroOrcConstants {
    */
   public final static String ORC_BATCH_SIZE = AvroOrcConstants.class.getCanonicalName() + ".orc_batch_size";
 
+  /**
+   * Prefix that will be used for temporary file that is just being converted.
+   */
+  public final static String TMP_PREFIX = ".avro_to_orc_tmp_conversion_";
 }

@@ -48,6 +48,11 @@ public class AvroOrcConvertMapper extends AvroConversionBaseMapper {
   private AvroToOrcRecordConverter avroOrcRecordConverter;
 
   @Override
+  protected String getTempFilePrefix() {
+    return AvroOrcConstants.TMP_PREFIX;
+  }
+
+  @Override
   protected String getOutputFileSuffix() {
     return ".orc";
   }

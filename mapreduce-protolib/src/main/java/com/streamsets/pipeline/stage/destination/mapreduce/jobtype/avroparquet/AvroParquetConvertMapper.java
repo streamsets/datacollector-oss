@@ -88,6 +88,11 @@ public class AvroParquetConvertMapper extends AvroConversionBaseMapper {
   }
 
   @Override
+  protected String getTempFilePrefix() {
+    return AvroParquetConstants.TMP_PREFIX;
+  }
+
+  @Override
   protected String getOutputFileSuffix() {
     return ".parquet";
   }
