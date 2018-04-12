@@ -34,7 +34,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRFSStandalone.html#task_tpv_kqc_mdb"
 )
 @GenerateResourceBundle
 public class MapRFSDSource extends HdfsDSource {
