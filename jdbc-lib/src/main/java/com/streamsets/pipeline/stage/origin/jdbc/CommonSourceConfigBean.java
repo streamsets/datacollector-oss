@@ -138,6 +138,19 @@ public final class CommonSourceConfigBean {
   )
   public boolean enableSchemaChanges;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "No-more-data Event Generation Delay (seconds)",
+      description = "Number of seconds to delay when all rows have been processed, before generating the no-more-data" +
+          " event.  Used if you want other events to show up in the event stream first.",
+      displayPosition = 201,
+      min = 0,
+      group = "JDBC"
+  )
+  public int noMoreDataEventDelay;
+
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";
   private static final String MAX_BLOB_SIZE = "maxBlobSize";

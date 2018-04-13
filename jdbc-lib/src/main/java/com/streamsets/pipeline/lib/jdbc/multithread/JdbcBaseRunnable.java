@@ -45,6 +45,7 @@ import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -201,6 +202,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    */
   private void generateBatchAndCommitOffset(BatchContext batchContext) {
     int recordCount = 0;
+    int eventCount = 0;
     try {
         while (tableRuntimeContext == null) {
           tableRuntimeContext = tableProvider.nextTable(threadNumber);
@@ -238,22 +240,39 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
 
           //If exception happened we do not report anything about no more data event
           //We report noMoreData if either evictTableReadContext is true (result set no more rows) / record count is 0.
+
+          final AtomicBoolean tableFinished = new AtomicBoolean(false);
+          final AtomicBoolean schemaFinished = new AtomicBoolean(false);
+          final List<String> schemaFinishedTables = new LinkedList<>();
           tableProvider.reportDataOrNoMoreData(
               tableRuntimeContext,
               recordCount,
               batchSize,
-              resultSetEndReached
+              resultSetEndReached,
+              tableFinished,
+              schemaFinished,
+              schemaFinishedTables
           );
+
+          if (tableFinished.get()) {
+            TableJdbcEvents.createTableFinishedEvent(context, tableRuntimeContext);
+            eventCount++;
+          }
+          if (schemaFinished.get()) {
+            TableJdbcEvents.createSchemaFinishedEvent(context, tableRuntimeContext, schemaFinishedTables);
+            eventCount++;
+          }
         } finally {
-          handlePostBatchAsNeeded(resultSetEndReached, recordCount, batchContext);
+          handlePostBatchAsNeeded(resultSetEndReached, recordCount, eventCount, batchContext);
         }
       } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
         //invalidate if the connection is closed
         tableReadContextCache.invalidateAll();
         connectionManager.closeConnection();
+        final TableContext table = tableRuntimeContext.getSourceTableContext();
 
         //if the currently acquired tableContext is no longer a valid candidate, try re-fetch the table from table provider
-        if (commonSourceConfigBean.allowLateTable && !tableProvider.getActiveRuntimeContexts().containsKey(tableRuntimeContext.getSourceTableContext())) {
+        if (commonSourceConfigBean.allowLateTable && !tableProvider.getActiveRuntimeContexts().containsKey(table)) {
           tableRuntimeContext = null;
         }
 
@@ -268,6 +287,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
         }
       }
     }
+
 
   private void handleSqlException(SQLException sqlE) {
     numSQLErrors++;
@@ -311,11 +331,12 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   private void handlePostBatchAsNeeded(
       boolean resultSetEndReached,
       int recordCount,
+      int eventCount,
       BatchContext batchContext
   ) {
     AtomicBoolean shouldEvict = new AtomicBoolean(resultSetEndReached);
-    //Only process batch if there are records
-    if (recordCount > 0) {
+    //Only process batch if there are records or events
+    if (recordCount > 0 || eventCount > 0) {
       TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
       Optional.ofNullable(tableReadContext)
           .ifPresent(readContext -> {

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcEvents;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -46,12 +47,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasKey;
 
 public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(MultiThreadedIT.class);
@@ -198,11 +212,14 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   private static class MultiThreadedJdbcTestCallback implements PushSourceRunner.Callback {
     private final PushSourceRunner pushSourceRunner;
     private final Map<String, List<Record>> tableToRecords;
+    private final List<Record> eventRecords;
     private final Set<String> tablesYetToBeCompletelyRead;
+    private final AtomicBoolean noMoreDataEvent = new AtomicBoolean(false);
 
     private MultiThreadedJdbcTestCallback(PushSourceRunner pushSourceRunner, Set<String> tables) {
       this.pushSourceRunner = pushSourceRunner;
       this.tableToRecords = new ConcurrentHashMap<>();
+      this.eventRecords = new LinkedList<>();
       this.tablesYetToBeCompletelyRead = new HashSet<>(tables);
     }
 
@@ -230,14 +247,33 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
           tablesYetToBeCompletelyRead.remove(tableName);
         }
       }
-      List<EventRecord> eventRecords = pushSourceRunner.getEventRecords();
-      if (tablesYetToBeCompletelyRead.isEmpty() && !eventRecords.isEmpty()) {
+      List<EventRecord> eventRecords = new LinkedList<>(pushSourceRunner.getEventRecords());
+      if (!noMoreDataEvent.get() && eventRecords != null && !eventRecords.isEmpty()) {
+        for (EventRecord eventRecord : eventRecords) {
+          if (eventRecord == null) {
+            // somehow, items in the event records can occasionally be null
+            continue;
+          }
+          if (CommonEvents.NO_MORE_DATA_TAG.equals(eventRecord.getEventType())) {
+            noMoreDataEvent.set(true);
+            break;
+          }
+        }
+      }
+
+      if (tablesYetToBeCompletelyRead.isEmpty() && noMoreDataEvent.get()) {
+        // at this point, we have all expected records and the no more data event
+        // because of the delay added when generating the no more data event, assume
+        // that all other new finished events are also received by now
         pushSourceRunner.setStop();
       }
     }
   }
 
-  public void testMultiThreadedRead(TableJdbcSource tableJdbcSource, String... tables) throws Exception {
+  public void testMultiThreadedRead(
+      TableJdbcSource tableJdbcSource,
+      String... tables
+  ) throws Exception {
     testMultiThreadedRead(tableJdbcSource, new HashSet<>(Arrays.asList(tables)));
   }
 
@@ -249,6 +285,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
+
     MultiThreadedJdbcTestCallback multiThreadedJdbcTestCallback = new MultiThreadedJdbcTestCallback(runner, tables);
 
     try {
@@ -278,12 +315,41 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         });
       });
 
-      Assert.assertEquals(1, runner.getEventRecords().size());
-      //Assert.assertTrue(1<=runner.getEventRecords().size());
-      Record eventRecord = runner.getEventRecords().get(0);
-      String eventType = eventRecord.getHeader().getAttribute("sdc.event.type");
-      Assert.assertNotNull(eventType);
-      Assert.assertTrue(CommonEvents.NO_MORE_DATA_TAG.equals(eventType));
+      // assert all expected events are present
+      // for each table, there should be a table finished event
+      final Set<String> tableFinishedEvents = new HashSet<>(tables);
+      // for each schema, there should be a schema finished event
+      // (in our test case, there is only one schema)
+      boolean schemaFinishedEvent = false;
+      // there should also be the no more data event, as before
+      boolean noMoreDataEvent = false;
+
+      for (EventRecord eventRecord : runner.getEventRecords()) {
+        if (eventRecord == null) {
+          continue;
+        }
+        switch (eventRecord.getEventType()) {
+          case TableJdbcEvents.TABLE_FINISHED_TAG:
+            tableFinishedEvents.remove(eventRecord.get("/" + TableJdbcEvents.TABLE_FIELD).getValueAsString());
+            break;
+          case TableJdbcEvents.SCHEMA_FINISHED_TAG:
+            schemaFinishedEvent = true;
+            final Set<String> allSchemaTables = new HashSet<>();
+            final Field allTablesField = eventRecord.get("/" + TableJdbcEvents.TABLES_FIELD);
+            assertThat(allTablesField, notNullValue());
+            allTablesField.getValueAsList().forEach(field -> allSchemaTables.add(field.getValueAsString()));
+            assertEquals(allSchemaTables, tables);
+            break;
+          case CommonEvents.NO_MORE_DATA_TAG:
+            noMoreDataEvent = true;
+            break;
+        }
+      }
+
+      Assert.assertTrue(noMoreDataEvent);
+      Assert.assertTrue(schemaFinishedEvent);
+      Assert.assertTrue(tableFinishedEvents.isEmpty());
+
     } finally {
       runner.runDestroy();
     }

@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -496,6 +497,157 @@ public class TestMultithreadedTableProvider {
     tableRuntimeContext = provider.nextTable(threadNumber);
     Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
     provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+  }
+
+  @Test
+  public void tableAndSchemasFinished() throws InterruptedException, StageException {
+    String schema1 = "schema1";
+    String table1Name = "table1";
+    String table2Name = "table2";
+    String schema2 = "schema2";
+    String table3Name = "table3";
+
+    String offsetCol = null;
+    final String partitionSize = null;
+    int maxActivePartitions = 0;
+    int threadNumber = 0;
+    int numThreads = 1;
+
+    TableContext tableContext1 = createTableContext(schema1, table1Name, offsetCol, partitionSize, maxActivePartitions, false);
+    TableContext tableContext2 = createTableContext(schema1, table2Name, offsetCol, partitionSize, maxActivePartitions, false);
+    TableContext tableContext3 = createTableContext(schema2, table3Name, offsetCol, partitionSize, maxActivePartitions, false);
+
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+
+    tableContextMap.put(tableContext1.getQualifiedName(), tableContext1);
+    tableContextMap.put(tableContext2.getQualifiedName(), tableContext2);
+    tableContextMap.put(tableContext3.getQualifiedName(), tableContext3);
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    sortedTableOrder.add(tableContext1.getQualifiedName());
+    sortedTableOrder.add(tableContext2.getQualifiedName());
+    sortedTableOrder.add(tableContext3.getQualifiedName());
+
+    Map threadNumToMaxTableSlots = new HashMap<>();
+
+    BatchTableStrategy batchTableStrategy = BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE;
+    MultithreadedTableProvider provider = new MultithreadedTableProvider(
+        tableContextMap,
+        sortedTableOrder,
+        threadNumToMaxTableSlots,
+        numThreads,
+        batchTableStrategy
+    );
+
+    assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(3));
+
+    TableRuntimeContext table1 = provider.nextTable(threadNumber);
+    Assert.equals(table1Name, table1.getSourceTableContext().getTableName());
+
+    assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(3));
+    // there should be two tables remaining in schema1 (table1 and table2)
+    assertThat(provider.getRemainingSchemasToTableContexts().get(schema1).size(), equalTo(2));
+    // and one remaining in schema2 (table3)
+    assertThat(provider.getRemainingSchemasToTableContexts().get(schema2).size(), equalTo(1));
+
+    final AtomicBoolean tableFinished = new AtomicBoolean(false);
+    final AtomicBoolean schemaFinished = new AtomicBoolean(false);
+    final List<String> schemaFinishedTables = new LinkedList<>();
+
+    // finish table1
+    provider.reportDataOrNoMoreData(table1, 10, 10, true, tableFinished, schemaFinished, schemaFinishedTables);
+
+    // table should be finished
+    assertTrue(tableFinished.get());
+
+    // schema should not
+    assertFalse(schemaFinished.get());
+    assertThat(schemaFinishedTables, empty());
+    assertThat(provider.getTablesWithNoMoreData().size(), equalTo(1));
+
+    // there should be a total of two remaining entries in the map
+    assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(2));
+    // one of which is in schema1
+    assertThat(provider.getRemainingSchemasToTableContexts().get(schema1).size(), equalTo(1));
+    // and one of which is in schema2
+    assertThat(provider.getRemainingSchemasToTableContexts().get(schema2).size(), equalTo(1));
+
+    provider.releaseOwnedTable(table1, 1);
+    tableFinished.set(false);
+    schemaFinished.set(false);
+    schemaFinishedTables.clear();
+
+    TableRuntimeContext table2 = provider.nextTable(threadNumber);
+    Assert.equals(table2Name, table2.getSourceTableContext().getTableName());
+
+    // finish table2
+    provider.reportDataOrNoMoreData(table2, 10, 10, true, tableFinished, schemaFinished, schemaFinishedTables);
+
+    // table should be finished
+    assertTrue(tableFinished.get());
+    // as should the schema this time
+    assertTrue(schemaFinished.get());
+    assertThat(schemaFinishedTables, hasSize(2));
+    assertThat(provider.getTablesWithNoMoreData().size(), equalTo(2));
+    // there should only be one entry left now
+    assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(1));
+    assertTrue(provider.getRemainingSchemasToTableContexts().get(schema1).isEmpty());
+    // which is for schema2
+    assertThat(provider.getRemainingSchemasToTableContexts().get(schema2).size(), equalTo(1));
+
+    provider.releaseOwnedTable(table2, 1);
+    tableFinished.set(false);
+    schemaFinished.set(false);
+    schemaFinishedTables.clear();
+
+    TableRuntimeContext table3 = provider.nextTable(threadNumber);
+    Assert.equals(table3Name, table3.getSourceTableContext().getTableName());
+
+    // suppose we did NOT actually reach the end of table3, in which case the conditions should be the same as above
+    provider.reportDataOrNoMoreData(table3, 10, 10, false, tableFinished, schemaFinished, schemaFinishedTables);
+
+    // now neither the table
+    assertFalse(tableFinished.get());
+    // nor schema should be finished
+    assertFalse(schemaFinished.get());
+    assertThat(schemaFinishedTables, empty());
+    // and entries in the map should be the same as above
+    assertThat(provider.getTablesWithNoMoreData().size(), equalTo(2));
+    assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(1));
+    assertTrue(provider.getRemainingSchemasToTableContexts().get(schema1).isEmpty());
+
+    provider.releaseOwnedTable(table3, 1);
+    tableFinished.set(false);
+    schemaFinished.set(false);
+    schemaFinishedTables.clear();
+
+    // cycle through table1 and table2 again
+    table1 = provider.nextTable(threadNumber);
+    provider.releaseOwnedTable(table1, 1);
+    table2 = provider.nextTable(threadNumber);
+    provider.releaseOwnedTable(table2, 1);
+
+    // and get back to table3
+    table3 = provider.nextTable(threadNumber);
+    Assert.equals(table3Name, table3.getSourceTableContext().getTableName());
+
+    // now suppose we have finally finished table3
+    provider.reportDataOrNoMoreData(table3, 3, 10, true, tableFinished, schemaFinished, schemaFinishedTables);
+
+    // both table
+    assertTrue(tableFinished.get());
+    // and schema should be finished
+    assertTrue(schemaFinished.get());
+    assertThat(schemaFinishedTables, hasSize(1));
+    assertThat(provider.getTablesWithNoMoreData().size(), equalTo(3));
+    // there should now be no more entries in this map
+    assertTrue(provider.getRemainingSchemasToTableContexts().isEmpty());
+
+    provider.releaseOwnedTable(table3, 1);
+
+    assertTrue(provider.shouldGenerateNoMoreDataEvent());
+
+
   }
 
   private static void validatePartition(

@@ -173,7 +173,7 @@ public class EventCreator {
       return this;
     }
 
-    public EventBuilder withStringList(String key, List<Object> value) {
+    public EventBuilder withStringList(String key, List<?> value) {
       List<Field> wrappedList = new ArrayList<>();
       for (Object object : value) {
         wrappedList.add(Field.create(Field.Type.STRING, object.toString()));

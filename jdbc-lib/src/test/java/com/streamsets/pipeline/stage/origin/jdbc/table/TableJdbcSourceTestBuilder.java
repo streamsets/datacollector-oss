@@ -228,6 +228,9 @@ public class TableJdbcSourceTestBuilder {
 
     commonSourceConfigBean.numSQLErrorRetries = numSQLErrorRetries;
 
+    // in test, delay for two seconds to allow no-more-data event to come last
+    commonSourceConfigBean.noMoreDataEventDelay = 2;
+
     return new TableJdbcSource(
         hikariPoolConfigBean,
         commonSourceConfigBean,
