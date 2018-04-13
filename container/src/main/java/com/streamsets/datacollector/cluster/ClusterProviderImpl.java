@@ -127,6 +127,14 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
   private static final String MAPR_UNAME_PWD_SECURITY_ENABLED_KEY = "maprlogin.password.enabled";
 
+  // Comma separated list of sdc.properties configs that should not be passed from master sdc to slave sdcs
+  private static final String CONFIG_ADDITIONAL_CONFIGS_TO_REMOVE = "cluster.slave.configs.remove";
+  // List of properties that we want to always remove as they do not make sense when passed from master sdc to slave sdcs
+  private static final String []SDC_CONFIGS_TO_ALWAYS_REMOVE = {
+    RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL,
+    "http.bindHost"
+  };
+
   static final String CLUSTER_BOOTSTRAP_JAR_REGEX = "cluster.bootstrap.jar.regex_";
   static final Pattern CLUSTER_BOOTSTRAP_API_JAR_PATTERN = Pattern.compile(
       "streamsets-datacollector-cluster-bootstrap-api-\\d+.*.jar$");
@@ -274,7 +282,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(mesosDispatcherURL);
   }
 
-  private void rewriteProperties(
+  @VisibleForTesting
+  void rewriteProperties(
       File sdcPropertiesFile,
       File etcStagingDir,
       Map<String, String> sourceConfigs,
@@ -291,7 +300,20 @@ public class ClusterProviderImpl implements ClusterProvider {
       copyDpmTokenIfRequired(sdcProperties, etcStagingDir);
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
-      sdcProperties.remove(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL);
+
+      // Remove always problematical properties
+      for(String property: SDC_CONFIGS_TO_ALWAYS_REMOVE) {
+        sdcProperties.remove(property);
+      }
+
+      // Remove additional properties that user might need to
+      String propertiesToRemove = sdcProperties.getProperty(CONFIG_ADDITIONAL_CONFIGS_TO_REMOVE);
+      if(propertiesToRemove != null) {
+        for(String property : propertiesToRemove.split(",")) {
+          sdcProperties.remove(property);
+        }
+      }
+
       if (runtimeInfo != null) {
         if (runtimeInfo.getSSLContext() != null) {
           sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "-1");

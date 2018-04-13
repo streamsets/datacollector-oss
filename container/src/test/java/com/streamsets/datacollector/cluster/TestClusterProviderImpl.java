@@ -59,6 +59,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -599,6 +600,43 @@ public class TestClusterProviderImpl {
             ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
         sdcProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
     );
+  }
+
+  @Test
+  public void testRemovingProperties() throws Exception {
+    Properties sdcProperties = new Properties();
+    sdcProperties.put("stay", "Don't try to touch me!");
+    sdcProperties.put("remove.me", "Yes please!");
+    sdcProperties.put("remove.me.too", "Yes please!");
+    sdcProperties.put(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "Yes please!");
+    sdcProperties.put("http.bindHost", "Yes please!");
+    sdcProperties.put("cluster.slave.configs.remove", "remove.me,remove.me.too");
+    File etcDir = tempFolder.newFolder();
+
+    File sdcPropertiesFile = new File(etcDir, "sdc.properties");
+    try (OutputStream out = new FileOutputStream(sdcPropertiesFile)) {
+      sdcProperties.store(out, null);
+    }
+
+    sparkProvider.rewriteProperties(
+      sdcPropertiesFile,
+      etcDir,
+      Collections.emptyMap(),
+      Collections.emptyMap(),
+      "",
+      Optional.empty()
+    );
+
+    try (InputStream in = new FileInputStream(sdcPropertiesFile)) {
+      Properties updatedProperties = new Properties();
+      updatedProperties.load(in);
+
+      Assert.assertEquals("Don't try to touch me!", updatedProperties.getProperty("stay"));
+      Assert.assertFalse(updatedProperties.containsValue("remove.me"));
+      Assert.assertFalse(updatedProperties.containsValue("remove.me.too"));
+      Assert.assertFalse(updatedProperties.containsValue("http.bindHost"));
+      Assert.assertFalse(updatedProperties.containsValue(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL));
+    }
   }
 
   @Test
