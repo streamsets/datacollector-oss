@@ -841,6 +841,45 @@ public class TestJdbcTarget {
   }
 
   @Test
+  public void testInvalidDateTimeValue() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "DT")
+    );
+
+    Target target = new JdbcTarget(
+        schema,
+        "DATETIMES",
+        fieldMappings,
+        caseSensitive,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(100));
+    fields1.add(Field.create("This isn't really a timestmap, right?"));
+    record1.set(Field.create(fields1));
+
+    List<Record> records = ImmutableList.of(record1);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    Assert.assertEquals(1, targetRunner.getErrorRecords().size());
+    Assert.assertEquals(JdbcErrors.JDBC_23.name(), targetRunner.getErrorRecords().get(0).getHeader().getErrorCode());
+  }
+
+  @Test
   public void testArrays() throws Exception {
     String[] strings = {"abc", "def", "ghi"};
     int[] ints = {1, 2, 3};

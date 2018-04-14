@@ -426,11 +426,9 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
             statement.setObject(paramIdx, value, getColumnType(column));
             break;
         }
-      } catch (SQLException e) {
-        LOG.error(JdbcErrors.JDBC_23.getMessage(), column, fieldType.toString());
-        //There is a case that the real case is not what JDBC_23 says.
-        LOG.error("Query failed due to {}. {}", e.getMessage(), e);
-        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, column, fieldType.toString());
+      } catch (SQLException|IllegalArgumentException e) {
+        LOG.error("Query failed due to {}", e.getMessage(), e);
+        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
       }
       ++paramIdx;
     }
