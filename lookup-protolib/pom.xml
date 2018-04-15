@@ -67,13 +67,19 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
       <scope>compile</scope>
     </dependency>
+
+    <!--
+         The guava version dependency is an artifact after removing common and commonlib
+         dependency. We might eventually refactor this lib to not depend on guava at all
+         or synchronize on newer version once we will clean up the classpath a bit more.
+    -->
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>18.0</version>
     </dependency>
 
     <!-- Test Dependencies -->

@@ -132,6 +132,7 @@
     <module>root-lib</module>
 
     <module>stagesupport</module>
+    <module>guavasupport</module>
     <module>commonlib</module>
     <module>httpcommonlib</module>
     <module>net-commonlib</module>

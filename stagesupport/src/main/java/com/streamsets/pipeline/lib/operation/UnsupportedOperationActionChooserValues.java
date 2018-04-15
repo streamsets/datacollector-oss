@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.common;
+package com.streamsets.pipeline.lib.operation;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class MissingValuesBehaviorChooserValues extends BaseEnumChooserValues<MultipleValuesBehavior> {
-  public MissingValuesBehaviorChooserValues() {
-    super(MissingValuesBehavior.class);
+public class UnsupportedOperationActionChooserValues extends BaseEnumChooserValues<UnsupportedOperationAction> {
+
+  public UnsupportedOperationActionChooserValues() {
+    super(UnsupportedOperationAction.class);
   }
+
 }

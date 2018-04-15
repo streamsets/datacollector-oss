@@ -20,14 +20,11 @@ import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -171,11 +168,11 @@ public class TimeNowEL {
       @ElParam("dateTimeString") String dateTimeString,
       @ElParam("dateFormat") String dateFormat
   ) throws ParseException{
-    if (StringUtils.isEmpty(dateTimeString)) {
+    if (isEmpty(dateTimeString)) {
       LOG.error(Utils.format("Invalid parameter - Date String is null/empty"));
       return null;
     }
-    if (StringUtils.isEmpty(dateFormat)) {
+    if (isEmpty(dateFormat)) {
       LOG.error(Utils.format("Invalid parameter - Date Format is null/empty"));
       return null;
     }
@@ -193,7 +190,7 @@ public class TimeNowEL {
       return "";
     }
 
-    if (StringUtils.isEmpty(outputFormat) || StringUtils.isEmpty(timeZone)) {
+    if (isEmpty(outputFormat) || isEmpty(timeZone)) {
       LOG.error(Utils.format("Invalid parameter - outputFormat or timeZone"));
       return "";
     }
@@ -235,7 +232,7 @@ public class TimeNowEL {
       @ElParam("Date String's Format") String inFormat
   ) {
 
-    if (StringUtils.isEmpty(inFormat) || StringUtils.isEmpty(timeZone) || StringUtils.isEmpty(inDate)) {
+    if (isEmpty(inFormat) || isEmpty(timeZone) || isEmpty(inDate)) {
       return null;
     }
 
@@ -259,6 +256,10 @@ public class TimeNowEL {
       ));
     }
     return null;
+  }
+
+  private static boolean isEmpty(String string) {
+    return string == null || string.isEmpty();
   }
 
 }

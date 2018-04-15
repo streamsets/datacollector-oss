@@ -34,6 +34,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Note: This class would make more sense in stagesupport module, but it does expose guava in it's public contact
+ * and hence can't be there. Perhaps in the future we might explore feasibility of removing  the guava dependency and
+ * subsequently moving this code to stagesupport.
+ */
 public class ELUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ELUtils.class);
 

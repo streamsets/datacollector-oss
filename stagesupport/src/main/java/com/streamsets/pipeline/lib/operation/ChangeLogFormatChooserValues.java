@@ -17,7 +17,7 @@ package com.streamsets.pipeline.lib.operation;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class ChangeLogFormatChooserValues extends BaseEnumChooserValues {
+public class ChangeLogFormatChooserValues extends BaseEnumChooserValues<ChangeLogFormat> {
 
   public ChangeLogFormatChooserValues() {
     super(ChangeLogFormat.class);

@@ -15,9 +15,9 @@
  */
 package com.streamsets.pipeline.lib.operation;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OperationType {
 
@@ -32,28 +32,35 @@ public class OperationType {
   public static final int REPLACE_CODE = 7;
   public static final int MERGE_CODE = 8;
 
-  private static final BiMap<Integer, String> CODE_LABEL = new ImmutableBiMap.Builder<Integer, String>()
-      .put(INSERT_CODE, "INSERT")
-      .put(DELETE_CODE, "DELETE")
-      .put(UPDATE_CODE, "UPDATE")
-      .put(UPSERT_CODE, "UPSERT")
-      .put(UNSUPPORTED_CODE, "UNSUPPORTED")
-      .put(UNDELETE_CODE, "UNDELETE")
-      .put(REPLACE_CODE, "REPLACE")
-      .put(MERGE_CODE, "MERGE")
-      .build();
+  private static final Map<Integer, String> CODE_LABEL;
+  static {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(INSERT_CODE, "INSERT");
+    map.put(DELETE_CODE, "DELETE");
+    map.put(UPDATE_CODE, "UPDATE");
+    map.put(UPSERT_CODE, "UPSERT");
+    map.put(UNSUPPORTED_CODE, "UNSUPPORTED");
+    map.put(UNDELETE_CODE, "UNDELETE");
+    map.put(REPLACE_CODE, "REPLACE");
+    map.put(MERGE_CODE, "MERGE");
 
-  private static final ImmutableMap<String, Integer> LABEL_CODE = new ImmutableMap.Builder<String, Integer>()
-      .put("INSERT", INSERT_CODE)
-      .put("DELETE", DELETE_CODE)
-      .put("UPDATE", UPDATE_CODE)
-      .put("UPSERT", UPSERT_CODE)
-      .put("UNSUPPORTED", UNSUPPORTED_CODE)
-      .put("UNDELETE", UNDELETE_CODE)
-      .put("REPLACE", REPLACE_CODE)
-      .put("MERGE", MERGE_CODE)
-      .build();
+    CODE_LABEL = Collections.unmodifiableMap(map);
+  }
 
+  private static final Map<String, Integer> LABEL_CODE;
+  static {
+    Map<String,  Integer> map = new HashMap<>();
+    map.put("INSERT", INSERT_CODE);
+    map.put("DELETE", DELETE_CODE);
+    map.put("UPDATE", UPDATE_CODE);
+    map.put("UPSERT", UPSERT_CODE);
+    map.put("UNSUPPORTED", UNSUPPORTED_CODE);
+    map.put("UNDELETE", UNDELETE_CODE);
+    map.put("REPLACE", REPLACE_CODE);
+    map.put("MERGE", MERGE_CODE);
+
+    LABEL_CODE = Collections.unmodifiableMap(map);
+  }
 
   /**
    * Convert from code in int type to String
@@ -86,6 +93,6 @@ public class OperationType {
    * @return int value of the code. -1 if not defined.
    */
   public static int getCodeFromLabel(String op) {
-    return CODE_LABEL.inverse().getOrDefault(op, -1);
+    return LABEL_CODE.getOrDefault(op, -1);
   }
 }
