@@ -101,28 +101,6 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-apache-kudu-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>

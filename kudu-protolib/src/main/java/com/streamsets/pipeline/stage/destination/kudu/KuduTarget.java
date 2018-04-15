@@ -45,7 +45,6 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
-import org.apache.commons.lang.StringUtils;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -367,7 +366,7 @@ public class KuduTarget extends BaseTarget {
     for (String tableName : partitions.keySet()) {
 
       // Send one LineageEvent per table that is accessed.
-      if(!StringUtils.isEmpty(tableName)) {
+      if(tableName != null && !tableName.isEmpty()) {
         if (!accessedTables.contains(tableName)) {
           accessedTables.add(tableName);
           sendLineageEvent(tableName);

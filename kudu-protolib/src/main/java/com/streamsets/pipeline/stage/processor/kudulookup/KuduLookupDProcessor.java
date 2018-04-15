@@ -15,8 +15,13 @@
  */
 package com.streamsets.pipeline.stage.processor.kudulookup;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.configurablestage.DProcessor;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
     version = 2,
