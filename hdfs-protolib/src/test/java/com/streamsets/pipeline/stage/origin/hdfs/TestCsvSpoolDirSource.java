@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,65 +13,95 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.stage.origin.hdfs;
 
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.dirspooler.LocalFileSystem;
-import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
+import com.streamsets.pipeline.stage.origin.hdfs.spooler.HdfsFile;
+import com.streamsets.pipeline.stage.origin.spooldir.BaseTestCsvSpoolDirSource;
+import com.streamsets.pipeline.stage.origin.spooldir.CsvSpoolDirSourceTestUtil;
+import org.apache.hadoop.fs.Path;
 import org.junit.Before;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestCsvSpoolDirSource extends BaseTestCsvSpoolDirSource {
+  HdfsSourceConfigBean hdfsConfig;
+
   @Before
   public void setup() {
-    clazz = SpoolDirDSource.class;
+    clazz = HdfsDSource.class;
+
+    hdfsConfig = new HdfsSourceConfigBean();
+    hdfsConfig.hdfsUri = "file:///";
+    hdfsConfig.hdfsConfigs = new ArrayList<>();
+
+
+    Target.Context context = ContextInfoCreator.createTargetContext(
+        HdfsDTarget.class,
+        "n",
+        false,
+        OnRecordError.TO_ERROR,
+        null);
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+    hdfsConfig.init(context, issues);
   }
 
   protected WrappedFile createDelimitedFile() throws Exception {
     File f = CsvSpoolDirSourceTestUtil.createDelimitedFile();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    Path path = new Path(f.getAbsolutePath());
+    return new HdfsFile(hdfsConfig.getFileSystem(), path);
   }
 
   protected WrappedFile createCustomDelimitedFile() throws Exception {
     File f = CsvSpoolDirSourceTestUtil.createCustomDelimitedFile();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    Path path = new Path(f.getAbsolutePath());
+    return new HdfsFile(hdfsConfig.getFileSystem(), path);
   }
 
   protected WrappedFile createSomeRecordsTooLongFile() throws Exception {
     File f = CsvSpoolDirSourceTestUtil.createSomeRecordsTooLongFile();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    Path path = new Path(f.getAbsolutePath());
+    return new HdfsFile(hdfsConfig.getFileSystem(), path);
   }
 
   protected WrappedFile createCommentFile() throws Exception {
     File f = CsvSpoolDirSourceTestUtil.createCommentFile();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    Path path = new Path(f.getAbsolutePath());
+    return new HdfsFile(hdfsConfig.getFileSystem(), path);
   }
 
   protected WrappedFile createEmptyLineFile() throws Exception {
     File f = CsvSpoolDirSourceTestUtil.createEmptyLineFile();
-    return new LocalFileSystem("*", PathMatcherMode.GLOB).getFile(f.getAbsolutePath());
+    Path path = new Path(f.getAbsolutePath());
+    return new HdfsFile(hdfsConfig.getFileSystem(), path);
   }
 
-  protected SpoolDirSource createSource(
-    CsvMode mode,
-    CsvHeader header,
-    char delimiter,
-    char escape,
-    char quote,
-    boolean commentsAllowed,
-    char comment,
-    boolean ignoreEmptyLines,
-    int maxLen,
-    CsvRecordType csvRecordType,
-    String filePath,
-    String pattern,
-    PostProcessingOptions postProcessing) {
+  protected HdfsSource createSource(
+      CsvMode mode,
+      CsvHeader header,
+      char delimiter,
+      char escape,
+      char quote,
+      boolean commentsAllowed,
+      char comment,
+      boolean ignoreEmptyLines,
+      int maxLen,
+      CsvRecordType csvRecordType,
+      String filePath,
+      String pattern,
+      PostProcessingOptions postProcessing) {
 
     SpoolDirConfigBean conf = CsvSpoolDirSourceTestUtil.getConf(
         mode,
@@ -90,6 +120,6 @@ public class TestCsvSpoolDirSource extends BaseTestCsvSpoolDirSource {
     );
 
     this.spoolDir = conf.spoolDir;
-    return new SpoolDirSource(conf);
+    return new HdfsSource(conf, hdfsConfig);
   }
 }
