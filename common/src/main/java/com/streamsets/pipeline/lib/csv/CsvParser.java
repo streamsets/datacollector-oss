@@ -115,7 +115,19 @@ public class CsvParser implements Closeable, AutoCloseable {
   }
 
   protected CSVRecord nextRecord() throws IOException {
-    return (iterator.hasNext()) ? iterator.next() : null;
+    // Since  the iterator interface doesn't allow  any checked exceptions the underlying CVS library will
+    // re-throw any IOException  as IllegalStateException. We catch it here and unwrap it. If the cause is
+    // in fact IOException we simply throw that exception instead.
+    try {
+      return (iterator.hasNext()) ? iterator.next() : null;
+    } catch (IllegalStateException  e) {
+      Throwable cause = e.getCause();
+      if(cause instanceof IOException) {
+        throw (IOException)cause;
+      }
+
+      throw e;
+    }
   }
 
   public String[] getHeaders() throws IOException {

@@ -22,6 +22,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -170,5 +171,16 @@ public class TestCsvParser {
     } finally {
       parser.close();
     }
+  }
+
+  @Test(expected = IOException.class)
+  public void testUnwrapIllegalStateException() throws Exception {
+    new CsvParser(
+      new CountingReader(new StringReader("0,\"020\"1,\"BS:5252525  ORDER:99999\"4")),
+      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true),
+      -1,
+      0,
+      0
+    );
   }
 }
