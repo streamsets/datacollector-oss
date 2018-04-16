@@ -191,12 +191,12 @@
                 
                     <dt class="dt dlterm">Uses temporary directories for Avro output files</dt>
 
-                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d41370e2635">adds .avro to the target directory that it
+                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d41807e2640">adds .avro to the target directory that it
                         generates for each record. This allows the data-processing destination to
                         write the Avro files to a directory that Hive ignores as a temporary
                         directory.</span></p>
 <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_ndg_3zw_vz__d41370e2640">&lt;generated
+                  directories: <samp class="ph codeph" id="concept_ndg_3zw_vz__d41807e2645">&lt;generated
                   directory&gt;/.avro</samp>.</p>
 <span class="ph">You can configure
                               the MapReduce executor to write the Parquet files to the parent
@@ -349,14 +349,14 @@
 </li>
 
                         <li class="li">Configure the decimal field precision
-                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d41370e5709">When
+                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d41807e5717">When
                                     processing data from the JDBC Query Consumer or JDBC Multitable
                                     Consumer origins, use the default attribute names, "precision"
-                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d41370e5711">origins
+                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d41807e5719">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
                                           field.</span></p>
-<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d41370e5714">When processing data from other origins, you can use the
+<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d41807e5722">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
                                           create precision and scale field attributes for Decimal
                                           fields. </span></p>
@@ -427,9 +427,8 @@
                             Parquet job type and add any additional job parameters that are
                             required.</li>
 
-                        <li class="li">On the Avro to Parquet tab, use the default Input Avro File
-                            configuration, specify the Output Directory to use and optionally
-                            configure the additional job properties. <ul class="ul" id="concept_y5w_dj3_fw__ul_ykw_gfc_11b">
+                        <li class="li">On the Avro Conversion tab, configure the Avro conversion properties:
+                                <ul class="ul" id="concept_y5w_dj3_fw__ul_fbl_35f_3db">
                                 <li class="li">Use the default Input Avro File expression - This allows the
                                     executor to process the file that the data processing
                                     destination just closed.</li>
@@ -440,10 +439,13 @@
                                     expression:<pre class="pre codeblock">${file:parentPath(file:parentPath(record:value('/filepath')))}</pre>
 </li>
 
-                                <li class="li">Optionally configure the additional job properties.</li>
+                                <li class="li">Optionally configure additional Avro conversion properties.</li>
 
                             </ul>
 </li>
+
+                        <li class="li">On the Avro to Parquet tab, optionally configure compression or other
+                            advanced Parquet properties. </li>
 
                     </ol>
 </li>
@@ -605,7 +607,7 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="327" width="478" /></p>
 
-        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d41370e3481">With this
+        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d41807e3486">With this
                         configuration, the destination uses the information in record header
                         attributes to write data to HDFS. It writes each record to the directory in
                         the targetDirectory header attribute, using the Avro schema in the
@@ -805,7 +807,7 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                         directory.</span></p>
 
         <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_kt2_zrf_zz__d41370e2640">&lt;generated
+                  directories: <samp class="ph codeph" id="concept_kt2_zrf_zz__d41807e2645">&lt;generated
                   directory&gt;/.avro</samp>.</p>
 
  </div>
@@ -900,17 +902,17 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
 </div>
 <div class="topic concept nested2" id="concept_gmh_b4h_zz">
- <h3 class="title topictitle3">The MapReduce Executor</h3>
+    <h3 class="title topictitle3">The MapReduce Executor</h3>
 
- <div class="body conbody">
-  <p class="p">To convert the Avro files generated by the Hadoop FS destination, use the Convert Avro to
+    <div class="body conbody">
+        <p class="p">To convert the Avro files generated by the Hadoop FS destination, use the Convert Avro to
             Parquet job in the MapReduce executor. Like all executors, the MapReduce executor
             performs tasks when triggered by an event. In this case, it will be the file-closure
             events generated by the Hadoop FS destination. </p>
 
         <div class="p">Connect the Hadoop FS event output stream to the MapReduce executor. In addition to the
             required configuration details, select the Convert Avro to Parquet job type, then
-            configure the following key job details:<ul class="ul" id="concept_gmh_b4h_zz__ul_fdd_wth_zz">
+            configure the following Avro conversion details:<ul class="ul" id="concept_gmh_b4h_zz__ul_fdd_wth_zz">
                 <li class="li">Input Avro File - Use the default expression for this property. With the
                     default, the executor uses the directory and file name specified in the filepath
                     field of the event record. Files will be in the .avro directory, but this
@@ -935,15 +937,17 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
             </ul>
 </div>
 
+        <p class="p">When needed, you can configure additional Parquet properties, such as the compression
+            codec or page size to use, on the Avro to Parquet tab.</p>
+
         <p class="p">Here's the pipeline and MapReduce executor configuration: </p>
 
-        <p class="p"><img class="image" id="concept_gmh_b4h_zz__image_qhp_j4n_zz" src="../Graphics/Parquet-MapReduce.png" height="434" width="581" /></p>
+        <p class="p"><img class="image" id="concept_gmh_b4h_zz__image_qhp_j4n_zz" src="../Graphics/Parquet-MapReduce.png" height="346" width="464" /></p>
 
         <p class="p"><span class="ph">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
-       
- </div>
+    </div>
 
 </div>
 <div class="topic concept nested2" id="concept_enc_2wh_zz">
@@ -1004,9 +1008,9 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d218253e1159"><span class="ph">Data Collector</span> Data Type</th>
+                            <th class="entry" valign="top" width="50%" id="d219415e1166"><span class="ph">Data Collector</span> Data Type</th>
 
-                            <th class="entry" valign="top" width="50%" id="d218253e1164">Hive Data Type</th>
+                            <th class="entry" valign="top" width="50%" id="d219415e1171">Hive Data Type</th>
 
                         </tr>
 
@@ -1014,114 +1018,114 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Boolean</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Boolean</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Boolean</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Byte</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Not supported</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Boolean</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Char</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Byte</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">String</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Date</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Date </td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Not supported</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Datetime</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Char</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">String</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Decimal</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Decimal</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Double</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Date</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Double</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Float</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Float</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Date </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Integer</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Datetime</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Int</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Long</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Bigint</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">List</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Decimal</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">List-Map</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Not supported</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Decimal</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Map</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Double</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Short</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">Int</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Double</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Float</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Float</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d218253e1159 ">Time</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Integer</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d218253e1164 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Long</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Bigint</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">List</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">List-Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Short</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">String</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">String</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d219415e1166 ">Time</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d219415e1171 ">String</td>
 
                         </tr>
 

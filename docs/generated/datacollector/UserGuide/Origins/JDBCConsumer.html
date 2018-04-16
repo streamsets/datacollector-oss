@@ -318,7 +318,7 @@
             about each record, such as the original data type of a field or the source tables for
             the record. The origin receives these details from the JDBC driver. </p>
 
-        <p class="p"><span class="ph" id="concept_egw_d4c_kw__d47417e20">You can use the record:attribute or
+        <p class="p"><span class="ph" id="concept_egw_d4c_kw__d47854e20">You can use the record:attribute or
                 record:attributeOrDefault functions to access the information in the attributes. For
                 more information about working with record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_rd2_ghz_dz">Working with Header Attributes</a>.</span></p>
 
@@ -330,24 +330,24 @@
             Prefix properties on the Advanced tab.</p>
 
         <div class="p">The origin can provide the following JDBC header attributes: 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_egw_d4c_kw__d47417e27" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_egw_d4c_kw__d47854e27" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d293034e457">JDBC Header Attribute</th>
+                            <th class="entry" valign="top" width="40%" id="d302069e457">JDBC Header Attribute</th>
 
-                            <th class="entry" valign="top" width="60%" id="d293034e460">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d302069e460">Description</th>
 
                         </tr>
 
                     </thead>
 
                     <tbody class="tbody">
-                        <tr id="concept_egw_d4c_kw__d47417e49">
-                            <td class="entry" valign="top" width="40%" headers="d293034e457 "> &lt;JDBC prefix&gt;.tables</td>
+                        <tr id="concept_egw_d4c_kw__d47854e49">
+                            <td class="entry" valign="top" width="40%" headers="d302069e457 "> &lt;JDBC prefix&gt;.tables</td>
 
-                            <td class="entry" id="concept_egw_d4c_kw__d47417e54" valign="top" width="60%" headers="d293034e460 ">Provides a comma-separated list of source
+                            <td class="entry" id="concept_egw_d4c_kw__d47854e54" valign="top" width="60%" headers="d302069e460 ">Provides a comma-separated list of source
                                 tables for the fields in the record.<div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers
                                     provide this information.</div>
 <p class="p"><span class="ph">Oracle uses all caps for schema, table, and column names by
@@ -358,25 +358,25 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d293034e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry" valign="top" width="40%" headers="d302069e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry" id="concept_egw_d4c_kw__d47417e67" valign="top" width="60%" headers="d293034e460 ">Provides the original SQL data type for each
+                            <td class="entry" id="concept_egw_d4c_kw__d47854e67" valign="top" width="60%" headers="d302069e460 ">Provides the original SQL data type for each
                                 field in the record.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d293034e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.precision</td>
+                            <td class="entry" valign="top" width="40%" headers="d302069e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.precision</td>
 
-                            <td class="entry" id="concept_egw_d4c_kw__d47417e76" valign="top" width="60%" headers="d293034e460 ">Provides the original precision for all
+                            <td class="entry" id="concept_egw_d4c_kw__d47854e76" valign="top" width="60%" headers="d302069e460 ">Provides the original precision for all
                                 numeric and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d293034e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.scale</td>
+                            <td class="entry" valign="top" width="40%" headers="d302069e457 ">&lt;JDBC prefix&gt;.&lt;column name&gt;.scale</td>
 
-                            <td class="entry" id="concept_egw_d4c_kw__d47417e85" valign="top" width="60%" headers="d293034e460 ">Provides the original scale for all numeric
+                            <td class="entry" id="concept_egw_d4c_kw__d47854e85" valign="top" width="60%" headers="d302069e460 ">Provides the original scale for all numeric
                                 and decimal fields. </td>
 
                         </tr>
@@ -559,7 +559,7 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
  <div class="body conbody">
         <p class="p">The JDBC Query
-            Consumer origin <span class="ph"><span class="ph" id="concept_o1c_kwr_kz__d46191e2110">can generate events that you can use in an event stream. When you
+            Consumer origin <span class="ph"><span class="ph" id="concept_o1c_kwr_kz__d46628e2110">can generate events that you can use in an event stream. When you
                               enable event generation, the origin generates an event when it
                               completes processing the data returned by the specified</span> query.
                   </span> The origin also generates an event when a query completes successfully and
@@ -611,9 +611,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d293034e887">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d302069e887">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d293034e890">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d302069e890">Description</th>
 
                         </tr>
 
@@ -621,9 +621,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d293034e887 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d302069e887 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d293034e890 ">Event type. Uses one of the following types:<ul class="ul" id="concept_rzl_s1t_kz__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d302069e890 ">Event type. Uses one of the following types:<ul class="ul" id="concept_rzl_s1t_kz__ul_m12_mgp_qx">
                                     <li class="li">no-more-data - Generated when the origin completes processing
           all data returned by a query.</li>
 
@@ -639,16 +639,16 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e887 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e887 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e890 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d302069e890 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e887 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e887 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_rzl_s1t_kz__d46281e2126" valign="top" width="70%" headers="d293034e890 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_rzl_s1t_kz__d46718e2126" valign="top" width="70%" headers="d302069e890 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -673,9 +673,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d293034e964">Event Record Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d302069e964">Event Record Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d293034e967">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d302069e967">Description</th>
 
                                     </tr>
 
@@ -683,9 +683,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e964 ">record-count</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e964 ">record-count</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e967 ">Number of records successfully generated since the pipeline started or since the last
+       <td class="entry" valign="top" width="70%" headers="d302069e967 ">Number of records successfully generated since the pipeline started or since the last
         no-more-data event was created. </td>
 
       </tr>
@@ -710,9 +710,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d293034e1009">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d302069e1009">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d293034e1012">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d302069e1012">Description</th>
 
                                     </tr>
 
@@ -720,30 +720,30 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1009 ">query</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1009 ">query</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1012 ">Query that completed successfully.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1009 ">timestamp</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1012 ">Timestamp when the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1012 ">Query that completed successfully.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1009 ">row-count</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1009 ">timestamp</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1012 ">Number of processed rows.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1012 ">Timestamp when the query completed.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1009 ">source-offset</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1009 ">row-count</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1012 ">Offset after the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1012 ">Number of processed rows.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1009 ">source-offset</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1012 ">Offset after the query completed.</td>
 
                                     </tr>
 
@@ -770,9 +770,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d293034e1084">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d302069e1084">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d293034e1087">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d302069e1087">Description</th>
 
                                     </tr>
 
@@ -780,38 +780,38 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1084 ">query</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1084 ">query</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1087 ">Query that failed to complete.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1084 ">timestamp</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1087 ">Timestamp when the query failed to complete.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1087 ">Query that failed to complete.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1084 ">row-count</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1084 ">timestamp</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1087 ">Number of records from the query that were
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1087 ">Timestamp when the query failed to complete.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1084 ">row-count</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1087 ">Number of records from the query that were
                                             processed.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1084 ">source-offset</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1084 ">source-offset</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1087 ">Origin offset after query failure.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1087 ">Origin offset after query failure.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d293034e1084 ">error</td>
+                                        <td class="entry" valign="top" width="30%" headers="d302069e1084 ">error</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d293034e1087 ">First error message.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d302069e1087 ">First error message.</td>
 
                                     </tr>
 
@@ -851,9 +851,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d293034e1190">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d302069e1190">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d293034e1193">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d302069e1193">Description</th>
 
                                 </tr>
 
@@ -861,34 +861,34 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1190 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1190 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1193 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1190 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d293034e1193 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d302069e1193 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1190 ">Produce Events <a class="xref" href="JDBCConsumer.html#concept_o1c_kwr_kz">
+       <td class="entry" valign="top" width="30%" headers="d302069e1190 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d302069e1193 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1190 ">Produce Events <a class="xref" href="JDBCConsumer.html#concept_o1c_kwr_kz">
                                             <img class="image" id="task_ryz_tkr_bs__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1193 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1193 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_ryz_tkr_bs__d46281e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_ryz_tkr_bs__d46718e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1190 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_ryz_tkr_bs__d46281e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1190 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_ryz_tkr_bs__d46718e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1193 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d46281e811">
+       <td class="entry" valign="top" width="70%" headers="d302069e1193 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d46718e811">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -916,9 +916,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d293034e1286">JDBC Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d302069e1286">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d293034e1289">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d302069e1289">Description</th>
 
                                 </tr>
 
@@ -926,9 +926,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">JDBC Connection String</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">JDBC Connection String</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
          Postgres, require the schema in the connection string. Use the connection string format
          required by the database.</p>
 </td>
@@ -936,10 +936,10 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Incremental Mode <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Incremental Mode <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Defines how JDBC Query Consumer queries the database.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Defines how JDBC Query Consumer queries the database.
                                         Select to perform incremental queries. Clear to perform full
                                         queries. <p class="p">To process CDC data from Microsoft SQL Server,
                                             select this option. For more information about CDC for
@@ -950,10 +950,10 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">SQL Query <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs" title="The SQL query defines the data returned from the database."><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">SQL Query <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs" title="The SQL query defines the data returned from the database."><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">SQL query to use when reading data from the database.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">SQL query to use when reading data from the database.
                                             <p class="p">Define the query in the property. Or, define the
                                             query in a <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resource</a>, and then use the
                                                 <samp class="ph codeph">runtime:loadResource</samp> function in
@@ -970,28 +970,28 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Initial Offset </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Initial Offset </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Offset value to use when the pipeline starts.<p class="p">Required
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Offset value to use when the pipeline starts.<p class="p">Required
                                             in incremental mode.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Offset Column <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Offset Column <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Column to use for the offset value.<p class="p">Required in
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Column to use for the offset value.<p class="p">Required in
                                             incremental mode.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Query Interval</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Query Interval</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
         You can use SECONDS, MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
         </p>
 </td>
@@ -999,41 +999,41 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Use Credentials</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 "><span class="ph" id="task_ryz_tkr_bs__d46281e2334">Enables entering credentials on the Credentials tab. Use
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 "><span class="ph" id="task_ryz_tkr_bs__d46718e2334">Enables entering credentials on the Credentials tab. Use
          when you do not include credentials in the JDBC connection string.</span></td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Root Field Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Root Field Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Root field type to use for generated records. Use the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Root field type to use for generated records. Use the
                                         default List-Map option unless using the origin in a
                                         pipeline built with <span class="ph">Data Collector</span> version 1.1.0 or earlier.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Max Clob Size (characters)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Max Clob Size (characters)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Maximum number of characters to be read in a Clob field. Larger data is
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Max Blob Size (bytes)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Max Blob Size (bytes)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">
         <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
        </td>
@@ -1041,9 +1041,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Number of Retries on SQL Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Number of Retries on SQL Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Number of times the origin tries to execute the query
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Number of times the origin tries to execute the query
                                         after receiving an SQL error. After retrying this number of
                                         times, the origin handles the error based on the error
                                         handling configured for the origin.<p class="p">Use to handle
@@ -1056,9 +1056,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d293034e1286 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d302069e1286 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d293034e1289 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d302069e1289 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -1078,14 +1078,14 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d46484e3790" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d46921e3790" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d293034e1515">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d302069e1515">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d293034e1518">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d302069e1518">Description</th>
 
                                 </tr>
 
@@ -1093,16 +1093,16 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1515 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1515 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1518 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1518 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_ryz_tkr_bs__d46484e3821">
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1515 ">Password</td>
+                                <tr id="task_ryz_tkr_bs__d46921e3821">
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1515 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1518 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_ryz_tkr_bs__d46191e4731">To
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1518 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_ryz_tkr_bs__d46628e4736">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1127,9 +1127,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d293034e1592">Change Data Capture Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d302069e1592">Change Data Capture Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d293034e1595">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d302069e1595">Description</th>
 
                                 </tr>
 
@@ -1137,18 +1137,18 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1592 ">Transaction ID Column Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1592 ">Transaction ID Column Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1595 ">Transaction ID column name, typically __$start_lsn.
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1595 ">Transaction ID column name, typically __$start_lsn.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1592 ">Max Transaction Size (rows) <a class="xref" href="JDBCConsumer.html#concept_e1j_jwv_ht"><img class="image" id="task_ryz_tkr_bs__image_gsf_kdw_ht" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1592 ">Max Transaction Size (rows) <a class="xref" href="JDBCConsumer.html#concept_e1j_jwv_ht"><img class="image" id="task_ryz_tkr_bs__image_gsf_kdw_ht" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1595 ">Maximum number of rows to include in a batch.
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1595 ">Maximum number of rows to include in a batch.
                                             <p class="p">Overrides the <span class="ph">Data Collector</span> maximum batch size. </p>
 </td>
 
@@ -1167,14 +1167,14 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d46484e3846" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d46921e3846" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d293034e1656">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d302069e1656">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d293034e1659">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d302069e1659">Description</th>
 
                                 </tr>
 
@@ -1182,17 +1182,17 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1656 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1656 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1659 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1659 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1656 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1656 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1659 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1659 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1214,9 +1214,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d293034e1712">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d302069e1712">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d293034e1715">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d302069e1715">Description</th>
 
                                 </tr>
 
@@ -1224,27 +1224,27 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Maximum Pool Size </td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -1253,9 +1253,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -1265,9 +1265,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1277,30 +1277,30 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Auto Commit</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
         the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Creates read-only connections to avoid any type of write. <p class="p">Default is enabled.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
          transaction isolation level set for the database. You can override the database default by
          setting the level to any of the following:</p>
-<ul class="ul" id="task_ryz_tkr_bs__d46281e2715">
+<ul class="ul" id="task_ryz_tkr_bs__d46718e2715">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -1315,9 +1315,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Init Query</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Init Query</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">SQL query to perform immediately after the stage connects to the database. Use to set
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">SQL query to perform immediately after the stage connects to the database. Use to set
         up the database session as needed. <p class="p">For example, the following query sets the time zone
          for the session for a MySQL database: <samp class="ph codeph">SET time_zone =
         timezone;</samp></p>
@@ -1326,10 +1326,10 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Create JDBC Header Attributes <a class="xref" href="JDBCConsumer.html#concept_egw_d4c_kw"><img class="image" id="task_ryz_tkr_bs__image_n2r_rjj_kw" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Create JDBC Header Attributes <a class="xref" href="JDBCConsumer.html#concept_egw_d4c_kw"><img class="image" id="task_ryz_tkr_bs__image_n2r_rjj_kw" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Adds JDBC header attributes to records. The origin
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Adds JDBC header attributes to records. The origin
                                         creates JDBC header attributes by default. <div class="p">
                                             <div class="note note"><span class="notetitle">Note:</span> When using the origin with the Drift
                                                 Synchronization Solution, make sure this property is
@@ -1341,16 +1341,16 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1712 ">JDBC Header Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1712 ">JDBC Header Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Prefix for JDBC header attributes. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Prefix for JDBC header attributes. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d293034e1712 ">Disable Query Validation</td>
+                                    <td class="entry" valign="top" width="30%" headers="d302069e1712 ">Disable Query Validation</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Disables the query validation that occurs by default. Use
+                                    <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Disables the query validation that occurs by default. Use
                                         to avoid time consuming query validation situations, like
                                         when querying Hive, which requires using a MapReduce job to
                                         perform the validation. <div class="p">
@@ -1364,9 +1364,9 @@ ORDER BY __$start_lsn &lt;ASC | DESC&gt;</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d293034e1712 ">On Unknown Type</td>
+       <td class="entry" valign="top" width="30%" headers="d302069e1712 ">On Unknown Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d293034e1715 ">Action to take when the origin encounters a record with an unsupported data type:<ul class="ul" id="task_ryz_tkr_bs__d46281e2775">
+       <td class="entry" valign="top" width="70%" headers="d302069e1715 ">Action to take when the origin encounters a record with an unsupported data type:<ul class="ul" id="task_ryz_tkr_bs__d46718e2775">
          <li class="li">Stop Pipeline - Stops the pipeline after completing processing the previous
           records.</li>
 

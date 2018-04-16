@@ -78,7 +78,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="keyword wintitle">New Pipeline</span> window, enter a pipeline title and
                     optional description, and select where you want the pipeline to run:</span>
-                <ul class="ul choices" id="task_xlv_jdw_kq__d82220e135">
+                <ul class="ul choices" id="task_xlv_jdw_kq__d84597e135">
                     <li class="li choice"><span class="ph">Data Collector</span> - Select
                         to design a standalone or cluster execution mode pipeline that runs on <span class="ph">Data Collector</span>.</li>
 
@@ -105,9 +105,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d416657e130">Pipeline Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d425712e130">Pipeline Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d416657e133">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d425712e133">Description</th>
 
                                 </tr>
 
@@ -115,9 +115,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Title</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Title</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Title of the pipeline. <p class="p"><span class="ph">Data Collector</span> uses the alphanumeric characters
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Title of the pipeline. <p class="p"><span class="ph">Data Collector</span> uses the alphanumeric characters
                                             entered for the pipeline title as a prefix for the
                                             generated pipeline ID. For example, if you enter “My
                                             Pipeline *&amp;%&amp;^^ 123” as the pipeline title, then
@@ -133,16 +133,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Description</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Description</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Optional description of the pipeline.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Optional description of the pipeline.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Optional labels to assign to the pipeline. <p class="p">Use labels
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Optional labels to assign to the pipeline. <p class="p">Use labels
                                             to group similar pipelines. For example, you might want
                                             to group pipelines by database schema or by the test or
                                             production environment. </p>
@@ -157,10 +157,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Execution Mode <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."><img class="image" id="task_xlv_jdw_kq__image_zfp_n5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Execution Mode <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."><img class="image" id="task_xlv_jdw_kq__image_zfp_n5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
                                             <li class="li">Standalone - A single <span class="ph">Data Collector</span> process runs the pipeline.</li>
 
                                             <li class="li">Cluster Batch - <span class="ph">Data Collector</span> spawns additional workers as needed to process
@@ -190,10 +190,22 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Delivery Guarantee <a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 "><span class="ph">Data Collector Edge</span> URL</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 "><p class="p">For edge pipelines, the URL to the <span class="ph">SDC Edge</span> installation. Used when you directly publish the
+                                            pipeline to an <span class="ph">SDC Edge</span> that is not registered with <span class="ph">Control Hub</span>. You can leave the default value when you publish the
+                                            pipeline to <span class="ph">Control Hub</span>, add the pipeine to a job, and start the job on a
+                                            registered <span class="ph">SDC Edge</span>. For more information, see <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#task_isp_m2f_3db" title="When SDC Edge is running and is accessible by the Data Collector machine, you can use the publish method to deploy edge pipelines to SDC Edge.">Publish Pipelines Directly</a>.</p>
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Delivery Guarantee <a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">
                                             <img class="image" id="task_xlv_jdw_kq__image_rtg_yfm_zs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Determines how <span class="ph">Data Collector</span> handles data after an unexpected event causes the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Determines how <span class="ph">Data Collector</span> handles data after an unexpected event causes the
                                         pipeline to stop running:<ul class="ul" id="task_xlv_jdw_kq__ul_b4v_51m_sq">
                                             <li class="li">At Least Once - Ensures all data is processed and
                                                 written to the destination. Might result in
@@ -210,9 +222,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Start Event</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Start Event</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Determines how the start event is handled. Select one of
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Determines how the start event is handled. Select one of
                                         the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_jmt_hht_51b">
                                             <li class="li">Discard - Use when you don't want to use the
                                                 event.</li>
@@ -232,9 +244,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Stop Event</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Stop Event</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Determines how the stop event is handled. Select one of
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Determines how the stop event is handled. Select one of
                                         the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_gcx_5ht_51b">
                                             <li class="li">Discard - Use when you don't want to use the
                                                 event.</li>
@@ -254,17 +266,17 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Retry Pipeline on Error <a class="xref" href="Retry.html#concept_cgm_ktz_2t" title="By default, when Data Collector encounters a stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That is, it waits a period of time, and then tries again to run the pipeline."><img class="image" id="task_xlv_jdw_kq__image_wms_qvz_2t" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Retry Pipeline on Error <a class="xref" href="Retry.html#concept_cgm_ktz_2t" title="By default, when Data Collector encounters a stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That is, it waits a period of time, and then tries again to run the pipeline."><img class="image" id="task_xlv_jdw_kq__image_wms_qvz_2t" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Retries the pipeline upon error. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Retries the pipeline upon error. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Retry Attempts</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Retry Attempts</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Number of retries attempted. Use -1 to retry
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Number of retries attempted. Use -1 to retry
                                         indefinitely. <p class="p">The wait time between retries starts at 15
                                             seconds and doubles until reaching five
                                         minutes.</p>
@@ -273,10 +285,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Max Pipeline Memory <a class="xref" href="PipelineMemory.html#concept_twq_nhx_rr"><img class="image" id="task_xlv_jdw_kq__image_ldk_s5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Max Pipeline Memory <a class="xref" href="PipelineMemory.html#concept_twq_nhx_rr"><img class="image" id="task_xlv_jdw_kq__image_ldk_s5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Maximum amount of memory for the pipeline to use. Used
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Maximum amount of memory for the pipeline to use. Used
                                         only when the <span class="ph">Data Collector</span> monitor.memory configuration property is set to
                                             true.<p class="p">You can enter a numeric value or edit the
                                             default expression to use a percentage of the <span class="ph">Data Collector</span> Java heap size. </p>
@@ -288,9 +300,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">On Memory Exceeded</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">On Memory Exceeded</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Action to take when the pipeline memory reaches the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Action to take when the pipeline memory reaches the
                                         configured Max Pipeline Memory:<ul class="ul" id="task_xlv_jdw_kq__ul_vsf_3k4_1s">
                                             <li class="li">Log - Logs a message in the pipeline history.</li>
 
@@ -313,10 +325,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Rate Limit (records / sec) <a class="xref" href="PipelineRateLimit.html#concept_erj_qg4_qv" title="You can limit the rate at which a pipeline processes records by defining the maximum number of records that the pipeline can read in a second."><img class="image" id="task_xlv_jdw_kq__image_lgk_s6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Rate Limit (records / sec) <a class="xref" href="PipelineRateLimit.html#concept_erj_qg4_qv" title="You can limit the rate at which a pipeline processes records by defining the maximum number of records that the pipeline can read in a second."><img class="image" id="task_xlv_jdw_kq__image_lgk_s6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Maximum number of records that the pipeline can read in a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Maximum number of records that the pipeline can read in a
                                         second. Use 0 or no value to set no rate limit.<p class="p">Default is
                                             0.</p>
 </td>
@@ -324,9 +336,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Max Runners </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Max Runners </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">The maximum number of pipeline runners to use in a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">The maximum number of pipeline runners to use in a
                                         multithreaded pipeline. <p class="p">Use 0 for no limit. When set to
                                             0, <span class="ph">Data Collector</span> generates up to the maximum number of threads or
                                             concurrency configured in the origin. </p>
@@ -339,9 +351,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d416657e130 ">Create Failure Snapshot</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d425712e130 ">Create Failure Snapshot</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d416657e133 ">Automatically creates a snapshot if the pipeline fails
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d425712e133 ">Automatically creates a snapshot if the pipeline fails
                                         because of data-related errors. Can be used to troubleshoot
                                         the pipeline. </td>
 
@@ -371,9 +383,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e515">Notifications Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e560">Notifications Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e518">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e563">Description</th>
 
                                 </tr>
 
@@ -381,18 +393,18 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e515 ">Notify on Pipeline State Changes <a class="xref" href="Notifications.html#concept_mtn_k4j_rz">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e560 ">Notify on Pipeline State Changes <a class="xref" href="Notifications.html#concept_mtn_k4j_rz">
                                             <img class="image" id="task_xlv_jdw_kq__image_rgb_stj_rz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e518 ">Sends notifications when the pipeline encounters the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e563 ">Sends notifications when the pipeline encounters the
                                         listed pipeline states. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e515 ">Email IDs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e560 ">Email IDs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e518 ">Email addresses to receive notification when the pipeline
+                                    <td class="entry" valign="top" width="70%" headers="d425712e563 ">Email addresses to receive notification when the pipeline
                                         state changes to one of the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         addresses. </td>
@@ -400,10 +412,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e515 ">Webhooks <a class="xref" href="Webhooks.html#concept_mp1_t3l_rz">
-         <img class="image" id="task_xlv_jdw_kq__d82419e546" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e560 ">Webhooks <a class="xref" href="Webhooks.html#concept_mp1_t3l_rz">
+         <img class="image" id="task_xlv_jdw_kq__d84856e546" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e518 ">Webhook to send when the pipeline state changes to one of
+                                    <td class="entry" valign="top" width="70%" headers="d425712e563 ">Webhook to send when the pipeline state changes to one of
                                         the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         webhooks.</td>
@@ -411,23 +423,23 @@ For example, you
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">Webhook URL</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">Webhook URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">URL to send the HTTP request.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">Headers</td>
-
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">Optional HTTP request headers. </td>
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">URL to send the HTTP request.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">HTTP Method</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">Headers</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_xlv_jdw_kq__d82419e583">
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">Optional HTTP request headers. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">HTTP Method</td>
+
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_xlv_jdw_kq__d84856e583">
          <li class="li">GET</li>
 
          <li class="li">PUT</li>
@@ -444,10 +456,10 @@ For example, you
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e515 ">Payload <a class="xref" href="Webhooks.html#concept_rby_1rl_rz">
-         <img class="image" id="task_xlv_jdw_kq__d82419e608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e560 ">Payload <a class="xref" href="Webhooks.html#concept_rby_1rl_rz">
+         <img class="image" id="task_xlv_jdw_kq__d84856e608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e518 ">Optional payload to use. Available for PUT, POST, and
+                                    <td class="entry" valign="top" width="70%" headers="d425712e563 ">Optional payload to use. Available for PUT, POST, and
                                         DELETE methods. <p class="p">Use any valid content type.</p>
 <p class="p">You can
                                             use webhook parameters in the payload to include
@@ -460,33 +472,33 @@ For example, you
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">Content Type</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">Content Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">Optional content type of the payload. Configure this property when the content type is
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">Optional content type of the payload. Configure this property when the content type is
         not declared in the request headers.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">Authentication Type</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">Authentication Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">Optional authentication type to include in the request. Use None, Basic, Digest, or
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">Optional authentication type to include in the request. Use None, Basic, Digest, or
          Universal.<p class="p">Use Basic for Form authentication.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">User Name </td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">User Name </td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">User name to include when using authentication. </td>
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">User name to include when using authentication. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e515 ">Password</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e560 ">Password</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e518 ">Password to include when using authentication.</td>
+       <td class="entry" valign="top" width="70%" headers="d425712e563 ">Password to include when using authentication.</td>
 
       </tr>
 
@@ -507,9 +519,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d416657e705">Error Records Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d425712e750">Error Records Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d416657e708">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d425712e753">Description</th>
 
                                 </tr>
 
@@ -517,10 +529,10 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e705 ">Error Records <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e750 ">Error Records <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e708 ">Determines how to handle records that cannot be processed
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e753 ">Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_ayr_y22_br">
                                             <li class="li">Discard - Discards error records.</li>
 
@@ -564,9 +576,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e705 ">Error Record Policy</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e750 ">Error Record Policy</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e708 ">Determines the version of the record to use as a basis
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e753 ">Determines the version of the record to use as a basis
                                         for an error record. For more information, see <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_itr_mzw_j1b">Error Records and Version</a>.</td>
 
                                 </tr>
@@ -589,9 +601,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e806">Write to Pipeline Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e851">Write to Pipeline Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e809">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e854">Description</th>
 
                                 </tr>
 
@@ -599,10 +611,10 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">SDC RPC Connection <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e9164" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">SDC RPC Connection <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e9164" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Connection information for the destination pipeline to
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Connection information for the destination pipeline to
                                         continue processing data. Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">Use a single
                                             RPC connection for each destination pipeline. Using
@@ -616,31 +628,31 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">SDC RPC ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">SDC RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">User-defined ID to allow the destination to pass data to
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Retries Per Batch</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Retries Per Batch</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Number of times the destination tries to write a batch to
-                                        the SDC RPC origin. <p class="p" id="task_xlv_jdw_kq__d82220e9253">When the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Number of times the destination tries to write a batch to
+                                        the SDC RPC origin. <p class="p" id="task_xlv_jdw_kq__d84597e9253">When the
                                             destination cannot write the batch within the configured
                                             number of retries, it fails the batch.</p>
-<p class="p" id="task_xlv_jdw_kq__d82220e9255">Default is 3.</p>
+<p class="p" id="task_xlv_jdw_kq__d84597e9255">Default is 3.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Back Off Period</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Back Off Period</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Milliseconds to wait before retrying writing a batch to
-                                        the SDC RPC origin.<p class="p" id="task_xlv_jdw_kq__d82220e9266">The value that
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Milliseconds to wait before retrying writing a batch to
+                                        the SDC RPC origin.<p class="p" id="task_xlv_jdw_kq__d84597e9266">The value that
                                             you enter increases exponentially after each retry,
                                             until it reaches the maximum wait time of 5 minutes. For
                                             example, if you set the back off period to 10, the
@@ -650,16 +662,16 @@ For example, you
                                             waiting 1,000 milliseconds. </p>
 <p class="p">Set to 0 to retry
                                             immediately.</p>
-<p class="p" id="task_xlv_jdw_kq__d82220e9270">Default is
+<p class="p" id="task_xlv_jdw_kq__d84597e9270">Default is
                                             0.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Milliseconds to establish a connection to the SDC RPC
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Milliseconds to establish a connection to the SDC RPC
                                         origin. <p class="p">The destination retries the connection based on
                                             the Retries Per Batch property.</p>
 <p class="p">Default is 5000
@@ -669,30 +681,30 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Read Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Read Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Milliseconds to wait for the SDC RPC origin to read data
-                                        from a batch. <p class="p" id="task_xlv_jdw_kq__d82220e9294">The destination retries
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Milliseconds to wait for the SDC RPC origin to read data
+                                        from a batch. <p class="p" id="task_xlv_jdw_kq__d84597e9294">The destination retries
                                             the write based on the Retries Per Batch property.</p>
-<p class="p" id="task_xlv_jdw_kq__d82220e9296">Default is 2000
+<p class="p" id="task_xlv_jdw_kq__d84597e9296">Default is 2000
                                             milliseconds.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Use Compression <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Use Compression <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Enables the destination to use compression to pass data
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Use TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Use TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -700,10 +712,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">The path to the truststore file. Enter an absolute path
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">The path to the truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -713,9 +725,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Truststore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Truststore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -727,9 +739,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Password to the truststore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -740,27 +752,27 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Truststore Trust Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">The algorithm used to manage the truststore. <p class="p">Default
-                                            is <span class="ph" id="task_xlv_jdw_kq__d82220e3487">SunX509</span>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_xlv_jdw_kq__d84597e3487">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -769,9 +781,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -779,9 +791,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e806 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e851 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e809 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d425712e854 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -810,34 +822,34 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e1162">Event Hub Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e1207">Event Hub Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e1165">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e1210">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_xlv_jdw_kq__d82220e7903">
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1162 ">Namespace Name</td>
+                                <tr id="task_xlv_jdw_kq__d84597e7903">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1207 ">Namespace Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1165 ">The name of the namespace that contains the event hub
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1210 ">The name of the namespace that contains the event hub
                                         that you want to use.</td>
 
                                 </tr>
 
-                                <tr id="task_xlv_jdw_kq__d82220e7912">
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1162 ">Event Hub Name</td>
+                                <tr id="task_xlv_jdw_kq__d84597e7912">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1207 ">Event Hub Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1165 ">The event hub name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1210 ">The event hub name.</td>
 
                                 </tr>
 
-                                <tr id="task_xlv_jdw_kq__d82220e7921">
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1162 ">Shared Access Policy Name</td>
+                                <tr id="task_xlv_jdw_kq__d84597e7921">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1207 ">Shared Access Policy Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1165 ">The policy name associated with the namespace. <p class="p">To
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1210 ">The policy name associated with the namespace. <p class="p">To
                                             retrieve the policy name, when logged into the Azure
                                             portal, navigate to your namespace and event hub, and
                                             then click Shared Access Policies for a list of
@@ -849,10 +861,10 @@ For example, you
 
                                 </tr>
 
-                                <tr id="task_xlv_jdw_kq__d82220e7934">
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1162 ">Connection String Key </td>
+                                <tr id="task_xlv_jdw_kq__d84597e7934">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1207 ">Connection String Key </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1165 ">One of the connection string keys associated with the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1210 ">One of the connection string keys associated with the
                                         specified shared access policy. <p class="p">To retrieve a connection
                                             string key, after accessing the list of shared access
                                             policies, click the policy name, and then copy the
@@ -881,9 +893,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e1243">Elasticsearch Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e1288">Elasticsearch Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e1246">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e1291">Description</th>
 
                                 </tr>
 
@@ -891,26 +903,26 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Cluster HTTP URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Cluster HTTP URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">HTTP URI used to connect to the cluster. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">HTTP URI used to connect to the cluster. Use the
                                         following format:
                                         <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Additional HTTP Params</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Additional HTTP Params</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Additional HTTP parameters that you want to send as query
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Additional HTTP parameters that you want to send as query
                                         string parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</td>
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Detect Additional Nodes in Cluster</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Detect Additional Nodes in Cluster</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">
                                         <p class="p">Detects additional nodes in the cluster based on the
                                             configured Cluster URI. </p>
 
@@ -925,20 +937,20 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Use Security</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Use Security</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Specifies whether security is enabled on the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Specifies whether security is enabled on the
                                         Elasticsearch cluster. </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Time Basis <a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8053" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Time Basis <a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8053" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">
                                         <div class="p">Time basis to use for writing to time-based indexes. Use
-                                            one of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d82220e8060">
+                                            one of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d84597e8060">
                                                 <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
                                                   processing time as the time basis. The processing
                                                   time is the time associated with the <span class="ph">Data Collector</span> running the pipeline. </li>
@@ -961,16 +973,16 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Time zone for the destination system. Used to resolve
                                         datetimes in time-based indexes. </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Index</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Index</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Index for the generated documents. Enter an index name or
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Index for the generated documents. Enter an index name or
                                         an expression that evaluates to the index name. <p class="p">For
                                             example, if you enter <samp class="ph codeph">customer</samp> as the
                                             index, the destination writes the document within the
@@ -983,9 +995,9 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Mapping</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Mapping</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Mapping type for the generated documents. Enter the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Mapping type for the generated documents. Enter the
                                         mapping type, an expression that evaluates to the mapping
                                         type, or a field that includes the mapping type. <p class="p">For
                                             example, if you enter <samp class="ph codeph">user</samp> as the
@@ -995,11 +1007,11 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Document ID <a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8141" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Document ID <a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8141" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Expression that evaluates to the ID for the generated
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Expression that evaluates to the ID for the generated
                                         documents. When you do not specify an ID, Elasticsearch
                                         creates an ID for each document.<p class="p">By default, the
                                             destination allows Elasticsearch to create the
@@ -1008,9 +1020,9 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Parent ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Parent ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Optional parent ID for the generated documents. Enter a
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Optional parent ID for the generated documents. Enter a
                                         parent ID or an expression that evaluates to the parent ID.
                                             <p class="p">Use to establish a parent-child relationship between
                                             documents in the same index.</p>
@@ -1018,9 +1030,9 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Routing</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Routing</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">Optional custom routing value for the generated
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">Optional custom routing value for the generated
                                         documents. Enter a routing value or an expression that
                                         evaluates to the routing value.<p class="p">Elasticsearch routes a
                                             document to a particular shard in an index based on the
@@ -1033,9 +1045,9 @@ For example, you
 
                                 </tr>
 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1243 ">Data Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1288 ">Data Charset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1246 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1291 ">
                                         <p class="p">Character encoding of the data to be processed. </p>
 
                                     </td>
@@ -1051,14 +1063,14 @@ For example, you
                 <div class="itemgroup info">If you enabled security, configure the following security property:</div>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d82220e8233" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d84597e8233" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e1461">Security Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e1506">Security Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e1464">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e1509">Description</th>
 
                                 </tr>
 
@@ -1066,13 +1078,13 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1461 ">Security Username/Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1506 ">Security Username/Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1464 ">Elasticsearch username and password. <div class="p">Enter the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1509 ">Elasticsearch username and password. <div class="p">Enter the
                                             username and password using the following
                                             syntax:<pre class="pre codeblock">&lt;username&gt;:&lt;password&gt;</pre>
 </div>
-<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d82290e4731">To
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d84667e4736">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1080,9 +1092,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1461 ">SSL Truststore Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1506 ">SSL Truststore Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1464 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1509 ">
                                         <p class="p">Location of the truststore file. </p>
 
                                         <p class="p">Configuring this property is the equivalent to
@@ -1096,9 +1108,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1461 ">SSL Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1506 ">SSL Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1464 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1509 ">
                                         <p class="p">Password for the truststore file. </p>
 
                                         <p class="p">Configuring this property is the equivalent to
@@ -1128,9 +1140,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d416657e1569">Write to File Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d425712e1614">Write to File Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d416657e1572">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d425712e1617">Description</th>
 
                                 </tr>
 
@@ -1138,16 +1150,16 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e1569 ">Directory</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e1614 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e1572 ">Local directory for error record files. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e1617 ">Local directory for error record files. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e1569 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e1614 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e1572 ">Prefix used for error record files. Use to differentiate
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e1617 ">Prefix used for error record files. Use to differentiate
                                         error record files from other files in the directory.<p class="p">Uses
                                             the prefix sdc-${sdc:id()} by default. The prefix
                                             evaluates to sdc-&lt;<span class="ph">Data Collector</span> ID&gt;. This provides default differentiation in case
@@ -1162,9 +1174,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e1569 ">File Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e1614 ">File Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e1572 ">Number of seconds <span class="ph">Data Collector</span> waits for error records. After that time, it creates a
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e1617 ">Number of seconds <span class="ph">Data Collector</span> waits for error records. After that time, it creates a
                                         new error record file. <p class="p">You can enter a number of seconds
                                             or use the default expression to enter the time in
                                             minutes. </p>
@@ -1173,9 +1185,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e1569 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e1614 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e1572 ">Maximum size for error files. Exceeding this size creates
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e1617 ">Maximum size for error files. Exceeding this size creates
                                         a new error file. <p class="p">Use 0 to avoid using this
                                         property.</p>
 </td>
@@ -1200,9 +1212,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e1702">Google Cloud Storage Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e1747">Google Cloud Storage Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e1705">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e1750">Description</th>
 
                                 </tr>
 
@@ -1210,24 +1222,24 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Project ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Project ID to connect to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Bucket</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Bucket</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Bucket that contains the objects to be read.</td>
+       <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Bucket that contains the objects to be read.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Credentials Provider <a class="xref" href="../Destinations/GCS.html#concept_otx_vxn_sbb">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8669" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Credentials Provider <a class="xref" href="../Destinations/GCS.html#concept_otx_vxn_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8669" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Credentials provider to use to connect:<ul class="ul" id="task_xlv_jdw_kq__d82220e8673">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Credentials provider to use to connect:<ul class="ul" id="task_xlv_jdw_kq__d84597e8673">
                                             <li class="li">Default credentials provider</li>
 
                                             <li class="li">Service account credentials file (JSON) </li>
@@ -1238,9 +1250,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Credentials File Path (JSON) </td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Credentials File Path (JSON) </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">When using a Google Cloud service account credentials
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">When using a Google Cloud service account credentials
                                         file, path to the file that the origin uses to connect to
                                         Google Cloud Storage. The credentials file must be a JSON
                                             file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
@@ -1250,19 +1262,19 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Common Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Common Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Common prefix that determines where objects are written.
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Common prefix that determines where objects are written.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Partition Prefix <a class="xref" href="../Destinations/GCS.html#concept_qsx_ryn_sbb">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Partition Prefix <a class="xref" href="../Destinations/GCS.html#concept_qsx_ryn_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Optional partition prefix to specify the partition to
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Optional partition prefix to specify the partition to
                                         use. <p class="p">Use a specific partition prefix or define an
                                             expression that evaluates to a partition prefix.
                                             </p>
@@ -1274,9 +1286,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">
                                         <p class="p">Time zone for the destination system. Used to resolve
                                             datetimes in a time-based partition prefix. </p>
 
@@ -1285,14 +1297,14 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Time Basis <a class="xref" href="../Destinations/GCS.html#concept_ffn_tc4_sbb">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8538" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Time Basis <a class="xref" href="../Destinations/GCS.html#concept_ffn_tc4_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8538" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">
                                         <div class="p">Time basis to use for writing to a time-based bucket or
                                             partition prefix. Use one of the following
-                                                expressions:<ul class="ul" id="task_xlv_jdw_kq__d82220e8545">
+                                                expressions:<ul class="ul" id="task_xlv_jdw_kq__d84597e8545">
                                                 <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
                                                   processing time as the time basis in conjunction
                                                   with the specified Data Time Zone.</li>
@@ -1317,11 +1329,11 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1702 ">Object Name Prefix <a class="xref" href="../Destinations/GCS.html#concept_s1m_j24_sbb">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8577" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1747 ">Object Name Prefix <a class="xref" href="../Destinations/GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8577" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1705 ">Defines a prefix for object names written by the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1750 ">Defines a prefix for object names written by the
                                         destination. By default, object names start with "sdc" as
                                         follows: <samp class="ph codeph">sdc-&lt;UUID&gt;</samp>. <p class="p">Not required for
                                             the whole file data format. </p>
@@ -1347,9 +1359,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e1894">Google Pub/Sub Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e1939">Google Pub/Sub Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e1897">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e1942">Description</th>
 
                                 </tr>
 
@@ -1357,25 +1369,25 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1894 ">Topic ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1939 ">Topic ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1897 ">Google Pub/Sub topic ID to write messages to.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1894 ">Project ID</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1897 ">Google Pub/Sub project ID to connect to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1942 ">Google Pub/Sub topic ID to write messages to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1894 ">Credentials Provider <a class="xref" href="../Destinations/PubSubPublisher.html#concept_snf_1wq_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e8412" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1939 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1897 ">Credentials provider to use to connect to Google
-                                            Pub/Sub:<ul class="ul" id="task_xlv_jdw_kq__d82220e8416">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1942 ">Google Pub/Sub project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1939 ">Credentials Provider <a class="xref" href="../Destinations/PubSubPublisher.html#concept_snf_1wq_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e8412" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1942 ">Credentials provider to use to connect to Google
+                                            Pub/Sub:<ul class="ul" id="task_xlv_jdw_kq__d84597e8416">
                                             <li class="li">Default credentials provider</li>
 
                                             <li class="li">Service account credentials file (JSON) </li>
@@ -1386,9 +1398,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e1894 ">Credentials File Path (JSON)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e1939 ">Credentials File Path (JSON)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e1897 ">When using a Google Cloud service account credentials
+                                    <td class="entry" valign="top" width="70%" headers="d425712e1942 ">When using a Google Cloud service account credentials
                                         file, path to the file that the destination uses to connect
                                         to Google Pub/Sub. The credentials file must be a JSON
                                             file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
@@ -1414,9 +1426,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d416657e1990">Write to Kafka Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d425712e2035">Write to Kafka Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d416657e1993">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d425712e2038">Description</th>
 
                                 </tr>
 
@@ -1424,9 +1436,9 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -1436,28 +1448,28 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d82220e8866" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d84597e8866" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                             </a></td>
 
-                                        <td class="entry" id="task_xlv_jdw_kq__d82220e8869" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Evaluates an expression at
+                                        <td class="entry" id="task_xlv_jdw_kq__d84597e8869" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -1468,19 +1480,19 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Topic</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_xlv_jdw_kq__d82220e8911" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d84597e8911" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d82220e8915">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d84597e8915">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -1502,10 +1514,10 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_xlv_jdw_kq__d82220e8937" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d84597e8937" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" id="task_xlv_jdw_kq__d82220e8939" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Expression to use with the
+                                        <td class="entry" id="task_xlv_jdw_kq__d84597e8939" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -1523,17 +1535,17 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d416657e1990 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d425712e2035 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d416657e1993 ">Additional Kafka properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d425712e2038 ">Additional Kafka properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -1562,9 +1574,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d416657e2177">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d425712e2222">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d416657e2180">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d425712e2225">Description</th>
 
                                 </tr>
 
@@ -1572,11 +1584,11 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Access Key ID <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Access Key ID <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_xlv_jdw_kq__image_v86_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -1586,11 +1598,11 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Secret Access Key <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Secret Access Key <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_xlv_jdw_kq__image_v74_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -1600,31 +1612,31 @@ For example, you
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Region</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Region</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Endpoint</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Endpoint</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Stream Name</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Stream Name</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Kinesis stream name.</td>
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Kinesis stream name.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Partitioning Strategy</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Partitioning Strategy</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_xlv_jdw_kq__d82419e1360">
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_xlv_jdw_kq__d84856e1360">
         <li class="li">Random - Generates a random partition key.</li>
 
         <li class="li">
@@ -1638,18 +1650,18 @@ For example, you
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Partition Expression</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Partition Expression</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
         for the expression partition strategy. </p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Kinesis Producer Configuration</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Kinesis Producer Configuration</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Additional Kinesis properties. <p class="p">When you add a configuration property, enter the
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Additional Kinesis properties. <p class="p">When you add a configuration property, enter the
         exact property name and the value. The Kinesis Producer does not validate the property names
         or values. </p>
 </td>
@@ -1657,9 +1669,9 @@ For example, you
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e2177 ">Preserve Record Order</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e2222 ">Preserve Record Order</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e2180 ">Select to preserve the order of records. Enabling this
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e2225 ">Select to preserve the order of records. Enabling this
                                         option can reduce pipeline performance.</td>
 
                                 </tr>
@@ -1677,14 +1689,14 @@ For example, you
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d82220e9029" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d84597e9029" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e2345">MapR Streams Producer Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e2390">MapR Streams Producer Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e2348">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e2393">Description</th>
 
                                 </tr>
 
@@ -1692,37 +1704,37 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d82220e8866" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d84597e8866" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                             </a></td>
 
-                                        <td class="entry" id="task_xlv_jdw_kq__d82220e8869" valign="top" width="70%" headers="d416657e2348 ">Evaluates an expression at
+                                        <td class="entry" id="task_xlv_jdw_kq__d84597e8869" valign="top" width="70%" headers="d425712e2393 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Topic</td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d416657e2348 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="70%" headers="d425712e2393 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d416657e2348 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="70%" headers="d425712e2393 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d416657e2348 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="70%" headers="d425712e2393 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -1733,10 +1745,10 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_xlv_jdw_kq__d82220e8911" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d84597e8911" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d416657e2348 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d82220e8915">
+                                        <td class="entry" valign="top" width="70%" headers="d425712e2393 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d84597e8915">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -1758,10 +1770,10 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_xlv_jdw_kq__d82220e8937" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d84597e8937" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" id="task_xlv_jdw_kq__d82220e8939" valign="top" width="70%" headers="d416657e2348 ">Expression to use with the
+                                        <td class="entry" id="task_xlv_jdw_kq__d84597e8939" valign="top" width="70%" headers="d425712e2393 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -1779,19 +1791,19 @@ For example, you
                                     </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d416657e2345 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="30%" headers="d425712e2390 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d416657e2348 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="70%" headers="d425712e2393 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2345 ">MapR Streams Configuration <a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e9093" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2390 ">MapR Streams Configuration <a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e9093" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2348 ">Additional configuration properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2393 ">Additional configuration properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the MapR
                                         Streams property name and value.<p class="p">Use the property names
                                             and values as expected by MapR.</p>
@@ -1819,9 +1831,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e2522">MQTT Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e2567">MQTT Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e2525">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e2570">Description</th>
 
                                 </tr>
 
@@ -1829,9 +1841,9 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Broker URL</td>
+      <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Broker URL</td>
 
-      <td class="entry" valign="top" width="70%" headers="d416657e2525 ">MQTT Broker URL. Enter in the following
+      <td class="entry" valign="top" width="70%" headers="d425712e2570 ">MQTT Broker URL. Enter in the following
         format:<pre class="pre codeblock">&lt;tcp | ssl&gt;://&lt;hostname&gt;:&lt;port&gt;</pre>
 <p class="p">Use ssl for secure
         connections to the broker.</p>
@@ -1843,9 +1855,9 @@ For example, you
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Client ID</td>
+      <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Client ID</td>
 
-      <td class="entry" valign="top" width="70%" headers="d416657e2525 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
+      <td class="entry" valign="top" width="70%" headers="d425712e2570 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
         broker.<div class="p">You can define an expression that evaluates to the client ID. For example, you can
         enter the following expression to use the unique pipeline ID as the client
         ID:<pre class="pre codeblock">${pipeline:id()}</pre>
@@ -1855,18 +1867,18 @@ For example, you
      </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Topic <a class="xref" href="../Destinations/MQTTPublisher.html#concept_bbq_w5q_mz" title="The MQTT Publisher destination writes messages to a single topic on the MQTT broker. Any MQTT client subscribed to that topic receives the messages. A topic is a string that the broker uses to filter messages for each connected client.">
-         <img class="image" id="task_xlv_jdw_kq__d82419e4400" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="14" width="14" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Topic <a class="xref" href="../Destinations/MQTTPublisher.html#concept_bbq_w5q_mz" title="The MQTT Publisher destination writes messages to a single topic on the MQTT broker. Any MQTT client subscribed to that topic receives the messages. A topic is a string that the broker uses to filter messages for each connected client.">
+         <img class="image" id="task_xlv_jdw_kq__d84856e4400" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="14" width="14" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Topic to publish to. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to read from
+       <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Topic to publish to. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to read from
         additional topics. </td>
 
       </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Quality of Service</td>
+      <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Quality of Service</td>
 
-      <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_xlv_jdw_kq__d82419e4323">
+      <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_xlv_jdw_kq__d84856e4323">
         <li class="li">At Most Once (0)</li>
 
         <li class="li">At Least Once (1)</li>
@@ -1881,11 +1893,11 @@ For example, you
      </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Client Persistence Mechanism</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Client Persistence Mechanism</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Determines the persistence mechanism that the destination uses to guarantee message
+       <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Determines the persistence mechanism that the destination uses to guarantee message
         delivery when the quality of service level is at least once or exactly once. Select one of
-        the following options:<ul class="ul" id="task_xlv_jdw_kq__d82419e4424">
+        the following options:<ul class="ul" id="task_xlv_jdw_kq__d84856e4424">
          <li class="li">Memory - Store messages in memory on the <span class="ph">Data Collector</span> machine until the delivery of
           the message is complete.</li>
 
@@ -1902,9 +1914,9 @@ For example, you
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Client Persistence Data Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Client Persistence Data Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Local directory on the <span class="ph">Data Collector</span>
+       <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Local directory on the <span class="ph">Data Collector</span>
         machine where the destination temporarily stores messages in a file when you configure file
          persistence.<p class="p">The user who starts <span class="ph">Data Collector</span> must have read and write access
          to this directory.</p>
@@ -1913,9 +1925,9 @@ For example, you
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Keep Alive Interval (secs)</td>
+       <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Keep Alive Interval (secs)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Maximum time in seconds to allow the connection to the MQTT broker to remain idle.
+       <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Maximum time in seconds to allow the connection to the MQTT broker to remain idle.
         After the destination publishes no messages for this amount of time, the connection is
         closed. The destination must reconnect to the MQTT broker.<p class="p">Default is 60
         seconds.</p>
@@ -1924,9 +1936,9 @@ For example, you
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Use Credentials</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Use Credentials</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Enables entering MQTT credentials. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d82290e4731">To
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Enables entering MQTT credentials. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d84667e4736">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1934,23 +1946,23 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">MQTT user name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">MQTT password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">MQTT user name.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Retain the Message</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Password</td>
 
-       <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Determines whether or not the MQTT broker retains the message last published by the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">MQTT password.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Retain the Message</td>
+
+       <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Determines whether or not the MQTT broker retains the message last published by the
         destination when no MQTT client is subscribed to listen to the topic. <p class="p">When selected, the
          MQTT broker retains the last message published by the destination. Any messages published
          earlier are lost. When cleared, all messages published by the destination are
@@ -1961,9 +1973,9 @@ For example, you
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Use TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Use TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -1971,10 +1983,10 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">The path to the truststore file. Enter an absolute path
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">The path to the truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -1984,9 +1996,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Truststore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Truststore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -1998,9 +2010,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Password to the truststore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -2011,27 +2023,27 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Truststore Trust Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">The algorithm used to manage the truststore. <p class="p">Default
-                                            is <span class="ph" id="task_xlv_jdw_kq__d82220e3487">SunX509</span>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_xlv_jdw_kq__d84597e3487">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_xlv_jdw_kq__d82220e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_xlv_jdw_kq__d84597e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -2040,9 +2052,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -2050,9 +2062,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2522 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e2567 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2525 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d425712e2570 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -2079,9 +2091,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d416657e2977">Mesos Cluster Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d425712e3022">Mesos Cluster Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d416657e2980">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d425712e3025">Description</th>
 
                                 </tr>
 
@@ -2089,18 +2101,18 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2977 ">Dispatcher URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d425712e3022 ">Dispatcher URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2980 ">Master URL of the Mesos dispatcher. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d425712e3025 ">Master URL of the Mesos dispatcher. For example,
                                         mesos://dispatcher:7077.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d416657e2977 ">Checkpoint Configuration Directory <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_cs4_lcg_j5" title="When the Data Collector runs a cluster streaming pipeline, on either Mesos or YARN, the Data Collector generates and stores checkpoint metadata. The checkpoint metadata provides the offset for the origin.">
+                                    <td class="entry" valign="top" width="30%" headers="d425712e3022 ">Checkpoint Configuration Directory <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_cs4_lcg_j5" title="When the Data Collector runs a cluster streaming pipeline, on either Mesos or YARN, the Data Collector generates and stores checkpoint metadata. The checkpoint metadata provides the offset for the origin.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d416657e2980 ">Location of the HDFS configuration files that specify
+                                    <td class="entry" valign="top" width="70%" headers="d425712e3025 ">Location of the HDFS configuration files that specify
                                         whether to write checkpoint metadata to HDFS or Amazon
                                             S3.<p class="p">Use a directory or symlink within the <span class="ph">Data Collector</span> resources directory.</p>
 <div class="p">The directory should
@@ -2127,9 +2139,9 @@ For example, you
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d416657e3050">Yarn Cluster Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d425712e3095">Yarn Cluster Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d416657e3053">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d425712e3098">Description</th>
 
                                 </tr>
 
@@ -2137,9 +2149,9 @@ For example, you
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e3050 ">Worker Count</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e3095 ">Worker Count</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e3053 ">Number of workers used in a Cluster Yarn Streaming
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e3098 ">Number of workers used in a Cluster Yarn Streaming
                                         pipeline. Use to limit the number of workers spawned for
                                         processing. By default, one worker is spawned for every
                                         partition in the topic. <p class="p">Default is 0 for one worker for
@@ -2149,9 +2161,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e3050 ">Worker Java Options</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e3095 ">Worker Java Options</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e3053 ">Additional Java properties for the pipeline. Separate
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e3098 ">Additional Java properties for the pipeline. Separate
                                         properties with a space.<p class="p">The following properties are set
                                             by default. </p>
 <div class="p">
@@ -2175,9 +2187,9 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e3050 ">Launcher Env Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e3095 ">Launcher Env Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e3053 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e3098 ">
                                         <p class="p">Additional configuration properties for the cluster
                                             launcher. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon and define the
@@ -2188,17 +2200,17 @@ For example, you
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e3050 ">Worker Memory (MB)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e3095 ">Worker Memory (MB)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e3053 ">Maximum amount of memory allocated to each <span class="ph">Data Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e3098 ">Maximum amount of memory allocated to each <span class="ph">Data Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d416657e3050 ">Extra Spark Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d425712e3095 ">Extra Spark Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d416657e3053 ">For Cluster Yarn Streaming pipelines, you can configure
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d425712e3098 ">For Cluster Yarn Streaming pipelines, you can configure
                                         additional Spark configurations to pass to the spark-submit
                                         script. Enter the Spark configuration name and the value to
                                         use. <div class="p">The specified configurations are passed to the

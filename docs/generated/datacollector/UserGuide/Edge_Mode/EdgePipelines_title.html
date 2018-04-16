@@ -55,9 +55,8 @@
         another pipeline and then act on that data to control the edge device.</p>
 
         <p class="p">You can design edge pipelines in <span class="ph">Data Collector</span> or
-                <span class="ph">StreamSets Control Hub</span>.
-            You run edge pipelines in edge execution mode on <span class="ph">StreamSets</span><span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDC Edge</span>). <span class="ph">SDC Edge</span> is a lightweight agent without a UI that runs pipelines on edge devices. Install <span class="ph">SDC Edge</span> on
+                <span class="ph">StreamSets Control Hub</span>. You run edge pipelines in edge execution mode on <span class="ph">StreamSets</span>
+            <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>). <span class="ph">SDC Edge</span> is a lightweight agent without a UI that runs pipelines on edge devices. Install <span class="ph">SDC Edge</span> on
             each edge device where you want to run edge pipelines. </p>
 
         <div class="p">Edge pipelines work in tandem with standalone execution mode pipelines running on <span class="ph">Data Collector</span>.
@@ -214,9 +213,8 @@
             </ul>
 </div>
 
-        <p class="p">After designing the edge pipelines, you export the pipelines, and then use
-            the command line to run the pipelines on <span class="ph">Data Collector Edge</span>
-                (<span class="ph">SDC Edge</span>).</p>
+        <p class="p">After designing the edge pipelines, you deploy the edge pipelines to <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) installed on an edge device. You then use the command line to run the pipelines on
+                <span class="ph">SDC Edge</span>.</p>
 
         
         
@@ -244,9 +242,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d179290e417">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d179807e421">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d179290e420">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d179807e424">Supported Stages</th>
 
                         </tr>
 
@@ -254,16 +252,16 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e417 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e421 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e420 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e424 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_lrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random Record Source</a> - A development
                                         stage.</li>
 
                                     <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Raw Data Source</a> - A development stage.</li>
 
-                                    <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a>
+                                    <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="The Directory origin reads data from files in a directory. The origin can use multiple threads to enable the parallel processing of files.">Directory</a>
                                         <p class="p">Edge pipelines do not support multithreaded processing.
                                             In an edge pipeline, the Directory origin always creates
                                             a single thread to read the files even if you configure
@@ -287,9 +285,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e417 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e421 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e420 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e424 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_mrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></li>
 
@@ -298,6 +296,11 @@
                                     <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></li>
 
                                     <li class="li"><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></li>
+
+                                    <li class="li"><a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript Evaluator</a><p class="p">In edge pipelines, the
+                                            JavaScript Evaluator processor does not support the
+                                            sdcFunctions scripting object.</p>
+</li>
 
                                     <li class="li"><a class="xref" href="../Processors/StreamSelector.html#concept_tqv_t5r_wq" title="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do not match user-defined conditions.">Stream Selector</a></li>
 
@@ -308,9 +311,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e417 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e421 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e420 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e424 ">
                                 <ul class="ul" id="concept_kly_qtq_4bb__ul_nrs_4rs_4bb">
                                     <li class="li"><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a></li>
 
@@ -331,9 +334,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e417 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e421 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e420 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e424 ">None</td>
 
                         </tr>
 
@@ -392,9 +395,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d179290e683">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d179807e695">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d179290e686">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d179807e698">Supported Stages</th>
 
                         </tr>
 
@@ -402,9 +405,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e683 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e695 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e686 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e698 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_npd_drs_4bb">
                                     <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a><p class="p">Edge pipelines do not support
                                             multithreaded processing. In an edge pipeline, the HTTP
@@ -423,9 +426,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e683 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e695 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e686 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e698 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_opd_drs_4bb">
                                     <li class="li"><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></li>
 
@@ -434,6 +437,11 @@
                                     <li class="li"><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></li>
 
                                     <li class="li"><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></li>
+
+                                    <li class="li"><a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript Evaluator</a><p class="p">In edge pipelines, the
+                                            JavaScript Evaluator processor does not support the
+                                            sdcFunctions scripting object.</p>
+</li>
 
                                     <li class="li"><a class="xref" href="../Processors/StreamSelector.html#concept_tqv_t5r_wq" title="The Stream Selector passes data to streams based on conditions. Define a condition for each stream of data that you want to create. The Stream Selector uses a default stream to pass records that do not match user-defined conditions.">Stream Selector</a></li>
 
@@ -444,9 +452,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e683 ">Destinations</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e695 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e686 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e698 ">
                                 <ul class="ul" id="concept_q3j_ytq_4bb__ul_ppd_drs_4bb">
                                     <li class="li"><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Client destination writes data to a CoAP endpoint. Use the destination to send requests to a CoAP resource URL.">CoAP Client</a></li>
 
@@ -465,9 +473,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e683 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e695 ">Executors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e686 ">None</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e698 ">None</td>
 
                         </tr>
 
@@ -623,9 +631,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d179290e1088">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d179807e1111">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d179290e1091">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d179807e1114">Supported Stages</th>
 
                         </tr>
 
@@ -633,9 +641,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1088 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1111 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1091 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1114 ">
                                 <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
                                     <li class="li">CoAP Server</li>
 
@@ -652,23 +660,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1088 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1111 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1091 ">Any</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1088 ">Destinations</td>
-
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1091 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1114 ">Any</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1088 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1111 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1091 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1114 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1111 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1114 ">Any</td>
 
                         </tr>
 
@@ -863,9 +871,9 @@
         <div class="note tip"><span class="tiptitle">Tip:</span> Using <span class="ph">Data Collector</span> to
             download the executable along with your edge pipelines is the simplest way to deploy
             your designed edge pipelines to an edge device. If you use another installation method,
-            you'll need to export your edge pipelines from <span class="ph">Data Collector</span>
-            and copy them to <span class="ph">SDC Edge</span>,
-            as described in <a class="xref" href="EdgePipelines_title.html#task_rzb_zgm_pbb" title="When you first get started with SDC Edge, the easiest way to deploy pipelines to SDC Edge is to use Data Collector to download the Data Collector Edge executable along with your designed edge pipelines. After SDC Edge is installed, you'll need to export new and updated edge pipelines from Data Collector and move them to SDC Edge installed on the edge device.">Export Pipelines to SDC Edge</a>.</div>
+            you'll need to <a class="xref" href="EdgePipelines_title.html#concept_ldf_ycf_3db" title="After designing edge pipelines in Data Collector, you deploy the edge pipelines to SDC Edge installed on an edge device. You run the edge pipelines on SDC Edge.">deploy your
+                edge pipelines</a> from <span class="ph">Data Collector</span> to
+                <span class="ph">SDC Edge</span>.</div>
 
  </div>
 
@@ -878,16 +886,16 @@
         executable along with your designed edge pipelines. The downloaded tarball includes the <span class="ph">SDC Edge</span>
         executable, the sample edge pipelines, and your selected edge pipelines. </p>
 
-        <div class="section context" id="task_p45_s5k_pbb__context_hhz_3lm_sbb"><p class="p">Selecting edge pipelines and downloading them with the <span class="ph">SDC Edge</span>
-            executable is the simplest way to deploy your designed edge pipelines to an edge device.
-            If you use another installation method, you'll need to export your edge pipelines from
-                <span class="ph">Data Collector</span> and copy them to <span class="ph">SDC Edge</span>.</p>
+        <div class="section context" id="task_p45_s5k_pbb__context_hhz_3lm_sbb"><p class="p">Selecting edge pipelines and downloading them with the <span class="ph">SDC Edge</span> executable is the simplest way to deploy your designed edge pipelines to an edge
+                device. If you use another installation method, you'll need to <a class="xref" href="EdgePipelines_title.html#concept_ldf_ycf_3db" title="After designing edge pipelines in Data Collector, you deploy the edge pipelines to SDC Edge installed on an edge device. You run the edge pipelines on SDC Edge.">deploy your edge
+                    pipelines</a> from <span class="ph">Data Collector</span>
+                to <span class="ph">SDC Edge</span>.</p>
 </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">From the <span class="ph">Data Collector</span>
                     <span class="ph uicontrol">Home</span> page, select the edge pipelines that you want to run
-                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d34565e65" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/icon_MonMore.png" height="13" width="18" />), and then click <span class="ph uicontrol">Download Edge
+                    on a single edge device, click the <span class="ph uicontrol">More</span> icon (<img class="image" id="task_p45_s5k_pbb__d34890e65" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/icon_MonMore.png" height="13" width="18" />), and then click <span class="ph uicontrol">Download Edge
                         Executable</span>.</span>
             </li>
 <li class="li step stepexpand">
@@ -980,41 +988,53 @@
 
         <div class="p">The <span class="ph">SDC Edge</span>
             configuration file includes the following general properties:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_dkt_g1m_pbb" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
-                        <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d179290e1849">General Property</th>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_ecg_xcg_3db" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d179807e1873">General Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d179290e1852">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d179807e1876">Description</th>
 
-                        </tr>
+                    </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody class="tbody">
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1849 ">max-batch-size</td>
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1873 ">max-batch-size</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1852 ">Maximum number of records included in a batch when the pipeline
-                                    runs.<p class="p">Default is 1000.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1876 ">Maximum number of records included in a batch when the pipeline
+                                runs.<p class="p">Default is 1000.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1849 ">bind-address</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1873 ">process-metrics-capture-interval</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1852 ">Address that <span class="ph">SDC Edge</span> binds to - localhost and the defined port number.<p class="p">Default port
-                                    number is 18633.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1876 ">Frequency in milliseconds that metrics about the <span class="ph">SDC Edge</span> process,
+                            such as memory usage, are refreshed.<p class="p">Default is -1, which means that
+                                the metrics are refreshed when the HTTP REST API is
+                            called.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                    </tbody>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1873 ">bind-address</td>
 
-                </table>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1876 ">Address that <span class="ph">SDC Edge</span> binds to -
+                            localhost and the defined port number.<p class="p">Default port number is
+                                18633.</p>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
 </div>
 </div>
 
@@ -1024,32 +1044,36 @@
 
         <div class="p">The configuration file includes the following <span class="ph">Control Hub</span>
                 properties:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_r3q_cbm_pbb" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
-                        <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d179290e1916"><span class="ph">Control Hub</span> Property</th>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_a4p_ycg_3db" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d179807e1954"><span class="ph">Control Hub</span>
+                            Property</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d179290e1921">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d179807e1959">Description</th>
 
-                        </tr>
+                    </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody class="tbody">
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">enabled</td>
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">enabled</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled to work with <span class="ph">Control Hub</span>. <p class="p">Default is false.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled
+                            to work with <span class="ph">Control Hub</span>.
+                                <p class="p">Default is false.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">base-url</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">base-url</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Base URL to access <span class="ph">Control Hub</span>. Enter the appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_c2n_5kd_j1b">
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Base URL to access <span class="ph">Control Hub</span>. Enter the
+                            appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_hbf_vcg_3db">
                                     <li class="li">For <span class="ph">Control Hub</span> cloud, use
                                             <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -1060,53 +1084,60 @@
                                 </ul>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">app-auth-token</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">app-auth-token</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Authentication token for this <span class="ph">SDC Edge</span> instance when enabled to work with <span class="ph">Control Hub</span>. </td>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Authentication token for this <span class="ph">SDC Edge</span> instance
+                            when enabled to work with <span class="ph">Control Hub</span>. </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">job-labels</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">job-labels</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">Control Hub</span>. To assign multiple labels, enter a comma-separated list of
-                                labels. <p class="p">Default is "all", which you can use to run a job on all
-                                    registered instances of <span class="ph">SDC Edge</span>. </p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels
+                            to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">Control Hub</span>. To assign
+                            multiple labels, enter a comma-separated list of labels. <p class="p">Default is
+                                "all", which you can use to run a job on all registered instances of
+                                    <span class="ph">SDC Edge</span>.
+                            </p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">events-recipient</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">events-recipient</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Name of the internal <span class="ph">Control Hub</span> messaging queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Name of the internal <span class="ph">Control Hub</span> messaging
+                            queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">ping-frequency</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">ping-frequency</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">Control Hub</span> that it is running. <p class="p">Default is 6,000.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">Control Hub</span> that it is
+                            running. <p class="p">Default is 6,000.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d179290e1916 ">status-events-interval</td>
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d179807e1954 ">status-events-interval</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d179290e1921 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">Control Hub</span> of the status of all local and published pipelines that are
-                                running on this <span class="ph">SDC Edge</span>.<p class="p">Default is 60,000.</p>
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d179807e1959 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">Control Hub</span> of the status
+                            of all local and published pipelines that are running on this <span class="ph">SDC Edge</span>.<p class="p">Default
+                                is 60,000.</p>
 </td>
 
-                        </tr>
+                    </tr>
 
-                    </tbody>
+                </tbody>
 
-                </table>
+            </table>
 </div>
 </div>
 
@@ -1186,27 +1217,74 @@
 
 </div>
 </div>
-<div class="topic task nested1" id="task_rzb_zgm_pbb">
-    <h2 class="title topictitle2">Export Pipelines to SDC Edge</h2>
+<div class="topic concept nested1" id="concept_ldf_ycf_3db">
+    <h2 class="title topictitle2">Deploy Pipelines to SDC Edge</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">When you first get started with <span class="ph">SDC Edge</span>, the
-        easiest way to deploy pipelines to <span class="ph">SDC Edge</span> is to
-        use <span class="ph">Data Collector</span> to
-        download the <span class="ph">Data Collector Edge</span>
-        executable along with your designed edge pipelines. After <span class="ph">SDC Edge</span> is
-        installed, you'll need to export new and updated edge pipelines from <span class="ph">Data Collector</span> and
-        move them to <span class="ph">SDC Edge</span>
-        installed on the edge device. </p>
+    <div class="body conbody"><p class="shortdesc">After designing edge pipelines in <span class="ph">Data Collector</span>, you
+        deploy the edge pipelines to <span class="ph">SDC Edge</span>
+        installed on an edge device. You run the edge pipelines on <span class="ph">SDC Edge</span>.</p>
 
-        <div class="section context">
-            <div class="note note"><span class="notetitle">Note:</span> We recognize that this export process should be easier -  it will be improved in a
-                future release.</div>
+        <div class="p">You can
+            use the following methods to deploy edge pipelines to <span class="ph">SDC Edge</span>:<ul class="ul" id="concept_ldf_ycf_3db__ul_tsz_hdf_3db">
+                <li class="li"><a class="xref" href="EdgePipelines_title.html#task_p45_s5k_pbb" title="Use Data Collector to download the SDC Edge executable along with your designed edge pipelines. The downloaded tarball includes the SDC Edge executable, the sample edge pipelines, and your selected edge pipelines.">Download the <span class="ph">Data Collector Edge</span> executable</a> along with your designed edge pipelines.<p class="p">When you
+                        first get started with <span class="ph">SDC Edge</span>, the easiest way to deploy pipelines to <span class="ph">SDC Edge</span> is to use <span class="ph">Data Collector</span> to download the <span class="ph">Data Collector Edge</span> executable along with your designed edge pipelines. After <span class="ph">SDC Edge</span> is installed, you'll need to use either the publishing or exporting
+                        method to deploy new or updated pipelines to <span class="ph">SDC Edge</span>. </p>
+</li>
 
-        </div>
+                <li class="li"><a class="xref" href="EdgePipelines_title.html#task_isp_m2f_3db" title="When SDC Edge is running and is accessible by the Data Collector machine, you can use the publish method to deploy edge pipelines to SDC Edge.">Publish edge
+                        pipelines</a> directly to <span class="ph">SDC Edge</span>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is running and is accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+                <li class="li"><a class="xref" href="EdgePipelines_title.html#task_rzb_zgm_pbb" title="If SDC Edge is not running or if it is not accessible by the Data Collector machine, you must use the export method to deploy edge pipelines to SDC Edge.">Export edge
+                        pipelines</a>, and then move them to <span class="ph">SDC Edge</span>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is not running or when it is not accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+            </ul>
+</div>
+
+    </div>
+
+<div class="topic task nested2" id="task_isp_m2f_3db">
+    <h3 class="title topictitle3">Publish Pipelines Directly</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When <span class="ph">SDC Edge</span> is
+        running and is accessible by the <span class="ph">Data Collector</span>
+        machine, you can use the publish method to deploy edge pipelines to <span class="ph">SDC Edge</span>.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the edge pipeline in the pipeline canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">General</span> tab, set the <span class="ph uicontrol">Data Collector
+                        Edge URL</span> property to the URL of the <span class="ph">SDC Edge</span> instance that you want to deploy the pipeline to.</span>
+                <div class="itemgroup info">The default URL is <samp class="ph codeph">http://localhost:18633</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the top toolbar, click the <span class="ph uicontrol">Publish Pipeline to Data Collector
+                        Edge</span> icon:</span>
+                <div class="itemgroup info"><img class="image" id="task_isp_m2f_3db__image_zdx_zwf_3db" src="../Graphics/EdgePipelinePublish.png" height="60" width="431" /></div>
+                <div class="itemgroup info">Data Collector publishes the pipeline to the
+                        <samp class="ph codeph">&lt;SDCEdge_home&gt;/data/pipelines</samp> directory on the edge
+                    device where <span class="ph">SDC Edge</span> is installed. </div>
+                <div class="itemgroup info">You can start and manage the pipeline on <span class="ph">SDC Edge</span> as described in <a class="xref" href="EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDC Edge</a>.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_rzb_zgm_pbb">
+    <h3 class="title topictitle3">Export Pipelines</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If <span class="ph">SDC Edge</span> is not
+        running or if it is not accessible by the <span class="ph">Data Collector</span>
+        machine, you must use the export method to deploy edge pipelines to <span class="ph">SDC Edge</span>.</p>
 
         <ol class="ol steps"><li class="li step stepexpand" id="task_rzb_zgm_pbb__step1">
-                <span class="ph cmd">Open the edge pipeline displayed in the pipeline canvas.</span>
+                <span class="ph cmd">Open the edge pipeline in the pipeline canvas.</span>
             </li>
 <li class="li step stepexpand" id="task_rzb_zgm_pbb__step2">
                 <span class="ph cmd">From the <span class="ph uicontrol">Properties</span> panel, click the
@@ -1259,6 +1337,7 @@
 
     </div>
 
+</div>
 </div>
 <div class="topic concept nested1" id="concept_rk3_2hm_pbb">
  <h2 class="title topictitle2">Manage Pipelines on SDC Edge</h2>

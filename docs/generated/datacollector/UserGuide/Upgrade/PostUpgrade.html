@@ -50,6 +50,47 @@
         on-premises installation after you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dzn_cdy_1cb">
+    <h2 class="title topictitle2">Update <span class="ph">Control Hub</span> On-premises</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">If you use <span class="ph">StreamSets Control Hub</span>
+        on-premises and you upgrade registered <span class="ph">Data Collector</span>s to a
+        version higher than your current version of <span class="ph">Control Hub</span>, you
+        must modify the <span class="ph">Data Collector</span>
+        version range within your <span class="ph">Control Hub</span>
+        installation.</p>
+
+        <p class="p">By default, <span class="ph">Control Hub</span> can
+            work with registered <span class="ph">Data Collector</span>s
+            from version 2.1.0.0 to the current version of <span class="ph">Control Hub</span>.
+            You can customize the <span class="ph">Data Collector</span>
+            version range. For example, if you use <span class="ph">Control Hub</span>
+            on-premises version 3.1.0 and you upgrade registered <span class="ph">Data Collector</span>s to
+            version <span class="ph">3.2.0.0</span>, you must configure the maximum <span class="ph">Data Collector</span>
+            version that can work with <span class="ph">Control Hub</span> to
+            version <span class="ph">3.2.0.0</span>.</p>
+
+        <p class="p">To modify the <span class="ph">Data Collector</span>
+            version range:</p>
+
+        <div class="p">
+            <ol class="ol" id="concept_dzn_cdy_1cb__ol_xbl_f2y_1cb">
+                <li class="li">Log in to <span class="ph">Control Hub</span> as the default system administrator - the admin@admin user account.</li>
+
+                <li class="li">In the Navigation panel, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Data Collectors</span></span>.</li>
+
+                <li class="li">Click the <span class="ph uicontrol">Component Version Range</span> icon: <img class="image" id="concept_dzn_cdy_1cb__image_hd3_dfy_1cb" src="../Graphics/icon_OrganizationConfig.png" height="16" width="14" />.</li>
+
+                <li class="li">Enter <span class="ph">3.2.0.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
+
+            </ol>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_hxf_3yd_qcb">
     <h2 class="title topictitle2">Update Value Replacer Pipelines</h2>
 
@@ -96,48 +137,6 @@
             be removed in a future release - so we recommend that you update pipelines to use the
                 <a class="xref" href="../Destinations/WaveAnalytics.html#concept_ryp_g4r_vcb">append
                 operation</a> as soon as possible.</p>
-
-    </div>
-
-</div>
-<div class="topic concept nested1" id="concept_dzn_cdy_1cb">
-    <h2 class="title topictitle2">Update <span class="ph">Control Hub</span> On-premises</h2>
-
-    
-    <div class="body conbody"><p class="shortdesc">If you use <span class="ph">StreamSets Control Hub</span>
-        on-premises and you upgrade registered <span class="ph">Data Collector</span>s to a
-        version higher than your current version of <span class="ph">Control Hub</span>, you
-        must modify the <span class="ph">Data Collector</span>
-        version range within your <span class="ph">Control Hub</span>
-        installation.</p>
-
-        <p class="p">By default, <span class="ph">Control Hub</span> can
-            work with registered <span class="ph">Data Collector</span>s
-            from version 2.1.0.0 to the current version of <span class="ph">Control Hub</span>.
-            You can customize the <span class="ph">Data Collector</span>
-            version range. For example, if you use <span class="ph">Control Hub</span>
-            on-premises version 2.7.2 and you upgrade registered <span class="ph">Data Collector</span>s
-            to version <span class="ph">3.1.0.0</span>, you
-            must configure the maximum <span class="ph">Data Collector</span>
-            version that can work with <span class="ph">Control Hub</span> to
-            version <span class="ph">3.1.0.0</span>.</p>
-
-        <p class="p">To modify the <span class="ph">Data Collector</span>
-            version range:</p>
-
-        <div class="p">
-            <ol class="ol" id="concept_dzn_cdy_1cb__ol_xbl_f2y_1cb">
-                <li class="li">Log in to <span class="ph">Control Hub</span> as the default system administrator - the admin@admin user account.</li>
-
-                <li class="li">In the Navigation panel, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Data Collectors</span></span>.</li>
-
-                <li class="li">Click the <span class="ph uicontrol">Component Version Range</span> icon: <img class="image" id="concept_dzn_cdy_1cb__image_hd3_dfy_1cb" src="../Graphics/icon_OrganizationConfig.png" height="16" width="14" />.</li>
-
-                <li class="li">Enter <span class="ph">3.1.0.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
-
-            </ol>
-
-        </div>
 
     </div>
 

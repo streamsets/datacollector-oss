@@ -43,14 +43,14 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </span></td></tr></tbody></table>
 
- <h1 class="title topictitle1">Control Character Removal</h1>
+  <h1 class="title topictitle1">Control Character Removal</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">You can use several stages to remove control characters - such as escape or
+  
+  <div class="body conbody"><p class="shortdesc">You can use several stages to remove control characters - such as escape or
     end-of-transmission characters - from data. Remove control characters to avoid creating invalid
     records. </p>
 
-  <div class="p">When <span class="ph">Data Collector</span> removes
+    <div class="p">When <span class="ph">Data Collector</span> removes
       control characters, it removes ASCII character codes 0-31 and 127 with the following
         exceptions:<ul class="ul" id="concept_hfs_dkm_js__ul_i3y_2lm_js">
         <li class="li">9 - Tab</li>
@@ -81,6 +81,8 @@
         <li class="li">Google Pub/Sub Subscriber origin</li>
 
         <li class="li">Hadoop FS origin</li>
+
+        <li class="li">Hadoop FS Standalone origin</li>
 
         <li class="li">HTTP Client origin</li>
 
@@ -127,7 +129,7 @@
       </ul>
 </div>
 
- </div>
+  </div>
 
 
 <div class="related-links"></div><div class="navfooter"><!---->

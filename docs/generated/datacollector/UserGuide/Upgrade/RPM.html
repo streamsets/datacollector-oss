@@ -143,9 +143,9 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 2.7.0.0 on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, copy the Data Collector data directory and rename it as follows:
-                <samp class="ph codeph">/var/lib/sdc2700</samp>. Create a backup of the environment configuration
-            file by renaming the file as follows: <samp class="ph codeph">sdcd-env-2700.sh</samp>.</p>
+        <p class="p">For example, if you are upgrading version 3.0.0.0 on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, copy the Data Collector data directory and rename it as follows:
+                <samp class="ph codeph">/var/lib/sdc3000</samp>. Create a backup of the environment configuration
+            file by renaming the file as follows: <samp class="ph codeph">sdcd-env-3000.sh</samp>.</p>
 
     </div>
 
@@ -164,7 +164,7 @@
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector</span> RPM package for
                     your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
-                <ul class="ul choices" id="task_ofc_2zl_5v__d95461e38">
+                <ul class="ul choices" id="task_ofc_2zl_5v__d97908e38">
                     <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, download the RPM EL6 package.</li>
 
                     <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, download the RPM EL7 package.</li>
@@ -178,9 +178,9 @@
                 <div class="itemgroup info">
                     <pre class="pre codeblock">tar xf streamsets-datacollector-&lt;version&gt;-&lt;operating_system&gt;-all-rpms.tar</pre>
 
-                    <div class="p">For example, to extract version <span class="ph">3.1.0.0</span> on CentOS 7,
+                    <div class="p">For example, to extract version <span class="ph">3.2.0.0</span> on CentOS 7,
                         use the following
-                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.1.0.0</span>-el7-all-rpms.tar</pre>
+                        command:<pre class="pre codeblock">tar xf streamsets-datacollector-<span class="ph">3.2.0.0</span>-el7-all-rpms.tar</pre>
 </div>
 
                 </div>
@@ -198,8 +198,8 @@
                     as needed, use the following command:</span>
                 <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 For
-                    example, to install version <span class="ph">3.1.0.0</span>, use the following
-                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">3.1.0.0</span>-1.noarch.rpm</pre>
+                    example, to install version <span class="ph">3.2.0.0</span>, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">3.2.0.0</span>-1.noarch.rpm</pre>
 </div>
             </li>
 </ol>
@@ -225,7 +225,7 @@ For
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Open the environment configuration file that you backed up in the previous
                     version.</span>
-                <div class="itemgroup info">For example, on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2700.sh</samp> file.</div>
+                <div class="itemgroup info">For example, on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-3000.sh</samp> file.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the new version of <span class="ph">Data Collector</span>, open the environment configuration file.</span>
@@ -350,9 +350,9 @@ For
                     Collector
                         version:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "&lt;version&gt;"</pre>
 <div class="p">For
-                        example, to list all stage libraries used by Data Collector version 2.7.0.0,
+                        example, to list all stage libraries used by Data Collector version 3.0.0.0,
                         run the following
-                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "2.7.0.0"</pre>
+                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "3.0.0.0"</pre>
 </div>
 </li>
 

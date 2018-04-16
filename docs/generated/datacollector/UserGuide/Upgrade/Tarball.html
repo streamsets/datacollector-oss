@@ -131,8 +131,8 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 2.7.0.0, copy the <span class="ph">Data Collector</span>
-            configuration directory and rename it as follows: <samp class="ph codeph">/etc/sdc2700</samp>.</p>
+        <p class="p">For example, if you are upgrading version 3.0.0.0, copy the <span class="ph">Data Collector</span>
+            configuration directory and rename it as follows: <samp class="ph codeph">/etc/sdc3000</samp>.</p>
 
     </div>
 
@@ -166,7 +166,7 @@
                     <pre class="pre codeblock">export SDC_DIST=&lt;extraction directory&gt;</pre>
 
                     <div class="p">For
-                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-<span class="ph">3.1.0.0</span></pre>
+                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-<span class="ph">3.2.0.0</span></pre>
 </div>
 
                 </div>
@@ -326,9 +326,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d514003e699">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d523196e699">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d514003e702">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d523196e702">Value</th>
 
                                 </tr>
 
@@ -336,33 +336,33 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d514003e699 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d523196e699 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d514003e702 ">New location outside of the base <span class="ph">Data Collector</span> runtime directory and unique from the previous renamed
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d523196e702 ">New location outside of the base <span class="ph">Data Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <samp class="ph codeph">/etc/sdc2700</samp>,
+                                        configuration directory to <samp class="ph codeph">/etc/sdc3000</samp>,
                                         use the value <samp class="ph codeph">/etc/sdc</samp>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d514003e699 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d523196e699 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d514003e702 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d514003e699 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d514003e702 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d523196e702 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d514003e699 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d523196e699 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d514003e702 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d523196e702 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d523196e699 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d523196e702 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -432,10 +432,10 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                 configuration files, and update the new files as needed with the same customized
                 property values.</p>
 
-            <p class="p">For example when upgrading from version 2.7.0.0, you'd compare the files in your back
-                up directory, /etc/sdc2700, with the files in the /etc/sdc directory. Then update
+            <p class="p">For example when upgrading from version 3.0.0.0, you'd compare the files in your back
+                up directory, /etc/sdc3000, with the files in the /etc/sdc directory. Then update
                 the new files in the /etc/sdc directory with any customizations made in the previous
-                files in the /etc/sdc2700 directory.</p>
+                files in the /etc/sdc3000 directory.</p>
 
         </div>
 

@@ -86,7 +86,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d45956e2179">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d46393e2179">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
@@ -148,7 +148,7 @@
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP endpoint and processes
                               the contents of all authorized CoAP requests.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
+                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="The Directory origin reads data from files in a directory. The origin can use multiple threads to enable the parallel processing of files.">Directory</a> - Reads fully written files from a
                               directory.</li>
 
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
@@ -156,6 +156,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files from
+                              HDFS. </li>
 
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
                               the contents of all authorized HTTP POST and PUT requests. </li>
@@ -370,7 +373,7 @@
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP endpoint and processes
                               the contents of all authorized CoAP requests.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="Configure a first file for processing when you want Directory to ignore one or more existing files in the directory.You can configure Directory to read files in a late directory - a directory that appears after the pipeline starts. The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available. Configure a Directory origin to read data from files in a directory.">Directory</a> - Reads fully written files from a
+                        <li class="li"><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq" title="The Directory origin reads data from files in a directory. The origin can use multiple threads to enable the parallel processing of files.">Directory</a> - Reads fully written files from a
                               directory.</li>
 
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
@@ -378,6 +381,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files from
+                              HDFS. </li>
 
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
                               the contents of all authorized HTTP POST and PUT requests. </li>
