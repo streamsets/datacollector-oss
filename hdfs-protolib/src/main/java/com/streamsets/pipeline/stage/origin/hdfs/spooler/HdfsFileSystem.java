@@ -197,6 +197,9 @@ public class HdfsFileSystem implements WrappedFileSystem {
   }
 
   public WrappedFile getFile(String dirPath, String filePath) {
+    if (filePath.startsWith(File.separator)) {
+      filePath = filePath.replaceFirst(File.separator, "");
+    }
     Path path = new Path(dirPath, filePath);
     return new HdfsFile(fs, path);
   }
