@@ -1220,6 +1220,20 @@ public class ClusterProviderImpl implements ClusterProvider {
       libJarString.append(",").append(jarToShip);
     }
     args.add(libJarString.toString());
+
+    // Add Security options
+    if (securityConfiguration != null && securityConfiguration.isKerberosEnabled()) {
+      args.add("--keytab");
+      args.add(securityConfiguration.getKerberosKeytab());
+      args.add("--principal");
+      args.add(securityConfiguration.getKerberosPrincipal());
+
+      String jaasPath = System.getProperty(WebServerTask.JAVA_SECURITY_AUTH_LOGIN_CONFIG);
+      String loginConf = "-Djava.security.auth.login.config";
+      args.add("--conf");
+      args.add(Joiner.on("=").join("spark.driver.extraJavaOptions", loginConf, jaasPath));
+      javaOpts = Utils.format("{} {}={}", javaOpts, loginConf, jaasPath);
+    }
     // use our javaagent and java opt configs
     args.add("--conf");
     args.add("spark.executor.extraJavaOptions=" +

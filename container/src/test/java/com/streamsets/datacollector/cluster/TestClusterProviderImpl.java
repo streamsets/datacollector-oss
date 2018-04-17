@@ -26,6 +26,7 @@ import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -33,6 +34,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -49,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -505,6 +508,68 @@ public class TestClusterProviderImpl {
                 "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
             "--conf", "spark" +
             ".executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar ",
+            "--conf", "a=b",
+            "--name", "StreamSets Data Collector: label",
+            "--class", "com" +
+            ".streamsets.pipeline.BootstrapClusterStreaming",
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
+        MockSystemProcess.args.toArray()
+    );
+  }
+
+  @Test
+  public void testYarnStreamingWithKerberos() throws Throwable {
+    String id = "application_1429587312661_0025";
+    MockSystemProcess.output.add(" " + id + " ");
+    MockSystemProcess.output.add(" " + id + " ");
+    System.setProperty("java.security.auth.login.config", "/etc/kafka-client-jaas.conf");
+    File keytab = new File(resourcesDir, "sdc.keytab");
+    keytab.createNewFile();
+    String principal = Utils.format("{}/{}", "sdc", InetAddress.getLocalHost().getHostName());
+
+    PipelineConfiguration pipelineConfKrb = pipelineConf.createWithNewConfig(new Config("kerberosPrincipal", "sdc"))
+        .createWithNewConfig(new Config("kerberosKeytab", keytab.getAbsolutePath()));
+    pipelineConfKrb.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
+        "aaa", null, null, null, true, null, "x", "y"));
+
+    URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+
+    Configuration conf = new Configuration();
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, keytab.getAbsolutePath());
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, SecurityConfiguration.KERBEROS_PRINCIPAL_DEFAULT);
+
+    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf), null));
+    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+        Mockito.eq(ExecutionMode.CLUSTER_BATCH),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.any(StageLibraryTask.class)
+    );
+
+    Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+        providerTemp, env, sourceInfo, pipelineConfKrb, stageLibrary, etcDir, resourcesDir, webDir,
+        bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            Collections.<MetricsRuleDefinition>emptyList(),
+            Collections.<DataRuleDefinition>emptyList(),
+            Collections.<DriftRuleDefinition>emptyList(),
+            Collections.<String>emptyList(),
+            UUID.randomUUID(),
+            Collections.<Config>emptyList()
+        ), null).getId());
+    Assert.assertArrayEquals(
+        new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster", "--executor-memory", "512m",
+            "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +
+            ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
+            "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
+            "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
+                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
+            "--keytab", "<masked>/resources-src/sdc.keytab", "--principal", principal,
+            "--conf", "spark.driver.extraJavaOptions=-Djava.security.auth.login.config=/etc/kafka-client-jaas.conf",
+            "--conf", "spark.executor.extraJavaOptions=" +
+            "-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar  -Djava.security.auth.login.config=/etc/kafka-client-jaas.conf" ,
             "--conf", "a=b",
             "--name", "StreamSets Data Collector: label",
             "--class", "com" +
