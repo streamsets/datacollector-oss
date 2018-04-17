@@ -15,9 +15,6 @@
  */
 package com.streamsets.pipeline.lib.event;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
@@ -26,10 +23,11 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ToEventContext;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,14 +75,14 @@ public class EventCreator {
   public static class Builder {
     private String name;
     private int version;
-    private ImmutableSet.Builder<String> requiredFields;
-    private ImmutableSet.Builder<String> optionalFields;
+    private Set<String> requiredFields;
+    private Set<String> optionalFields;
 
     public Builder(String name, int version) {
       this.name = name;
       this.version = version;
-      this.requiredFields = ImmutableSet.builder();
-      this.optionalFields = ImmutableSet.builder();
+      this.requiredFields = new HashSet<>();
+      this.optionalFields = new HashSet<>();
     }
 
     public Builder withRequiredField(String field) {
@@ -98,11 +96,16 @@ public class EventCreator {
     }
 
     public EventCreator build() {
-      Set<String> required = requiredFields.build();
-      Set<String> optional = optionalFields.build();
-      Set<String> requiredAndOptional = Sets.union(required, optional);
+      Set<String> requiredAndOptional = new HashSet<>();
+      requiredAndOptional.addAll(requiredFields);
+      requiredAndOptional.addAll(optionalFields);
 
-      return new EventCreator(name, version, required, requiredAndOptional);
+      return new EventCreator(
+        name,
+        version,
+        Collections.unmodifiableSet(requiredFields),
+        Collections.unmodifiableSet(requiredAndOptional)
+      );
     }
   }
 
@@ -198,10 +201,19 @@ public class EventCreator {
      */
     public EventRecord create() {
       // Verify all required and optional fields
-      Set<String> missingRequiredFields = Sets.difference(requiredFields, rootMap.keySet());
-      Preconditions.checkState(missingRequiredFields.size() == 0, "Some of the required fields are missing: " + StringUtils.join(missingRequiredFields, ","));
-      Set<String> unknownFields = Sets.difference(rootMap.keySet(), requiredAndOptionalFields);
-      Preconditions.checkState(unknownFields.size() == 0, "There are unknown fields: " + StringUtils.join(unknownFields, ","));
+      Set<String> missingRequiredFields = new HashSet<>();
+      missingRequiredFields.addAll(requiredFields);
+      missingRequiredFields.removeAll(rootMap.keySet());
+      if(!missingRequiredFields.isEmpty()) {
+        throw new IllegalStateException("Some of the required fields are missing: " + String.join(",", missingRequiredFields));
+      }
+
+      Set<String> unknownFields = new HashSet<>();
+      unknownFields.addAll(rootMap.keySet());
+      unknownFields.removeAll(requiredAndOptionalFields);
+      if(!unknownFields.isEmpty()) {
+        throw new IllegalStateException("There are unknown fields: " + String.join(",", unknownFields));
+      }
 
       // And finally build the event itself
       String recordSourceId = Utils.format("event:{}:{}:{}", name, version, System.currentTimeMillis());

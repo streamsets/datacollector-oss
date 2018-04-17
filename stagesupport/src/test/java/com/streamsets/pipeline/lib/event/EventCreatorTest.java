@@ -15,23 +15,21 @@
  */
 package com.streamsets.pipeline.lib.event;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Target;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class EventCreatorTest {
 
@@ -110,8 +108,8 @@ public class EventCreatorTest {
 
   @Before
   public void setUp() {
-    context = mock(Target.Context.class);
-    when(context.createEventRecord(anyString(), anyInt(), anyString())).thenReturn(new CustomEventRecordImpl());
+    context = Mockito.mock(Target.Context.class);
+    Mockito.when(context.createEventRecord(Matchers.anyString(), Matchers.anyInt(), Matchers.anyString())).thenReturn(new CustomEventRecordImpl());
 
     creator = new EventCreator.Builder("custom-event", 1)
       .withRequiredField("A")
@@ -152,9 +150,14 @@ public class EventCreatorTest {
 
   @Test
   public void testWithStringMap() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("A", "valueA");
+    map.put("B", 2);
+    map.put("C", 1.0);
+
     // Event
     EventRecord event = creator.create(context)
-      .withStringMap("A", ImmutableMap.<String, Object>of("A", "valueA", "B", 2, "C", 1.0))
+      .withStringMap("A", map)
       .create();
 
     assertNotNull(event);
