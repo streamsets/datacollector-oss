@@ -110,6 +110,7 @@ public class DependencyParserExhaustiveTest {
       {"hbase-client-1.2.0-cdh5.11.2.jar", new Dependency("hbase", "1.2.0-cdh5.11.2")},
       {"hive-ant-1.1.0-cdh5.10.1.jar", new Dependency("hive", "1.1.0-cdh5.10.1")},
       {"hive-bridge-0.8.0.2.6.1.0-129.jar", new Dependency("hive-bridge", "0.8.0.2.6.1.0-129")},
+      {"hive-jdbc-1.2.0-mapr-1707-standalone.jar", new Dependency("hive", "1.2.0-mapr-1707-standalone")},
       {"hk2-api-2.5.0-b32.jar", new Dependency("hk2-api", "2.5.0-b32")},
       {"jackson-annotations-2.4.0.jar", new Dependency("jackson", "2.4.0")},
       {"javassist-3.18.1-GA.jar", new Dependency("javassist", "3.18.1-GA")},

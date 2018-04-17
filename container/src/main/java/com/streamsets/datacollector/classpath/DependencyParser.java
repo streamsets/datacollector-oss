@@ -58,7 +58,7 @@ public class DependencyParser {
     "-([0-9.]+-kafka-[0-9.]+)",
     // MapR
     "-([0-9.]+-mapr-beta)",
-    "-([0-9.]+-mapr-[0-9.]+(-beta)?)",
+    "-([0-9.]+-mapr-[0-9.]+(-beta|-standalone)?)",
     "-([0-9.]+-mapr)",
     // Time based (like '3.0.0.v201112011016')
     "-([0-9.]+\\.v[0-9.]+)",
