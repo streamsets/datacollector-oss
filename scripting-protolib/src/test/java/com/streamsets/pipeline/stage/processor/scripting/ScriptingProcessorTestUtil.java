@@ -15,8 +15,6 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -29,12 +27,16 @@ import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.RecordHeaderCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -480,7 +482,7 @@ public class ScriptingProcessorTestUtil {
       Record record = RecordCreator.create();
       record.set(Field.create(Collections.<String, Field>emptyMap()));
 
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      StageRunner.Output output = runner.runProcess(Collections.singletonList(record));
 
       List<EventRecord> events = runner.getEventRecords();
       Assert.assertNotNull(events);
@@ -635,17 +637,19 @@ public class ScriptingProcessorTestUtil {
     assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
     Map<String, Field> outMap = outRec.get().getValueAsMap();
 
+    List<Field> nullList = new ArrayList<>();
+    nullList.add(Field.create("elem1"));
+    nullList.add(Field.create("elem2"));
+
+    Map<String, Field> nullMap = new HashMap<>();
+    nullMap.put("x", Field.create("X"));
+    nullMap.put("y", Field.create("Y"));
+
     assertFieldUtil("null_int", outMap.get("null_int"), 123);
     assertFieldUtil("null_string", outMap.get("null_string"), "test");
     assertFieldUtil("null_boolean", outMap.get("null_boolean"), true);
-    assertFieldUtil("null_list", outMap.get("null_list"),
-        ImmutableList.of(Field.create("elem1"), Field.create("elem2"))
-    );
-    assertFieldUtil("null_map", outMap.get("null_map"),
-        ImmutableMap.of(
-            "x", Field.create("X"),
-            "y", Field.create("Y"))
-    );
+    assertFieldUtil("null_list", outMap.get("null_list"), nullList);
+    assertFieldUtil("null_map", outMap.get("null_map"),  nullMap);
 
     assertFieldUtil("null_datetime", outMap.get("null_datetime"), record.get("/null_datetime").getValueAsDatetime());
   }
@@ -680,7 +684,7 @@ public class ScriptingProcessorTestUtil {
 
     } finally {
       runner.runDestroy();
-      FileUtils.deleteDirectory(testDirectory);
+      deleteDirectory(Paths.get(testDir));
     }
 
     List<Record> records = output.getRecords().get("lane");
@@ -701,6 +705,23 @@ public class ScriptingProcessorTestUtil {
 
     assertTrue(record.has("/fileRef"));
     assertEquals(Field.Type.FILE_REF, record.get("/fileRef").getType());
+  }
+
+  private static void deleteDirectory(Path path) throws IOException {
+    Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        Files.delete(dir);
+        return FileVisitResult.CONTINUE;
+      }
+
+    });
   }
 
   public static <C extends Processor> void verifyCreateRecord(
@@ -895,7 +916,7 @@ public class ScriptingProcessorTestUtil {
 
   public static <C extends Processor> void verifyConstants(Class<C> clazz, Processor processor) throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
-        .addConstants(ImmutableMap.of("company", "StreamSets"))
+        .addConstants(Collections.singletonMap("company", "StreamSets"))
         .addOutputLane("lane")
         .build();
 
@@ -1016,7 +1037,7 @@ public class ScriptingProcessorTestUtil {
 
     runner.runInit();
     try {
-      runner.runProcess(ImmutableList.of(record));
+      runner.runProcess(Collections.singletonList(record));
       Assert.fail("Expected exception");
     } catch(Exception e) {
       Assert.assertTrue(e.toString(), e.toString().contains("Script sent record to error"));
@@ -1040,7 +1061,7 @@ public class ScriptingProcessorTestUtil {
     runner.runInit();
     StageRunner.Output output;
     try {
-      output = runner.runProcess(ImmutableList.of(record));
+      output = runner.runProcess(Collections.singletonList(record));
     } finally {
       runner.runDestroy();
     }
@@ -1063,7 +1084,7 @@ public class ScriptingProcessorTestUtil {
     runner.runInit();
     StageRunner.Output output;
     try {
-      output = runner.runProcess(ImmutableList.of(record));
+      output = runner.runProcess(Collections.singletonList(record));
     } finally {
       runner.runDestroy();
     }

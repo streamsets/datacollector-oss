@@ -199,6 +199,7 @@
     <module>sdc-solr_6</module>
     <module>spark-executor-protolib</module>
     <module>spark-processor-protolib</module>
+    <module>scripting-protolib</module>
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)

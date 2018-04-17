@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2018 StreamSets Inc.
+    Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
     limitations under the License.
 
 -->
-
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.streamsets</groupId>
@@ -27,19 +26,11 @@
     <version>3.3.0.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
-  <artifactId>streamsets-datacollector-guavasupport</artifactId>
+  <artifactId>streamsets-datacollector-scripting-protolib</artifactId>
   <version>3.3.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Guava Support Libraries</description>
-  <name>StreamSets Data Collector Guava Support Libraries</name>
+  <description>StreamSets Data Collector Scripting Protolib</description>
+  <name>StreamSets Data Collector Scripting Protoli</name>
   <packaging>jar</packaging>
-
-  <!--
-       We're using Guava 18.0 as that is used by the framework, once we will be done cleaning classpath,
-       we should be able to re-evalute if the version needs to be hardcoded here
-  -->
-  <properties>
-    <guava.version>18.0</guava.version>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -50,19 +41,17 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-stagesupport</artifactId>
-      <scope>provided</scope>
     </dependency>
-
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-guavasupport</artifactId>
     </dependency>
 
     <!-- Test Dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-guavasupport</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -71,8 +60,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

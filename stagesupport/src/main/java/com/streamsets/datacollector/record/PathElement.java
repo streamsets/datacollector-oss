@@ -15,11 +15,9 @@
  */
 package com.streamsets.datacollector.record;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,11 +110,10 @@ public class PathElement {
       boolean isSingleQuoteEscaped,
       boolean includeFieldPathExpressionElements
   ) {
-    fieldPath =
-        EscapeUtil.standardizePathForParse(
-            Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null"),
-            isSingleQuoteEscaped
-        );
+    if(fieldPath == null) {
+      throw new NullPointerException("fieldPath cannot be null");
+    }
+    fieldPath = EscapeUtil.standardizePathForParse(fieldPath, isSingleQuoteEscaped);
     List<PathElement> elements = new ArrayList<>();
     elements.add(PathElement.ROOT);
     if (!fieldPath.isEmpty()) {
@@ -237,7 +234,7 @@ public class PathElement {
                     final boolean singleCharWildcard = WILDCARD_SINGLE_CHAR.equals(bracketedString);
                     final boolean wildcardAnyLength = WILDCARD_ANY_LENGTH.equals(bracketedString);
                     final boolean wildcardIndex = singleCharWildcard || wildcardAnyLength;
-                    if (wildcardIndex || StringUtils.isNumeric(bracketedString)) {
+                    if (wildcardIndex || bracketedString.matches("[0-9]+")) {
                       // wildcard or numeric index
                       try {
                         int index = singleCharWildcard ? WILDCARD_INDEX_SINGLE_CHAR : WILDCARD_INDEX_ANY_LENGTH;
