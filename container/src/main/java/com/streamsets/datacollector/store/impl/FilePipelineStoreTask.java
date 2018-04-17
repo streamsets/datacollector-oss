@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.PipelineFragmentConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -685,7 +686,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       PipelineFragmentConfiguration pipelineFragmentConfiguration = new PipelineFragmentConfiguration(
           uuid,
-          PipelineConfigBean.VERSION,
+          PipelineFragmentConfigBean.VERSION,
           SCHEMA_VERSION,
           pipelineTitle,
           pipelineId,
@@ -694,7 +695,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           Collections.emptyList(),
           Collections.emptyList(),
           Collections.emptyMap(),
-          stageLibrary.getPipeline().getPipelineDefaultConfigs()
+          stageLibrary.getPipelineFragment().getPipelineFragmentDefaultConfigs()
       );
       pipelineFragmentConfiguration.setPipelineInfo(info);
       return pipelineFragmentConfiguration;

@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.fragment;
+package com.streamsets.pipeline.stage.origin.fragment;
 
-import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.fragment.FragmentConfigBean;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
-    label = "Fragment Input Processor",
-    icon="dev.png",
-    execution = {
-        ExecutionMode.STANDALONE,
-        ExecutionMode.CLUSTER_BATCH,
-        ExecutionMode.CLUSTER_YARN_STREAMING,
-        ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
-    },
-    onlineHelpRefUrl =""
+  version = 1,
+  label = "Fragment Origin",
+  icon = "fragment.png",
+  onlineHelpRefUrl =""
 )
-// This is hidden by the UI, so the help, icon, description, label etc don't matter at all. Only execution mode matters.
-// The UI will not allow the input lane for this processor to change.
-public class FragmentInputProcessor extends BaseFragmentIdentityProcessor {
+@HideConfigs(preconditions = true, onErrorRecord = true)
+public class FragmentSource extends BaseSource {
 
+  @ConfigDefBean
+  public FragmentConfigBean conf = new FragmentConfigBean();
+
+  @Override
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
+    return null;
+  }
 }

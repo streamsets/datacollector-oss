@@ -127,7 +127,8 @@ public class TestStoreApi {
     // Create Pipeline Fragment
     PipelineFragmentEnvelopeJson fragmentEnvelope = storeApi.createDraftPipelineFragment(
         pipelineName,
-        "Testing Fragment"
+        "Testing Fragment",
+        null
     );
     Assert.assertNotNull(fragmentEnvelope);
 

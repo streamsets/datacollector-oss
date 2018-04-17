@@ -27,6 +27,7 @@ import com.streamsets.datacollector.client.model.PipelineFragmentEnvelopeJson;
 import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.PipelineOrderByFields;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
+import com.streamsets.datacollector.client.model.StageConfigurationJson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,9 +167,10 @@ public class StoreApi {
    */
   public PipelineFragmentEnvelopeJson createDraftPipelineFragment (
       String fragmentId,
-      String description
+      String description,
+      List<StageConfigurationJson> stageInstances
   ) throws ApiException {
-    Object postBody = null;
+    Object postBody = stageInstances;
     byte[] postBinaryBody = null;
 
     // verify the required parameter 'pipelineId' is set

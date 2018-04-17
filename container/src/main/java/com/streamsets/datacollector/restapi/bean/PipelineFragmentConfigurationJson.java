@@ -19,11 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
+import com.streamsets.datacollector.config.StageConfiguration;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineFragmentConfigurationJson implements Serializable {
@@ -109,7 +112,21 @@ public class PipelineFragmentConfigurationJson implements Serializable {
   }
 
   public List<StageConfigurationJson> getStages() {
-    return BeanHelper.wrapStageConfigurations(fragmentConfiguration.getStages());
+    if (CollectionUtils.isEmpty(fragments)) {
+      return BeanHelper.wrapStageConfigurations(fragmentConfiguration.getStages());
+    } else {
+      // update original stages
+      List<StageConfiguration> originalStages = fragmentConfiguration.getOriginalStages()
+          .stream()
+          .map(stageConfiguration -> fragmentConfiguration.getStages()
+              .stream()
+              .filter(upgraded -> upgraded.getInstanceName().equals(stageConfiguration.getInstanceName()))
+              .findFirst()
+              .orElse(stageConfiguration)
+          )
+          .collect(Collectors.toList());
+      return BeanHelper.wrapStageConfigurations(originalStages);
+    }
   }
 
   public UUID getUuid() {

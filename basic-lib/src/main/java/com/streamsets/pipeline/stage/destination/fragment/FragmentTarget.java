@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.fragment;
+package com.streamsets.pipeline.stage.destination.fragment;
 
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.lib.fragment.FragmentConfigBean;
 
-@GenerateResourceBundle
 @StageDef(
     version = 1,
-    label = "Fragment Output Processor",
-    icon="dev.png",
+    label = "Fragment Destination",
+    icon="fragment.png",
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,
@@ -33,8 +38,15 @@ import com.streamsets.pipeline.api.StageDef;
     },
     onlineHelpRefUrl =""
 )
-// This is hidden by the UI, so the help, icon, description, label etc don't matter at all. Only execution mode matters.
-// The UI will not allow the output lane for this processor to change.
-public class FragmentOutputProcessor extends BaseFragmentIdentityProcessor {
+@HideConfigs(preconditions = true, onErrorRecord = true)
+@GenerateResourceBundle
+public class FragmentTarget extends BaseTarget {
+
+  @ConfigDefBean
+  public FragmentConfigBean conf = new FragmentConfigBean();
+
+  @Override
+  public void write(Batch batch) throws StageException {
+  }
 
 }

@@ -17,11 +17,13 @@ package com.streamsets.datacollector.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,11 +45,27 @@ public class PipelineFragmentConfiguration implements Serializable {
   protected String description;
   protected List<PipelineFragmentConfiguration> fragments;
   protected List<StageConfiguration> stages;
+  protected List<StageConfiguration> resolvedStages; // resolved stages from fragments
   protected Issues issues;
   protected List<Config> configuration;
   protected Map<String, Object> metadata;
   private PipelineInfo info;
   protected boolean previewable;
+
+  public static final String FRAGMENT_SOURCE_STAGE_NAME =
+      "com_streamsets_pipeline_stage_origin_fragment_FragmentSource";
+  public static final String FRAGMENT_PROCESSOR_STAGE_NAME =
+      "com_streamsets_pipeline_stage_processor_fragment_FragmentProcessor";
+  public static final String FRAGMENT_TARGET_STAGE_NAME =
+      "com_streamsets_pipeline_stage_destination_fragment_FragmentTarget";
+  public static final String CONF_FRAGMENT_ID= "conf.fragmentId";
+  public static final String CONF_FRAGMENT_INSTANCE_ID= "conf.fragmentInstanceId";
+
+  private static final List<String> FRAGMENT_STAGE_NAMES = ImmutableList.of(
+      FRAGMENT_SOURCE_STAGE_NAME,
+      FRAGMENT_PROCESSOR_STAGE_NAME,
+      FRAGMENT_TARGET_STAGE_NAME
+  );
 
   public PipelineFragmentConfiguration(
       UUID uuid,
@@ -68,11 +86,13 @@ public class PipelineFragmentConfiguration implements Serializable {
     this.schemaVersion = schemaVersion;
     this.title = title;
     this.pipelineId = pipelineId;
+    this.fragmentInstanceId = fragmentInstanceId;
     this.description = description;
     this.fragments = Optional.ofNullable(fragments).orElse(Collections.emptyList());
     this.stages = (stages != null) ? stages : Collections.emptyList();
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<>();
     this.configuration = new ArrayList<>(configuration);
+    this.processStages();
   }
 
   public void setInfo(PipelineInfo info) {
@@ -147,11 +167,15 @@ public class PipelineFragmentConfiguration implements Serializable {
   }
 
   public List<StageConfiguration> getStages() {
+    return resolvedStages;
+  }
+
+  public List<StageConfiguration> getOriginalStages() {
     return stages;
   }
 
   public void setStages(List<StageConfiguration> stages) {
-    this.stages = stages;
+    this.resolvedStages = stages;
   }
 
   public void setUuid(UUID uuid) {
@@ -238,4 +262,45 @@ public class PipelineFragmentConfiguration implements Serializable {
   public void setMetadata(Map<String, Object> metadata) {
     this.metadata = metadata;
   }
+
+  private void processStages() {
+    if (CollectionUtils.isEmpty(fragments)) {
+      this.resolvedStages = stages;
+    } else {
+      this.resolvedStages = new ArrayList<>();
+      this.stages.forEach(stageInstance -> {
+        if (isFragmentStage(stageInstance)) {
+          resolvedStages.addAll(this.getFragmentStages(stageInstance));
+        } else {
+          resolvedStages.add(stageInstance);
+        }
+      });
+    }
+  }
+
+  private boolean isFragmentStage(StageConfiguration stageInstance) {
+    return FRAGMENT_STAGE_NAMES.contains(stageInstance.getStageName());
+  }
+
+  private List<StageConfiguration> getFragmentStages(StageConfiguration stageInstance) {
+    Config fragmentIdConfig = stageInstance.getConfig(CONF_FRAGMENT_ID);
+    Config fragmentInstanceIdConfig = stageInstance.getConfig(CONF_FRAGMENT_INSTANCE_ID);
+
+    if (fragmentIdConfig != null && fragmentInstanceIdConfig != null) {
+      String fragmentId = (String) fragmentIdConfig.getValue();
+      String fragmentInstanceId = (String) fragmentInstanceIdConfig.getValue();
+
+      PipelineFragmentConfiguration fragment = getFragments()
+          .stream()
+          .filter(f -> f.getFragmentInstanceId().equals(fragmentInstanceId) && f.getPipelineId().equals(fragmentId))
+          .findFirst()
+          .orElse(null);
+
+      if (fragment != null) {
+        return fragment.getStages();
+      }
+    }
+    return Collections.emptyList();
+  }
+
 }

@@ -58,7 +58,6 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     this.pipelineConfiguration = pipelineConfiguration;
   }
 
-  @Override
   public PipelineConfiguration validate() {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;

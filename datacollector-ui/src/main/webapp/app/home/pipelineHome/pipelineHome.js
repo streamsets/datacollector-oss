@@ -1129,6 +1129,11 @@ angular
         $scope.isDPMPipelineDirty = true;
       }
 
+      if (pipelineConfig.fragments && pipelineConfig.fragments.length) {
+        // Pipeline contains fragments - so mark it readonly
+        $scope.isPipelineReadOnly = true;
+      }
+
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 

@@ -443,11 +443,7 @@ public class ApiClient {
     } else if ("POST".equals(method)) {
       response = builder.post(Entity.entity(body, contentType));
     } else if ("PUT".equals(method)) {
-      if(body != null) {
-        response = builder.put(Entity.entity(body, contentType));
-      } else {
-        response = builder.put(Entity.text(""));
-      }
+      response = builder.put(Entity.entity(body, contentType));
     } else if ("DELETE".equals(method)) {
       response = builder.delete();
     } else {

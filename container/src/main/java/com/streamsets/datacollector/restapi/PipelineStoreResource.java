@@ -57,6 +57,7 @@ import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -79,6 +80,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -122,7 +124,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -756,6 +757,7 @@ public class PipelineStoreResource {
 
   @Path("/fragment/{pipelineFragmentTitle}")
   @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
@@ -763,7 +765,8 @@ public class PipelineStoreResource {
   public Response createPipelineFragment(
       @PathParam("pipelineFragmentTitle") String pipelineFragmentTitle,
       @QueryParam("description") @DefaultValue("") String description,
-      @QueryParam("draft") @DefaultValue("true") boolean draft
+      @QueryParam("draft") @DefaultValue("true") boolean draft,
+      List<StageConfigurationJson> stageConfigurations
   ) throws PipelineException {
     String pipelineId = pipelineFragmentTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
     RestAPIUtils.injectPipelineInMDC(pipelineFragmentTitle + "/" + pipelineId);
@@ -774,6 +777,27 @@ public class PipelineStoreResource {
         description,
         draft
     );
+
+    if (!CollectionUtils.isEmpty(stageConfigurations)) {
+      List<StageConfiguration> stageInstances = BeanHelper.unwrapStageConfigurations(stageConfigurations);
+      // cleanup input lanes
+      List<String> availableOutputLanes = stageInstances
+          .stream()
+          .map(StageConfiguration::getOutputAndEventLanes)
+          .collect(ArrayList::new, List::addAll, List::addAll);
+
+      stageInstances.forEach(stageConfiguration -> {
+        List<String> filteredInputLanes = stageConfiguration
+            .getInputLanes()
+            .stream()
+            .filter(availableOutputLanes::contains)
+            .collect(Collectors.toList());
+        stageConfiguration.getInputLanes().clear();
+        stageConfiguration.getInputLanes().addAll(filteredInputLanes);
+      });
+
+      pipelineFragmentConfig.setStages(stageInstances);
+    }
 
     RuleDefinitions ruleDefinitions = new RuleDefinitions(
         PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
@@ -792,7 +816,7 @@ public class PipelineStoreResource {
         pipelineId,
         pipelineFragmentConfig
     );
-    pipelineFragmentConfig = validator.validate();
+    pipelineFragmentConfig = validator.validateFragment();
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
@@ -1039,8 +1063,17 @@ public class PipelineStoreResource {
       List<StageDefinition> stageDefinitions = new ArrayList<>();
       Map<String, String> stageIcons = new HashMap<>();
 
-      for (StageConfiguration conf : pipelineConfig.getStages()) {
+      for (StageConfiguration conf : pipelineConfig.getOriginalStages()) {
         fetchStageDefinition(conf, stageDefinitions, stageIcons);
+      }
+
+      // add from fragments
+      if (CollectionUtils.isEmpty(pipelineConfig.getFragments())) {
+        pipelineConfig.getFragments().forEach(pipelineFragmentConfiguration -> {
+          for (StageConfiguration conf : pipelineFragmentConfiguration.getOriginalStages()) {
+            fetchStageDefinition(conf, stageDefinitions, stageIcons);
+          }
+        });
       }
 
       StageConfiguration errorStageConfig = pipelineConfig.getErrorStage();
@@ -1253,7 +1286,7 @@ public class PipelineStoreResource {
         fragmentId,
         fragmentConfig
     );
-    fragmentConfig = validator.validate();
+    fragmentConfig = validator.validateFragment();
 
     RuleDefinitionsJson ruleDefinitionsJson = fragmentEnvelope.getPipelineRules();
     RuleDefinitions ruleDefinitions = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);

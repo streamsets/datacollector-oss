@@ -94,7 +94,7 @@ public class PipelineFragmentConfigurationValidator {
 
   boolean sortStages() {
     boolean ok = true;
-    List<StageConfiguration> original = new ArrayList<>(getStagesFromFragment(pipelineFragmentConfiguration));
+    List<StageConfiguration> original = new ArrayList<>(pipelineFragmentConfiguration.getStages());
     List<StageConfiguration> sorted = new ArrayList<>();
     Set<String> producedOutputs = new HashSet<>();
     while (ok && !original.isEmpty()) {
@@ -123,17 +123,7 @@ public class PipelineFragmentConfigurationValidator {
     return ok;
   }
 
-  private List<StageConfiguration> getStagesFromFragment(PipelineFragmentConfiguration fragmentConfiguration) {
-    List<StageConfiguration> fragmentStages =
-        fragmentConfiguration.getFragments()
-            .stream()
-            .flatMap(fragment -> getStagesFromFragment(fragment).stream())
-            .collect(Collectors.toList());
-    fragmentStages.addAll(fragmentConfiguration.getStages());
-    return fragmentStages;
-  }
-
-  public PipelineFragmentConfiguration validate() {
+  public PipelineFragmentConfiguration validateFragment() {
     Preconditions.checkState(!validated, "Already validated");
     isPipelineFragment = true;
     validated = true;
@@ -141,10 +131,10 @@ public class PipelineFragmentConfigurationValidator {
     canPreview = resolveLibraryAliases();
     // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
     // upgrade is not successful.
-    canPreview &= upgradePipeline() && addMissingConfigs();
+    canPreview &= upgradePipelineFragment() && addPipelineFragmentMissingConfigs();
     canPreview &= sortStages();
     canPreview &= checkIfPipelineIsEmpty();
-    canPreview &= loadAndValidatePipelineConfig();
+    canPreview &= loadAndValidatePipelineFragmentConfig();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
     canPreview &= validateEventAndDataLanesDoNotCross();
@@ -227,24 +217,13 @@ public class PipelineFragmentConfigurationValidator {
     return PipelineConfigurationUpgrader.get();
   }
 
-  private boolean upgradePipeline() {
-    List<Issue> upgradeIssues = new ArrayList<>();
-    /*
-    PipelineFragmentConfiguration pConf = getUpgrader().upgradeIfNecessary(
-        stageLibrary,
-        pipelineFragmentConfiguration,
-        upgradeIssues
-    );
-    if (pConf != null) {
-      pipelineFragmentConfiguration = pConf;
-    }
-    */
-    issues.addAll(upgradeIssues);
-    return upgradeIssues.isEmpty();
+  private boolean upgradePipelineFragment() {
+    // For Fragment Version 1 - no upgrade required
+    return true;
   }
 
-  private boolean addMissingConfigs() {
-    for (ConfigDefinition configDef : stageLibrary.getPipeline().getConfigDefinitions()) {
+  private boolean addPipelineFragmentMissingConfigs() {
+    for (ConfigDefinition configDef : stageLibrary.getPipelineFragment().getConfigDefinitions()) {
       String configName = configDef.getName();
       Config config = pipelineFragmentConfiguration.getConfiguration(configName);
       if (config == null) {
@@ -257,11 +236,6 @@ public class PipelineFragmentConfigurationValidator {
     for (StageConfiguration stageConf : pipelineFragmentConfiguration.getStages()) {
       addMissingConfigsToStage(stageConf);
     }
-    /*
-    if(pipelineFragmentConfiguration.getErrorStage() != null) {
-      addMissingConfigsToStage(pipelineFragmentConfiguration.getErrorStage());
-    }
-    */
     return true;
   }
 
@@ -371,7 +345,7 @@ public class PipelineFragmentConfigurationValidator {
     return canPreview;
   }
 
-  private boolean loadAndValidatePipelineConfig() {
+  private boolean loadAndValidatePipelineFragmentConfig() {
     List<Issue> errors = new ArrayList<>();
     /*
     pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineFragmentConfiguration, errors);
@@ -459,7 +433,7 @@ public class PipelineFragmentConfigurationValidator {
       preview = false;
     } else {
       if (shouldBeSource) {
-        if (stageDef.getType() != StageType.SOURCE) {
+        if (stageDef.getType() != StageType.SOURCE && !isPipelineFragment) {
           // first stage must be a Source
           issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0003));
           preview = false;
@@ -946,7 +920,7 @@ public class PipelineFragmentConfigurationValidator {
   boolean validateStageConfiguration() {
     boolean preview = true;
     Set<String> stageNames = new HashSet<>();
-    boolean shouldBeSource = !isPipelineFragment;
+    boolean shouldBeSource = true;
     for (StageConfiguration stageConf : pipelineFragmentConfiguration.getStages()) {
       if (stageNames.contains(stageConf.getInstanceName())) {
         // duplicate stage instance name in the pipeline

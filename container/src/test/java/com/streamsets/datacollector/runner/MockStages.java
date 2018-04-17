@@ -1199,11 +1199,6 @@ public class MockStages {
   }
 
   public static PipelineConfiguration createPipelineConfigSourceFragmentTarget() {
-    List<StageConfiguration> stages = new ArrayList<>();
-    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-        .withOutputLanes("s")
-        .build();
-    stages.add(source);
     StageConfiguration processor = new StageConfigurationBuilder("p", "processorName")
         .withInputLanes("s")
         .withOutputLanes("p1")
@@ -1212,10 +1207,6 @@ public class MockStages {
         .withInputLanes("p1")
         .withOutputLanes("p")
         .build();
-    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-        .withInputLanes("p")
-        .build();
-    stages.add(target);
     PipelineFragmentConfiguration fragment = new PipelineFragmentConfiguration(
         UUID.randomUUID(),
         1,
@@ -1229,6 +1220,35 @@ public class MockStages {
         Collections.emptyMap(),
         Collections.emptyList()
     );
+    fragment.setFragmentInstanceId("fragment_01");
+
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+        .withOutputLanes("s")
+        .build();
+    stages.add(source);
+
+    StageConfiguration fragmentProcessor =
+        new StageConfigurationBuilder("fp1", PipelineFragmentConfiguration.FRAGMENT_PROCESSOR_STAGE_NAME)
+            .withInputLanes("s")
+            .withOutputLanes("p")
+            .withConfig(
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_ID,
+                    fragment.getPipelineId()
+                ),
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_INSTANCE_ID,
+                    fragment.getFragmentInstanceId()
+                )
+            )
+            .build();
+    stages.add(fragmentProcessor);
+
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+        .withInputLanes("p")
+        .build();
+    stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
@@ -1252,28 +1272,10 @@ public class MockStages {
   }
 
   public static PipelineConfiguration createPipelineConfigSourceFragmentInsideFragmentTarget() {
-    List<StageConfiguration> stages = new ArrayList<>();
-    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-        .withOutputLanes("s")
-        .build();
-    stages.add(source);
-    StageConfiguration processor1 = new StageConfigurationBuilder("p1", "processorName")
-        .withInputLanes("p1")
-        .withOutputLanes("p2")
-        .build();
     StageConfiguration processor2 = new StageConfigurationBuilder("p2", "processorName")
         .withInputLanes("p2")
         .withOutputLanes("p3")
         .build();
-    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-        .withInputLanes("p3")
-        .build();
-    stages.add(target);
-    StageConfiguration processor3 = new StageConfigurationBuilder("p0", "processorName")
-        .withInputLanes("s")
-        .withOutputLanes("p1")
-        .build();
-    stages.add(processor3);
     PipelineFragmentConfiguration nestedFragment = new PipelineFragmentConfiguration(
         UUID.randomUUID(),
         1,
@@ -1287,6 +1289,30 @@ public class MockStages {
         Collections.emptyMap(),
         Collections.emptyList()
     );
+    nestedFragment.setFragmentInstanceId("nestedFragment_01");
+
+
+    StageConfiguration processor1 = new StageConfigurationBuilder("p1", "processorName")
+        .withInputLanes("p1")
+        .withOutputLanes("p2")
+        .build();
+
+    StageConfiguration fragmentProcessor =
+        new StageConfigurationBuilder("fp1", PipelineFragmentConfiguration.FRAGMENT_PROCESSOR_STAGE_NAME)
+            .withInputLanes("p2")
+            .withOutputLanes("p3")
+            .withConfig(
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_ID,
+                    nestedFragment.getPipelineId()
+                ),
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_INSTANCE_ID,
+                    nestedFragment.getFragmentInstanceId()
+                )
+            )
+            .build();
+
     PipelineFragmentConfiguration fragment = new PipelineFragmentConfiguration(
         UUID.randomUUID(),
         1,
@@ -1296,10 +1322,45 @@ public class MockStages {
         "random_fragment_instance_id",
         "weird description",
         Collections.singletonList(nestedFragment),
-        Collections.singletonList(processor1),
+        ImmutableList.of(processor1, fragmentProcessor),
         Collections.emptyMap(),
         Collections.emptyList()
     );
+    fragment.setFragmentInstanceId("fragment_01");
+
+
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+        .withOutputLanes("s")
+        .build();
+    stages.add(source);
+
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+        .withInputLanes("p3")
+        .build();
+    stages.add(target);
+    StageConfiguration processor3 = new StageConfigurationBuilder("p0", "processorName")
+        .withInputLanes("s")
+        .withOutputLanes("p1")
+        .build();
+    stages.add(processor3);
+
+    StageConfiguration fragmentProcessor2 =
+        new StageConfigurationBuilder("fp2", PipelineFragmentConfiguration.FRAGMENT_PROCESSOR_STAGE_NAME)
+            .withInputLanes("p1")
+            .withOutputLanes("p3")
+            .withConfig(
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_ID,
+                    fragment.getPipelineId()
+                ),
+                new Config(
+                    PipelineFragmentConfiguration.CONF_FRAGMENT_INSTANCE_ID,
+                    fragment.getFragmentInstanceId()
+                )
+            )
+            .build();
+    stages.add(fragmentProcessor2);
 
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
