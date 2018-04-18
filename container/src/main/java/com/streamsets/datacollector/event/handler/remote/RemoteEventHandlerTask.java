@@ -384,7 +384,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 null
             );
             remoteEventList.add(clientEvent);
-            LOG.debug(Utils.format("Sending event for remote pipeline: '{}' in status: '{}'",
+            LOG.info(Utils.format("Sending event for remote pipeline: '{}' in status: '{}'",
                 pipelineStatusEvent.getName(), pipelineStatusEvent.getPipelineStatus()));
           }
         }
@@ -402,7 +402,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           Set<ServerEvent> eventsAlreadyAcked = eventToAckEventFuture.keySet().stream().filter(serverEvent ->
               eventIds.contains(
               serverEvent.getEventId())).collect(Collectors.toSet());
-          LOG.debug("Removing already acked events {}", eventsAlreadyAcked);
+          LOG.info("Removing already acked events {}", eventsAlreadyAcked);
           eventToAckEventFuture.keySet().removeAll(eventsAlreadyAcked);
         }
         if (!stopWatch.isRunning()) {
