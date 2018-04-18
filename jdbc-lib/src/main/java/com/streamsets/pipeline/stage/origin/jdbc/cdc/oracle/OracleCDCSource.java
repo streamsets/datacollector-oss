@@ -63,7 +63,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -504,19 +503,8 @@ public class OracleCDCSource extends BaseSource {
             Offset offset = null;
             if (LOG.isDebugEnabled()) {
               LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Txn Id = {}, Timestamp = {}, Redo SQL = {}",
-                  commitSCN, scn, op, xid, tsDate, queryString);
-            }
-
-            RuleContextAndOpCode ctxOp = null;
-            try {
-              ctxOp = getRuleContextAndCode(queryString, op);
-            } catch (UnparseableSQLException ex) {
-              try {
-                errorRecordHandler.onError(JDBC_43, queryString);
-              } catch (StageException stageException) {
-                addToStageExceptionsQueue(stageException);
-              }
-              continue;
+                  commitSCN, scn, op, xid, tsDate, queryString
+              );
             }
 
             if (op != DDL_CODE && op != COMMIT_CODE && op != ROLLBACK_CODE) {
@@ -543,9 +531,17 @@ public class OracleCDCSource extends BaseSource {
                 if (configBean.keepOriginalQuery) {
                   attributes.put(QUERY_KEY, queryString);
                 }
-                Record record = generateRecord(attributes, ctxOp.operationCode, ctxOp.context);
-                if (record != null && record.getEscapedFieldPaths().size() > 0) {
-                  recordQueue.put(new RecordOffset(record, offset));
+                try {
+                  Record record = generateRecord(queryString, attributes, op);
+                  if (record != null && record.getEscapedFieldPaths().size() > 0) {
+                    recordQueue.put(new RecordOffset(record, offset));
+                  }
+                } catch (UnparseableSQLException ex) {
+                  try {
+                    errorRecordHandler.onError(JDBC_43, queryString);
+                  } catch (StageException stageException) {
+                    addToStageExceptionsQueue(stageException);
+                  }
                 }
               } else {
                 bufferedRecordsLock.lock();
@@ -558,7 +554,7 @@ public class OracleCDCSource extends BaseSource {
 
                   int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
                   RecordSequence node =
-                      new RecordSequence(attributes, queryString, nextSeq, ctxOp.operationCode, rsId, ssn, tsDate);
+                      new RecordSequence(attributes, queryString, nextSeq, op, rsId, ssn, tsDate);
                   records.add(node);
                 } finally {
                   bufferedRecordsLock.unlock();
@@ -699,72 +695,87 @@ public class OracleCDCSource extends BaseSource {
     return useLocalBuffering ? startTime : startTime.minusSeconds(configBean.txnWindow);
   }
 
-  private Record generateRecord(Map<String, String> attributes, int operationCode, ParserRuleContext ruleContext)
-      throws StageException {
+  private Record generateRecord(
+      String sql,
+      Map<String, String> attributes,
+      int operationCode
+  ) throws UnparseableSQLException, StageException {
     String operation;
     SchemaAndTable table = new SchemaAndTable(attributes.get(SCHEMA), attributes.get(TABLE));
-    operation = OperationType.getLabelFromIntCode(operationCode);
-    attributes.put(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
+    int sdcOperationType = getOperation(operationCode);
+    operation = OperationType.getLabelFromIntCode(sdcOperationType);
+    attributes.put(OperationType.SDC_OPERATION_TYPE, String.valueOf(sdcOperationType));
     attributes.put(OPERATION, operation);
-    // Walk it and attach our sqlListener
-    sqlListener.reset();
-    if (configBean.allowNulls && table.isNotEmpty()) {
-      sqlListener.setColumns(tableSchemas.get(table).keySet());
-    }
-
-    parseTreeWalker.walk(sqlListener, ruleContext);
-
-    Map<String, String> columns = sqlListener.getColumns();
-    String rowId = columns.get(ROWID);
-    columns.remove(ROWID);
-    if (rowId != null) {
-      attributes.put(ROWID_KEY, rowId);
-    }
-    Map<String, Field> fields = new HashMap<>();
     String id = useLocalBuffering ?
         attributes.get(RS_ID) + OFFSET_DELIM + attributes.get(SSN) :
         attributes.get(SCN) + OFFSET_DELIM + attributes.get(SEQ);
     Record record = getContext().createRecord(id);
-    List<UnsupportedFieldTypeException> fieldTypeExceptions = new ArrayList<>();
-    for (Map.Entry<String, String> column : columns.entrySet()) {
-      String columnName = column.getKey();
-      try {
-        fields.put(columnName, objectToField(table, columnName, column.getValue()));
-      } catch (UnsupportedFieldTypeException ex) {
-        if (configBean.sendUnsupportedFields) {
-          fields.put(columnName, Field.create(column.getValue()));
-        }
-        fieldTypeExceptions.add(ex);
+    if (configBean.parseQuery) {
+      // Walk it and attach our sqlListener
+      sqlListener.reset();
+      if (configBean.allowNulls && table.isNotEmpty()) {
+        sqlListener.setColumns(tableSchemas.get(table).keySet());
       }
-      if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
-        int precision = decimalColumns.get(table).get(columnName).precision;
-        int scale = decimalColumns.get(table).get(columnName).scale;
-        attributes.put("jdbc." + columnName + ".precision", String.valueOf(precision));
-        attributes.put("jdbc." + columnName + ".scale", String.valueOf(scale));
+
+      parseTreeWalker.walk(sqlListener, getParserRuleContext(sql, operationCode));
+
+      Map<String, String> columns = sqlListener.getColumns();
+      String rowId = columns.get(ROWID);
+      columns.remove(ROWID);
+      if (rowId != null) {
+        attributes.put(ROWID_KEY, rowId);
       }
-    }
-    attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
-    record.set(Field.create(fields));
-    LOG.debug(GENERATED_RECORD, record, attributes.get(XID));
-    Joiner errorStringJoiner = Joiner.on(", ");
-    List<String> errorColumns = Collections.emptyList();
-    if (!fieldTypeExceptions.isEmpty()) {
-      errorColumns = fieldTypeExceptions.stream().map(ex -> {
-            String fieldTypeName = JDBCTypeNames.getOrDefault(ex.fieldType, "unknown");
-            return "[Column = '" + ex.column + "', Type = '" + fieldTypeName + "', Value = '" + ex.columnVal + "']";
+      Map<String, Field> fields = new HashMap<>();
+
+      List<UnsupportedFieldTypeException> fieldTypeExceptions = new ArrayList<>();
+      for (Map.Entry<String, String> column : columns.entrySet()) {
+        String columnName = column.getKey();
+        try {
+          fields.put(columnName, objectToField(table, columnName, column.getValue()));
+        } catch (UnsupportedFieldTypeException ex) {
+          if (configBean.sendUnsupportedFields) {
+            fields.put(columnName, Field.create(column.getValue()));
           }
-      ).collect(Collectors.toList());
-    }
-    if (!fieldTypeExceptions.isEmpty()) {
-      boolean add = handleUnsupportedFieldTypes(record, errorStringJoiner.join(errorColumns));
-      if (add) {
-        return record;
+          fieldTypeExceptions.add(ex);
+        }
+        if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
+          int precision = decimalColumns.get(table).get(columnName).precision;
+          int scale = decimalColumns.get(table).get(columnName).scale;
+          attributes.put("jdbc." + columnName + ".precision", String.valueOf(precision));
+          attributes.put("jdbc." + columnName + ".scale", String.valueOf(scale));
+        }
+      }
+      record.set(Field.create(fields));
+      attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
+
+      LOG.debug(GENERATED_RECORD, record, attributes.get(XID));
+      Joiner errorStringJoiner = Joiner.on(", ");
+      List<String> errorColumns = Collections.emptyList();
+      if (!fieldTypeExceptions.isEmpty()) {
+        errorColumns = fieldTypeExceptions.stream().map(ex -> {
+              String fieldTypeName = JDBCTypeNames.getOrDefault(ex.fieldType, "unknown");
+              return "[Column = '" + ex.column + "', Type = '" + fieldTypeName + "', Value = '" + ex.columnVal + "']";
+            }
+        ).collect(Collectors.toList());
+      }
+      if (!fieldTypeExceptions.isEmpty()) {
+        boolean add = handleUnsupportedFieldTypes(record, errorStringJoiner.join(errorColumns));
+        if (add) {
+          return record;
+        } else {
+          return null;
+        }
       } else {
-        return null;
+        return record;
       }
     } else {
+      attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
+      Map<String, Field> fields = new HashMap<>();
+      fields.put("sql", Field.create(sql));
+      record.set(Field.create(fields));
       return record;
     }
+
   }
 
   private boolean handleUnsupportedFieldTypes(Record r, String error) {
@@ -792,7 +803,7 @@ public class OracleCDCSource extends BaseSource {
       LocalDateTime commitTimestamp,
       String commitScn,
       String xid
-  ) throws StageException, ParseException, InterruptedException {
+  ) throws StageException, InterruptedException {
     TransactionIdKey key = new TransactionIdKey(xid);
     int seq = 0;
     bufferedRecordsLock.lock();
@@ -808,8 +819,8 @@ public class OracleCDCSource extends BaseSource {
           if (configBean.keepOriginalQuery) {
             r.headers.put(QUERY_KEY, r.sqlString);
           }
-          RuleContextAndOpCode ctxOp = getRuleContextAndCode(r.sqlString, r.opCode);
-          Record record = generateRecord(r.headers, ctxOp.operationCode, ctxOp.context);
+          seq = r.seq;
+          Record record = generateRecord(r.sqlString, r.headers, r.opCode);
           if (record != null && record.getEscapedFieldPaths().size() > 0) {
             final RecordOffset recordOffset =
                 new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, r.seq)
@@ -823,7 +834,6 @@ public class OracleCDCSource extends BaseSource {
               }
             }
           }
-          seq = r.seq;
         } catch (UnparseableSQLException ex) {
           try {
             errorRecordHandler.onError(JDBC_43, r.sqlString);
@@ -1648,10 +1658,15 @@ public class OracleCDCSource extends BaseSource {
           if (!configBean.discardExpired) {
             for (RecordSequence x : entry.getValue()) {
               try {
-                RuleContextAndOpCode ctxOp = getRuleContextAndCode(x.sqlString, x.opCode);
-                Record record = generateRecord(x.headers, ctxOp.operationCode, ctxOp.context);
+                Record record = generateRecord(x.sqlString, x.headers, x.opCode);
                 if (record != null) {
                   getContext().toError(record, JDBC_84, entry.getKey().txnId, entry.getKey().txnStartTime);
+                }
+              } catch(UnparseableSQLException ex) {
+                try {
+                  errorRecordHandler.onError(JDBC_43, x.sqlString);
+                } catch (StageException stageException) {
+                  addToStageExceptionsQueue(stageException);
                 }
               } catch (Exception ex) {
                 LOG.error("Error while generating expired record from SQL: " + x.sqlString);
@@ -1693,24 +1708,21 @@ public class OracleCDCSource extends BaseSource {
     this.dataSource = dataSource;
   }
 
-  private RuleContextAndOpCode getRuleContextAndCode(String queryString, int op) throws UnparseableSQLException {
+  private ParserRuleContext getParserRuleContext(String queryString, int op) throws UnparseableSQLException {
     plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(queryString));
     CommonTokenStream tokenStream = new CommonTokenStream(lexer);
     plsqlParser parser = new plsqlParser(tokenStream);
-    RuleContextAndOpCode contextAndOpCode = new RuleContextAndOpCode();
+    ParserRuleContext context = null;
     switch (op) {
       case UPDATE_CODE:
       case SELECT_FOR_UPDATE_CODE:
-        contextAndOpCode.context = parser.update_statement();;
-        contextAndOpCode.operationCode = OperationType.UPDATE_CODE;
+        context = parser.update_statement();
         break;
       case INSERT_CODE:
-        contextAndOpCode.context = parser.insert_statement();
-        contextAndOpCode.operationCode = OperationType.INSERT_CODE;
+        context = parser.insert_statement();
         break;
       case DELETE_CODE:
-        contextAndOpCode.context = parser.delete_statement();
-        contextAndOpCode.operationCode = OperationType.DELETE_CODE;
+        context = parser.delete_statement();
         break;
       case DDL_CODE:
       case COMMIT_CODE:
@@ -1719,7 +1731,24 @@ public class OracleCDCSource extends BaseSource {
       default:
         throw new UnparseableSQLException(queryString);
     }
-    return contextAndOpCode;
+    return context;
+  }
+
+  private int getOperation(int op) {
+    switch (op) {
+      case UPDATE_CODE:
+      case SELECT_FOR_UPDATE_CODE:
+        return OperationType.UPDATE_CODE;
+      case INSERT_CODE:
+        return OperationType.INSERT_CODE;
+      case DELETE_CODE:
+        return OperationType.DELETE_CODE;
+      case DDL_CODE:
+      case COMMIT_CODE:
+      case ROLLBACK_CODE:
+      default:
+        return -1;
+    }
   }
 
   private HashQueue<RecordSequence> createTransactionBuffer(String txnId) {
@@ -1799,11 +1828,6 @@ public class OracleCDCSource extends BaseSource {
           scn + OFFSET_DELIM +
           sequence;
     }
-  }
-
-  private class RuleContextAndOpCode {
-    ParserRuleContext context;
-    int operationCode;
   }
 
   private class RecordOffset {
