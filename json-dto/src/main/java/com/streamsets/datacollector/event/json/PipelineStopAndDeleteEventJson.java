@@ -17,7 +17,7 @@ package com.streamsets.datacollector.event.json;
 
 public class PipelineStopAndDeleteEventJson extends PipelineBaseEventJson {
 
-  private long forceTimeoutMillis = 600000;
+  private long forceTimeoutMillis = 120000;
 
   public PipelineStopAndDeleteEventJson() {
   }
