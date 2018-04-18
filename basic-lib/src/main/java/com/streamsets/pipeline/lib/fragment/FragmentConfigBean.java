@@ -35,27 +35,4 @@ public class FragmentConfigBean {
   )
   public String fragmentInstanceId;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Pipeline Id",
-      displayPosition = 30
-  )
-  public String pipelineId;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Pipeline Commit Id",
-      displayPosition = 40
-  )
-  public String pipelineCommitId;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Pipeline Version",
-      displayPosition = 50
-  )
-  public String pipelineVersion;
 }
