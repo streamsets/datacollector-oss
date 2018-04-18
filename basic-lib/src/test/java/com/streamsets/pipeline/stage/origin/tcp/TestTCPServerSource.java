@@ -77,6 +77,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -280,7 +281,7 @@ public class TestTCPServerSource {
     // therefore, we will simply combine all acks in the expected order into a single String and assert at that
     // level, rather than at an individual read/expected ack level
     final String combinedAcks = StringUtils.join(responses, "");
-    assertThat(combinedAcks, equalTo(StringUtils.join(expectedAcks, "")));
+    assertThat(combinedAcks, startsWith(StringUtils.join(expectedAcks, "")));
   }
 
   @Test
