@@ -688,6 +688,16 @@
       </modules>
     </profile>
 
+   <profile>
+      <id>hdp-stagelib-base</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>hdp-stagelib-base</module>
+      </modules>
+    </profile>
+
     <profile>
       <id>ui</id>
       <activation>
