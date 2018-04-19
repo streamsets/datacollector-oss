@@ -15,12 +15,21 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import static java.sql.Types.BIT;
+import static java.sql.Types.VARCHAR;
+
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Field.Type;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import java.math.BigDecimal;
+import java.sql.Types;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -401,8 +410,21 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       Field field = record.get(recordReader.getFieldPath(column, getColumnsToFields(), opCode));
       Field.Type fieldType = field.getType();
       Object value = field.getValue();
+      int columnType = getColumnType(column);
 
+      /* See SDC-7959: MapD does not support PreparedStatement.setObject()
+      * To minimise exceptions, explicitly set values using setType method.
+      * Note:
+      * - MAP, LIST_MAP not implemented here as seemed recursive and better handled externally.
+      * - ZONED_DATETIME not implemented here as best guidance is to use setObject() */
       try {
+        /* If a value is null, regardless of its passed in Field.Type, the column should be set to null
+         */
+        if (value == null) {
+          statement.setObject(paramIdx, value, getColumnType(column));
+          paramIdx++;
+          continue;
+        }
         switch (fieldType) {
           case LIST:
             List<Field> fieldList = field.getValueAsList();
@@ -417,16 +439,97 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
           case DATE:
           case TIME:
           case DATETIME:
+            if ((columnType != Types.TIMESTAMP ) &&
+                (columnType != Types.DATE) &&
+                (columnType != Types.TIME)) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
             // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
             statement.setTimestamp(paramIdx,
                 field.getValueAsDate() == null ? null : new java.sql.Timestamp(field.getValueAsDatetime().getTime())
             );
             break;
+          case BOOLEAN:
+            if (columnType != Types.BOOLEAN) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setBoolean(paramIdx, (Boolean)value);
+            break;
+          case CHAR:
+          case STRING:
+            if ((columnType != Types.NCHAR ) &&
+                (columnType != Types.VARCHAR) &&
+                (columnType != Types.NVARCHAR) &&
+                (columnType != Types.LONGNVARCHAR) &&
+                (columnType != Types.CHAR)) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setString(paramIdx, String.valueOf(value));
+            break;
+          case BYTE:
+            if (columnType != Types.TINYINT) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setByte(paramIdx, (Byte)value);
+            break;
+          case SHORT:
+            if (columnType != Types.SMALLINT) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setShort(paramIdx, (Short)value);
+            break;
+          case INTEGER:
+            if (columnType != Types.INTEGER) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setInt(paramIdx, (Integer)value);
+            break;
+          case LONG:
+            if (columnType != Types.BIGINT) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setLong(paramIdx, (Long)value);
+            break;
+          case FLOAT:
+            if ((columnType != Types.FLOAT) &&
+                (columnType != Types.REAL)) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setFloat(paramIdx, (Float)value);
+            break;
+          case DOUBLE:
+            if (columnType != Types.DOUBLE) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setDouble(paramIdx, (Double)value);
+            break;
+          case DECIMAL:
+            if (columnType != Types.DECIMAL) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setBigDecimal(paramIdx, (BigDecimal)value);
+            break;
+          case BYTE_ARRAY:
+            if ((columnType != Types.BINARY ) &&
+                (columnType != Types.LONGVARBINARY) &&
+                (columnType != Types.VARBINARY)) {
+              throw new IllegalArgumentException("Incorrect type");
+            }
+            statement.setBytes(paramIdx, (byte[])value);
+            break;
+          case FILE_REF:
+            throw new DataFormatException(fieldType.name());
           default:
             statement.setObject(paramIdx, value, getColumnType(column));
             break;
         }
-      } catch (SQLException|IllegalArgumentException e) {
+      } catch (DataFormatException e) {
+        LOG.error("Query failed unsupported type {}", e.getMessage());
+        throw new OnRecordErrorException(record, JdbcErrors.JDBC_05, field.getValue(), fieldType.toString(), column);
+      } catch (IllegalArgumentException e) {
+        LOG.error("Query failed due to type mismatch {} for column {}", fieldType.toString(), column);
+        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
+      } catch (SQLException e) {
         LOG.error("Query failed due to {}", e.getMessage(), e);
         throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
       }

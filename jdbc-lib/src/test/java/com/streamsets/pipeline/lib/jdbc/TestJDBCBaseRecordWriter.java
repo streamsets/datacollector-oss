@@ -21,11 +21,16 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.DateTypeSupport;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.math.BigDecimal;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.Calendar;
+import java.util.Date;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,6 +47,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.SortedMap;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+
 
 public class TestJDBCBaseRecordWriter {
 
@@ -67,7 +75,27 @@ public class TestJDBCBaseRecordWriter {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-              "(P_ID INT NOT NULL, MSG VARCHAR(255), PRIMARY KEY(P_ID));"
+              "(P_ID INT NOT NULL, "
+              + "MSG VARCHAR(255), "
+              + "PRIMARY KEY(P_ID));"
+      );
+
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE2 " +
+              "(P_ID INT NOT NULL, "
+              + "F_BOOL BIT ,"
+              + "F_SHORT SMALLINT ,"
+              + "F_INT INTEGER ,"
+              + "F_LONG BIGINT ,"
+              + "F_FLOAT REAL ,"
+              + "F_DOUBLE DOUBLE ,"
+              + "F_DATE DATE ,"
+              + "F_DATETIME DATE ,"
+              + "F_TIME TIME ,"
+              + "F_DECIMAL DECIMAL ,"
+              + "F_STR VARCHAR(255) ,"
+              + "F_BYTEARRAY BINARY ,"
+              + "PRIMARY KEY(P_ID));"
       );
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.COMPOSITE_KEY " +
@@ -87,6 +115,7 @@ public class TestJDBCBaseRecordWriter {
     try (Statement statement = connection.createStatement()) {
       // Setup table
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE2;");
     }
     // Last open connection terminates H2
     connection.close();
@@ -178,7 +207,7 @@ public class TestJDBCBaseRecordWriter {
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
     fields.put("field1", Field.create("")); // this should cause Data conversion error
-    fields.put("field2", Field.create(true));
+    fields.put("field2", Field.create("true"));
     record.set(Field.create(fields));
     SortedMap<String, String> columnsToParameters = ImmutableSortedMap.of(
         "P_ID", "?",
@@ -192,7 +221,128 @@ public class TestJDBCBaseRecordWriter {
       writer.setParameters(OperationType.UPDATE_CODE, columnsToParameters, record, connection, stmt);
       Assert.fail("Primary key should cause data conversion error while converting empty string to int");
     } catch (OnRecordErrorException ex) {
-      // should come here
+      Assert.assertEquals(
+          "Received expected data conversion error",
+          true,
+          ex.getErrorCode().getCode().equals(JdbcErrors.JDBC_23.name())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Wrong SQLException:" + ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testSetParamsToStatementUseTypes() throws StageException {
+    //Test filling parameters and ensure setObject() not used
+    List<JdbcFieldColumnParamMapping> columnMapping = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("/field2", "F_BOOL", "?"),
+        new JdbcFieldColumnParamMapping("/field3", "F_SHORT", "?"),
+        new JdbcFieldColumnParamMapping("/field4", "F_INT", "?"),
+        new JdbcFieldColumnParamMapping("/field5", "F_LONG", "?"),
+        new JdbcFieldColumnParamMapping("/field6", "F_FLOAT", "?"),
+        new JdbcFieldColumnParamMapping("/field7", "F_DOUBLE", "?"),
+        new JdbcFieldColumnParamMapping("/field8", "F_DATE", "?"),
+        new JdbcFieldColumnParamMapping("/field9", "F_DATETIME", "?"),
+        new JdbcFieldColumnParamMapping("/field10", "F_TIME", "?"),
+        new JdbcFieldColumnParamMapping("/field11", "F_DECIMAL", "?"),
+        new JdbcFieldColumnParamMapping("/field12", "F_STR", "?"),
+        new JdbcFieldColumnParamMapping("/field13", "F_BYTEARRAY", "?")
+    );
+
+    List<JdbcFieldColumnMapping> generatedColumnMapping = ImmutableList.of(
+        new JdbcFieldColumnMapping("/field2", "F_BOOL", "", DataType.BOOLEAN),
+        new JdbcFieldColumnMapping("/field3", "F_SHORT", "", DataType.SHORT),
+        new JdbcFieldColumnMapping("/field4", "F_INT", "", DataType.INTEGER),
+        new JdbcFieldColumnMapping("/field5", "F_LONG", "", DataType.LONG),
+        new JdbcFieldColumnMapping("/field6", "F_FLOAT", "", DataType.FLOAT),
+        new JdbcFieldColumnMapping("/field7", "F_DOUBLE", "", DataType.DOUBLE),
+        new JdbcFieldColumnMapping("/field8", "F_DATE", "", DataType.DATE),
+        new JdbcFieldColumnMapping("/field9", "F_DATETIME", "", DataType.DATETIME),
+        new JdbcFieldColumnMapping("/field10", "F_TIME", "", DataType.TIME),
+        new JdbcFieldColumnMapping("/field11", "F_DECIMAL", "", DataType.DECIMAL),
+        new JdbcFieldColumnMapping("/field12", "F_STR", "", DataType.STRING),
+        new JdbcFieldColumnMapping("/field13", "F_BYTEARRAY", "", DataType.BYTE_ARRAY)
+    );
+
+    boolean caseSensitive = false;
+    JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE2",
+        false, //rollback
+        columnMapping,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        generatedColumnMapping,
+        new JdbcRecordReader(),
+        caseSensitive
+    );
+    Record record = RecordCreator.create();
+    Map<String, Field> fields = new HashMap<>();
+    byte[] bytes = {1 ,2 , 3};
+    fields.put("field2", Field.create(true));
+    fields.put("field3", Field.create((short) 3));
+    fields.put("field4", Field.create(4)); //integer
+    fields.put("field5", Field.create(Long.valueOf(5)));
+    fields.put("field6", Field.create(Float.valueOf(6)));
+    fields.put("field7", Field.create(Double.valueOf(7)));
+    fields.put("field8", Field.createDate(new Date())); //date
+    fields.put("field9", Field.createDatetime(new Date())); //datetime
+    fields.put("field10", Field.createTime(new Date())); //time
+    fields.put("field11", Field.create(new BigDecimal(11))); //decimal
+    fields.put("field12", Field.create("field12"));
+    fields.put("field13", Field.create(bytes)); //bytearray
+
+    record.set(Field.create(fields));
+    SortedMap<String, String> columnsToParameters = ImmutableSortedMap.<String, String>naturalOrder()
+        .put("F_BOOL", "?")
+        .put("F_SHORT", "?")
+        .put("F_INT", "?")
+        .put("F_LONG", "?")
+        .put("F_FLOAT", "?")
+        .put("F_DOUBLE", "?")
+        .put("F_DATE", "?")
+        .put("F_DATETIME", "?")
+        .put("F_TIME", "?")
+        .put("F_DECIMAL", "?")
+        .put("F_STR" , "?")
+        .put("F_BYTEARRAY", "?")
+        .build();
+
+    String query = "INSERT INTO TEST.TEST_TABLE2 ("
+        + "F_BOOL,"
+        + "F_SHORT,"
+        + "F_INT,"
+        + "F_LONG,"
+        + "F_FLOAT,"
+        + "F_DOUBLE,"
+        + "F_DATE,"
+        + "F_DATETIME,"
+        + "F_TIME,"
+        + "F_DECIMAL,"
+        + "F_STR,"
+        + "F_BYTEARRAY)"
+        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
+
+    try {
+      PreparedStatement stmt = PowerMockito.spy(connection.prepareStatement(query));
+      PowerMockito.doThrow(
+          new SQLFeatureNotSupportedException("SDC-7959: setObject() not supported by some drivers.")
+      )
+          .when(stmt)
+          .setObject(
+              Mockito.anyInt(),
+              Mockito.anyObject(),
+              Mockito.anyInt()
+          );
+
+      writer.setParameters(OperationType.INSERT_CODE, columnsToParameters, record, connection, stmt);
+    } catch (OnRecordErrorException ex) {
+      Assert.fail(ex.getMessage());
+    } catch (SQLFeatureNotSupportedException ex) {
+      Assert.fail("SDC-7959: setObject() not supported by all drivers. " + ex.getMessage());
     } catch (SQLException ex) {
       Assert.fail("Wrong SQLException:" + ex.getMessage());
     }

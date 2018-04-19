@@ -444,7 +444,7 @@ public class TestJdbcMultiRowRecordWriter {
   private Record generateRecord() {
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
-    fields.put("P_ID", Field.create(++id));
+    fields.put("P_ID", Field.create((int)++id));
     fields.put("F1", Field.create(random.nextInt()));
     if (id % 2 == 0) {
       fields.put("F2", Field.create(random.nextInt()));
