@@ -154,7 +154,7 @@ public class SpoolDirRunnable implements Runnable {
     String offset = lastSourceOffset.getOffset();
 
     try {
-      if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
+      if (hasToFetchNextFileFromSpooler(file, offset)) {
         updateGauge(Status.SPOOLING, null);
         currentFile = null;
         try {
