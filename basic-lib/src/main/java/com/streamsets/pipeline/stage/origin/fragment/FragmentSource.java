@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.fragment;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
@@ -25,10 +26,17 @@ import com.streamsets.pipeline.lib.fragment.FragmentConfigBean;
 
 @GenerateResourceBundle
 @StageDef(
-  version = 1,
-  label = "Fragment Origin",
-  icon = "fragment.png",
-  onlineHelpRefUrl =""
+    version = 1,
+    label = "Fragment Origin",
+    icon = "fragment.png",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    },
+    onlineHelpRefUrl =""
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 public class FragmentSource extends BaseSource {
