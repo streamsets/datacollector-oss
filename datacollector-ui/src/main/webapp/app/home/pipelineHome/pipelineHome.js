@@ -1196,7 +1196,7 @@ angular
           ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
       });
 
-      //Initialize the pipeline config
+      // Initialize the pipeline config
       if (!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {
         $scope.pipelineConfig.uiInfo = {
           previewConfig : {
@@ -1220,8 +1220,6 @@ angular
       }
 
       $scope.stageInstances = stageInstances;
-
-      console.log($scope.stageInstances);
 
       // Initialize metadata for label support
       if (!$scope.pipelineConfig.metadata || _.isEmpty($scope.pipelineConfig.metadata)) {

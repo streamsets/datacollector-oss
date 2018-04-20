@@ -1176,7 +1176,7 @@ angular.module('dataCollectorApp.common')
      * @param stages
      */
     this.autoArrange = function(stages) {
-      this.sortStageInstances(stages);
+      stages = this.sortStageInstances(stages);
       var xPos = 60;
       var yPos = 50;
       var laneYPos = {};

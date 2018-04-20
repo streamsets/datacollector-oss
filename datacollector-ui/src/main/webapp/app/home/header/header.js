@@ -538,8 +538,6 @@ angular
         });
     };
 
-
-
     $scope.$on('$destroy', function() {
       if (validateConfigStatusTimer) {
         $timeout.cancel(validateConfigStatusTimer);
