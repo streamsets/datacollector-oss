@@ -1255,7 +1255,7 @@ public class PipelineFragmentConfigurationValidator {
         issues.add(issue);
       }
 
-      if (!openEvents.isEmpty()) {
+      if (!openEvents.isEmpty() && !isPipelineFragment) {
         openLanes.addAll(openEvents);
         // the stage has open Event lanes
         Issue issue = IssueCreator.getStage(stageConf.getInstanceName()).create(ValidationError.VALIDATION_0104);
