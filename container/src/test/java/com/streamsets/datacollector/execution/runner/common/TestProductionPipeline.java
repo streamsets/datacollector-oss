@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.StateListener;
@@ -31,9 +32,12 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.memory.TestMemoryUsageCollector;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
+import com.streamsets.datacollector.runner.SourcePipe;
+import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
@@ -72,6 +76,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -129,7 +134,6 @@ public class TestProductionPipeline {
 
   @Test
   public void testStopPipeline() throws Exception {
-
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
     pipeline.stop();
     Assert.assertTrue(pipeline.wasStopped());
@@ -763,6 +767,7 @@ public class TestProductionPipeline {
     Assert.assertEquals(1, target.records.size());
   }
 
+
   /**
    * Producing error messages should work even outside of batch context
    */
@@ -800,6 +805,47 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.PUSH_SOURCE);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
+  }
+
+  /**
+   * Validate that stats aggregator is called on pipeline.destroy().
+   * @throws Exception
+   */
+  @Test
+  public void testStatsAggregatorCalledOnDestroy() throws Exception {
+    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(
+        Source.POLL_SOURCE_OFFSET_KEY,
+        "1"
+    ));
+    SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
+    Configuration config = new Configuration();
+    BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME,
+        REVISION,
+        null,
+        config,
+        runtimeInfo,
+        new MetricRegistry(),
+        snapshotStore,
+        null
+    );
+    runner.setObserveRequests(productionObserveRequests);
+    runner.setMemoryLimitConfiguration(memoryLimit);
+    runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);
+    runner.setStatsAggregatorRequests(new ArrayBlockingQueue<>(1));
+    runner.setOffsetTracker(tracker);
+    PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
+    pipelineConfigBean.constants = new HashMap<>();
+    runner.setRuntimeConfiguration(null, Mockito.mock(PipelineConfiguration.class), pipelineConfigBean);
+    SourcePipe sourcePipe = Mockito.mock(SourcePipe.class);
+    Mockito.doNothing().when(sourcePipe).destroy(Mockito.any(PipeBatch.class));
+    StatsAggregationHandler statsAggregationHandler = Mockito.mock(StatsAggregationHandler.class);
+    runner.destroy(sourcePipe, Collections.emptyList(), null, statsAggregationHandler);
+    Mockito.verify(statsAggregationHandler, Mockito.times(1)).handle(Mockito.anyString(),
+        Mockito.anyString(),
+        Mockito.anyList()
+    );
+    Mockito.verifyNoMoreInteractions(statsAggregationHandler);
   }
 
 }
