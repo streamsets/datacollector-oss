@@ -314,7 +314,7 @@ angular
        * @param $index
        */
       removeLane: function(stageInstance, configValue, lanePredicateMapping, $index) {
-        var stages = $scope.pipelineConfig.stages;
+        var stages = $scope.stageInstances;
 
         stageInstance.outputLanes.splice($index, 1);
         configValue.splice($index, 1);
@@ -675,7 +675,7 @@ angular
         } else if (!$scope.producingEventsConfig.value) {
           if ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length) {
             var eventLane = $scope.detailPaneConfig.eventLanes[0];
-            angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
+            angular.forEach($scope.stageInstances, function (targetStageInstance) {
               if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length) {
                 targetStageInstance.inputLanes = _.filter(targetStageInstance.inputLanes, function (inputLane) {
                   return inputLane !== eventLane;

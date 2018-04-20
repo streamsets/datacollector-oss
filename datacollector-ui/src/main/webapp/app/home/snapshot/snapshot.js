@@ -89,7 +89,7 @@ angular
      */
     var updateSnapshotDataForStage = function(stageInstance) {
       if($scope.snapshotMode) {
-        var stageInstances = $scope.pipelineConfig.stages,
+        var stageInstances = $scope.stageInstances,
           batchData = $scope.previewData.snapshotBatches[0];
 
         $scope.stagePreviewData = previewService.getPreviewDataForStage(batchData, stageInstance);
@@ -117,7 +117,7 @@ angular
         .then(function(res) {
           $scope.previewData = res.data;
 
-          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          var firstStageInstance = $scope.stageInstances[0];
           $scope.changeStageSelection({
             selectedObject: firstStageInstance,
             type: pipelineConstant.STAGE_INSTANCE
@@ -181,7 +181,7 @@ angular
         } else {
           $scope.clearStartAndEndStageInstance();
           $scope.changeStageSelection({
-            selectedObject: $scope.pipelineConfig.stages[0],
+            selectedObject: $scope.stageInstances[0],
             type: pipelineConstant.STAGE_INSTANCE
           });
         }

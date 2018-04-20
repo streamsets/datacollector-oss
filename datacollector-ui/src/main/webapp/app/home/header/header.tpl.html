@@ -93,6 +93,18 @@
             </a>
           </li>
 
+          <li role="presentation" ng-if="fragmentsScope.containsFragments && !fragmentsScope.fragmentsExpanded">
+            <a href="#" dropdown-toggle ng-click="expandAllFragments()">
+              <i class="fa fa-expand"></i> {{'home.header.expandAllFragments' | translate}}
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="fragmentsScope.containsFragments && fragmentsScope.fragmentsExpanded">
+            <a href="#" dropdown-toggle ng-click="collapseAllFragments()">
+              <i class="fa fa-compress"></i> {{'home.header.collapseAllFragments' | translate}}
+            </a>
+          </li>
+
         </ul>
       </div>
 
@@ -339,7 +351,7 @@
 
     <div class="pull-right" ng-if="pipelineConfig && (activeConfigStatus.status === 'STOPPING' || activeConfigStatus.status === 'STARTING_ERROR' || activeConfigStatus.status === 'RUNNING_ERROR' || activeConfigStatus.status === 'STOPPING_ERROR' || activeConnfigStatus.status === 'FINISHING')">
       <a class="btn btn-link icon-button-danger"
-         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && activeConfigStatus.executionMode != pipelineConstant.SLAVE && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING""
+         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && activeConfigStatus.executionMode != pipelineConstant.SLAVE && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING"
          ng-click="stopPipeline(true)">{{'home.header.forceStop' | translate}}</a>
     </div>
 

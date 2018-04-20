@@ -216,7 +216,7 @@ angular
         $rootScope.$broadcast('clearDirtyLaneConnector');
 
         if(!$scope.previewMultipleStages) {
-          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          var firstStageInstance = $scope.stageInstances[0];
           $scope.changeStageSelection({
             selectedObject: firstStageInstance,
             type: pipelineConstant.STAGE_INSTANCE
@@ -312,7 +312,7 @@ angular
        * Used to determine when Multiple Preview is available.
        */
       hasMultipleStages: function() {
-        return $scope.pipelineConfig && $scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length > 1;
+        return $scope.pipelineConfig && $scope.stageInstances && $scope.stageInstances.length > 1;
       }
     });
 
@@ -326,7 +326,7 @@ angular
         return;
       }
 
-      var stageInstances = $scope.pipelineConfig.stages,
+      var stageInstances = $scope.stageInstances,
         batchData = $scope.previewData.batchesOutput[0];
 
       $scope.stagePreviewData = previewService.getPreviewDataForStage(batchData, stageInstance);
@@ -399,12 +399,12 @@ angular
                   var snapshotSourceOutputs = res.snapshotBatches[0][0].output;
 
                   stageOutputs = [{
-                    instanceName: $scope.pipelineConfig.stages[0].instanceName,
+                    instanceName: $scope.stageInstances[0].instanceName,
                     output: {}
                   }];
 
 
-                  stageOutputs[0].output[$scope.pipelineConfig.stages[0].outputLanes[0]] =
+                  stageOutputs[0].output[$scope.stageInstances[0].outputLanes[0]] =
                     snapshotSourceOutputs[Object.keys(snapshotSourceOutputs)[0]];
 
                   getSnapshotDefer.resolve();
@@ -451,7 +451,7 @@ angular
               $scope.dirtyLanes = [];
 
               if(!$scope.previewMultipleStages) {
-                firstStageInstance = $scope.pipelineConfig.stages[0];
+                firstStageInstance = $scope.stageInstances[0];
                 $scope.changeStageSelection({
                   selectedObject: firstStageInstance,
                   type: pipelineConstant.STAGE_INSTANCE
@@ -534,7 +534,7 @@ angular
         } else {
           $scope.clearStartAndEndStageInstance();
           $scope.changeStageSelection({
-            selectedObject: $scope.pipelineConfig.stages[0],
+            selectedObject: $scope.stageInstances[0],
             type: pipelineConstant.STAGE_INSTANCE
           });
         }

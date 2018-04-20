@@ -137,7 +137,7 @@ angular
     });
 
 
-    var stages = $scope.pipelineConfig.stages;
+    var stages = $scope.stageInstances;
 
     angular.forEach(stages, function(stage) {
       $scope.chartData.push({
