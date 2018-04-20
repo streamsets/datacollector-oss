@@ -1176,6 +1176,7 @@ angular.module('dataCollectorApp.common')
      * @param stages
      */
     this.autoArrange = function(stages) {
+      this.sortStageInstances(stages);
       var xPos = 60;
       var yPos = 50;
       var laneYPos = {};
@@ -1237,6 +1238,43 @@ angular.module('dataCollectorApp.common')
 
         xPos = x + 220;
       });
+    };
+
+    this.sortStageInstances = function(stages) {
+      if (!stages || stages.length === 0) {
+        return stages;
+      }
+      var sorted = [];
+      var removedMap = {};
+      var producedOutputs = [];
+      var ok = true;
+      var iteration = 0;
+      while (ok) {
+        var prior = sorted.length;
+        angular.forEach(stages, function(t) {
+          if (!removedMap[t.instanceName]) {
+            var alreadyProduced = _.filter(producedOutputs, function(p) {
+              return t.inputLanes.indexOf(p) !== -1;
+            });
+            if (alreadyProduced.length === t.inputLanes.length) {
+              producedOutputs.push.apply(producedOutputs, t.outputLanes);
+              producedOutputs.push.apply(producedOutputs, t.eventLanes);
+              removedMap[t.instanceName] = true;
+              sorted.push(t);
+            }
+          }
+        });
+        iteration++;
+        if (prior === sorted.length && iteration >= sorted.length) {
+          ok = false;
+          angular.forEach(stages, function(t) {
+            if (!removedMap[t.instanceName]) {
+              sorted.push(t);
+            }
+          });
+        }
+      }
+      return sorted;
     };
 
     $translate([
