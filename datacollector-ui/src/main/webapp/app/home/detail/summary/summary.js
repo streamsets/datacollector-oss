@@ -99,7 +99,7 @@ angular
         'Total': '#5cb85c',
         'Event': '#ff9f4a'
       },
-      stageNameToLabelMap: _.reduce($scope.pipelineConfig.stages, function(nameToLabelMap, stageInstance){
+      stageNameToLabelMap: _.reduce($scope.stageInstances, function(nameToLabelMap, stageInstance){
         nameToLabelMap[stageInstance.instanceName] = stageInstance.uiInfo.label;
         return nameToLabelMap;
       }, {}),

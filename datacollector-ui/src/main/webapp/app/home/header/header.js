@@ -19,9 +19,10 @@
 
 angular
   .module('dataCollectorApp.home')
-
-  .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location, authService,
-                                           pipelineService, pipelineConstant, $modal, $q, $route) {
+  .controller('HeaderController', function (
+    $scope, $rootScope, $timeout, _, api, $translate, $location, authService, pipelineService, pipelineConstant,
+    $modal, $q, $route
+  ) {
 
     var pipelineValidationInProgress;
     var pipelineValidationSuccess;
@@ -301,7 +302,7 @@ angular
       resetOffset: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Reset Offset', 1);
 
-        var originStageInstance = $scope.pipelineConfig.stages[0];
+        var originStageInstance = $scope.stageInstances[0];
         var originStageDef = _.find($scope.stageLibraries, function (stageDef) {
           return stageDef.name === originStageInstance.stageName;
         });
@@ -345,7 +346,7 @@ angular
        */
       autoArrange: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Auto Arrange', 1);
-        pipelineService.autoArrange($scope.pipelineConfig);
+        pipelineService.autoArrange($scope.stageInstances);
         $scope.refreshGraph();
       },
 

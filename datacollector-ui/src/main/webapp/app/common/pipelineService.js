@@ -19,24 +19,32 @@
 angular.module('dataCollectorApp.common')
   .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
 
-    var self = this,
-      translations = {},
-      defaultELEditorOptions = {
-        mode: {
-          name: 'javascript'
-        },
-        inputStyle: 'contenteditable',
-        showCursorWhenSelecting: true,
-        lineNumbers: false,
-        matchBrackets: true,
-        autoCloseBrackets: {
-          pairs: '(){}\'\'""'
-        },
-        cursorHeight: 1,
-        extraKeys: {
-          'Ctrl-Space': 'autocomplete'
-        }
-      };
+    var self = this;
+    var translations = {};
+    var defaultELEditorOptions = {
+      mode: {
+        name: 'javascript'
+      },
+      inputStyle: 'contenteditable',
+      showCursorWhenSelecting: true,
+      lineNumbers: false,
+      matchBrackets: true,
+      autoCloseBrackets: {
+        pairs: '(){}\'\'""'
+      },
+      cursorHeight: 1,
+      extraKeys: {
+        'Ctrl-Space': 'autocomplete'
+      }
+    };
+    var fragmentGroupStages = [
+      'com_streamsets_pipeline_stage_origin_fragment_FragmentSource',
+      'com_streamsets_pipeline_stage_processor_fragment_FragmentProcessor',
+      'com_streamsets_pipeline_stage_destination_fragment_FragmentTarget'
+    ];
+
+    var confFragmentId = 'conf.fragmentId';
+    var confFragmentInstanceId = 'conf.fragmentInstanceId';
 
     this.initializeDefer = undefined;
 
@@ -1165,12 +1173,11 @@ angular.module('dataCollectorApp.common')
     /**
      * Auto Arrange the stages in the pipeline config
      *
-     * @param pipelineConfig
+     * @param stages
      */
-    this.autoArrange = function(pipelineConfig) {
+    this.autoArrange = function(stages) {
       var xPos = 60;
       var yPos = 50;
-      var stages = pipelineConfig.stages;
       var laneYPos = {};
       var laneXPos = {};
 
@@ -1863,6 +1870,33 @@ angular.module('dataCollectorApp.common')
           returnType: "Type"
         }
       ];
+    };
+
+    // Fragments helpers
+    this.ProcessFragmentStages = function(pipelineConfig) {
+      var stageInstances = [];
+      angular.forEach(pipelineConfig.stages, function (stageInstance) {
+        if (fragmentGroupStages.indexOf(stageInstance.stageName) === -1) {
+          stageInstances.push(stageInstance);
+        } else {
+          var fragmentIdConfig = _.find(stageInstance.configuration, function (c) {
+            return c.name === confFragmentId;
+          });
+          var fragmentInstanceIdConfig = _.find(stageInstance.configuration, function (c) {
+            return c.name === confFragmentInstanceId;
+          });
+          if (fragmentIdConfig && fragmentInstanceIdConfig) {
+            angular.forEach(pipelineConfig.fragments, function (fragment) {
+              if (fragment.fragmentId === fragmentIdConfig.value &&
+                fragment.fragmentInstanceId === fragmentInstanceIdConfig.value) {
+                stageInstances.push.apply(stageInstances, fragment.stages);
+              }
+            });
+          }
+        }
+      });
+      self.autoArrange(stageInstances);
+      return stageInstances;
     };
 
   });

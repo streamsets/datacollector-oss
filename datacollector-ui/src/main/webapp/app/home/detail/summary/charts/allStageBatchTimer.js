@@ -124,7 +124,7 @@ angular
       }
     });
 
-    var stages = $scope.pipelineConfig.stages;
+    var stages = $scope.stageInstances;
 
     if (stages.length > 10) {
       $scope.chartOptions.chart.showLegend = false;

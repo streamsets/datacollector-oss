@@ -243,7 +243,7 @@ angular
 
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
-        stages = $scope.pipelineConfig.stages,
+        stages = $scope.stageInstances,
         badRecordsArr = [],
         errorMessagesArr = [],
         errorRecordsHistogram,

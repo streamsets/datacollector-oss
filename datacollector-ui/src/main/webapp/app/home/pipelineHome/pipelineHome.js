@@ -101,6 +101,10 @@ angular
       canWrite: false,
       canExecute: false,
       isDPMPipelineDirty: false,
+      fragmentsScope: {
+        containsFragments: false,
+        fragmentsExpanded: false
+      },
 
       /**
        * Add New Pipeline Configuration
@@ -152,7 +156,7 @@ angular
 
         if (stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
-          angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
+          angular.forEach($scope.stageInstances, function (sourceStageInstance) {
             if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
               sourceExists = true;
             }
@@ -519,7 +523,7 @@ angular
         var startEventStage = $scope.pipelineConfig.startEventStages[0];
         var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
 
-        angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
+        angular.forEach($scope.stageInstances, function (stageInstance) {
           if (stageInstance.instanceName === stageInstanceName) {
             instance = stageInstance;
           }
@@ -555,7 +559,7 @@ angular
         var msg = issue.message;
 
         if (issue.configName) {
-          var stageInstance = _.find($scope.pipelineConfig.stages, function (stage) {
+          var stageInstance = _.find($scope.stageInstances, function (stage) {
             return stage.instanceName === stageInstanceName;
           });
 
@@ -664,7 +668,6 @@ angular
        * Delete Triggered Alert
        */
       deleteTriggeredAlert: function(triggeredAlert, event) {
-
         if (event) {
           event.preventDefault();
           event.stopPropagation();
@@ -760,6 +763,16 @@ angular
       clearTabSelectionCache: function() {
         $scope.selectedDetailPaneTabCache = {};
         $scope.selectedConfigGroupCache = {};
+      },
+
+      expandAllFragments: function () {
+        $scope.fragmentsScope.fragmentsExpanded = true;
+        $scope.refreshGraph();
+      },
+
+      collapseAllFragments: function () {
+        $scope.fragmentsScope.fragmentsExpanded = false;
+        $scope.refreshGraph();
       }
     });
 
@@ -842,6 +855,16 @@ angular
 
           if ($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
             updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
+          }
+
+          if (config.fragments && config.fragments.length) {
+            // Pipeline contains fragments - so mark it readonly
+            $scope.isPipelineReadOnly = true;
+
+            $scope.fragmentsScope = {
+              containsFragments: true,
+              fragmentsExpanded: true
+            };
           }
 
           updateGraph(config, rules, undefined, undefined, true);
@@ -1129,11 +1152,6 @@ angular
         $scope.isDPMPipelineDirty = true;
       }
 
-      if (pipelineConfig.fragments && pipelineConfig.fragments.length) {
-        // Pipeline contains fragments - so mark it readonly
-        $scope.isPipelineReadOnly = true;
-      }
-
       //Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
@@ -1194,6 +1212,17 @@ angular
         };
       }
 
+      var stageInstances = [];
+      if (pipelineConfig.fragments && pipelineConfig.fragments.length && $scope.fragmentsScope.fragmentsExpanded) {
+        stageInstances = pipelineService.ProcessFragmentStages(pipelineConfig);
+      } else {
+        stageInstances = pipelineConfig.stages;
+      }
+
+      $scope.stageInstances = stageInstances;
+
+      console.log($scope.stageInstances);
+
       // Initialize metadata for label support
       if (!$scope.pipelineConfig.metadata || _.isEmpty($scope.pipelineConfig.metadata)) {
         $scope.pipelineConfig.metadata = {
@@ -1215,14 +1244,14 @@ angular
       //And also set flag sourceExists if pipeline Config contains source
       edges = [];
       $scope.sourceExists = false;
-      angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
+      angular.forEach($scope.stageInstances, function (sourceStageInstance) {
         if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
           $scope.sourceExists = true;
         }
 
         if (sourceStageInstance.outputLanes && sourceStageInstance.outputLanes.length) {
           angular.forEach(sourceStageInstance.outputLanes, function (outputLane) {
-            angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
+            angular.forEach($scope.stageInstances, function (targetStageInstance) {
               if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length &&
                 _.contains(targetStageInstance.inputLanes, outputLane)) {
                 edges.push({
@@ -1237,7 +1266,7 @@ angular
 
         if (sourceStageInstance.eventLanes && sourceStageInstance.eventLanes.length) {
           angular.forEach(sourceStageInstance.eventLanes, function (eventLane) {
-            angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
+            angular.forEach($scope.stageInstances, function (targetStageInstance) {
               if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length &&
                 _.contains(targetStageInstance.inputLanes, eventLane)) {
                 edges.push({
@@ -1279,7 +1308,7 @@ angular
           $scope.selectedType = pipelineConstant.PIPELINE;
         } else if ($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           //In case of detail pane is stage instance
-          angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
+          angular.forEach($scope.stageInstances, function (stageInstance) {
             if (stageInstance.instanceName === $scope.detailPaneConfig.instanceName) {
               selectedStageInstance = stageInstance;
             }
@@ -1381,7 +1410,7 @@ angular
         }
 
         $scope.$broadcast('updateGraph', {
-          nodes: $scope.pipelineConfig.stages,
+          nodes: $scope.stageInstances,
           edges: edges,
           issues: issuesMap,
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
@@ -1650,7 +1679,7 @@ angular
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if (pipelineMetrics && pipelineMetrics.meters) {
-        angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
+        angular.forEach($scope.stageInstances, function(stageInstance) {
           var errorRecordsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'],
             stageErrorsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'];
 

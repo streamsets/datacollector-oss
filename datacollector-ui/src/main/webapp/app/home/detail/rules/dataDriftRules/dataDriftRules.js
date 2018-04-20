@@ -22,7 +22,7 @@ angular
 
   .controller('DataDriftRulesController', function ($scope, $rootScope, $modal, pipelineConstant,
                                                pipelineService, previewService) {
-    var stageInstances = $scope.pipelineConfig.stages;
+    var stageInstances = $scope.stageInstances;
 
     angular.extend($scope, {
       showLoading: false,
