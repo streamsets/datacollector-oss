@@ -15,9 +15,10 @@
  */
 
 angular.module('dataCollectorApp')
-  .config(function($routeProvider, $locationProvider, $translateProvider, $provide,
-                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider) {
-
+  .config(function(
+    $routeProvider, $locationProvider, $translateProvider, $provide, tmhDynamicLocaleProvider, uiSelectConfig,
+    $httpProvider, AnalyticsProvider
+  ) {
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',
@@ -105,11 +106,11 @@ angular.module('dataCollectorApp')
     var alertsTimer;
     var isWebSocketSupported;
     var loc = window.location;
-    var httpBaseURL = ((loc.protocol === "https:") ? "https://" : "http://") + loc.hostname + (loc.port ? ":" + loc.port : "");
+    var httpBaseURL = ((loc.protocol === 'https:') ? 'https://' : 'http://') + loc.hostname + (loc.port ? ':' + loc.port : '');
     var bases = document.getElementsByTagName('base');
     var baseHref = (bases.length > 0) ? (bases[0].href).replace(httpBaseURL, '') : '/';
-    var webSocketBaseURL = ((loc.protocol === "https:") ?
-      "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port === 80) || (loc.protocol === "https:" && loc.port === 443)) ? "" : ":" + loc.port) + baseHref;
+    var webSocketBaseURL = ((loc.protocol === 'https:') ?
+      'wss://' : 'ws://') + loc.hostname + (((loc.protocol === 'http:' && loc.port === 80) || (loc.protocol === 'https:' && loc.port === 443)) ? '' : ':' + loc.port) + baseHref;
     var BACKSPACE_KEY = 8;
     var DELETE_KEY = 46;
     var D_KEY = 68;
@@ -128,7 +129,7 @@ angular.module('dataCollectorApp')
     // so overriding to use window.crypto.getRandomValues for getting random values.
     var randomFunction = Math.random;
     Math.random = function() {
-      if(window.crypto && typeof window.crypto.getRandomValues === "function") {
+      if(window.crypto && typeof window.crypto.getRandomValues === 'function') {
         var array = new Uint32Array(10);
         window.crypto.getRandomValues(array);
         return array[0]/10000000000;
@@ -579,7 +580,7 @@ angular.module('dataCollectorApp')
           authService.fetchRemoteUserRoles();
         }
 
-        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+        isWebSocketSupported = (typeof(WebSocket) === 'function') && configuration.isWebSocketUseEnabled();
         refreshPipelineStatus();
         refreshAlerts();
 
@@ -670,7 +671,7 @@ angular.module('dataCollectorApp')
 
         pipelineStatusTimer = $timeout(
           function() {
-            //console.log( "Pipeline Status Timeout executed", Date.now() );
+            //console.log( 'Pipeline Status Timeout executed', Date.now() );
           },
           configuration.getRefreshInterval()
         );
@@ -695,7 +696,7 @@ angular.module('dataCollectorApp')
               });
           },
           function() {
-            //console.log( "Timer rejected!" );
+            //console.log( 'Timer rejected!' );
           }
         );
       }
@@ -760,7 +761,7 @@ angular.module('dataCollectorApp')
 
         alertsTimer = $timeout(
           function() {
-            //console.log( "Pipeline Status Timeout executed", Date.now() );
+            //console.log( 'Pipeline Status Timeout executed', Date.now() );
           },
           configuration.getRefreshInterval()
         );
@@ -795,7 +796,7 @@ angular.module('dataCollectorApp')
               });
           },
           function() {
-            //console.log( "Timer rejected!" );
+            //console.log( 'Timer rejected!' );
           }
         );
       }
