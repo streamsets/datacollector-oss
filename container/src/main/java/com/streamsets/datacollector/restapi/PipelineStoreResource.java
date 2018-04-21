@@ -1068,7 +1068,7 @@ public class PipelineStoreResource {
       }
 
       // add from fragments
-      if (CollectionUtils.isEmpty(pipelineConfig.getFragments())) {
+      if (CollectionUtils.isNotEmpty(pipelineConfig.getFragments())) {
         pipelineConfig.getFragments().forEach(pipelineFragmentConfiguration -> {
           for (StageConfiguration conf : pipelineFragmentConfiguration.getOriginalStages()) {
             fetchStageDefinition(conf, stageDefinitions, stageIcons);
@@ -1147,6 +1147,15 @@ public class PipelineStoreResource {
 
       for (StageConfiguration conf : pipelineFragmentConfig.getStages()) {
         fetchStageDefinition(conf, stageDefinitions, stageIcons);
+      }
+
+      // add from fragments
+      if (CollectionUtils.isNotEmpty(pipelineFragmentConfig.getFragments())) {
+        pipelineFragmentConfig.getFragments().forEach(pipelineFragmentConfiguration -> {
+          for (StageConfiguration conf : pipelineFragmentConfiguration.getOriginalStages()) {
+            fetchStageDefinition(conf, stageDefinitions, stageIcons);
+          }
+        });
       }
 
       List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
