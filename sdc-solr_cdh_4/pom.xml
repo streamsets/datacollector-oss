@@ -47,12 +47,6 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-commonlib</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-api</artifactId>
             <scope>provided</scope>
         </dependency>
