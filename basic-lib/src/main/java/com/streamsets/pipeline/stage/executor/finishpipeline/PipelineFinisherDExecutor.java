@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.executor.finishpipeline;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DExecutor;
+import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @GenerateResourceBundle
 @StageDef(

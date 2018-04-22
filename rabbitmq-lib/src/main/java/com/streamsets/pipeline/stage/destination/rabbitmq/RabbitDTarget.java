@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
@@ -36,7 +36,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class RabbitDTarget extends DTarget{
+public class RabbitDTarget extends DTarget {
   @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "ADVANCED"})
   public RabbitTargetConfigBean conf;
 

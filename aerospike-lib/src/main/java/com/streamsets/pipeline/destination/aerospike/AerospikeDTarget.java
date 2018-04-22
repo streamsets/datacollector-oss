@@ -17,7 +17,7 @@ package com.streamsets.pipeline.destination.aerospike;
 
 
 import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 

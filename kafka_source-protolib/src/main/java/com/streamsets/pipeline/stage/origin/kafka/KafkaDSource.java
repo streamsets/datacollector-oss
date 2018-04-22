@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.base.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.api.impl.ClusterSource;
-import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 
 @StageDef(

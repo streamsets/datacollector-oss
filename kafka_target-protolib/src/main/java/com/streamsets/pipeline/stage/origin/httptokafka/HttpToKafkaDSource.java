@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
+import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 

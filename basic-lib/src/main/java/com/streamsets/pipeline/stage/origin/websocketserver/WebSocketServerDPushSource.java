@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.websocket.Groups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 

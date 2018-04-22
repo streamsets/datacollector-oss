@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @StageDef(
     version = 3,
@@ -39,7 +39,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 @HideConfigs(value = {"conf.dataFormatConfig.verifyChecksum"})
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
-public class RemoteDownloadDSource extends DSource{
+public class RemoteDownloadDSource extends DSource {
 
   @ConfigDefBean
   public RemoteDownloadConfigBean conf;

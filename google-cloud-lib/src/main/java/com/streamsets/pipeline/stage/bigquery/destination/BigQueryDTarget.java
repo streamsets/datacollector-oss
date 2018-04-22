@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 
 @StageDef(
@@ -32,7 +32,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/BigQuery.html#task_gxn_dsk_dbb"
 )
 @ConfigGroups(Groups.class)
-public class BigQueryDTarget extends DTarget{
+public class BigQueryDTarget extends DTarget {
 
   @ConfigDefBean
   public BigQueryTargetConfig conf;

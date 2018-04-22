@@ -23,8 +23,8 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.Arrays;
 

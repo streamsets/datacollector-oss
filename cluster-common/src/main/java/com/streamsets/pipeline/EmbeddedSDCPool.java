@@ -17,9 +17,9 @@ package com.streamsets.pipeline;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.configurablestage.DSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
