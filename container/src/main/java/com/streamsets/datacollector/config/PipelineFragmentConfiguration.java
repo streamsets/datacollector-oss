@@ -178,6 +178,10 @@ public class PipelineFragmentConfiguration implements Serializable {
     this.resolvedStages = stages;
   }
 
+  public void setOriginalStages(List<StageConfiguration> stages) {
+    this.stages = stages;
+  }
+
   public void setUuid(UUID uuid) {
     this.uuid = uuid;
   }

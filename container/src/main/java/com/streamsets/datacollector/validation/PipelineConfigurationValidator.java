@@ -34,6 +34,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
     // upgrade is not successful.
     canPreview &= upgradePipeline() && addMissingConfigs();
-    canPreview &= sortStages();
+    canPreview &= sortStages(false);
+    if (CollectionUtils.isNotEmpty(pipelineConfiguration.getFragments())) {
+      canPreview &= sortStages(true);
+    }
     canPreview &= checkIfPipelineIsEmpty();
     canPreview &= loadAndValidatePipelineConfig();
     canPreview &= validatePipelineMemoryConfiguration();
