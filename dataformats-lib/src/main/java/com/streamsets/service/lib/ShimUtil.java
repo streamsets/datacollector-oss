@@ -17,6 +17,7 @@ package com.streamsets.service.lib;
 
 import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
+import com.streamsets.pipeline.api.service.dataformats.RecoverableDataParserException;
 
 /**
  * When using DataFormat as a service, the interfaces, exceptions and other enums lives in different package. This class
@@ -33,12 +34,22 @@ public class ShimUtil {
   public static DataParserException convert(
       com.streamsets.pipeline.lib.parser.DataParserException original
   ) {
+    if(original instanceof com.streamsets.pipeline.lib.parser.RecoverableDataParserException) {
+      return new RecoverableDataParserException(
+        ((com.streamsets.pipeline.lib.parser.RecoverableDataParserException) original).getUnparsedRecord(),
+        original.getErrorCode(),
+        original.getParams(),
+        original.getCause()
+      );
+    }
+
     return new DataParserException(
       original.getErrorCode(),
       original.getParams(),
       original.getCause()
     );
   }
+
   /**
    * Change package name for DataGeneratorException.
    *

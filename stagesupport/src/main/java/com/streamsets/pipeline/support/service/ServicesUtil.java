@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
-//import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
+import com.streamsets.pipeline.api.service.dataformats.RecoverableDataParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,14 +58,13 @@ public final class ServicesUtil {
     try (DataParser parser = stageContext.getService(DataFormatParserService.class).getParser(messageId, payload)) {
       Record record = null;
       do {
-// TODO(SDC-8736): Recoverable exceptions are not yet properly propagated (sub-classed)
-//        try {
+        try {
           record = parser.parse();
-//        } catch (RecoverableDataParserException e) {
-//          handleException(stageContext, toErrorContext, messageId, e, e.getUnparsedRecord());
-//          //Go to next record
-//          continue;
-//        }
+        } catch (RecoverableDataParserException e) {
+          handleException(stageContext, toErrorContext, messageId, e, e.getUnparsedRecord());
+          //Go to next record
+          continue;
+        }
         if (record != null) {
           records.add(record);
         }
