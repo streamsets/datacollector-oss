@@ -42,6 +42,7 @@ public class ConfigDefinitionJson   {
     CHARACTER("CHARACTER"),
     TEXT("TEXT"),
     CREDENTIAL("CREDENTIAL"),
+    RUNTIME("RUNTIME"),
     ;
 
     private String value;

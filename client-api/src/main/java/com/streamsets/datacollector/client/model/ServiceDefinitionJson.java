@@ -15,6 +15,9 @@
  */
 package com.streamsets.datacollector.client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ServiceDefinitionJson {
   private String className = null;
   private String version = null;
@@ -24,6 +27,8 @@ public class ServiceDefinitionJson {
   private String libraryLabel = null;
   private ConfigGroupDefinitionJson configGroupDefinition = null;
   private Boolean privateClassLoader = null;
+  private String provides = null;
+  private List<ConfigDefinitionJson> configDefinitions = new ArrayList<>();
 
   public String getClassName() {
     return className;
@@ -87,5 +92,21 @@ public class ServiceDefinitionJson {
 
   public void setPrivateClassLoader(Boolean privateClassLoader) {
     this.privateClassLoader = privateClassLoader;
+  }
+
+  public String getProvides() {
+    return provides;
+  }
+
+  public void setProvides(String provides) {
+    this.provides = provides;
+  }
+
+  public List<ConfigDefinitionJson> getConfigDefinitions() {
+    return configDefinitions;
+  }
+
+  public void setConfigDefinitions(List<ConfigDefinitionJson> configDefinitions) {
+    this.configDefinitions = configDefinitions;
   }
 }
