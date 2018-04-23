@@ -19,21 +19,27 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RawDataSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(
-      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
-  ) throws StageException {
-    switch (fromVersion) {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs);
+        if (context.getToVersion() == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs, context);
         break;
       default:
-        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
     return configs;
   }
@@ -51,5 +57,17 @@ public class RawDataSourceUpgrader implements StageUpgrader {
     }
 
     configs.removeAll(toRemove);
+  }
+
+  private static void upgradeV2ToV3(List<Config> configs, Context context) {
+    List<Config> dataFormatConfigs = configs.stream()
+      .filter(c -> c.getName().startsWith("dataFormat"))
+      .collect(Collectors.toList());
+
+    // Remove those configs
+    configs.removeAll(dataFormatConfigs);
+
+    // And finally register new service
+    context.registerService(DataFormatParserService.class, dataFormatConfigs);
   }
 }

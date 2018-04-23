@@ -34,7 +34,6 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,7 +155,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
     for(DataGeneratorConfig con : dataGenConfigs) {
       names.add(con.field.isEmpty() ? "<empty field name>" : con.field);
     }
-    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, names.isEmpty() ? "No fields" : StringUtils.join(names, ", "));
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, names.isEmpty() ? "No fields" : String.join(", ", names));
     getContext().publishLineageEvent(event);
 
     return super.init();

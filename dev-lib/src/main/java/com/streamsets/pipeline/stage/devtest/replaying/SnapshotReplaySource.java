@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -79,7 +78,7 @@ public class SnapshotReplaySource extends BaseSource  {
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
 
-    if (snapshotInputStream == null && !StringUtils.isBlank(snapshotInputFilePath)) {
+    if (snapshotInputStream == null && snapshotInputFilePath != null && !snapshotInputFilePath.isEmpty()) {
       Path path = Paths.get(snapshotInputFilePath);
       if (!Files.exists(path)) {
         issues.add(getContext().createConfigIssue(
@@ -115,7 +114,7 @@ public class SnapshotReplaySource extends BaseSource  {
         Iterator<Map<String, ?>> snapshotBatchIter = snapshotBatches.iterator();
         while (!foundStage && snapshotBatchIter.hasNext()) {
           Map<String, ?> snapshotBatch = snapshotBatchIter.next();
-          if (StringUtils.isBlank(stageInstanceName) || snapshotBatch.get("instanceName").equals(stageInstanceName)) {
+          if (stageInstanceName.isEmpty() || snapshotBatch.get("instanceName").equals(stageInstanceName)) {
             Map<String, List<Map<?, ?>>> outputRecords = (Map<String, List<Map<?, ?>>>) snapshotBatch.get("output");
             List<Map<?, ?>> records = outputRecords.values().iterator().next();
             for (Map<? ,?> record : records) {

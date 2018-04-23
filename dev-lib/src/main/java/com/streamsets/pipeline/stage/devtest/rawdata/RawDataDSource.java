@@ -16,46 +16,34 @@
 package com.streamsets.pipeline.stage.devtest.rawdata;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Dev Raw Data Source",
     description = "Add Raw data to the source.",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon = "dev.png",
     upgrader = RawDataSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html",
+    services = @ServiceDependency(
+    service = DataFormatParserService.class,
+    configuration = {
+      @ServiceConfiguration(name = "displayFormats", value = "DELIMITED,JSON,LOG,SDC_JSON,TEXT,XML")
+    }
+  )
 )
 @ConfigGroups(value = RawDataSourceGroups.class)
 public class RawDataDSource extends DSource {
-  private static final Logger LOG = LoggerFactory.getLogger(RawDataDSource.class);
-
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    label = "Data Format",
-    displayPosition = 1,
-    group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDefBean(groups = "RAW")
-  public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDef(
     required = true,
@@ -80,6 +68,6 @@ public class RawDataDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new RawDataSource(dataFormat, dataFormatConfig, rawData, stopAfterFirstBatch);
+    return new RawDataSource(rawData, stopAfterFirstBatch);
   }
 }
