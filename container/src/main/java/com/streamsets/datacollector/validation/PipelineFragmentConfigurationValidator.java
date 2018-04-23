@@ -47,6 +47,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,9 +94,16 @@ public class PipelineFragmentConfigurationValidator {
     this.constants = ElUtil.getConstants(pipelineFragmentConfiguration.getConfiguration());
   }
 
-  boolean sortStages() {
+  boolean sortStages(boolean sortOriginalStages) {
     boolean ok = true;
-    List<StageConfiguration> original = new ArrayList<>(pipelineFragmentConfiguration.getStages());
+    List<StageConfiguration> original;
+
+    if (sortOriginalStages) {
+      original = new ArrayList<>(pipelineFragmentConfiguration.getOriginalStages());
+    } else {
+      original = new ArrayList<>(pipelineFragmentConfiguration.getStages());
+    }
+
     List<StageConfiguration> sorted = new ArrayList<>();
     Set<String> producedOutputs = new HashSet<>();
     while (ok && !original.isEmpty()) {
@@ -120,7 +128,12 @@ public class PipelineFragmentConfigurationValidator {
       }
     }
     sorted.addAll(original);
-    pipelineFragmentConfiguration.setStages(sorted);
+
+    if (sortOriginalStages) {
+      pipelineFragmentConfiguration.setOriginalStages(sorted);
+    } else {
+      pipelineFragmentConfiguration.setStages(sorted);
+    }
     return ok;
   }
 
@@ -133,7 +146,10 @@ public class PipelineFragmentConfigurationValidator {
     // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
     // upgrade is not successful.
     canPreview &= upgradePipelineFragment() && addPipelineFragmentMissingConfigs();
-    canPreview &= sortStages();
+    canPreview &= sortStages(false);
+    if (CollectionUtils.isNotEmpty(pipelineFragmentConfiguration.getFragments())) {
+      canPreview &= sortStages(true);
+    }
     canPreview &= checkIfPipelineIsEmpty();
     canPreview &= loadAndValidatePipelineFragmentConfig();
     canPreview &= validateStageConfiguration();
@@ -1199,6 +1215,11 @@ public class PipelineFragmentConfigurationValidator {
   boolean validatePipelineLanes() {
     boolean preview = true;
     List<StageConfiguration> stagesConf = pipelineFragmentConfiguration.getStages();
+
+    if (CollectionUtils.isNotEmpty(this.pipelineFragmentConfiguration.getFragments())) {
+      stagesConf = pipelineFragmentConfiguration.getOriginalStages();
+    }
+
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
 
