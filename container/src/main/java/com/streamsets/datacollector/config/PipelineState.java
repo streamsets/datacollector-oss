@@ -29,6 +29,7 @@ public enum PipelineState implements Label, Serializable {
   FINISHED("Finished"),
   DISCONNECTED("Disconnected"),
   CONNECTING("Connecting"),
+  STOP_ERROR("Stop Error"),
 
   ;
 
