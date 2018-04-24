@@ -86,7 +86,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d46393e2179">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d46656e2179">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
@@ -157,7 +157,7 @@
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files from
+                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files in
                               HDFS. </li>
 
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
@@ -174,6 +174,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed MapR DB data that has been
                               written to MapR Streams.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/MapRFSStandalone.html#concept_b43_3qc_mdb" title="The MapR FS Standalone origin reads files in MapR. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written.">MapR FS Standalone</a> - Reads fully written files in
+                              MapR.</li>
 
                         <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>
@@ -382,7 +385,7 @@
                         <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes messages from a
                               Google Pub/Sub subscription.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files from
+                        <li class="li"><a class="xref" href="../Origins/HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> - Reads fully-written files in
                               HDFS. </li>
 
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on a HTTP endpoint and processes
@@ -399,6 +402,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed MapR DB data that has been
                               written to MapR Streams.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/MapRFSStandalone.html#concept_b43_3qc_mdb" title="The MapR FS Standalone origin reads files in MapR. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written.">MapR FS Standalone</a> - Reads fully written files in
+                              MapR.</li>
 
                         <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation.">MapR Multitopic Streams Consumer</a> - Reads data from
                               multiple topics in a MapR Streams cluster.</li>

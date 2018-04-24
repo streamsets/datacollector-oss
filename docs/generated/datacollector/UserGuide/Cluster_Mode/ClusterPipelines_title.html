@@ -272,9 +272,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d35688e492">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d36148e492">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d35688e495">Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d36148e495">Requirement</th>
 
                             </tr>
 
@@ -282,18 +282,21 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35688e492 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e492 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35688e495 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e495 "><span class="ph">Spark versions 1.3 through 2.x</span><div class="note important"><span class="importanttitle">Important:</span> Spark version 1.x is now deprecated and will be removed in version 3.3.0.0. We highly
+                  recommend that you <a class="xref" href="../Upgrade/PreUpgrade.html#concept_zgm_vj2_mdb" title="When Data Collector first introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, Data Collector introduced updated Kafka stages with support for these security features when used with Kafka 0.9.0.0 or later.">upgrade to Spark 2.1 or later</a>.</div>
+</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d35688e492 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e492 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d35688e495 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
-                                    distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
-                                        Mesos requires Apache Kafka on Apache Mesos.</p>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e495 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                    distribution of an Apache Kafka cluster version 0.9.0.0 through
+                                    1.0.x. <p class="p">Spark Streaming on Mesos requires Apache Kafka on
+                                        Apache Mesos.</p>
 </td>
 
                             </tr>
@@ -559,15 +562,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
  <div class="body conbody">
         <div class="p">Cluster
-            mode pipelines that read from a MapR cluster have the following requirements: 
+            mode pipelines that read from a MapR cluster have the following requirements:
+                
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kry_gn5_lx__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d35688e1036">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d36148e1053">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d35688e1039">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d36148e1056">Requirement</th>
 
                         </tr>
 
@@ -575,16 +579,31 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35688e1036 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e1053 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35688e1039 "><span class="ph">Spark versions 1.3 through 1.6</span></td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e1056 "><span class="ph">Spark versions 1.3 through 2.x</span><div class="note important"><span class="importanttitle">Important:</span> Spark version 1.x is now deprecated and will be removed in version 3.3.0.0. We highly
+                  recommend that you <a class="xref" href="../Upgrade/PreUpgrade.html#concept_zgm_vj2_mdb" title="When Data Collector first introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, Data Collector introduced updated Kafka stages with support for these security features when used with Kafka 0.9.0.0 or later.">upgrade to Spark 2.1 or later</a>.</div>
+</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d35688e1036 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e1053 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d35688e1039 ">MapR version 5.1, 5.2, or 6.0</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e1056 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
+                                    <ul class="ul" id="concept_kry_gn5_lx__ul_fkh_cyh_pdb">
+                                    <li class="li">MapR 5.1.0<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> MEP is not applicable for MapR 5.1.0.</div>
+
+                                        </div>
+</li>
+
+                                    <li class="li">MapR 5.2.0 and MEP 1.x</li>
+
+                                    <li class="li">MapR 6.0.0 and MEP 4.0</li>
+
+                                </ul>
+</td>
 
                         </tr>
 
@@ -704,7 +723,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR FS</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR FS</a></div>
 </div>
 </div>
 </div>
@@ -750,9 +769,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <div class="itemgroup info">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
                 <div class="itemgroup info">For example, say the spark-submit script is in the following directory:
-                        <samp class="ph codeph">/opt/mapr/spark/spark-1.6/bin/spark-submit</samp>. Then, you might
-                    use the following command to define the location of the script:
-                    <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6/bin/spark-submit</pre>
+                        <samp class="ph codeph">/opt/mapr/spark/spark-2.1.0/bin/spark-submit</samp>. Then, you
+                    might use the following command to define the location of the script:
+                    <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1.0/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
                     <div class="note note" id="task_i3h_q3w_hx__d2795e9645"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
@@ -789,8 +808,8 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                   </ol>
 </div>
-                <div class="itemgroup info">For example, when using Spark 1.6.1, you would edit
-                        <samp class="ph codeph">/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</samp>, and you
+                <div class="itemgroup info">For example, when using Spark 2.1.0, you would edit
+                        <samp class="ph codeph">/opt/mapr/spark/spark-2.1.0/conf/log4j.properties</samp>, and you
                     might set the property as follows:
                     <pre class="pre codeblock">log4j.rootCategory=INFO</pre>
 </div>

@@ -196,8 +196,9 @@
         <div class="section context">
             <p class="p">You can start <span class="ph">Data Collector</span> pipelines when they are valid. When you start a pipeline, <span class="ph">Data Collector</span> runs the pipeline until you stop the pipeline or shut down <span class="ph">Data Collector</span>.</p>
 
-            <div class="note note"><span class="notetitle">Note:</span> You cannot use <span class="ph">Data Collector</span> to start edge pipelines. Edge pipelines run on <span class="ph">Data Collector Edge</span>
-                    (<span class="ph">SDC Edge</span>). For more information about starting edge pipelines, see <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#concept_rk3_2hm_pbb">Manage Pipelines on SDC Edge</a>.</div>
+            <div class="note note"><span class="notetitle">Note:</span> You can use the <span class="ph">Data Collector</span>
+                UI to start edge pipelines on <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) only when <span class="ph">SDC Edge</span> is accessible by the <span class="ph">Data Collector</span>
+                machine. For more information about managing edge pipelines, see <a class="xref" href="../Edge_Mode/EdgePipelines_title.html#concept_tqk_dbb_4db" title="After designing edge pipelines in Data Collector and then deploying the edge pipelines to SDC Edge, you can manage the pipelines on SDC Edge. Managing edge pipelines includes starting, stopping, resetting the origin, and monitoring the pipelines.">Manage Pipelines on SDC Edge</a>.</div>
 
             <p class="p">For most origins, when you restart a pipeline, <span class="ph">Data Collector</span> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>
@@ -293,6 +294,8 @@
                 <li class="li">Kinesis Consumer - For unique details about resetting this origin, see <a class="xref" href="../Origins/KinConsumer.html#concept_dt1_4mq_h1b">Resetting the Origin</a>.</li>
 
                 <li class="li">MapR DB JSON</li>
+
+                <li class="li">MapR FS Standalone</li>
 
                 <li class="li">MongoDB</li>
 
@@ -484,9 +487,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d446404e892">Permission</th>
+       <th class="entry" valign="top" width="30%" id="d454954e920">Permission</th>
 
-       <th class="entry" valign="top" width="70%" id="d446404e895">Description</th>
+       <th class="entry" valign="top" width="70%" id="d454954e923">Description</th>
 
       </tr>
 
@@ -494,23 +497,23 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d446404e892 ">Read</td>
+       <td class="entry" valign="top" width="30%" headers="d454954e920 ">Read</td>
 
-       <td class="entry" valign="top" width="70%" headers="d446404e895 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="30%" headers="d446404e892 ">Write</td>
-
-       <td class="entry" valign="top" width="70%" headers="d446404e895 ">Edit the pipeline and alerts.</td>
+       <td class="entry" valign="top" width="70%" headers="d454954e923 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d446404e892 ">Execute</td>
+       <td class="entry" valign="top" width="30%" headers="d454954e920 ">Write</td>
 
-       <td class="entry" valign="top" width="70%" headers="d446404e895 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
+       <td class="entry" valign="top" width="70%" headers="d454954e923 ">Edit the pipeline and alerts.</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d454954e920 ">Execute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d454954e923 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
         snapshot</span>.</td>
 
       </tr>
