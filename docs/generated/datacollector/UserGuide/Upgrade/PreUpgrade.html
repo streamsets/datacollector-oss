@@ -48,6 +48,64 @@
  <p class="shortdesc">In some situations, you must complete tasks before you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zgm_vj2_mdb">
+    <h2 class="title topictitle2">Upgrade to Spark 2.1 or Later</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When <span class="ph">Data Collector</span> first
+        introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support
+        security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, <span class="ph">Data Collector</span>
+        introduced updated Kafka stages with support for these security features when used with
+        Kafka 0.9.0.0 or later.</p>
+
+        <p class="p">In <span class="ph">Data Collector</span>
+            version 3.3.0.0, we will be introducing cluster streaming mode with support for Kafka
+            security features using Spark 2.1 or later and Kafka 0.10 or later. </p>
+
+        <div class="p">However, this means that cluster streaming mode and the Spark Evaluator processor using
+            Spark 1.x are deprecated as of version 3.2.0.0. Support for Spark 1.x will be removed in
+            version 3.3.0.0. If you are using cluster streaming mode or the Spark Evaluator
+            processor, we highly recommend that you upgrade to Spark 2.1 or later in version
+                3.2.0.0.<div class="note note"><span class="notetitle">Note:</span>  In <span class="ph">Data Collector</span>
+                version 3.3.0.0, you can use Spark 2.1 and Kafka 0.9.0.0 for cluster streaming mode.
+                However, you cannot use Kafka security features unless you also upgrade to Kafka
+                0.10 or later.</div>
+</div>
+
+        <div class="p">Since Spark 1.x is now deprecated, the following stage libraries are also deprecated
+            since they only support Spark 1.x:<ul class="ul" id="concept_zgm_vj2_mdb__ul_uw5_zj2_mdb">
+                <li class="li">Cloudera CDH version 5.5 or earlier distribution of Apache Hadoop</li>
+
+                <li class="li">Hortonworks version 2.4 or earlier distribution of Apache Hadoop</li>
+
+            </ul>
+</div>
+
+        <p class="p">These stage libraries will also be removed in version 3.3.0.0. We highly recommend that
+            you upgrade to a newer Cloudera CDH or Hortonworks Hadoop distribution in version
+            3.2.0.0.</p>
+
+        <p class="p">The major Hadoop distribution vendors provide a means for Spark 1.x and Spark 2.x to
+            coexist on the same cluster, so you can use both versions in your clusters. </p>
+
+        <div class="p"><span class="ph">Data Collector</span>
+            supports the following Spark 2.x versions for the Hadoop distribution vendors:<ul class="ul" id="concept_zgm_vj2_mdb__ul_iyg_dk2_mdb">
+                <li class="li"><span class="ph uicontrol">Cloudera</span> - Cloudera Distribution of Spark 2.1 release 1
+                    or later is supported. For more information, see <a class="xref" href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_requirements.html" target="_blank"><u class="ph u">Spark 2 Requirements</u></a>.</li>
+
+                <li class="li"><span class="ph uicontrol">Hortonworks</span> - Hortonworks Data Platform (HDP) 2.6 or
+                    later includes Spark 2.2.0. For more information, see the <a class="xref" href="https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_release-notes/content/comp_versions.html" target="_blank"><u class="ph u">HDP 2.6 Release Notes</u></a>.</li>
+
+                <li class="li"><span class="ph uicontrol">MapR</span> - MapR with MapR Expansion Pack 3.0 or later is
+                    supported. For more information, see <a class="xref" href="https://maprdocs.mapr.com/home/InteropMatrix/r_mep_support_core_version.html#reference_jqk_b2m_zz" target="_blank"><u class="ph u">MEP Support by MapR Core
+                        Version</u></a>.</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ip1_dgp_hz">
  <h2 class="title topictitle2">Verify Installation Requirements</h2>
 
