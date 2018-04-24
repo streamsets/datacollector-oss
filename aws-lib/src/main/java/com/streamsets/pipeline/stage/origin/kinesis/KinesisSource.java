@@ -242,8 +242,8 @@ public class KinesisSource extends BasePushSource {
   }
 
   private void previewProcess(
-    int maxBatchSize,
-    BatchMaker batchMaker
+      int maxBatchSize,
+      BatchMaker batchMaker
   ) throws IOException, StageException {
     ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.proxyConfig);
 
@@ -274,10 +274,42 @@ public class KinesisSource extends BasePushSource {
     }
   }
 
+  private boolean shutDownResourcesAndReturnInterrupted() {
+    AtomicBoolean interrupted = new AtomicBoolean(false);
+    Optional.ofNullable(worker).ifPresent(w -> {
+      try {
+        boolean isStopped = w.startGracefulShutdown().get();
+        if (!isStopped) {
+          LOG.warn("Worker not stopped properly");
+        }
+      } catch (ExecutionException e) {
+        LOG.error("Exception while shutting down the worker", e);
+      } catch (InterruptedException e) {
+        LOG.warn("Interrupted while shutting down workers");
+        interrupted.set(true);
+      }
+    });
+
+    Optional.ofNullable(executor).ifPresent(exe -> {
+      if (!exe.isTerminated()) {
+        LOG.info("Shutting down executor service");
+        exe.shutdown();
+        try {
+          exe.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+          LOG.warn("Interrupted while shutting down executor");
+          interrupted.set(true);
+        }
+      }
+    });
+    return interrupted.get();
+  }
+
   @Override
   public void destroy() {
-    Optional.ofNullable(worker).ifPresent(Worker::shutdown);
-    Optional.ofNullable(executor).ifPresent(ExecutorService::shutdownNow);
+    if (shutDownResourcesAndReturnInterrupted()) {
+      LOG.error("Interrupted while shutting down");
+    }
     super.destroy();
   }
 
@@ -392,19 +424,19 @@ public class KinesisSource extends BasePushSource {
   }
 
   private boolean leaseTableExists() {
-      DescribeTableRequest request = new DescribeTableRequest();
-      request.setTableName(conf.applicationName);
-      DescribeTableResult result;
-      try {
-        result = dynamoDBClient.describeTable(request);
-      } catch (ResourceNotFoundException e) {
-        LOG.debug("Lease table '{}' does not exist", conf.applicationName);
-        return false;
-      }
+    DescribeTableRequest request = new DescribeTableRequest();
+    request.setTableName(conf.applicationName);
+    DescribeTableResult result;
+    try {
+      result = dynamoDBClient.describeTable(request);
+    } catch (ResourceNotFoundException e) {
+      LOG.debug("Lease table '{}' does not exist", conf.applicationName);
+      return false;
+    }
 
-      TableStatus tableStatus = TableStatus.fromValue(result.getTable().getTableStatus());
-      LOG.debug("Lease table exists and is in '{}' state", tableStatus);
-      return tableStatus == TableStatus.ACTIVE;
+    TableStatus tableStatus = TableStatus.fromValue(result.getTable().getTableStatus());
+    LOG.debug("Lease table exists and is in '{}' state", tableStatus);
+    return tableStatus == TableStatus.ACTIVE;
   }
 
   private void resetOffsets(Map<String, String> lastOffsets) throws StageException {
