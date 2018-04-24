@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
-import com.streamsets.pipeline.config.JsonMode;
 
 @StageDef(
     version = 14,
@@ -37,7 +36,6 @@ import com.streamsets.pipeline.config.JsonMode;
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HTTPClient.html#task_akl_rkz_5r"
 )
 @HideConfigs(value = {
-    "conf.dataFormatConfig.jsonContent",
     "conf.client.numThreads"
 })
 @ConfigGroups(Groups.class)
@@ -49,7 +47,6 @@ public class HttpClientDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS; // Only mode that is currently supported.
     return new HttpClientSource(conf);
   }
 }
