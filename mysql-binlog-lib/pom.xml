@@ -35,6 +35,7 @@
     <jackson.version>2.8.8</jackson.version>
     <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
     <mysql-binlog-connector-java.version>0.13.0</mysql-binlog-connector-java.version>
+    <joda.version>2.8</joda.version>
     <guava.version>19.0</guava.version>
   </properties>
 
@@ -85,9 +86,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -111,6 +110,12 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
       <version>${hamcrest.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>${joda.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
