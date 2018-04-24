@@ -551,6 +551,24 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/jsonArray")
+  @Produces("application/json")
+  public static class JsonArrayResource {
+    @GET
+    public Response getJsonArray() {
+      return entityOnlyOnFirstRequest(
+          "[{\"AccountId\":1,\"DeviceId\":77,\"DeviceName\":\"Tetraphis Moss\",\"Latitude\":8.5681393," +
+              "\"Longitude\":-70.3583879,\"Heading\":100,\"Velocity\":33,\"Satellites\":16,\"Ignition\":13," +
+              "\"LastMoved\":\"2017-06-03\",\"LastUpdated\":\"2017-04-21\",\"OutputFlags\":92,\"Power\":62}," +
+              "{\"AccountId\":2,\"DeviceId\":85,\"DeviceName\":\"Field Locoweed\",\"Latitude\":54.3667173," +
+              "\"Longitude\":92.1024101,\"Heading\":51,\"Velocity\":64,\"Satellites\":81,\"Ignition\":44," +
+              "\"LastMoved\":\"2017-06-04\",\"LastUpdated\":\"2017-07-23\",\"OutputFlags\":68,\"Power\":58}," +
+              "{\"AccountId\":3,\"DeviceId\":50,\"DeviceName\":\"Eggplant\",\"Latitude\":40.039342," +
+              "\"Longitude\":116.260921,\"Heading\":56,\"Velocity\":58,\"Satellites\":16,\"Ignition\":40," +
+              "\"LastMoved\":\"2017-08-30\",\"LastUpdated\":\"2018-02-01\",\"OutputFlags\":64,\"Power\":79}]");
+    }
+  }
+
   @Override
   protected Application configure() {
     forceSet(TestProperties.CONTAINER_PORT, "0");
@@ -570,7 +588,8 @@ public class HttpClientSourceIT extends JerseyTest {
             Auth2Resource.class,
             Auth2ResourceOwnerWithIdResource.class,
             Auth2BasicResource.class,
-            Auth2JWTResource.class
+            Auth2JWTResource.class,
+            JsonArrayResource.class
         )
     );
   }
@@ -600,7 +619,8 @@ public class HttpClientSourceIT extends JerseyTest {
                     Auth2Resource.class,
                     Auth2ResourceOwnerWithIdResource.class,
                     Auth2BasicResource.class,
-                    Auth2JWTResource.class
+                    Auth2JWTResource.class,
+                    JsonArrayResource.class
                 )
             )
         )
@@ -1495,4 +1515,49 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Test
+  public void testJsonArray() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.client.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = getBaseUri() + "jsonArray";
+    conf.client.readTimeoutMillis = 1000;
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      List<Record> parsedRecords = getRecords(runner);
+
+      assertEquals(3, parsedRecords.size());
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertTrue(parsedRecords.get(i).has("/AccountId"));
+        assertTrue(parsedRecords.get(i).has("/DeviceId"));
+        assertTrue(parsedRecords.get(i).has("/DeviceName"));
+        assertTrue(parsedRecords.get(i).has("/Heading"));
+        assertTrue(parsedRecords.get(i).has("/Ignition"));
+        assertTrue(parsedRecords.get(i).has("/LastMoved"));
+        assertTrue(parsedRecords.get(i).has("/LastUpdated"));
+        assertTrue(parsedRecords.get(i).has("/Latitude"));
+        assertTrue(parsedRecords.get(i).has("/Longitude"));
+        assertTrue(parsedRecords.get(i).has("/OutputFlags"));
+        assertTrue(parsedRecords.get(i).has("/Power"));
+        assertTrue(parsedRecords.get(i).has("/Satellites"));
+        assertTrue(parsedRecords.get(i).has("/Velocity"));
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
