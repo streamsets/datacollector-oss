@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum OnStagePreConditionFailure implements Label {
-  CONTINUE("Continue"),
+  CONTINUE("Include without Processing"),
   TO_ERROR("Send to Error"),
 
   ;
