@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.el;
 
-import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.StageException;
@@ -58,7 +57,7 @@ public class VaultEL {
     try {
       return vaultCredentialStore.get("all", path + "@" + key, "delay=" + delay).get();
     } catch (StageException ex) {
-      throw Throwables.propagate(ex);
+      throw new RuntimeException(ex);
     }
   }
 

@@ -51,7 +51,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
