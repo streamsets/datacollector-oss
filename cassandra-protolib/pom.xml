@@ -34,6 +34,7 @@
 
   <properties>
     <cassandra-driver.version>3.2.0</cassandra-driver.version>
+    <commons-io.version>2.4</commons-io.version>
     <dse-driver.version>1.2.4</dse-driver.version>
     <cassandra-unit.version>3.1.3.2</cassandra-unit.version>
     <lz4.version>1.3.0</lz4.version>
@@ -82,27 +83,12 @@
     <!-- Compile Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-buffer</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
     </dependency>
 
     <dependency>
