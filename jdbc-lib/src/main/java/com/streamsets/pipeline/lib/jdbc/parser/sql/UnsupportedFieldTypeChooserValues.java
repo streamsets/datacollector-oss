@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 

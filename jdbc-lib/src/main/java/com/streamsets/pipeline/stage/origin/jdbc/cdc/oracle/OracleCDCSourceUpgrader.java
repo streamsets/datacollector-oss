@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
 
 import java.time.ZoneId;
 import java.util.ArrayList;

@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.RawTypeHandler;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Assert;

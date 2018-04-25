@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
-class UnsupportedFieldTypeException extends RuntimeException {
+public class UnparseableSQLException extends Exception {
+  public final String sql;
 
-  final String column;
-  final String columnVal;
-  final int fieldType;
-
-  UnsupportedFieldTypeException(String column, String columnVal, int fieldType) {
-    this.column = column;
-    this.columnVal = columnVal;
-    this.fieldType = fieldType;
+  public UnparseableSQLException(String sql) {
+    this.sql = sql;
   }
 }

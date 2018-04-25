@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.StageException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -29,8 +28,7 @@ public class RawTypeHandler {
 
   private static final Pattern HEX_TO_RAW_PATTERN = Pattern.compile("HEXTORAW\\('(.*)'\\)");
 
-  @VisibleForTesting
-  static byte[] parseRaw(String column, String value, int columnType) throws StageException {
+  public static byte[] parseRaw(String column, String value, int columnType) throws StageException {
     if (value == null) {
       return null;
     }

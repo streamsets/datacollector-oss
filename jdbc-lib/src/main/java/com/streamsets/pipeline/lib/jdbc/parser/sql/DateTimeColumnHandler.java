@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
@@ -24,7 +24,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -34,6 +33,9 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_37;
 
 public class DateTimeColumnHandler {
 
+  public static final String DEFAULT_LOCAL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss[.SSSSSSSSS]";
+  public static final String DEFAULT_ZONED_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss[.SSSSSSSSS] VV";;
+  public static final String DEFAULT_DATETIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
   private final Pattern toDatePattern = Pattern.compile("TO_DATE\\('(.*)',.*");
   // If a date is set into a timestamp column (or a date field is widened to a timestamp,
   // a timestamp ending with "." is returned (like 2016-04-15 00:00:00.), so we should also ignore the trailing ".".
@@ -41,35 +43,52 @@ public class DateTimeColumnHandler {
   // TIMESTAMP WITH LOCAL TIME ZONE contains a "." at the end just like timestamp, so ignore that.
   private final Pattern toTimeStampTzPatternLocalTz = Pattern.compile("TO_TIMESTAMP_TZ\\('(.*[^\\.]).*'");
   private final Pattern toTimeStampTzPatternTz = Pattern.compile("TO_TIMESTAMP_TZ\\('(.*).*'");
-  static final DateTimeFormatter DT_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-  private static final DateTimeFormatter LOCAL_DT_FORMATTER =
-      new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
-          .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
-          .toFormatter();
-  private static final DateTimeFormatter ZONED_DT_FORMATTER =
-      new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
-          .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
-          .appendLiteral(' ')
-          .appendZoneId()
-          .toFormatter();
+  public final DateTimeFormatter dateFormatter;
+  private final DateTimeFormatter localDtFormatter;
+  private final DateTimeFormatter zonedDtFormatter;
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
 
-  static final String DT_SESSION_FORMAT = "'DD-MM-YYYY HH24:MI:SS'";
+  public static final String DT_SESSION_FORMAT = "'DD-MM-YYYY HH24:MI:SS'";
   // Oracle cannot return offset and zone id together -
   // so we use offset since that uniquely represents an instant in time. TZH:TZM TZR as format will throw an exception.
   // Oracle can represent 3 letter times (PST/PDT) and zone id (America/Los_Angeles) and expects that can be used to
   // figure out if the time was in an overlapping period (ex: PDT -> PST), but this is not useful as SHORT zone id
   // is no longer used by Java for detecting overlap, and will always fall to the "standard" time, not to summer time.
   // So we only use offsets, no zone id
-  static final String ZONED_DATETIME_SESSION_FORMAT = "'YYYY-MM-DD HH24:MI:SS.FF TZH:TZM'";
-  static final String TIMESTAMP_SESSION_FORMAT = "'YYYY-MM-DD HH24:MI:SS.FF'";
+  public static final String ZONED_DATETIME_SESSION_FORMAT = "'YYYY-MM-DD HH24:MI:SS.FF TZH:TZM'";
+  public static final String TIMESTAMP_SESSION_FORMAT = "'YYYY-MM-DD HH24:MI:SS.FF'";
 
   private final ZoneId zoneId;
 
   public DateTimeColumnHandler(ZoneId zoneId) {
+    this(zoneId, DEFAULT_DATETIME_FORMAT, DEFAULT_LOCAL_DATETIME_FORMAT, DEFAULT_ZONED_DATETIME_FORMAT);
+  }
+
+  public DateTimeColumnHandler(
+      ZoneId zoneId,
+      String dateFormat,
+      String localDateTimeFormat,
+      String zonedDatetimeFormat
+  ) {
     this.zoneId = zoneId;
+    dateFormatter =
+        new DateTimeFormatterBuilder()
+            .parseLenient()
+            .appendPattern(dateFormat)
+            .toFormatter();
+    localDtFormatter =
+        new DateTimeFormatterBuilder()
+            .parseLenient()
+            .appendPattern(localDateTimeFormat)
+            .toFormatter();
+
+    zonedDtFormatter =
+        new DateTimeFormatterBuilder()
+            .parseLenient()
+            .appendPattern(zonedDatetimeFormat)
+            .toFormatter();
   }
 
   /**
@@ -79,7 +98,7 @@ public class DateTimeColumnHandler {
    * DATE to TIMESTAMP. So we check whether the returned SQL has TO_TIMESTAMP - if it does we return it as DATETIME, else we
    * return it as DATE.
    */
-  Field getDateTimeStampField(
+  public Field getDateTimeStampField(
       String column,
       String columnValue,
       int columnType,
@@ -109,24 +128,24 @@ public class DateTimeColumnHandler {
     }
   }
 
-  Field getTimestampWithTimezoneField(String columnValue) {
+  public Field getTimestampWithTimezoneField(String columnValue) {
     if (columnValue == null) {
       return Field.createZonedDateTime(null);
     }
     Matcher m = toTimeStampTzPatternTz.matcher(columnValue);
     if (m.find()) {
-      return Field.createZonedDateTime(ZonedDateTime.parse(m.group(1), ZONED_DT_FORMATTER));
+      return Field.createZonedDateTime(ZonedDateTime.parse(m.group(1), zonedDtFormatter));
     }
     return Field.createZonedDateTime(null);
   }
 
-  Field getTimestampWithLocalTimezone(String columnValue) {
+  public Field getTimestampWithLocalTimezone(String columnValue) {
     if (columnValue == null) {
       return Field.createZonedDateTime(null);
     }
     Matcher m = toTimeStampTzPatternLocalTz.matcher(columnValue);
     if (m.find()) {
-      return Field.createZonedDateTime(ZonedDateTime.of(LocalDateTime.parse(m.group(1), LOCAL_DT_FORMATTER), zoneId));
+      return Field.createZonedDateTime(ZonedDateTime.of(LocalDateTime.parse(m.group(1), localDtFormatter), zoneId));
     }
     return Field.createZonedDateTime(null);
   }
@@ -138,7 +157,7 @@ public class DateTimeColumnHandler {
     return Optional.of(m.group(1));
   }
 
-  LocalDateTime getDate(String s) {
-    return LocalDateTime.parse(s, DT_FORMATTER);
+  public LocalDateTime getDate(String s) {
+    return LocalDateTime.parse(s, dateFormatter);
   }
 }

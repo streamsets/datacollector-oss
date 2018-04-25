@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.stage.processor.jdbclookup.JdbcLookupLoader;
 import com.streamsets.pipeline.stage.processor.jdbclookup.JdbcLookupProcessor;
 
 @GenerateResourceBundle
@@ -133,6 +132,11 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_307("Invalid decimal value {} in field {}: {} {} is more then expected {} "),
   JDBC_308("Information {} missing or invalid in the metadata record: {}"),
   JDBC_309("No schema writer for connection string '{}'"),
+
+  JDBC_401("Record '{}' has null or empty field '{}'"),
+  JDBC_402("Columns '{}' are not present in {}"),
+  JDBC_403("Could not parse SQL statement: {}"),
+
   ;
 
   private final String msg;

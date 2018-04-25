@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
-import com.streamsets.pipeline.api.Label;
+public class UnsupportedFieldTypeException extends RuntimeException {
 
-public enum UnsupportedFieldTypeValues implements Label {
-  SEND_TO_PIPELINE("Send Record to Pipeline"),
-  TO_ERROR("Send Record To Error"),
-  DISCARD("Discard Record"),
-  ;
+  public final String column;
+  public final String columnVal;
+  public final int fieldType;
 
-  private final String label;
-
-  UnsupportedFieldTypeValues(String label) {
-    this.label = label;
-  }
-  @Override
-  public String getLabel() {
-    return label;
+  UnsupportedFieldTypeException(String column, String columnVal, int fieldType) {
+    this.column = column;
+    this.columnVal = columnVal;
+    this.fieldType = fieldType;
   }
 }

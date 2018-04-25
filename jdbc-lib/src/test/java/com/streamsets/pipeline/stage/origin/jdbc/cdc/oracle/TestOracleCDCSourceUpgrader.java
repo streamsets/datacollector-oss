@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
 import org.junit.Assert;
 import org.junit.Test;
 

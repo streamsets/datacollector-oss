@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Listener for use with {@linkplain org.antlr.v4.runtime.tree.ParseTreeWalker}.
@@ -37,6 +39,9 @@ public class SQLListener extends plsqlBaseListener {
   private boolean allowNulls = false;
   private Set<String> columnsExpected;
   private String table;
+  private String schema;
+
+  private final Pattern tableSchemaPattern = Pattern.compile("\"(.*)\"\\.\"(.*)\"");
 
   private List<plsqlParser.Column_nameContext> columnNames;
 
@@ -47,8 +52,39 @@ public class SQLListener extends plsqlBaseListener {
     }
   }
 
+  private void extractTableAndSchema(String tableSchema) {
+    Matcher m = tableSchemaPattern.matcher(tableSchema);
+    if (m.matches()) {
+      schema = m.group(1);
+      table = m.group(2);
+    } else {
+      table = format(table); // no schema name, only table
+    }
+  }
+
+  @Override
+  public void enterUpdate_statement(plsqlParser.Update_statementContext ctx) {
+    if (table == null) {
+      String tableSchema = ctx.general_table_ref().getText();
+      extractTableAndSchema(tableSchema);
+    }
+  }
+
+  @Override
+  public void enterDelete_statement(plsqlParser.Delete_statementContext ctx) {
+    if (table == null) {
+      String tableSchema = ctx.general_table_ref().getText();
+      extractTableAndSchema(tableSchema);
+    }
+  }
+
   @Override
   public void enterInsert_into_clause(plsqlParser.Insert_into_clauseContext ctx) {
+    if (table == null) {
+      String tableSchema = ctx.general_table_ref().getText();
+      extractTableAndSchema(tableSchema);
+    }
+
     this.columnNames = ctx.column_name();
   }
 
@@ -95,7 +131,9 @@ public class SQLListener extends plsqlBaseListener {
       }
       // Why check the table's column names? Because stuff like TO_DATE(<something>) will also come in here
       // with each token as a key with null value.
-      if (key != null && (val != null || (allowNulls && columnsExpected.contains(key))) && !columns.containsKey(key)) {
+      if (key != null
+          && (val != null || (allowNulls && columnsExpected != null && columnsExpected.contains(key)))
+          && !columns.containsKey(key)) {
         columns.put(key, formatValue(val));
       }
     }
@@ -146,6 +184,7 @@ public class SQLListener extends plsqlBaseListener {
     this.columnsExpected = null;
     columnNames = null;
     table = null;
+    schema = null;
     insideStatement = false;
   }
 
@@ -157,15 +196,20 @@ public class SQLListener extends plsqlBaseListener {
     return table;
   }
 
-  void setCaseSensitive() {
+  public String getSchema() {
+    return schema;
+  }
+
+
+  public void setCaseSensitive() {
     this.caseSensitive = true;
   }
 
-  void allowNulls() {
+  public void allowNulls() {
     this.allowNulls = true;
   }
 
-  void setColumns(Set<String> columns) {
+  public void setColumns(Set<String> columns) {
     this.columnsExpected = columns;
   }
 }
