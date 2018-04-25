@@ -84,22 +84,10 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -109,34 +97,6 @@
         <configuration>
           <skip>true</skip>
         </configuration>
-      </plugin>
-      <!-- We have to shade Avro to avoid issues between Kinetica and StreamSets -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <!-- <version>3.0.0</version> -->
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-               <artifactSet>
-                <includes>
-                  <include>org.apache.avro:*</include>
-                </includes>
-              </artifactSet>
-              <relocations>
-                <relocation>
-                  <pattern>org.apache.avro</pattern>
-                  <shadedPattern>org.shaded.apache.avro</shadedPattern>
-                </relocation>
-              </relocations>
-              <createDependencyReducedPom>false</createDependencyReducedPom>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

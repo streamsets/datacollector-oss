@@ -15,14 +15,13 @@
  */
 package com.streamsets.pipeline.stage.kinetica;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.avro.generic.IndexedRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
 import com.gpudb.BulkInserter;
 import com.gpudb.BulkInserter.InsertException;
 import com.gpudb.Type;
@@ -76,9 +75,11 @@ public class KineticaTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
-    Iterator<Record> batchIterator = batch.getRecords();
-    while (batchIterator.hasNext()) {
-      Record record = batchIterator.next();
+    // Generate in-memory list of records
+    List<Record> records = new ArrayList<>();
+    batch.getRecords().forEachRemaining(records::add);
+
+    for(Record record : records)  {
       try {
         write(record);
       } catch (Exception e) {
@@ -89,7 +90,7 @@ public class KineticaTarget extends BaseTarget {
            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KINETICA_03, e));
           break;
         case STOP_PIPELINE:
-          errorRecordHandler.onError(Lists.newArrayList(batch.getRecords()), new StageException(Errors.KINETICA_03, e));
+          errorRecordHandler.onError(records, new StageException(Errors.KINETICA_03, e));
           break;
         default:
           throw new IllegalStateException(
@@ -103,7 +104,7 @@ public class KineticaTarget extends BaseTarget {
       bulkInserter.flush();
     } catch (InsertException e) {
       LOG.error(e.getMessage(), e);
-      errorRecordHandler.onError(Lists.newArrayList(batch.getRecords()), new StageException(Errors.KINETICA_04, e));
+      errorRecordHandler.onError(records, new StageException(Errors.KINETICA_04, e));
     }
   }
 
