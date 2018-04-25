@@ -58,6 +58,12 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-stagesupport</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-scripting-protolib</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -77,6 +83,11 @@
         <artifactId>streamsets-datacollector-guavasupport</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-lookup-protolib</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>

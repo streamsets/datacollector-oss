@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ChooserValues;
 
 import java.time.LocalDateTime;
@@ -65,7 +64,7 @@ public class TimeZoneChooserValues implements ChooserValues {
    * +01:00 CET (Europe/Prague)
    * -07:00 PST (America/Los_Angeles)
    */
-  @VisibleForTesting
+//  @VisibleForTesting
   static String getLabelForTimeZoneId(ZoneId zoneId) {
     ZoneOffset zos = LocalDateTime.now().atZone(zoneId).getOffset();
 

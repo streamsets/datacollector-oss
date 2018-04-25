@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.executor;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
@@ -240,7 +239,7 @@ public class SafeScheduledExecutorService extends ScheduledThreadPoolExecutor {
     }
   }
 
-  @VisibleForTesting
+//  @VisibleForTesting
   void setExecutorSupport(ExecutorSupport executorSupport) {
     this.executorSupport = executorSupport;
   }

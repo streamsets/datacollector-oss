@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -293,7 +292,7 @@ public final class MultithreadedTableProvider {
       if (fromStoredOffsets) {
         partitions = reconstructedPartitions.get(tableContext);
       }
-      if (CollectionUtils.isEmpty(partitions)) {
+      if (partitions == null  || partitions.isEmpty()) {
         partitions = Collections.singletonList(TableRuntimeContext.createInitialPartition(tableContext));
       }
 

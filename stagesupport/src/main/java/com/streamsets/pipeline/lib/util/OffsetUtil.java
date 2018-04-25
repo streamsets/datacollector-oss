@@ -18,9 +18,6 @@ package com.streamsets.pipeline.lib.util;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +25,6 @@ import java.util.Map;
 
 public final class OffsetUtil {
   private static final JsonMapper JSON_MAPPER = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
-  private static final Logger LOG = LoggerFactory.getLogger(OffsetUtil.class);
 
   private OffsetUtil() {}
 
@@ -51,7 +47,7 @@ public final class OffsetUtil {
   @SuppressWarnings("unchecked")
   public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
     Map<String, String> offsetMap;
-    if (StringUtils.isEmpty(lastSourceOffset)) {
+    if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
       offsetMap = new HashMap<>();
     } else {
       offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);

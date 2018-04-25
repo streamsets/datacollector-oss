@@ -15,10 +15,7 @@
  */
 package com.streamsets.pipeline.config.upgrade;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.streamsets.pipeline.api.Config;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -27,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
@@ -62,7 +60,9 @@ public class UpgraderTestUtils {
      */
     public void assertAllMoved(List<Config> configs, Map<String, String> oldToNewNames) {
       Set<String> newNamesSeen = new HashSet<>(oldToNewNames.values());
-      BiMap<String, String> newToOld = HashBiMap.create(oldToNewNames).inverse();
+      Map<String, String> newToOld = oldToNewNames.entrySet()
+          .stream()
+          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
       for (Config config : configs) {
         final String name = config.getName();
@@ -91,7 +91,7 @@ public class UpgraderTestUtils {
       Assert.assertEquals(
           String.format(
               "new configs did not contain expected new names: %s",
-              StringUtils.join(newNamesSeen)
+              String.join(", ", newNamesSeen)
           ),
           0,
           newNamesSeen.size()
@@ -153,8 +153,8 @@ public class UpgraderTestUtils {
     configs.forEach(config -> allPropertyNames.remove(config.getName()));
     assertThat(String.format(
         "Expected all properties %s to exist in configs, but these were not present: %s",
-        StringUtils.join(propertyNames, ", "),
-        StringUtils.join(allPropertyNames, ", ")
+        String.join(", ", propertyNames),
+        String.join(", ", allPropertyNames)
     ), allPropertyNames, empty());
   }
 

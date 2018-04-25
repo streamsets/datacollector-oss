@@ -17,8 +17,7 @@
 package com.streamsets.pipeline.lib.jdbc.multithread.util;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
