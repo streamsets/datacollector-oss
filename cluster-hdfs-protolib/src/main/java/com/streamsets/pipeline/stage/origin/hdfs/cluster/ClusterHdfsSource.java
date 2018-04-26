@@ -86,17 +86,15 @@ import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.stream.Collectors;
-
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -157,6 +155,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
+    validateDelimitedConfigIfNeeded(issues);
+
     getHadoopConfiguration(issues);
 
     validateHadoopFS(issues);
@@ -182,7 +182,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     CsvHeader originalCsvHeader = conf.dataFormatConfig.csvHeader;
     if (originalCsvHeader != null && originalCsvHeader == CsvHeader.IGNORE_HEADER) {
       conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
-
     }
     conf.dataFormatConfig.init(
         getContext(),
@@ -338,7 +337,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @VisibleForTesting
   List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
-    throws IOException, InterruptedException {
+      throws IOException, InterruptedException {
     int previewCount = previewBuffer.size();
     TextInputFormat textInputFormat = new TextInputFormat();
     long fileLength = fileStatus.getLen();
@@ -354,7 +353,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     long splitLength = (fileLength < Integer.MAX_VALUE) ? fileLength: Integer.MAX_VALUE;
     InputSplit fileSplit = new FileSplit(filePath, 0, splitLength, null);
     TaskAttemptContext taskAttemptContext = new TaskAttemptContextImpl(hadoopConf,
-      TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
+        TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
 
     try (RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext)) {
       recordReader.initialize(fileSplit, taskAttemptContext);
@@ -415,6 +414,18 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     hadoopConfigFiles.forEach(file -> addHadoopConfigFile(file).ifPresent(issues::add));
   }
 
+  private void validateDelimitedConfigIfNeeded(List<ConfigIssue> issues) {
+    if (conf.dataFormat == DataFormat.DELIMITED && conf.dataFormatConfig.csvSkipStartLines != 0) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.csvSkipStartLines",
+              Errors.HADOOPFS_32
+          )
+      );
+    }
+  }
+
   private Optional<ConfigIssue> addHadoopConfigFile(File file) {
     if (file.isFile()) {
       hadoopConf.addResource(new Path(file.getAbsolutePath()));
@@ -446,14 +457,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     if (conf.hdfsKerberos) {
       hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-        UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+          UserGroupInformation.AuthenticationMethod.KERBEROS.name());
       try {
         hadoopConf.set(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY, "hdfs/_HOST@" + HadoopSecurityUtil.getDefaultRealm());
       } catch (Exception ex) {
         LOG.error(ex.toString(), ex);
         if (!conf.hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
-            ex.getMessage()));
+              ex.getMessage()));
         }
       }
     }
@@ -479,25 +490,25 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
           if(!hadoopConfigDir.getPath().startsWith(new File(getContext().getResourcesDirectory()).getCanonicalPath())) {
             issues.add(
-              getContext().createConfigIssue(
-                  Groups.HADOOP_FS.name(),
-                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
-                  Errors.HADOOPFS_29,
-                  conf.hdfsConfDir,
-                  hadoopConfigDir.getAbsolutePath(),
-                  getContext().getResourcesDirectory()
-              )
+                getContext().createConfigIssue(
+                    Groups.HADOOP_FS.name(),
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
+                    Errors.HADOOPFS_29,
+                    conf.hdfsConfDir,
+                    hadoopConfigDir.getAbsolutePath(),
+                    getContext().getResourcesDirectory()
+                )
             );
           }
         } catch (IOException e) {
           LOG.error("Can't resolve configuration directory", e);
           issues.add(
-            getContext().createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
-                Errors.HADOOPFS_26,
-                conf.hdfsConfDir
-            )
+              getContext().createConfigIssue(
+                  Groups.HADOOP_FS.name(),
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
+                  Errors.HADOOPFS_26,
+                  conf.hdfsConfDir
+              )
           );
         }
       }
@@ -560,13 +571,13 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     try {
       UserGroupInformation loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
       userUgi = HadoopSecurityUtil.getProxyUser(
-            conf.hdfsUser,
-            getContext(),
-            loginUgi,
-            issues,
-            Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
-        );
+          conf.hdfsUser,
+          getContext(),
+          loginUgi,
+          issues,
+          Groups.HADOOP_FS.name(),
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
+      );
       if (userUgi != loginUgi) {
         proxyUser = userUgi.getUserName();
         LOG.debug("Proxy user submitting cluster batch job is {}", proxyUser);
@@ -587,7 +598,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       } else {
         logMessage.append("Using Simple");
         hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-          UserGroupInformation.AuthenticationMethod.SIMPLE.name());
+            UserGroupInformation.AuthenticationMethod.SIMPLE.name());
       }
       if (validHadoopFsUri) {
         getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {

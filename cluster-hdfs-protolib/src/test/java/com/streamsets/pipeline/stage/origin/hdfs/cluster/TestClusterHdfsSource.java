@@ -16,10 +16,13 @@
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -27,8 +30,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,36 @@ public class TestClusterHdfsSource {
       Assert.assertEquals(conf.dataFormatConfig.customDelimiter,
           clusterHdfsSource.getConfiguration().get(ClusterHdfsSource.TEXTINPUTFORMAT_RECORD_DELIMITER)
       );
+    } finally {
+      clusterHdfsSource.destroy();
+    }
+  }
+
+  @Test
+  public void testInvalidDelimitedLinesToSkipConfig() throws Exception {
+    List<String> dirPaths = Arrays.asList("dummy");
+    ClusterHdfsConfigBean conf = getConfigBean(dirPaths);
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.csvSkipStartLines = 1;
+    ClusterHdfsSource clusterHdfsSource = Mockito.spy(createSource(conf));
+    Mockito.doNothing().when(clusterHdfsSource).validateHadoopFS(Mockito.anyListOf(Stage.ConfigIssue.class));
+    Mockito.doNothing().when(clusterHdfsSource).getHadoopConfiguration(Mockito.anyListOf(Stage.ConfigIssue.class));
+    Mockito.doAnswer(invocationOnMock -> null).when(clusterHdfsSource).getFileSystemForInitDestroy(Mockito.any(Path.class));
+    Mockito.doReturn(dirPaths).when(clusterHdfsSource).validateAndGetHdfsDirPaths(Mockito.anyListOf(Stage.ConfigIssue
+        .class));
+    Configuration hadoopConf = new Configuration();
+
+    Whitebox.setInternalState(clusterHdfsSource,"hadoopConf", hadoopConf);
+    SourceRunner sourceRunner =
+        new SourceRunner.Builder(ClusterHdfsDSource.class, clusterHdfsSource)
+            .addOutputLane("lane")
+            .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
+            .build();
+    try {
+      List<Stage.ConfigIssue> issues = sourceRunner.runValidateConfigs();
+      Assert.assertFalse(issues.isEmpty());
+      Assert.assertEquals(1, issues.size());
+      Assert.assertTrue(issues.get(0).toString().contains(Errors.HADOOPFS_32.name()));
     } finally {
       clusterHdfsSource.destroy();
     }

@@ -42,7 +42,9 @@ public enum Errors implements ErrorCode {
   HADOOPFS_29("Hadoop configuration directory '{}' (resolved to '{}') is not inside SDC resources directory '{}'."),
   HADOOPFS_30("Hadoop configuration file '{}' does not exist"),
   HADOOPFS_31("Hadoop configuration dir with config files core-site.xml, hdfs-site.xml, yarn-site.xml and " +
-      "mapred-site.xml is required");
+      "mapred-site.xml is required"),
+  HADOOPFS_32("Lines to Skip is not applicable for Cluster Batch Mode and should be set to 0"),
+
   ;
   private final String msg;
 
