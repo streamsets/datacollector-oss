@@ -29,7 +29,7 @@ public class SecretAuth {
   private List<String> policies;
   @Key
   private Map<String, String> metadata;
-  @Key
+  @Key("lease_duration")
   private int leaseDuration;
   @Key
   private boolean renewable;
