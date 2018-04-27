@@ -368,11 +368,17 @@ public class ProtobufTypeUtil {
     if (message == null) {
       // If the message does not contain required fields then builder.build() throws UninitializedMessageException
       Object defaultValue = null;
+      Descriptors.FieldDescriptor.JavaType javaType = fieldDescriptor.getJavaType();
       // get default values only for optional fields and non-message types
       if (fieldDescriptor.isOptional() && fieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.MESSAGE) {
         defaultValue = fieldDescriptor.getDefaultValue();
+        //Default value for byte string should be converted to byte array
+        if (javaType == Descriptors.FieldDescriptor.JavaType.BYTE_STRING
+            && defaultValue instanceof ByteString) {
+          defaultValue = ((ByteString)defaultValue).toByteArray();
+        }
       }
-      newField = Field.create(getFieldType(fieldDescriptor.getJavaType()), defaultValue);
+      newField = Field.create(getFieldType(javaType), defaultValue);
     } else if (fieldDescriptor.isMapField()) {
       // Map entry (protobuf 3 map)
       Map<String, Field> sdcMapFieldValues = new HashMap<>();

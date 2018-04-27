@@ -1,0 +1,9 @@
+package util;
+
+option java_package = "com.streamsets.pipeline.lib.util";
+option java_outer_classname = "SampleProto";
+
+message Sample {
+  required int32 id = 1;
+  optional bytes description = 2 [default=""];
+}
