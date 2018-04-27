@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.avroorc.AvroToOrcRecordConverter;
 import com.streamsets.pipeline.lib.util.avroorc.AvroToOrcSchemaConverter;
@@ -22,15 +23,9 @@ import com.streamsets.pipeline.stage.destination.mapreduce.MapreduceUtils;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseCreator;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionInputFormat;
 import io.airlift.compress.Decompressor;
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.generic.GenericDatumReader;
-import org.apache.avro.mapred.FsInput;
-import org.apache.avro.util.Utf8;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.ql.exec.vector.TimestampColumnVector;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.orc.impl.OrcCodecPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
@@ -49,7 +44,8 @@ public class AvroOrcConvertCreator extends AvroConversionBaseCreator {
         AvroTypeUtil.class,
         Log4jLoggerAdapter.class,
         Logger.class,
-        Decompressor.class
+        Decompressor.class,
+        ErrorCode.class
     );
     // add all other required dependencies
     MapreduceUtils.addJarsToJob(conf, true, "hive-storage-api", "orc-core", "avro");
