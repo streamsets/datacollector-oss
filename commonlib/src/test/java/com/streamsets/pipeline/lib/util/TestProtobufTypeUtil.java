@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -241,7 +242,6 @@ public class TestProtobufTypeUtil {
 
   @Test
   public void testSdcToProtobufExtensions() throws Exception {
-
     List<Record> protobufRecords = ProtobufTestUtil.getProtobufRecords();
     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(bOut);
@@ -464,6 +464,68 @@ public class TestProtobufTypeUtil {
     Assert.assertNotNull(oneof_name);
     Assert.assertTrue(oneof_name instanceof String);
     Assert.assertEquals("Hello", oneof_name);
+  }
+
+  @Test
+  public void testDefaultValueByteString() throws Exception {
+    Record writtenRecord = RecordCreator.create();
+    Map<String, Field> oneofInt = new HashMap<>();
+    oneofInt.put("id", Field.create(5));
+    writtenRecord.set(Field.create(oneofInt));
+
+    Map<String, Object> defaultValueMap = new HashMap<>();
+    Map<String, Descriptors.FileDescriptor> fileDescriptorMap = new HashMap<>();
+    Map<String, Set<Descriptors.FieldDescriptor>> typeToExtensionMap = new HashMap<>();
+
+    FileInputStream fin = new FileInputStream(Resources.getResource("SampleV1.desc").getPath());
+
+    DescriptorProtos.FileDescriptorSet fileDescriptorSet = DescriptorProtos.FileDescriptorSet.parseFrom(fin);
+    ProtobufTypeUtil.getAllFileDescriptors(fileDescriptorSet, new HashMap<>(), fileDescriptorMap);
+    ProtobufTypeUtil.populateDefaultsAndExtensions(fileDescriptorMap, typeToExtensionMap, defaultValueMap);
+
+    Descriptors.Descriptor descriptor =
+        ProtobufTypeUtil.getDescriptor(fileDescriptorSet, fileDescriptorMap, "SampleV1.desc", "util.Sample");
+
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
+    DynamicMessage dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+        writtenRecord,
+        descriptor,
+        typeToExtensionMap,
+        defaultValueMap
+    );
+
+    dynamicMessage.writeTo(bOut);
+    bOut.close();
+
+    //Read the written message
+    defaultValueMap.clear();
+    fileDescriptorMap.clear();
+    typeToExtensionMap.clear();
+
+    fin = new FileInputStream(Resources.getResource("SampleV2.desc").getPath());
+    fileDescriptorSet = DescriptorProtos.FileDescriptorSet.parseFrom(fin);
+    ProtobufTypeUtil.getAllFileDescriptors(fileDescriptorSet, new HashMap<>(), fileDescriptorMap);
+    ProtobufTypeUtil.populateDefaultsAndExtensions(fileDescriptorMap, typeToExtensionMap, defaultValueMap);
+
+    descriptor =
+        ProtobufTypeUtil.getDescriptor(fileDescriptorSet, fileDescriptorMap, "SampleV2.desc", "util.Sample");
+    DynamicMessage.Builder dynBldr = DynamicMessage.newBuilder(descriptor);
+    dynBldr.mergeFrom(new ByteArrayInputStream(bOut.toByteArray()), null);
+
+    Record record = RecordCreator.create();
+    Field rootField = ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, typeToExtensionMap, dynBldr.build());
+    record.set(rootField);
+    Assert.assertTrue(record.has("/id"));
+    Assert.assertTrue(record.has("/description"));
+
+    Assert.assertEquals(Field.Type.INTEGER, record.get("/id").getType());
+    Assert.assertEquals(Field.Type.BYTE_ARRAY, record.get("/description").getType());
+
+    Assert.assertEquals(5, record.get("/id").getValueAsInteger());
+    Assert.assertArrayEquals("".getBytes(), record.get("/description").getValueAsByteArray());
+
+
   }
 
 }
