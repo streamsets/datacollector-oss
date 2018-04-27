@@ -24,7 +24,8 @@ public enum Errors implements ErrorCode {
   AVRO_GENERATOR_01("Error getting default value for avro field '{}' : {}"),
   AVRO_GENERATOR_02("Expected a default value of 'null' but found '{}'"),
   AVRO_GENERATOR_03("Record '{}' is missing required header 'avroSchema'"),
-  AVRO_GENERATOR_04("Record {} has a different schema than is used for the current file. Current schema is '{}' whereas the record schema is '{}'"),
+  AVRO_GENERATOR_04("RecordRecord {} has a different schema than is used for the current file. Current schema is '{}' whereas the record schema is '{}'"),
+  AVRO_GENERATOR_05("Field type mismatch: Schema field type '{}' Record field type '{}'"),
   ;
 
   private final String msg;
