@@ -142,11 +142,11 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
               break;
             default:
           }
-          sb.append("\tat " + ste.toString());
-          sb.append('\n');
-
-          i++;
         }
+        sb.append("\tat " + ste.toString());
+        sb.append('\n');
+
+        i++;
 
         for (MonitorInfo mi : info.getLockedMonitors()) {
           if (mi.getLockedStackDepth() == i) {
