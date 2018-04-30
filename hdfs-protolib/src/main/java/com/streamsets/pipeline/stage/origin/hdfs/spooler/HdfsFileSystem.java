@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.spooler;
 
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
@@ -246,17 +247,20 @@ public class HdfsFileSystem implements WrappedFileSystem {
     // why not just check if the file exists? Well, there is a possibility file gets moved/archived/deleted right after
     // that check. In that case we will still fail. So fail, and recover.
     try {
-      if (useLastModified && (path2 == null || !fs.exists(new Path(path2.getAbsolutePath())))) {
+      if (path1 == null || path2 == null) {
         return 1;
       }
 
+      final String filePath1 = path1.getAbsolutePath();
+      final String filePath2 = path2.getAbsolutePath();
+
       if (useLastModified) {
         // if comparing with folder last modified timestamp, always return true
-        if (path2.toString().isEmpty()) {
+        if (filePath2.isEmpty() || !fs.exists(new Path(filePath2))) {
           return 1;
         }
 
-        if (!fs.exists(new Path(path1.getAbsolutePath()))) {
+        if (filePath1.isEmpty() || !fs.exists(new Path(filePath1))) {
           return 1;
         }
 
