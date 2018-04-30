@@ -596,7 +596,7 @@ public class DirectorySpooler {
         fs.handleOldFiles(spoolDirPath, startingFile, useLastModified, toProcess);
       } catch (Exception ex) {
         throw new IOException("traverseDirectories(): walkFileTree error. startingFile "
-            + startingFile
+            + startingFile.getAbsolutePath()
             + ex.getMessage(),
             ex
         );
