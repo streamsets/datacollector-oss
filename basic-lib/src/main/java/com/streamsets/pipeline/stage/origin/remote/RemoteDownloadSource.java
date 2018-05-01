@@ -642,18 +642,49 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private boolean shouldQueue(RemoteFile remoteFile) throws FileSystemException {
-    // Case 1: We started up for the first time, so anything we see must be queued
-    return currentOffset == null ||
-        // We poll for new files only when fileQueue is empty, so we don't need to check if this file is in the queue.
-        // The file can be in the fileQueue only if the file was already queued in this iteration -
-        // which is not possible, since we are iterating through the children,
-        // so this is the first time we are seeing the file.
-        // Case 2: The file is newer than the last one we read/are reading
-        ((remoteFile.lastModified > currentOffset.timestamp) ||
-            // Case 3: The file has the same timestamp as the last one we read, but is lexicographically higher, and we have not queued it before.
-            (remoteFile.lastModified == currentOffset.timestamp && remoteFile.filename.compareTo(currentOffset.fileName) > 0) ||
-            // Case 4: It is the same file as we were reading, but we have not read the whole thing, so queue it again - recovering from a shutdown.
-            remoteFile.filename.equals(currentOffset.fileName) && !currentOffset.offset.equals(MINUS_ONE));
+    // Case: We started up for the first time, so anything we see must be queued
+    if (currentOffset == null) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Initial file: {}", remoteFile.filename);
+      }
+      return true;
+    }
+    // We poll for new files only when fileQueue is empty, so we don't need to check if this file is in the queue.
+    // The file can be in the fileQueue only if the file was already queued in this iteration -
+    // which is not possible, since we are iterating through the children,
+    // so this is the first time we are seeing the file.
+
+    // Case: It is the same file as we were reading, but we have not read the whole thing, so queue it again
+    // - recovering from a shutdown.
+    if ((remoteFile.filename.equals(currentOffset.fileName))
+        && !(currentOffset.offset.equals(MINUS_ONE))) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Offset not complete: {}. Re-queueing.", remoteFile.filename);
+      }
+      return true;
+    }
+
+    // Case: The file is newer than the last one we read/are reading, and its not the same last one
+    if ((remoteFile.lastModified > currentOffset.timestamp)
+        && !(remoteFile.filename.equals(currentOffset.fileName))) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Updated file: {}", remoteFile.filename);
+      }
+      return true;
+    }
+
+    // Case: The file has the same timestamp as the last one we read, but is lexicographically higher,
+    // and we have not queued it before.
+    if ((remoteFile.lastModified == currentOffset.timestamp)
+        && (remoteFile.filename.compareTo(currentOffset.fileName) > 0)) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Same timestamp as currentOffset, lexicographically higher file: {}", remoteFile.filename);
+      }
+      return true;
+    }
+
+    // For all other things .. we don't add.
+    return false;
   }
 
   @Override
