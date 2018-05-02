@@ -179,6 +179,7 @@ public enum ContainerError implements ErrorCode {
       "running and that the URL is correctly configured in the pipeline general properties."),
   CONTAINER_01603("Starting Edge pipeline failed, status code '{}': {}"),
   CONTAINER_01604("Reset Offset for Edge pipeline failed, status code '{}': {}"),
+  CONTAINER_01605("Publishing Edge pipeline failed, status code '{}': {}"),
   ;
 
   private final String msg;
