@@ -76,6 +76,14 @@ public class EdgeUtil {
           .request()
           .post(Entity.json(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)));
 
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new PipelineException(
+            ContainerError.CONTAINER_01605,
+            response.getStatus(),
+            response.readEntity(String.class)
+        );
+      }
+
     } catch (ProcessingException ex) {
       if (ex.getCause() instanceof ConnectException) {
         throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
