@@ -53,6 +53,8 @@ public class FieldPathExpressionUtil {
    * @param elVars the {@link ELVars} instance to use when evaluating the expression
    * @param record the record against which to evaluate the expression; all returned values will be valid field paths
    *   within it
+   * @param recordEscapedFieldPaths the record's complete set of escaped field paths; should be identical to calling
+   *   record.getEscapedFieldPaths() on the record param
    * @return a {@link List} of field paths satisfying the given expression within the given {@code record}
    * @throws ELEvalException
    */
@@ -60,14 +62,15 @@ public class FieldPathExpressionUtil {
       String fieldExpression,
       ELEval elEval,
       ELVars elVars,
-      Record record
+      Record record,
+      Set<String> recordEscapedFieldPaths
   ) throws ELEvalException {
     if (isFieldPathExpressionFast(fieldExpression)) {
       // this field path expression actually does contain an EL expression, so need to evaluate against all fields
       return evaluateMatchingFieldPathsImpl(fieldExpression, elEval, elVars, record);
     } else {
       // else it does NOT contain one, so the field regex util (which is faster) can be used
-      return FieldRegexUtil.getMatchingFieldPaths(fieldExpression, record.getEscapedFieldPaths());
+      return FieldRegexUtil.getMatchingFieldPaths(fieldExpression, recordEscapedFieldPaths);
     }
   }
 

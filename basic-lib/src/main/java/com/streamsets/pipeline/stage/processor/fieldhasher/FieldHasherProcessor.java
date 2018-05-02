@@ -255,7 +255,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
             fieldToHash,
             fieldPathEval,
             fieldPathVars,
-            record
+            record,
+            record.getEscapedFieldPaths()
         );
         matchingFieldsForTheConfig.addAll(matchingFieldsPath);
       }

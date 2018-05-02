@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
@@ -134,13 +135,15 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   }
 
   private void processByField(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    final Set<String> fieldPaths = record.getEscapedFieldPaths();
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         final List<String> matchingFieldPaths = new LinkedList<>(FieldPathExpressionUtil.evaluateMatchingFieldPaths(
             fieldToConvert,
             fieldPathEval,
             fieldPathVars,
-            record
+            record,
+            fieldPaths
         ));
         if (matchingFieldPaths.isEmpty()) {
           // FieldPathExpressionUtil.evaluateMatchingFieldPaths does NOT return the supplied param in its result

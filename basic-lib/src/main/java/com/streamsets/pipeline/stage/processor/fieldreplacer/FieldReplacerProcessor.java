@@ -63,7 +63,8 @@ public class FieldReplacerProcessor extends SingleLaneRecordProcessor {
         rule.fields,
         pathEval,
         vars,
-        record
+        record,
+        record.getEscapedFieldPaths()
       );
 
       if(fieldPaths.isEmpty() && conf.onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR) {

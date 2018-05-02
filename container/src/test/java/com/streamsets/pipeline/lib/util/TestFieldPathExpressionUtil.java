@@ -133,7 +133,8 @@ public class TestFieldPathExpressionUtil {
         expression,
         eval,
         vars,
-        record
+        record,
+        record.getEscapedFieldPaths()
     );
 
     assertThat(matchingPaths, hasSize(expectedMatches.length));

@@ -129,7 +129,8 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
             toMask,
             fieldPathEval,
             fieldPathVars,
-            record
+            record,
+            fieldPaths
         )) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);

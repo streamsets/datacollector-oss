@@ -100,7 +100,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
           final List<String> matchingPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(fieldToReplace,
               fieldPathEval,
               fieldPathVars,
-              record
+              record,
+              fieldPaths
           );
           if (matchingPaths.isEmpty()) {
             fieldsThatDoNotExist.add(fieldToReplace);
@@ -136,7 +137,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
               fieldToReplace,
               fieldPathEval,
               fieldPathVars,
-              record
+              record,
+              fieldPaths
           )) {
             if (record.has(matchingField)) {
 
@@ -223,8 +225,11 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       for (String fieldNameToNull : fieldNamesToNull) {
         try {
           final List<String> matchingPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
-              fieldNameToNull, fieldPathEval, fieldPathVars,
-              record
+              fieldNameToNull,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              fieldPaths
           );
           if (matchingPaths.isEmpty()) {
             // FieldPathExpressionUtil.evaluateMatchingFieldPaths does NOT return the supplied param in its result

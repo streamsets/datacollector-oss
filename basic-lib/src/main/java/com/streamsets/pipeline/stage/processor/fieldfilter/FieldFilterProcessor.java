@@ -60,8 +60,11 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
         list = new ArrayList<>();
         for(String field : fields) {
           List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
-              field, fieldPathEval, fieldPathVars,
-              record
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              fieldPaths
           );
           list.addAll(matchingFieldPaths);
         }
@@ -70,8 +73,11 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
         list = new ArrayList<>();
         for (String field : fields) {
           List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
-              field, fieldPathEval, fieldPathVars,
-              record
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              fieldPaths
           );
           for (String fieldPath : matchingFieldPaths) {
             if (fieldPaths.contains(fieldPath) && record.get(fieldPath).getValue() == null) {
@@ -112,8 +118,11 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
           //Consider wild card characters
 
           List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
-              field, fieldPathEval, fieldPathVars,
-              record
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              fieldPaths
           );
           fieldsToRemove.removeAll(matchingFieldPaths);
           //Keep the children of the field
