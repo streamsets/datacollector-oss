@@ -69,7 +69,7 @@ public class EventHubProducerTarget extends BaseTarget {
     generatorFactory = producerConfigBean.dataGeneratorFormatConfig.getDataGeneratorFactory();
     if(issues.size() == 0) {
       try {
-        eventHubClient = eventHubCommon.createEventHubClient();
+        eventHubClient = eventHubCommon.createEventHubClient("event-hub-producer-pool-%d");
       } catch (Exception e) {
         issues.add(getContext().createConfigIssue(
             Groups.EVENT_HUB.toString(),
@@ -93,7 +93,7 @@ public class EventHubProducerTarget extends BaseTarget {
         try (DataGenerator dataGenerator = generatorFactory.getGenerator(byteBufferOutputStream)) {
           dataGenerator.write(record);
           dataGenerator.flush();
-          eventDataList.add(new EventData(byteBufferOutputStream.toByteArray()));
+          eventDataList.add(EventData.create(byteBufferOutputStream.toByteArray()));
         } catch(Exception ex) {
           LOG.error(Errors.EVENT_HUB_00.getMessage(), ex.toString(), ex);
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.EVENT_HUB_00, ex.getMessage()));

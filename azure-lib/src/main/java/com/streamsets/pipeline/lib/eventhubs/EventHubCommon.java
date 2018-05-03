@@ -15,11 +15,14 @@
  */
 package com.streamsets.pipeline.lib.eventhubs;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.microsoft.azure.eventhubs.ConnectionStringBuilder;
 import com.microsoft.azure.eventhubs.EventHubClient;
-import com.microsoft.azure.servicebus.ConnectionStringBuilder;
-import com.microsoft.azure.servicebus.ServiceBusException;
+import com.microsoft.azure.eventhubs.EventHubException;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class EventHubCommon {
 
@@ -30,14 +33,18 @@ public class EventHubCommon {
     this.commonConf = commonConf;
   }
 
-  public EventHubClient createEventHubClient() throws IOException, ServiceBusException {
-    ConnectionStringBuilder connStr = new ConnectionStringBuilder(
-        commonConf.namespaceName,
-        commonConf.eventHubName,
-        commonConf.sasKeyName,
-        commonConf.sasKey
+  public EventHubClient createEventHubClient(String threadNamePattern) throws IOException, EventHubException {
+    final ConnectionStringBuilder connStr = new ConnectionStringBuilder()
+        .setNamespaceName(commonConf.namespaceName)
+        .setEventHubName(commonConf.eventHubName)
+        .setSasKey(commonConf.sasKey)
+        .setSasKeyName(commonConf.sasKeyName);
+
+    final Executor executor = Executors.newCachedThreadPool(
+        new ThreadFactoryBuilder().setNameFormat(threadNamePattern).build()
     );
-    return EventHubClient.createFromConnectionStringSync(connStr.toString());
+
+    return EventHubClient.createSync(connStr.toString(), executor);
   }
 
 }
