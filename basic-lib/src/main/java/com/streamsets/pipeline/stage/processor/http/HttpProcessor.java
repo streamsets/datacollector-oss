@@ -223,9 +223,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       responses.put(entry.getKey(), responseFuture);
     }
     for (Map.Entry<Record, Future<Response>> entry : responses.entrySet()) {
-      Record output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
-      if (output != null) {
-        batchMaker.addRecord(output);
+      try {
+        Record output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
+        if (output != null) {
+          batchMaker.addRecord(output);
+        }
+      } catch (OnRecordErrorException e) {
+        errorRecordHandler.onError(e);
       }
     }
   }
@@ -259,6 +263,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return null;
       } else if (response.getStatus() < 200 || response.getStatus() >= 300) {
+        resolvedRecords.remove(record);
         throw new OnRecordErrorException(
             record,
             Errors.HTTP_01,
