@@ -23,6 +23,7 @@ public enum Errors implements ErrorCode {
   EVENT_HUB_00("Error sending resource. Status: {} Reason: {}"),
   EVENT_HUB_01("Error when disconnecting Azure Event Hub Client. Reason: {}"),
   EVENT_HUB_02("Failed to connect : {}"),
+  EVENT_HUB_03("Error closing event processor. Status: {} Reason: {}"),
   ;
 
   private final String msg;

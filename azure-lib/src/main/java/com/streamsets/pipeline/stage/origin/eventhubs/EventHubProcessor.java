@@ -52,22 +52,22 @@ public class EventHubProcessor implements IEventProcessor {
   }
 
   @Override
-  public void onOpen(PartitionContext context) throws Exception {
+  public void onOpen(PartitionContext context) {
     LOG.debug("Partition " + context.getPartitionId() + " is opening");
   }
 
   @Override
-  public void onClose(PartitionContext context, CloseReason reason) throws Exception {
+  public void onClose(PartitionContext context, CloseReason reason) {
     LOG.debug("Partition " + context.getPartitionId() + " is closing for reason " + reason.toString());
   }
 
   @Override
   public void onError(PartitionContext context, Throwable error) {
-    LOG.debug("Partition " + context.getPartitionId() + " onError: " + error.toString());
+    LOG.error("Partition " + context.getPartitionId() + " onError: " + error.toString());
   }
 
   @Override
-  public void onEvents(PartitionContext context, Iterable<EventData> messages) throws Exception {
+  public void onEvents(PartitionContext context, Iterable<EventData> messages) {
     BatchContext batchContext = pushSourceContext.startBatch();
     final EventData[] lasEventData = new EventData[]{null};
     if (messages != null) {

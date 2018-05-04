@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -142,9 +143,13 @@ public class EventHubConsumerSource implements PushSource, IEventProcessorFactor
       throw new StageException(Errors.EVENT_HUB_02, ex, ex);
     } finally {
       eventProcessorHostList.forEach(eventProcessorHost -> {
-      eventProcessorHost.unregisterEventProcessor();
-    });
-
+        CompletableFuture<Void> hostShutdown = eventProcessorHost.unregisterEventProcessor();
+        try {
+          hostShutdown.get();
+        } catch (InterruptedException | ExecutionException ex) {
+          LOG.error(Errors.EVENT_HUB_03.getMessage(), ex.toString(), ex);
+        }
+      });
     }
   }
 
