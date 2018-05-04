@@ -23,7 +23,8 @@ public class ResponseActionChooserValues extends BaseEnumChooserValues<ResponseA
         ResponseAction.RETRY_LINEAR_BACKOFF,
         ResponseAction.RETRY_EXPONENTIAL_BACKOFF,
         ResponseAction.RETRY_IMMEDIATELY,
-        ResponseAction.STAGE_ERROR
+        ResponseAction.STAGE_ERROR,
+        ResponseAction.ERROR_RECORD
     );
   }
 }

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.http;
 
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -32,6 +33,9 @@ import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.origin.http.PaginationConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.stage.origin.http.HttpStatusResponseActionConfigBean;
+import com.streamsets.pipeline.stage.origin.http.HttpTimeoutResponseActionConfigBean;
+import com.streamsets.pipeline.stage.origin.http.ResponseAction;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 
@@ -230,7 +234,49 @@ public class HttpProcessorConfig {
   @ConfigDefBean(groups = "PAGINATION")
   public PaginationConfigBean pagination = new PaginationConfigBean();
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Per-Status Actions",
+      description = "List of actions to take for specific response statuses.",
+      displayPosition = 1200,
+      group = "HTTP"
+  )
+  @ListBeanModel
+  public List<HttpStatusResponseActionConfigBean> responseStatusActionConfigs;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Records for Remaining Statuses",
+      description = "Produces records for all HTTP status codes not listed in Per-Status Actions.",
+      defaultValue = "false",
+      displayPosition = 1201,
+      group = "HTTP"
+  )
+  public boolean propagateAllHttpResponses = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Error Response Body Field",
+      description = "Field to store the error response body after performing per-status actions",
+      defaultValue = "outErrorBody",
+      displayPosition = 1202,
+      dependsOn = "propagateAllHttpResponses",
+      triggeredByValue = "true",
+      group = "HTTP"
+  )
+  public String errorResponseField = "outErrorBody";
+
+  @ConfigDefBean(groups = "TIMEOUT")
+  public HttpTimeoutResponseActionConfigBean responseTimeoutActionConfig =
+      new HttpTimeoutResponseActionConfigBean(0, ResponseAction.RETRY_IMMEDIATELY);
+
+
   public void init(Stage.Context context, String group, String prefix, List<Stage.ConfigIssue> issues) {
     client.init(context, group, prefix + "client", issues);
   }
+
+
 }

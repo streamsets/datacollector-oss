@@ -15,11 +15,10 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+
 import com.amazonaws.util.IOUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -45,6 +44,7 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.PaginationMode;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.lang.StringUtils;
@@ -52,23 +52,26 @@ import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +79,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_66;
 
@@ -91,7 +96,6 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String REQUEST_STATUS_CONFIG_NAME = "HTTP-Status";
   private static final String STOP_CONFIG_NAME = "stopCondition";
   private static final String START_AT = "startAt";
-  private static final HashFunction HF = Hashing.sha256();
 
   private static final Set<PaginationMode> LINK_PAGINATION = ImmutableSet.of(
       PaginationMode.LINK_HEADER,
@@ -140,6 +144,19 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private final Map<Record, HeadersAndBody> resolvedRecords = new LinkedHashMap<>();
 
+  private static class ResponseState {
+    private long backoffIntervalLinear = 0;
+    private long backoffIntervalExponential = 0;
+    private int retryCount = 0;
+    private int lastStatus = 0;
+    private boolean lastRequestTimedOut;
+  }
+
+  private final Map<Record, ResponseState> recordsToResponseState = new HashMap<>();
+
+  private final Map<Integer, HttpResponseActionConfigBean> statusToActionConfigs = new HashMap<>();
+  private HttpResponseActionConfigBean timeoutActionConfig;
+
   /**
    * Creates a new HttpProcessor configured using the provided config instance.
    *
@@ -180,6 +197,16 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     next = null;
     haveMorePages = false;
+
+    HttpStageUtil.validateStatusActionConfigs(
+        issues,
+        getContext(),
+        conf.responseStatusActionConfigs,
+        statusToActionConfigs,
+        "conf.responseStatusActionConfigs"
+    );
+
+    this.timeoutActionConfig = conf.responseTimeoutActionConfig;
 
     if (issues.isEmpty()) {
       parserFactory = conf.dataFormatConfig.getParserFactory();
@@ -685,6 +712,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       List<Record> records
   ) throws StageException {
 
+    ResponseState responseState;
+    if (recordsToResponseState.containsKey(record)) {
+      responseState = recordsToResponseState.get(record);
+    } else {
+      responseState = new ResponseState();
+    }
+
     Response response = null;
     try {
       response = responseFuture.get(maxRequestCompletionSecs, TimeUnit.SECONDS);
@@ -700,32 +734,106 @@ public class HttpProcessor extends SingleLaneProcessor {
         return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
-        throw new OnRecordErrorException(
-            record,
-            Errors.HTTP_01,
-            response.getStatus(),
-            response.getStatusInfo().getReasonPhrase() + " " + responseBody
-        );
+        final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
+        if(action==null){
+
+          if(conf.propagateAllHttpResponses){
+            String respString = extractResponseBodyStr(response);
+            Map<String,Field> mapFields = new HashMap<>();
+            mapFields.put(conf.errorResponseField,Field.create(respString));
+            Record r = getContext().createRecord("");
+            r.set(Field.create(mapFields));
+            createResponseHeaders(r,response);
+            r.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d",getResponse().getStatus()));
+            records.add(r);
+            return false;
+          }else{
+            throw new OnRecordErrorException(
+                record,
+                Errors.HTTP_01,
+                response.getStatus(),
+                response.getStatusInfo().getReasonPhrase() + " " + responseBody
+            );
+          }
+
+        }else{
+          final boolean statusChanged = responseState.lastStatus != responseStatus || responseState.lastRequestTimedOut;
+
+          final AtomicInteger retryCountObj = new AtomicInteger(responseState.retryCount);
+          final AtomicLong backoffExp = new AtomicLong(responseState.backoffIntervalExponential);
+          final AtomicLong backoffLin = new AtomicLong(responseState.backoffIntervalLinear);
+          final String responseStr = extractResponseBodyStr(response);
+          HttpStageUtil.applyResponseAction(
+              action,
+              statusChanged,
+              input -> new StageException(Errors.HTTP_14, responseStatus, responseStr),
+              retryCountObj,
+              backoffLin,
+              backoffExp,
+              record,
+              String.format("action defined for status %d (response: %s)", responseStatus, responseStr)
+          );
+          responseState.retryCount = retryCountObj.get();
+          responseState.backoffIntervalExponential = backoffExp.get();
+          responseState.backoffIntervalLinear = backoffLin.get();
+          responseState.lastRequestTimedOut = true;
+        }
       }
       resolvedRecords.remove(record);
       boolean close = parseResponse(record, responseBody, records);
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       }
+      responseState.lastRequestTimedOut = false;
       return close;
     } catch (InterruptedException | ExecutionException e) {
       LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(), e.toString(), e);
       throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(), e.toString());
     } catch (TimeoutException e) {
-      LOG.error("HTTP request future timed out", e.toString(), e);
-      throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(), e.toString());
+      final HttpResponseActionConfigBean actionConf = this.timeoutActionConfig;
+
+      final boolean firstTimeout = !responseState.lastRequestTimedOut;
+
+      final AtomicInteger retryCountObj = new AtomicInteger(responseState.retryCount);
+      final AtomicLong backoffExp = new AtomicLong(responseState.backoffIntervalExponential);
+      final AtomicLong backoffLin = new AtomicLong(responseState.backoffIntervalLinear);
+      HttpStageUtil.applyResponseAction(
+          actionConf,
+          firstTimeout,
+          input -> new StageException(Errors.HTTP_18),
+          retryCountObj,
+          backoffLin,
+          backoffExp,
+          record,
+          "action defined for timeout"
+      );
+      responseState.retryCount = retryCountObj.get();
+      responseState.backoffIntervalExponential = backoffExp.get();
+      responseState.backoffIntervalLinear = backoffLin.get();
+      responseState.lastRequestTimedOut = true;
+      return false;
+
     } finally {
+      recordsToResponseState.put(record, responseState);
       if (response != null) {
         response.close();
       }
     }
   }
 
+  private String extractResponseBodyStr(Response response) {
+    String bodyStr = "";
+    if (response != null) {
+      try {
+        bodyStr = response.readEntity(String.class);
+      } catch (ProcessingException e) {
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("IOException attempting to read response stream to String: {}", e.getMessage(), e);
+        }
+      }
+    }
+    return bodyStr;
+  }
 
   /**
    * Parses the HTTP response text from a request into SDC Records

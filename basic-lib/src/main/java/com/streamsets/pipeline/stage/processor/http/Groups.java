@@ -28,7 +28,7 @@ public enum Groups implements Label {
   TLS("TLS"),
   DATA_FORMAT("Data Format"),
   LOGGING("Logging"),
-
+  TIMEOUT("Timeout")
   ;
 
   private final String label;
