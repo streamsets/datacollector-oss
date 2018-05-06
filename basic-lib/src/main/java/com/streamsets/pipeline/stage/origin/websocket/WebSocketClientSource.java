@@ -28,9 +28,11 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.websocket.Errors;
 import com.streamsets.pipeline.lib.websocket.Groups;
 import com.streamsets.pipeline.lib.websocket.WebSocketCommon;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -193,6 +195,18 @@ public class WebSocketClientSource implements PushSource {
     destroyed = true;
   }
 
+
+  @OnWebSocketConnect
+  public void onConnect(Session session) {
+    if (StringUtils.isNotEmpty(this.conf.requestBody)) {
+      try {
+        session.getRemote().sendString(this.conf.requestBody);
+      } catch (IOException e) {
+        errorQueue.offer(e);
+        LOG.error(Errors.WEB_SOCKET_04.getMessage(), e.toString(), e);
+      }
+    }
+  }
 
   @OnWebSocketClose
   public void onClose(int statusCode, String reason) {

@@ -56,6 +56,17 @@ public class WebSocketClientSourceConfigBean {
   public Map<String, String> headers = new HashMap<>();
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Request Data",
+      description = "Data that should be sent as initial message after connecting to the WebSocket Server",
+      displayPosition = 25,
+      lines = 2,
+      group = "WEB_SOCKET"
+  )
+  public String requestBody = "";
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Authentication Type",
