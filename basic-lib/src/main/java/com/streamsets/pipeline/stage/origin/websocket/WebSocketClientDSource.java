@@ -26,13 +26,14 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.websocket.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "WebSocket Client",
     description = "Uses a WebSocket client to read from a resource URL",
     icon = "websockets.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WebSocketClient.html#task_u4n_rzk_fbb"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WebSocketClient.html#task_u4n_rzk_fbb",
+    upgrader = WebSocketClientSourceUpgrader.class
 )
 @HideConfigs({
     "conf.dataFormatConfig.jsonContent",
