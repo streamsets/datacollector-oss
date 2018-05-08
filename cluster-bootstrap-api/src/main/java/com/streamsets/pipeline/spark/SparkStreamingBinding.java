@@ -41,7 +41,7 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
 
   static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   static final String CHECKPOINT_BASE_DIR = ".streamsets-spark-streaming";
-  private final String RDD_CHECKPOINT_DIR = "rdd-checkpoints";
+  private static final String RDD_CHECKPOINT_DIR = "rdd-checkpoints";
   static final String SDC_ID = "sdc.id";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
   private final boolean isRunningInMesos;
@@ -72,7 +72,7 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
 
   public SparkStreamingBinding(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
-    isRunningInMesos = System.getProperty("SDC_MESOS_BASE_DIR") != null ? true: false;
+    isRunningInMesos = System.getProperty("SDC_MESOS_BASE_DIR") != null;
   }
 
   @Override
@@ -288,6 +288,10 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
     @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
       sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
+      // Use our classpath first, since we ship a newer version of Jackson and possibly other deps in the future.
+      sparkConf.set("spark.driver.userClassPathFirst", "true");
+      sparkConf.set("spark.executor.userClassPathFirst", "true");
+
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, Object> props = new HashMap<>();
 
