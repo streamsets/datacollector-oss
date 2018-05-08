@@ -27,6 +27,7 @@ import com.streamsets.datacollector.lineage.LineageModule;
 import com.streamsets.datacollector.store.CacheAclStoreModule;
 import com.streamsets.datacollector.store.CachePipelineStoreModule;
 
+import com.streamsets.datacollector.usagestats.StatsCollectorModule;
 import dagger.Module;
 
 /**
@@ -45,7 +46,8 @@ import dagger.Module;
     CacheSnapshotStoreModule.class,
     SupportBundleModule.class,
     BlobStoreModule.class,
-    LineageModule.class
+    LineageModule.class,
+    StatsCollectorModule.class
 })
 public class StandalonePipelineManagerModule {
 

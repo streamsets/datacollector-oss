@@ -27,6 +27,7 @@ import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.CompositeTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 
 import javax.inject.Inject;
 
@@ -51,7 +52,8 @@ public class PipelineTask extends CompositeTask {
     LineagePublisherTask lineagePublisherTask,
     SupportBundleManager supportBundleManager,
     BlobStoreTask blobStoreTask,
-    CredentialStoresTask credentialStoresTask
+    CredentialStoresTask credentialStoresTask,
+    StatsCollector statsCollectorTask
   ) {
     super(
       "pipelineNode",
@@ -64,7 +66,8 @@ public class PipelineTask extends CompositeTask {
             webServerTask,
             manager,
             eventHandlerTask,
-            supportBundleManager
+            supportBundleManager,
+            statsCollectorTask
         ),
       true);
     this.webServerTask = webServerTask;

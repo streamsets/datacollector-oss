@@ -24,6 +24,7 @@ import com.streamsets.datacollector.http.SlaveWebServerTask;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 
 import javax.inject.Inject;
 
@@ -39,7 +40,8 @@ public class SlavePipelineTask extends PipelineTask {
     LineagePublisherTask lineagePublisherTask,
     SupportBundleManager supportBundleManager,
     BlobStoreTask blobStoreTask,
-    CredentialStoresTask credentialStoresTask
+    CredentialStoresTask credentialStoresTask,
+    StatsCollector statsCollector
   ) {
     super(
       library,
@@ -50,7 +52,8 @@ public class SlavePipelineTask extends PipelineTask {
       lineagePublisherTask,
       supportBundleManager,
       blobStoreTask,
-      credentialStoresTask
+      credentialStoresTask,
+      statsCollector
     );
   }
 }

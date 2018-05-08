@@ -26,6 +26,7 @@ import com.streamsets.datacollector.lineage.LineageModule;
 import com.streamsets.datacollector.store.SlaveAclStoreModule;
 import com.streamsets.datacollector.store.SlavePipelineStoreModule;
 
+import com.streamsets.datacollector.usagestats.StatsCollectorModule;
 import dagger.Module;
 
 /**
@@ -43,8 +44,9 @@ import dagger.Module;
     SlaveCacheSnapshotStoreModule.class,
     LineageModule.class,
     BlobStoreModule.class,
-    CredentialStoresModule.class
-})
+    CredentialStoresModule.class,
+    StatsCollectorModule.class
+  })
 public class SlavePipelineManagerModule {
 
 }

@@ -24,7 +24,6 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
