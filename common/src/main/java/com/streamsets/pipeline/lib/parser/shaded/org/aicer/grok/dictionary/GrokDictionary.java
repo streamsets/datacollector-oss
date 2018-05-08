@@ -25,10 +25,10 @@
 package com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary;
 
 import com.google.common.io.CharStreams;
-import com.google.common.io.Closeables;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.exception.GrokCompilationException;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -261,7 +261,7 @@ public final class GrokDictionary {
       try {
         addDictionaryAux(reader);
       } finally {
-        Closeables.closeQuietly(reader);
+        IOUtils.closeQuietly(reader);
       }
     }
 
@@ -279,7 +279,7 @@ public final class GrokDictionary {
     } catch (IOException e) {
       throw new GrokCompilationException(e);
     } finally {
-      Closeables.closeQuietly(reader);
+      IOUtils.closeQuietly(reader);
     }
   }
 
