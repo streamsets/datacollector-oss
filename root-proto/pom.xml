@@ -25,7 +25,6 @@
     <artifactId>streamsets-datacollector</artifactId>
     <version>3.4.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-root-proto</artifactId>
   <version>3.4.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Root Prototype POM</description>
@@ -505,7 +504,11 @@
           <artifactId>streamsets-datacollector-rbgen-maven-plugin</artifactId>
           <version>3.4.0-SNAPSHOT</version>
         </plugin>
-
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>3.3.2</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
