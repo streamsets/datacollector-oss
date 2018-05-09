@@ -37,6 +37,8 @@ public class SensorReaderConfigBean {
       label = "I2C Address",
       description = "I2C Address in hexadecimal string",
       displayPosition = 20,
+      dependsOn = "sensorDevice",
+      triggeredByValue = "BMxx80",
       group = "SENSOR"
   )
   public String i2cAddress = "0x77";
@@ -53,4 +55,32 @@ public class SensorReaderConfigBean {
       group = "SENSOR"
   )
   public long delay;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "/sys/class/thermal/thermal_zone0/temp",
+      label = "Path to Pseudo-file",
+      description = "Location of the sysfs pseudo-file holding the temperature value",
+      displayPosition = 20,
+      dependsOn = "sensorDevice",
+      triggeredByValue = "BCM2835",
+      group = "SENSOR"
+  )
+  public String path = "/sys/class/thermal/thermal_zone0/temp";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Scaling Factor",
+      description = "The Sensor origin will divide the value from file by the scaling factor to provide the temperature",
+      min = 1,
+      max = Integer.MAX_VALUE,
+      displayPosition = 25,
+      dependsOn = "sensorDevice",
+      triggeredByValue = "BCM2835",
+      group = "SENSOR"
+  )
+  public long scalingFactor;
 }

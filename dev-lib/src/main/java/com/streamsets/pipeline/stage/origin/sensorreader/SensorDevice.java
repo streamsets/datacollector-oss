@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum SensorDevice implements Label {
   BMxx80("BMxx80 - Family of atmospheric sensors"),
+  BCM2835("BCM2835 - Onboard thermal sensor"),
   ;
 
   private final String label;
