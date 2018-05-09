@@ -109,7 +109,6 @@
       <artifactId>hive-hcatalog-streaming</artifactId>
       <version>${hive.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.hive.hcatalog</groupId>
       <artifactId>hive-hcatalog-core</artifactId>
@@ -120,6 +119,12 @@
       <artifactId>hive-jdbc</artifactId>
       <version>${hive.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Test dependencies-->
