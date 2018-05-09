@@ -273,7 +273,10 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
 
   public void runDestroy() throws StageException {
     LOG.debug("Stage '{}' destroy starts", getInfo().getInstanceName());
-    ensureStatus(Status.INITIALIZED);
+    // Running destroy on CREATED is valid, because the initialization could have failed (leaving the state in INITALIZED)
+    // and even main execution could run destory() on component that never run init() - especially in multi-threaded
+    // pipelines.
+    ensureStatus(Status.INITIALIZED, Status.CREATED);
 
     for(ServiceRunner serviceRunner : services) {
       serviceRunner.runDestroy();

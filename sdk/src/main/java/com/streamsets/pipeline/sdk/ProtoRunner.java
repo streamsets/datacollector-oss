@@ -38,7 +38,26 @@ public abstract class ProtoRunner {
 
   protected Status status;
 
-  enum Status { CREATED, INITIALIZED, DESTROYED}
+  enum Status {
+    CREATED,
+    INITIALIZED,
+    DESTROYED
+    ;
+
+    public boolean isOneOf(Status ...statuses) {
+      if(statuses == null) {
+        return false;
+      }
+
+      for(Status t : statuses) {
+        if(this == t) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
 
   static {
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
@@ -53,8 +72,8 @@ public abstract class ProtoRunner {
     }
   }
 
-  void ensureStatus(Status status) {
-    Utils.checkState(this.status == status, Utils.format("Current status '{}', expected '{}'", this.status, status));
+  void ensureStatus(Status ...statuses) {
+    Utils.checkState(this.status.isOneOf(statuses), Utils.format("Current status '{}', expected one of '{}'", this.status, statuses));
   }
 
   // Configuration

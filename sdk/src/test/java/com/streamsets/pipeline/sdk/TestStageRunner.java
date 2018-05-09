@@ -278,14 +278,6 @@ public class TestStageRunner {
   }
 
   @Test(expected = RuntimeException.class)
-  public void testBuilderInvalidDestroy1() throws Exception {
-    DummyStage1 stage = new DummyStage1();
-    DummyStageRunner.Builder builder = new DummyStageRunner.Builder(stage);
-    DummyStageRunner runner = builder.build();
-    runner.runDestroy();
-  }
-
-  @Test(expected = RuntimeException.class)
   public void testBuilderInvalidDestroy2() throws Exception {
     DummyStage1 stage = new DummyStage1();
     DummyStageRunner.Builder builder = new DummyStageRunner.Builder(stage);
