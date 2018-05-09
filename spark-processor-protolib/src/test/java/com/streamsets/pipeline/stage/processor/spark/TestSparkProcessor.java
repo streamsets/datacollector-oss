@@ -78,9 +78,12 @@ public class TestSparkProcessor {
             .build();
 
     DelegatingSparkProcessor sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
-    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
-    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof StandaloneSparkProcessor);
-    sparkProcessor.destroy();
+    try {
+      sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+      Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof StandaloneSparkProcessor);
+    } finally {
+      sparkProcessor.destroy();
+    }
 
     runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0)))
         .addOutputLane(LANE)
@@ -89,9 +92,13 @@ public class TestSparkProcessor {
         .build();
 
     sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
-    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
-    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
-    sparkProcessor.destroy();
+    try {
+      sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+      Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
+      sparkProcessor.destroy();
+    } finally {
+      sparkProcessor.destroy();
+    }
 
     runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0)))
         .addOutputLane(LANE)
@@ -100,9 +107,13 @@ public class TestSparkProcessor {
         .build();
 
     sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
-    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
-    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
-    sparkProcessor.destroy();
+    try {
+      sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+      Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
+      sparkProcessor.destroy();
+    } finally {
+      sparkProcessor.destroy();
+    }
   }
 
   @Test
@@ -251,6 +262,8 @@ public class TestSparkProcessor {
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_01.name()));
       Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_01.getMessage(), configBean.transformerClass)));
+    } finally {
+      runner.runDestroy();
     }
   }
 
@@ -273,6 +286,8 @@ public class TestSparkProcessor {
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_00.name()));
       Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_00.getMessage(), configBean.transformerClass)));
+    } finally {
+      runner.runDestroy();
     }
   }
 
@@ -294,6 +309,8 @@ public class TestSparkProcessor {
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_02.name()));
       Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_02.getMessage(), configBean.transformerClass, "java.lang.IllegalStateException")));
+    } finally {
+      runner.runDestroy();
     }
   }
 
@@ -315,6 +332,8 @@ public class TestSparkProcessor {
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_05.name()));
       Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_05.getMessage(), configBean.transformerClass, "java.lang.IllegalStateException : Error")));
+    } finally {
+      runner.runDestroy();
     }
   }
 
@@ -340,13 +359,15 @@ public class TestSparkProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
 
-    runner.runInit();
+    try {
+      runner.runInit();
 
-    for (int i = 0; i < 10; i++) {
-      runner.runProcess(records);
+      for (int i = 0; i < 10; i++) {
+        runner.runProcess(records);
+      }
+    } finally {
+      runner.runDestroy();
     }
-
-    runner.runDestroy();
 
     Assert.assertEquals(MethodCallCountingTransformer.initCallCount, 1);
     Assert.assertEquals(MethodCallCountingTransformer.transformCallCount, 10);
