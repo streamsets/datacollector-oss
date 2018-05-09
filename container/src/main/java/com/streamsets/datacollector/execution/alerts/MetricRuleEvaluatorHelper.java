@@ -352,7 +352,7 @@ public class MetricRuleEvaluatorHelper {
       Map<String, Object> runnerMetrics = (Map<String, Object>) ((Gauge)getMetric(metrics, "runner." + runnerId, MetricType.GAUGE)).getValue();
 
       // Get current value
-      long value = (long) runnerMetrics.getOrDefault(runnerMetricName, 0);
+      long value = (long) runnerMetrics.getOrDefault(runnerMetricName, 0L);
       long runTime = currentTime - value;
 
       if(maxTime < runTime) {

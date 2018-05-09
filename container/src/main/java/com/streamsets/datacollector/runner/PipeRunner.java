@@ -149,7 +149,7 @@ public class PipeRunner {
     this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, IDLE);
     this.runtimeMetricGauge.put(METRIC_OFFSET_KEY, "");
     this.runtimeMetricGauge.put(METRIC_OFFSET_VALUE, "");
-    this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, 0);
+    this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, 0L);
   }
 
   /**
