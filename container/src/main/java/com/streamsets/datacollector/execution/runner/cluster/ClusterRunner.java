@@ -924,9 +924,19 @@ public class ClusterRunner extends AbstractRunner {
       // This is needed for UI
       runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
       slaveCallbackManager.clearSlaveList();
-      ApplicationState applicationState = clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
-          new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
-          sourceInfo, SUBMIT_TIMEOUT_SECS, getRules(), acl);
+      ApplicationState applicationState = clusterHelper.submit(pipelineConf,
+          stageLibrary,
+          credentialStoresTask,
+          new File(runtimeInfo.getConfigDir()),
+          new File(runtimeInfo.getResourcesDir()),
+          new File(runtimeInfo.getStaticWebDir()),
+          bootstrapDir,
+          environment,
+          sourceInfo,
+          SUBMIT_TIMEOUT_SECS,
+          getRules(),
+          acl
+      );
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = new HashMap<>();
       attributes.putAll(getAttributes());

@@ -22,6 +22,7 @@ import com.streamsets.datacollector.cluster.ClusterProvider;
 import com.streamsets.datacollector.cluster.ClusterProviderImpl;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -80,14 +81,26 @@ public class ClusterHelper {
       errorString("_cluster-manager is not executable: {}", clusterManagerFile));
   }
 
-  public ApplicationState submit(final PipelineConfiguration pipelineConfiguration,
-    final StageLibraryTask stageLibrary, final File etcDir, final File resourcesDir, final File staticWebDir,
-    final File bootstrapDir, final Map<String, String> environment, final Map<String, String> sourceInfo,
-    final long timeout, RuleDefinitions ruleDefinitions, Acl acl) throws TimeoutException, IOException {
+  public ApplicationState submit(
+      final PipelineConfiguration pipelineConfiguration,
+      final StageLibraryTask stageLibrary,
+      CredentialStoresTask credentialStoresTask,
+      final File etcDir,
+      final File resourcesDir,
+      final File staticWebDir,
+      final File bootstrapDir,
+      final Map<String, String> environment,
+      final Map<String, String> sourceInfo,
+      final long timeout,
+      RuleDefinitions ruleDefinitions,
+      Acl acl
+  ) throws TimeoutException, IOException {
 
     return clusterProvider.startPipeline(systemProcessFactory, clusterManagerFile, tempDir, environment, sourceInfo,
-      pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-      timeout, ruleDefinitions, acl);
+      pipelineConfiguration, stageLibrary, credentialStoresTask, etcDir, resourcesDir, staticWebDir, bootstrapDir,
+        apiCL, containerCL,
+      timeout, ruleDefinitions, acl
+    );
   }
 
   public void kill(final ApplicationState applicationState, final PipelineConfiguration pipelineConfiguration)

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
   private final Configuration configuration;
   private final StageLibraryTask stageLibraryTask;
   private final Map<String, CredentialStore> stores;
+  private final List<CredentialStoreDefinition> credentialStoreDefinitions;
 
   @Inject
   public CredentialStoresTaskImpl(
@@ -49,11 +51,18 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
     this.configuration = configuration;
     this.stageLibraryTask = stageLibraryTask;
     stores = new HashMap<>();
+    credentialStoreDefinitions = new ArrayList<>();
   }
 
   Map<String, CredentialStore> getStores() {
     return stores;
   }
+
+  @Override
+  public List<CredentialStoreDefinition> getConfiguredStoreDefinititions() {
+    return Collections.unmodifiableList(credentialStoreDefinitions);
+  }
+
 
   @Override
   protected void initTask() {
@@ -128,6 +137,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
         store = new ClassloaderInContextCredentialStore(storeDef, store);
         issues.addAll(store.init(context));
         getStores().put(storeId, store);
+        credentialStoreDefinitions.add(storeDef);
       } catch (Exception ex) {
         issues.add(context.createConfigIssue(Errors.CREDENTIAL_STORE_000, ex));
       }

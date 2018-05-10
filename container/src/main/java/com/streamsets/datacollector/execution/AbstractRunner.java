@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
@@ -53,6 +54,7 @@ public abstract  class AbstractRunner implements Runner {
   @Inject protected EventListenerManager eventListenerManager;
   @Inject protected PipelineStoreTask pipelineStore;
   @Inject protected StageLibraryTask stageLibrary;
+  @Inject protected CredentialStoresTask credentialStoresTask;
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
   protected Map<String, Object> runtimeParameters;

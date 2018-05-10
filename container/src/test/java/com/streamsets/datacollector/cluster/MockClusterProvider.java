@@ -17,6 +17,7 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -69,11 +70,25 @@ public class MockClusterProvider implements ClusterProvider {
   }
 
   @Override
-  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                              Map<String, String> environment, Map<String, String> sourceInfo,
-                              PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-                              File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                              URLClassLoader containerCL, long timeout, RuleDefinitions ruleDefinitions, Acl acl)
+  public ApplicationState startPipeline(
+      SystemProcessFactory systemProcessFactory,
+      File sparkManager,
+      File tempDir,
+      Map<String, String> environment,
+      Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration,
+      StageLibraryTask stageLibrary,
+      CredentialStoresTask credentialStoresTask,
+      File etcDir,
+      File resourcesDir,
+      File staticWebDir,
+      File bootstrapDir,
+      URLClassLoader apiCL,
+      URLClassLoader containerCL,
+      long timeout,
+      RuleDefinitions ruleDefinitions,
+      Acl acl
+  )
   throws TimeoutException {
     LOG.info("startPipeline");
     if (submitTimesOut) {
