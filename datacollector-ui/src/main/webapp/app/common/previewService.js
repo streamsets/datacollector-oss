@@ -18,10 +18,8 @@
  */
 angular.module('dataCollectorApp.common')
   .service('previewService', function(api, $q, $translate, $timeout) {
-
-    var self = this,
-      translations;
-
+    var self = this;
+    var translations;
 
     $translate([
       'global.form.stream',
@@ -155,18 +153,18 @@ angular.module('dataCollectorApp.common')
     /**
      * Returns Input Records from Preview Data.
      *
-     * @param pipelineName
+     * @param pipelineId
      * @param stageInstance
      * @param batchSize
      * @returns {*}
      */
-    this.getInputRecordsFromPreview = function(pipelineName, stageInstance, batchSize) {
+    this.getInputRecordsFromPreview = function(pipelineId, stageInstance, batchSize) {
       var deferred = $q.defer();
-      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, true, [], stageInstance.instanceName)
+      api.pipelineAgent.createPreview(pipelineId, 0, batchSize, 0, true, true, [], stageInstance.instanceName)
         .then(
           function (res) {
             var checkStatusDefer = $q.defer();
-            checkForPreviewStatus(res.data.previewerId, checkStatusDefer);
+            checkForPreviewStatus(pipelineId, res.data.previewerId, checkStatusDefer);
             return checkStatusDefer.promise;
           },
           function(res) {
@@ -175,7 +173,7 @@ angular.module('dataCollectorApp.common')
         )
         .then(
           function(previewData) {
-            var stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
+            var stagePreviewData = self.getPreviewDataForStage(pipelineId, previewData.batchesOutput[0], stageInstance);
             deferred.resolve(stagePreviewData.input);
           },
           function(res) {
@@ -385,15 +383,11 @@ angular.module('dataCollectorApp.common')
         .replace(/'/g, "&#039;");
     }
 
-
-
-
-
     /**
      * Check for Preview Status for every 1 seconds, once done open the snapshot view.
      *
      */
-    var checkForPreviewStatus = function(previewerId, defer) {
+    var checkForPreviewStatus = function(pipelineId, previewerId, defer) {
       var previewStatusTimer = $timeout(
         function() {
         },
@@ -402,13 +396,13 @@ angular.module('dataCollectorApp.common')
 
       previewStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus(previewerId)
+          api.pipelineAgent.getPreviewStatus(pipelineId, previewerId, $scope.edgeHttpUrl)
             .then(function(response) {
               var data = response.data;
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED', 'STOP_ERROR'], data.status)) {
                 fetchPreviewData(previewerId, defer);
               } else {
-                checkForPreviewStatus(previewerId, defer);
+                checkForPreviewStatus(pipelineId, previewerId, defer);
               }
             })
             .catch(function(response) {
@@ -423,8 +417,8 @@ angular.module('dataCollectorApp.common')
       );
     };
 
-    var fetchPreviewData = function(previewerId, defer) {
-      api.pipelineAgent.getPreviewData(previewerId)
+    var fetchPreviewData = function(pipelineId, previewerId, defer) {
+      api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
         .then(function(response) {
           var previewData = response.data;
           if(previewData.status !== 'FINISHED') {

@@ -1165,6 +1165,10 @@ angular
 
       if ($scope.executionMode === 'EDGE') {
         isWebSocketSupported = false;
+        var edgeHttpUrlConfig = _.find($scope.pipelineConfig.configuration, function (c) {
+          return c.name === 'edgeHttpUrl';
+        });
+        $scope.edgeHttpUrl = edgeHttpUrlConfig.value;
       }
 
       $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {

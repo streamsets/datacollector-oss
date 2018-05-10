@@ -823,6 +823,7 @@ angular.module('dataCollectorApp.common')
        * @param stageOutputList
        * @param endStage
        * @param timeout
+       * @param edgeHttpUrl
        * @returns {*}
        */
       createPreview: function(
@@ -834,28 +835,28 @@ angular.module('dataCollectorApp.common')
         skipLifecycleEvents,
         stageOutputList,
         endStage,
-        timeout
+        timeout,
+        edgeHttpUrl
       ) {
-        var url;
-
         if (!batchSize) {
           batchSize = 10;
         }
-
         if (!timeout || timeout <=0) {
-          timeout = 10000;
+          timeout = 30000;
         }
-
-        url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
-            '&skipTargets=' + skipTargets + '&timeout=' + timeout + '&skipLifecycleEvents=' + skipLifecycleEvents;
-
-        if (endStage) {
-          url += '&endStage=' + endStage;
-        }
-
+        var url = apiBase + '/pipeline/' + name + '/preview';
         return $http({
           method: 'POST',
           url: url,
+          params: {
+            batchSize: batchSize,
+            rev: rev,
+            skipTargets: skipTargets,
+            timeout: timeout,
+            skipLifecycleEvents: skipLifecycleEvents,
+            endStage: endStage,
+            edge: !!edgeHttpUrl
+          },
           data: stageOutputList || []
         });
       },
@@ -864,14 +865,18 @@ angular.module('dataCollectorApp.common')
       /**
        * Fetches Preview Status
        *
+       * @param pipelineId
        * @param previewerId
-       * @param pipelineName
+       * @param edgeHttpUrl
        */
-      getPreviewStatus: function(previewerId, pipelineName) {
-        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId + '/status' ;
+      getPreviewStatus: function(pipelineId, previewerId, edgeHttpUrl) {
+        var url = apiBase + '/pipeline/' + pipelineId + '/preview/' + previewerId + '/status' ;
         return $http({
           method: 'GET',
-          url: url
+          url: url,
+          params: {
+            edge: !!edgeHttpUrl
+          }
         });
       },
 
@@ -879,28 +884,36 @@ angular.module('dataCollectorApp.common')
       /**
        * Fetches Preview Data
        *
+       * @param pipelineId
        * @param previewerId
-       * @param pipelineName
+       * @param edgeHttpUrl
        */
-      getPreviewData: function(previewerId, pipelineName) {
-        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId;
+      getPreviewData: function(pipelineId, previewerId, edgeHttpUrl) {
+        var url = apiBase + '/pipeline/' + pipelineId + '/preview/' + previewerId;
         return $http({
           method: 'GET',
-          url: url
+          url: url,
+          params: {
+            edge: !!edgeHttpUrl
+          }
         });
       },
 
       /**
        * Stop Preview
        *
+       * @param pipelineId
        * @param previewerId
-       * @param pipelineName
+       * @param edgeHttpUrl
        */
-      cancelPreview: function(previewerId, pipelineName) {
-        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId;
+      cancelPreview: function(pipelineId, previewerId, edgeHttpUrl) {
+        var url = apiBase + '/pipeline/' + pipelineId + '/preview/' + previewerId;
         return $http({
           method: 'DELETE',
-          url: url
+          url: url,
+          params: {
+            edge: !!edgeHttpUrl
+          }
         });
       },
 
@@ -930,18 +943,22 @@ angular.module('dataCollectorApp.common')
         });
       },
 
-
       /**
        * Validate the Pipeline
        *
-       * @param name
+       * @param pipelineId
+       * @param edgeHttpUrl
        * @returns {*}
        */
-      validatePipeline: function(name) {
-        var url = apiBase + '/pipeline/' + name + '/validate?timeout=500000';
+      validatePipeline: function(pipelineId, edgeHttpUrl) {
+        var url = apiBase + '/pipeline/' + pipelineId + '/validate';
         return $http({
           method: 'GET',
-          url: url
+          url: url,
+          params: {
+            timeout: 500000,
+            edge: !!edgeHttpUrl
+          }
         });
       },
 

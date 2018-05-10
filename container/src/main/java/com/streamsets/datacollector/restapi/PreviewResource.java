@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.AclManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
@@ -35,9 +37,10 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.SSOPrincipal;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Config;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -59,7 +62,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
@@ -74,7 +76,6 @@ public class PreviewResource {
   private static final String MAX_BATCHES_KEY = "preview.maxBatches";
   private static final int MAX_BATCHES_DEFAULT = 10;
 
-  //preview.maxBatchSize
   private final Manager manager;
   private final PipelineStoreTask store;
   private final Configuration configuration;
@@ -111,10 +112,15 @@ public class PreviewResource {
   @Path("/pipeline/{pipelineId}/preview")
   @POST
   @ApiOperation(value = "Run Pipeline preview",
-    response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
+      response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE,
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.MANAGER,
+      AuthzRole.MANAGER_REMOTE
   })
   public Response previewWithOverride(
       @PathParam("pipelineId") String pipelineId,
@@ -125,12 +131,33 @@ public class PreviewResource {
       @QueryParam("skipLifecycleEvents") @DefaultValue("true") boolean skipLifecycleEvents,
       @QueryParam("endStage") String endStageInstanceName,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
+      @QueryParam("edge") @DefaultValue("false") boolean edge,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
-  ) throws PipelineException, StageException {
-
+  ) throws PipelineException {
     if (stageOutputsToOverrideJson == null) {
       stageOutputsToOverrideJson = Collections.emptyList();
     }
+
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+        return EdgeUtil.proxyRequestPOST(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/preview",
+            ImmutableMap.of(
+                "bathces", batches,
+                "batchSize", batchSize,
+                "skipTargets", skipTargets,
+                "endStage", endStageInstanceName + "",
+                "timeout", timeout
+            ),
+            stageOutputsToOverrideJson
+        );
+      }
+    }
+
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
@@ -154,7 +181,7 @@ public class PreviewResource {
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
-          BeanHelper.wrapIssues(ex.getIssues())).build();
+            BeanHelper.wrapIssues(ex.getIssues())).build();
       } else {
         throw ex;
       }
@@ -164,15 +191,32 @@ public class PreviewResource {
   @Path("/pipeline/{pipelineId}/preview/{previewerId}/status")
   @GET
   @ApiOperation(value = "Return Preview status by previewer ID", response = PreviewInfoJson.class,
-    authorizations = @Authorization(value = "basic"))
+      authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.MANAGER,
+      AuthzRole.MANAGER_REMOTE
   })
   public Response getPreviewStatus(
       @PathParam("pipelineId") String pipelineId,
-      @PathParam("previewerId") String previewerId
-  ) throws PipelineException, StageException {
+      @PathParam("previewerId") String previewerId,
+      @QueryParam("edge") @DefaultValue("false") boolean edge
+  ) throws PipelineException {
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        return EdgeUtil.proxyRequestGET(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/preview/" + previewerId + "/status",
+            Collections.emptyMap()
+        );
+      }
+    }
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -186,15 +230,32 @@ AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_RE
   @Path("/pipeline/{pipelineId}/preview/{previewerId}")
   @GET
   @ApiOperation(value = "Return Preview Data by previewer ID", response = PreviewOutputJson.class,
-    authorizations = @Authorization(value = "basic"))
+      authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.MANAGER,
+      AuthzRole.MANAGER_REMOTE
   })
   public Response getPreviewData(
       @PathParam("pipelineId") String pipelineId,
-      @PathParam("previewerId") String previewerId
-  ) throws PipelineException, StageException {
+      @PathParam("previewerId") String previewerId,
+      @QueryParam("edge") @DefaultValue("false") boolean edge
+  ) throws PipelineException {
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        return EdgeUtil.proxyRequestGET(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/preview/" + previewerId,
+            Collections.emptyMap()
+        );
+      }
+    }
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -208,15 +269,32 @@ AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_RE
   @Path("/pipeline/{pipelineId}/preview/{previewerId}")
   @DELETE
   @ApiOperation(value = "Stop Preview by previewer ID", response = PreviewInfoJson.class,
-    authorizations = @Authorization(value = "basic"))
+      authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.MANAGER,
+      AuthzRole.MANAGER_REMOTE
   })
   public Response stopPreview(
       @PathParam("pipelineId") String pipelineId,
-      @PathParam("previewerId") String previewerId
-  ) throws PipelineException, StageException {
+      @PathParam("previewerId") String previewerId,
+      @QueryParam("edge") @DefaultValue("false") boolean edge
+  ) throws PipelineException {
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        return EdgeUtil.proxyRequestDELETE(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/preview/" + previewerId,
+            Collections.emptyMap()
+        );
+      }
+    }
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -231,16 +309,19 @@ AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_RE
   @Path("/pipeline/{pipelineId}/rawSourcePreview")
   @GET
   @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = RawPreview.class,
-    authorizations = @Authorization(value = "basic"))
+      authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE, AuthzRole.MANAGER, AuthzRole.MANAGER_REMOTE
   })
   public Response rawSourcePreview(
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo
-  ) throws PipelineException, IOException {
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
@@ -252,7 +333,7 @@ AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_RE
   @Path("/pipeline/{pipelineId}/validate")
   @GET
   @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
-    response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
+      response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
       AuthzRole.CREATOR,
@@ -265,8 +346,21 @@ AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_RE
   public Response validateConfigs(
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
-      @QueryParam("timeout") @DefaultValue("2000") long timeout
-  ) throws PipelineException, StageException {
+      @QueryParam("timeout") @DefaultValue("2000") long timeout,
+      @QueryParam("edge") @DefaultValue("false") boolean edge
+  ) throws PipelineException {
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+        return EdgeUtil.proxyRequestGET(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/validate",
+            ImmutableMap.of("timeout", timeout)
+        );
+      }
+    }
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {

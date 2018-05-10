@@ -393,8 +393,10 @@ public class SyncPreviewer implements Previewer {
     return null;
   }
 
-  private static void validateParameters(MultivaluedMap<String, String> previewParams,
-                                         List<ConfigDefinition> configDefinitions) throws PipelineRuntimeException {
+  private static void validateParameters(
+      MultivaluedMap<String, String> previewParams,
+      List<ConfigDefinition> configDefinitions
+  ) throws PipelineRuntimeException {
     //validate that all configuration required by config definitions are supplied through the URL
     List<String> requiredPropertiesNotSet = new ArrayList<>();
     for(ConfigDefinition confDef: configDefinitions) {

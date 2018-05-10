@@ -19,9 +19,9 @@
 
 angular
   .module('dataCollectorApp.home')
-
-  .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant,
-                                             $timeout, $modal) {
+  .controller('PreviewController', function (
+    $scope, $rootScope, $q, _, api, previewService, pipelineConstant, $timeout, $modal
+  ) {
     var previewDataBackup, previewStatusTimer, currentPreviewerId, currentStage;
 
     angular.extend($scope, {
@@ -135,10 +135,10 @@ angular
        * @param stageInstance
        */
       stepPreview: function(stageInstance) {
-        var dirtyLanes = $scope.dirtyLanes,
-          previewBatchOutput = $scope.previewData.batchesOutput[0],
-          previewConfig = $scope.pipelineConfig.uiInfo.previewConfig,
-          stageOutputs = [];
+        var dirtyLanes = $scope.dirtyLanes;
+        var previewBatchOutput = $scope.previewData.batchesOutput[0];
+        var previewConfig = $scope.pipelineConfig.uiInfo.previewConfig;
+        var stageOutputs = [];
 
         angular.forEach(previewBatchOutput, function(stageOutput, index) {
           var lanesList = _.keys(stageOutput.output);
@@ -154,49 +154,57 @@ angular
 
         $scope.showLoading = true;
 
-        api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, !previewConfig.executeLifecycleEvents,
-          stageOutputs, null, previewConfig.timeout)
-          .then(function (response) {
-            var res = response.data;
-            var defer = $q.defer();
-            currentPreviewerId = res.previewerId;
-            checkForPreviewStatus(res.previewerId, defer);
+        api.pipelineAgent.createPreview(
+          $scope.activeConfigInfo.pipelineId,
+          $scope.previewSourceOffset,
+          previewConfig.batchSize,
+          0,
+          !previewConfig.writeToDestinations,
+          !previewConfig.executeLifecycleEvents,
+          stageOutputs,
+          null,
+          previewConfig.timeout,
+          $scope.edgeHttpUrl
+        ).then(function (response) {
+          var res = response.data;
+          var defer = $q.defer();
+          currentPreviewerId = res.previewerId;
+          checkForPreviewStatus($scope.activeConfigInfo.pipelineId, res.previewerId, defer);
 
-            defer.promise.then(function(previewData) {
-              var updatedPreviewBatchOutput = previewData.batchesOutput[0];
+          defer.promise.then(function(previewData) {
+            var updatedPreviewBatchOutput = previewData.batchesOutput[0];
 
-              angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
-                var lanesList = _.keys(stageOutput.output);
-                lanesList.push(stageOutput.instanceName + '_EventLane');
-                var intersection = _.intersection(dirtyLanes, lanesList);
-                var changedStageOutput = previewBatchOutput[index];
+            angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
+              var lanesList = _.keys(stageOutput.output);
+              lanesList.push(stageOutput.instanceName + '_EventLane');
+              var intersection = _.intersection(dirtyLanes, lanesList);
+              var changedStageOutput = previewBatchOutput[index];
 
-                if(intersection && intersection.length) {
-                  angular.forEach(intersection, function(laneName) {
-                    stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
-                  });
-                  stageOutput.eventRecords = angular.copy(changedStageOutput.eventRecords);
-                }
-              });
-
-              $scope.previewData = previewData;
-
-              if(!$scope.previewMultipleStages) {
-                $scope.changeStageSelection({
-                  selectedObject: stageInstance,
-                  type: pipelineConstant.STAGE_INSTANCE
+              if(intersection && intersection.length) {
+                angular.forEach(intersection, function(laneName) {
+                  stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
                 });
+                stageOutput.eventRecords = angular.copy(changedStageOutput.eventRecords);
               }
-
-              $rootScope.$broadcast('updateErrorCount',
-                previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
-              $scope.stepExecuted = true;
-              $scope.showLoading = false;
-              $rootScope.common.errors = [];
             });
 
-          })
+            $scope.previewData = previewData;
+
+            if(!$scope.previewMultipleStages) {
+              $scope.changeStageSelection({
+                selectedObject: stageInstance,
+                type: pipelineConstant.STAGE_INSTANCE
+              });
+            }
+
+            $rootScope.$broadcast('updateErrorCount',
+              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
+            $scope.stepExecuted = true;
+            $scope.showLoading = false;
+            $rootScope.common.errors = [];
+          });
+
+        })
           .catch(function(res) {
             $rootScope.common.errors = [res.data];
             $scope.showLoading = false;
@@ -250,7 +258,7 @@ angular
        */
       cancelPreview: function() {
         if(currentPreviewerId) {
-          api.pipelineAgent.cancelPreview(currentPreviewerId);
+          api.pipelineAgent.cancelPreview($scope.activeConfigInfo.pipelineId, currentPreviewerId);
         }
         $scope.closePreview();
         $scope.showLoading = false;
@@ -429,47 +437,55 @@ angular
       }
 
       $q.all(deferList).then(function() {
-        api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, !previewConfig.executeLifecycleEvents,
-          stageOutputs, null, previewConfig.timeout)
-          .then(function (response) {
-            var res = response.data;
-            var defer = $q.defer();
-            currentPreviewerId = res.previewerId;
-            checkForPreviewStatus(res.previewerId, defer);
+        api.pipelineAgent.createPreview(
+          $scope.activeConfigInfo.pipelineId,
+          $scope.previewSourceOffset,
+          previewConfig.batchSize,
+          0,
+          !previewConfig.writeToDestinations,
+          !previewConfig.executeLifecycleEvents,
+          stageOutputs,
+          null,
+          previewConfig.timeout,
+          $scope.edgeHttpUrl
+        ).then(function (response) {
+          var res = response.data;
+          var defer = $q.defer();
+          currentPreviewerId = res.previewerId;
+          checkForPreviewStatus($scope.activeConfigInfo.pipelineId, res.previewerId, defer);
 
-            defer.promise.then(function(previewData) {
-              var firstStageInstance;
+          defer.promise.then(function(previewData) {
+            var firstStageInstance;
 
-              //Clear Previous errors
-              $rootScope.common.errors = [];
+            //Clear Previous errors
+            $rootScope.common.errors = [];
 
-              previewDataBackup = angular.copy(previewData);
+            previewDataBackup = angular.copy(previewData);
 
-              $scope.previewData = previewData;
-              $scope.previewDataUpdated = false;
-              $scope.dirtyLanes = [];
+            $scope.previewData = previewData;
+            $scope.previewDataUpdated = false;
+            $scope.dirtyLanes = [];
 
-              if(!$scope.previewMultipleStages) {
-                firstStageInstance = $scope.stageInstances[0];
-                $scope.changeStageSelection({
-                  selectedObject: firstStageInstance,
-                  type: pipelineConstant.STAGE_INSTANCE
-                });
-              }
+            if(!$scope.previewMultipleStages) {
+              firstStageInstance = $scope.stageInstances[0];
+              $scope.changeStageSelection({
+                selectedObject: firstStageInstance,
+                type: pipelineConstant.STAGE_INSTANCE
+              });
+            }
 
-              $rootScope.$broadcast('updateErrorCount',
-                previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
-              $rootScope.$broadcast('clearDirtyLaneConnector');
-              $scope.showLoading = false;
-            });
-
-          })
-          .catch(function(res) {
-            $rootScope.common.errors = [res.data];
-            $scope.closePreview();
+            $rootScope.$broadcast('updateErrorCount',
+              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
+            $rootScope.$broadcast('clearDirtyLaneConnector');
             $scope.showLoading = false;
           });
+
+        }).catch(function(res) {
+          $rootScope.common.errors = [res.data];
+          $scope.closePreview();
+          $scope.showLoading = false;
+        });
+
       }, function(data) {
         $rootScope.common.errors = [data];
         $scope.closePreview();
@@ -559,7 +575,7 @@ angular
      * Check for Preview Status for every 1 seconds, once done open the snapshot view.
      *
      */
-    var checkForPreviewStatus = function(previewerId, defer) {
+    var checkForPreviewStatus = function(pipelineId, previewerId, defer) {
       previewStatusTimer = $timeout(
         function() {
         },
@@ -568,14 +584,14 @@ angular
 
       previewStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus(previewerId)
+          api.pipelineAgent.getPreviewStatus(pipelineId, previewerId, $scope.edgeHttpUrl)
             .then(function(res) {
               var data = res.data;
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED', 'STOP_ERROR'], data.status)) {
-                fetchPreviewData(previewerId, defer);
+                fetchPreviewData(pipelineId, previewerId, defer);
                 currentPreviewerId = null;
               } else {
-                checkForPreviewStatus(previewerId, defer);
+                checkForPreviewStatus(pipelineId, previewerId, defer);
               }
             })
             .catch(function(res) {
@@ -588,8 +604,8 @@ angular
       );
     };
 
-    var fetchPreviewData = function(previewerId, defer) {
-      api.pipelineAgent.getPreviewData(previewerId)
+    var fetchPreviewData = function(pipelineId, previewerId, defer) {
+      api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
         .then(function(res) {
           var previewData = res.data;
           if(previewData.status !== 'FINISHED') {

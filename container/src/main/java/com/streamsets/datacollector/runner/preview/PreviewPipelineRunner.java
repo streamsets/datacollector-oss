@@ -121,7 +121,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.skipLifecycleEvents = skipLifecycleEvents;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
-    batchesOutput = Collections.synchronizedList(new ArrayList<List<StageOutput>>());
+    batchesOutput = Collections.synchronizedList(new ArrayList<>());
   }
 
   @Override
@@ -152,7 +152,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   public void runLifecycleEvent(
     Record eventRecord,
     StageRuntime stageRuntime
-  ) throws StageException, PipelineRuntimeException {
+  ) throws StageException {
     if(skipLifecycleEvents) {
       return;
     }

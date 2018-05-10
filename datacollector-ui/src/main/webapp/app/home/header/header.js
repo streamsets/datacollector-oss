@@ -87,11 +87,11 @@ angular
           message: pipelineValidationInProgress
         });
 
-        api.pipelineAgent.validatePipeline($scope.activeConfigInfo.pipelineId).
+        api.pipelineAgent.validatePipeline($scope.activeConfigInfo.pipelineId, $scope.edgeHttpUrl).
           then(
           function (res) {
             var defer = $q.defer();
-            checkForValidateConfigStatus(res.data.previewerId, defer);
+            checkForValidateConfigStatus($scope.activeConfigInfo.pipelineId, res.data.previewerId, defer);
 
             defer.promise.then(function(previewData) {
               if (pipelineBeingValidated.pipelineId !== $rootScope.$storage.activeConfigInfo.pipelineId) {
@@ -498,7 +498,7 @@ angular
      * Check for Validate Config Status for every 1 seconds, once done open the snapshot view.
      *
      */
-    var checkForValidateConfigStatus = function(previewerId, defer) {
+    var checkForValidateConfigStatus = function(pipelineId, previewerId, defer) {
       validateConfigStatusTimer = $timeout(
         function() {
         },
@@ -507,13 +507,13 @@ angular
 
       validateConfigStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus(previewerId)
+          api.pipelineAgent.getPreviewStatus(pipelineId, previewerId, $scope.edgeHttpUrl)
             .then(function(res) {
               var data = res.data;
               if (data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'VALID'], data.status)) {
-                fetchValidateConfigData(previewerId, defer);
+                fetchValidateConfigData(pipelineId, previewerId, defer);
               } else {
-                checkForValidateConfigStatus(previewerId, defer);
+                checkForValidateConfigStatus(pipelineId, previewerId, defer);
               }
             })
             .catch(function(res) {
@@ -527,8 +527,8 @@ angular
       );
     };
 
-    var fetchValidateConfigData = function(previewerId, defer) {
-      api.pipelineAgent.getPreviewData(previewerId)
+    var fetchValidateConfigData = function(pipelineId, previewerId, defer) {
+      api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
         .then(function(res) {
           defer.resolve(res.data);
         })

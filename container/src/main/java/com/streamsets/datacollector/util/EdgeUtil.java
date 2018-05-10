@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class EdgeUtil {
+  public static final String EDGE_HTTP_URL = "edgeHttpUrl";
 
   public static void publishEdgePipeline(PipelineConfiguration pipelineConfiguration) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
@@ -273,6 +276,49 @@ public class EdgeUtil {
       if (response != null) {
         response.close();
       }
+    }
+  }
+
+  public static Response proxyRequestGET(String resourceUrl, String resource, Map<String, Object> params) {
+    return proxyRequest("GET", resourceUrl, resource, params, null);
+  }
+
+  public static Response proxyRequestPOST(
+      String resourceUrl,
+      String resource,
+      Map<String, Object> params,
+      Object payload
+  ) {
+    return proxyRequest("POST", resourceUrl, resource, params, payload);
+  }
+
+  public static Response proxyRequestDELETE(String resourceUrl, String resource, Map<String, Object> params) {
+    return proxyRequest("DELETE", resourceUrl, resource, params, null);
+  }
+
+  private static Response proxyRequest(
+      String method,
+      String resourceUrl,
+      String resource,
+      Map<String, Object> params,
+      Object payload
+  ) {
+    WebTarget target = ClientBuilder.newClient().target(resourceUrl).path(resource);
+    for (Map.Entry<String, Object> entry : params.entrySet()) {
+      target = target.queryParam(entry.getKey(), entry.getValue());
+    }
+    if ("GET".equals(method)) {
+      return target.request().get();
+    } if ("POST".equals(method)) {
+      if (payload != null) {
+        return target.request().post(Entity.entity(payload, MediaType.APPLICATION_JSON));
+      } else {
+        return target.request().method("POST");
+      }
+    } if ("DELETE".equals(method)) {
+      return target.request().delete();
+    } else {
+      throw new RuntimeException("Unsupported HTTP method for proxying: " + method);
     }
   }
 
