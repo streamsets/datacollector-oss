@@ -34,6 +34,7 @@
   <packaging>pom</packaging>
 
   <properties>
+    <commons-compress.version>1.16.1</commons-compress.version>
     <confluent.version>3.0.1</confluent.version>
     <mockserver.version>3.10.8</mockserver.version>
   </properties>
@@ -137,6 +138,11 @@
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mesos-bootstrap</artifactId>
         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${commons-compress.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
