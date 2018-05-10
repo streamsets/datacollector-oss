@@ -15,8 +15,20 @@
  */
 package com.streamsets.datacollector.credential;
 
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.task.Task;
 
+import java.util.List;
+
+/**
+ * A credential store task is a task supposed to load credential stores configured in datacollector
+ */
 public interface CredentialStoresTask extends Task {
+
+  /**
+   * Get a list of configured store definitions
+   * @return the list of configured credential store definitions
+   */
+  List<CredentialStoreDefinition> getConfiguredStoreDefinititions();
 
 }

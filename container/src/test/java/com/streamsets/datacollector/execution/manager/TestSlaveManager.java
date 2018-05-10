@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.manager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -131,6 +132,12 @@ public class TestSlaveManager {
     @Singleton
     public StageLibraryTask provideStageLibraryTask() {
       return MockStages.createStageLibrary(new URLClassLoader(new URL[0]));
+    }
+
+    @Provides
+    @Singleton
+    public CredentialStoresTask provideCredentialsTask() {
+      return Mockito.mock(CredentialStoresTask.class);
     }
 
     @Provides
