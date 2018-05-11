@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.config.UserConfigurable;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
@@ -209,16 +210,7 @@ public class PipelineFragmentConfigurationValidator {
   }
 
   protected boolean resolveLibraryAliases() {
-    List<StageConfiguration> stageConfigurations = new ArrayList<>();
-    /*
-    if(pipelineFragmentConfiguration.getStatsAggregatorStage() != null) {
-      stageConfigurations.add(pipelineFragmentConfiguration.getStatsAggregatorStage());
-    }
-    if(pipelineFragmentConfiguration.getErrorStage() != null) {
-      stageConfigurations.add(pipelineFragmentConfiguration.getErrorStage());
-    }
-    */
-    stageConfigurations.addAll(pipelineFragmentConfiguration.getStages());
+    List<StageConfiguration> stageConfigurations = new ArrayList<>(pipelineFragmentConfiguration.getStages());
     for (StageConfiguration stageConf : stageConfigurations) {
       String name = stageConf.getLibrary();
       if (isLibraryAlias(name)) {
@@ -329,66 +321,26 @@ public class PipelineFragmentConfigurationValidator {
   private boolean validateStagesExecutionMode(PipelineFragmentConfiguration pipelineConf) {
     boolean canPreview = true;
     List<Issue> errors = new ArrayList<>();
-    /*
     ExecutionMode pipelineExecutionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConf, errors);
     if (errors.isEmpty()) {
-      StageConfiguration errorStage = pipelineConf.getErrorStage();
-      if (errorStage != null) {
-        canPreview &= validateStageExecutionMode(
-            errorStage,
-            pipelineExecutionMode,
-            errors,
-            PipelineGroups.BAD_RECORDS.name(),
-            "badRecordsHandling"
-        );
-      }
-      StageConfiguration statsStage = pipelineConf.getStatsAggregatorStage();
-      if (statsStage != null) {
-        canPreview &= validateStageExecutionMode(statsStage,
-            pipelineExecutionMode,
-            errors,
-            PipelineGroups.STATS.name(),
-            "statsAggregatorStage"
-        );
-      }
       for (StageConfiguration stageConf : pipelineConf.getStages()) {
         canPreview &= validateStageExecutionMode(stageConf, pipelineExecutionMode, errors, null, null);
       }
     } else {
       canPreview = false;
     }
-    */
     issues.addAll(errors);
     return canPreview;
   }
 
   private boolean loadAndValidatePipelineFragmentConfig() {
     List<Issue> errors = new ArrayList<>();
-    /*
-    pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineFragmentConfiguration, errors);
-    StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineFragmentConfiguration);
-    IssueCreator issueCreator = IssueCreator.getPipeline();
-    for (ConfigDefinition confDef : PipelineBeanCreator.PIPELINE_DEFINITION.getConfigDefinitions()) {
-      Config config = pipelineConfs.getConfig(confDef.getName());
-      // No need to validate bad records, its validated before in PipelineBeanCreator.create()
-      if (!confDef.getGroup().equals(PipelineGroups.BAD_RECORDS.name()) && confDef.isRequired()
-        && (config == null || isNullOrEmpty(confDef, config))) {
-        validateRequiredField(confDef, pipelineConfs, issueCreator);
-      }
-      if (confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
-        validatedNumberConfig(config, confDef, pipelineConfs, issueCreator);
-      }
-    }
-    */
-
     if (pipelineFragmentConfiguration.getTitle() != null && pipelineFragmentConfiguration.getTitle().isEmpty()) {
       issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0093));
     }
     issues.addAll(errors);
     return errors.isEmpty();
   }
-
-
 
   public boolean canPreview() {
     Preconditions.checkState(validated, "validate() has not been called");
@@ -424,7 +376,7 @@ public class PipelineFragmentConfigurationValidator {
     return null;
   }
 
-  protected boolean validateStageConfiguration(
+  boolean validateStageConfiguration(
       boolean shouldBeSource,
       StageConfiguration stageConf,
       boolean noInputAndEventLanes,
@@ -693,7 +645,7 @@ public class PipelineFragmentConfigurationValidator {
     return preview;
   }
 
-  public boolean validateComponentConfigs(
+  private boolean validateComponentConfigs(
     UserConfigurable component,
     List<ConfigDefinition> configs,
     Map<String, ConfigDefinition> definitionMap,
@@ -840,7 +792,7 @@ public class PipelineFragmentConfigurationValidator {
   private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
 
   @SuppressWarnings("unchecked")
-  boolean validatePreconditions(
+  private boolean validatePreconditions(
       ConfigDefinition confDef,
       Config conf,
       Issues issues,
@@ -1297,12 +1249,10 @@ public class PipelineFragmentConfigurationValidator {
     if(stagesConf.size() < 1) {
       return true; // We have nothing to validate
     }
-    Set<String> eventLanes = new HashSet<>();
-    Set<String> dataLanes = new HashSet<>();
 
     // First stage is always on the data path
-    eventLanes.addAll(stagesConf.get(0).getEventLanes());
-    dataLanes.addAll(stagesConf.get(0).getOutputLanes());
+    Set<String> eventLanes = new HashSet<>(stagesConf.get(0).getEventLanes());
+    Set<String> dataLanes = new HashSet<>(stagesConf.get(0).getOutputLanes());
 
     for (int i = 1; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
@@ -1345,7 +1295,7 @@ public class PipelineFragmentConfigurationValidator {
     return true;
   }
 
-  protected boolean validateCommitTriggerStage(PipelineFragmentConfiguration pipelineFragmentConfiguration) {
+  boolean validateCommitTriggerStage(PipelineFragmentConfiguration pipelineFragmentConfiguration) {
     boolean valid = true;
     StageConfiguration target = null;
     int offsetCommitTriggerCount = 0;

@@ -18,6 +18,7 @@ package com.streamsets.datacollector.creation;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -336,7 +337,7 @@ public abstract class PipelineBeanCreator {
     return new PipelineStageBeans(stageBeans);
   }
 
-  public ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf, List<Issue> errors) {
+  public ExecutionMode getExecutionMode(PipelineFragmentConfiguration pipelineConf, List<Issue> errors) {
     ExecutionMode mode = null;
     String value = null;
     if (pipelineConf.getConfiguration("executionMode") != null) {

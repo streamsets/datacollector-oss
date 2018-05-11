@@ -269,7 +269,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     return preview;
   }
 
-  boolean validatePipelineLifecycleEvents() {
+  private boolean validatePipelineLifecycleEvents() {
     boolean preview = true;
 
     // Pipeline lifecycle events are only supported in STANDALONE mode
@@ -284,7 +284,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     return preview;
   }
 
-  boolean validatePipelineLifecycleEventStages(
+  private boolean validatePipelineLifecycleEventStages(
       List<StageConfiguration> eventStages,
       ExecutionMode executionMode
   ) {
@@ -358,7 +358,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
    * We have special type of a ConfigDef called RUNTIME. This config is never displayed in UI and instead it's values
    * are supplied at "runtime". This method is the "runtime" method that propagates them.
    */
-  protected void propagateRuntimeConfiguration() {
+  private void propagateRuntimeConfiguration() {
     // If pipeline wasn't loaded or there if there are no stages, there is nothing to propagate
     if(pipelineBean == null || pipelineBean.getPipelineStageBeans() == null) {
       return;
