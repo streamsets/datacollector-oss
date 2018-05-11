@@ -267,7 +267,7 @@ public class Configuration {
 
   public void set(String name, String value) {
     Preconditions.checkNotNull(name, "name cannot be null");
-    Preconditions.checkNotNull(value, "value cannot be null, use unset");
+    Preconditions.checkNotNull(value, Utils.format("value cannot be null for key {}, use unset", name));
     map.put(name, createRef(value));
   }
 
