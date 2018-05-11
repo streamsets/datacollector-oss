@@ -20,7 +20,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -32,7 +31,6 @@ import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageBean;
-import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -497,9 +495,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       Map<String, String> sourceInfo,
       PipelineConfiguration pipelineConfiguration,
       StageLibraryTask stageLibrary,
-      CredentialStoresTask credentialStoresTask,
-      File etcDir,
-      File resourcesDir,
+      File etcDir, File resourcesDir,
       File staticWebDir, File bootstrapDir,
       URLClassLoader apiCL,
       URLClassLoader containerCL,
@@ -521,7 +517,6 @@ public class ClusterProviderImpl implements ClusterProvider {
           sourceInfo,
           pipelineConfiguration,
           stageLibrary,
-          credentialStoresTask,
           etcDir,
           resourcesDir,
           staticWebDir,
@@ -552,7 +547,6 @@ public class ClusterProviderImpl implements ClusterProvider {
       Map<String, String> sourceInfo,
       PipelineConfiguration pipelineConfiguration,
       StageLibraryTask stageLibrary,
-      CredentialStoresTask credentialStoresTask,
       File etcDir,
       File resourcesDir,
       File staticWebDir,
@@ -663,18 +657,6 @@ public class ClusterProviderImpl implements ClusterProvider {
         addJarsToJarsList((URLClassLoader) stageDef.getStageClassLoader(), jarsToShip, "streamsets-datacollector-spark-api-[0-9]+.*");
       }
     }
-    for (CredentialStoreDefinition credentialStoreDefinition : credentialStoresTask.getConfiguredStoreDefinititions()) {
-      LOG.info(
-          "Adding Credential store stage library for: {}",
-          credentialStoreDefinition.getName()
-     );
-      extractClassLoaderInfo(streamsetsLibsCl,
-          userLibsCL,
-          credentialStoreDefinition.getStageLibraryDefinition().getClassLoader(),
-          credentialStoreDefinition.getStoreClass().getName()
-      );
-    }
-
 
     // We're shipping several stage libraries to the backend and those libraries can have stages that depends on various
     // different services. Our bootstrap procedure will however terminate SDC start up if we have stage that doesn't have

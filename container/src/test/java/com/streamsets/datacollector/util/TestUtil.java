@@ -25,7 +25,6 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
-import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -294,18 +293,6 @@ public class TestUtil {
     }
   }
 
-  @Module(library = true)
-  public static class TestCredentialStoreModule {
-
-    public TestCredentialStoreModule() {
-    }
-
-    @Provides @Singleton
-    public CredentialStoresTask provideCredentialTask() {
-      return Mockito.mock(CredentialStoresTask.class);
-    }
-  }
-
   /*************** Lineage ***************/
   @Module(
     injects = {
@@ -326,8 +313,7 @@ public class TestUtil {
   @Module(
       injects = {PipelineStoreTask.class, Configuration.class},
       library = true,
-      includes = {TestRuntimeModule.class, TestStageLibraryModule.class,  TestCredentialStoreModule
-          .class, TestPipelineStateStoreModule.class }
+      includes = {TestRuntimeModule.class, TestStageLibraryModule.class,  TestPipelineStateStoreModule.class }
   )
   public static class TestPipelineStoreModuleNew {
 

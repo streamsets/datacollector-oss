@@ -108,7 +108,6 @@ public class TestCredentialStoresTaskImpl {
     storeTask.initTask();
 
     CredentialStore store = storeTask.getStores().get("id");
-    Assert.assertEquals(1, storeTask.getConfiguredStoreDefinititions().size());
     Assert.assertTrue(store instanceof ClassloaderInContextCredentialStore);
 
     GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("g", "n", "o"));

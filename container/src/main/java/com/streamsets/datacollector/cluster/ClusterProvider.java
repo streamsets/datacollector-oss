@@ -17,7 +17,6 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
-import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -46,7 +45,6 @@ public interface ClusterProvider {
       Map<String, String> sourceInfo,
       PipelineConfiguration pipelineConfiguration,
       StageLibraryTask stageLibrary,
-      CredentialStoresTask credentialStoresTask,
       File etcDir,
       File resourcesDir,
       File staticWebDir,

@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.execution.manager.standalone;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -58,7 +57,6 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Duration;
-import org.eclipse.jetty.util.security.Credential;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -184,11 +182,6 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public StageLibraryTask provideStageLibraryTask() {
       return MockStages.createStageLibrary(new URLClassLoader(new URL[0]));
-    }
-
-    @Provides @Singleton
-    public CredentialStoresTask provideCredentialStoreTask() {
-      return Mockito.mock(CredentialStoresTask.class);
     }
 
     @Provides @Singleton @Named("previewExecutor")
