@@ -336,6 +336,8 @@ public class SpoolDirRunnable implements Runnable {
         );
       }
 
+      Map<String, Object> recordHeaderAttr = generateHeaderAttrs(file);
+
       for (int i = 0; i < maxBatchSize; i++) {
         try {
           Record record;
@@ -345,7 +347,8 @@ public class SpoolDirRunnable implements Runnable {
           } catch(RecoverableDataParserException ex) {
             // Propagate partially parsed record to error stream
             record = ex.getUnparsedRecord();
-            setHeaders(record, file, offset);
+            recordHeaderAttr.put(HeaderAttributeConstants.OFFSET, offset);
+            setHeaders(record, recordHeaderAttr);
 
             errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
             perFileErrorCount++;
@@ -355,10 +358,13 @@ public class SpoolDirRunnable implements Runnable {
           }
 
           if (record != null) {
-            setHeaders(record, file, offset);
+            recordHeaderAttr.put(HeaderAttributeConstants.OFFSET, offset);
+            setHeaders(record, recordHeaderAttr);
             batchMaker.addRecord(record);
             offset = parser.getOffset();
-
+            if (offset == null) {
+              offset = "0";
+            }
             noMoreDataRecordCount++;
             perFileRecordCount++;
 
@@ -371,6 +377,9 @@ public class SpoolDirRunnable implements Runnable {
         } catch (ObjectLengthException ex) {
           String exOffset = offset;
           offset = (parser != null) ? parser.getOffset() : MINUS_ONE;
+          if (offset == null) {
+            offset = "0";
+          }
           errorRecordHandler.onError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
           perFileErrorCount++;
           noMoreDataErrorCount++;
@@ -494,12 +503,17 @@ public class SpoolDirRunnable implements Runnable {
     return false;
   }
 
-  private void setHeaders(Record record, WrappedFile file, String offset) throws IOException {
-    record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getAbsolutePath());
-    record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getFileName());
-    record.getHeader().setAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME, String.valueOf(fs.getLastModifiedTime(file)));
-    record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
-    record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
+  private Map<String, Object> generateHeaderAttrs(WrappedFile file) throws IOException {
+    Map<String, Object> recordHeaderAttr = new HashMap<>();
+    recordHeaderAttr.put(HeaderAttributeConstants.FILE, file.getAbsolutePath());
+    recordHeaderAttr.put(HeaderAttributeConstants.FILE_NAME, file.getFileName());
+    recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, String.valueOf(fs.getLastModifiedTime(file)));
+    recordHeaderAttr.put(BASE_DIR, conf.spoolDir);
+    return recordHeaderAttr;
+  }
+
+  private void setHeaders(Record record, Map<String, Object> recordHeaderAttr) throws IOException {
+    record.getHeader().setAllAttributes(recordHeaderAttr);
   }
 
   private enum Status {
