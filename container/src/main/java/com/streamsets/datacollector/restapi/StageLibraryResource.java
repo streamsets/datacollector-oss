@@ -193,9 +193,7 @@ public class StageLibraryResource {
 
     final InputStream resourceAsStream = stage.getStageClassLoader().getResourceAsStream(iconFile);
 
-    if(iconFile.endsWith(".svg"))
-      responseType = SVG_MEDIA_TYPE;
-    else if(iconFile.endsWith(".png"))
+    if(iconFile.endsWith(".png"))
       responseType = PNG_MEDIA_TYPE;
 
     return Response.ok().type(responseType).entity(resourceAsStream).build();
@@ -222,6 +220,18 @@ public class StageLibraryResource {
         installedLibraries.add(new StageLibraryJson(
             stageDefinition.getLibrary(),
             stageDefinition.getLibraryLabel(),
+            true
+        ));
+      }
+    }
+
+    List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
+    for(ServiceDefinition serviceDefinition: serviceDefinitions) {
+      if (!installedLibrariesMap.containsKey(serviceDefinition.getLibraryDefinition().getName())) {
+        installedLibrariesMap.put(serviceDefinition.getLibraryDefinition().getName(), true);
+        installedLibraries.add(new StageLibraryJson(
+            serviceDefinition.getLibraryDefinition().getName(),
+            serviceDefinition.getLibraryDefinition().getLabel(),
             true
         ));
       }
@@ -398,7 +408,7 @@ public class StageLibraryResource {
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
-  public Response getExtras() throws IOException {
+  public Response getExtras() {
     String libsExtraDir = runtimeInfo.getLibsExtraDir();
     if (StringUtils.isEmpty(libsExtraDir)) {
       throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
@@ -425,8 +435,7 @@ public class StageLibraryResource {
         .build();
   }
 
-  private void addExtras(File extraJarsDir, String libraryId, List<StageLibraryExtrasJson> extrasList)
-      throws IOException {
+  private void addExtras(File extraJarsDir, String libraryId, List<StageLibraryExtrasJson> extrasList) {
     if (extraJarsDir != null && extraJarsDir.exists()) {
       File[] files = extraJarsDir.listFiles();
       if (files != null ) {
