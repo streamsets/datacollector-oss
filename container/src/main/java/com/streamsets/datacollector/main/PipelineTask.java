@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
@@ -34,6 +35,7 @@ public class PipelineTask extends CompositeTask {
   private final Manager manager;
   private final PipelineStoreTask pipelineStoreTask;
   private final StageLibraryTask stageLibraryTask;
+  private final BlobStoreTask blobStoreTask;
   private final WebServerTask webServerTask;
   private final LineagePublisherTask lineagePublisherTask;
   private final SupportBundleManager supportBundleManager;
@@ -48,6 +50,7 @@ public class PipelineTask extends CompositeTask {
     EventHandlerTask eventHandlerTask,
     LineagePublisherTask lineagePublisherTask,
     SupportBundleManager supportBundleManager,
+    BlobStoreTask blobStoreTask,
     CredentialStoresTask credentialStoresTask
   ) {
     super(
@@ -56,6 +59,7 @@ public class PipelineTask extends CompositeTask {
             library,
             lineagePublisherTask,
             credentialStoresTask,
+            blobStoreTask,
             store,
             webServerTask,
             manager,
@@ -66,6 +70,7 @@ public class PipelineTask extends CompositeTask {
     this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
     this.pipelineStoreTask = store;
+    this.blobStoreTask = blobStoreTask;
     this.manager = manager;
     this.lineagePublisherTask = lineagePublisherTask;
     this.supportBundleManager = supportBundleManager;
@@ -90,7 +95,9 @@ public class PipelineTask extends CompositeTask {
   public SupportBundleManager getSupportBundleManager() {
     return supportBundleManager;
   }
-
+  public BlobStoreTask getBlobStoreTask() {
+    return blobStoreTask;
+  }
   public CredentialStoresTask getCredentialStoresTask() {
     return credentialStoresTask;
   }

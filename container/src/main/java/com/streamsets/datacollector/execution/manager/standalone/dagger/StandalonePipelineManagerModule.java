@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.standalone.dagger;
 
+import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.bundles.SupportBundleModule;
 import com.streamsets.datacollector.execution.executor.ExecutorModule;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
@@ -43,6 +44,7 @@ import dagger.Module;
     StandaloneAndClusterRunnerProviderModule.class,
     CacheSnapshotStoreModule.class,
     SupportBundleModule.class,
+    BlobStoreModule.class,
     LineageModule.class
 })
 public class StandalonePipelineManagerModule {

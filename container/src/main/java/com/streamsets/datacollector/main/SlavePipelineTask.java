@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
@@ -37,6 +38,7 @@ public class SlavePipelineTask extends PipelineTask {
     EventHandlerTask eventHandlerTask,
     LineagePublisherTask lineagePublisherTask,
     SupportBundleManager supportBundleManager,
+    BlobStoreTask blobStoreTask,
     CredentialStoresTask credentialStoresTask
   ) {
     super(
@@ -47,6 +49,7 @@ public class SlavePipelineTask extends PipelineTask {
       eventHandlerTask,
       lineagePublisherTask,
       supportBundleManager,
+      blobStoreTask,
       credentialStoresTask
     );
   }

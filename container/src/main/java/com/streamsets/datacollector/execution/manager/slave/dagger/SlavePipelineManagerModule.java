@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.slave.dagger;
 
+import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.credential.CredentialStoresModule;
 import com.streamsets.datacollector.execution.executor.SlaveExecutorModule;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
@@ -41,6 +42,7 @@ import dagger.Module;
     SlaveRunnerProviderModule.class,
     SlaveCacheSnapshotStoreModule.class,
     LineageModule.class,
+    BlobStoreModule.class,
     CredentialStoresModule.class
 })
 public class SlavePipelineManagerModule {
