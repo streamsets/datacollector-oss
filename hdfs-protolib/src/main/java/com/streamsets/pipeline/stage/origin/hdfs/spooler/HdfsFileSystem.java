@@ -15,14 +15,13 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.spooler;
 
-import com.google.common.base.Strings;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.GlobPattern;
+import org.apache.hadoop.fs.GlobFilter;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
 import org.slf4j.Logger;
@@ -32,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.GLOB;
@@ -43,19 +41,24 @@ public class HdfsFileSystem implements WrappedFileSystem {
   private final FileSystem fs;
   private final String filePattern;
   private final boolean processSubdirectories;
-  private Pattern ptrn;
+  private PathFilter filter;
 
   public HdfsFileSystem(String filePattern, PathMatcherMode mode, boolean processSubdirectories, FileSystem fs) {
     this.filePattern = filePattern;
     this.processSubdirectories = processSubdirectories;
     this.fs = fs;
 
-    if (mode == GLOB) {
-      ptrn = GlobPattern.compile(filePattern);
-    } else if (mode == REGEX) {
-      ptrn = Pattern.compile(filePattern);
-    } else {
-      throw new IllegalArgumentException("Unrecognized Path Matcher Mode: " + mode.getLabel());
+    try {
+      if (mode == GLOB) {
+        filter = new GlobFilter(filePattern);
+      } else if (mode == REGEX) {
+        Pattern pattern = Pattern.compile(filePattern);
+        filter = path -> pattern.matcher(path.toString()).matches();
+      } else {
+        throw new IllegalArgumentException("Unrecognized Path Matcher Mode: " + mode.getLabel());
+      }
+    } catch(IOException e) {
+      throw new IllegalArgumentException("Can't create filter pattern: " + e.toString(), e);
     }
   }
 
@@ -106,8 +109,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
             return false;
           }
 
-          Matcher matcher = ptrn.matcher(entry.getName());
-          if (!matcher.matches()) {
+          if(!patternMatches(entry.getName())) {
             return false;
           }
 
@@ -144,8 +146,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
       @Override
       public boolean accept(Path entry) {
         try {
-          Matcher matcher = ptrn.matcher(entry.getName());
-          if (!matcher.matches()) {
+          if(!patternMatches(entry.getName())) {
             return false;
           }
 
@@ -210,16 +211,14 @@ public class HdfsFileSystem implements WrappedFileSystem {
   }
 
   public boolean patternMatches(String fileName) {
-    Matcher matcher = ptrn.matcher(fileName);
-    return matcher.matches();
+     return filter.accept(new Path(fileName));
   }
 
   public void handleOldFiles(WrappedFile dirpath, WrappedFile startingFile, boolean useLastModified, List<WrappedFile> toProcess) throws IOException {
     PathFilter pathFilter = new PathFilter() {
       @Override
       public boolean accept(Path entry) {
-        Matcher matcher = ptrn.matcher(entry.getName());
-        if (!matcher.matches()) {
+        if(!patternMatches(entry.getName())) {
           LOG.debug("Ignoring old file '{}' that do not match the file name pattern '{}'", entry.getName(), filePattern);
           return false;
         }
