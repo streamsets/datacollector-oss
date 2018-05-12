@@ -15,12 +15,12 @@
  */
 package com.streamsets.pipeline.lib.dirspooler;
 
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
-import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -70,6 +70,7 @@ public class SpoolDirUtil {
    * @return  the {@code DataParser} of the file
    */
   public static DataParser getParser(
+      WrappedFileSystem fs,
       WrappedFile file,
       DataFormat dataFormat,
       DataParserFactory parserFactory,
@@ -83,14 +84,14 @@ public class SpoolDirUtil {
 
     switch (dataFormat) {
       case WHOLE_FILE:
-        LocalFileRef localFileRef = new LocalFileRef.Builder()
+        FileRef fileRef = fs.getFileRefBuilder()
             .filePath(file.getAbsolutePath())
             .bufferSize(wholeFileMaxObjectLen)
             .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, rateLimit))
             .createMetrics(true)
             .totalSizeInBytes(file.getSize())
             .build();
-        parser = parserFactory.getParser(file.getFileName(), file.getFileMetadata(), localFileRef);
+        parser = parserFactory.getParser(file.getFileName(), file.getFileMetadata(), fileRef);
         break;
       default:
         parser = parserFactory.getParser(file.getFileName(), file.getInputStream(), offset);

@@ -325,6 +325,7 @@ public class SpoolDirRunnable implements Runnable {
     try {
       if (parser == null) {
         parser = SpoolDirUtil.getParser(
+            fs,
             file,
             conf.dataFormat,
             parserFactory,
