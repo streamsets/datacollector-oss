@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.lib.dirspooler;
 
+import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
+
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -158,4 +161,11 @@ public interface WrappedFileSystem {
    * @return  {@code true} if, and only if, the file exists
    */
   boolean findDirectoryPathCreationWatcher(List<WrappedFile> spoolDirPath);
+
+  /**
+   * Returns the FileRef Builder for whole file data format
+   *
+   * @return  AbstractSpoolerFileRef.Builder
+   */
+  AbstractSpoolerFileRef.Builder getFileRefBuilder();
 }

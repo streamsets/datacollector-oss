@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.hdfs.spooler;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
 import org.apache.commons.lang3.StringUtils;
@@ -315,5 +316,9 @@ public class HdfsFileSystem implements WrappedFileSystem {
   public boolean findDirectoryPathCreationWatcher(List<WrappedFile> spoolDirPath) {
     // TODO: HDFS does not support DirectoryWatcher so returns always true
     return true;
+  }
+
+  public AbstractSpoolerFileRef.Builder getFileRefBuilder() {
+    return new HdfsFileRef.Builder().fileSystem(fs);
   }
 }

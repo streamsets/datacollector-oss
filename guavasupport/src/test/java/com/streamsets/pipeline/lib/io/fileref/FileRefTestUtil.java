@@ -41,7 +41,7 @@ public final class FileRefTestUtil {
       String checksum,
       HashingUtil.HashType checksumAlgorithm
   ) throws IOException {
-    LocalFileRef.Builder builder = new LocalFileRef.Builder()
+    AbstractSpoolerFileRef.Builder builder = new LocalFileRef.Builder()
         .filePath(getSourceFilePath(testDir))
         //To force multiple reads from the file.
         .bufferSize(TEXT.getBytes().length / 2)

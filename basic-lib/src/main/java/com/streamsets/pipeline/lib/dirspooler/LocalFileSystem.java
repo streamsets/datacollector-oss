@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.dirspooler;
 
 import com.streamsets.pipeline.lib.io.DirectoryPathCreationWatcher;
+import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
+import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -264,5 +266,9 @@ public class LocalFileSystem implements WrappedFileSystem {
     }
     DirectoryPathCreationWatcher watcher = new DirectoryPathCreationWatcher(files, 0);
     return !watcher.find().isEmpty();
+  }
+
+  public AbstractSpoolerFileRef.Builder getFileRefBuilder() {
+    return new LocalFileRef.Builder();
   }
 }
