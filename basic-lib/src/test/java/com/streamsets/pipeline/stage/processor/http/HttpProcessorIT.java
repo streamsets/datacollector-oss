@@ -52,6 +52,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -330,6 +331,16 @@ public class HttpProcessorIT extends JerseyTest {
     }
   }
 
+  @Path("/test/time_el")
+  @Produces(MediaType.APPLICATION_JSON)
+  public static class TestTimeEL {
+    @GET
+    public Response get(@QueryParam("bihourly") String value) {
+      return Response.ok(value)
+          .build();
+    }
+  }
+
   @Override
   protected Application configure() {
     forceSet(TestProperties.CONTAINER_PORT, "0");
@@ -344,7 +355,8 @@ public class HttpProcessorIT extends JerseyTest {
             Auth2Resource.class,
             Auth2ResourceOwnerWithIdResource.class,
             Auth2BasicResource.class,
-            Auth2JWTResource.class
+            Auth2JWTResource.class,
+            TestTimeEL.class
         )
     );
   }
@@ -997,4 +1009,37 @@ public class HttpProcessorIT extends JerseyTest {
       tokenGetCount = 0;
     }
   }
+
+  @Test
+  public void testHttpGetTimeEl() throws Exception {
+    HttpProcessorConfig conf = new HttpProcessorConfig();
+    conf.httpMethod = HttpMethod.GET;
+    conf.outputField = "/output";
+    conf.dataFormat = DataFormat.TEXT;
+    conf.resourceUrl = getBaseUri() + "test/time_el?bihourly=${time:extractStringFromDateTZ(time:createDateFromStringTZ" +
+        "('2018-01-02', 'Asia/Calcutta', 'yyyy-MM-dd'), 'Asia/Calcutta' ,'yyyyMMdd')}";
+    conf.headerOutputLocation = HeaderOutputLocation.HEADER;
+
+    Record record = RecordCreator.create();
+    record.set("/", Field.create(new HashMap<String, Field>()));
+
+    List<Record> records = ImmutableList.of(record);
+    Processor processor = new HttpProcessor(conf);
+    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> outputRecords = output.getRecords().get("lane");
+      assertTrue(runner.getErrorRecords().isEmpty());
+      assertEquals(1, outputRecords.size());
+      assertTrue(outputRecords.get(0).has("/output"));
+      assertEquals("20180102", outputRecords.get(0).get("/output").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
+

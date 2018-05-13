@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -105,7 +107,7 @@ public class HttpProcessorConfig {
       type = ConfigDef.Type.STRING,
       label = "Resource URL",
       description = "The HTTP resource URL",
-      elDefs = RecordEL.class,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 60,
       group = "HTTP"

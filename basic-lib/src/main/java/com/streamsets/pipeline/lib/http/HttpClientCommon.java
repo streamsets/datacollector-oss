@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import org.glassfish.jersey.client.ClientConfig;
@@ -44,6 +46,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -359,6 +363,9 @@ public class HttpClientCommon {
 
   public String getResolvedUrl(String resourceUrl, Record record) throws ELEvalException {
     RecordEL.setRecordInContext(resourceVars, record);
+    TimeEL.setCalendarInContext(resourceVars, Calendar.getInstance());
+    TimeNowEL.setTimeNowInContext(resourceVars, new Date());
+
     return resourceEval.eval(resourceVars, resourceUrl, String.class);
   }
   public void destroy() {

@@ -76,6 +76,20 @@ For Data Collector CLI, execute:
 
 To skip the RAT report during the build use the `-DskipRat` option.
 
+## Running integration tests
+
+From within the Data Collector directory, execute:
+
+`mvn install -Pdist -DskipTests`
+
+Once the dependencies are installed, run the integration tests:
+
+`mvn failsafe:integration-test -DfailIfNoTests=false`
+
+In case you want to run a specific integration class (here the module basic-lib is executed with integration tests in 'HttpProcessorIT'):
+
+`mvn -pl basic-lib failsafe:integration-test -Dit.test="HttpProcessorIT" -DfailIfNoTests=false`
+
 ## Release build
 
 From within the Data Collector directory, execute:
