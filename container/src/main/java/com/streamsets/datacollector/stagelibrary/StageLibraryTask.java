@@ -17,6 +17,7 @@ package com.streamsets.datacollector.stagelibrary;
 
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentDefinition;
@@ -41,6 +42,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public static final String SERVICE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.SERVICES_FILE;
 
+  public static final String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
+
   public PipelineDefinition getPipeline();
 
   public PipelineFragmentDefinition getPipelineFragment();
@@ -58,6 +61,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public List<ServiceDefinition> getServiceDefinitions();
 
   public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution);
+
+  public List<InterceptorDefinition> getInterceptorDefinitions();
 
   public StageDefinition getStage(String library, String name, boolean forExecution);
 

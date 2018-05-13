@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner.preview;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentDefinition;
@@ -127,6 +128,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
     return library.getServiceDefinition(serviceInterface, forExecution);
+  }
+
+  @Override
+  public List<InterceptorDefinition> getInterceptorDefinitions() {
+    return library.getInterceptorDefinitions();
   }
 
   @Override

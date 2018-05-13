@@ -39,15 +39,13 @@ public class ServiceDefinitionExtractor {
     return EXTRACTOR;
   }
 
-
-
   public ServiceDefinition extract(
     StageLibraryDefinition libraryDef,
     Class<? extends Service> klass
   ) {
     List<ErrorMessage> errors = validate(libraryDef, klass);
     if(!errors.isEmpty()) {
-      throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
+      throw new IllegalArgumentException(Utils.format("Invalid service definition: {}", errors));
     }
 
     ServiceDef def = klass.getAnnotation(ServiceDef.class);

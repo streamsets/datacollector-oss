@@ -27,6 +27,7 @@ import com.streamsets.datacollector.classpath.ClasspathValidator;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentDefinition;
@@ -39,6 +40,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
+import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
 import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtractor;
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
@@ -120,6 +122,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private List<ServiceDefinition> serviceList;
   private Map<Class, ServiceDefinition> serviceMap;
+  private List<InterceptorDefinition> interceptorList;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
 
@@ -228,6 +231,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     credentialStoreDefinitions = new ArrayList<>();
     serviceList = new ArrayList<>();
     serviceMap = new HashMap<>();
+    interceptorList = new ArrayList<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
@@ -236,6 +240,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     credentialStoreDefinitions = ImmutableList.copyOf(credentialStoreDefinitions);
     serviceList = ImmutableList.copyOf(serviceList);
     serviceMap = ImmutableMap.copyOf(serviceMap);
+    interceptorList = ImmutableList.copyOf(interceptorList);
 
     // Various validations
     validateAllServicesAvailable();
@@ -419,6 +424,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       int lineagePublishers = 0;
       int credentialStores = 0;
       int services = 0;
+      int interceptors = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -489,17 +495,26 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             serviceList.add(def);
             serviceMap.put(def.getProvides(), def);
           }
+
+          // Load Interceptors
+          for(Class klass : loadClassesFromResource(libDef, cl, INTERCEPTOR_DEFINITION_RESOURCE)) {
+            interceptors++;
+            InterceptorDefinition def = InterceptorDefinitionExtractor.get().extract(libDef, klass);
+            LOG.debug("Loaded interceptor '{}'", def.getKlass().getCanonicalName());
+            interceptorList.add(def);
+          }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.info(
-        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services and '{}' credentialStores in '{}ms'",
+        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services, '{}' interceptors and '{}' credentialStores in '{}ms'",
         libs,
         stages,
         lineagePublishers,
         services,
+        interceptors,
         credentialStores,
         System.currentTimeMillis() - start
       );
@@ -645,6 +660,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
 
     return serviceDefinition;
+  }
+
+  @Override
+  public List<InterceptorDefinition> getInterceptorDefinitions() {
+    return interceptorList;
   }
 
   @Override

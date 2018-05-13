@@ -20,6 +20,7 @@ import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -696,6 +697,11 @@ public class MockStages {
     @Override
     public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
       return null;
+    }
+
+    @Override
+    public List<InterceptorDefinition> getInterceptorDefinitions() {
+      return Collections.emptyList();
     }
 
     @Override
