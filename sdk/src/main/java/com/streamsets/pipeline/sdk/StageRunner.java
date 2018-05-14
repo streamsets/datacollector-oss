@@ -17,7 +17,6 @@ package com.streamsets.pipeline.sdk;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
@@ -35,6 +34,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.ErrorMessage;

@@ -661,7 +661,7 @@ public abstract class PipelineBeanCreator {
 
       DefaultInterceptorCreator creator = definition.getDefaultCreator().newInstance();
       // TODO: This method will need proper context
-      Interceptor interceptor = creator.create(stageDefinition.getType().getApiType(), null);
+      Interceptor interceptor = creator.create(stageDefinition.getType(), null);
 
       if(interceptor == null) {
         return null;

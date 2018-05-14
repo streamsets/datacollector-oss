@@ -18,9 +18,9 @@ package com.streamsets.datacollector.runner;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.RateLimiter;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 

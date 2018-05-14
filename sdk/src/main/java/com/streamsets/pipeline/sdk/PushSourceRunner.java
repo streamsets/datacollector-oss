@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.sdk;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.*;
 import com.streamsets.pipeline.api.BatchContext;
@@ -25,6 +24,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

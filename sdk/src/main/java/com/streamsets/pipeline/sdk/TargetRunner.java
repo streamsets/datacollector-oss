@@ -15,12 +15,12 @@
  */
 package com.streamsets.pipeline.sdk;
 
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;

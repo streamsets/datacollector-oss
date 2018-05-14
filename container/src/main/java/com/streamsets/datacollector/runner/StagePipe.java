@@ -22,7 +22,6 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.memory.MemoryMonitor;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
@@ -36,6 +35,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

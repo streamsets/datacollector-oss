@@ -17,6 +17,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.ChooserValues;
+import com.streamsets.pipeline.api.StageType;
 
 import java.util.ArrayList;
 import java.util.Collections;

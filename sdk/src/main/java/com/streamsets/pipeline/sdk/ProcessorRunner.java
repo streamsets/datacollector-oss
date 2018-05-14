@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.sdk;
 
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -26,6 +25,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;

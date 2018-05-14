@@ -21,7 +21,6 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -55,6 +54,7 @@ import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
 
+import com.streamsets.pipeline.api.StageType;
 import dagger.ObjectGraph;
 
 import org.apache.commons.io.IOUtils;
