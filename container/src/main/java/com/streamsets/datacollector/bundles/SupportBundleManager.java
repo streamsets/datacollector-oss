@@ -229,10 +229,19 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     );
   }
 
+
   /**
    * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
    */
   public void uploadNewBundle(List<String> generators) throws IOException {
+    // Generate bundle
+    uploadNewBundle(generateNewBundle(generators), getMetadata());
+  }
+
+  /**
+   * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
+   */
+  public void uploadNewBundle(SupportBundle bundle, Properties metadata) throws IOException {
     boolean enabled = configuration.get(Constants.UPLOAD_ENABLED, Constants.DEFAULT_UPLOAD_ENABLED);
     String accessKey = configuration.get(Constants.UPLOAD_ACCESS, Constants.DEFAULT_UPLOAD_ACCESS);
     String secretKey = configuration.get(Constants.UPLOAD_SECRET, Constants.DEFAULT_UPLOAD_SECRET);
@@ -249,19 +258,16 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     s3Client.setRegion(Region.getRegion(Regions.US_WEST_2));
 
     // Object Metadata
-    ObjectMetadata metadata = new ObjectMetadata();
-    for(Map.Entry<Object, Object> entry: getMetadata().entrySet()) {
-      metadata.addUserMetadata((String)entry.getKey(), (String)entry.getValue());
+    ObjectMetadata s3Metadata = new ObjectMetadata();
+    for(Map.Entry<Object, Object> entry: metadata.entrySet()) {
+      s3Metadata.addUserMetadata((String)entry.getKey(), (String)entry.getValue());
     }
-
-    // Generate bundle
-    SupportBundle bundle = generateNewBundle(generators);
 
     // Uploading part by part
     LOG.info("Initiating multi-part support bundle upload");
     List<PartETag> partETags = new ArrayList<>();
     InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, bundle.getBundleKey());
-    initRequest.setObjectMetadata(metadata);
+    initRequest.setObjectMetadata(s3Metadata);
     InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
 
     try {
@@ -451,6 +457,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
   private Properties getMetadata() {
     Properties metadata = new Properties();
+    metadata.put("bundle.type","sdc.support");
     metadata.put("version", "1");
     metadata.put("sdc.version", buildInfo.getVersion());
     metadata.put("sdc.id", runtimeInfo.getId());

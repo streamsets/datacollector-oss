@@ -16,7 +16,10 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.bundles.SupportBundle;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -34,8 +37,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +62,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private final RuntimeInfo runtimeInfo;
   private final long rollFrequencyMillis;
   private final SafeScheduledExecutorService executorService;
+  private final SupportBundleManager bundleManager;
   private final File optFile;
   private final File statsFile;
   private boolean opted;
@@ -69,13 +75,15 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      SafeScheduledExecutorService executorService
+      SafeScheduledExecutorService executorService,
+      SupportBundleManager bundleManager
   ) {
     super("StatsCollector");
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     rollFrequencyMillis = TimeUnit.DAYS.toMillis(config.get(ROLL_FREQUENCY_CONFIG, ROLL_FREQUENCY_DEFAULT));
     this.executorService = executorService;
+    this.bundleManager = bundleManager;
     optFile = new File(runtimeInfo.getDataDir(), OPT_FILE);
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
   }
@@ -88,6 +96,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   @VisibleForTesting
   protected RuntimeInfo getRuntimeInfo() {
     return runtimeInfo;
+  }
+
+  @VisibleForTesting
+  protected SupportBundleManager getBundleManager() {
+    return bundleManager;
   }
 
   @VisibleForTesting
@@ -105,8 +118,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     return rollFrequencyMillis;
   }
 
-  @VisibleForTesting
-  protected StatsInfo getStatsInfo() {
+  @Override
+  public StatsInfo getStatsInfo() {
     return statsInfo;
   }
 
@@ -205,10 +218,12 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       if (active) {
         if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getRollFrequencyMillis())) {
           LOG.debug("Stats collection data rolled");
-          if (getStatsInfo().getCollectedStats().isEmpty()) {
-            if (reportStats(getStatsInfo().getCollectedStats())) {
-              getStatsInfo().getCollectedStats().clear();
-            }
+        }
+        if (!getStatsInfo().getCollectedStats().isEmpty()) {
+          LOG.debug("Reporting");
+          if (reportStats(getStatsInfo().getCollectedStats())) {
+            LOG.debug("Reported");
+            getStatsInfo().getCollectedStats().clear();
           }
         }
         saveStats();
@@ -217,7 +232,19 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   }
 
   protected boolean reportStats(List<StatsBean> stats) {
-    return true; //TODO SDC-8921
+    try {
+      SupportBundle bundle = getBundleManager().generateNewBundle(
+          Collections.singletonList(new StatsGenerator(stats)),
+          false
+      );
+      Properties metadata = new Properties();
+      metadata.setProperty("bundle.type","sdc.usageStats");
+      getBundleManager().uploadNewBundle(bundle, metadata);
+      return true;
+    } catch (IOException ex) {
+      LOG.warn("Reporting failed. Error: {}", ex);
+      return false;
+    }
   }
 
   protected void saveStats() {

@@ -69,4 +69,11 @@ public interface StatsCollector extends Task {
    */
   void incrementRecordCount(long count);
 
+  /**
+   * Returns the StatsInfo of the data collector.
+   *
+   * @return the StatsInfo of the data collector.
+   */
+  StatsInfo getStatsInfo();
+
 }

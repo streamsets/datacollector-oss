@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -38,10 +39,10 @@ public class StatsCollectorModule {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      @Named("runnerExecutor")
-          SafeScheduledExecutorService executorService
+      @Named("runnerExecutor") SafeScheduledExecutorService executorService,
+      SupportBundleManager bundleManager
   ) {
-    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService);
+    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, bundleManager);
   }
 
 }
