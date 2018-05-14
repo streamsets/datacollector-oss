@@ -173,7 +173,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01500("Stage '{}' configuration '{}', EL must resolve to String or to a CredentialValue resolved to '{}'"),
 
 
-  CONTAINER_01600("Download executable not supported for pipeline execution mode: '{}'"),
+  CONTAINER_01600("Not supported for pipeline execution mode: '{}'"),
   CONTAINER_01601("Start operation is not supported for pipeline '{}' with execution mode: '{}'"),
   CONTAINER_01602("Data Collector cannot connect to Data Collector Edge URL '{}'. Verify that Data Collector Edge is " +
       "running and that the URL is correctly configured in the pipeline general properties."),

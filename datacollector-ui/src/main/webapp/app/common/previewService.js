@@ -396,11 +396,11 @@ angular.module('dataCollectorApp.common')
 
       previewStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus(pipelineId, previewerId, $scope.edgeHttpUrl)
+          api.pipelineAgent.getPreviewStatus(pipelineId, previewerId)
             .then(function(response) {
               var data = response.data;
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED', 'STOP_ERROR'], data.status)) {
-                fetchPreviewData(previewerId, defer);
+                fetchPreviewData(pipelineId, previewerId, defer);
               } else {
                 checkForPreviewStatus(pipelineId, previewerId, defer);
               }
@@ -418,7 +418,7 @@ angular.module('dataCollectorApp.common')
     };
 
     var fetchPreviewData = function(pipelineId, previewerId, defer) {
-      api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
+      api.pipelineAgent.getPreviewData(pipelineId, previewerId)
         .then(function(response) {
           var previewData = response.data;
           if(previewData.status !== 'FINISHED') {

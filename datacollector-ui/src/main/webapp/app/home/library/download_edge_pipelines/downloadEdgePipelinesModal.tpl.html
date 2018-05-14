@@ -1,0 +1,31 @@
+<form class="download-edge-pipelines-modal-form" role="form" ng-submit="downloadPipelines()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.downloadEdgePipelines.title"></h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div class="form-group">
+      <label class="control-label" translate="home.downloadEdgePipelines.edgeHttpUrl">Data Collector Edge URL</label>
+      <input type="text" class="form-control" required
+             ng-disabled="operationInProgress"
+             placeholder="{{'home.library.namePlaceholder' | translate}}"
+             ng-model="downloadModel.edgeHttpUrl"
+             focus-me="true">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
+            translate="global.form.cancel">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!downloadModel.edgeHttpUrl" ng-if="!operationInProgress"
+            translate="global.form.download">Download</button>
+    <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+            translate="global.form.downloading">Downloading...</button>
+  </div>
+</form>

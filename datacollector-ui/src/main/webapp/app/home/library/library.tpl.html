@@ -29,6 +29,9 @@
              ng-if="common.isDPMEnabled"
              ng-click="downloadRemotePipelineConfig()"translate="home.downloadRemotePipeline">Download Remote Pipeline</a>
         </li>
+        <li>
+          <a href="#" ng-click="downloadEdgePipelines()"translate="home.downloadEdgePipelines.title">Download Edge Pipelines</a>
+        </li>
       </ul>
     </div>
 
@@ -73,7 +76,7 @@
         <div ng-click="onSelectNode(node)"
              ng-class="{'active': selectedPipelineLabel === node.vPath}"
              class="list-group-item-wrapper"
-             style="padding-left: {{::node.level * 10}}px;">
+             style="padding-left: {{::node.level * 10}}px">
 
           <span class="list-group-icon-wrapper">
             <i ng-show="hasChildren(node) && node.isExpanded" class="fa fa-caret-down"></i>

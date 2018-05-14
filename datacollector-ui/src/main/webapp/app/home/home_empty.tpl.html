@@ -22,10 +22,8 @@
           <span class="fa fa-arrow-circle-down"></span>
           <span translate="home.importPipeline">Import Pipeline</span>
         </button>
-      </div>
 
-      <div>
-        <button class="btn btn-primary pull-left download-pipeline-btn"
+        <button class="btn btn-primary pull-left import-pipeline-btn"
                 ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
                 ng-click="importPipelinesFromArchive()">
           <span class="fa fa-arrow-circle-down"></span>
@@ -41,6 +39,16 @@
           <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
         </button>
       </div>
+
+      <div>
+        <button class="btn btn-primary download-edge-pipelines-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+                ng-click="downloadEdgePipelines()">
+          <span class="fa fa-cloud-download"></span>
+          <span translate="home.downloadEdgePipelines.title">Download Edge Pipelines</span>
+        </button>
+      </div>
+
 
       <div>
         <a class="btn btn-primary pull-left get-started-with-tutorial"

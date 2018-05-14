@@ -142,7 +142,7 @@ public class PreviewResource {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
       Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
       if (edgeHttpUrlConfig != null) {
-        EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+        EdgeUtil.publishEdgePipeline(pipelineConfiguration, null);
         return EdgeUtil.proxyRequestPOST(
             (String)edgeHttpUrlConfig.getValue(),
             "/rest/v1/pipeline/" + pipelineId + "/preview",
@@ -353,7 +353,7 @@ public class PreviewResource {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
       Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
       if (edgeHttpUrlConfig != null) {
-        EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+        EdgeUtil.publishEdgePipeline(pipelineConfiguration, null);
         return EdgeUtil.proxyRequestGET(
             (String)edgeHttpUrlConfig.getValue(),
             "/rest/v1/pipeline/" + pipelineId + "/validate",

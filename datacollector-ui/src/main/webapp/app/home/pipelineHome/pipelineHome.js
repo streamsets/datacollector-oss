@@ -1169,6 +1169,8 @@ angular
           return c.name === 'edgeHttpUrl';
         });
         $scope.edgeHttpUrl = edgeHttpUrlConfig.value;
+      } else {
+        $scope.edgeHttpUrl = null;
       }
 
       $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {

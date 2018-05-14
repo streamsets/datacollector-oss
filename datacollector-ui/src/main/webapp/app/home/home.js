@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * Home module for displaying home page content.
  */
@@ -34,15 +35,16 @@ angular
         }
       });
   }])
-  .controller('HomeController', function ($scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api,
-                                          configuration, pipelineConstant, Analytics, $route, $translate) {
+  .controller('HomeController', function (
+    $scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api, configuration, pipelineConstant,
+    Analytics, $route, $translate
+  ) {
     $location.search('auth_token', null);
     $location.search('auth_user', null);
     $rootScope.common.successList = [];
 
     if ($routeParams.errors) {
       $rootScope.common.errors = [$routeParams.errors];
-      //$location.search('errors', null);
     } else {
       $rootScope.common.errors = [];
     }
@@ -66,7 +68,7 @@ angular
       header: {
         pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
         sortColumn: 'LAST_MODIFIED',
-        sortReverse: true,
+        sortReverse: false,
         searchInput: $scope.$storage.pipelineListState.searchInput,
         showNameColumn: $scope.$storage.pipelineListState.showNameColumn
       },
@@ -98,7 +100,7 @@ angular
         var regex = new RegExp(searchInput, 'i');
         $scope.$storage.pipelineListState.searchInput = searchInput;
 
-        if (offset == 0) {
+        if (offset === 0) {
           $scope.filteredPipelines = [];
           $rootScope.common.pipelineStatusMap = {};
         }
@@ -117,7 +119,6 @@ angular
             var statusList = res.data[1];
 
             $scope.filteredPipelines.push.apply($scope.filteredPipelines, pipelineInfoList);
-
 
             angular.forEach(statusList, function (status) {
               $rootScope.common.pipelineStatusMap[status.pipelineId] = status;
@@ -385,6 +386,45 @@ angular
           $rootScope.common.errors = [];
         }
         api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
+      },
+
+      publishPipelinesToEdge: function($event) {
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var validationIssues = [];
+        angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+            if (pipelineStatus && pipelineStatus.executionMode !== 'EDGE') {
+              validationIssues.push('Publish to Data Collector Edge  is not supported for Pipeline "' +
+                pipelineInfo.pipelineId + '" with execution mode ' +  pipelineStatus.executionMode );
+            }
+
+            if (!pipelineInfo.valid) {
+              validationIssues.push('Publish to Data Collector Edge  is not supported for invalid Pipeline "' +
+                pipelineInfo.pipelineId);
+            }
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+
+        $rootScope.common.errors = [];
+
+        pipelineService.publishEdgePipelinesCommand($event, selectedPipelineList)
+          .then(function() {
+            $route.reload();
+          });
+
+      },
+
+      downloadEdgePipelines: function($event) {
+        pipelineService.downloadEdgePipelinesCommand($event)
+          .then(function() {
+            $route.reload();
+          });
       },
 
       /**
@@ -678,7 +718,7 @@ angular
           var index = _.findIndex(filteredPipelines, function(p) {
             return pipeline.pipelineId === p.pipelineId;
           });
-          if (index != -1) {
+          if (index !== -1) {
             while (index > 0) {
               var prevPipeline = $scope.filteredPipelines[--index];
               if ($scope.selectedPipelineMap[prevPipeline.pipelineId]) {
@@ -700,7 +740,7 @@ angular
       unSelectPipeline: function(pipeline) {
         $scope.selectedPipelineMap[pipeline.pipelineId] = false;
         var index = $scope.selectedPipelineList.indexOf(pipeline.pipelineId);
-        if (index != -1) {
+        if (index !== -1) {
           $scope.selectedPipelineList.splice(index, 1);
         }
         $scope.allSelected = false;
@@ -837,17 +877,12 @@ angular
       api.pipelineAgent.getPipelineLabels()
     ]).then(
       function (results) {
-
-        /**
-         * Labels are loaded only once so they're sent to library.js
-         */
+        // Labels are loaded only once so they're sent to library.js
         if (_.isFunction($scope.onLabelsLoadedCallback)) {
           $scope.onLabelsLoadedCallback(results[0].data, results[1].data);
         }
 
-        /**
-         * Make sure we only keep selection of still-existing labels
-         */
+        // Make sure we only keep selection of still-existing labels
         var labels = results[0].data.concat(results[1].data);
         if (labels.indexOf($scope.$storage.pipelineListState.selectedLabel) !== -1) {
           $scope.selectedPipelineLabel = $scope.$storage.pipelineListState.selectedLabel;

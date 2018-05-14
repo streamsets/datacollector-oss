@@ -21,8 +21,10 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.pipeline.api.ExecutionMode;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
@@ -32,25 +34,37 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class EdgeUtil {
   public static final String EDGE_HTTP_URL = "edgeHttpUrl";
 
-  public static void publishEdgePipeline(PipelineConfiguration pipelineConfiguration) throws PipelineException {
+  public static void publishEdgePipeline(
+      PipelineConfiguration pipelineConfiguration,
+      String edgeHttpUrl
+
+  ) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
+
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
         .create(pipelineConfiguration, new ArrayList<>(), null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
 
+    if (StringUtils.isEmpty(edgeHttpUrl)) {
+      edgeHttpUrl = pipelineConfigBean.edgeHttpUrl;
+    }
+
     Response response = null;
     try {
       UUID uuid;
       response = ClientBuilder.newClient()
-          .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
+          .target(edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
           .request()
           .get();
       if (response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -61,7 +75,7 @@ public class EdgeUtil {
         // Pipeline Doesn't exist, create new pipeline
         response.close();
         response = ClientBuilder.newClient()
-            .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
+            .target(edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
             .queryParam("description", pipelineConfiguration.getDescription())
             .request()
             .put(Entity.json(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)));
@@ -73,7 +87,7 @@ public class EdgeUtil {
       response.close();
       pipelineConfiguration.setUuid(uuid);
       response = ClientBuilder.newClient()
-          .target(pipelineConfigBean.edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
+          .target(edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
           .queryParam("pipelineTitle", pipelineConfiguration.getPipelineId())
           .queryParam("description", pipelineConfiguration.getDescription())
           .request()
@@ -89,7 +103,7 @@ public class EdgeUtil {
 
     } catch (ProcessingException ex) {
       if (ex.getCause() instanceof ConnectException) {
-        throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
+        throw new PipelineException(ContainerError.CONTAINER_01602, edgeHttpUrl, ex);
       }
       throw ex;
     }
@@ -269,6 +283,56 @@ public class EdgeUtil {
     } catch (ProcessingException ex) {
       if (ex.getCause() instanceof ConnectException) {
         throw new PipelineException(ContainerError.CONTAINER_01602, pipelineConfigBean.edgeHttpUrl, ex);
+      }
+      throw ex;
+    }
+    finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+  }
+
+  public static List<PipelineInfoJson> getEdgePipelines(String edgeHttpUrl) throws PipelineException {
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(edgeHttpUrl + "/rest/v1/pipelines")
+          .request()
+          .get();
+      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+        return Arrays.asList(response.readEntity(PipelineInfoJson[].class));
+      } else {
+        return Collections.emptyList();
+      }
+    } catch (ProcessingException ex) {
+      if (ex.getCause() instanceof ConnectException) {
+        throw new PipelineException(ContainerError.CONTAINER_01602, edgeHttpUrl, ex);
+      }
+      throw ex;
+    }
+    finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+  }
+
+  public static PipelineConfigurationJson getEdgePipeline(String edgeHttpUrl, String pipelineId) throws PipelineException {
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(edgeHttpUrl + "/rest/v1/pipeline/" + pipelineId)
+          .request()
+          .get();
+      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+        return response.readEntity(PipelineConfigurationJson.class);
+      } else {
+        return null;
+      }
+    } catch (ProcessingException ex) {
+      if (ex.getCause() instanceof ConnectException) {
+        throw new PipelineException(ContainerError.CONTAINER_01602, edgeHttpUrl, ex);
       }
       throw ex;
     }

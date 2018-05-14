@@ -19,12 +19,12 @@
 
 angular.module('dataCollectorApp.common')
   .factory('api', function($rootScope, $http, $q) {
-    var apiVersion = 'v1',
-      apiBase = 'rest/' + apiVersion,
-      api = {
-        apiVersion: apiVersion,
-        events: {}
-      };
+    var apiVersion = 'v1';
+    var apiBase = 'rest/' + apiVersion;
+    var api = {
+      apiVersion: apiVersion,
+      events: {}
+    };
 
     api.log = {
       /**
@@ -672,7 +672,7 @@ angular.module('dataCollectorApp.common')
             //Save the pipeline Rules
             return api.pipelineAgent.savePipelineRules(name, duplicatePipelineRulesObject);
           })
-          .then(function(res) {
+          .then(function() {
             deferred.resolve(duplicatePipelineObject);
           },function(res) {
             deferred.reject(res);
@@ -759,6 +759,7 @@ angular.module('dataCollectorApp.common')
        * @param pipelineName
        * @param pipelineEnvelope
        * @param overwrite
+       * @param autoGeneratePipelineId
        */
       importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite, autoGeneratePipelineId) {
         var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGeneratePipelineId=' + !!autoGeneratePipelineId;
@@ -797,17 +798,34 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Download Sample Edge pipelines
+       * @param edgeHttpUrl
+       */
+      downloadPipelinesFromEdge: function(edgeHttpUrl) {
+        var url = apiBase + '/pipelines/downloadFromEdge' ;
+        return $http({
+          method: 'POST',
+          url: url,
+          data: edgeHttpUrl
+        });
+      },
+
+      /**
        * Publish Pipelines to Data Collector Edge
        *
        * @param pipelineIds
+       * @param edgeHttpUrl
        * @returns {*}
        */
-      publishPipelinesToEdge: function(pipelineIds) {
+      publishPipelinesToEdge: function(pipelineIds, edgeHttpUrl) {
         var url = apiBase + '/pipelines/publishToEdge' ;
         return $http({
           method: 'POST',
           url: url,
-          data: pipelineIds
+          data: {
+            pipelineIds: pipelineIds,
+            edgeHttpUrl: edgeHttpUrl
+          }
         });
       },
 
@@ -1013,10 +1031,11 @@ angular.module('dataCollectorApp.common')
       /**
        * Stop multiple Pipelines
        *
-       * @param pipelineNames
+       * @param pipelineIds
+       * @param forceStop
        * @returns {*}
        */
-      stopPipelines: function(pipelineNames, forceStop) {
+      stopPipelines: function(pipelineIds, forceStop) {
         var url = apiBase + '/pipelines/stop';
         if (forceStop) {
           url = apiBase + '/pipelines/forceStop';
@@ -1024,7 +1043,7 @@ angular.module('dataCollectorApp.common')
         return $http({
           method: 'POST',
           url: url,
-          data: pipelineNames
+          data: pipelineIds
         });
       },
 
@@ -1033,8 +1052,8 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelineMetrics: function(pipelineName, rev) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/metrics?rev=' + rev ;
+      getPipelineMetrics: function(pipelineId, rev) {
+        var url = apiBase + '/pipeline/' + pipelineId + '/metrics?rev=' + rev ;
         return $http({
           method: 'GET',
           url: url
@@ -1224,10 +1243,9 @@ angular.module('dataCollectorApp.common')
        * Get history of the pipeline
        *
        * @param name
-       * @param rev
        * @returns {*}
        */
-      getHistory: function(name, rev) {
+      getHistory: function(name) {
         var url = apiBase + '/pipeline/' + name + '/history';
         return $http({
           method: 'GET',
@@ -1239,10 +1257,9 @@ angular.module('dataCollectorApp.common')
        * Clear history of the pipeline
        *
        * @param name
-       * @param rev
        * @returns {*}
        */
-      clearHistory: function(name, rev) {
+      clearHistory: function(name) {
         var url = apiBase + '/pipeline/' + name + '/history';
         return $http({
           method: 'DELETE',

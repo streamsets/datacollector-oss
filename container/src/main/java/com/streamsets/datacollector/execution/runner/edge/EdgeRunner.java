@@ -173,7 +173,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       );
       toState = currentState;
     } else {
-      EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+      EdgeUtil.publishEdgePipeline(pipelineConfiguration, null);
       toState = EdgeUtil.startEdgePipeline(pipelineConfiguration, runtimeParameters);
     }
 

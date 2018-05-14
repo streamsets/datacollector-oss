@@ -495,8 +495,8 @@ public class TestPipelineConfigurationUpgrader {
 
     List<Issue> issues = new ArrayList<>();
 
-    Assert.assertNull(pipelineConf.getStartEventStages());
-    Assert.assertNull(pipelineConf.getStopEventStages());
+    Assert.assertNotNull(pipelineConf.getStartEventStages());
+    Assert.assertNotNull(pipelineConf.getStopEventStages());
 
     pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), pipelineConf, issues);
 

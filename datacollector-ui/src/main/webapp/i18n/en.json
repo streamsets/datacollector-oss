@@ -144,6 +144,7 @@
       "processors": "Processors",
       "publish": "Publish Pipeline",
       "publishToEdge": "Publish Pipeline to Data Collector Edge",
+      "publishPipelinesToEdge": "Publish Pipelines to Data Collector Edge",
       "record": "Record",
       "recordHeader": "Record Header",
       "records": "Records",
@@ -276,6 +277,10 @@
       "pipelineName": "Pipeline Name",
       "pipelineId": "Pipeline ID",
       "version": "Version"
+    },
+    "downloadEdgePipelines": {
+      "edgeHttpUrl": "Data Collector Edge URL",
+      "title": "Download Edge Pipelines"
     },
     "dpmInfo": {
       "enableDPM": "Enable Control Hub",
@@ -663,6 +668,12 @@
       "headerLabel" : "Publish Pipeline",
       "listHeaderLabel": "Publish Pipelines",
       "pipelineRepository": "Control Hub Pipeline Repository"
+    },
+    "publishEdgePipelines": {
+      "edgeHttpUrl": "Data Collector Edge URL",
+      "publish": "Publish",
+      "publishing": "Publishing...",
+      "title": "Publish pipelines to Data Collector Edge"
     },
     "resetOffset": {
       "title": "Reset Origin",

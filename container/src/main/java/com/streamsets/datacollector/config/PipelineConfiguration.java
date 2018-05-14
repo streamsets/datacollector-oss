@@ -21,6 +21,7 @@ import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -73,8 +74,8 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
     this.errorStage = errorStage;
     this.statsAggregatorStage = statsAggregatorStage;
     memoryLimitConfiguration = new MemoryLimitConfiguration();
-    this.startEventStages = startEventStages;
-    this.stopEventStages = stopEventStages;
+    this.startEventStages = startEventStages != null ? startEventStages : Collections.emptyList();
+    this.stopEventStages = stopEventStages != null ? stopEventStages : Collections.emptyList();
   }
 
   public void setErrorStage(StageConfiguration errorStage) {

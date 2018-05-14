@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.restapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -115,7 +114,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -170,6 +168,8 @@ public class PipelineStoreResource {
   private static final String SYSTEM_INVALID_PIPELINES = "system:invalidPipelines";
   private static final String SYSTEM_ERROR_PIPELINES = "system:errorPipelines";
   private static final String SHARED_WITH_ME_PIPELINES = "system:sharedWithMePipelines";
+
+  private static final String PIPELINE_IDS = "pipelineIds";
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
@@ -251,7 +251,7 @@ public class PipelineStoreResource {
       responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getSystemPipelineLabels() throws PipelineStoreException {
+  public Response getSystemPipelineLabels() {
     return Response.ok()
         .type(MediaType.APPLICATION_JSON)
         .entity(runtimeInfo.isDPMEnabled() ? DPM_ENABLED_SYSTEM_PIPELINE_LABELS : SYSTEM_PIPELINE_LABELS)
@@ -300,130 +300,124 @@ public class PipelineStoreResource {
     final List<PipelineInfo> pipelineInfoList = store.getPipelines();
     final Map<String, PipelineState> pipelineStateCache = new HashMap<>();
 
-    Collection<PipelineInfo> filteredCollection = Collections2.filter(pipelineInfoList, new Predicate<PipelineInfo>() {
-      @Override
-      public boolean apply(PipelineInfo pipelineInfo) {
-        String title = pipelineInfo.getTitle() != null ? pipelineInfo.getTitle() : pipelineInfo.getPipelineId();
-        if (filterText != null && !title.toLowerCase().contains(filterText.toLowerCase())) {
-          return false;
-        }
-        if (label != null) {
-          try {
-            Map<String, Object> metadata = pipelineInfo.getMetadata();
-            switch (label) {
-              case SYSTEM_ALL_PIPELINES:
-                return true;
-              case SYSTEM_RUNNING_PIPELINES:
-                PipelineState state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
-                pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
-                return state.getStatus().isActive();
-              case SYSTEM_NON_RUNNING_PIPELINES:
-                state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
-                pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
-                return !state.getStatus().isActive();
-              case SYSTEM_INVALID_PIPELINES:
-                return !pipelineInfo.isValid();
-              case SYSTEM_ERROR_PIPELINES:
-                state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
-                pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
-                PipelineStatus status = state.getStatus();
-                return status == PipelineStatus.START_ERROR ||
-                    status == PipelineStatus.RUNNING_ERROR ||
-                    status == PipelineStatus.RUN_ERROR ||
-                    status == PipelineStatus.CONNECT_ERROR;
-              case SYSTEM_PUBLISHED_PIPELINES:
-                state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
-                pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
-                return !isRemotePipeline(state) && metadata != null && metadata.containsKey(DPM_PIPELINE_ID);
-              case SYSTEM_DPM_CONTROLLED_PIPELINES:
-                state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
-                pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
-                return isRemotePipeline(state);
-              case SYSTEM_LOCAL_PIPELINES:
-                return metadata == null || !metadata.containsKey(DPM_PIPELINE_ID);
-              case SHARED_WITH_ME_PIPELINES:
-                return !pipelineInfo.getCreator().equals(user);
-              default:
-                if (metadata != null && metadata.containsKey("labels")) {
-                  List<String> labels = (List<String>) metadata.get("labels");
-                  if (!labels.contains(label)) {
-                    return false;
-                  }
-                } else {
+    Collection<PipelineInfo> filteredCollection = Collections2.filter(pipelineInfoList, pipelineInfo -> {
+      String title = pipelineInfo.getTitle() != null ? pipelineInfo.getTitle() : pipelineInfo.getPipelineId();
+      if (filterText != null && !title.toLowerCase().contains(filterText.toLowerCase())) {
+        return false;
+      }
+      if (label != null) {
+        try {
+          Map<String, Object> metadata = pipelineInfo.getMetadata();
+          switch (label) {
+            case SYSTEM_ALL_PIPELINES:
+              return true;
+            case SYSTEM_RUNNING_PIPELINES:
+              PipelineState state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              return state.getStatus().isActive();
+            case SYSTEM_NON_RUNNING_PIPELINES:
+              state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              return !state.getStatus().isActive();
+            case SYSTEM_INVALID_PIPELINES:
+              return !pipelineInfo.isValid();
+            case SYSTEM_ERROR_PIPELINES:
+              state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              PipelineStatus status = state.getStatus();
+              return status == PipelineStatus.START_ERROR ||
+                  status == PipelineStatus.RUNNING_ERROR ||
+                  status == PipelineStatus.RUN_ERROR ||
+                  status == PipelineStatus.CONNECT_ERROR;
+            case SYSTEM_PUBLISHED_PIPELINES:
+              state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              return !isRemotePipeline(state) && metadata != null && metadata.containsKey(DPM_PIPELINE_ID);
+            case SYSTEM_DPM_CONTROLLED_PIPELINES:
+              state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              return isRemotePipeline(state);
+            case SYSTEM_LOCAL_PIPELINES:
+              return metadata == null || !metadata.containsKey(DPM_PIPELINE_ID);
+            case SHARED_WITH_ME_PIPELINES:
+              return !pipelineInfo.getCreator().equals(user);
+            default:
+              if (metadata != null && metadata.containsKey("labels")) {
+                List<String> labels = (List<String>) metadata.get("labels");
+                if (!labels.contains(label)) {
                   return false;
                 }
-            }
-          } catch (PipelineException e) {
-            e.printStackTrace();
+              } else {
+                return false;
+              }
           }
+        } catch (PipelineException e) {
+          e.printStackTrace();
         }
-        return true;
       }
+      return true;
     });
 
     List<PipelineInfo> filteredList = new ArrayList<>(filteredCollection);
 
-    Collections.sort(filteredList, new Comparator<PipelineInfo>() {
-      @Override
-      public int compare(PipelineInfo p1, PipelineInfo p2) {
-        if (order.equals(Order.DESC)) {
-          PipelineInfo tmp = p1;
-          p1 = p2;
-          p2 = tmp;
-        }
-
-        if (orderBy.equals(PipelineOrderByFields.NAME)) {
-          return p1.getPipelineId().compareTo(p2.getPipelineId());
-        }
-
-        if (orderBy.equals(PipelineOrderByFields.TITLE)) {
-          String p1Title = p1.getTitle() != null ? p1.getTitle() : p1.getPipelineId();
-          String p2Title = p2.getTitle() != null ? p2.getTitle() : p2.getPipelineId();
-          return p1Title.compareTo(p2Title);
-        }
-
-        if (orderBy.equals(PipelineOrderByFields.LAST_MODIFIED)) {
-          return p2.getLastModified().compareTo(p1.getLastModified());
-        }
-
-        if (orderBy.equals(PipelineOrderByFields.CREATED)) {
-          return p2.getCreated().compareTo(p1.getCreated());
-        }
-
-        if (orderBy.equals(PipelineOrderByFields.CREATOR)) {
-          return p1.getCreator().compareTo(p2.getCreator());
-        }
-
-        if(orderBy.equals(PipelineOrderByFields.STATUS)) {
-          try {
-            PipelineState p1State = null;
-            PipelineState p2State = null;
-
-            if (pipelineStateCache.containsKey(p1.getPipelineId())) {
-              p1State = pipelineStateCache.get(p1.getPipelineId());
-            } else {
-              p1State = manager.getPipelineState(p1.getPipelineId(), p1.getLastRev());
-              pipelineStateCache.put(p1.getPipelineId(), p1State);
-            }
-
-            if (pipelineStateCache.containsKey(p2.getPipelineId())) {
-              p2State = pipelineStateCache.get(p2.getPipelineId());
-            } else {
-              p2State = manager.getPipelineState(p2.getPipelineId(), p2.getLastRev());
-              pipelineStateCache.put(p2.getPipelineId(), p2State);
-            }
-
-            if (p1State != null && p2State != null) {
-              return p1State.getStatus().compareTo(p2State.getStatus());
-            }
-
-          } catch (PipelineException e) {
-            LOG.debug("Failed to get Pipeline State - " + e.getLocalizedMessage());
-          }
-        }
-
-        return 0;
+    filteredList.sort((p1, p2) -> {
+      if (order.equals(Order.DESC)) {
+        PipelineInfo tmp = p1;
+        p1 = p2;
+        p2 = tmp;
       }
+
+      if (orderBy.equals(PipelineOrderByFields.NAME)) {
+        return p1.getPipelineId().compareTo(p2.getPipelineId());
+      }
+
+      if (orderBy.equals(PipelineOrderByFields.TITLE)) {
+        String p1Title = p1.getTitle() != null ? p1.getTitle() : p1.getPipelineId();
+        String p2Title = p2.getTitle() != null ? p2.getTitle() : p2.getPipelineId();
+        return p1Title.compareTo(p2Title);
+      }
+
+      if (orderBy.equals(PipelineOrderByFields.LAST_MODIFIED)) {
+        return p2.getLastModified().compareTo(p1.getLastModified());
+      }
+
+      if (orderBy.equals(PipelineOrderByFields.CREATED)) {
+        return p2.getCreated().compareTo(p1.getCreated());
+      }
+
+      if (orderBy.equals(PipelineOrderByFields.CREATOR)) {
+        return p1.getCreator().compareTo(p2.getCreator());
+      }
+
+      if (orderBy.equals(PipelineOrderByFields.STATUS)) {
+        try {
+          PipelineState p1State = null;
+          PipelineState p2State = null;
+
+          if (pipelineStateCache.containsKey(p1.getPipelineId())) {
+            p1State = pipelineStateCache.get(p1.getPipelineId());
+          } else {
+            p1State = manager.getPipelineState(p1.getPipelineId(), p1.getLastRev());
+            pipelineStateCache.put(p1.getPipelineId(), p1State);
+          }
+
+          if (pipelineStateCache.containsKey(p2.getPipelineId())) {
+            p2State = pipelineStateCache.get(p2.getPipelineId());
+          } else {
+            p2State = manager.getPipelineState(p2.getPipelineId(), p2.getLastRev());
+            pipelineStateCache.put(p2.getPipelineId(), p2State);
+          }
+
+          if (p1State != null && p2State != null) {
+            return p1State.getStatus().compareTo(p2State.getStatus());
+          }
+
+        } catch (PipelineException e) {
+          LOG.debug("Failed to get Pipeline State - " + e.getLocalizedMessage());
+        }
+      }
+
+      return 0;
     });
 
     Object responseData;
@@ -553,7 +547,7 @@ public class PipelineStoreResource {
   public Response importPipelines(
       @FormDataParam("file") InputStream uploadedInputStream,
       @Context SecurityContext context
-  ) throws PipelineException, IOException {
+  ) throws IOException {
     RestAPIUtils.injectPipelineInMDC("*");
     List<PipelineInfoJson> successEntities = new ArrayList<>();
     List<String> errorMessages = new ArrayList<>();
@@ -602,7 +596,7 @@ public class PipelineStoreResource {
       List<String> pipelineIds,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
       @Context SecurityContext context
-  ) throws PipelineException {
+  ) {
     RestAPIUtils.injectPipelineInMDC("*");
     String fileName = "pipelines.zip";
     StreamingOutput streamingOutput = output -> {
@@ -695,7 +689,7 @@ public class PipelineStoreResource {
       @QueryParam("description") @DefaultValue("") String description,
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft
-  ) throws URISyntaxException, PipelineException {
+  ) throws PipelineException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
       pipelineId = pipelineTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
@@ -838,7 +832,7 @@ public class PipelineStoreResource {
   public Response deletePipeline(
       @PathParam("pipelineId") String name,
       @Context SecurityContext context
-  ) throws URISyntaxException, PipelineException {
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if (store.isRemotePipeline(name, "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
@@ -864,7 +858,7 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("description") String description,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline
-  ) throws URISyntaxException, PipelineException {
+  ) throws PipelineException {
     if (store.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_PIPELINE", name);
     }
@@ -890,7 +884,7 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       Map uiInfo
-  ) throws PipelineException, URISyntaxException {
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     store.saveUiInfo(name, rev, uiInfo);
@@ -910,7 +904,7 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       Map<String, Object> metadata
-  ) throws PipelineException, URISyntaxException {
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     store.saveMetadata(user, name, rev, metadata);
@@ -994,7 +988,7 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions
-  ) throws PipelineException, URISyntaxException {
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
 
@@ -1321,7 +1315,7 @@ public class PipelineStoreResource {
       AuthzRole.MANAGER_REMOTE,
       AuthzRole.ADMIN_REMOTE
   })
-  public Response addLabelsToPipelines(AddLabelsRequestJson addLabelsRequestJson) throws PipelineException {
+  public Response addLabelsToPipelines(AddLabelsRequestJson addLabelsRequestJson) {
     List<String> labels = addLabelsRequestJson.getLabels();
     List<String> pipelineIds = addLabelsRequestJson.getPipelineNames();
     List<String> successEntities = new ArrayList<>();
@@ -1379,8 +1373,7 @@ public class PipelineStoreResource {
       @QueryParam("edgeOs") @DefaultValue("darwin") String edgeOs,
       @QueryParam("edgeArch") @DefaultValue("amd64") String edgeArch,
       @QueryParam("pipelineIds") String pipelineIds
-  ) throws IOException, PipelineException {
-
+  ) throws PipelineException {
     String[] pipelineIdArr = pipelineIds.split(",");
     List<PipelineConfigurationJson> pipelineConfigurationList = new ArrayList<>();
 
@@ -1412,15 +1405,84 @@ public class PipelineStoreResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   @ApiOperation(
-      value = "Upload pipelines to Edge Data Collector",
+      value = "Upload pipelines to Data Collector Edge",
       authorizations = @Authorization(value = "basic")
   )
-  public Response uploadToEdge(List<String> pipelineIds) throws PipelineException {
+  public Response uploadToEdge(Map<String, Object> publishInfo) throws PipelineException {
+    String edgeHttpUrl = (String)publishInfo.get(EdgeUtil.EDGE_HTTP_URL);
+    List<String> pipelineIds = (List<String>)publishInfo.get(PIPELINE_IDS);
     for (String pipelineId: pipelineIds) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
-      EdgeUtil.publishEdgePipeline(pipelineConfiguration);
+      EdgeUtil.publishEdgePipeline(pipelineConfiguration, edgeHttpUrl);
     }
     return Response.ok().build();
+  }
+
+  @POST
+  @Path("/pipelines/downloadFromEdge")
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  @ApiOperation(
+      value = "Download all pipelines from Data Collector Edge",
+      authorizations = @Authorization(value = "basic")
+  )
+  public Response downloadFromEdge(String edgeHttpUrl) throws PipelineException {
+    List<PipelineInfoJson> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    List<PipelineInfoJson> pipelineInfoList = EdgeUtil.getEdgePipelines(edgeHttpUrl);
+
+    pipelineInfoList.forEach(pipelineInfo -> {
+      try {
+        PipelineConfigurationJson pipelineConfigurationJson = EdgeUtil.getEdgePipeline(
+            edgeHttpUrl,
+            pipelineInfo.getPipelineId()
+        );
+        if (pipelineConfigurationJson != null) {
+          PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
+
+          PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+              stageLibrary,
+              pipelineConfig.getPipelineId(),
+              pipelineConfig
+          );
+          pipelineConfig = validator.validate();
+
+          PipelineConfiguration newPipelineConfig = store.create(
+              user,
+              pipelineConfig.getPipelineId(),
+              pipelineConfig.getTitle(),
+              pipelineConfig.getDescription(),
+              false,
+              false
+          );
+
+          pipelineConfig.setUuid(newPipelineConfig.getUuid());
+          pipelineConfig.setPipelineId(newPipelineConfig.getPipelineId());
+
+          pipelineConfig = store.save(
+              user,
+              pipelineConfig.getPipelineId(),
+              pipelineInfo.getLastRev(),
+              pipelineConfig.getDescription(),
+              pipelineConfig
+          );
+
+          successEntities.add(BeanHelper.wrapPipelineInfo(pipelineConfig.getInfo()));
+        }
+      } catch (PipelineException ex) {
+        errorMessages.add(Utils.format(
+            "Failed to download Pipeline Title: {}. Error: {} ",
+            pipelineInfo.getTitle(),
+            ex.getMessage()
+        ));
+      }
+    });
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
+
   }
 
 }

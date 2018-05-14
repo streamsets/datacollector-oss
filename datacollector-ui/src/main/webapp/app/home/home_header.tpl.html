@@ -86,6 +86,16 @@
             </a>
           </li>
 
+          <li role="presentation"
+              ng-class="{'disabled': selectedPipelineList.length === 0}"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+            <a href="#" dropdown-toggle
+               ng-click="selectedPipelineList.length === 0 || publishPipelinesToEdge(true)">
+              <i class="fa fa-upload"></i>
+              <span>{{'global.form.publishPipelinesToEdge' | translate}}</span>
+            </a>
+          </li>
+
 
           <li role="presentation">
             <a href="#" dropdown-toggle

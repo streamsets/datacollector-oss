@@ -198,12 +198,11 @@ angular.module('dataCollectorApp.common')
     /**
      * Returns Service Definition for given service
      *
-     * @returns {*|serviceDefinition}
      */
     this.getServiceDefinition = function(serviceName) {
       var serviceDef = null;
       angular.forEach(self.getServiceDefinitions(), function(serviceDefinition) {
-        if (serviceDefinition.provides == serviceName) {
+        if (serviceDefinition.provides === serviceName) {
           serviceDef = serviceDefinition;
         }
       });
@@ -355,24 +354,24 @@ angular.module('dataCollectorApp.common')
      * Delete Pipeline Configuration Command Handler
      */
     this.deletePipelineConfigCommand = function(pipelineInfo, pipelineStatusMap, $event) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/delete/delete.tpl.html',
-          controller: 'DeleteModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/delete/delete.tpl.html',
+        controller: 'DeleteModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
           }
-        });
+        }
+      });
 
       if ($event) {
         $event.stopPropagation();
       }
 
-      modalInstance.result.then(function (configInfo) {
+      modalInstance.result.then(function () {
         defer.resolve();
       }, function () {
 
@@ -386,18 +385,18 @@ angular.module('dataCollectorApp.common')
      * Duplicate Pipeline Configuration Command Handler
      */
     this.duplicatePipelineConfigCommand = function(pipelineInfo, $event) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
-          controller: 'DuplicateModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
+        controller: 'DuplicateModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
           }
-        });
+        }
+      });
 
       if ($event) {
         $event.stopPropagation();
@@ -417,18 +416,18 @@ angular.module('dataCollectorApp.common')
      * Publish Pipeline to Remote Command Handler
      */
     this.publishPipelineCommand = function(pipelineInfo, $event) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/publish/publishModal.tpl.html',
-          controller: 'PublishModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/publish/publishModal.tpl.html',
+        controller: 'PublishModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
           }
-        });
+        }
+      });
 
       if ($event) {
         $event.stopPropagation();
@@ -447,18 +446,18 @@ angular.module('dataCollectorApp.common')
      * Download Remote Pipeline Command Handler
      */
     this.downloadRemotePipelineConfigCommand = function($event, existingDPMPipelineIds) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/download_remote/downloadRemoteModal.tpl.html',
-          controller: 'DownloadRemoteModalInstanceController',
-          size: 'lg',
-          backdrop: 'static',
-          resolve: {
-            existingDPMPipelineIds: function() {
-              return existingDPMPipelineIds;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/download_remote/downloadRemoteModal.tpl.html',
+        controller: 'DownloadRemoteModalInstanceController',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          existingDPMPipelineIds: function () {
+            return existingDPMPipelineIds;
           }
-        });
+        }
+      });
 
       if ($event) {
         $event.stopPropagation();
@@ -474,6 +473,59 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Download Edge Pipelines command handler
+     */
+    this.downloadEdgePipelinesCommand = function($event) {
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/download_edge_pipelines/downloadEdgePipelinesModal.tpl.html',
+        controller: 'DownloadEdgePipelinesModalInstanceController',
+        backdrop: 'static'
+      });
+
+      if ($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(
+        function () {
+          defer.resolve();
+        }
+      );
+
+      return defer.promise;
+    };
+
+    /**
+     * Publish Edge Pipelines command handler
+     */
+    this.publishEdgePipelinesCommand = function($event, pipelineIds) {
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/publish_edge_pipelines/publishEdgePipelinesModal.tpl.html',
+        controller: 'PublishEdgePipelinesModalInstanceController',
+        backdrop: 'static',
+        resolve: {
+          pipelineIds: function () {
+            return pipelineIds;
+          }
+        }
+      });
+
+      if ($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(
+        function () {
+          defer.resolve();
+        }
+      );
+
+      return defer.promise;
+    };
+
+    /**
      * Show Remote Pipeline Commit History
      * @param pipelineInfo
      * @param metadata
@@ -481,21 +533,21 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.showCommitHistoryCommand = function(pipelineInfo, metadata, $event) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/commit_history/commitHistoryModal.tpl.html',
-          controller: 'CommitHistoryModalInstanceController',
-          size: 'lg',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            },
-            metadata: function() {
-              return metadata;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/commit_history/commitHistoryModal.tpl.html',
+        controller: 'CommitHistoryModalInstanceController',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          },
+          metadata: function () {
+            return metadata;
           }
-        });
+        }
+      });
 
       if ($event) {
         $event.stopPropagation();
@@ -517,21 +569,21 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.revertChangesCommand = function(pipelineInfo, metadata) {
-      var defer = $q.defer(),
-        modalInstance = $modal.open({
-          templateUrl: 'app/home/library/revert_changes/revertChangesModal.tpl.html',
-          controller: 'RevertChangesModalInstanceController',
-          size: 'lg',
-          backdrop: 'static',
-          resolve: {
-            pipelineInfo: function () {
-              return pipelineInfo;
-            },
-            metadata: function() {
-              return metadata;
-            }
+      var defer = $q.defer();
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/revert_changes/revertChangesModal.tpl.html',
+        controller: 'RevertChangesModalInstanceController',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          },
+          metadata: function () {
+            return metadata;
           }
-        });
+        }
+      });
 
       modalInstance.result.then(function (updatedPipelineConfig) {
         defer.resolve(updatedPipelineConfig);
@@ -712,7 +764,7 @@ angular.module('dataCollectorApp.common')
         // Propagate RUNTIME configuration injected by the stage
         angular.forEach(serviceDependency.configuration, function(value, key) {
           angular.forEach(serviceInstance.configuration, function(config) {
-            if(config.name == key) {
+            if(config.name === key) {
               config.value = value;
             }
           });
@@ -1340,7 +1392,7 @@ angular.module('dataCollectorApp.common')
      * Returns Metric element list
      */
     this.getMetricElementList = function() {
-      var elementList = {
+      return {
         GAUGE: [
           {
             value: 'CURRENT_BATCH_AGE',
@@ -1532,8 +1584,6 @@ angular.module('dataCollectorApp.common')
           }
         ]
       };
-
-      return elementList;
     };
 
 

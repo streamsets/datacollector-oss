@@ -40,6 +40,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 import com.streamsets.pipeline.api.service.Service;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -214,7 +215,7 @@ public abstract class PipelineBeanCreator {
 
       // Pipeline Lifecycle event handlers
       StageBean startBean = null;
-      if(!pipelineConf.getStartEventStages().isEmpty()) {
+      if(CollectionUtils.isNotEmpty(pipelineConf.getStartEventStages())) {
          startBean = createStageBean(
             forExecution,
             library,
@@ -227,7 +228,7 @@ public abstract class PipelineBeanCreator {
       }
       startEventBeans = new PipelineStageBeans(startBean == null ? Collections.emptyList() : ImmutableList.of(startBean));
       StageBean stopBean = null;
-      if(!pipelineConf.getStopEventStages().isEmpty()) {
+      if(CollectionUtils.isNotEmpty(pipelineConf.getStopEventStages())) {
          stopBean = createStageBean(
             forExecution,
             library,
