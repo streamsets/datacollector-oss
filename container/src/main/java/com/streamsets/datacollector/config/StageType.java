@@ -37,4 +37,26 @@ public enum StageType {
     return false;
   }
 
+  /**
+   * Return API representation of this StageType.
+   *
+   * TODO: Why do we have two different stage types in the first place?
+   */
+  public com.streamsets.pipeline.api.StageType getApiType() {
+    switch (this) {
+      case SOURCE:
+        return com.streamsets.pipeline.api.StageType.SOURCE;
+      case PROCESSOR:
+        return com.streamsets.pipeline.api.StageType.PROCESSOR;
+      case TARGET:
+        return com.streamsets.pipeline.api.StageType.TARGET;
+      case EXECUTOR:
+        return com.streamsets.pipeline.api.StageType.EXECUTOR;
+      case PIPELINE:
+        return com.streamsets.pipeline.api.StageType.PIPELINE;
+      default:
+        return null;
+    }
+  }
+
 }

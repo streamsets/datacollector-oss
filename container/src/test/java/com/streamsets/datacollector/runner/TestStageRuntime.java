@@ -63,7 +63,13 @@ public class TestStageRuntime {
 
     this.serviceRuntime = Mockito.mock(ServiceRuntime.class);
 
-    this.runtime = new StageRuntime(pipelineBean, stageBean, ImmutableList.of(serviceRuntime));
+    this.runtime = new StageRuntime(
+      pipelineBean,
+      stageBean,
+      ImmutableList.of(serviceRuntime),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     runtime.setContext(context);
   }
 

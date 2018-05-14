@@ -31,6 +31,8 @@ public class StageBean {
   private final Stage stage;
   private final ClassLoaderReleaser classLoaderReleaser;
   private final List<ServiceBean> services;
+  private final List<InterceptorBean> preInterceptors;
+  private final List<InterceptorBean> postInterceptors;
 
   public StageBean(
     StageDefinition definition,
@@ -38,7 +40,9 @@ public class StageBean {
     StageConfigBean systemConfigs,
     Stage stage,
     ClassLoaderReleaser classLoaderReleaser,
-    List<ServiceBean> services
+    List<ServiceBean> services,
+    List<InterceptorBean> preInterceptors,
+    List<InterceptorBean> postInterceptors
   ) {
     this.definition = definition;
     this.conf = conf;
@@ -46,6 +50,8 @@ public class StageBean {
     this.stage = stage;
     this.classLoaderReleaser = classLoaderReleaser;
     this.services = Collections.unmodifiableList(services);
+    this.preInterceptors = Collections.unmodifiableList(preInterceptors);
+    this.postInterceptors = Collections.unmodifiableList(postInterceptors);
   }
 
   public StageDefinition getDefinition() {
@@ -66,6 +72,14 @@ public class StageBean {
 
   public List<ServiceBean> getServices() {
     return services;
+  }
+
+  public List<InterceptorBean> getPreInterceptors() {
+    return preInterceptors;
+  }
+
+  public List<InterceptorBean> getPostInterceptors() {
+    return postInterceptors;
   }
 
   public ServiceBean getService(Class service) {

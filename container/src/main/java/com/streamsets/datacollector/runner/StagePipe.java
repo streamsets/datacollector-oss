@@ -39,7 +39,6 @@ import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,14 +76,38 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   FilterRecordBatch.Predicate[] predicates;
 
   @VisibleForTesting
-  StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, List<String> eventLanes) {
-    this("myPipeline", "0", new Configuration(), stage, inputLanes, outputLanes, eventLanes, new ResourceControlledScheduledExecutor(0.02f),
-      new MemoryUsageCollectorResourceBundle(), null);
+  StagePipe(
+    StageRuntime stage,
+    List<String> inputLanes,
+    List<String> outputLanes,
+    List<String> eventLanes
+  ) {
+    this(
+      "myPipeline",
+      "0",
+      new Configuration(),
+      stage,
+      inputLanes,
+      outputLanes,
+      eventLanes,
+      new ResourceControlledScheduledExecutor(0.02f),
+      new MemoryUsageCollectorResourceBundle(),
+      null
+    );
   }
 
-  public StagePipe(String name, String rev, Configuration configuration, StageRuntime stage, List<String> inputLanes,
-                   List<String> outputLanes, List<String> eventLanes, ResourceControlledScheduledExecutor scheduledExecutorService,
-                   MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle, MetricRegistryJson metricRegistryJson) {
+  public StagePipe(
+    String name,
+    String rev,
+    Configuration configuration,
+    StageRuntime stage,
+    List<String> inputLanes,
+    List<String> outputLanes,
+    List<String> eventLanes,
+    ResourceControlledScheduledExecutor scheduledExecutorService,
+    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
+    MetricRegistryJson metricRegistryJson
+  ) {
     super(stage, inputLanes, outputLanes, eventLanes);
     this.name = name;
     this.rev = rev;
@@ -206,7 +229,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
-    BatchImpl batchImpl = pipeBatch.getBatch(this, Collections.emptyList());
+    BatchImpl batchImpl = pipeBatch.getBatch(this, getStage().getPreInterceptors());
     ErrorSink errorSink = pipeBatch.getErrorSink();
     EventSink eventSink = pipeBatch.getEventSink();
     ProcessedSink processedSink = pipeBatch.getProcessedSink();
@@ -303,7 +326,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
     batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
 
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker, getStage().getPostInterceptors());
 
     // In this is source pipe, update source-specific metrics
     if(isSource()) {

@@ -52,6 +52,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import org.slf4j.Logger;
@@ -66,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
@@ -75,6 +77,7 @@ public class Pipeline {
   private static final int MAX_RUNNERS_DEFAULT = 50;
   private static final String FRAMEWORK_NAME = "Framework";
 
+  private final StageLibraryTask stageLib;
   private final PipelineBean pipelineBean;
   private final String name;
   private final String rev;
@@ -102,6 +105,7 @@ public class Pipeline {
   private boolean stopEventStageInitialized;
 
   private Pipeline(
+      StageLibraryTask stageLib,
       String name,
       String rev,
       Configuration configuration,
@@ -125,6 +129,7 @@ public class Pipeline {
       StageRuntime startEventStage,
       StageRuntime stopEventStage
   ) {
+    this.stageLib = stageLib;
     this.pipelineBean = pipelineBean;
     this.name = name;
     this.rev = rev;
@@ -325,6 +330,7 @@ public class Pipeline {
 
             // Create list of Stage beans
             PipelineStageBeans beans = PipelineBeanCreator.get().duplicatePipelineStageBeans(
+              stageLib,
               pipelineBean.getPipelineStageBeans(),
               originPipe.getStage().getConstants(),
               localIssues
@@ -745,6 +751,7 @@ public class Pipeline {
 
         try {
           pipeline = new Pipeline(
+            stageLib,
             name,
             rev,
             configuration,
@@ -980,8 +987,21 @@ public class Pipeline {
       services.put(serviceBean.getDefinition().getProvides(), runtime);
     }
 
+    List<Interceptor> preInterceptors = stageBean.getPreInterceptors().stream()
+      .map(InterceptorRuntime::new)
+      .collect(Collectors.toList());
+    List<Interceptor> postInterceptors = stageBean.getPostInterceptors().stream()
+      .map(InterceptorRuntime::new)
+      .collect(Collectors.toList());
+
     // Create StageRuntime itself
-    StageRuntime stageRuntime = new StageRuntime(pipelineBean, stageBean, services.values());
+    StageRuntime stageRuntime = new StageRuntime(
+      pipelineBean,
+      stageBean,
+      services.values(),
+      preInterceptors,
+      postInterceptors
+    );
 
     // Add it to Info array
     if (addToStageInfos) {

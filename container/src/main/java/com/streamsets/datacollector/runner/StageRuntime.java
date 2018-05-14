@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -52,6 +53,8 @@ public class StageRuntime implements PushSourceContextDelegate {
   private final StageBean stageBean;
   private final Stage.Info info;
   private final Collection<ServiceRuntime> services;
+  private final List<Interceptor> preInterceptors;
+  private final List<Interceptor> postInterceptors;
   private StageContext context;
   private volatile long runnerThread;
 
@@ -75,7 +78,9 @@ public class StageRuntime implements PushSourceContextDelegate {
   public StageRuntime(
     PipelineBean pipelineBean,
     final StageBean stageBean,
-    Collection<ServiceRuntime> services
+    Collection<ServiceRuntime> services,
+    List<Interceptor> preInterceptors,
+    List<Interceptor> postInterceptors
   ) {
     this.pipelineBean = pipelineBean;
     this.def = stageBean.getDefinition();
@@ -83,6 +88,8 @@ public class StageRuntime implements PushSourceContextDelegate {
     this.conf = stageBean.getConfiguration();
     String label = Optional.ofNullable(conf.getUiInfo().get("label")).orElse("").toString();
     this.services = services;
+    this.preInterceptors = preInterceptors;
+    this.postInterceptors = postInterceptors;
     info = new Stage.Info() {
       @Override
       public String getName() {
@@ -138,6 +145,14 @@ public class StageRuntime implements PushSourceContextDelegate {
 
   public Stage getStage() {
     return stageBean.getStage();
+  }
+
+  public List<Interceptor> getPreInterceptors() {
+    return preInterceptors;
+  }
+
+  public List<Interceptor> getPostInterceptors() {
+    return postInterceptors;
   }
 
   public void setContext(StageContext context) {

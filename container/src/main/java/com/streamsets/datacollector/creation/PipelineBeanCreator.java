@@ -17,6 +17,7 @@ package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
@@ -36,8 +37,12 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 import com.streamsets.pipeline.api.service.Service;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +53,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class PipelineBeanCreator {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
+
   public static final String PIPELINE_LIB_DEFINITION = "Pipeline";
   private static final String RULE_DEFINITIONS_LIB_DEFINITION = "RuleDefinitions";
   private static final String PARAMETERS = "constants";
@@ -307,6 +314,7 @@ public abstract class PipelineBeanCreator {
    * @return PipelineStageBeans with new instances of the given stages
    */
   public PipelineStageBeans duplicatePipelineStageBeans(
+    StageLibraryTask stageLib,
     PipelineStageBeans pipelineStageBeans,
     Map<String, Object> constants,
     List<Issue> errors
@@ -321,6 +329,7 @@ public abstract class PipelineBeanCreator {
         .collect(Collectors.toMap(c -> c.getDefinition().getKlass(), ServiceBean::getDefinition));
 
       StageBean stageBean = createStage(
+          stageLib,
           original.getDefinition(),
           ClassLoaderReleaser.NOOP_RELEASER,
           original.getConfiguration(),
@@ -409,6 +418,7 @@ public abstract class PipelineBeanCreator {
       }
 
       bean = createStage(
+        library,
         stageDef,
         library,
         stageConf,
@@ -511,6 +521,7 @@ public abstract class PipelineBeanCreator {
   }
 
   StageBean createStage(
+      StageLibraryTask stageLib,
       StageDefinition stageDef,
       ClassLoaderReleaser classLoaderReleaser,
       StageConfiguration stageConf,
@@ -551,7 +562,20 @@ public abstract class PipelineBeanCreator {
       }
     }
 
-    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage, classLoaderReleaser, services) : null;
+    if(!errors.isEmpty()) {
+      return null;
+    }
+
+    return new StageBean(
+      stageDef,
+      stageConf,
+      stageConfigBean,
+      stage,
+      classLoaderReleaser,
+      services,
+      createDefaultInterceptors(stageLib, stageDef, errors),
+      createDefaultInterceptors(stageLib, stageDef, errors)
+    );
   }
 
   private Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {
@@ -597,6 +621,67 @@ public abstract class PipelineBeanCreator {
       errors.add(issueCreator.create(CreationError.CREATION_000, "service", serviceDef.getKlass().getName(), ex.toString()));
     }
     return service;
+  }
+
+  /**
+   * Create default interceptors for given stage.
+   */
+  public List<InterceptorBean> createDefaultInterceptors(
+    StageLibraryTask stageLib,
+    StageDefinition stageDefinition,
+    List<Issue> issues
+  ) {
+    List<InterceptorBean> beans = new ArrayList<>();
+
+    for(InterceptorDefinition definition : stageLib.getInterceptorDefinitions()) {
+      InterceptorBean bean = createDefaultInterceptor(stageLib, definition, stageDefinition, issues);
+      if (bean != null) {
+        beans.add(bean);
+      }
+    }
+
+    return beans;
+  }
+
+  /**
+   * Create a default interceptor for given InterceptorDefinition. This method might
+   * return null as the underlying interface for default creation allows it as well -
+   * in such case no interceptor is needed.
+   */
+  public InterceptorBean createDefaultInterceptor(
+    StageLibraryTask stageLib,
+    InterceptorDefinition definition,
+    StageDefinition stageDefinition,
+    List<Issue> issues
+  ) {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(definition.getStageClassLoader());
+
+      DefaultInterceptorCreator creator = definition.getDefaultCreator().newInstance();
+      // TODO: This method will need proper context
+      Interceptor interceptor = creator.create(stageDefinition.getType().getApiType(), null);
+
+      if(interceptor == null) {
+        return null;
+      }
+
+      return new InterceptorBean(
+        definition,
+        interceptor,
+        stageLib
+      );
+    } catch (IllegalAccessException|InstantiationException e) {
+      LOG.debug("Can't instantiate interceptor: {}", e.toString(), e);
+      IssueCreator issueCreator = IssueCreator.getStage(stageDefinition.getName());
+      issues.add(issueCreator.create(
+        CreationError.CREATION_000, "interceptor", definition.getKlass().getName(), e.toString()
+      ));
+    } finally {
+      Thread.currentThread().setContextClassLoader(classLoader);
+    }
+
+    return null;
   }
 
 }
