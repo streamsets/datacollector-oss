@@ -69,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +106,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
    * List describing auto discovered content generators.
    */
   private List<BundleContentGeneratorDefinition> definitions;
+  private Map<String, BundleContentGeneratorDefinition> definitionMap;
 
   /**
    * Redactor to remove sensitive data.
@@ -176,6 +178,11 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
     definitions = builder.build();
 
+    definitionMap = new HashMap<>();
+    for (BundleContentGeneratorDefinition definition : definitions) {
+      definitionMap.put(definition.getId(), definition);
+    }
+
     // Create shared instance of redactor
     try {
       redactor = StringRedactor.createFromJsonFile(runtimeInfo.getConfigDir() + "/" + Constants.REDACTOR_CONFIG);
@@ -196,13 +203,21 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
   public SupportBundle generateNewBundle(List<String> generators) throws IOException {
+    List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generators);
+    return generateNewBundle(defs.stream().map(def -> def.createInstance()).collect(Collectors.toList()), true);
+  }
+
+  /**
+   * Return InputStream from which a new generated resource bundle can be retrieved.
+   */
+  public SupportBundle generateNewBundle(List<BundleContentGenerator> generators, boolean includeMetadata)
+      throws IOException {
     PipedInputStream inputStream = new PipedInputStream();
     PipedOutputStream outputStream = new PipedOutputStream();
     inputStream.connect(outputStream);
     ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
-    List<BundleContentGeneratorDefinition> useDefs = getRequestedDefinitions(generators);
-    executor.submit(() -> generateNewBundleInternal(useDefs, zipOutputStream));
+    executor.submit(() -> generateNewBundleInternal(generators, includeMetadata, zipOutputStream));
 
     String bundleName = generateBundleName();
     String bundleKey = generateBundleDate() + "/" + bundleName;
@@ -363,7 +378,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   /**
    * Orchestrate what definitions should be used for this bundle.
    *
-   * Either get all definittions that should be used by default or only those specified in the generators argument.
+   * Either get all definitions that should be used by default or only those specified in the generators argument.
    */
   private List<BundleContentGeneratorDefinition> getRequestedDefinitions(List<String> generators) {
     Stream<BundleContentGeneratorDefinition> stream = definitions.stream();
@@ -378,13 +393,16 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       .collect(Collectors.toList());
   }
 
-  private void generateNewBundleInternal(List<BundleContentGeneratorDefinition> defs, ZipOutputStream zipStream) {
+  private void generateNewBundleInternal(
+      List<BundleContentGenerator> generators, boolean includeMetadata, ZipOutputStream zipStream
+  ) {
     try {
-      Properties generators = new Properties();
+      Properties runGenerators = new Properties();
       Properties failedGenerators = new Properties();
 
       // Let each individual content generator run to generate it's content
-      for(BundleContentGeneratorDefinition definition : defs) {
+      for(BundleContentGenerator generator : generators) {
+        BundleContentGeneratorDefinition definition = definitionMap.get(generator.getClass().getSimpleName());
         BundleWriterImpl writer = new BundleWriterImpl(
           definition.getKlass().getName(),
           redactor,
@@ -393,9 +411,8 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
         try {
           LOG.debug("Generating content with {} generator", definition.getKlass().getName());
-          BundleContentGenerator contentGenerator = definition.getKlass().newInstance();
-          contentGenerator.generateContent(this, writer);
-          generators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
+          generator.generateContent(this, writer);
+          runGenerators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
         } catch (Throwable t) {
           LOG.error("Generator {} failed", definition.getName(), t);
           failedGenerators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
@@ -403,20 +420,22 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
         }
       }
 
-      // generators.properties
-      zipStream.putNextEntry(new ZipEntry("generators.properties"));
-      generators.store(zipStream, "");
-      zipStream.closeEntry();
+      if (includeMetadata) {
+        // generators.properties
+        zipStream.putNextEntry(new ZipEntry("generators.properties"));
+        runGenerators.store(zipStream, "");
+        zipStream.closeEntry();
 
-      // failed_generators.properties
-      zipStream.putNextEntry(new ZipEntry("failed_generators.properties"));
-      failedGenerators.store(zipStream, "");
-      zipStream.closeEntry();
+        // failed_generators.properties
+        zipStream.putNextEntry(new ZipEntry("failed_generators.properties"));
+        failedGenerators.store(zipStream, "");
+        zipStream.closeEntry();
 
-      // metadata.properties
-      zipStream.putNextEntry(new ZipEntry("metadata.properties"));
-      getMetadata().store(zipStream, "");
-      zipStream.closeEntry();
+        // metadata.properties
+        zipStream.putNextEntry(new ZipEntry("metadata.properties"));
+        getMetadata().store(zipStream, "");
+        zipStream.closeEntry();
+      }
 
     } catch (Exception e) {
       LOG.error("Failed to generate resource bundle", e);

@@ -15,10 +15,15 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Internal representation of the bundle content creator.
  */
 public class BundleContentGeneratorDefinition {
+  private static final Logger LOG = LoggerFactory.getLogger(BundleContentGeneratorDefinition.class);
+
   private Class<? extends BundleContentGenerator> klass;
   private String name;
   private String id;
@@ -72,4 +77,14 @@ public class BundleContentGeneratorDefinition {
   public int getOrder() {
     return order;
   }
+
+  public BundleContentGenerator createInstance() {
+    try {
+      return getKlass().newInstance();
+    } catch (Exception ex) {
+      LOG.warn("Could not create instance for generator '{}', error: {}", getKlass().getName(), ex);
+      return (context, writer) -> {};
+    }
+  }
+
 }

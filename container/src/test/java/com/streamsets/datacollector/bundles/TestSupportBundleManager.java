@@ -25,18 +25,23 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -127,4 +132,20 @@ public class TestSupportBundleManager {
 
     return zipFile;
   }
+
+  @Test
+  public void testBundleCreationWithoutMetadata() throws Exception {
+
+    SupportBundle bundle = manager.generateNewBundle(ImmutableList.of(new SimpleGenerator()), false);
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    IOUtils.copy(bundle.getInputStream(), os);
+    os.close();
+    ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(os.toByteArray()));
+    ZipEntry entry = zis.getNextEntry();
+    Assert.assertEquals(SimpleGenerator.class.getName() + "/file.txt", entry.getName());
+    Assert.assertNull(zis.getNextEntry());
+    zis.close();
+  }
+
 }
