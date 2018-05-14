@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FullPipeBatch implements PipeBatch {
 
@@ -156,8 +157,11 @@ public class FullPipeBatch implements PipeBatch {
     }
     if (stageOutputSnapshot != null) {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
-      // TODO: We need to run interceptors also here (not  sure why is this different call then get output directly)
-      stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
+      // The snapshot have a (deep) copy of the records so we need to run the interceptors again. We might eventually
+      // decide to run the interceptor directly inside the batch to avoid this, but that is a future exercise.
+      Map<String, List<Record>> records = batchMaker.getStageOutputSnapshot().entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> intercept(e.getValue(), interceptors)));
+      stageOutputSnapshot.add(new StageOutput(instanceName, records, errorSink, eventSink));
     }
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
