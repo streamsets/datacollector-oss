@@ -22,6 +22,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +107,7 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
       batchContext.getStartTime(),
       batchContext.getPipeBatch(),
       (BatchMakerImpl) batchContext.getBatchMaker(),
-      batchContext.getPipeBatch().getBatch(this),
+      batchContext.getPipeBatch().getBatch(this, Collections.emptyList()),
       batchContext.getPipeBatch().getErrorSink(),
       batchContext.getPipeBatch().getEventSink(),
       null

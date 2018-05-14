@@ -39,6 +39,7 @@ import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,7 +206,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
-    BatchImpl batchImpl = pipeBatch.getBatch(this);
+    BatchImpl batchImpl = pipeBatch.getBatch(this, Collections.emptyList());
     ErrorSink errorSink = pipeBatch.getErrorSink();
     EventSink eventSink = pipeBatch.getEventSink();
     ProcessedSink processedSink = pipeBatch.getProcessedSink();
@@ -302,7 +303,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
     batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
 
-    pipeBatch.completeStage(batchMaker);
+    pipeBatch.completeStage(batchMaker, Collections.emptyList());
 
     // In this is source pipe, update source-specific metrics
     if(isSource()) {

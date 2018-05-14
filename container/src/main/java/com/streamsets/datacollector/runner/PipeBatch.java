@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public interface PipeBatch {
 
   void setNewOffset(String offset);
 
-  BatchImpl getBatch(Pipe pipe);
+  BatchImpl getBatch(Pipe pipe, List<Interceptor> interceptors);
 
   /**
    * During destroy() phase, rather then running this stage, simply skip it (but still propagate empty output).
@@ -42,7 +43,7 @@ public interface PipeBatch {
   /**
    * Complete stage on normal execution (while pipeline is running)
    */
-  void completeStage(BatchMakerImpl batchMaker);
+  void completeStage(BatchMakerImpl batchMaker, List<Interceptor> interceptors);
 
   /**
    * Complete stage on during destroy() phase.

@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   @SuppressWarnings("unchecked")
-  public BatchImpl getBatch(final Pipe pipe) {
+  public BatchImpl getBatch(final Pipe pipe, List<Interceptor> interceptors) {
     List<Record> records = new ArrayList<>();
     List<String> inputLanes = pipe.getInputLanes();
     for (String inputLane : inputLanes) {
@@ -101,6 +102,11 @@ public class FullPipeBatch implements PipeBatch {
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords += records.size();
     }
+
+    // Run interceptors as part before providing data to the stage
+    records = intercept(records, interceptors);
+
+    // And finally give the batch to the stage itself
     return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), sourceEntity, lastOffset, records);
   }
 
@@ -131,7 +137,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker) {
+  public void completeStage(BatchMakerImpl batchMaker, List<Interceptor> interceptors) {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
       inputRecords += batchMaker.getSize() +
@@ -144,10 +150,13 @@ public class FullPipeBatch implements PipeBatch {
     for (int i = 0; i < stageLaneNames.size() ; i++) {
       String stageLaneName = stageLaneNames.get(i);
       String pipeLaneName = pipe.getOutputLanes().get(i);
-      fullPayload.put(pipeLaneName, stageOutput.get(stageLaneName));
+      List<Record> records  = stageOutput.get(stageLaneName);
+
+      fullPayload.put(pipeLaneName, intercept(records, interceptors));
     }
     if (stageOutputSnapshot != null) {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
+      // TODO: We need to run interceptors also here (not  sure why is this different call then get output directly)
       stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
     }
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
@@ -333,6 +342,19 @@ public class FullPipeBatch implements PipeBatch {
       stageOutputSnapshot != null,
       errorSink.size()
     );
+  }
+
+  /**
+   * Intercept given records with all the interceptors.
+   *
+   * TODO: Do we need to clone the records at the begging of each iteration?
+   */
+  private List<Record> intercept(List<Record> records, List<Interceptor> interceptors) {
+    for(Interceptor interceptor : interceptors)  {
+      records = interceptor.intercept(records);
+    }
+
+    return records;
   }
 
 }
