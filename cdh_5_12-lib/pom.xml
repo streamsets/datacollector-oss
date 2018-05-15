@@ -71,6 +71,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- This MUST appear after hdfs-protolib as we override classes from hadoop-common
+        which is a transitive dependency of this one. -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-azure</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-azure-datalake</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
         <!--Dependency for Solr Unit Tests to override SDC Jetty Artifacts -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

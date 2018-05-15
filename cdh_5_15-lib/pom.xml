@@ -73,6 +73,19 @@
             </exclusions>
         </dependency>
 
+        <!-- This MUST appear after hdfs-protolib as we override classes from hadoop-common
+     which is a transitive dependency of this one. -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-azure</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-azure-datalake</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
         <!-- Leave this dependency right here so it takes precedence in the classpath over jersey 1.9 brought in by
         hadoop/hive test classes which wrongfully includes the javax.ws.rs-api classes from an older version of the
         api-->
