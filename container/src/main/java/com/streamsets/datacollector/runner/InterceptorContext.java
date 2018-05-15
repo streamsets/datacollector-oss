@@ -15,21 +15,34 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
+import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 public class InterceptorContext implements Interceptor.Context {
 
   private final BlobStore blobStore;
   private final Configuration configuration;
+  private final String stageInstanceName;
 
   public InterceptorContext(
     BlobStore blobStore,
-    Configuration configuration
+    Configuration configuration,
+    String stageInstanceName
   ) {
     this.blobStore = blobStore;
     this.configuration = configuration;
+    this.stageInstanceName = stageInstanceName;
+  }
+
+  @Override
+  public ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args) {
+    Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
+    args = (args != null) ? args.clone() : ProtoContext.NULL_ONE_ARG;
+    return new ProtoContext.ConfigIssueImpl(stageInstanceName, null, null, null, errorCode, args);
   }
 
   @Override

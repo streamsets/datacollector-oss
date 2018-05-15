@@ -17,6 +17,8 @@ package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.creation.InterceptorBean;
 import com.streamsets.datacollector.util.LambdaUtil;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
@@ -43,13 +45,13 @@ public class InterceptorRuntime implements Interceptor {
     this.context = context;
   }
 
-  public boolean init() {
+  public List<Issue> init() {
     //TODO: Parameters should be passed in constructor similarly as we're passing StageConfiguration for stages
-    return init(Collections.emptyMap(), context);
+    return (List)init(Collections.emptyMap(), context);
   }
 
   @Override
-  public boolean init(Map<String, String> parameters, Context context) {
+  public List<ConfigIssue> init(Map<String, String> parameters, Context context) {
     return LambdaUtil.privilegedWithClassLoader(
         bean.getDefinition().getStageClassLoader(),
         () -> bean.getInterceptor().init(parameters, context)

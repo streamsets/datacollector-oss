@@ -184,8 +184,7 @@ public class StageRuntime implements PushSourceContextDelegate {
 
     // Initialize the interceptors that are created for this stage
     for(InterceptorRuntime interceptor : Iterables.concat(preInterceptors, postInterceptors)) {
-      // TODO: We ignore the return value here as the init() should simply return the List<Issue> like on any other component (e.g. not a boolean value, was an oversight of mine)
-      interceptor.init();
+      issues.addAll(interceptor.init());
     }
 
     // Firstly init() all services, so that Stage's init() can already use the Services if needed

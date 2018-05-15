@@ -141,7 +141,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     return configToElDefMap;
   }
 
-  private static class ConfigIssueImpl extends Issue implements ConfigIssue {
+  static class ConfigIssueImpl extends Issue implements ConfigIssue {
     public ConfigIssueImpl(
         String stageName,
         String serviceName,
@@ -154,7 +154,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     }
   }
 
-  private static final Object[] NULL_ONE_ARG = {null};
+  static final Object[] NULL_ONE_ARG = {null};
 
   @Override
   public String getConfig(String configName) {

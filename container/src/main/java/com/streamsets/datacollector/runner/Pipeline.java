@@ -1011,7 +1011,8 @@ public class Pipeline {
 
       interceptorRuntime.setContext(new InterceptorContext(
         blobStore,
-        configuration
+        configuration,
+        stageBean.getConfiguration().getInstanceName()
       ));
 
       preInterceptors.add(interceptorRuntime);
@@ -1022,7 +1023,8 @@ public class Pipeline {
 
       interceptorRuntime.setContext(new InterceptorContext(
         blobStore,
-        configuration
+        configuration,
+        stageBean.getConfiguration().getInstanceName()
       ));
 
       postInterceptors.add(interceptorRuntime);
