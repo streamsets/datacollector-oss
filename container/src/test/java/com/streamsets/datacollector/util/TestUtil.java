@@ -18,6 +18,7 @@ package com.streamsets.datacollector.util;
 import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -306,6 +307,21 @@ public class TestUtil {
     }
   }
 
+  /*************** BlobStore ***************/
+  @Module(
+    injects = {
+      BlobStoreTask.class
+    },
+    library = true
+  )
+  public static class TestBlobStoreModule {
+    @Provides
+    @Singleton
+    public BlobStoreTask provideBlobStoreTask() {
+      return Mockito.mock(BlobStoreTask.class);
+    }
+  }
+
   /*************** Lineage ***************/
   @Module(
     injects = {
@@ -576,6 +592,7 @@ public class TestUtil {
       TestRuntimeModule.class,
       TestPipelineStoreModuleNew.class,
       TestSnapshotStoreModule.class,
+      TestBlobStoreModule.class,
       TestLineageModule.class,
       TestExecutorModule.class
     })
@@ -685,6 +702,7 @@ public class TestUtil {
         stageLib,
         (ProductionPipelineRunner)runner,
         observer,
+        Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class)
       );
     }
@@ -741,6 +759,7 @@ public class TestUtil {
       TestExecutorModule.class,
       TestSnapshotStoreModule.class,
       TestAclStoreModule.class,
+      TestBlobStoreModule.class,
       TestLineageModule.class
     }
   )

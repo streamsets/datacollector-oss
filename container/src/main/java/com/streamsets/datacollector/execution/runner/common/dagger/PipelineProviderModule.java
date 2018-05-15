@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.runner.common.dagger;
 
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -200,6 +201,7 @@ public class PipelineProviderModule {
     StageLibraryTask stageLib,
     PipelineRunner runner,
     Observer observer,
+    BlobStoreTask blobStoreTask,
     LineagePublisherTask lineagePublisherTask
   ) {
     return new ProductionPipelineBuilder(
@@ -210,6 +212,7 @@ public class PipelineProviderModule {
       stageLib,
       (ProductionPipelineRunner)runner,
       observer,
+      blobStoreTask,
       lineagePublisherTask
     );
   }

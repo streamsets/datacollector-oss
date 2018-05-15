@@ -64,7 +64,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public BatchImpl getBatch(Pipe pipe, List<Interceptor> interceptors) {
+  public BatchImpl getBatch(Pipe pipe, List<? extends Interceptor> interceptors) {
     return new BatchImpl(instanceName, null, null, inputRecords);
   }
 
@@ -78,7 +78,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker, List<Interceptor> interceptors) {
+  public void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors) {
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
   }
 

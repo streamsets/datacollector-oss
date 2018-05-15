@@ -94,7 +94,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   @SuppressWarnings("unchecked")
-  public BatchImpl getBatch(final Pipe pipe, List<Interceptor> interceptors) {
+  public BatchImpl getBatch(final Pipe pipe, List<? extends Interceptor> interceptors) {
     List<Record> records = new ArrayList<>();
     List<String> inputLanes = pipe.getInputLanes();
     for (String inputLane : inputLanes) {
@@ -138,7 +138,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker, List<Interceptor> interceptors) {
+  public void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors) {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
       inputRecords += batchMaker.getSize() +
@@ -353,7 +353,7 @@ public class FullPipeBatch implements PipeBatch {
    *
    * TODO: Do we need to clone the records at the begging of each iteration?
    */
-  private List<Record> intercept(List<Record> records, List<Interceptor> interceptors) {
+  private List<Record> intercept(List<Record> records, List<? extends Interceptor> interceptors) {
     for(Interceptor interceptor : interceptors)  {
       records = interceptor.intercept(records);
     }

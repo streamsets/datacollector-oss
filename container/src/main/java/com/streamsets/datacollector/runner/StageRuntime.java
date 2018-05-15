@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
@@ -35,7 +36,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -53,8 +53,8 @@ public class StageRuntime implements PushSourceContextDelegate {
   private final StageBean stageBean;
   private final Stage.Info info;
   private final Collection<ServiceRuntime> services;
-  private final List<Interceptor> preInterceptors;
-  private final List<Interceptor> postInterceptors;
+  private final List<InterceptorRuntime> preInterceptors;
+  private final List<InterceptorRuntime> postInterceptors;
   private StageContext context;
   private volatile long runnerThread;
 
@@ -79,8 +79,8 @@ public class StageRuntime implements PushSourceContextDelegate {
     PipelineBean pipelineBean,
     final StageBean stageBean,
     Collection<ServiceRuntime> services,
-    List<Interceptor> preInterceptors,
-    List<Interceptor> postInterceptors
+    List<InterceptorRuntime> preInterceptors,
+    List<InterceptorRuntime> postInterceptors
   ) {
     this.pipelineBean = pipelineBean;
     this.def = stageBean.getDefinition();
@@ -147,11 +147,13 @@ public class StageRuntime implements PushSourceContextDelegate {
     return stageBean.getStage();
   }
 
-  public List<Interceptor> getPreInterceptors() {
+  // Java doesn't allow casting of List<InterceptorRuntime> to List<Interceptor>, so we "hack it" a bit here
+  public List<InterceptorRuntime> getPreInterceptors() {
     return preInterceptors;
   }
 
-  public List<Interceptor> getPostInterceptors() {
+  // Java doesn't allow casting of List<InterceptorRuntime> to List<Interceptor>, so we "hack it" a bit here
+  public List<InterceptorRuntime> getPostInterceptors() {
     return postInterceptors;
   }
 
@@ -179,6 +181,12 @@ public class StageRuntime implements PushSourceContextDelegate {
     }
 
     List<Issue> issues = new LinkedList<>();
+
+    // Initialize the interceptors that are created for this stage
+    for(InterceptorRuntime interceptor : Iterables.concat(preInterceptors, postInterceptors)) {
+      // TODO: We ignore the return value here as the init() should simply return the List<Issue> like on any other component (e.g. not a boolean value, was an oversight of mine)
+      interceptor.init();
+    }
 
     // Firstly init() all services, so that Stage's init() can already use the Services if needed
     for(ServiceRuntime serviceRuntime : services) {
@@ -290,6 +298,10 @@ public class StageRuntime implements PushSourceContextDelegate {
       // Then all associated services
       for (ServiceRuntime serviceRuntime : services) {
         serviceRuntime.destroy();
+      }
+
+      for(InterceptorRuntime interceptor : Iterables.concat(preInterceptors, postInterceptors)) {
+        interceptor.destroy();
       }
     } finally {
       // Do not eventSink and errorSink to null when in preview mode AND current thread

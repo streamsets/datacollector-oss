@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -34,6 +35,7 @@ public class MockPipelineBuilder {
   private UserContext userContext;
   private PipelineConfiguration pipelineConf;
   private long startTime;
+  private BlobStoreTask blobStoreTask;
   private LineagePublisherTask lineagePublisherTask;
   private Observer observer;
 
@@ -46,6 +48,7 @@ public class MockPipelineBuilder {
     this.userContext = MockStages.userContext();
     this.pipelineConf = MockStages.createPipelineConfigurationSourceTarget();
     this.startTime = System.currentTimeMillis();
+    this.blobStoreTask = Mockito.mock(BlobStoreTask.class);
     this.lineagePublisherTask = Mockito.mock(LineagePublisherTask.class);
     this.observer = null;
   }
@@ -90,6 +93,11 @@ public class MockPipelineBuilder {
     return this;
   }
 
+  public MockPipelineBuilder withBlobStoreTask(BlobStoreTask blobStoreTask) {
+    this.blobStoreTask = blobStoreTask;
+    return this;
+  }
+
   public MockPipelineBuilder withLineagePublisherTask(LineagePublisherTask lineagePublisherTask) {
     this.lineagePublisherTask = lineagePublisherTask;
     return this;
@@ -110,6 +118,7 @@ public class MockPipelineBuilder {
       userContext,
       pipelineConf,
       startTime,
+      blobStoreTask,
       lineagePublisherTask
     ).setObserver(observer);
   }

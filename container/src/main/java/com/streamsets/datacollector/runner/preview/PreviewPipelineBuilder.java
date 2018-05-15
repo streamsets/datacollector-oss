@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
@@ -64,6 +65,7 @@ public class PreviewPipelineBuilder {
   private final String rev;
   private PipelineConfiguration pipelineConf;
   private final String endStageInstanceName;
+  private final BlobStoreTask blobStoreTask;
   private final LineagePublisherTask lineagePublisherTask;
 
   /**
@@ -82,6 +84,7 @@ public class PreviewPipelineBuilder {
     String rev,
     PipelineConfiguration pipelineConf,
     String endStageInstanceName,
+    BlobStoreTask blobStoreTask,
     LineagePublisherTask lineagePublisherTask
   ) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
@@ -90,6 +93,7 @@ public class PreviewPipelineBuilder {
     this.rev = rev;
     this.pipelineConf = pipelineConf;
     this.endStageInstanceName = endStageInstanceName;
+    this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
@@ -148,6 +152,7 @@ public class PreviewPipelineBuilder {
        userContext,
        pipelineConf,
        System.currentTimeMillis(),
+       blobStoreTask,
        lineagePublisherTask
      );
      Pipeline pipeline = builder.build(runner);

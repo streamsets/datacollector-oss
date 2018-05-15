@@ -40,6 +40,8 @@ public class TestStageRuntime {
   private StageDefinition def;
   private StageContext context;
   private StageRuntime runtime;
+  private InterceptorRuntime preInterceptor;
+  private InterceptorRuntime postInterceptor;
   private ServiceRuntime serviceRuntime;
 
   @Before
@@ -61,14 +63,18 @@ public class TestStageRuntime {
 
     this.context = Mockito.mock(StageContext.class);
 
+    this.preInterceptor = Mockito.mock(InterceptorRuntime.class);
+
+    this.postInterceptor = Mockito.mock(InterceptorRuntime.class);
+
     this.serviceRuntime = Mockito.mock(ServiceRuntime.class);
 
     this.runtime = new StageRuntime(
       pipelineBean,
       stageBean,
-      ImmutableList.of(serviceRuntime),
-      Collections.emptyList(),
-      Collections.emptyList()
+      Collections.singletonList(serviceRuntime),
+      Collections.singletonList(preInterceptor),
+      Collections.singletonList(postInterceptor)
     );
     runtime.setContext(context);
   }
@@ -130,5 +136,14 @@ public class TestStageRuntime {
     Mockito.when(serviceRuntime.init()).thenReturn(ImmutableList.of(Mockito.mock(Issue.class)));
     runtime.init();
     Mockito.verify(stage, Mockito.never()).init(Mockito.any(), Mockito.any());
+  }
+
+  @Test
+  public void testInterceptorInit() throws Exception {
+    Mockito.verify(preInterceptor, Mockito.never()).init();
+    Mockito.verify(postInterceptor, Mockito.never()).init();
+    runtime.init();
+    Mockito.verify(preInterceptor, Mockito.times(1)).init();
+    Mockito.verify(postInterceptor, Mockito.times(1)).init();
   }
 }

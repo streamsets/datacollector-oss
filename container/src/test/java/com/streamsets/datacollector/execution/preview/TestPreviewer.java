@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.preview;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -89,6 +90,7 @@ public abstract class TestPreviewer {
       StageLibraryTask.class,
       PipelineStoreTask.class,
       SyncPreviewer.class,
+      BlobStoreTask.class,
       LineagePublisherTask.class
     },
     library = true
@@ -121,6 +123,12 @@ public abstract class TestPreviewer {
     @Singleton
     public LineagePublisherTask providesLineagePublisherTask() {
       return Mockito.mock(LineagePublisherTask.class);
+    }
+
+    @Provides
+    @Singleton
+    public BlobStoreTask providesBlobStoreTask() {
+      return Mockito.mock(BlobStoreTask.class);
     }
 
   }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -131,6 +132,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       null,
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -171,6 +173,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       "p",
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
 
@@ -190,6 +193,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       "p1",
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -207,6 +211,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       "p5",
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -224,6 +229,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       "p6",
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -239,6 +245,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       "t",
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -277,6 +284,7 @@ public class TestPreviewRun {
       "0",
       pipelineConfiguration,
       null,
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -317,6 +325,7 @@ public class TestPreviewRun {
       "0",
       MockStages.createPipelineConfigurationSourceProcessorTarget(),
       null,
+      Mockito.mock(BlobStoreTask.class),
       Mockito.mock(LineagePublisherTask.class)
     ).build(MockStages.userContext(), runner);
     Assert.assertFalse(pp.validateConfigs().isEmpty());

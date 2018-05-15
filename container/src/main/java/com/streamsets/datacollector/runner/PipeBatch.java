@@ -28,7 +28,7 @@ public interface PipeBatch {
 
   void setNewOffset(String offset);
 
-  BatchImpl getBatch(Pipe pipe, List<Interceptor> interceptors);
+  BatchImpl getBatch(Pipe pipe, List<? extends Interceptor> interceptors);
 
   /**
    * During destroy() phase, rather then running this stage, simply skip it (but still propagate empty output).
@@ -43,7 +43,7 @@ public interface PipeBatch {
   /**
    * Complete stage on normal execution (while pipeline is running)
    */
-  void completeStage(BatchMakerImpl batchMaker, List<Interceptor> interceptors);
+  void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors);
 
   /**
    * Complete stage on during destroy() phase.

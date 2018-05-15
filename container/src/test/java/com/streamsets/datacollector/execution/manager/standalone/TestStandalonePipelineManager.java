@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.manager.standalone;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -72,6 +73,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.sql.Blob;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -244,6 +246,11 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public EventListenerManager provideEventListenerManager() {
       return new EventListenerManager();
+    }
+
+    @Provides @Singleton
+    public BlobStoreTask provideBlobStoreTask() {
+      return Mockito.mock(BlobStoreTask.class);
     }
 
     @Provides @Singleton

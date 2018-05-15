@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.preview.sync;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RawSourceDefinition;
@@ -90,6 +91,7 @@ public class SyncPreviewer implements Previewer {
   @Inject StageLibraryTask stageLibrary;
   @Inject PipelineStoreTask pipelineStore;
   @Inject RuntimeInfo runtimeInfo;
+  @Inject BlobStoreTask blobStoreTask;
   @Inject LineagePublisherTask lineagePublisherTask;
   private volatile PreviewStatus previewStatus;
   private volatile PreviewOutput previewOutput;
@@ -335,6 +337,7 @@ public class SyncPreviewer implements Previewer {
       rev,
       pipelineConf,
       endStageInstanceName,
+      blobStoreTask,
       lineagePublisherTask
     ).build(userContext, runner);
   }

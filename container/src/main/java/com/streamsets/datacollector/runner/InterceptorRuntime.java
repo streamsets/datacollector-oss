@@ -20,6 +20,7 @@ import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +31,21 @@ import java.util.Map;
 public class InterceptorRuntime implements Interceptor {
 
   private final InterceptorBean bean;
+  private InterceptorContext context;
 
   public InterceptorRuntime(
     InterceptorBean bean
   ) {
     this.bean = bean;
+  }
+
+  public void setContext(InterceptorContext context) {
+    this.context = context;
+  }
+
+  public boolean init() {
+    //TODO: Parameters should be passed in constructor similarly as we're passing StageConfiguration for stages
+    return init(Collections.emptyMap(), context);
   }
 
   @Override

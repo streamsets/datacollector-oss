@@ -19,7 +19,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.InterceptorBean;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -52,7 +54,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.interceptor.Interceptor;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import org.slf4j.Logger;
@@ -67,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
@@ -99,6 +99,7 @@ public class Pipeline {
   private final List<Map<String, Object>> runnerSharedMaps;
   private final Map<String, Object> runtimeParameters;
   private final long startTime;
+  private final BlobStoreTask blobStore;
   private final LineagePublisherTask lineagePublisherTask;
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
@@ -125,6 +126,7 @@ public class Pipeline {
       List<Map<String, Object>> runnerSharedMaps,
       Map<String, Object> runtimeParameters,
       long startTime,
+      BlobStoreTask blobStore,
       LineagePublisherTask lineagePublisherTask,
       StageRuntime startEventStage,
       StageRuntime stopEventStage
@@ -151,6 +153,7 @@ public class Pipeline {
     this.userContext = userContext;
     this.runtimeParameters = runtimeParameters;
     this.startTime = startTime;
+    this.blobStore = blobStore;
     this.lineagePublisherTask = lineagePublisherTask;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
@@ -365,6 +368,7 @@ public class Pipeline {
               scheduledExecutor,
               runnerSharedMaps,
               startTime,
+              blobStore,
               lineagePublisherTask
             ));
           }
@@ -552,6 +556,7 @@ public class Pipeline {
     private final UserContext userContext;
     private final PipelineConfiguration pipelineConf;
     private final long startTime;
+    private final BlobStoreTask blobStore;
     private final LineagePublisherTask lineagePublisherTask;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
@@ -569,6 +574,7 @@ public class Pipeline {
         UserContext userContext,
         PipelineConfiguration pipelineConf,
         long startTime,
+        BlobStoreTask blobStore,
         LineagePublisherTask lineagePublisherTask
     ) {
       this.stageLib = stageLib;
@@ -580,6 +586,7 @@ public class Pipeline {
       this.pipelineConf = pipelineConf;
       this.errors = Collections.emptyList();
       this.startTime = startTime;
+      this.blobStore = blobStore;
       this.lineagePublisherTask = lineagePublisherTask;
     }
 
@@ -623,6 +630,7 @@ public class Pipeline {
           0,
           new ConcurrentHashMap<>(),
           startTime,
+          blobStore,
           lineagePublisherTask
         );
 
@@ -651,6 +659,7 @@ public class Pipeline {
           scheduledExecutor,
           runnerSharedMaps,
           startTime,
+          blobStore,
           lineagePublisherTask
         ));
 
@@ -669,6 +678,7 @@ public class Pipeline {
           0,
           new ConcurrentHashMap<>(),
           startTime,
+          blobStore,
           lineagePublisherTask
         );
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(
@@ -695,6 +705,7 @@ public class Pipeline {
             0,
             new ConcurrentHashMap<>(),
             startTime,
+            blobStore,
             lineagePublisherTask
           );
 
@@ -727,6 +738,7 @@ public class Pipeline {
             0,
             new ConcurrentHashMap<>(),
             startTime,
+            blobStore,
             lineagePublisherTask
           );
         }
@@ -745,6 +757,7 @@ public class Pipeline {
             0,
             new ConcurrentHashMap<>(),
             startTime,
+            blobStore,
             lineagePublisherTask
           );
         }
@@ -771,6 +784,7 @@ public class Pipeline {
             runnerSharedMaps,
             runtimeParameters,
             startTime,
+            blobStore,
             lineagePublisherTask,
             startEventStageRuntime,
             stopEventStageRuntime
@@ -823,6 +837,7 @@ public class Pipeline {
     ResourceControlledScheduledExecutor scheduledExecutor,
     List<Map<String, Object>> sharedRunnerMaps,
     long startTime,
+    BlobStoreTask blobStore,
     LineagePublisherTask lineagePublisherTask
   ) throws PipelineRuntimeException {
     Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(),
@@ -849,6 +864,7 @@ public class Pipeline {
         runnerId,
         sharedRunnerMap,
         startTime,
+        blobStore,
         lineagePublisherTask
       ));
     }
@@ -961,6 +977,7 @@ public class Pipeline {
     int runnerId,
     Map<String, Object> runnerSharedMap,
     long startTime,
+    BlobStoreTask blobStore,
     LineagePublisherTask lineagePublisherTask
   ) {
     EmailSender emailSender = new EmailSender(configuration);
@@ -987,12 +1004,29 @@ public class Pipeline {
       services.put(serviceBean.getDefinition().getProvides(), runtime);
     }
 
-    List<Interceptor> preInterceptors = stageBean.getPreInterceptors().stream()
-      .map(InterceptorRuntime::new)
-      .collect(Collectors.toList());
-    List<Interceptor> postInterceptors = stageBean.getPostInterceptors().stream()
-      .map(InterceptorRuntime::new)
-      .collect(Collectors.toList());
+    // Properly wrap the interceptors
+    List<InterceptorRuntime> preInterceptors = new ArrayList<>();
+    for(InterceptorBean interceptorBean : stageBean.getPreInterceptors()) {
+      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(interceptorBean);
+
+      interceptorRuntime.setContext(new InterceptorContext(
+        blobStore,
+        configuration
+      ));
+
+      preInterceptors.add(interceptorRuntime);
+    }
+    List<InterceptorRuntime> postInterceptors = new ArrayList<>();
+    for(InterceptorBean interceptorBean : stageBean.getPostInterceptors()) {
+      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(interceptorBean);
+
+      interceptorRuntime.setContext(new InterceptorContext(
+        blobStore,
+        configuration
+      ));
+
+      postInterceptors.add(interceptorRuntime);
+    }
 
     // Create StageRuntime itself
     StageRuntime stageRuntime = new StageRuntime(

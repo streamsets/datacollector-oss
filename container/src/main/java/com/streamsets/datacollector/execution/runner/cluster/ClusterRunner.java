@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
@@ -126,6 +127,7 @@ public class ClusterRunner extends AbstractRunner {
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject ResourceManager resourceManager;
   @Inject SlaveCallbackManager slaveCallbackManager;
+  @Inject BlobStoreTask blobStoreTask;
   @Inject LineagePublisherTask lineagePublisherTask;
   @Inject SupportBundleManager supportBundleManager;
 
@@ -769,6 +771,7 @@ public class ClusterRunner extends AbstractRunner {
       stageLibrary,
       runner,
       null,
+      blobStoreTask,
       lineagePublisherTask
     );
     return builder.build(new UserContext(user,

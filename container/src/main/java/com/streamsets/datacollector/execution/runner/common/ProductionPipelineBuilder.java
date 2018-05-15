@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.runner.common;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -28,7 +29,6 @@ import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTrac
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
@@ -47,6 +47,7 @@ public class ProductionPipelineBuilder {
   private final String rev;
   private final Configuration configuration;
   private final RuntimeInfo runtimeInfo;
+  private final BlobStoreTask blobStoreTask;
   private final LineagePublisherTask lineagePublisherTask;
 
   private final ProductionPipelineRunner runner;
@@ -60,6 +61,7 @@ public class ProductionPipelineBuilder {
       StageLibraryTask stageLib,
       ProductionPipelineRunner runner,
       Observer observer,
+      BlobStoreTask blobStoreTask,
       LineagePublisherTask lineagePublisherTask
   ) {
     this.name = name;
@@ -69,6 +71,7 @@ public class ProductionPipelineBuilder {
     this.stageLib = stageLib;
     this.runner = runner;
     this.observer = observer;
+    this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
@@ -100,6 +103,7 @@ public class ProductionPipelineBuilder {
         userContext,
         pipelineConf,
         startTime,
+        blobStoreTask,
         lineagePublisherTask
     ).setObserver(observer).build(runner, runtimeParameters);
 
