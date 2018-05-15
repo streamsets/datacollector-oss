@@ -576,6 +576,7 @@ public class StoreApi {
       Boolean overwrite,
       Boolean autoGeneratePipelineId,
       boolean draft,
+      boolean includeLibraryDefinitions,
       PipelineEnvelopeJson pipelineEnvelope
   ) throws ApiException {
     Object postBody = pipelineEnvelope;
@@ -605,6 +606,7 @@ public class StoreApi {
     queryParams.addAll(apiClient.parameterToPairs("", "overwrite", overwrite));
     queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
     queryParams.addAll(apiClient.parameterToPairs("", "draft", draft));
+    queryParams.addAll(apiClient.parameterToPairs("", "includeLibraryDefinitions", includeLibraryDefinitions));
 
     final String[] accepts = {
         "application/json"
@@ -634,6 +636,7 @@ public class StoreApi {
   public PipelineFragmentEnvelopeJson importPipelineFragment (
       String fragmentId,
       boolean draft,
+      boolean includeLibraryDefinitions,
       PipelineFragmentEnvelopeJson fragmentEnvelope
   ) throws ApiException {
     Object postBody = fragmentEnvelope;
@@ -662,6 +665,7 @@ public class StoreApi {
     Map<String, Object> formParams = new HashMap<String, Object>();
 
     queryParams.addAll(apiClient.parameterToPairs("", "draft", draft));
+    queryParams.addAll(apiClient.parameterToPairs("", "includeLibraryDefinitions", includeLibraryDefinitions));
 
     final String[] accepts = {
         "application/json"

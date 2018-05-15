@@ -567,6 +567,7 @@ public class PipelineStoreResource {
                 false,
                 true,
                 envelope,
+                false,
                 false
             );
             successEntities.add(envelope.getPipelineConfig().getInfo());
@@ -741,7 +742,7 @@ public class PipelineStoreResource {
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
-          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), true))
+          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), false))
           .build();
     } else {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
@@ -814,7 +815,7 @@ public class PipelineStoreResource {
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
-          .entity(getPipelineFragmentEnvelope(pipelineFragmentConfig, ruleDefinitions, true))
+          .entity(getPipelineFragmentEnvelope(pipelineFragmentConfig, ruleDefinitions, false))
           .build();
     } else {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
@@ -1088,8 +1089,7 @@ public class PipelineStoreResource {
         fetchStageDefinition(stopEventStage, stageDefinitions, stageIcons);
       }
 
-      List<StageDefinitionJson> stages = new ArrayList<>();
-      stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
+      List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
       definitions.setStages(stages);
 
       definitions.setStageIcons(stageIcons);
@@ -1185,10 +1185,19 @@ public class PipelineStoreResource {
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
-  ) throws PipelineException, URISyntaxException {
+  ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
-    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGeneratePipelineId, pipelineEnvelope, draft);
+    pipelineEnvelope = importPipelineEnvelope(
+        name,
+        rev,
+        overwrite,
+        autoGeneratePipelineId,
+        pipelineEnvelope,
+        draft,
+        includeLibraryDefinitions
+    );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
   }
@@ -1199,7 +1208,8 @@ public class PipelineStoreResource {
       boolean overwrite,
       boolean autoGeneratePipelineId,
       PipelineEnvelopeJson pipelineEnvelope,
-      boolean draft
+      boolean draft,
+      boolean includeLibraryDefinitions
   ) throws PipelineException {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
@@ -1253,7 +1263,12 @@ public class PipelineStoreResource {
       ruleDefinitions = store.storeRules(name, rev, ruleDefinitions, false);
     }
 
-    return getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), draft);
+    return getPipelineEnvelope(
+        pipelineConfig,
+        ruleDefinitions,
+        stageLibrary.getServiceDefinitions(),
+        includeLibraryDefinitions
+    );
   }
 
   @Path("/fragment/{fragmentId}/import")
@@ -1265,10 +1280,11 @@ public class PipelineStoreResource {
   public Response importPipelineFragment(
       @PathParam("fragmentId") String fragmentId,
       @QueryParam("draft") @DefaultValue("true") boolean draft,
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
       PipelineFragmentEnvelopeJson fragmentEnvelope
   ) {
     RestAPIUtils.injectPipelineInMDC("*");
-    fragmentEnvelope = importPipelineFragmentEnvelope(fragmentId, fragmentEnvelope, draft);
+    fragmentEnvelope = importPipelineFragmentEnvelope(fragmentId, fragmentEnvelope, draft, includeLibraryDefinitions);
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(fragmentEnvelope).build();
   }
@@ -1276,7 +1292,8 @@ public class PipelineStoreResource {
   private PipelineFragmentEnvelopeJson importPipelineFragmentEnvelope(
       String fragmentId,
       PipelineFragmentEnvelopeJson fragmentEnvelope,
-      boolean draft
+      boolean draft,
+      boolean includeLibraryDefinitions
   ) {
     // Supporting only static validation of uploaded pipeline fragment & rules, not saving contents in disk
     PipelineFragmentConfigurationJson fragmentConfigurationJson = fragmentEnvelope.getPipelineFragmentConfig();
@@ -1301,7 +1318,7 @@ public class PipelineStoreResource {
     );
     ruleDefinitionValidator.validateRuleDefinition();
 
-    return getPipelineFragmentEnvelope(fragmentConfig, ruleDefinitions, draft);
+    return getPipelineFragmentEnvelope(fragmentConfig, ruleDefinitions, includeLibraryDefinitions);
   }
 
   @Path("/pipelines/addLabels")

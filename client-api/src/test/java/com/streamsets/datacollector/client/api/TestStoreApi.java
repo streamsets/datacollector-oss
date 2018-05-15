@@ -136,6 +136,7 @@ public class TestStoreApi {
     PipelineFragmentEnvelopeJson updatedFragmentEnvelope = storeApi.importPipelineFragment(
         fragmentEnvelope.getPipelineFragmentConfig().getFragmentId(),
         true,
+        false,
         fragmentEnvelope
     );
     Assert.assertNotNull(updatedFragmentEnvelope);
