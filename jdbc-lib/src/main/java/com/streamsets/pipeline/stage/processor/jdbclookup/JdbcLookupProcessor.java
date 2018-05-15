@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
@@ -43,6 +44,12 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -89,6 +96,9 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private Optional<List<Map<String, Field>>> defaultValue;
   private CacheCleaner cacheCleaner;
   private final MissingValuesBehavior missingValuesBehavior;
+
+  private List<ExecutorService> generationExecutors = new ArrayList<>();
+  private int preprocessThreads = 0;
 
   public JdbcLookupProcessor(
       String query,
@@ -138,6 +148,10 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     if (issues.isEmpty()) {
       cache = buildCache();
       cacheCleaner = new CacheCleaner(cache, "JdbcLookupProcessor", 10 * 60 * 1000);
+      if (cacheConfig.enabled) {
+        preprocessThreads = Math.min(hikariConfigBean.minIdle, Runtime.getRuntime().availableProcessors()-1);
+        preprocessThreads = Math.max(preprocessThreads, 1);
+      }
     }
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
@@ -219,7 +233,54 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   @Override
   public void destroy() {
     closeQuietly(dataSource);
+    for (ExecutorService generationExecutor : generationExecutors) {
+      generationExecutor.shutdown();
+      try {
+        generationExecutor.awaitTermination(5, TimeUnit.SECONDS);
+      } catch (InterruptedException ex) {
+        LOG.error("Interrupted while attempting to shutdown Generator thread", ex);
+        Thread.currentThread().interrupt();
+      }
+    }
     super.destroy();
+  }
+
+  public void preprocess(Batch batch) throws StageException {
+    //Gather all JDBC queries
+    Iterator<Record> it = batch.getRecords();
+    List<List<String>> preparedQueries = new ArrayList<>();
+    for (int i =0; i < preprocessThreads; i++) {
+      preparedQueries.add(new ArrayList<String>());
+    }
+    int recordNum = 0;
+    while (it.hasNext()) {
+      Record record = it.next();
+      recordNum++;
+      try {
+        ELVars elVars = getContext().createELVars();
+        RecordEL.setRecordInContext(elVars, record);
+        String preparedQuery = queryEval.eval(elVars, query, String.class);
+        preparedQueries.get((recordNum-1) % preprocessThreads).add(preparedQuery);
+      } catch (ELEvalException e) {
+        LOG.error(JdbcErrors.JDBC_01.getMessage(), query, e);
+        throw new OnRecordErrorException(record, JdbcErrors.JDBC_01, query);
+      }
+    }
+
+    for (int i =0; i < preprocessThreads; i++) {
+      generationExecutors.add(Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("JDBC Lookup "
+          + "Cache Warmer"+i)
+          .build()));
+      final List<String> preparedQueriesPart = preparedQueries.get(i);
+      generationExecutors.get(i).submit(() -> {
+        try {
+          for ( String query : preparedQueriesPart)
+            cache.get(query);
+        } catch (Throwable ex) {
+          LOG.error("Error while producing records", ex);
+        }
+      });
+    }
   }
 
   @Override
@@ -228,6 +289,11 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
       cacheCleaner.periodicCleanUp();
     }
+    //Cache warming
+    if (preprocessThreads > 0) {
+      preprocess(batch);
+    }
+    //Normal processing per record
     super.process(batch, batchMaker);
   }
 

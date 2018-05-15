@@ -221,6 +221,7 @@ public class TestJdbcLookup {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
 
     JdbcLookupDProcessor processor = createProcessor();
+    processor.cacheConfig.enabled = true;
 
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
