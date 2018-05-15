@@ -29,6 +29,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
+import com.streamsets.datacollector.runner.DefaultInterceptorCreatorContext;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
@@ -574,8 +575,8 @@ public abstract class PipelineBeanCreator {
       stage,
       classLoaderReleaser,
       services,
-      createDefaultInterceptors(stageLib, stageDef, errors),
-      createDefaultInterceptors(stageLib, stageDef, errors)
+      createDefaultInterceptors(stageLib, stageDef, DefaultInterceptorCreator.InterceptorType.PRE_STAGE, errors),
+      createDefaultInterceptors(stageLib, stageDef, DefaultInterceptorCreator.InterceptorType.POST_STAGE, errors)
     );
   }
 
@@ -630,12 +631,13 @@ public abstract class PipelineBeanCreator {
   public List<InterceptorBean> createDefaultInterceptors(
     StageLibraryTask stageLib,
     StageDefinition stageDefinition,
+    DefaultInterceptorCreator.InterceptorType interceptorType,
     List<Issue> issues
   ) {
     List<InterceptorBean> beans = new ArrayList<>();
 
     for(InterceptorDefinition definition : stageLib.getInterceptorDefinitions()) {
-      InterceptorBean bean = createDefaultInterceptor(stageLib, definition, stageDefinition, issues);
+      InterceptorBean bean = createDefaultInterceptor(stageLib, definition, stageDefinition, interceptorType, issues);
       if (bean != null) {
         beans.add(bean);
       }
@@ -653,6 +655,7 @@ public abstract class PipelineBeanCreator {
     StageLibraryTask stageLib,
     InterceptorDefinition definition,
     StageDefinition stageDefinition,
+    DefaultInterceptorCreator.InterceptorType interceptorType,
     List<Issue> issues
   ) {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -660,8 +663,13 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(definition.getStageClassLoader());
 
       DefaultInterceptorCreator creator = definition.getDefaultCreator().newInstance();
-      // TODO: This method will need proper context
-      Interceptor interceptor = creator.create(stageDefinition.getType(), null);
+      // TODO: This method is missing both blobStore and configuration
+      Interceptor interceptor = creator.create(new DefaultInterceptorCreatorContext(
+        null,
+        null,
+        stageDefinition.getType(),
+        interceptorType
+      ));
 
       if(interceptor == null) {
         return null;

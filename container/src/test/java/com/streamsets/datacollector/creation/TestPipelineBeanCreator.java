@@ -360,8 +360,8 @@ public class TestPipelineBeanCreator {
 
   public static class MyDefaultInterceptorCreator implements DefaultInterceptorCreator {
     @Override
-    public Interceptor create(StageType stageType, Context context) {
-      return new MyInterceptor(stageType.name());
+    public Interceptor create(Context context) {
+      return new MyInterceptor(context.getStageType().name() + " " + context.getInterceptorType().name());
     }
   }
 
@@ -370,9 +370,9 @@ public class TestPipelineBeanCreator {
     defaultCreator = MyDefaultInterceptorCreator.class
   )
   public static class MyInterceptor extends BaseInterceptor {
-    public final String stageType;
-    public MyInterceptor(String stageType) {
-      this.stageType = stageType;
+    public final String str;
+    public MyInterceptor(String str) {
+      this.str = str;
     }
 
     @Override
@@ -844,14 +844,14 @@ public class TestPipelineBeanCreator {
     Assert.assertNotNull(bean.getOrigin());
     Assert.assertEquals(1, bean.getOrigin().getPreInterceptors().size());
     Assert.assertEquals(1, bean.getOrigin().getPostInterceptors().size());
-    Assert.assertEquals("SOURCE", ((MyInterceptor)(bean.getOrigin().getPreInterceptors().get(0).getInterceptor())).stageType);
-    Assert.assertEquals("SOURCE", ((MyInterceptor)(bean.getOrigin().getPostInterceptors().get(0).getInterceptor())).stageType);
+    Assert.assertEquals("SOURCE PRE_STAGE", ((MyInterceptor)(bean.getOrigin().getPreInterceptors().get(0).getInterceptor())).str);
+    Assert.assertEquals("SOURCE POST_STAGE", ((MyInterceptor)(bean.getOrigin().getPostInterceptors().get(0).getInterceptor())).str);
 
     StageBean processor = bean.getPipelineStageBeans().get(0);
     Assert.assertEquals(1, processor.getPreInterceptors().size());
     Assert.assertEquals(1, processor.getPostInterceptors().size());
-    Assert.assertEquals("TARGET", ((MyInterceptor)(processor.getPreInterceptors().get(0).getInterceptor())).stageType);
-    Assert.assertEquals("TARGET", ((MyInterceptor)(processor.getPostInterceptors().get(0).getInterceptor())).stageType);
+    Assert.assertEquals("TARGET PRE_STAGE", ((MyInterceptor)(processor.getPreInterceptors().get(0).getInterceptor())).str);
+    Assert.assertEquals("TARGET POST_STAGE", ((MyInterceptor)(processor.getPostInterceptors().get(0).getInterceptor())).str);
   }
 
 }

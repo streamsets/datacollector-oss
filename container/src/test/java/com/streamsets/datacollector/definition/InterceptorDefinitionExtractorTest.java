@@ -35,7 +35,7 @@ public class InterceptorDefinitionExtractorTest {
 
   public static class DummyCreator implements DefaultInterceptorCreator {
     @Override
-    public Interceptor create(StageType stageType, Context context) {
+    public Interceptor create(Context context) {
       return null;
     }
   }
