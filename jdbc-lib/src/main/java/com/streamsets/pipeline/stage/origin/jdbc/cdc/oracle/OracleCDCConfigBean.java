@@ -235,6 +235,17 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use PEG-based SQL parser (experimental)",
+      description = "Use the new experimental SQL Parser, which may improve parsing performance",
+      displayPosition = 170,
+      group = "ADVANCED",
+      defaultValue = "false"
+  )
+  public boolean useNewParser;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "DB Time Zone",
       description = "Time Zone that the DB is operating in",

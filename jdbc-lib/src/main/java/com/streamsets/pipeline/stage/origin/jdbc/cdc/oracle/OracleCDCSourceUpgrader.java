@@ -65,7 +65,13 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 6:
-        return upgradeV6ToV7(configs);
+        configs = upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          return configs;
+        }
+        // fall through
+      case 7:
+        return upgradeV7ToV8(configs);
 
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -144,6 +150,11 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
 
   private static List<Config> upgradeV6ToV7(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.parseQuery", true));
+    return configs;
+  }
+
+  private static List<Config> upgradeV7ToV8(List<Config> configs) {
+    configs.add(new Config("oracleCDCConfigBean.useNewParser", false));
     return configs;
   }
 }
