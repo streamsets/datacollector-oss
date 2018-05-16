@@ -1173,34 +1173,29 @@ angular
         $scope.edgeHttpUrl = null;
       }
 
-      $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
-        return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
-          stageLibrary.name.indexOf('_fragment_') === -1 &&
-          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
-      });
+      $scope.sources = pipelineService.getFilteredStageDefinitions(
+        $scope.stageLibraries,
+        pipelineConstant.SOURCE_STAGE_TYPE,
+        $scope.executionMode
+      );
 
-      $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-        return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
-          stageLibrary.name.indexOf('_fragment_') === -1 &&
-          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
-      });
+      $scope.processors = pipelineService.getFilteredStageDefinitions(
+        $scope.stageLibraries,
+        pipelineConstant.PROCESSOR_STAGE_TYPE,
+        $scope.executionMode
+      );
 
-      $scope.executors = _.filter($scope.stageLibraries, function (stageLibrary) {
-        return (stageLibrary.type === pipelineConstant.EXECUTOR_STAGE_TYPE &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
-          stageLibrary.name.indexOf('_fragment_') === -1 &&
-          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
-      });
+      $scope.executors = pipelineService.getFilteredStageDefinitions(
+        $scope.stageLibraries,
+        pipelineConstant.EXECUTOR_STAGE_TYPE,
+        $scope.executionMode
+      );
 
-      $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-        return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
-          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
-          stageLibrary.name.indexOf('_fragment_') === -1 &&
-          ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1);
-      });
+      $scope.targets = pipelineService.getFilteredStageDefinitions(
+        $scope.stageLibraries,
+        pipelineConstant.TARGET_STAGE_TYPE,
+        $scope.executionMode
+      );
 
       // Initialize the pipeline config
       if (!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {

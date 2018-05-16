@@ -1987,4 +1987,22 @@ angular.module('dataCollectorApp.common')
       return stageInstances;
     };
 
+    this.getFilteredStageDefinitions = function(stageDefinitions, type, executionMode) {
+      var alreadyAdded = {};
+      return _.chain(stageDefinitions)
+        .filter(function (s) {
+          if (alreadyAdded[s.name + s.version]) {
+            return;
+          }
+          alreadyAdded[s.name + s.version] = true;
+          return s.type === type && !s.errorStage && !s.statsAggregatorStage &&
+            s.name.indexOf('_fragment_') === -1 &&
+            s.library !== 'streamsets-datacollector-stats-lib' &&
+            (!executionMode || s.executionModes.indexOf(executionMode) !== -1);
+
+        })
+        .sortBy('libraryLabel')
+        .value();
+    }
+
   });

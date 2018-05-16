@@ -14,7 +14,7 @@
       <span  class="validation-message">{{'home.graphPane.originMissing' | translate}}</span>
 
       <select class="form-control" name="newPipelineSource"
-          ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in sources | orderBy: 'label'"
+          ng-options="stage.label for stage in sources | orderBy: 'label'"
           ng-model="selectedSource.selected"
           ng-change="onSelectSourceChange()">
         <option value="">
@@ -52,7 +52,7 @@
       </span>
 
       <select class="form-control" name="newPipelineProcessor"
-              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors | orderBy: 'label'"
+              ng-options="stage.label for stage in processors | orderBy: 'label'"
               ng-model="connectStage.selected"
               ng-change="onConnectStageChange()">
         <option value="">
@@ -63,7 +63,7 @@
       <span class="pull-left123"> Or </span>
 
       <select class="form-control" name="newPipelineTarget"
-              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in targets | orderBy: 'label'"
+              ng-options="stage.label for stage in targets | orderBy: 'label'"
               ng-model="connectStage.selected"
               ng-change="onConnectStageChange()">
         <option value="">
@@ -75,7 +75,7 @@
 
       <select class="form-control" name="newPipelineExecutor"
               ng-if="firstOpenLane.isEventLane"
-              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in executors | orderBy: 'label'"
+              ng-options="stage.label for stage in executors | orderBy: 'label'"
               ng-model="connectStage.selected"
               ng-change="onConnectStageChange()">
         <option value="">
@@ -101,16 +101,14 @@
         <span class="sr-only">Close</span>
       </button>
 
-
       <select class="form-control stage-in-between" name="newPipelineProcessor"
-              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors | orderBy: 'label'"
+              ng-options="stage.label for stage in processors | orderBy: 'label'"
               ng-model="insertStage.selected"
               ng-change="onInsertStageChange()">
         <option value="">
           {{'home.graphPane.selectProcessorToAddInBetween' | translate}}
         </option>
       </select>
-
 
       <div class="pull-right checkbox dont-show-again">
         <label>
