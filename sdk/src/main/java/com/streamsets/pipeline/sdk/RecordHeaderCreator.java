@@ -38,7 +38,8 @@ public class RecordHeaderCreator {
       String errorMessage,
       long errorTimestamp,
       String errorStackTrace,
-      Map<String, Object> map
+      Map<String, Object> map,
+      String errorJobId
   ) {
       HeaderImpl header = new HeaderImpl(
           stageCreator,
@@ -56,7 +57,8 @@ public class RecordHeaderCreator {
           errorMessage,
           errorTimestamp,
           errorStackTrace,
-          map
+          map,
+          errorJobId
       );
 
       return header.getAllAttributes();

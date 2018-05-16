@@ -59,6 +59,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StageContext extends ProtoContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context {
+  private static final String JOB_ID = "JOB_ID";
+
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final Stage.UserContext userContext;
@@ -386,12 +388,16 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   }
 
   private void toError(Record record, ErrorMessage errorMessage) {
+    String jobId = (String) getPipelineConstants().get(JOB_ID);
     RecordImpl recordImpl = ((RecordImpl) record).clone();
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
     recordImpl.getHeader().setError(stageInfo.getInstanceName(), stageInfo.getLabel(), errorMessage);
+    if (jobId != null) {
+      recordImpl.getHeader().setErrorJobId(jobId);
+    }
     errorSink.addRecord(stageInfo.getInstanceName(), recordImpl);
   }
 

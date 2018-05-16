@@ -253,7 +253,7 @@ public class TestSdcIpcRequestFragmenter {
     }
     rw.close();
     List<byte[]> fragments =
-        new SdcIpcRequestFragmenter().fragmentInternal(new ByteArrayInputStream(baos.toByteArray()), 800, 2000);
+        new SdcIpcRequestFragmenter().fragmentInternal(new ByteArrayInputStream(baos.toByteArray()), 1000, 2000);
     Assert.assertEquals(2, fragments.size());
     List<Record> got = new ArrayList<>();
     for (byte[] fragment : fragments) {

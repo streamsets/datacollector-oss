@@ -302,6 +302,11 @@ public class RuleDefinitionValidator {
           }
 
           @Override
+          public String getErrorJobId() {
+            return null;
+          }
+
+          @Override
           public Map<String, Object> getAllAttributes() {
             return null;
           }

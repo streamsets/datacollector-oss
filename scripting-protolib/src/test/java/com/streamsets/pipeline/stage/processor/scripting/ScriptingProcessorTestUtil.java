@@ -788,7 +788,8 @@ public class ScriptingProcessorTestUtil {
         errorMessage,
         errorTimestamp,
         errorStackTrace,
-        map
+        map,
+        null
     );
     record.getHeader().setAllAttributes(recordHeaderAttributes);
 

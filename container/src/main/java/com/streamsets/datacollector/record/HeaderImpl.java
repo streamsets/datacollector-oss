@@ -49,6 +49,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   private static final String ERROR_DATACOLLECTOR_ID_ATTR = RESERVED_PREFIX + "dataCollectorId";
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
+  private static final String ERROR_JOB_ID = RESERVED_PREFIX + "errorJobId";
   //Note: additional fields should also define in ScriptRecord
 
   private Map<String, Object> map;
@@ -153,6 +154,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   }
 
   @Override
+  public String getErrorJobId() {
+    return (String) map.get(ERROR_JOB_ID);
+  }
+
+  @Override
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
@@ -205,7 +211,8 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     String errorMessage,
     long errorTimestamp,
     String errorStackTrace,
-    Map<String, Object> map
+    Map<String, Object> map,
+    String errorJobId
   ) {
     this.map = map;
     setStageCreator(stageCreator);
@@ -230,6 +237,9 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
       setRawMimeType(rawMimeType);
     }
     map.put(SOURCE_RECORD_ATTR, null);
+    if (errorJobId != null) {
+      setErrorJobId(errorJobId);
+    }
   }
 
   // HeaderImpl setter methods
@@ -269,6 +279,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     map.put(RAW_MIME_TYPE_ATTR, rawMime);
   }
 
+  public void setErrorJobId(String errorJobId) {
+    Preconditions.checkNotNull(errorJobId, "errorJobId cannot be null");
+    map.put(ERROR_JOB_ID, errorJobId);
+  }
+
   public void setError(String errorStage, String errorStageName, ErrorMessage errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
     setError(
@@ -296,8 +311,8 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   public void setErrorContext(String datacollector, String pipelineName) {
     map.put(ERROR_DATACOLLECTOR_ID_ATTR, datacollector);
     map.put(ERROR_PIPELINE_NAME_ATTR, pipelineName);
-
   }
+
   private void setError(
     String errorStage,
     String errorStageName,

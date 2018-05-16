@@ -33,7 +33,7 @@ public class TestHeaderBean {
   @Test
   public void testHeaderBean() {
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      System.currentTimeMillis(), "stack trace", new HashMap<>());
+      System.currentTimeMillis(), "stack trace", new HashMap<>(), null);
 
     HeaderJson headerJsonBean = new HeaderJson(header);
 
@@ -53,6 +53,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getStageCreator(), headerJsonBean.getStageCreator());
     Assert.assertEquals(header.getStagesPath(), headerJsonBean.getStagesPath());
     Assert.assertEquals(header.getTrackingId(), headerJsonBean.getTrackingId());
+    Assert.assertEquals(header.getErrorJobId(), headerJsonBean.getErrorJobId());
 
   }
 
@@ -60,10 +61,10 @@ public class TestHeaderBean {
   public void testHeaderBeanConstructorWithArgs() {
     long timestamp = System.currentTimeMillis();
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      timestamp, "stack trace", new HashMap<>());
+      timestamp, "stack trace", new HashMap<>(), null);
 
     HeaderJson headerJsonBean = new HeaderJson("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      timestamp, "stack trace", new HashMap<>());
+      timestamp, "stack trace", null, new HashMap<>());
 
     Assert.assertEquals(header.getErrorCode(), headerJsonBean.getErrorCode());
     Assert.assertEquals(header.getErrorMessage(), headerJsonBean.getErrorMessage());
@@ -101,6 +102,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getStageCreator(), headerJsonBean.getHeader().getStageCreator());
     Assert.assertEquals(header.getStagesPath(), headerJsonBean.getHeader().getStagesPath());
     Assert.assertEquals(header.getTrackingId(), headerJsonBean.getHeader().getTrackingId());
+    Assert.assertEquals(header.getErrorJobId(), headerJsonBean.getErrorJobId());
 
   }
 }

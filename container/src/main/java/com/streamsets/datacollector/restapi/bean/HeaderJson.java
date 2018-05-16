@@ -44,6 +44,7 @@ public class HeaderJson {
       @JsonProperty("errorMessage") String errorMessage,
       @JsonProperty("errorTimestamp") long errorTimestamp,
       @JsonProperty("errorStackTrace") String errorStackTrace,
+      @JsonProperty("errorJobId") String errorJobId,
       @JsonProperty("values") Map<String, Object> map
   ) {
     this.header = new HeaderImpl(
@@ -62,7 +63,8 @@ public class HeaderJson {
       errorMessage,
       errorTimestamp,
       errorStackTrace,
-      map
+      map,
+      errorJobId
     );
   }
 
@@ -94,6 +96,8 @@ public class HeaderJson {
   public String getErrorMessage() {return header.getErrorMessage();}
 
   public String getErrorStage() {return header.getErrorStage();}
+
+  public String getErrorJobId() {return header.getErrorJobId();}
 
   public String getErrorStageLabel() {return header.getErrorStageLabel();}
 
