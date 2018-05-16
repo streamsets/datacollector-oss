@@ -32,7 +32,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.glassfish.jersey.client.RequestEntityProcessing.CHUNKED;
+import static org.glassfish.jersey.client.RequestEntityProcessing.BUFFERED;
 
 public class JerseyClientConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(JerseyClientConfigBean.class);
@@ -41,12 +41,12 @@ public class JerseyClientConfigBean {
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Request Transfer Encoding",
-      defaultValue = "CHUNKED",
+      defaultValue = "BUFFERED",
       displayPosition = 100,
       group = "#0"
   )
   @ValueChooserModel(RequestEntityProcessingChooserValues.class)
-  public RequestEntityProcessing transferEncoding = CHUNKED;
+  public RequestEntityProcessing transferEncoding = BUFFERED;
 
 
   @ConfigDef(
