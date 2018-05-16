@@ -86,13 +86,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cluster-bootstrap-kafka-08</artifactId>
-       <scope>provided</scope>
-    </dependency>
-    <dependency>
        <groupId>com.streamsets</groupId>
-       <artifactId>streamsets-datacollector-cluster-bootstrap-kafka-010</artifactId>
+       <artifactId>streamsets-datacollector-cluster-bootstrap</artifactId>
        <scope>provided</scope>
     </dependency>
     <dependency>

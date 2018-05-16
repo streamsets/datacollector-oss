@@ -269,31 +269,15 @@
 
     <!-- CDH Spark Kafka lib -->
     <fileSet>
-      <directory>${basedir}/../${cdh_5_8-cluster-cdh_kafka_2_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh-spark_2_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_9-cluster-cdh_kafka_2_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh-spark_2_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_10-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_11-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_12-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_13-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_14-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh-spark_2_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
@@ -599,8 +583,7 @@
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-api</include>
-        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-kafka-08</include>
-        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-kafka-010</include>
+        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-spark-api</include>
