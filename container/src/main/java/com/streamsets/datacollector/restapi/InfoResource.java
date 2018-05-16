@@ -19,6 +19,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.PipelineException;
 
@@ -29,10 +30,13 @@ import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -53,12 +57,16 @@ public class InfoResource {
 
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
+  private final StatsCollector statsCollector;
   private final UserGroupManager userGroupManager;
 
   @Inject
-  public InfoResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo, UserGroupManager userGroupManager) {
+  public InfoResource(
+      BuildInfo buildInfo, RuntimeInfo runtimeInfo, StatsCollector statsCollector, UserGroupManager
+      userGroupManager) {
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
+    this.statsCollector = statsCollector;
     this.userGroupManager = userGroupManager;
   }
 
@@ -147,4 +155,39 @@ public class InfoResource {
     map.put("id", runtimeInfo.getId());
     return Response.status(Response.Status.OK).entity(map).build();
   }
+
+  @GET
+  @Path("/stats")
+  @ApiOperation(value = "Stats status", response = Map.class, authorizations = @Authorization(value =
+      "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response getStatus() throws PipelineException, IOException {
+    Map map = new HashMap();
+    map.put("opted", statsCollector.isOpted());
+    map.put("active", statsCollector.isActive());
+    if (statsCollector.isActive()) {
+      map.put("stats", statsCollector.getStatsInfo().snapshot());
+    }
+    return Response.status(Response.Status.OK).entity(map).build();
+  }
+
+  @POST
+  @Path("/stats")
+  @ApiOperation(value = "Stats status change", response = Map.class, authorizations = @Authorization(value =
+      "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response setStatus(@QueryParam("active") boolean active) throws PipelineException, IOException {
+    statsCollector.setActive(active);
+    Map map = new HashMap();
+    map.put("opted", statsCollector.isOpted());
+    map.put("active", statsCollector.isActive());
+    if (statsCollector.isActive()) {
+      map.put("stats", statsCollector.getStatsInfo().snapshot());
+    }
+    return Response.status(Response.Status.OK).entity(map).build();
+  }
+
 }

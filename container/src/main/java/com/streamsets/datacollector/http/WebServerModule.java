@@ -36,12 +36,14 @@ import com.streamsets.datacollector.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.datacollector.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.StageLibraryInjector;
 import com.streamsets.datacollector.restapi.configuration.StandAndClusterManagerInjector;
+import com.streamsets.datacollector.restapi.configuration.StatsCollectorInjector;
 import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.websockets.SDCWebSocketServlet;
 import com.streamsets.lib.security.http.CORSConstants;
@@ -356,6 +358,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(BuildInfoInjector.BUILD_INFO, buildInfo);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideStatsInfo(final StatsCollector statsCollector) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(StatsCollectorInjector.STATS_COLLECTOR, statsCollector);
       }
     };
   }

@@ -25,6 +25,7 @@ import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
@@ -53,6 +54,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
         bindFactory(RuntimeInfoInjector.class).to(RuntimeInfo.class);
         bindFactory(BuildInfoInjector.class).to(BuildInfo.class);
+        bindFactory(StatsCollectorInjector.class).to(StatsCollector.class);
         bindFactory(StandAndClusterManagerInjector.class).to(Manager.class);
         bindFactory(SupportBundleInjector.class).to(SupportBundleManager.class);
         bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
