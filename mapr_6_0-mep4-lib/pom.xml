@@ -30,7 +30,7 @@
   <artifactId>streamsets-datacollector-mapr_6_0-mep4-lib</artifactId>
   <version>3.3.0</version>
   <description>StreamSets Data Collector MapR 6.0.0 MEP 4Lib</description>
-  <name>StreamSets Data Collector MapR 6.00.0 MEP 4 Lib</name>
+  <name>StreamSets Data Collector MapR 6.0.0 MEP 4 Lib</name>
   <packaging>jar</packaging>
 
   <properties>

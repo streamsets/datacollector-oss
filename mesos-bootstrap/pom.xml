@@ -50,12 +50,12 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cluster-bootstrap-kafka-08</artifactId>
+      <artifactId>streamsets-datacollector-cluster-bootstrap</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming-kafka-0-8_2.11</artifactId>
+      <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
       <version>${spark.version}</version>
       <scope>compile</scope>
     </dependency>

@@ -473,12 +473,7 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cluster-bootstrap-kafka-08</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cluster-bootstrap-kafka-010</artifactId>
+        <artifactId>streamsets-datacollector-cluster-bootstrap</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -493,27 +488,17 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</artifactId>
+        <artifactId>streamsets-datacollector-cdh-spark_2_1-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</artifactId>
+        <artifactId>streamsets-datacollector-cdh-spark_2_2-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_1-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_10-cluster-cdh_kafka_2_1-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</artifactId>
+        <artifactId>streamsets-datacollector-cdh-spark_2_3-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
