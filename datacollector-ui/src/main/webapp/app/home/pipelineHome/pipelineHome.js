@@ -1855,7 +1855,7 @@ angular
 
     $scope.$watch('activeConfigStatus.status', function (newValue) {
       if (newValue === 'FINISHED') {
-        $rootScope.common.successList = [{message:'Pipeline Job has been finished'}];
+        $rootScope.common.successList = [{message:'Pipeline job has finished'}];
       }
     });
 
