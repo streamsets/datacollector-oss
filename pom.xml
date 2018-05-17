@@ -446,12 +446,17 @@
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
-        <cdh-spark_2_1-lib>cdh-spark_2_1-lib</cdh-spark_2_1-lib>
-        <cdh-spark_2_2-lib>cdh-spark_2_2-lib</cdh-spark_2_2-lib>
-        <cdh-spark_2_3-lib>cdh-spark_2_3-lib</cdh-spark_2_3-lib>
+        <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
+        <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
+        <cdh_5_9-lib>cdh_5_9-lib</cdh_5_9-lib>
+        <cdh_5_10-lib>cdh_5_10-lib</cdh_5_10-lib>
+        <cdh_5_11-lib>cdh_5_11-lib</cdh_5_11-lib>
         <cdh_5_12-lib>cdh_5_12-lib</cdh_5_12-lib>
         <cdh_5_13-lib>cdh_5_13-lib</cdh_5_13-lib>
         <cdh_5_14-lib>cdh_5_14-lib</cdh_5_14-lib>
+        <cdh-spark_2_1-lib>cdh-spark_2_1-lib</cdh-spark_2_1-lib>
+        <cdh-spark_2_2-lib>cdh-spark_2_2-lib</cdh-spark_2_2-lib>
+        <cdh-spark_2_3-lib>cdh-spark_2_3-lib</cdh-spark_2_3-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
