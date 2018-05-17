@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class ServerEvent {

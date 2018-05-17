@@ -17,6 +17,7 @@ package com.streamsets.datacollector.event.handler.remote;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -91,6 +92,7 @@ public class RemoteDataCollector implements DataCollector {
   private final AclCacheHelper aclCacheHelper;
   private final RuntimeInfo runtimeInfo;
   private final StageLibraryTask stageLibrary;
+  private final BlobStoreTask blobStoreTask;
   private final SafeScheduledExecutorService eventHandlerExecutor;
 
   @Inject
@@ -103,6 +105,7 @@ public class RemoteDataCollector implements DataCollector {
       RuntimeInfo runtimeInfo,
       AclCacheHelper aclCacheHelper,
       StageLibraryTask stageLibrary,
+      BlobStoreTask blobStoreTask,
       @Named("eventHandlerExecutor")  SafeScheduledExecutorService eventHandlerExecutor
   ) {
     this.manager = manager;
@@ -114,6 +117,7 @@ public class RemoteDataCollector implements DataCollector {
     this.aclStoreTask = aclStoreTask;
     this.aclCacheHelper = aclCacheHelper;
     this.stageLibrary = stageLibrary;
+    this.blobStoreTask = blobStoreTask;
     this.eventHandlerExecutor = eventHandlerExecutor;
   }
 
@@ -414,6 +418,16 @@ public class RemoteDataCollector implements DataCollector {
     } else {
       LOG.warn(ContainerError.CONTAINER_0200.getMessage(), acl.getResourceId());
     }
+  }
+
+  @Override
+  public void blobStore(String namespace, String id, int version, String content) throws StageException {
+    blobStoreTask.store(namespace, id, version, content);
+  }
+
+  @Override
+  public void blobDelete(String namespace, String id, int version) throws StageException {
+    blobStoreTask.delete(namespace, id, version);
   }
 
   private List<WorkerInfo> getWorkers(Collection<CallbackInfo> callbackInfos) {

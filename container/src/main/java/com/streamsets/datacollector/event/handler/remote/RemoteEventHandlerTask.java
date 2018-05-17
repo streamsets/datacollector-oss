@@ -29,6 +29,8 @@ import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
+import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
@@ -522,6 +524,23 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 pipelineStopDeleteEvent.getRev(),
                 pipelineStopDeleteEvent.getForceTimeoutMillis()
             ));
+            break;
+          case BLOB_STORE:
+            BlobStoreEvent blobStoreEvent = (BlobStoreEvent)event;
+            remoteDataCollector.blobStore(
+              blobStoreEvent.getNamespace(),
+              blobStoreEvent.getId(),
+              blobStoreEvent.getVersion(),
+              blobStoreEvent.getContent()
+            );
+            break;
+          case BLOB_DELETE:
+            BlobDeleteEvent blobDeleteEvent = (BlobDeleteEvent)event;
+            remoteDataCollector.blobDelete(
+              blobDeleteEvent.getNamespace(),
+              blobDeleteEvent.getId(),
+              blobDeleteEvent.getVersion()
+            );
             break;
           case SYNC_ACL:
             remoteDataCollector.syncAcl(((SyncAclEvent) event).getAcl());

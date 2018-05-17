@@ -65,4 +65,13 @@ public interface DataCollector {
 
   void syncAcl(Acl acl) throws PipelineException;
 
+  /**
+   * Add a new object to DataCollector's blob store.
+   */
+  void blobStore(String namespace, String id, int version, String content) throws StageException;
+
+  /**
+   * Remove object from DataCollector's blob store.
+   */
+  void blobDelete(String namespace, String id, int version) throws StageException;
 }

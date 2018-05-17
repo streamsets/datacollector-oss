@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
@@ -42,6 +44,8 @@ import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
+import com.streamsets.datacollector.event.json.BlobDeleteEventJson;
+import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
@@ -121,6 +125,12 @@ public class MessagingJsonToFromDto {
       case DELETE_HISTORY_PIPELINE:
       case DELETE_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
+        break;
+      case BLOB_STORE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobStoreEventJson((BlobStoreEvent) event);
+        break;
+      case BLOB_DELETE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteEventJson((BlobDeleteEvent) event);
         break;
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
         eventJson =
@@ -230,6 +240,20 @@ public class MessagingJsonToFromDto {
         };
         PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
+        break;
+      }
+      case BLOB_STORE: {
+        TypeReference<BlobStoreEventJson> typeRef = new TypeReference<BlobStoreEventJson>() {
+        };
+        BlobStoreEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobStoreEventDto(eventJson));
+        break;
+      }
+      case BLOB_DELETE: {
+        TypeReference<BlobDeleteEventJson> typeRef = new TypeReference<BlobDeleteEventJson>() {
+        };
+        BlobDeleteEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobDeleteEventDto(eventJson));
         break;
       }
       case SSO_DISCONNECTED_MODE_CREDENTIALS: {

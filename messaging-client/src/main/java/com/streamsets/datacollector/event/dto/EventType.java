@@ -21,8 +21,6 @@ import java.util.Map;
 public enum EventType {
 
   // EVENT CODE for DPM->SDC events: 1000 - 1999
-  // EVENT CODE for SDC->DPM events: 2000 - 2999
-  // EVENT CODE FOR ACK events: >=5000
   VALIDATE_PIPELINE(1000),
   SAVE_PIPELINE(1001),
   SAVE_RULES_PIPELINE(1002),
@@ -35,9 +33,15 @@ public enum EventType {
   STOP_DELETE_PIPELINE(1009),
   SSO_DISCONNECTED_MODE_CREDENTIALS(1010),
   SYNC_ACL(1011),
+  BLOB_STORE(1012),
+  BLOB_DELETE(1013),
+
+  // EVENT CODE for SDC->DPM events: 2000 - 2999
   STATUS_PIPELINE(2000),
   SDC_INFO_EVENT(2001),
   STATUS_MULTIPLE_PIPELINES(2002),
+
+  // EVENT CODE FOR ACK events: >=5000
   ACK_EVENT(5000);
 
   private final int value;

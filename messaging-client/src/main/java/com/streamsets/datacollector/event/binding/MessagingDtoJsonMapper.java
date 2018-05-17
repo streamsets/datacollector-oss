@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.event.binding;
 
 import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
@@ -29,6 +31,8 @@ import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
+import com.streamsets.datacollector.event.json.BlobDeleteEventJson;
+import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
@@ -114,4 +118,12 @@ public abstract class MessagingDtoJsonMapper {
 
   @Maps(withIgnoreFields = {"payload", "event", "eventType"})
   public abstract ClientEventJson toClientEventJson(ClientEvent clientEvent);
+
+  public abstract BlobStoreEvent asBlobStoreEventDto(BlobStoreEventJson blobStoreEventJson);
+
+  public abstract BlobStoreEventJson toBlobStoreEventJson(BlobStoreEvent blobStoreEvent);
+
+  public abstract BlobDeleteEvent asBlobDeleteEventDto(BlobDeleteEventJson blobDeleteEventJson);
+
+  public abstract BlobDeleteEventJson toBlobDeleteEventJson(BlobDeleteEvent blobDeleteEvent);
 }
