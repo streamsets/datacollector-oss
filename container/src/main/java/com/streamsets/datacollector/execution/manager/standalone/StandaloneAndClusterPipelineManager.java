@@ -30,6 +30,7 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.execution.StatsCollectorRunner;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
@@ -42,6 +43,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -82,6 +84,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Inject PreviewerProvider previewerProvider;
   @Inject ResourceManager resourceManager;
   @Inject EventListenerManager eventListenerManager;
+  @Inject StatsCollector statsCollector;
 
   private Cache<String, RunnerInfo> runnerCache;
   private Cache<String, Previewer> previewerCache;
@@ -352,7 +355,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       executionMode = ExecutionMode.STANDALONE;
     }
     Runner runner = runnerProvider.createRunner(name, rev, objectGraph, executionMode);
-    return runner;
+    return new StatsCollectorRunner(runner, statsCollector);
   }
 
   private String getNameAndRevString(String name, String rev) {

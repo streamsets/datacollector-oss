@@ -277,6 +277,11 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+      return null;
+    }
+
+    @Override
     public void resetOffset(String user) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 

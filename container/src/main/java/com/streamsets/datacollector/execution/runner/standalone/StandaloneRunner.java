@@ -433,6 +433,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return pipelineStore.load(getName(), getRev());
+  }
+
+  @Override
   public synchronized void resetOffset(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     LOG.debug("Resetting offset for pipeline {}, {}", name, rev);

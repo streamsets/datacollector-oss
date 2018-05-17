@@ -69,6 +69,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -793,6 +794,11 @@ public class TestUtil {
             new SafeScheduledExecutorService(1, "runnerStopExecutor")
         );
       };
+    }
+
+    @Provides @Singleton
+    public StatsCollector provideStatsCollector() {
+      return Mockito.mock(StatsCollector.class);
     }
 
   }

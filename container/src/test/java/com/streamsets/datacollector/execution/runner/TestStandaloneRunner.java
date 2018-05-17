@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.StateListener;
+import com.streamsets.datacollector.execution.StatsCollectorRunner;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
@@ -119,8 +120,8 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
@@ -136,8 +137,8 @@ public class TestStandaloneRunner {
         .get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
     assertNotNull(runtimeConstantsInState);
     assertEquals(runtimeParameters.get("param1"), runtimeConstantsInState.get("param1"));
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
@@ -194,7 +195,7 @@ public class TestStandaloneRunner {
     waitForState(runner, PipelineStatus.FINISHED);
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner = ((AsyncRunner)runner).getDelegatingRunner();
+    runner = runner.getRunner(AsyncRunner.class).getDelegatingRunner();
     ((StateListener)runner).stateChanged(PipelineStatus.RETRY, null, null);
     assertEquals(1, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getRetryAttempt());
     assertEquals(PipelineStatus.RETRY, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getStatus());
@@ -231,8 +232,8 @@ public class TestStandaloneRunner {
         Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
       }
     }
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
@@ -275,8 +276,8 @@ public class TestStandaloneRunner {
 
     runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     Assert.assertTrue(runner.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner.getState().getMetrics());
   }
@@ -318,11 +319,11 @@ public class TestStandaloneRunner {
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
-    ((AsyncRunner)runner1).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner1).getDelegatingRunner().stop("admin");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner1, PipelineStatus.STOPPED);
-    ((AsyncRunner)runner2).getDelegatingRunner().prepareForStop("admin2");
-    ((AsyncRunner)runner2).getDelegatingRunner().stop("admin2");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin2");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin2");
     Assert.assertTrue(runner2.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
     assertNotNull(runner2.getState().getMetrics());
@@ -372,10 +373,10 @@ public class TestStandaloneRunner {
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
-    ((AsyncRunner)runner1).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner1).getDelegatingRunner().stop("admin");
-    ((AsyncRunner)runner2).getDelegatingRunner().prepareForStop("admin2");
-    ((AsyncRunner)runner2).getDelegatingRunner().stop("admin2");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin2");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin2");
     waitForState(runner1, PipelineStatus.STOPPED);
     waitForState(runner2, PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
@@ -392,9 +393,9 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().forceQuit("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().forceQuit("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
@@ -451,8 +452,8 @@ public class TestStandaloneRunner {
     assertNull(snapshot.getInfo());
     assertNull(snapshot.getOutput());
 
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
@@ -474,8 +475,8 @@ public class TestStandaloneRunner {
     assertEquals("0", info.getRev());
     assertEquals(1, info.getBatchNumber());
 
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
 
     // try with batch size less than 0
@@ -523,8 +524,8 @@ public class TestStandaloneRunner {
 
     await().until(() -> !runner.getSnapshot(snapshotId).getInfo().isInProgress());
 
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
 
     Snapshot snapshot = runner.getSnapshot(snapshotId);
@@ -553,8 +554,8 @@ public class TestStandaloneRunner {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    ((AsyncRunner)runner1).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner1).getDelegatingRunner().stop("admin");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner1.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner1, PipelineStatus.STOPPED);
 
     runner2.start("admin2");
@@ -567,8 +568,8 @@ public class TestStandaloneRunner {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    ((AsyncRunner)runner2).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner2).getDelegatingRunner().stop("admin2");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner2.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin2");
     waitForState(runner2, PipelineStatus.STOPPED);
   }
 
@@ -577,8 +578,8 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner( TestUtil.PIPELINE_WITH_EMAIL, "0");
     runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getDelegatingRunner().prepareForStop("admin");
-    ((AsyncRunner)runner).getDelegatingRunner().stop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
     //wait for email
     GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();

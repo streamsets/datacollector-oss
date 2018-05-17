@@ -60,6 +60,8 @@ public interface Runner {
   // pipeline title
   public String getPipelineTitle() throws PipelineException;
 
+  PipelineConfiguration getPipelineConfiguration() throws PipelineException;
+
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status
   public void resetOffset(String user) throws PipelineException;

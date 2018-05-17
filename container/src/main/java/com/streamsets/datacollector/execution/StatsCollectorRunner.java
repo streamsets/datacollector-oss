@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,9 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
-import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.runner.production.SourceOffset;
-import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -34,15 +33,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class AclRunner implements Runner {
+public class StatsCollectorRunner implements Runner {
   private final Runner runner;
-  private final AclStoreTask aclStore;
-  private final UserJson currentUser;
+  private final StatsCollector statsCollector;
 
-  public AclRunner(Runner runner, AclStoreTask aclStore, UserJson currentUser) {
+  public StatsCollectorRunner(Runner runner, StatsCollector statsCollector) {
     this.runner = runner;
-    this.aclStore = aclStore;
-    this.currentUser = currentUser;
+    this.statsCollector = statsCollector;
+  }
+
+  public StatsCollector getStatsCollector() {
+    return statsCollector;
   }
 
   @Override
@@ -67,19 +68,16 @@ public class AclRunner implements Runner {
 
   @Override
   public void resetOffset(String user) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.resetOffset(user);
   }
 
   @Override
   public SourceOffset getCommittedOffsets() throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     return runner.getCommittedOffsets();
   }
 
   @Override
   public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.updateCommittedOffsets(sourceOffset);
   }
 
@@ -96,23 +94,25 @@ public class AclRunner implements Runner {
   @Override
   public void onDataCollectorStart(String user) throws PipelineException, StageException {
     runner.onDataCollectorStart(user);
+    statsCollector.startPipeline(getPipelineConfiguration());
   }
 
   @Override
   public void onDataCollectorStop(String user) throws PipelineException {
     runner.onDataCollectorStop(user);
+    statsCollector.stopPipeline(getPipelineConfiguration());
   }
 
   @Override
   public void stop(String user) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.stop(user);
+    statsCollector.stopPipeline(getPipelineConfiguration());
   }
 
   @Override
   public void forceQuit(String user) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.forceQuit(user);
+    statsCollector.stopPipeline(getPipelineConfiguration());
   }
 
   @Override
@@ -127,14 +127,14 @@ public class AclRunner implements Runner {
 
   @Override
   public void start(String user) throws PipelineException, StageException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.start(user);
+    statsCollector.startPipeline(getPipelineConfiguration());
   }
 
   @Override
   public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.start(user, runtimeParameters);
+    statsCollector.startPipeline(getPipelineConfiguration());
   }
 
   @Override
@@ -146,25 +146,18 @@ public class AclRunner implements Runner {
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+    statsCollector.startPipeline(getPipelineConfiguration());
   }
 
   @Override
-  public String captureSnapshot(
-      String user,
-      String snapshotName,
-      String snapshotLabel,
-      int batches,
-      int batchSize
-  ) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
+  public String captureSnapshot(String user, String snapshotName, String snapshotLabel, int batches, int batchSize)
+      throws PipelineException {
     return runner.captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override
   public String updateSnapshotLabel(String snapshotName, String snapshotLabel) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     return runner.updateSnapshotLabel(snapshotName, snapshotLabel);
   }
 
@@ -180,7 +173,6 @@ public class AclRunner implements Runner {
 
   @Override
   public void deleteSnapshot(String id) throws PipelineException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.deleteSnapshot(id);
   }
 
@@ -191,7 +183,6 @@ public class AclRunner implements Runner {
 
   @Override
   public void deleteHistory() throws PipelineException {
-    aclStore.validateWritePermission(this.getName(), currentUser);
     runner.deleteHistory();
   }
 
@@ -206,17 +197,14 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public List<ErrorMessage> getErrorMessages(
-      String stage,
-      int max
-  ) throws PipelineRunnerException, PipelineStoreException {
+  public List<ErrorMessage> getErrorMessages(String stage, int max)
+      throws PipelineRunnerException, PipelineStoreException {
     return runner.getErrorMessages(stage, max);
   }
 
   @Override
   public List<SampledRecord> getSampledRecords(
-      String sampleId,
-      int max
+      String sampleId, int max
   ) throws PipelineRunnerException, PipelineStoreException {
     return runner.getSampledRecords(sampleId, max);
   }
@@ -228,7 +216,6 @@ public class AclRunner implements Runner {
 
   @Override
   public boolean deleteAlert(String alertId) throws PipelineException {
-    aclStore.validateWritePermission(this.getName(), currentUser);
     return runner.deleteAlert(alertId);
   }
 

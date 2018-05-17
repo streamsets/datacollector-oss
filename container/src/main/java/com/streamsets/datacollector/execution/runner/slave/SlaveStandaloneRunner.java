@@ -19,6 +19,7 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.callback.CallbackServerErrorEventListener;
 import com.streamsets.datacollector.callback.CallbackServerMetricsEventListener;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -78,6 +79,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public String getPipelineTitle() throws PipelineException {
     return standaloneRunner.getPipelineTitle();
+  }
+
+  @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return standaloneRunner.getPipelineConfiguration();
   }
 
   @Override

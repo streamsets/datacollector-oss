@@ -48,6 +48,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
@@ -256,6 +257,11 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public LineagePublisherTask provideLineagePublisherTask() {
       return Mockito.mock(LineagePublisherTask.class);
+    }
+
+    @Provides @Singleton
+    public StatsCollector provideStatsCollector() {
+      return Mockito.mock(StatsCollector.class);
     }
 
   }

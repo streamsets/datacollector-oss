@@ -79,6 +79,11 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return pipelineStoreTask.load(pipelineId, rev);
+  }
+
+  @Override
   public void resetOffset(String user) throws PipelineException {
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
     EdgeUtil.resetOffset(pipelineConfiguration);

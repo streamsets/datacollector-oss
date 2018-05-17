@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
@@ -72,6 +73,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   @Override
   public String getPipelineTitle() throws PipelineException {
     return runner.getPipelineTitle();
+  }
+
+  @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return runner.getPipelineConfiguration();
   }
 
   @Override

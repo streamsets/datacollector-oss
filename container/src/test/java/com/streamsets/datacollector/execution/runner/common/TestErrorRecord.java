@@ -242,7 +242,7 @@ public class TestErrorRecord {
     captureMockStages(errorStage, new AtomicBoolean(false));
 
     ProductionPipelineRunnable runnable =
-        new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner) this.runner).getDelegatingRunner(), pipeline,
+        new ProductionPipelineRunnable(null, this.runner.getRunner(StandaloneRunner.class), pipeline,
             TestUtil.MY_PIPELINE, "0", Collections.<Future<?>> emptyList());
     Thread t = new Thread(runnable);
     t.start();

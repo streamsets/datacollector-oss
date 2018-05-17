@@ -322,6 +322,11 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return pipelineStore.load(getName(), getRev());
+  }
+
+  @Override
   public void resetOffset(String user) {
     throw new UnsupportedOperationException();
   }

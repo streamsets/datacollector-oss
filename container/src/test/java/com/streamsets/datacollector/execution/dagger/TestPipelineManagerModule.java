@@ -93,10 +93,10 @@ public class TestPipelineManagerModule {
 
     //create Runner
     Runner runner = pipelineManager.getRunner(pc.getInfo().getPipelineId(), "0");
-    Assert.assertTrue(runner instanceof AsyncRunner);
+    Assert.assertNotNull(runner.getRunner(AsyncRunner.class));
 
-    runner = ((AsyncRunner)runner).getDelegatingRunner();
-    Assert.assertTrue(runner instanceof StandaloneRunner);
+    runner = runner.getRunner(StandaloneRunner.class);
+    Assert.assertNotNull(runner);
 
     Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());
     Assert.assertEquals(pc.getInfo().getPipelineId(), runner.getName());

@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
@@ -231,6 +232,11 @@ public class TestRunner {
     public Runner getDelegatingRunner() {
       return null;
     }
+
+    @Override
+    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+      return null;
+    }
   }
 
   public class Runner2 implements Runner {
@@ -427,6 +433,11 @@ public class TestRunner {
     @Override
     public Runner getDelegatingRunner() {
       return new Runner1();
+    }
+
+    @Override
+    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+      return null;
     }
   }
 

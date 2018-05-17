@@ -87,7 +87,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
     pipeline.registerStatusListener(new MyStateListener());
     ProductionPipelineRunnable runnable =
-      new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner)runner).getDelegatingRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
+      new ProductionPipelineRunnable(null, runner.getRunner(StandaloneRunner.class), pipeline, TestUtil.MY_PIPELINE, "0",
         Collections.<Future<?>> emptyList());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null, 0, 0);
     runnable.run();
@@ -100,7 +100,7 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable
-      (null, (StandaloneRunner) ((AsyncRunner)runner).getDelegatingRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
+      (null, runner.getRunner(StandaloneRunner.class), pipeline, TestUtil.MY_PIPELINE, "0",
       Collections.<Future<?>>emptyList());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null, 0, 0);
     //Stops after the first batch
