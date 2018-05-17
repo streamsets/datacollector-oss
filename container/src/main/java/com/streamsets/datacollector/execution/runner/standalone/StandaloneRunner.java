@@ -39,6 +39,7 @@ import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -1031,5 +1032,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public int getRunnerCount() {
     return prodPipeline != null ? prodPipeline.getPipeline().getNumOfRunners() : 0;
+  }
+
+  @Override
+  public Runner getDelegatingRunner() {
+    return null;
   }
 }

@@ -41,6 +41,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
@@ -1048,4 +1049,8 @@ public class ClusterRunner extends AbstractRunner {
     return 1;
   }
 
+  @Override
+  public Runner getDelegatingRunner() {
+    return null;
+  }
 }

@@ -95,7 +95,7 @@ public class TestPipelineManagerModule {
     Runner runner = pipelineManager.getRunner(pc.getInfo().getPipelineId(), "0");
     Assert.assertTrue(runner instanceof AsyncRunner);
 
-    runner = ((AsyncRunner)runner).getRunner();
+    runner = ((AsyncRunner)runner).getDelegatingRunner();
     Assert.assertTrue(runner instanceof StandaloneRunner);
 
     Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());

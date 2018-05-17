@@ -262,11 +262,6 @@ public class AsyncRunner implements Runner, PipelineInfo {
     }
   }
 
-  @VisibleForTesting
-  public Runner getRunner() {
-    return runner;
-  }
-
   @Override
   public void updateSlaveCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
     runner.updateSlaveCallbackInfo(callbackInfo);
@@ -291,4 +286,10 @@ public class AsyncRunner implements Runner, PipelineInfo {
   public void prepareForStop(String user) {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call stop() instead.");
   }
+
+  @Override
+  public Runner getDelegatingRunner() {
+    return runner;
+  }
+
 }

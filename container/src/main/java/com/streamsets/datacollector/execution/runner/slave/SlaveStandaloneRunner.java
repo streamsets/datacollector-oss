@@ -279,5 +279,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
     standaloneRunner.prepareForStop(user);
   }
 
-
+  @Override
+  public Runner getDelegatingRunner() {
+    return standaloneRunner;
+  }
 }

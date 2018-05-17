@@ -22,6 +22,7 @@ import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.StateListener;
@@ -335,5 +336,10 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       String message,
       Map<String, Object> attributes
   ) {
+  }
+
+  @Override
+  public Runner getDelegatingRunner() {
+    return null;
   }
 }

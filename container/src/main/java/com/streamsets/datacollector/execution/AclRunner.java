@@ -255,4 +255,9 @@ public class AclRunner implements Runner {
   public int getRunnerCount() {
     return runner.getRunnerCount();
   }
+
+  @Override
+  public Runner getDelegatingRunner() {
+    return runner;
+  }
 }

@@ -490,6 +490,10 @@ public class TestRemoteDataCollector {
       return 0;
     }
 
+    @Override
+    public Runner getDelegatingRunner() {
+      return null;
+    }
   }
 
   private static class MockPreviewer implements Previewer {

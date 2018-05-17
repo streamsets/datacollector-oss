@@ -15,8 +15,10 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
@@ -164,5 +166,22 @@ public interface Runner {
   String getToken();
 
   int getRunnerCount();
+
+  // returns the Runner this instance delegates the work to, or NULL if there is no delegation
+  Runner getDelegatingRunner();
+
+  // returns a runner from the runner delegation chain of the specified class, or NULL if there is no such
+  // implementation. If the current runner is an instance of the class it returns the current runner.
+  default <R extends Runner> R getRunner(Class<R> klass) {
+    Preconditions.checkNotNull(klass, "klass cannot be NULL");
+    Runner delegationRunner = this;
+    while (delegationRunner != null) {
+      if (klass.isInstance(delegationRunner)) {
+        return (R) delegationRunner;
+      }
+      delegationRunner = delegationRunner.getDelegatingRunner();
+    }
+    return null;
+  }
 
 }
