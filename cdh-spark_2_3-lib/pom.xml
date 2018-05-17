@@ -29,8 +29,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh-spark_2_3-lib</artifactId>
   <version>3.4.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector CDH Cluster Cloudera Kafka 2.3 Lib</description>
-  <name>StreamSets Data Collector CDH Cluster Kafka 2.3 Lib</name>
+  <description>StreamSets Data Collector CDH Cluster Cloudera Spark 2.3 Lib</description>
+  <name>StreamSets Data Collector CDH Cluster Spark 2.3 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
