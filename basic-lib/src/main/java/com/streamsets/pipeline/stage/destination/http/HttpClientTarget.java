@@ -62,7 +62,7 @@ public class HttpClientTarget extends BaseTarget {
   private ErrorRecordHandler errorRecordHandler;
   private RateLimiter rateLimiter;
 
-  HttpClientTarget(HttpClientTargetConfig conf) {
+  protected HttpClientTarget(HttpClientTargetConfig conf) {
     this.conf = conf;
     this.httpClientCommon = new HttpClientCommon(conf.client);
   }
