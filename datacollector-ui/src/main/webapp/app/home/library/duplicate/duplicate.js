@@ -25,7 +25,7 @@ angular
         errors: []
       },
       newConfig : {
-        title: pipelineInfo.title + 'copy',
+        title: pipelineInfo.title + ' copy',
         description: pipelineInfo.description,
         numberOfCopies: 1
       },

@@ -175,7 +175,7 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should be able to export the pipeline created above', function() {
-      var pipeline2 = pipeline1 + 'copy',
+      var pipeline2 = pipeline1 + ' copy',
         pipelineElement;
 
       browser.get('/');
@@ -208,7 +208,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to import the pipeline', function() {
-      var pipeline2 = pipeline1 + 'copy',
+      var pipeline2 = pipeline1 + ' copy',
         pipelineElement;
 
       browser.get('/');
@@ -249,7 +249,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to delete the pipeline', function() {
-      var pipeline2 = pipeline1 + 'copy',
+      var pipeline2 = pipeline1 + ' copy',
         pipelineElement;
 
       browser.get('/');
