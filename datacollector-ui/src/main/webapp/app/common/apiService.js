@@ -409,11 +409,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getStageLibrariesExtras: function() {
+      getStageLibrariesExtras: function(libraryId) {
         var url = apiBase + '/stageLibraries/extras/list';
         return $http({
           method: 'GET',
-          url: url
+          url: url,
+          params: {
+            libraryId: libraryId ? libraryId : ''
+          }
         });
       },
 

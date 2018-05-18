@@ -19,7 +19,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal) {
+  .controller('DetailController', function (
+    $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal, authService, userRoles
+  ) {
     var infoTab = {
       name: 'info',
       template: 'app/home/detail/info/info.tpl.html',
@@ -78,6 +80,12 @@ angular
       iconClass: 'fa fa-list',
       helpId: 'metric-rules-tab'
     };
+    var externalLibrariesTab = {
+      name: 'externalLibraries',
+      template: 'app/home/detail/external_libraries/external_libraries.tpl.html',
+      iconClass: 'fa fa-upload',
+      helpId: 'metric-rules-tab'
+    };
 
     /**
      * Returns list tabs based on type.
@@ -87,13 +95,13 @@ angular
      * @returns {*}
      */
     var getDetailTabsList = function(type, isPipelineRunning) {
-      var tabsList = [],
-        executionMode = $scope.activeConfigStatus.executionMode;
+      var tabsList = [];
+      var executionMode = $scope.activeConfigStatus.executionMode;
+      var clusterExecutionModePipeline = _.contains(pipelineConstant.CLUSTER_MODES, executionMode);
       switch(type) {
         case pipelineConstant.PIPELINE:
           if (isPipelineRunning) {
-            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-                executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
+            if (clusterExecutionModePipeline) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
@@ -105,8 +113,7 @@ angular
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
           if (isPipelineRunning) {
-            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-              executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
+            if (clusterExecutionModePipeline) {
               tabsList = [summaryTab, infoTab, configurationTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab];
@@ -115,15 +122,18 @@ angular
             tabsList = [infoTab, configurationTab];
           }
 
+          if (authService.isAuthorized([userRoles.admin])) {
+            tabsList.push(externalLibrariesTab);
+          }
+
           if ($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.rawSourceDefinition) {
-            tabsList.push(rawPreviewTab);
+
           }
 
           return tabsList;
         case pipelineConstant.LINK:
           if (isPipelineRunning) {
-            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-              executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
+            if (clusterExecutionModePipeline) {
               return [dataRulesTab, dataDriftRulesTab, infoTab];
             } else {
               return [dataSummaryTab, dataRulesTab, dataDriftRulesTab, infoTab];
@@ -131,7 +141,6 @@ angular
           } else {
             return [infoTab, dataRulesTab, dataDriftRulesTab];
           }
-          break;
       }
     };
 

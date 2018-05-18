@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.restapi;
 
-
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
@@ -76,7 +75,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-
 @Path("/v1")
 @Api(value = "definitions")
 @DenyAll
@@ -109,11 +107,6 @@ public class StageLibraryResource {
   static final String EL_CONSTANT_DEFS = "elConstantDefinitions";
   @VisibleForTesting
   static final String EL_FUNCTION_DEFS = "elFunctionDefinitions";
-  @VisibleForTesting
-  static final String RUNTIME_CONFIGS = "runtimeConfigs";
-
-  @VisibleForTesting
-  static final String EL_CATALOG = "elCatalog";
 
   private final StageLibraryTask stageLibrary;
   private final BuildInfo buildInfo;
@@ -408,7 +401,9 @@ public class StageLibraryResource {
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
-  public Response getExtras() {
+  public Response getExtras(
+      @QueryParam("libraryId") String libraryId
+  ) {
     String libsExtraDir = runtimeInfo.getLibsExtraDir();
     if (StringUtils.isEmpty(libsExtraDir)) {
       throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
@@ -418,7 +413,8 @@ public class StageLibraryResource {
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     Map<String, Boolean> installedLibrariesMap = new HashMap<>();
     for(StageDefinition stageDefinition: stageDefinitions) {
-      if (!installedLibrariesMap.containsKey(stageDefinition.getLibrary())) {
+      if (!installedLibrariesMap.containsKey(stageDefinition.getLibrary()) &&
+          (StringUtils.isEmpty(libraryId) || stageDefinition.getLibrary().equals(libraryId))) {
         installedLibrariesMap.put(stageDefinition.getLibrary(), true);
         File stageLibExtraDir = new File(libsExtraDir, stageDefinition.getLibrary());
         if (stageLibExtraDir.exists()) {

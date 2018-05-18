@@ -437,6 +437,7 @@
         "notMatchedSampledRecordsTooltip": "Show only Sampled Records which didn't matched the condition"
       },
       "definitionsJSONData": "Definitions",
+      "externalLibraries": "External Libraries",
       "general": "General",
       "history": "History",
       "historyTab": {

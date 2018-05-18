@@ -69,6 +69,10 @@ angular
         return library.id === 'streamsets-datacollector-jdbc-lib';
       });
 
+      if (!$scope.libraryInfo.library && installedLibraries) {
+        $scope.libraryInfo.library = installedLibraries[0];
+      }
+
       $scope.installedLibraries = _.chain(installedLibraries)
         .filter(function(stageLibrary) {
           return stageLibrary.library !== 'streamsets-datacollector-stats-lib';

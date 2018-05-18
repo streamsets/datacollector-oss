@@ -34,8 +34,10 @@ angular
         }
       });
   }])
-  .controller('PackageManagerController', function ($scope, $rootScope, $routeParams, $q, $modal, $location,
-                                                    pipelineService, api, configuration, pipelineConstant, Analytics) {
+  .controller('PackageManagerController', function (
+    $scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api, configuration, pipelineConstant,
+    Analytics
+  ) {
     $location.search('auth_token', null);
     $location.search('auth_user', null);
     $rootScope.common.errors = [];
@@ -162,7 +164,7 @@ angular
       unSelectStageLibrary: function(stageLibrary) {
         $scope.selectedStageLibraryMap[stageLibrary.id] = false;
         var index = $scope.selectedStageLibraryList.indexOf(stageLibrary.id);
-        if (index != -1) {
+        if (index !== -1) {
           $scope.selectedStageLibraryList.splice(index, 1);
         }
         $scope.allSelected = false;
@@ -356,7 +358,7 @@ angular
     $q.all([
       configuration.init()
     ]).then(
-      function (results) {
+      function () {
         if(configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/collector/packageManager');
         }
@@ -396,7 +398,6 @@ angular
           }
         );
     };
-
 
     var getStageLibrariesExtras = function() {
       $scope.stageLibrariesExtras = [];
@@ -471,7 +472,6 @@ angular
       }, function () {
       });
     };
-
 
     var updateCustomRepoUrl= function() {
       var modalInstance = $modal.open({

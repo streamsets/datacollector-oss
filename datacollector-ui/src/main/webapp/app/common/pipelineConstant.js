@@ -57,5 +57,11 @@ angular.module('dataCollectorApp.common')
     LINUX_OS: 'linux',
     WINDOWS_OS: 'windows',
     AMD64_ARCH: 'amd64',
-    ARM_ARCH: 'arm'
+    ARM_ARCH: 'arm',
+    CLUSTER_MODES: [
+      'CLUSTER',
+      'CLUSTER_BATCH',
+      'CLUSTER_YARN_STREAMING',
+      'CLUSTER_MESOS_STREAMING'
+    ]
   });
