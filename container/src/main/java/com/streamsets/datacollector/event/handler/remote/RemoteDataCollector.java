@@ -127,16 +127,8 @@ public class RemoteDataCollector implements DataCollector {
     this.pipelineStore.registerStateListener(stateEventListener);
   }
 
-  private void validateIfRemote(String name, String rev, String operation) throws PipelineException {
-    if (!manager.isRemotePipeline(name, rev)) {
-      throw new PipelineException(ContainerError.CONTAINER_01100, operation, name);
-    }
-  }
-
   @Override
   public void start(String user, String name, String rev) throws PipelineException, StageException {
-    validateIfRemote(name, rev, "START");
-
     //TODO we should receive the groups from DPM, SDC-6793
 
     try {
@@ -169,21 +161,31 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void stop(String user, String name, String rev) throws PipelineException {
-    validateIfRemote(name, rev, "STOP");
     manager.getRunner(name, rev).stop(user);
   }
 
   @Override
   public void delete(String name, String rev) throws PipelineException {
-    validateIfRemote(name, rev, "DELETE");
     pipelineStore.delete(name);
     pipelineStore.deleteRules(name);
   }
 
   @Override
   public void deleteHistory(String user, String name, String rev) throws PipelineException {
-    validateIfRemote(name, rev, "DELETE_HISTORY");
     manager.getRunner(name, rev).deleteHistory();
+  }
+
+  @VisibleForTesting
+  boolean pipelineStateExists(String name, String rev) throws PipelineException {
+    try {
+      pipelineStateStore.getState(name, rev);
+      return true;
+    } catch (PipelineStoreException e) {
+      if (e.getErrorCode().getCode().equals(ContainerError.CONTAINER_0209.name())) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   @Override
@@ -197,26 +199,18 @@ public class RemoteDataCollector implements DataCollector {
       RuleDefinitions ruleDefinitions,
       Acl acl
   ) throws PipelineException {
-
-    List<PipelineState> pipelineInfoList = manager.getPipelines();
-    boolean pipelineExists = false;
-    for (PipelineState pipelineState : pipelineInfoList) {
-      if (pipelineState.getPipelineId().equals(name)) {
-        pipelineExists = true;
-        break;
-      }
+    // Due to some reason, if pipeline folder doesn't exist but state file exists then remove the state file.
+    if (!pipelineStore.hasPipeline(name) && pipelineStateExists(name, rev)) {
+      LOG.warn("Deleting state file for pipeline {} as pipeline is deleted", name);
+      pipelineStateStore.delete(name, rev);
     }
-    UUID uuid;
-    if (!pipelineExists) {
-      uuid = pipelineStore.create(user, name, name, description, true, false).getUuid();
-    } else {
-      validateIfRemote(name, rev, "SAVE");
-      PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
-      uuid = pipelineInfo.getUuid();
-      ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
-    }
+    UUID uuid = pipelineStore.create(user, name, name, description, true, false).getUuid();
     pipelineConfiguration.setUuid(uuid);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfiguration);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        name,
+        pipelineConfiguration
+    );
     pipelineConfiguration = validator.validate();
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
     pipelineStore.storeRules(name, rev, ruleDefinitions, false);
@@ -233,7 +227,6 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException {
-    validateIfRemote(name, rev, "SAVE_RULES");
     // Check for existence of pipeline first
     pipelineStore.getInfo(name);
     ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
@@ -242,14 +235,12 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void resetOffset(String user, String name, String rev) throws PipelineException {
-    validateIfRemote(name, rev, "RESET_OFFSET");
     manager.getRunner(name, rev).resetOffset(user);
   }
 
   @Override
   public void validateConfigs(String user, String name, String rev) throws PipelineException {
     Previewer previewer = manager.createPreviewer(user, name, rev);
-    validateIfRemote(name, rev, "VALIDATE_CONFIGS");
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -297,10 +288,12 @@ public class RemoteDataCollector implements DataCollector {
           LOG.warn("Pipeline {}:{} is already deleted", pipelineName, rev);
           return new AckEvent(ackStatus, ackEventMessage);
         }
-        remoteDataCollector.validateIfRemote(pipelineName, rev, "STOP_AND_DELETE");
         PipelineStateStore pipelineStateStore = remoteDataCollector.pipelineStateStore;
         Manager manager = remoteDataCollector.manager;
         PipelineState pipelineState = pipelineStateStore.getState(pipelineName, rev);
+        if (pipelineState.getStatus().equals(PipelineStatus.STOPPING)) {
+          throw new RuntimeException("Pipeline is already being stopped by another invocation of stopJob");
+        }
         if (pipelineState.getStatus().isActive()) {
           try {
             manager.getRunner(pipelineName, rev).stop(user);
@@ -346,7 +339,7 @@ public class RemoteDataCollector implements DataCollector {
             ex);
       }
       long endTime = System.currentTimeMillis();
-      LOG.debug("Time in secs to stop and delete pipeline {} is {}", pipelineName, (endTime - startTime)/1000);
+      LOG.info("Time in secs to stop and delete pipeline {} is {}", pipelineName, (endTime - startTime)/1000);
       AckEvent ackEvent = new AckEvent(ackStatus, ackEventMessage);
       return ackEvent;
     }
@@ -413,7 +406,6 @@ public class RemoteDataCollector implements DataCollector {
       return;
     }
     if (pipelineStore.hasPipeline(acl.getResourceId())) {
-      validateIfRemote(acl.getResourceId(), "0", "SYNC_ACL");
       aclStoreTask.saveAcl(acl.getResourceId(), acl);
     } else {
       LOG.warn(ContainerError.CONTAINER_0200.getMessage(), acl.getResourceId());

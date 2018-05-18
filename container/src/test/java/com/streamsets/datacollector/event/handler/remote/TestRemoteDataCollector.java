@@ -56,6 +56,7 @@ import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
@@ -69,6 +70,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -1140,6 +1142,27 @@ public class TestRemoteDataCollector {
     assertEquals(2, sourceOffsetJson.getVersion());
     assertEquals("offset:1000", sourceOffsetJson.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
     assertNull(pipelineAndValidationStatus.getValidationStatus());
+  }
+
+  @Test
+  public void testPipelineStateExists() throws Exception {
+    Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
+    PipelineStoreTask pipelineStoreTask = Mockito.mock(PipelineStoreTask.class);
+    PipelineStateStore pipelineStateStore = Mockito.mock(PipelineStateStore.class);
+    Mockito.when(pipelineStateStore.getState("name", "rev")).thenThrow(new PipelineStoreException(ContainerError
+        .CONTAINER_0209));
+    RemoteDataCollector dataCollector = Mockito.spy(new RemoteDataCollector(manager,
+        pipelineStoreTask,
+        pipelineStateStore,
+        Mockito.mock(AclStoreTask.class),
+        Mockito.mock(RemoteStateEventListener.class),
+        Mockito.mock(RuntimeInfo.class),
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class),
+        Mockito.mock(BlobStoreTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
+    ));
+    Assert.assertTrue(!dataCollector.pipelineStateExists("name", "rev"));
   }
 
   @Test
