@@ -79,8 +79,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -263,9 +265,12 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement getTimestampsFromLogMnrContents;
   private PreparedStatement tsTzStatement;
 
-  private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
-  private final SQLListener sqlListener = new SQLListener();
-  private final SQLParser sqlParser = Parboiled.createParser(SQLParser.class);
+  private final ThreadLocal<ParseTreeWalker> parseTreeWalker = ThreadLocal.withInitial(ParseTreeWalker::new);
+  private final ThreadLocal<SQLListener> sqlListener = ThreadLocal.withInitial(SQLListener::new);
+  private final ThreadLocal<SQLParser> sqlParser =
+      ThreadLocal.withInitial(() -> Parboiled.createParser(SQLParser.class));
+
+  private ExecutorService parsingExecutor;
 
   public OracleCDCSource(HikariPoolConfigBean hikariConf, OracleCDCConfigBean oracleCDCConfigBean) {
     this.configBean = oracleCDCConfigBean;
@@ -709,7 +714,7 @@ public class OracleCDCSource extends BaseSource {
           columnsExpected = tableSchemas.get(table).keySet();
         }
         columns = SQLParserUtils.process(
-            sqlParser,
+            sqlParser.get(),
             sql,
             operationCode,
             configBean.allowNulls,
@@ -718,13 +723,20 @@ public class OracleCDCSource extends BaseSource {
         );
       } else {
         // Walk it and attach our sqlListener
-        sqlListener.reset();
-        if (configBean.allowNulls && table.isNotEmpty()) {
-          sqlListener.setColumns(tableSchemas.get(table).keySet());
+        sqlListener.get().reset();
+        if (configBean.baseConfigBean.caseSensitive) {
+          sqlListener.get().setCaseSensitive();
         }
 
-        parseTreeWalker.walk(sqlListener, ParseUtil.getParserRuleContext(sql, operationCode));
-        columns = sqlListener.getColumns();
+        if (configBean.allowNulls) {
+          sqlListener.get().allowNulls();
+        }
+        if (configBean.allowNulls && table.isNotEmpty()) {
+          sqlListener.get().setColumns(tableSchemas.get(table).keySet());
+        }
+
+        parseTreeWalker.get().walk(sqlListener.get(), ParseUtil.getParserRuleContext(sql, operationCode));
+        columns = sqlListener.get().getColumns();
       }
 
       String rowId = columns.get(ROWID);
@@ -811,49 +823,55 @@ public class OracleCDCSource extends BaseSource {
       LocalDateTime commitTimestamp,
       String commitScn,
       String xid
-  ) throws StageException, InterruptedException {
+  ) throws InterruptedException {
     TransactionIdKey key = new TransactionIdKey(xid);
     int seq = 0;
     bufferedRecordsLock.lock();
+    HashQueue<RecordSequence> records;
     try {
-      HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+      records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
       records.completeInserts();
-      while (!records.isEmpty()) {
-        if (getContext().isStopped()) {
-          return seq;
-        }
-        RecordSequence r = records.remove();
-        try {
-          if (configBean.keepOriginalQuery) {
-            r.headers.put(QUERY_KEY, r.sqlString);
-          }
-          seq = r.seq;
-          Record record = generateRecord(r.sqlString, r.headers, r.opCode);
-          if (record != null && record.getEscapedFieldPaths().size() > 0) {
-            final RecordOffset recordOffset =
-                new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, r.seq)
-            );
-            // If produce is not called because pipeline was stopped and the queue is full,
-            // we simply return
-            while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
-              // if pipeline was stopped just return last added offset.
-              if (getContext().isStopped()) {
-                return seq;
-              }
-            }
-          }
-        } catch (UnparseableSQLException ex) {
-          try {
-            errorRecordHandler.onError(JDBC_43, r.sqlString);
-          } catch (StageException stageException) {
-            addToStageExceptionsQueue(stageException);
-          }
-        }
-      }
-      records.close();
       bufferedRecords.remove(key);
     } finally {
       bufferedRecordsLock.unlock();
+    }
+    final List<FutureWrapper> parseFutures = new ArrayList<>();
+    while (!records.isEmpty()) {
+      if (getContext().isStopped()) {
+        return seq;
+      }
+      RecordSequence r = records.remove();
+      if (configBean.keepOriginalQuery) {
+        r.headers.put(QUERY_KEY, r.sqlString);
+      }
+      seq = r.seq;
+      final Future<Record> recordFuture = parsingExecutor.submit(() -> generateRecord(r.sqlString, r.headers, r.opCode));
+      parseFutures.add(new FutureWrapper(recordFuture, r.sqlString, r.seq));
+    }
+    records.close();
+    for (FutureWrapper recordFuture : parseFutures) {
+      try {
+        Record record = recordFuture.future.get();
+        if (record != null) {
+          final RecordOffset recordOffset =
+              new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq)
+              );
+          // If produce is not called because pipeline was stopped and the queue is full,
+          // we simply return
+          while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
+            // if pipeline was stopped just return last added offset.
+            if (getContext().isStopped()) {
+              return seq;
+            }
+          }
+        }
+      } catch (ExecutionException e) {
+        try {
+          errorRecordHandler.onError(JDBC_43, recordFuture.sql);
+        } catch (StageException stageException) {
+          addToStageExceptionsQueue(stageException);
+        }
+      }
     }
     return seq;
   }
@@ -1254,12 +1272,11 @@ public class OracleCDCSource extends BaseSource {
       }
     }
 
-    if (configBean.baseConfigBean.caseSensitive) {
-      sqlListener.setCaseSensitive();
-    }
-
-    if (configBean.allowNulls) {
-      sqlListener.allowNulls();
+    if (configBean.parseQuery && configBean.bufferLocally) {
+      parsingExecutor = Executors.newFixedThreadPool(
+          configBean.parseThreadPoolSize,
+          new ThreadFactoryBuilder().setNameFormat("Oracle CDC Origin Parse Thread - %d").build()
+      );
     }
 
     if (configBean.txnWindow >= configBean.logminerWindow) {
@@ -1533,6 +1550,10 @@ public class OracleCDCSource extends BaseSource {
     }
     generationStarted = false;
 
+    if (parsingExecutor != null) {
+      parsingExecutor.shutdown();
+    }
+
   }
 
   private void closeAllStatements() throws Exception {
@@ -1722,6 +1743,18 @@ public class OracleCDCSource extends BaseSource {
     public RecordOffset(Record record, Offset offset) {
       this.record = record;
       this.offset = offset;
+    }
+  }
+
+  private class FutureWrapper {
+    final Future<Record> future;
+    final String sql;
+    final int seq;
+
+    public FutureWrapper(Future<Record> future, String sql, int seq) {
+      this.future = future;
+      this.sql = sql;
+      this.seq = seq;
     }
   }
 
