@@ -155,6 +155,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
 
   private static List<Config> upgradeV7ToV8(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.useNewParser", false));
+    configs.add(new Config("oracleCDCConfigBean.parseThreadPoolSize", 1));
     return configs;
   }
 }
