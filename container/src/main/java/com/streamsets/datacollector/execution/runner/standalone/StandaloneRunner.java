@@ -368,7 +368,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private void retryOrStart(String user) throws PipelineException, StageException {
     PipelineState pipelineState = getState();
-    if (pipelineState.getRetryAttempt() == 0) {
+    if (pipelineState.getRetryAttempt() == 0 || pipelineState.getStatus() == PipelineStatus.DISCONNECTED) {
       prepareForStart(user, runtimeParameters);
       start(user, runtimeParameters);
     } else {
