@@ -527,6 +527,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- wholefile-transformer-lib -->
+    <fileSet>
+      <directory>${basedir}/../wholefile-transformer-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>

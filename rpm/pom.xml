@@ -137,6 +137,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-wholefile-transformer-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-wholefile-transformer-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-windows-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>

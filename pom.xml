@@ -82,6 +82,7 @@
     <salesforce-lib>salesforce-lib</salesforce-lib>
     <stats-lib>stats-lib</stats-lib>
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
+    <wholefile-transformer-lib>wholefile-transformer-lib</wholefile-transformer-lib>
     <windows-lib>windows-lib</windows-lib>
     <rootProject>true</rootProject>
   </properties>
@@ -201,6 +202,7 @@
     <module>spark-executor-protolib</module>
     <module>spark-processor-protolib</module>
     <module>scripting-protolib</module>
+    <module>wholefile-converter-protolib</module>
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)
@@ -231,6 +233,7 @@
     <module>salesforce-lib</module>
     <module>stats-lib</module>
     <module>vault-credentialstore-lib</module>
+    <module>wholefile-transformer-lib</module>
     <module>windows-lib</module>
   </modules>
 
