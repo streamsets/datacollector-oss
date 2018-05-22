@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.datacollector.config.PipelineStateChooserValues;
+import com.streamsets.datacollector.config.PipelineTestStageChooserValues;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -57,13 +58,19 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 9;
+  public static final int VERSION = 10;
 
   public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
 
   public static final String STATS_DPM_DIRECTLY_TARGET = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
+
+  private static final String TRASH_TARGET = "streamsets-datacollector-basic-lib" +
+      "::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1";
+
+  public static final String RAW_DATA_ORIGIN = "streamsets-datacollector-dev-lib" +
+      "::com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource::3";
 
   public static final String EDGE_HTTP_URL_DEFAULT = "http://localhost:18633";
 
@@ -101,9 +108,20 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
+      label = "Test Origin",
+      description = "Stage used for testing in preview mode.",
+      defaultValue = RAW_DATA_ORIGIN,
+      displayPosition = 21
+  )
+  @ValueChooserModel(PipelineTestStageChooserValues.class)
+  public String testOriginStage;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
       label = "Start Event",
       description = "Stage that should handle pipeline start event.",
-      defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1",
+      defaultValue = TRASH_TARGET,
       displayPosition = 23,
       dependsOn = "executionMode",
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
@@ -116,7 +134,7 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       label = "Stop Event",
       description = "Stage that should handle pipeline stop event.",
-      defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1",
+      defaultValue = TRASH_TARGET,
       displayPosition = 26,
       dependsOn = "executionMode",
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}

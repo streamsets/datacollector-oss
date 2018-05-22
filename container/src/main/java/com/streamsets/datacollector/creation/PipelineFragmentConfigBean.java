@@ -17,6 +17,7 @@ package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
 import com.streamsets.datacollector.config.PipelineFragmentGroups;
+import com.streamsets.datacollector.config.PipelineTestStageChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -35,12 +36,13 @@ import java.util.Map;
 @StageDef(
     version = PipelineFragmentConfigBean.VERSION,
     label = "Pipeline Fragment",
+    upgrader = PipelineFragmentConfigUpgrader.class,
     onlineHelpRefUrl = "not applicable"
 )
 @ConfigGroups(PipelineFragmentGroups.class)
 public class PipelineFragmentConfigBean implements Stage {
 
-  public static final int VERSION = 1;
+  public static final int VERSION = 2;
 
   @ConfigDef(
       required = true,
@@ -51,6 +53,17 @@ public class PipelineFragmentConfigBean implements Stage {
   )
   @ValueChooserModel(ExecutionModeChooserValues.class)
   public ExecutionMode executionMode;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Test Origin",
+      description = "Stage used for testing in preview mode.",
+      defaultValue = PipelineConfigBean.RAW_DATA_ORIGIN,
+      displayPosition = 21
+  )
+  @ValueChooserModel(PipelineTestStageChooserValues.class)
+  public String testOriginStage;
 
   @ConfigDef(
       required = false,

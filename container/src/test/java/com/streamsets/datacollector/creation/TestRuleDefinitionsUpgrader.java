@@ -15,12 +15,8 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.streamsets.datacollector.config.DataRuleDefinition;
-import com.streamsets.datacollector.config.DriftRuleDefinition;
-import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.configupgrade.RuleDefinitionsUpgrader;
-import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
@@ -33,7 +29,7 @@ import java.util.UUID;
 public class TestRuleDefinitionsUpgrader {
 
   @Test
-  public void testRuleDefinitionsUpgrader() throws StageException {
+  public void testRuleDefinitionsUpgrader() {
     RuleDefinitionsUpgrader ruleDefinitionsUpgrader = RuleDefinitionsUpgrader.get();
 
     RuleDefinitions upgradedRulesDefinitions = ruleDefinitionsUpgrader.upgradeIfNecessary(
@@ -55,9 +51,9 @@ public class TestRuleDefinitionsUpgrader {
     return new RuleDefinitions(
         2,
         RuleDefinitionsConfigBean.VERSION,
-        Collections.<MetricsRuleDefinition>emptyList(),
-        Collections.<DataRuleDefinition>emptyList(),
-        Collections.<DriftRuleDefinition>emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList(),
         ImmutableList.of("sample1@email.com", "sample2@email.com"),
         UUID.randomUUID(),
         new ArrayList<>()

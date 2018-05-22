@@ -35,9 +35,8 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigUpgrader.class);
 
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-      List<Config> configs) throws StageException {
-    switch(fromVersion) {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    switch(context.getFromVersion()) {
       case 0:
         // nothing to do from 0 to 1
       case 1:
@@ -63,9 +62,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs);
         break;
       default:
-        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
     return configs;
   }
@@ -101,8 +103,11 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     if (found) {
       configs.remove(index);
       Utils.checkNotNull(sourceName, "Source stage name cannot be null");
-      configs.add(new Config("executionMode", (sourceName.contains("ClusterHdfsDSource")) ? ExecutionMode.CLUSTER_BATCH
-          : ExecutionMode.CLUSTER_YARN_STREAMING));
+      configs.add(new Config(
+          "executionMode",
+          (sourceName.contains("ClusterHdfsDSource")) ?
+              ExecutionMode.CLUSTER_BATCH : ExecutionMode.CLUSTER_YARN_STREAMING
+      ));
     }
   }
 
@@ -130,15 +135,18 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     boolean isClusterExecutionMode = isPipelineClusterMode(configs);
     if (isClusterExecutionMode) {
       Config statsAggregatorStageConfig = getStatsAggregatorStageConfig(configs);
-      String statsAggregatorStage = (String) statsAggregatorStageConfig.getValue();
-      if (statsAggregatorStage != null && statsAggregatorStage.contains(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
-        LOG.warn(
-            "Cluster Pipeline Stats Aggregator is set to {} from {}",
-            PipelineConfigBean.STATS_AGGREGATOR_DEFAULT,
-            PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET
-        );
-        configs.remove(statsAggregatorStageConfig);
-        configs.add(new Config("statsAggregatorStage", PipelineConfigBean.STATS_AGGREGATOR_DEFAULT));
+      if (statsAggregatorStageConfig != null) {
+        String statsAggregatorStage = (String) statsAggregatorStageConfig.getValue();
+        if (statsAggregatorStage != null &&
+            statsAggregatorStage.contains(PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET)) {
+          LOG.warn(
+              "Cluster Pipeline Stats Aggregator is set to {} from {}",
+              PipelineConfigBean.STATS_AGGREGATOR_DEFAULT,
+              PipelineConfigBean.STATS_DPM_DIRECTLY_TARGET
+          );
+          configs.remove(statsAggregatorStageConfig);
+          configs.add(new Config("statsAggregatorStage", PipelineConfigBean.STATS_AGGREGATOR_DEFAULT));
+        }
       }
     }
   }
@@ -149,10 +157,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         .map(ExecutionMode::name)
         .collect(Collectors.toSet());
     return configs.stream()
-        .anyMatch(config -> config.getName().equals("executionMode") && clusterExecutionModes.contains(config.getValue().toString()));
+        .anyMatch(config ->
+            config.getName().equals("executionMode") && clusterExecutionModes.contains(config.getValue().toString())
+        );
   }
 
-  public static Config getStatsAggregatorStageConfig(List<Config> configs) {
+  private static Config getStatsAggregatorStageConfig(List<Config> configs) {
     List<Config> statsAggregatorConfigList = configs.stream()
         .filter(config -> config.getName().equals("statsAggregatorStage"))
         .collect(Collectors.toList());
@@ -165,7 +175,17 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         .findFirst()
         .orElse(null);
     if (edgeHttpUrlConfig == null) {
-      configs.add(new Config("edgeHttpUrl", "http://localhost:18633"));
+      configs.add(new Config("edgeHttpUrl", PipelineConfigBean.EDGE_HTTP_URL_DEFAULT));
+    }
+  }
+
+  private void upgradeV9ToV10(List<Config> configs) {
+    Config edgeHttpUrlConfig = configs.stream()
+        .filter(config -> config.getName().equals("testOriginStage"))
+        .findFirst()
+        .orElse(null);
+    if (edgeHttpUrlConfig == null) {
+      configs.add(new Config("testOriginStage", PipelineConfigBean.RAW_DATA_ORIGIN));
     }
   }
 }

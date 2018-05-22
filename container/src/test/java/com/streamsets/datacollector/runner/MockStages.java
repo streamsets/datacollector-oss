@@ -1224,7 +1224,8 @@ public class MockStages {
         null,
         Arrays.asList(processor, processor2),
         Collections.emptyMap(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     fragment.setFragmentInstanceId("fragment_01");
 
@@ -1256,7 +1257,8 @@ public class MockStages {
         .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
         UUID.randomUUID(),
@@ -1269,7 +1271,8 @@ public class MockStages {
         getErrorStageConfig(),
         getStatsAggregatorStageConfig(),
         Collections.emptyList(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
@@ -1293,7 +1296,8 @@ public class MockStages {
         null,
         Collections.singletonList(processor2),
         Collections.emptyMap(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     nestedFragment.setFragmentInstanceId("nestedFragment_01");
 
@@ -1330,7 +1334,8 @@ public class MockStages {
         Collections.singletonList(nestedFragment),
         ImmutableList.of(processor1, fragmentProcessor),
         Collections.emptyMap(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     fragment.setFragmentInstanceId("fragment_01");
 
@@ -1368,7 +1373,8 @@ public class MockStages {
             .build();
     stages.add(fragmentProcessor2);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
         UUID.randomUUID(),
@@ -1381,7 +1387,8 @@ public class MockStages {
         getErrorStageConfig(),
         getStatsAggregatorStageConfig(),
         Collections.emptyList(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");

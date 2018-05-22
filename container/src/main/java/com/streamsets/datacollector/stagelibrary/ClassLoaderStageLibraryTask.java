@@ -33,6 +33,7 @@ import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
+import com.streamsets.datacollector.config.PipelineTestStageChooserValues;
 import com.streamsets.datacollector.config.PrivateClassLoaderDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
@@ -267,6 +268,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     // initializing the list of targets that can be used for pipeline lifecycle events
     PipelineLifecycleStageChooserValues.setHandlingOptions(this);
+
+    // initializing the list of sources that can be used for test stages
+    PipelineTestStageChooserValues.setHandlingOptions(this);
 
     // initializing the pool of private stage classloaders
     GenericKeyedObjectPoolConfig poolConfig = new GenericKeyedObjectPoolConfig();

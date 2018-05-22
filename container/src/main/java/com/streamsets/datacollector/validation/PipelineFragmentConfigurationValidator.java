@@ -28,7 +28,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.UserConfigurable;
-import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
+import com.streamsets.datacollector.configupgrade.FragmentConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
@@ -155,6 +155,7 @@ public class PipelineFragmentConfigurationValidator {
     canPreview &= loadAndValidatePipelineFragmentConfig();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
+    canPreview &= validateTestOriginStage();
     canPreview &= validateEventAndDataLanesDoNotCross();
     canPreview &= validateStagesExecutionMode(pipelineFragmentConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineFragmentConfiguration);
@@ -221,14 +222,23 @@ public class PipelineFragmentConfigurationValidator {
     return true;
   }
 
-  @VisibleForTesting
-  PipelineConfigurationUpgrader getUpgrader() {
-    return PipelineConfigurationUpgrader.get();
+  FragmentConfigurationUpgrader getFragmentUpgrader() {
+    return FragmentConfigurationUpgrader.get();
   }
 
   private boolean upgradePipelineFragment() {
-    // For Fragment Version 1 - no upgrade required
-    return true;
+    List<Issue> upgradeIssues = new ArrayList<>();
+
+    PipelineFragmentConfiguration fConf = getFragmentUpgrader().upgradeIfNecessary(
+        pipelineFragmentConfiguration,
+        upgradeIssues
+    );
+    if (fConf != null) {
+      pipelineFragmentConfiguration = fConf;
+    }
+
+    issues.addAll(upgradeIssues);
+    return upgradeIssues.isEmpty();
   }
 
   private boolean addPipelineFragmentMissingConfigs() {
@@ -1343,5 +1353,15 @@ public class PipelineFragmentConfigurationValidator {
 
   public static String[] getSpecialStageDefQualifiedNameParts(String stageQualifiedName) {
     return stageQualifiedName.split("::");
+  }
+
+  boolean validateTestOriginStage() {
+    boolean preview = true;
+    StageConfiguration testOriginStage = pipelineFragmentConfiguration.getTestOriginStage();
+    if (testOriginStage != null) {
+      IssueCreator errorStageCreator = IssueCreator.getStage(testOriginStage.getInstanceName());
+      preview = validateStageConfiguration(true, testOriginStage, true, errorStageCreator);
+    }
+    return preview;
   }
 }

@@ -41,6 +41,7 @@ public class PipelineFragmentConfigurationJson {
   private Boolean previewable = null;
   private Map<String, Object> metadata = new HashMap<>();
   private List<PipelineFragmentConfigurationJson> fragments = new ArrayList<>();
+  private StageConfigurationJson testOriginStage = null;
 
   public Integer getSchemaVersion() {
     return schemaVersion;
@@ -168,5 +169,13 @@ public class PipelineFragmentConfigurationJson {
 
   public void setFragments(List<PipelineFragmentConfigurationJson> fragments) {
     this.fragments = fragments;
+  }
+
+  public StageConfigurationJson getTestOriginStage() {
+    return testOriginStage;
+  }
+
+  public void setTestOriginStage(StageConfigurationJson testOriginStage) {
+    this.testOriginStage = testOriginStage;
   }
 }

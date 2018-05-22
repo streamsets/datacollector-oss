@@ -49,7 +49,8 @@ public class PipelineFragmentConfigurationJson implements Serializable {
       @JsonProperty("uiInfo") Map<String, Object> uiInfo,
       @JsonProperty("stages") List<StageConfigurationJson> stages,
       @JsonProperty("info") PipelineInfoJson pipelineInfo,
-      @JsonProperty("metadata") Map<String, Object> metadata
+      @JsonProperty("metadata") Map<String, Object> metadata,
+      @JsonProperty("testOriginStage") StageConfigurationJson testOriginStage
   ) {
     fragmentConfiguration = new PipelineFragmentConfiguration(
         uuid,
@@ -62,7 +63,8 @@ public class PipelineFragmentConfigurationJson implements Serializable {
         BeanHelper.unwrapPipelineFragementConfigurations(fragments),
         BeanHelper.unwrapStageConfigurations(stages),
         uiInfo,
-        BeanHelper.unwrapConfigConfiguration(configuration)
+        BeanHelper.unwrapConfigConfiguration(configuration),
+        BeanHelper.unwrapStageConfiguration(testOriginStage)
     );
     this.fragmentConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
     this.fragmentConfiguration.setMetadata(metadata);
@@ -155,6 +157,11 @@ public class PipelineFragmentConfigurationJson implements Serializable {
 
   public Map<String, Object> getMetadata() {
     return fragmentConfiguration.getMetadata();
+  }
+
+
+  public StageConfigurationJson getTestOriginStage() {
+    return BeanHelper.wrapStageConfiguration(fragmentConfiguration.getTestOriginStage());
   }
 
   @JsonIgnore

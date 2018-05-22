@@ -32,44 +32,44 @@ import java.util.Map;
 
 public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
-  public static final String STAGES_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.STAGES_FILE;
+  String STAGES_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.STAGES_FILE;
 
-  public static final String EL_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.ELDEFS_FILE;
+  String EL_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.ELDEFS_FILE;
 
-  public static final String LINEAGE_PUBLISHERS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.LINEAGE_PUBLISHERS_FILE;
+  String LINEAGE_PUBLISHERS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.LINEAGE_PUBLISHERS_FILE;
 
-  public static final String CREDENTIAL_STORE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CREDENTIAL_STORE_FILE;
+  String CREDENTIAL_STORE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CREDENTIAL_STORE_FILE;
 
-  public static final String SERVICE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.SERVICES_FILE;
+  String SERVICE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.SERVICES_FILE;
 
-  public static final String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
+  String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
 
-  public PipelineDefinition getPipeline();
+  PipelineDefinition getPipeline();
 
-  public PipelineFragmentDefinition getPipelineFragment();
+  PipelineFragmentDefinition getPipelineFragment();
 
-  public PipelineRulesDefinition getPipelineRules();
+  PipelineRulesDefinition getPipelineRules();
 
-  public List<StageDefinition> getStages();
+  List<StageDefinition> getStages();
 
-  public List<LineagePublisherDefinition> getLineagePublisherDefinitions();
+  List<LineagePublisherDefinition> getLineagePublisherDefinitions();
 
-  public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name);
+  LineagePublisherDefinition getLineagePublisherDefinition(String library, String name);
 
-  public List<CredentialStoreDefinition> getCredentialStoreDefinitions();
+  List<CredentialStoreDefinition> getCredentialStoreDefinitions();
 
-  public List<ServiceDefinition> getServiceDefinitions();
+  List<ServiceDefinition> getServiceDefinitions();
 
-  public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution);
+  ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution);
 
-  public List<InterceptorDefinition> getInterceptorDefinitions();
+  List<InterceptorDefinition> getInterceptorDefinitions();
 
-  public StageDefinition getStage(String library, String name, boolean forExecution);
+  StageDefinition getStage(String library, String name, boolean forExecution);
 
-  public Map<String, String> getLibraryNameAliases();
+  Map<String, String> getLibraryNameAliases();
 
-  public Map<String, String> getStageNameAliases();
+  Map<String, String> getStageNameAliases();
 
-  public List<ClasspathValidatorResult> validateStageLibClasspath();
+  List<ClasspathValidatorResult> validateStageLibClasspath();
 
 }

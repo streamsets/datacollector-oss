@@ -58,6 +58,7 @@ public abstract class PipelineBeanCreator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
 
   public static final String PIPELINE_LIB_DEFINITION = "Pipeline";
+  public static final String FRAGMENT_LIB_DEFINITION = "Fragment";
   private static final String RULE_DEFINITIONS_LIB_DEFINITION = "RuleDefinitions";
   private static final String PARAMETERS = "constants";
 
@@ -80,7 +81,8 @@ public abstract class PipelineBeanCreator {
         null,
         null
     );
-    return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
+    return StageDefinitionExtractor.get()
+        .extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
   }
 
   public static final StageDefinition RULES_DEFINITION = getRulesDefinition();
@@ -100,6 +102,22 @@ public abstract class PipelineBeanCreator {
         RuleDefinitionsConfigBean.class,
         "Rules Definitions Config Definitions"
     );
+  }
+
+  public static final StageDefinition FRAGMENT_DEFINITION = getFragmentDefinition();
+
+  static private StageDefinition getFragmentDefinition() {
+    StageLibraryDefinition libraryDef = new StageLibraryDefinition(
+        Thread.currentThread().getContextClassLoader(),
+        FRAGMENT_LIB_DEFINITION,
+        FRAGMENT_LIB_DEFINITION,
+        new Properties(),
+        null,
+        null,
+        null
+    );
+    return StageDefinitionExtractor.get()
+        .extract(libraryDef, PipelineFragmentConfigBean.class, "Fragment Config Definitions");
   }
 
   public PipelineConfigBean create(
@@ -436,7 +454,7 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  public static StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
+  public static StageConfiguration getPipelineConfAsStageConf(PipelineFragmentConfiguration pipelineConf) {
     return new StageConfiguration(
         null,
         "none",

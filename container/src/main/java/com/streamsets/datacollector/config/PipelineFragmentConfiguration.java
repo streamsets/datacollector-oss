@@ -40,7 +40,7 @@ public class PipelineFragmentConfiguration implements Serializable {
   protected int version;
   protected String pipelineId;
   protected String fragmentInstanceId;
-  protected UUID uuid = null;
+  protected UUID uuid;
   protected String title;
   protected String description;
   protected List<PipelineFragmentConfiguration> fragments;
@@ -51,6 +51,7 @@ public class PipelineFragmentConfiguration implements Serializable {
   protected Map<String, Object> metadata;
   private PipelineInfo info;
   protected boolean previewable;
+  protected StageConfiguration testOriginStage;
 
   public static final String FRAGMENT_SOURCE_STAGE_NAME =
       "com_streamsets_pipeline_stage_origin_fragment_FragmentSource";
@@ -78,7 +79,8 @@ public class PipelineFragmentConfiguration implements Serializable {
       List<PipelineFragmentConfiguration> fragments,
       List<StageConfiguration> stages,
       Map<String, Object> uiInfo,
-      List<Config> configuration
+      List<Config> configuration,
+      StageConfiguration testOriginStage
   ) {
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.version = version;
@@ -92,6 +94,7 @@ public class PipelineFragmentConfiguration implements Serializable {
     this.stages = (stages != null) ? stages : Collections.emptyList();
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<>();
     this.configuration = new ArrayList<>(configuration);
+    this.testOriginStage = testOriginStage;
     this.processStages();
   }
 
@@ -251,6 +254,14 @@ public class PipelineFragmentConfiguration implements Serializable {
     if (!found) {
       configuration.add(config);
     }
+  }
+
+  public StageConfiguration getTestOriginStage() {
+    return testOriginStage;
+  }
+
+  public void setTestOriginStage(StageConfiguration testOriginStage) {
+    this.testOriginStage = testOriginStage;
   }
 
   @Override

@@ -51,7 +51,8 @@ public class PipelineConfigurationJson implements Serializable {
     @JsonProperty("metadata") Map<String, Object> metadata,
     @JsonProperty("statsAggregatorStage") StageConfigurationJson statsAggregatorStage,
     @JsonProperty("startEventStages") List<StageConfigurationJson> startEventStages,
-    @JsonProperty("stopEventStages") List<StageConfigurationJson> stopEventStages
+    @JsonProperty("stopEventStages") List<StageConfigurationJson> stopEventStages,
+    @JsonProperty("testOriginStage") StageConfigurationJson testOriginStage
   ) {
     version = (version == 0) ? 1 : version;
     this.pipelineConfiguration = new PipelineConfiguration(
@@ -68,7 +69,8 @@ public class PipelineConfigurationJson implements Serializable {
         BeanHelper.unwrapStageConfiguration(errorStage),
         BeanHelper.unwrapStageConfiguration(statsAggregatorStage),
         BeanHelper.unwrapStageConfigurations(startEventStages),
-        BeanHelper.unwrapStageConfigurations(stopEventStages)
+        BeanHelper.unwrapStageConfigurations(stopEventStages),
+        BeanHelper.unwrapStageConfiguration(testOriginStage)
     );
     this.pipelineConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
     this.pipelineConfiguration.setMetadata(metadata);
@@ -170,6 +172,10 @@ public class PipelineConfigurationJson implements Serializable {
 
   public List<StageConfigurationJson> getStopEventStages() {
     return BeanHelper.wrapStageConfigurations(pipelineConfiguration.getStopEventStages());
+  }
+
+  public StageConfigurationJson getTestOriginStage() {
+    return BeanHelper.wrapStageConfiguration(pipelineConfiguration.getTestOriginStage());
   }
 
   @JsonIgnore

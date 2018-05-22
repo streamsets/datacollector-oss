@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,15 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.util.Collections;
 import java.util.List;
 
-public class RuleDefinitionsConfigUpgrader implements StageUpgrader {
+public class PipelineFragmentConfigUpgrader implements StageUpgrader {
 
   @Override
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     switch(context.getFromVersion()) {
       case 0:
-        upgradeV0ToV1(configs);
-        // fall through
+        // nothing to do from 0 to 1
       case 1:
         upgradeV1ToV2(configs);
         break;
@@ -40,29 +38,16 @@ public class RuleDefinitionsConfigUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV0ToV1(List<Config> configs) {
-    boolean found = false;
-    for (Config config : configs) {
-      if (config.getName().equals("webhookConfigs")) {
-        found = true;
-      }
-    }
-
-    if(!found) {
-      configs.add(new Config("webhookConfigs", Collections.emptyList()));
-    }
-  }
-
   private void upgradeV1ToV2(List<Config> configs) {
     boolean found = false;
     for (Config config : configs) {
-      if (config.getName().equals("emailIDs")) {
+      if (config.getName().equals("testOriginStage")) {
         found = true;
       }
     }
 
     if(!found) {
-      configs.add(new Config("emailIDs", Collections.emptyList()));
+      configs.add(new Config("testOriginStage", PipelineConfigBean.RAW_DATA_ORIGIN));
     }
   }
 

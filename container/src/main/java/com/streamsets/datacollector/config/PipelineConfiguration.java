@@ -49,8 +49,23 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
       List<StageConfiguration> startEventStages,
       List<StageConfiguration> stopEventStages
   ) {
-    this(schemaVersion, version, pipelineId, uuid, title, description, configuration, uiInfo, null,
-        stages, errorStage, statsAggregatorStage, startEventStages, stopEventStages);
+    this(
+        schemaVersion,
+        version,
+        pipelineId,
+        uuid,
+        title,
+        description,
+        configuration,
+        uiInfo,
+        null,
+        stages,
+        errorStage,
+        statsAggregatorStage,
+        startEventStages,
+        stopEventStages,
+        null
+    );
   }
 
   @SuppressWarnings("unchecked")
@@ -68,9 +83,23 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
       StageConfiguration errorStage,
       StageConfiguration statsAggregatorStage,
       List<StageConfiguration> startEventStages,
-      List<StageConfiguration> stopEventStages
+      List<StageConfiguration> stopEventStages,
+      StageConfiguration testOriginStage
   ) {
-    super(uuid, version, schemaVersion, title, pipelineId, null, description, fragments, stages, uiInfo, configuration);
+    super(
+        uuid,
+        version,
+        schemaVersion,
+        title,
+        pipelineId,
+        null,
+        description,
+        fragments,
+        stages,
+        uiInfo,
+        configuration,
+        testOriginStage
+    );
     this.errorStage = errorStage;
     this.statsAggregatorStage = statsAggregatorStage;
     memoryLimitConfiguration = new MemoryLimitConfiguration();
@@ -149,7 +178,8 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
         errorStage,
         statsAggregatorStage,
         startEventStages,
-        stopEventStages
+        stopEventStages,
+        testOriginStage
     );
   }
 

@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -78,6 +79,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     canPreview &= validatePipelineLanes();
     canPreview &= validateEventAndDataLanesDoNotCross();
     canPreview &= validateErrorStage();
+    canPreview &= validateTestOriginStage();
     canPreview &= validateStatsAggregatorStage();
     canPreview &= validatePipelineLifecycleEvents();
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
@@ -126,6 +128,11 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       resolveStageAlias(stageConf);
     }
     return true;
+  }
+
+  @VisibleForTesting
+  PipelineConfigurationUpgrader getUpgrader() {
+    return PipelineConfigurationUpgrader.get();
   }
 
   private boolean upgradePipeline() {

@@ -35,6 +35,7 @@ public class PipelineConfigurationJson   {
   private Map<String, Object> uiInfo = new HashMap<>();
   private List<StageConfigurationJson> stages = new ArrayList<>();
   private StageConfigurationJson errorStage = null;
+  private StageConfigurationJson testOriginStage = null;
   private PipelineInfoJson info = null;
   private IssuesJson issues = null;
   private Boolean valid = null;
@@ -123,6 +124,14 @@ public class PipelineConfigurationJson   {
 
   public void setErrorStage(StageConfigurationJson errorStage) {
     this.errorStage = errorStage;
+  }
+
+  public StageConfigurationJson getTestOriginStage() {
+    return testOriginStage;
+  }
+
+  public void setTestOriginStage(StageConfigurationJson testOriginStage) {
+    this.testOriginStage = testOriginStage;
   }
 
   public PipelineInfoJson getInfo() {

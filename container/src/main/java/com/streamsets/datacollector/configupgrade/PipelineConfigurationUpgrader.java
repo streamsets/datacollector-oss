@@ -99,6 +99,9 @@ public class PipelineConfigurationUpgrader {
         // fall through
       case 4:
         upgradeSchema4to5(pipelineConf, issues);
+        // fall through
+      case 5:
+        upgradeSchema5to6(pipelineConf, issues);
         break;
       default:
         issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConf.getSchemaVersion()));
@@ -197,6 +200,12 @@ public class PipelineConfigurationUpgrader {
         );
       }
     }
+  }
+
+  private void upgradeSchema5to6(PipelineConfiguration pipelineConf, List<Issue> issues) {
+    // Added new attributes:
+    // * testOriginStage
+    pipelineConf.setTestOriginStage(null);
   }
 
   private void convertNullServiceToEmptyList(StageConfiguration stage) {
