@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The UDP to Kafka origin reads messages from one or more UDP ports and writes each message directly to Kafka. Use the UDP to Kafka origin to read large volumes of data from multiple UDP ports and write ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="UDP to Kafka" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jzq_jcz_pw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>UDP to Kafka</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The UDP to Kafka origin reads messages from one or more UDP ports and writes each message directly to Kafka. However, the UDP to Kafka origin is now deprecated and will be removed in a future release. ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="UDP to Kafka (Deprecated)" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jzq_jcz_pw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>UDP to Kafka (Deprecated)</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -42,11 +42,15 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_jzq_jcz_pw">
- <h1 class="title topictitle1">UDP to Kafka</h1>
+ <h1 class="title topictitle1">UDP to Kafka (Deprecated)</h1>
 
  <div class="body conbody">
         <p class="p">The UDP to Kafka origin reads messages from one
-            or more UDP ports and writes each message directly to Kafka.</p>
+            or more UDP ports and writes each message directly to Kafka. However, the UDP to Kafka
+            origin is now deprecated and will be removed in a future release. We recommend using the
+                <a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source
+                origin</a> that can use multiple threads to enable parallel processing of data
+            from multiple UDP ports.</p>
 
         <p class="p">Use the UDP to Kafka origin to read large volumes of data from multiple UDP ports and
             write the data immediately to Kafka, without additional processing.</p>
@@ -59,7 +63,7 @@
             system other than Kafka, or if the origin does not need to process high volumes of data,
             use the UDP Source origin.</p>
 
-        <div class="p">UDP to Kafka <span class="ph">can process <a class="xref" href="https://collectd.org/" target="_blank">collectd</a> messages, <span class="ph" id="concept_jzq_jcz_pw__d46891e2531">NetFlow 5 and NetFlow 9 messages</span>, and the
+        <div class="p">UDP to Kafka <span class="ph">can process <a class="xref" href="https://collectd.org/" target="_blank">collectd</a> messages, <span class="ph" id="concept_jzq_jcz_pw__d47348e2531">NetFlow 5 and NetFlow 9 messages</span>, and the
                         following types of syslog messages:</span><ul class="ul" id="concept_jzq_jcz_pw__ul_zwj_rm4_4x">
                         <li class="li">RFC 5424 (<a class="xref" href="https://tools.ietf.org/html/rfc5424" target="_blank">https://tools.ietf.org/html/rfc5424</a>)</li>
 
@@ -120,7 +124,7 @@
             as necessary.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_owg_1hc_rw__d77381e36">
+                user-defined values for the following properties:<ul class="ul" id="concept_owg_1hc_rw__d77914e36">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -141,11 +145,8 @@
  <h2 class="title topictitle2">Enabling Kafka Security</h2>
 
  <div class="body conbody">
-        <p class="p">When using <span class="ph">Kafka version 0.9.0.0 or later</span>,
-            you can configure the UDP to Kafka origin to connect securely through SSL/TLS, Kerberos,
-            or both. </p>
-
-        <p class="p">Earlier versions of Kafka do not support security. </p>
+        <p class="p">You can configure the UDP to Kafka origin to
+            connect securely to Kafka through SSL/TLS, Kerberos, or both. </p>
 
  </div>
 
@@ -154,23 +155,22 @@
 
  <div class="body conbody">
         <p class="p">Perform the following steps to enable the UDP to Kafka
-            origin to use SSL/TLS to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>. </p>
+            origin to use SSL/TLS to connect to Kafka. </p>
 
         <div class="p">
-            <ol class="ol" id="concept_wb5_sxc_rw__d58425e27">
-                <li class="li" id="concept_wb5_sxc_rw__d58425e29">To use SSL/TLS to connect, first make sure Kafka is
+            <ol class="ol" id="concept_wb5_sxc_rw__d58882e25">
+                <li class="li" id="concept_wb5_sxc_rw__d58882e27">To use SSL/TLS to connect, first make sure Kafka is
                     configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
 
-                <li class="li" id="concept_wb5_sxc_rw__d58425e35">On the <span class="ph uicontrol">General</span> tab of the stage, set
-                    the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka 0.9.0.0 or a
-                    later version.</li>
+                <li class="li" id="concept_wb5_sxc_rw__d58882e33">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                    the <span class="ph uicontrol">Stage Library</span> property to the appropriate Apache
+                    Kafka version.</li>
 
-                <li class="li" id="concept_wb5_sxc_rw__d58425e44">On the <span class="keyword wintitle">Connection</span> tab, add the
-                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
-                    set it to <span class="ph uicontrol">SSL</span>.</li>
+                <li class="li" id="concept_wb5_sxc_rw__d58882e42">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
+                    property and set it to <strong class="ph b">SSL</strong>.</li>
 
-                <li class="li" id="concept_wb5_sxc_rw__d58425e56">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_wb5_sxc_rw__d58425e58">
+                <li class="li" id="concept_wb5_sxc_rw__d58882e54">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_wb5_sxc_rw__d58882e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -178,7 +178,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_wb5_sxc_rw__d58425e68">
+                        following properties: <ul class="ul" id="concept_wb5_sxc_rw__d58882e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -188,7 +188,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_wb5_sxc_rw__d58425e81">
+                            well:<ul class="ul" id="concept_wb5_sxc_rw__d58882e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -206,7 +206,7 @@
         </div>
 
         <p class="p">For example, the following properties allow the stage to use SSL/TLS to
-            connect to Kafka 0.9.0.0 with client authentication:</p>
+            connect to Kafka with client authentication:</p>
 
         <img class="image" id="concept_wb5_sxc_rw__image_hgt_xzc_rw" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
     </div>
@@ -218,26 +218,27 @@
  <div class="body conbody">
         <p class="p">When you
             use Kerberos authentication, <span class="ph">Data Collector</span>
-            uses the Kerberos principal and keytab to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>.
-            Perform the following steps to enable the UDP to Kafka origin to use Kerberos to connect
-            to Kafka.</p>
+            uses the Kerberos principal and keytab to connect to Kafka. Perform the following steps
+            to enable the UDP to Kafka origin to use Kerberos to connect to Kafka.</p>
 
         <div class="p">
             <ol class="ol">
-                <li class="li" id="concept_xyx_mtd_rw__d58517e41">To use Kerberos, first make sure Kafka is configured for
+                <li class="li" id="concept_xyx_mtd_rw__d58936e39">To use Kerberos, first make sure Kafka is configured for
                     Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d58517e47">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                <li class="li" id="concept_xyx_mtd_rw__d58936e45">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
                     in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d58517e54">Add the Java Authentication and Authorization
+                <li class="li" id="concept_xyx_mtd_rw__d58936e52">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation type:<ul class="ul" id="concept_xyx_mtd_rw__d58517e56">
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation</span> - Add the properties
-                            to the JAAS configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                            properties to a client login section in the file named
-                                <samp class="ph codeph">KafkaClient</samp>:<pre class="pre codeblock">KafkaClient {
+                    installation and authentication type:<ul class="ul" id="concept_xyx_mtd_rw__d58936e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
@@ -248,17 +249,61 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/kafka_client.keytab"
-    principal="kafka-client-1/sdc-01.streamsets.net@EXAMPLE.COM";
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
 </li>
 
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation</span> - Add the
-                            properties to the <strong class="ph b">Data Collector Advanced Configuration Snippet
-                                (Safety Valve) for generated-ldap-login-append.conf</strong> field for
-                            the StreamSets service in Cloudera Manager. Add the properties to the
-                            field as
-                                follows:<pre class="pre codeblock">KafkaClient {
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
@@ -269,7 +314,7 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
-    principal="kafka-client-1/_HOST@EXAMPLE.COM";
+    principal="sdc/_HOST@EXAMPLE.COM";
 };</pre>
 </div>
 <p class="p">Cloudera
@@ -280,14 +325,14 @@
                     </ul>
 </li>
 
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the Stage Library
-                    property to Apache Kafka 0.9.0.0 or a later version.</li>
+                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
+                        Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d58517e100">On the <span class="keyword wintitle">Connection</span> tab, add the
+                <li class="li" id="concept_xyx_mtd_rw__d58936e135">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d58517e113">Then, add the
+                <li class="li" id="concept_xyx_mtd_rw__d58936e148">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to the same Kerberos principal name that you just defined in the JAAS
                     configuration properties. </li>
@@ -297,9 +342,9 @@
         </div>
 
         <p class="p">For example, the following Kafka properties enable connecting to Kafka
-            0.9.0.0 with Kerberos:</p>
+            with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_xyx_mtd_rw__d58517e125" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="88" width="639" /></p>
+        <p class="p"><img class="image" id="concept_xyx_mtd_rw__d58936e160" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="99" width="580" /></p>
 
     </div>
 
@@ -309,13 +354,13 @@
 
  <div class="body conbody">
   <p class="p">You can
-            enable the UDP to Kafka origin to use SSL/TLS and Kerberos to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>.</p>
+            enable the UDP to Kafka origin to use SSL/TLS and Kerberos to connect to Kafka.</p>
 
-        <div class="p"><span class="ph" id="concept_xgk_4yd_rw__d58664e30">To use SSL/TLS and Kerberos, combine the required
+        <div class="p"><span class="ph" id="concept_xgk_4yd_rw__d59110e28">To use SSL/TLS and Kerberos, combine the required
                 steps to enable each and set the security.protocol property as follows:</span>
-            <ol class="ol" id="concept_xgk_4yd_rw__d58664e33">
-                <li class="li" id="concept_xgk_4yd_rw__d58664e35">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_xgk_4yd_rw__d58664e37">
+            <ol class="ol" id="concept_xgk_4yd_rw__d59110e31">
+                <li class="li" id="concept_xgk_4yd_rw__d59110e33">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_xgk_4yd_rw__d59110e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -328,12 +373,14 @@
 
                 <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation type:<ul class="ul" id="concept_xgk_4yd_rw__d58517e56">
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation</span> - Add the properties
-                            to the JAAS configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                            properties to a client login section in the file named
-                                <samp class="ph codeph">KafkaClient</samp>:<pre class="pre codeblock">KafkaClient {
+                    installation and authentication type:<ul class="ul" id="concept_xgk_4yd_rw__d58936e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
@@ -344,17 +391,61 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/kafka_client.keytab"
-    principal="kafka-client-1/sdc-01.streamsets.net@EXAMPLE.COM";
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
 </li>
 
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation</span> - Add the
-                            properties to the <strong class="ph b">Data Collector Advanced Configuration Snippet
-                                (Safety Valve) for generated-ldap-login-append.conf</strong> field for
-                            the StreamSets service in Cloudera Manager. Add the properties to the
-                            field as
-                                follows:<pre class="pre codeblock">KafkaClient {
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
@@ -365,7 +456,7 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
-    principal="kafka-client-1/_HOST@EXAMPLE.COM";
+    principal="sdc/_HOST@EXAMPLE.COM";
 };</pre>
 </div>
 <p class="p">Cloudera
@@ -376,10 +467,10 @@
                     </ul>
 </li>
 
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the Stage Library
-                    property to Apache Kafka 0.9.0.0 or a later version.</li>
+                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
+                        Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_xgk_4yd_rw__d58664e56">On the <span class="keyword wintitle">Connection</span> tab, add the
+                <li class="li" id="concept_xgk_4yd_rw__d59110e57">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> property and set it to
                         <span class="ph uicontrol">SASL_SSL</span>.</li>
 
@@ -388,8 +479,8 @@
                     and set it to the same Kerberos principal name that you just defined in the JAAS
                     configuration properties. </li>
 
-                <li class="li">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_xgk_4yd_rw__d58425e58">
+                <li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_xgk_4yd_rw__d58882e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -397,7 +488,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_xgk_4yd_rw__d58425e68">
+                        following properties: <ul class="ul" id="concept_xgk_4yd_rw__d58882e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -407,7 +498,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_xgk_4yd_rw__d58425e81">
+                            well:<ul class="ul" id="concept_xgk_4yd_rw__d58882e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -442,14 +533,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d47184e613" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d47641e613" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d420352e636">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d422592e711">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d420352e639">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d422592e714">Description</th>
 
                                 </tr>
 
@@ -457,31 +548,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e636 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e711 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e639 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e636 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d420352e639 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d422592e714 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e636 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e711 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e639 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d422592e714 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e636 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_tvh_bhz_pw__d47184e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e711 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e639 ">Error record handling for the stage: <ul class="ul" id="task_tvh_bhz_pw__d47184e672">
+                                    <td class="entry" valign="top" width="70%" headers="d422592e714 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e711 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_tvh_bhz_pw__d47641e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d422592e714 ">Error record handling for the stage: <ul class="ul" id="task_tvh_bhz_pw__d47641e672">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -511,9 +602,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d420352e724">UDP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d422592e799">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d420352e727">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d422592e802">Description</th>
 
                                 </tr>
 
@@ -521,9 +612,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e724 ">Port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e799 ">Port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e727 ">Port to listen to for data. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the<span class="ph uicontrol">
+                                    <td class="entry" valign="top" width="70%" headers="d422592e802 ">Port to listen to for data. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the<span class="ph uicontrol">
                                             Add</span> icon to list additional ports.<div class="note note"><span class="notetitle">Note:</span> To
                                             listen to a port below 1024, <span class="ph">Data Collector</span> must be run by a user with root privileges.
                                             Otherwise, the operating system does not allow <span class="ph">Data Collector</span> to bind to the port.</div>
@@ -532,9 +623,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e724 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e799 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e727 ">Data format passed by UDP:<ul class="ul" id="task_tvh_bhz_pw__ul_xnb_xzc_vbb">
+                                    <td class="entry" valign="top" width="70%" headers="d422592e802 ">Data format passed by UDP:<ul class="ul" id="task_tvh_bhz_pw__ul_xnb_xzc_vbb">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -563,9 +654,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d420352e805">UDP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d422592e880">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d420352e808">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d422592e883">Description</th>
 
                                 </tr>
 
@@ -573,9 +664,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e805 ">Broker URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e880 ">Broker URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e808 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry" valign="top" width="70%" headers="d422592e883 ">Connection string for the Kafka broker. Use the following
                                         format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URIs.</p>
@@ -583,18 +674,18 @@
 
                                 </tr>
  <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e805 ">Topic</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e880 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e808 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d422592e883 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e805 ">Kafka Configuration <a class="xref" href="UDPtoKafka.html#concept_owg_1hc_rw">
+                                    <td class="entry" valign="top" width="30%" headers="d422592e880 ">Kafka Configuration <a class="xref" href="UDPtoKafka.html#concept_owg_1hc_rw">
                                         <img class="image" id="task_tvh_bhz_pw__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e808 ">
+                                    <td class="entry" valign="top" width="70%" headers="d422592e883 ">
                                         <p class="p">Additional Kafka configuration
                                             properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add properties.
@@ -627,9 +718,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d420352e899">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d422592e974">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d420352e902">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d422592e977">Description</th>
 
                                 </tr>
 
@@ -637,9 +728,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e899 ">Enable UDP Multithreading</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e974 ">Enable UDP Multithreading</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e902 ">Specifies whether to use
+                                    <td class="entry" valign="top" width="70%" headers="d422592e977 ">Specifies whether to use
                                         multiple receiver threads for each port. Using multiple
                                         receiver threads can improve performance. <p class="p">You can use
                                             multiple receiver threads using epoll, which can be
@@ -649,13 +740,13 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e899 ">Accept Threads</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e974 ">Accept Threads</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e902 "><span class="ph" id="task_tvh_bhz_pw__d47184e4904">Number of receiver
+                                    <td class="entry" valign="top" width="70%" headers="d422592e977 "><span class="ph" id="task_tvh_bhz_pw__d47641e4904">Number of receiver
                                             threads to use for each port. For example, if you
                                             configure two threads per port and configure the origin
                                             to use three ports, the origin uses a total of six
-                                            threads.</span><p class="p" id="task_tvh_bhz_pw__d47184e4906">Use to
+                                            threads.</span><p class="p" id="task_tvh_bhz_pw__d47641e4906">Use to
                                             increase the number of threads passing data to the
                                             origin when epoll is available on the <span class="ph">Data Collector</span> machine.</p>
 <p class="p">Default is 1.</p>
@@ -664,9 +755,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e899 ">Write Concurrency</td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e974 ">Write Concurrency</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e902 ">Maximum number of Kafka clients that the origin can use
+                                    <td class="entry" valign="top" width="70%" headers="d422592e977 ">Maximum number of Kafka clients that the origin can use
                                         to write to Kafka. <p class="p">When configuring this property,
                                             consider the number of Kafka brokers, partitions, and
                                             volume of data to be written.</p>
@@ -684,16 +775,16 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For NetFlow 9 data, on the <span class="ph uicontrol">NetFlow 9</span> tab, configure the
                     following properties:</span>
-                <div class="itemgroup info" id="task_tvh_bhz_pw__d47184e5087">When processing earlier versions of NetFlow data, these
+                <div class="itemgroup info" id="task_tvh_bhz_pw__d47641e5087">When processing earlier versions of NetFlow data, these
                     properties are ignored. 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d47184e5089" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d47641e5089" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d420352e978">Netflow 9 Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d422592e1053">Netflow 9 Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d420352e981">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d422592e1056">Description</th>
 
                                 </tr>
 
@@ -701,12 +792,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e978 "><span class="ph" id="task_tvh_bhz_pw__d47184e5114">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
-                                                <img class="image" id="task_tvh_bhz_pw__d47184e5118" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></span></td>
+                                    <td class="entry" valign="top" width="30%" headers="d422592e1053 "><span class="ph" id="task_tvh_bhz_pw__d47641e5114">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
+                                                <img class="image" id="task_tvh_bhz_pw__d47641e5118" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e981 "><span class="ph" id="task_tvh_bhz_pw__d47184e5121">Determines the type of
+                                    <td class="entry" valign="top" width="70%" headers="d422592e1056 "><span class="ph" id="task_tvh_bhz_pw__d47641e5121">Determines the type of
                                             values to include in the record. Select one of the
-                                            following options:</span><ul class="ul" id="task_tvh_bhz_pw__d47184e5123">
+                                            following options:</span><ul class="ul" id="task_tvh_bhz_pw__d47641e5123">
                                             <li class="li">Raw Only</li>
 
                                             <li class="li">Interpreted Only</li>
@@ -719,26 +810,26 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e978 "><span class="ph" id="task_tvh_bhz_pw__d47184e5139">Max Templates in
+                                    <td class="entry" valign="top" width="30%" headers="d422592e1053 "><span class="ph" id="task_tvh_bhz_pw__d47641e5139">Max Templates in
                                             Cache</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e981 "><span class="ph" id="task_tvh_bhz_pw__d47184e5143">The maximum number of
+                                    <td class="entry" valign="top" width="70%" headers="d422592e1056 "><span class="ph" id="task_tvh_bhz_pw__d47641e5143">The maximum number of
                                             templates to store in the template cache. For more
-                                            information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_tvh_bhz_pw__d47184e5148">Default is -1
+                                            information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_tvh_bhz_pw__d47641e5148">Default is -1
                                                 for an unlimited cache size.</span></p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d420352e978 "><span class="ph" id="task_tvh_bhz_pw__d47184e5155">Template Cache
+                                    <td class="entry" valign="top" width="30%" headers="d422592e1053 "><span class="ph" id="task_tvh_bhz_pw__d47641e5155">Template Cache
                                             Timeout (ms)</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d420352e981 "><span class="ph" id="task_tvh_bhz_pw__d47184e5159">The maximum number
+                                    <td class="entry" valign="top" width="70%" headers="d422592e1056 "><span class="ph" id="task_tvh_bhz_pw__d47641e5159">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
                                             the cache. For more information about templates, see
-                                                <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_tvh_bhz_pw__d47184e5164">Default is -1 for caching templates
+                                                <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph" id="task_tvh_bhz_pw__d47641e5164">Default is -1 for caching templates
                                                 indefinitely.</span></p>
 </td>
 

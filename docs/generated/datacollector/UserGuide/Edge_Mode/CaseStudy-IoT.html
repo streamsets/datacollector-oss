@@ -1,0 +1,130 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Example: IoT Preventative Maintenance" /><meta name="abstract" content="Let's say that you have a factory with a network of machine tools. Sensors are installed on each machine that measure the temperature, relative humidity, and pressure of the machine. You need to continuously monitor this sensor data, and shut down any machine that exceeds the allowed limits." /><meta name="description" content="Let's say that you have a factory with a network of machine tools. Sensors are installed on each machine that measure the temperature, relative humidity, and pressure of the machine. You need to continuously monitor this sensor data, and shut down any machine that exceeds the allowed limits." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_tb2_cyf_5bb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Example: IoT Preventative Maintenance</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+  <!--
+  Copyright 2018 StreamSets Inc.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines">Edge Pipelines</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_tb2_cyf_5bb">
+ <h1 class="title topictitle1">Example: IoT Preventative Maintenance</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Let's say that you have a factory with a network of machine tools. Sensors are installed
+        on each machine that measure the temperature, relative humidity, and pressure of the
+        machine. You need to continuously monitor this sensor data, and shut down any machine that
+        exceeds the allowed limits. </p>
+
+        <p class="p">You design one set of pipelines to collect and enrich the sensor data, and then write the
+            data to HDFS where a third-party application analyzes and evaluates the data. You design
+            another set of pipelines to read the results from the third-party application and shut
+            down the machine tool if needed.</p>
+
+        <div class="p">The following pipelines work together to perform the preventative maintenance on the machines:<dl class="dl">
+                
+                    <dt class="dt dlterm">Edge sending pipeline</dt>
+
+                    <dd class="dd">The edge sending pipeline runs on the <span class="ph">SDC Edge</span> installed on each machine tool. It includes a Directory origin that reads
+                        the sensor measurements written to log files on the machine. The pipeline
+                        performs minimal processing - using a Stream Selector to discard out of
+                        range readings and an Expression Evaluator to convert the sensor units of
+                        measurement. The pipeline includes an MQTT Publisher destination that sends
+                        the data to a topic named "sensorReadings" on the MQTT broker. Each pipeline
+                        running on each machine sends the data to the same topic. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector receiving pipeline</dt>
+
+                    <dd class="dd">The <span class="ph">Data Collector</span> receiving pipeline runs on <span class="ph">Data Collector</span> installed on a server. It includes an MQTT Subscriber origin that reads
+                        the sensor measurements from the "sensorReadings" topic on the MQTT broker
+                        that all edge sending pipelines publish data to. The pipeline uses a Redis
+                        Lookup processor to look up the sensor location by the sensorID field. It
+                        then writes the enriched data to HDFS.</dd>
+
+                    <dd class="dd">A third-party application analyzes the data written to HDFS. The application
+                        determines if sensor measurements have exceeded the allowed limits and then
+                        sends an HTTP POST request to an HTTP endpoint to shut down the
+                        machine.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Data Collector pipeline</dt>
+
+                    <dd class="dd">To read the requests from the third-party application, another <span class="ph">Data Collector</span> pipeline runs on the same <span class="ph">Data Collector</span>. It includes an HTTP Server origin that listens for HTTP POST requests on
+                        the HTTP endpoint used by the third-party application. The pipeline uses the
+                        MQTT Publisher destination to write the data to a topic on the MQTT broker.
+                        The destination uses the <samp class="ph codeph">${record:attribute('sensorID')}</samp>
+                        function to define the topic name by the sensorID field.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Edge receiving pipeline</dt>
+
+                    <dd class="dd">To allow the automatic shutdown of the edge devices, each <span class="ph">SDC Edge</span> installed on each machine tool also runs an edge receiving pipeline. The
+                        edge pipeline includes an MQTT Subscriber origin that listens to the sensor
+                        ID topic written to by the <span class="ph">Data Collector</span> pipeline. The edge pipeline uses an HTTP Client destination to send the
+                        POST request to an HTTP resource URL, instructing the machine to shut itself
+                        down.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">The following image displays how the edge and <span class="ph">Data Collector</span>
+            pipelines work together to perform IoT preventative maintenance: </p>
+
+        <p class="p"><img class="image" id="concept_tb2_cyf_5bb__image_oly_crq_4bb" src="../Graphics/EdgePipelines.png" /></p>
+
+    </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

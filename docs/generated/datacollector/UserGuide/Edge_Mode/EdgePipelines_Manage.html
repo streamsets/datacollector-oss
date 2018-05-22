@@ -1,0 +1,207 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Manage Pipelines on SDC Edge" /><meta name="abstract" content="After designing edge pipelines in Data Collector and then deploying the edge pipelines to SDC Edge, you can manage the pipelines on SDC Edge. Managing edge pipelines includes starting, stopping, resetting the origin, and monitoring the pipelines." /><meta name="description" content="After designing edge pipelines in Data Collector and then deploying the edge pipelines to SDC Edge, you can manage the pipelines on SDC Edge. Managing edge pipelines includes starting, stopping, resetting the origin, and monitoring the pipelines." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_tqk_dbb_4db" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Manage Pipelines on SDC Edge</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+  <!--
+  Copyright 2018 StreamSets Inc.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines">Edge Pipelines</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_tqk_dbb_4db">
+    <h1 class="title topictitle1">Manage Pipelines on SDC Edge</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc">After designing edge pipelines in <span class="ph">Data Collector</span> and
+        then deploying the edge pipelines to <span class="ph">SDC Edge</span>, you
+        can manage the pipelines on <span class="ph">SDC Edge</span>.
+        Managing edge pipelines includes starting, stopping, resetting the origin, and monitoring
+        the pipelines.</p>
+
+        <p class="p">You can use the following methods to manage edge pipelines on <span class="ph">SDC Edge</span>:</p>
+
+        <ul class="ul" id="concept_tqk_dbb_4db__ul_r2n_3bb_4db">
+            <li class="li"><a class="xref" href="EdgePipelines_Manage.html#task_byv_n2b_4db" title="When SDC Edge is accessible by the Data Collector machine and when the deployed edge pipeline has the Data Collector Edge URL property correctly configured, you can use the Data Collector UI to manage edge pipelines.">Use the <span class="ph">Data Collector</span> UI</a>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+            <li class="li"><a class="xref" href="EdgePipelines_Manage.html#concept_rk3_2hm_pbb" title="When SDC Edge is not accessible by the Data Collector machine, you must use the command line and REST API to manage edge pipelines on Data Collector Edge (SDC Edge).">Send commands to <span class="ph">SDC Edge</span></a>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is not accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+        </ul>
+
+        <div class="note note"><span class="notetitle">Note:</span> When you use <span class="ph">Control Hub</span>,
+            you add edge pipelines to jobs and then start, stop, and monitor the jobs running on
+            groups of <span class="ph">Edge Data Collectors</span> from the <span class="ph">Control Hub</span> UI.
+            For more information, see <a class="xref" href="../DPM/DPM.html#concept_l45_qwf_xw" title="StreamSets Control HubTM is a central point of control for all of your dataflow pipelines. Control Hub allows teams to build and execute large numbers of complex dataflows at scale.">Meet StreamSets Control Hub</a>. </div>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_byv_n2b_4db">
+    <h2 class="title topictitle2">Using the Data Collector UI</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When <span class="ph">SDC Edge</span> is
+        accessible by the <span class="ph">Data Collector</span> machine
+        and when the deployed edge pipeline has the Data Collector Edge URL property correctly
+        configured, you can use the <span class="ph">Data Collector</span> UI to
+        manage edge pipelines.</p>
+
+        <div class="section context">
+            <div class="p">Managing edge pipelines includes starting, stopping, resetting the origin, and
+                monitoring the pipelines. <div class="note note"><span class="notetitle">Note:</span> When you start an edge pipeline from <span class="ph">Data Collector</span> that has not yet been deployed to the <span class="ph">SDC Edge</span>, <span class="ph">Data Collector</span> publishes and then starts the pipeline.</div>
+</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the edge pipeline in the pipeline canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">General</span> tab, set the <span class="ph uicontrol">Data Collector
+                        Edge URL</span> property to the URL of the <span class="ph">SDC Edge</span> instance that you want to manage the pipeline on.</span>
+                <div class="itemgroup info">The default URL is <samp class="ph codeph">http://localhost:18633</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the <span class="ph">Data Collector</span> top toolbar to start, stop, and reset the origin for the edge pipeline
+                    running on <span class="ph">SDC Edge</span> - just as you manage standalone or cluster pipelines running on <span class="ph">Data Collector</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">As the edge pipeline runs, the <span class="ph">Data Collector</span> UI displays the pipeline in Monitor mode so that you can monitor the edge
+                        pipeline status and metrics.</p>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rk3_2hm_pbb">
+ <h2 class="title topictitle2">Sending Commands to SDC Edge</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">When <span class="ph">SDC Edge</span> is not
+        accessible by the <span class="ph">Data Collector</span>
+        machine, you must use the command line and REST API to manage edge pipelines on <span class="ph">Data Collector Edge</span>
+            (<span class="ph">SDC Edge</span>).</p>
+
+        <p class="p">Managing edge
+            pipelines includes starting, stopping, resetting the offset, and viewing the pipeline
+            status and metrics.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_b45_m3b_4db">
+    <h3 class="title topictitle3">Commands to Start a Pipeline at Startup</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can start an edge pipeline at the same time that you start <span class="ph">SDC Edge</span>. </p>
+
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> Be sure to start the receiving pipelines before starting the
+                sending pipelines.</div>
+
+        </div>
+
+        <p class="p">On the edge device, run the following command from the <span class="ph">SDC Edge</span>
+            home directory:</p>
+
+        <pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
+
+        <div class="p">For example, use the following command to start <span class="ph">SDC Edge</span>
+            and an edge pipeline with the specified
+            ID:<pre class="pre codeblock">bin/edge -start=FileTailToHTTP74f418f8-c7d3-4d0c-8788-b6474f7160e0</pre>
+</div>
+
+        <div class="p">If the edge pipeline uses parameters, use the following
+            command:<pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt; -runtimeParameters='{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;",
+"&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+</div>
+
+        <div class="p">For example, use the following command if the edge pipeline uses parameters to define the
+            file path used by the File Tail
+            origin:<pre class="pre codeblock">bin/edge -start=FileTailToHTTP74f418f8-c7d3-4d0c-8788-b6474f7160e0 -runtimeParameters='{"filePath":"/tmp/sds.log"}'</pre>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_ur2_r3b_4db">
+    <h3 class="title topictitle3">Commands to Manage Pipelines After Start Up</h3>
+
+    <div class="body conbody">
+        <div class="p">After <span class="ph">SDC Edge</span> is started, use the following command to start another edge
+            pipeline:<pre class="pre codeblock">curl -X POST http://&lt;SDCEdge_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start</pre>
+</div>
+
+        <div class="p">For example, use the following command to start a pipeline on a running <span class="ph">SDC Edge</span>:<pre class="pre codeblock">curl -X POST http://localhost:18633/rest/v1/pipeline/fileTailControl74f418f8-cl2f5-4r7k-8790-b9854h1450e8/start</pre>
+</div>
+
+        <div class="p">If the edge pipeline uses parameters, use the following
+            command:<pre class="pre codeblock">curl -X POST http://&lt;SDCEdge_hostname&gt;:&lt;port&gt;/rest/v1/pipeline/&lt;pipelineID&gt;/start -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"&lt;parameter_name1&gt;":"&lt;parameter_value1&gt;","&lt;parameter_name2":"&lt;parameter_value2&gt;"}'</pre>
+</div>
+
+        <div class="p">To list all edge pipelines deployed to <span class="ph">SDC Edge</span>,
+            use the following
+            command:<pre class="pre codeblock">curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipelines</pre>
+</div>
+
+        <div class="p">To manage running edge pipelines - including stopping, resetting the offset, and viewing
+            the pipeline status and metrics - use the following
+            commands:<pre class="pre codeblock">curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/status
+curl -X POST http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/stop
+curl -X POST http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/resetOffset
+curl -X GET http://&lt;SDCEdge_hostname&gt;:18633/rest/v1/pipeline/&lt;pipelineID&gt;/metrics</pre>
+</div>
+
+    </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

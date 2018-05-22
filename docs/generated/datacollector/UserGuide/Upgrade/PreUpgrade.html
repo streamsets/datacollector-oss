@@ -52,43 +52,145 @@
     <h2 class="title topictitle2">Upgrade to Spark 2.1 or Later</h2>
 
     
-    <div class="body conbody"><p class="shortdesc">When <span class="ph">Data Collector</span> first
-        introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support
-        security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, <span class="ph">Data Collector</span>
-        introduced updated Kafka stages with support for these security features when used with
-        Kafka 0.9.0.0 or later.</p>
+    <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        version 3.3.0 introduces cluster streaming mode with support for Kafka security features
+        such as SSL/TLS and Kerberos authentication using Spark 2.1 or later and Kafka 0.10.0.0 or
+        later.</p>
 
-        <p class="p">In <span class="ph">Data Collector</span>
-            version 3.3.0.0, we will be introducing cluster streaming mode with support for Kafka
-            security features using Spark 2.1 or later and Kafka 0.10 or later. </p>
-
-        <div class="p">However, this means that cluster streaming mode and the Spark Evaluator processor using
-            Spark 1.x are deprecated as of version 3.2.0.0. Support for Spark 1.x will be removed in
-            version 3.3.0.0. If you are using cluster streaming mode or the Spark Evaluator
-            processor, we highly recommend that you upgrade to Spark 2.1 or later in version
-                3.2.0.0.<div class="note note"><span class="notetitle">Note:</span>  In <span class="ph">Data Collector</span>
-                version 3.3.0.0, you can use Spark 2.1 and Kafka 0.9.0.0 for cluster streaming mode.
-                However, you cannot use Kafka security features unless you also upgrade to Kafka
-                0.10 or later.</div>
+        <div class="p">However, this means that using Spark 1.x for cluster streaming mode, the Spark Evaluator
+            processor, and the Spark executor was deprecated as of version 3.2.0.0. Support for
+            Spark 1.x is now removed in version 3.3.0. If you are using cluster streaming mode, the
+            Spark Evaluator processor, or the Spark executor, you must upgrade to Spark 2.1 or later
+            in version 3.3.0. In addition, if you are using cluster streaming mode for Kafka with or
+            without security features, you must also upgrade to Kafka 0.10.0.0 or later.<div class="note note"><span class="notetitle">Note:</span> You
+                can continue to use Kafka 0.9.0.0 in standalone pipelines. Or you can continue to
+                use an earlier version of <span class="ph">Data Collector</span>
+                to use Kafka 0.9.0.0 in cluster pipelines until you can upgrade Kafka.</div>
 </div>
 
-        <div class="p">Since Spark 1.x is now deprecated, the following stage libraries are also deprecated
-            since they only support Spark 1.x:<ul class="ul" id="concept_zgm_vj2_mdb__ul_uw5_zj2_mdb">
-                <li class="li">Cloudera CDH version 5.5 or earlier distribution of Apache Hadoop</li>
+        <div class="p">Since Spark 1.x is no longer supported and since Kafka 0.9.0.0 is no longer supported in
+            cluster pipelines, the following stage libraries have changed:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zgm_vj2_mdb__table_mgp_cy1_wdb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d532875e61">Category</th>
 
-                <li class="li">Hortonworks version 2.4 or earlier distribution of Apache Hadoop</li>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d532875e64">Stage Libraries</th>
 
-            </ul>
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532875e61 ">New stage libraries</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532875e64 ">The following new stage libraries include the Kafka Consumer
+                                origin for cluster mode pipelines:<ul class="ul" id="concept_zgm_vj2_mdb__ul_qpl_2y1_wdb">
+                                    <li class="li">streamsets-datacollector-cdh-spark_2_1-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh-spark_2_2-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh-spark_2_3-lib</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532875e61 ">Changed stage libraries</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532875e64 ">The following stage library no longer includes the Kafka Consumer
+                                origin for cluster mode pipelines:<ul class="ul" id="concept_zgm_vj2_mdb__ul_vzl_np2_wdb">
+                                    <li class="li">streamsets-datacollector-hdp_2_4-lib</li>
+
+                                </ul>
+<div class="p">The following stage libraries were upgraded to use Spark
+                                        2.1:<ul class="ul" id="concept_zgm_vj2_mdb__ul_h4p_wp2_wdb">
+                                        <li class="li">streamsets-datacollector-hdp_2_6-lib</li>
+
+                                        <li class="li">streamsets-datacollector-mapr_5_2-lib</li>
+
+                                        <li class="li">streamsets-datacollector-mapr_6_0-mep4-lib</li>
+
+                                    </ul>
+</div>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532875e61 ">Removed stage libraries</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532875e64 ">The following stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_e1m_hy1_wdb">
+                                    <li class="li">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib </li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_10-cluster-cdh_kafka_2_1-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_12-cluster-cdh_kafka_2_1-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_13-cluster-cdh_kafka_2_1-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_14-cluster-cdh_kafka_2_1-lib</li>
+
+                                </ul>
+<p class="p">During the upgrade process, these removed stage libraries
+                                    are replaced with the new
+                                    streamsets-datacollector-cdh-spark_2_1-lib stage
+                                library.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532875e61 ">Removed legacy stage libraries</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532875e64 ">The following legacy stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_cqy_3y1_wdb">
+                                    <li class="li">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532875e61 ">Changed legacy stage libraries</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532875e64 ">The following legacy stage libraries no longer include the Spark
+                                Evaluator processor:<ul class="ul" id="concept_zgm_vj2_mdb__ul_hxx_jy1_wdb">
+                                    <li class="li">streamsets-datacollector-cdh_5_4-lib</li>
+
+                                    <li class="li">streamsets-datacollector-cdh_5_5-lib</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
 </div>
 
-        <p class="p">These stage libraries will also be removed in version 3.3.0.0. We highly recommend that
-            you upgrade to a newer Cloudera CDH or Hortonworks Hadoop distribution in version
-            3.2.0.0.</p>
-
-        <p class="p">The major Hadoop distribution vendors provide a means for Spark 1.x and Spark 2.x to
-            coexist on the same cluster, so you can use both versions in your clusters. </p>
-
-        <div class="p"><span class="ph">Data Collector</span>
+        <div class="p">To continue to use cluster streaming mode, you must upgrade to a newer Cloudera CDH or
+            Hortonworks Hadoop distribution and to Kafka 0.10.0.0 or later in <span class="ph">Data Collector</span>
+            version 3.3.0. The major Hadoop distribution vendors provide a means for Spark 1.x and
+            Spark 2.x to coexist on the same cluster, so you can use both versions in your clusters.
+                <span class="ph">Data Collector</span>
             supports the following Spark 2.x versions for the Hadoop distribution vendors:<ul class="ul" id="concept_zgm_vj2_mdb__ul_iyg_dk2_mdb">
                 <li class="li"><span class="ph uicontrol">Cloudera</span> - Cloudera Distribution of Spark 2.1 release 1
                     or later is supported. For more information, see <a class="xref" href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_requirements.html" target="_blank"><u class="ph u">Spark 2 Requirements</u></a>.</li>
@@ -99,6 +201,24 @@
                 <li class="li"><span class="ph uicontrol">MapR</span> - MapR with MapR Expansion Pack 3.0 or later is
                     supported. For more information, see <a class="xref" href="https://maprdocs.mapr.com/home/InteropMatrix/r_mep_support_core_version.html#reference_jqk_b2m_zz" target="_blank"><u class="ph u">MEP Support by MapR Core
                         Version</u></a>.</li>
+
+            </ul>
+</div>
+
+        <p class="p">Then, you must configure upgraded pipelines to work with the upgraded system, as described
+            in <a class="xref" href="Upgrade-ExternalSystems.html#task_ijh_wtw_xy" title="When an external system is upgraded to a new version, you can continue to use existing Data Collector pipelines that connected to the previous version of the external system. You simply configure the pipelines to work with the upgraded system.">Working with Upgraded External Systems</a>. </p>
+
+        <div class="p">In addition to selecting the upgraded stage library version for each stage that connects
+            to the upgraded CDH, HDP, or Kafka system, you might need to perform additional tasks
+            for the following stages:<ul class="ul" id="concept_zgm_vj2_mdb__ul_dcz_nch_5db">
+                <li class="li"><span class="ph uicontrol">Spark Evaluator processor</span> - If the Spark application was
+                    previously built with Spark 2.0 or earlier, you must rebuild it with Spark 2.1.
+                    Or if you used Scala to write the custom Spark class, and the application was
+                    compiled with Scala 2.10, you must recompile it with Scala 2.11.</li>
+
+                <li class="li"><span class="ph uicontrol">Spark executor</span> - If the Spark application was previously
+                    built with Spark 2.0 or earlier, you must rebuild it with Spark 2.1 and Scala
+                    2.11. </li>
 
             </ul>
 </div>

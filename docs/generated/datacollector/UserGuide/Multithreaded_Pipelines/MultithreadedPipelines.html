@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A multithreaded pipeline is a pipeline with an origin that supports parallel execution, enabling one pipeline to run in multiple threads. Multithreaded pipelines enable processing high volumes of data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Multithreaded Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wwq_gxc_py" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Multithreaded Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A multithreaded pipeline is a pipeline with an origin that supports parallel execution, enabling one pipeline to run in multiple threads. Multithreaded pipelines enable processing high volumes of data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Multithreaded Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wwq_gxc_py" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Multithreaded Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -41,7 +41,7 @@
 <body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_wwq_gxc_py">
  <h1 class="title topictitle1">Multithreaded Pipelines</h1>
 
@@ -86,7 +86,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d46656e2179">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d47113e2179">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
@@ -166,7 +166,7 @@
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="The first time that a Kafka Multitopic Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in Kafka.You can set an initial offset for the consumer group so that the Kafka Multitopic Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
                               topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data from a Kinesis
@@ -206,11 +206,11 @@
             origin systems they work with. For details on how an origin performs multithreaded
             processing, see "Multithreaded Processing" in the origin documentation.</p>
 
-        <p class="p">Note that <span class="ph">Data Collector</span>
-            provides several "to Kafka" multithreaded origins: <a class="xref" href="../Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka</a>, <a class="xref" href="../Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SDC RPC to Kafka</a>, and
-                <a class="xref" href="../Origins/UDPtoKafka.html#concept_jzq_jcz_pw" title="When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash destination.">UDP to Kafka</a>.
-            These origins write incoming data directly to Kafka with no additional processing. They
-            do not create full multithreaded pipelines. </p>
+        <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data Collector</span>
+            provides several "to Kafka" multithreaded origins that are now deprecated and will be
+            removed in a future release: <a class="xref" href="../Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka</a>, <a class="xref" href="../Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw" title="You can specify the maximum number of requests the SDC RPC to Kafka origin handles at one time. Configure the SDC RPC to Kafka maximum batch request size and Kafka message size properties in relationship to each other and to the maximum message size configured in Kafka.">SDC RPC to Kafka</a>, and <a class="xref" href="../Origins/UDPtoKafka.html#concept_jzq_jcz_pw" title="When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash destination.">UDP to Kafka</a>. These
+            origins write incoming data directly to Kafka with no additional processing. They do not
+            create full multithreaded pipelines. </div>
 
     </div>
 
@@ -394,7 +394,7 @@
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="The first time that a Kafka Multitopic Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in Kafka.You can set an initial offset for the consumer group so that the Kafka Multitopic Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">Kafka Multitopic Consumer</a> - Reads data from multiple
                               topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data from a Kinesis
@@ -459,7 +459,7 @@
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html#concept_fyf_gkq_4bb" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

@@ -94,11 +94,16 @@
 
                 <dd class="dd">Spark Streaming runs on either the Mesos or YARN cluster manager to process data
                     from a Kafka cluster. The cluster manager and Spark Streaming spawn a <span class="ph">Data Collector</span> worker for each topic partition in the Kafka cluster. So each partition has a
-                        <span class="ph">Data Collector</span> worker to process data. When Spark Streaming runs on YARN, you can limit the
-                    number of workers spawned by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>. And you can use the Extra
+                        <span class="ph">Data Collector</span> worker to process data. </dd>
+
+                <dd class="dd">When Spark Streaming runs on YARN, you can limit the number of workers spawned
+                    by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>. You can also use the Extra
                     Spark Configuration property to pass Spark configurations to the spark-submit
-                        script.<p class="p">Use the Kafka Consumer origin to process data from a Kafka cluster
-                        in cluster streaming mode.</p>
+                    script. In addition, you can configure the Kafka Consumer origin in a cluster
+                    streaming pipeline on YARN to <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb" title="When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Kafka. You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS and Kerberos to connect to Kafka.">connect
+                        securely</a> through SSL/TLS, Kerberos, or both.<p class="p">Use the Kafka Consumer
+                        origin to process data from a Kafka cluster in cluster streaming
+                    mode.</p>
 </dd>
 
             
@@ -149,6 +154,41 @@
     </div>
 
 </div>
+<div class="topic concept nested2" id="concept_ywt_vp3_vdb">
+    <h3 class="title topictitle3">Data Collector Configuration</h3>
+
+    <div class="body conbody">
+        <div class="p">When running cluster pipelines, the <span class="ph">Data Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, defined on the master
+            gateway node is propagated to the worker nodes with the exception of the following
+                properties:<ul class="ul" id="concept_ywt_vp3_vdb__ul_ydf_k4j_vdb">
+                <li class="li"><samp class="ph codeph">sdc.base.http.url</samp></li>
+
+                <li class="li"><samp class="ph codeph">http.bindHost</samp></li>
+
+            </ul>
+</div>
+
+        <p class="p">If you modify the <samp class="ph codeph">sdc.base.http.url</samp> and <samp class="ph codeph">http.bindHost</samp>
+            properties on the master gateway node to configure a specific host name or port number
+            or to configure a specific IP address that <span class="ph">Data Collector</span>
+            binds to, the modified values are not propagated to the worker nodes. The worker nodes
+            always use the default values for the <samp class="ph codeph">sdc.base.http.url</samp> and
+                <samp class="ph codeph">http.bindHost</samp> properties so that the worker nodes can dynamically
+            determine the host name and can bind to any IP address.</p>
+
+        <div class="p">To prevent additional configuration properties from being propagated to the worker nodes,
+            add the following property to the <samp class="ph codeph">sdc.properties</samp> file on the master
+            gateway
+            node:<pre class="pre codeblock">cluster.slave.configs.remove=&lt;property1&gt;,&lt;property2&gt;</pre>
+</div>
+
+        <p class="p">For more information on configuring the <span class="ph">Data Collector</span>
+            configuration file, see <a class="xref" href="../Configuration/DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">Data Collector Configuration</a>.</p>
+
+    </div>
+
+</div>
 <div class="topic concept nested2" id="concept_rmd_hgp_cw">
  <h3 class="title topictitle3">HTTP Protocols</h3>
 
@@ -159,8 +199,8 @@
   <p class="p">To configure HTTPS when you run cluster pipelines, you must generate an SSL/TLS certificate for
             the gateway node and the worker nodes. You then specify the generated keystore file and
             keystore password file for the gateway and worker nodes in the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">sdc.properties</samp>. You can optionally generate a
-            truststore file for the gateway and worker nodes.</p>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. You can optionally
+            generate a truststore file for the gateway and worker nodes.</p>
 
         <p class="p"><span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_rdt_h54_cw">Configuring HTTPS for Cluster Pipelines</a>.</span></p>
 
@@ -272,9 +312,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d36148e492">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d36160e584">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d36148e495">Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d36160e587">Requirement</th>
 
                             </tr>
 
@@ -282,20 +322,18 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e492 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e584 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e495 "><span class="ph">Spark versions 1.3 through 2.x</span><div class="note important"><span class="importanttitle">Important:</span> Spark version 1.x is now deprecated and will be removed in version 3.3.0.0. We highly
-                  recommend that you <a class="xref" href="../Upgrade/PreUpgrade.html#concept_zgm_vj2_mdb" title="When Data Collector first introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, Data Collector introduced updated Kafka stages with support for these security features when used with Kafka 0.9.0.0 or later.">upgrade to Spark 2.1 or later</a>.</div>
-</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e587 "><span class="ph">Spark version 2.1 or later</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e492 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e584 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e495 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
-                                    distribution of an Apache Kafka cluster version 0.9.0.0 through
-                                    1.0.x. <p class="p">Spark Streaming on Mesos requires Apache Kafka on
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e587 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                    distribution of an Apache Kafka cluster version 0.10.0.0 or
+                                    later. <p class="p">Spark Streaming on Mesos requires Apache Kafka on
                                         Apache Mesos.</p>
 </td>
 
@@ -318,7 +356,7 @@
     <h3 class="title topictitle3">Kafka Consumer Maximum Batch Size</h3>
 
     <div class="body conbody">
-        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer
+        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer
                 origin</a> in cluster mode, the Max Batch Size property is ignored. Instead, the
             effective batch size is &lt;Batch Wait Time&gt; x &lt;Rate Limit Per Partition&gt;. </p>
 
@@ -365,38 +403,45 @@
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9566">The user environment variable defines the system
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9573">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9571">For example, say the user environment
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9578">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2795e9576">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2795e9583">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2795e9619">If necessary, specify the location of the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2795e9626">If necessary, specify the location of the
                     spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9622"><span class="ph">Data Collector</span> assumes that the
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9629"><span class="ph">Data Collector</span> assumes that the
                     spark-submit script used to submit job requests to Spark Streaming is located in
                     the following directory: <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9628">If the script is not in this directory, use
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9635">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9631">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9638">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9634"><span class="ph" id="task_hhk_bfv_cy__d2795e9635">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9641"><span class="ph" id="task_hhk_bfv_cy__d2795e9642">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2795e9639">=/usr/bin/spark2-submit</span></pre>
+                        script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2795e9646">=/usr/bin/spark2-submit</span></pre>
+<div class="p">Or,
+                        if using Hortonworks Data Platform (HDP) 2.6 which includes Spark 2.2.0, the
+                        spark-submit script is in the following directory by default:
+                        /usr/hdp/2.6/spark2/bin/spark-submit. Then, you might use the following
+                        command to define the location of the
+                        script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/usr/hdp/2.6/spark2/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9643">
-                    <div class="note note" id="task_hhk_bfv_cy__d2795e9645"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9654">
+                    <div class="note note" id="task_hhk_bfv_cy__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -436,7 +481,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2795e9692"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -462,14 +507,403 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         see <a class="xref" href="ClusterPipelines_title.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a>.</div>
 </div>
             </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If the Kafka cluster is configured to use SSL/TLS, Kerberos, or both, configure
+                    the Kafka Consumer origin to securely connect to the cluster, as described in
+                        <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb" title="When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Kafka. You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS and Kerberos to connect to Kafka.">Enabling Security for Cluster YARN Streaming</a>.</span>
+            </li>
 </ol>
 
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
 </div>
+</div>
+</div>
+<div class="topic concept nested2" id="concept_bb2_m5p_tdb">
+    <h3 class="title topictitle3">Enabling Security for Cluster YARN Streaming</h3>
+
+    <div class="body conbody">
+        <p class="p">When using a cluster pipeline to read from a
+            Kafka cluster on YARN, you can configure the Kafka Consumer origin to connect securely
+            through SSL/TLS, Kerberos, or both.</p>
+
+    </div>
+
+<div class="topic concept nested3" id="concept_c2g_myp_tdb">
+    <h4 class="title topictitle4">Enabling SSL/TLS</h4>
+
+    <div class="body conbody">
+        <p class="p">Perform the following steps to enable the Kafka
+            Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS to connect to
+            Kafka. </p>
+
+        <ol class="ol" id="concept_c2g_myp_tdb__ol_s5w_1zp_tdb">
+            <li class="li">To use SSL/TLS to connect, first make sure Kafka is
+                    configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
+
+            <li class="li">On the <span class="ph uicontrol">General</span> tab of the Kafka Consumer origin in the
+                cluster pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache
+                Kafka 0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
+                    property and set it to <strong class="ph b">SSL</strong>.</li>
+<li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d3481e56">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d3481e66">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_c2g_myp_tdb__d3481e79">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            <li class="li">Store the SSL truststore and keystore files in the same location on the <span class="ph">Data Collector</span>
+                machine and on each node in the Kafka cluster.</li>
+
+        </ol>
+
+        <p class="p">For example, the following properties allow the stage to use SSL/TLS to connect to Kafka
+            with client authentication:</p>
+
+        <img class="image" id="concept_c2g_myp_tdb__image_dhf_4gq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
+    </div>
+
+</div>
+<div class="topic concept nested3" id="concept_rjl_rgq_tdb">
+    <h4 class="title topictitle4">Enabling Kerberos (SASL)</h4>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you use Kerberos authentication, <span class="ph">Data Collector</span> uses
+        the Kerberos principal and keytab to connect to Kafka. </p>
+
+        <p class="p">Perform the following steps to enable the Kafka
+            Consumer origin in a cluster streaming pipeline on YARN to use Kerberos to connect to
+            Kafka:</p>
+
+        <ol class="ol" id="concept_rjl_rgq_tdb__ol_tbk_5hq_tdb">
+            <li class="li">To use Kerberos, first make sure Kafka is configured for
+                    Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
+<li class="li">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
+<li class="li">Add the Java Authentication and Authorization
+                    Service (JAAS) configuration properties required for Kafka clients based on your
+                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d3359e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="sdc/_HOST@EXAMPLE.COM";
+};</pre>
+</div>
+<p class="p">Cloudera
+                                Manager generates the appropriate keytab path and host name.
+                            </p>
+</li>
+
+                    </ul>
+</li>
+
+            <li class="li">Store the JAAS configuration and Kafka keytab files in the same locations on the <span class="ph">Data Collector</span>
+                machine and on each node in the Kafka cluster.</li>
+
+            <li class="li">On the <span class="keyword wintitle">General</span> tab of the Kafka Consumer origin in the cluster
+                pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka
+                0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
+                    set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
+<li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to the same Kerberos principal name that you just defined in the JAAS
+                    configuration properties. </li>
+
+        </ol>
+
+        <p class="p">For example, the following Kafka properties enable connecting to Kafka with Kerberos:</p>
+
+        <p class="p"><img class="image" id="concept_rjl_rgq_tdb__image_cl5_bmq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="99" width="580" /></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested3" id="concept_ijh_kmq_tdb">
+    <h4 class="title topictitle4">Enabling SSL/TLS and Kerberos</h4>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to
+        use SSL/TLS and Kerberos to connect to Kafka.</p>
+
+        <p class="p"><span class="ph">To use SSL/TLS and Kerberos, combine the required
+                steps to enable each and set the security.protocol property as follows:</span></p>
+
+        <ol class="ol" id="concept_ijh_kmq_tdb__ol_tpp_vyq_tdb">
+            <li class="li">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d3535e35">
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
+
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
+
+                    </ul>
+</li>
+
+            <li class="li">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
+
+            <li class="li">Add the Java Authentication and Authorization
+                    Service (JAAS) configuration properties required for Kafka clients based on your
+                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d3359e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="sdc/_HOST@EXAMPLE.COM";
+};</pre>
+</div>
+<p class="p">Cloudera
+                                Manager generates the appropriate keytab path and host name.
+                            </p>
+</li>
+
+                    </ul>
+</li>
+
+            <li class="li">Store the JAAS configuration and Kafka keytab files in the same locations on the <span class="ph">Data Collector</span>
+                machine and on each node in the Kafka cluster.</li>
+
+            <li class="li">On the <span class="keyword wintitle">General</span> tab of the Kafka Consumer origin in the cluster
+                pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka
+                0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> property and set it to
+                        <span class="ph uicontrol">SASL_SSL</span>.</li>
+
+            <li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to the same Kerberos principal name that you just defined in the JAAS
+                    configuration properties. </li>
+
+            <li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d3481e56">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d3481e66">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d3481e79">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            <li class="li">Store the SSL truststore and keystore files in the same location on the <span class="ph">Data Collector</span>
+                machine and on each node in the Kafka cluster.</li>
+
+        </ol>
+
+    </div>
+
 </div>
 </div>
 <div class="topic task nested2" id="task_kf1_fgv_cy">
@@ -520,10 +954,10 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
+                        script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2795e9645"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -552,7 +986,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
 </div>
 </div>
 </div>
@@ -569,9 +1003,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d36148e1053">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d36160e1656">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d36148e1056">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d36160e1659">Requirement</th>
 
                         </tr>
 
@@ -579,26 +1013,18 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e1053 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1656 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e1056 "><span class="ph">Spark versions 1.3 through 2.x</span><div class="note important"><span class="importanttitle">Important:</span> Spark version 1.x is now deprecated and will be removed in version 3.3.0.0. We highly
-                  recommend that you <a class="xref" href="../Upgrade/PreUpgrade.html#concept_zgm_vj2_mdb" title="When Data Collector first introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, Data Collector introduced updated Kafka stages with support for these security features when used with Kafka 0.9.0.0 or later.">upgrade to Spark 2.1 or later</a>.</div>
-</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1659 "><span class="ph">Spark version 2.1 or later</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36148e1053 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1656 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36148e1056 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1659 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
                                     <ul class="ul" id="concept_kry_gn5_lx__ul_fkh_cyh_pdb">
-                                    <li class="li">MapR 5.1.0<div class="p">
-                                            <div class="note note"><span class="notetitle">Note:</span> MEP is not applicable for MapR 5.1.0.</div>
-
-                                        </div>
-</li>
-
-                                    <li class="li">MapR 5.2.0 and MEP 1.x</li>
+                                    <li class="li">MapR 5.2.0 and MEP 4.0</li>
 
                                     <li class="li">MapR 6.0.0 and MEP 4.0</li>
 
@@ -694,7 +1120,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2795e9692"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -744,15 +1170,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9566">The user environment variable defines the system
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9573">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9571">For example, say the user environment
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9578">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2795e9576">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2795e9583">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
@@ -774,7 +1200,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1.0/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2795e9645"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -818,7 +1244,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2795e9692"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -928,7 +1354,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2795e9692"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>

@@ -115,8 +115,10 @@ For an Apache Kafka stage library version 0.10 or earlier, you can
                 
                     <dt class="dt dlterm">JAAS configuration file</dt>
 
-                    <dd class="dd">Configure the Kerberos properties in the JAAS configuration file. <span class="ph">Data Collector</span> uses the <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file as the JAAS
-                        configuration file.</dd>
+                    <dd class="dd">Configure the Kerberos properties in the JAAS configuration file. If <span class="ph">Data Collector</span> uses LDAP authentication, configure the properties in the
+                            <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. If <span class="ph">Data Collector</span> does not use LDAP authentication, configure the properties in a separate
+                        JAAS configuration file on the <span class="ph">Data Collector</span> machine and modify the SDC_JAVA_OPTS environment variable to specify the
+                        location of the file.</dd>
 
                 
             </dl>
@@ -124,8 +126,7 @@ For an Apache Kafka stage library version 0.10 or earlier, you can
 
         <p class="p">As of Kafka version 0.11, you can no longer enable Kerberos in the <span class="ph">Data Collector</span>
             configuration file for Apache Kafka stage libraries. Instead, you must configure the
-            Kerberos properties in the JAAS configuration file,
-                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp>.</p>
+            Kerberos properties in the JAAS configuration file.</p>
 
         <p class="p">If earlier Kafka stages using an Apache Kafka stage library used the <span class="ph">Data Collector</span>
             configuration file, you must update each <span class="ph">Data Collector</span>

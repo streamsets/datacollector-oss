@@ -87,6 +87,8 @@
 
                 <li class="li">HEAD</li>
 
+                <li class="li">PATCH</li>
+
                 <li class="li">Expression - An expression that evaluates to one of the other methods. </li>
 
             </ul>
@@ -179,8 +181,8 @@
                     <dt class="dt dlterm">Verbosity</dt>
 
                     <dd class="dd">
-                        <div class="p" id="concept_dhg_gmk_hdb__d94240e42">The type of data to include in logged
-                                messages:<ul class="ul" id="concept_dhg_gmk_hdb__d94240e44">
+                        <div class="p" id="concept_dhg_gmk_hdb__d94808e42">The type of data to include in logged
+                                messages:<ul class="ul" id="concept_dhg_gmk_hdb__d94808e44">
                                 <li class="li">Headers_Only - Includes request and response headers.</li>
 
                                 <li class="li">Payload_Text - Includes request and response headers as well as
@@ -211,17 +213,17 @@
 
                     <dd class="dd">The following table describes the HTTP Client log levels and the
                         corresponding <span class="ph">Data Collector</span> log levels needed to enable the logging:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dhg_gmk_hdb__d94240e84" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dhg_gmk_hdb__d94808e84" class="table" frame="border" border="1" rules="all">
                                 
                                 
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" align="left" valign="top" width="25%" id="d484617e282">HTTP Client Log Level</th>
+                                        <th class="entry" align="left" valign="top" width="25%" id="d486972e285">HTTP Client Log Level</th>
 
-                                        <th class="entry" align="left" valign="top" width="25%" id="d484617e285"><span class="ph">Data Collector</span></th>
+                                        <th class="entry" align="left" valign="top" width="25%" id="d486972e288"><span class="ph">Data Collector</span></th>
 
-                                        <th class="entry" align="left" valign="top" width="50%" id="d484617e289">Description</th>
+                                        <th class="entry" align="left" valign="top" width="50%" id="d486972e292">Description</th>
 
                                     </tr>
 
@@ -229,56 +231,56 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Severe</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Severe</td>
 
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">ERROR</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">ERROR</td>
 
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Only messages indicating serious failures.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Warning</td>
-
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">WARN</td>
-
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Messages warning of potential problems.</td>
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Only messages indicating serious failures.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Info</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Warning</td>
 
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">INFO</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">WARN</td>
 
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Informational messages.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Fine</td>
-
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">DEBUG</td>
-
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Basic tracing information.</td>
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Messages warning of potential problems.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Finer</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Info</td>
 
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">DEBUG</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">INFO</td>
 
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Detailed tracing information.</td>
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Informational messages.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e282 ">Finest</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Fine</td>
 
-                                        <td class="entry" align="left" valign="top" width="25%" headers="d484617e285 ">TRACE</td>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">DEBUG</td>
 
-                                        <td class="entry" align="left" valign="top" width="50%" headers="d484617e289 ">Highly detailed tracing information.</td>
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Basic tracing information.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Finer</td>
+
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">DEBUG</td>
+
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Detailed tracing information.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e285 ">Finest</td>
+
+                                        <td class="entry" align="left" valign="top" width="25%" headers="d486972e288 ">TRACE</td>
+
+                                        <td class="entry" align="left" valign="top" width="50%" headers="d486972e292 ">Highly detailed tracing information.</td>
 
                                     </tr>
 
@@ -299,7 +301,7 @@
                     <dt class="dt dlterm">Maximum entity size</dt>
 
                     <dd class="dd">
-                        <p class="p" id="concept_dhg_gmk_hdb__d94240e204">The maximum size of message data to write to the
+                        <p class="p" id="concept_dhg_gmk_hdb__d94808e204">The maximum size of message data to write to the
                             log. Use to limit the volume of data written to the <span class="ph">Data Collector</span> log for any single message.</p>
 
                     </dd>
@@ -644,14 +646,14 @@ For example, enter the claims in
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91005e5201" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91573e5201" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e1001">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e1004">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e1004">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e1007">Description</th>
 
                                 </tr>
 
@@ -659,24 +661,24 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1001 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1004 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1004 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1001 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1004 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1007 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1001 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e5247" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1004 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1004 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1007 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1004 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e5247" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1007 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -688,10 +690,10 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1001 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e5263" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1004 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e5263" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1004 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1007 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -702,10 +704,10 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1001 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e5280" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1004 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e5280" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1004 ">Error record handling for the stage: <ul class="ul" id="task_z54_1qr_fw__d91005e5284">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1007 ">Error record handling for the stage: <ul class="ul" id="task_z54_1qr_fw__d91573e5284">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -735,9 +737,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e1115">HTTP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e1118">HTTP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e1118">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e1121">Description</th>
 
                                 </tr>
 
@@ -745,84 +747,84 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Output Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Field to use for the response. You can use a new or
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Field to use for the response. You can use a new or
                                         existing field.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Header Output Location <a class="xref" href="HTTPClient.html#concept_ekz_wrz_zw">
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Header Output Location <a class="xref" href="HTTPClient.html#concept_ekz_wrz_zw">
                                             <img class="image" id="task_z54_1qr_fw__image_bf1_nwz_zw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Location to write response header field information.
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Location to write response header field information.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Header Attribute Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Header Attribute Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Prefix to use when writing response header field
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Prefix to use when writing response header field
                                         information to record header attributes.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Header Output Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Header Output Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Field to use when writing response header field
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Field to use when writing response header field
                                         information to a field in the record. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Resource URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Resource URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">HTTP resource URL.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">HTTP resource URL.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Headers</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Headers</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">The headers to include in the request. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">The headers to include in the request. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         headers.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">HTTP Method</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">HTTP Method</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">HTTP request method. Use one of the standard methods or
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">HTTP request method. Use one of the standard methods or
                                         use Expression to enter an expression. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_dc2_qwn_jw">
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_dc2_qwn_jw">
                                             <img class="image" id="task_z54_1qr_fw__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Expression that evaluates to a standard HTTP method.
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Expression that evaluates to a standard HTTP method.
                                             <p class="p">Used for the Expression method only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Request Data </td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Request Data </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Request data to use with the specified method. Available
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Request data to use with the specified method. Available
                                         for the PUT, POST, DELETE, and Expression methods.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Default Request Content Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Default Request Content Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Content-Type header to include in the request. Used only
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Content-Type header to include in the request. Used only
                                         when the Content-Type header is not present. <p class="p">Available
                                             for the PUT, POST, DELETE, and Expression methods.
                                             </p>
@@ -832,9 +834,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Request Transfer Encoding</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Request Transfer Encoding</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Use one of the following encoding types:<ul class="ul" id="task_z54_1qr_fw__d91127e1434">
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Use one of the following encoding types:<ul class="ul" id="task_z54_1qr_fw__d91695e1435">
          <li class="li">Buffered - The standard transfer encoding type. </li>
 
          <li class="li">Chunked - Transfers data in chunks. Not supported by all servers.</li>
@@ -846,36 +848,36 @@ For example, enter the claims in
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Connect Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Connect Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Maximum number of milliseconds to wait for a connection. <p class="p">Use 0 to wait
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Maximum number of milliseconds to wait for a connection. <p class="p">Use 0 to wait
          indefinitely.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Read Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Read Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Maximum number of milliseconds to wait for data. <p class="p">Use 0 to wait
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Maximum number of milliseconds to wait for data. <p class="p">Use 0 to wait
         indefinitely.</p>
 </td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_d3m_yrn_jw" title="The HTTP Client processor sends multiple requests at a time. To preserve record order, the processor waits until all requests for the entire batch are completed before processing the next batch.">
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_d3m_yrn_jw" title="The HTTP Client processor sends multiple requests at a time. To preserve record order, the processor waits until all requests for the entire batch are completed before processing the next batch.">
                                             <img class="image" id="task_z54_1qr_fw__image_afb_xb4_jw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Maximum number of requests to send to the server at one
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Maximum number of requests to send to the server at one
                                         time. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Authentication Type</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Authentication Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_z54_1qr_fw__d91127e1475">
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_z54_1qr_fw__d91695e1476">
          <li class="li">None - Performs no authentication.</li>
 
          <li class="li">Basic - Uses basic authentication. Requires a username and password. <p class="p">Use with HTTPS
@@ -899,18 +901,18 @@ For example, enter the claims in
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Use OAuth 2</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Use OAuth 2</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Enables using OAuth 2 authorization to request access tokens. <p class="p">You can use OAuth 2
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Enables using OAuth 2 authorization to request access tokens. <p class="p">You can use OAuth 2
          authorization with none, basic, digest, or universal authentication.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Use Proxy</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Use Proxy</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">
         <p class="p">Enables using an HTTP proxy to connect to the system. </p>
 
        </td>
@@ -918,16 +920,16 @@ For example, enter the claims in
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Maximum Request Time</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Maximum Request Time</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Maximum number of seconds to wait for a request to complete.</td>
+       <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Maximum number of seconds to wait for a request to complete.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1115 ">Rate Limit</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1118 ">Rate Limit</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1118 ">Minimum amount of time between requests in milliseconds.
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1121 ">Minimum amount of time between requests in milliseconds.
                                         Set a rate limit when sending requests to a rate-limited
                                             API.<p class="p">Default is 0, which means there is no delay
                                             between requests.</p>
@@ -947,14 +949,14 @@ For example, enter the claims in
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91005e2941" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91573e2941" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e1398">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e1401">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e1401">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e1404">Description</th>
 
                                 </tr>
 
@@ -962,18 +964,18 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">User name for basic, digest, or universal authentication.
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">User name for basic, digest, or universal authentication.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">Password for basic, digest, or universal authentication.
-                                            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91071e4741">To
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">Password for basic, digest, or universal authentication.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91639e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -981,30 +983,30 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Consumer Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Consumer Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">Consumer key for OAuth 1.0 authentication.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Consumer Secret</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">Consumer secret for OAuth 1.0 authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">Consumer key for OAuth 1.0 authentication.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Token</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Consumer Secret</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">Consumer token for OAuth 1.0 authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">Consumer secret for OAuth 1.0 authentication.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1398 ">Token Secret</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Token</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1401 ">Token secret for OAuth 1.0 authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">Consumer token for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1401 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1404 ">Token secret for OAuth 1.0 authentication.</td>
 
                                 </tr>
 
@@ -1025,9 +1027,9 @@ For example, enter the claims in
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d484617e1519">OAuth 2 Property</th>
+      <th class="entry" valign="top" width="30%" id="d486972e1522">OAuth 2 Property</th>
 
-      <th class="entry" valign="top" width="70%" id="d484617e1522">Description</th>
+      <th class="entry" valign="top" width="70%" id="d486972e1525">Description</th>
 
      </tr>
 
@@ -1035,9 +1037,9 @@ For example, enter the claims in
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Credentials Grant Type</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Credentials Grant Type</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Type of client credentials grant type required by the HTTP service:<ul class="ul" id="task_z54_1qr_fw__d91127e1580">
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Type of client credentials grant type required by the HTTP service:<ul class="ul" id="task_z54_1qr_fw__d91695e1581">
         <li class="li">Client credentials grant</li>
 
         <li class="li">Resource owner password credentials grant</li>
@@ -1050,16 +1052,16 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Token URL</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Token URL</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">URL to request the access token.</td>
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">URL to request the access token.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Client ID</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Client ID</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Client ID that the HTTP service uses to identify the HTTP client.<p class="p">Enter for the
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Client ID that the HTTP service uses to identify the HTTP client.<p class="p">Enter for the
         client credentials grant that uses a client ID and secret for authentication. Or, for the
         resource owner password credentials grant that requires a client ID and secret.</p>
 </td>
@@ -1067,9 +1069,9 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Client Secret</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Client Secret</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Client secret that the HTTP service uses to authenticate the HTTP client.<p class="p">Enter for
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Client secret that the HTTP service uses to authenticate the HTTP client.<p class="p">Enter for
         the client credentials grant that uses a client ID and secret for authentication. Or, for
         the resource owner password credentials grant that requires a client ID and secret.</p>
 <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
@@ -1079,20 +1081,20 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">User Name</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">User Name</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Resource owner user name.<p class="p">Enter for the resource owner password credentials
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Resource owner user name.<p class="p">Enter for the resource owner password credentials
         grant.</p>
 </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Password</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Password</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Resource owner password.<p class="p">Enter for the resource owner password credentials
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Resource owner password.<p class="p">Enter for the resource owner password credentials
         grant.</p>
-<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91071e4741">To
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91639e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1100,18 +1102,18 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">JWT Signing Algorithm</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">JWT Signing Algorithm</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Algorithm used to sign the JSON Web Token (JWT).<p class="p">Default is none. Enter for the JSON
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Algorithm used to sign the JSON Web Token (JWT).<p class="p">Default is none. Enter for the JSON
         Web Tokens grant.</p>
 </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">JWT Signing Key</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">JWT Signing Key</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Base64 encoded key used to sign the JSON Web Token, if you selected a signing
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Base64 encoded key used to sign the JSON Web Token, if you selected a signing
         algorithm.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the JWT
                   signing key, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
 <p class="p">Enter
@@ -1121,9 +1123,9 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">JWT Claims</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">JWT Claims</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Claims to use in the JSON Web Token request, entered in JSON format. Enter each claim
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Claims to use in the JSON Web Token request, entered in JSON format. Enter each claim
        required by the HTTP service. You can include the expression language in the JWT
         claims.<p class="p">For example, to read from Google service accounts, enter the following claims with
         the appropriate
@@ -1142,18 +1144,18 @@ For example, enter the claims in
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Request Transfer Encoding</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Request Transfer Encoding</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Form of encoding to use when the stage requests an access token: buffered or
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Form of encoding to use when the stage requests an access token: buffered or
         chunked.<p class="p">Default is buffered.</p>
 </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d484617e1519 ">Additional Key-Value Pairs</td>
+      <td class="entry" valign="top" width="30%" headers="d486972e1522 ">Additional Key-Value Pairs</td>
 
-      <td class="entry" valign="top" width="70%" headers="d484617e1522 ">Optional key-value pairs to send to the token URL when requesting an access token. For
+      <td class="entry" valign="top" width="70%" headers="d486972e1525 ">Optional key-value pairs to send to the token URL when requesting an access token. For
        example, you can define the OAuth 2 <samp class="ph codeph">scope</samp> request parameter.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add
         additional key-value pairs.</p>
 </td>
@@ -1171,14 +1173,14 @@ For example, enter the claims in
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91005e3046" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d91573e3046" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e1762">HTTP Proxy Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e1765">HTTP Proxy Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e1765">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e1768">Description</th>
 
                                 </tr>
 
@@ -1186,23 +1188,23 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1762 ">Proxy URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1765 ">Proxy URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1765 ">Proxy URI.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1762 ">Username</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1765 ">Proxy user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1768 ">Proxy URI.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1762 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1765 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1765 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91071e4741">To
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1768 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1765 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1768 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d91639e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1226,9 +1228,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e1849">TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e1852">TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e1852">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e1855">Description</th>
 
                                 </tr>
 
@@ -1236,9 +1238,9 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Use TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Use TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -1246,10 +1248,10 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">The path to the keystore file. Enter an absolute path to
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">The path to the keystore file. Enter an absolute path to
                                         the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -1259,10 +1261,10 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Keystore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Keystore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Type of keystore to use. Use one of the following
-                                            types:<ul class="ul" id="task_z54_1qr_fw__d91005e3385">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_z54_1qr_fw__d91573e3385">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -1274,9 +1276,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Keystore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Keystore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Password to the keystore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Password to the keystore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -1287,19 +1289,19 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Keystore Key Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Keystore Key Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">The algorithm used to manage the keystore. <p class="p">Default is
                                                 <span class="ph">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">The path to the truststore file. Enter an absolute path
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">The path to the truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -1309,9 +1311,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Truststore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Truststore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -1323,9 +1325,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Password to the truststore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -1336,27 +1338,27 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Truststore Trust Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">The algorithm used to manage the truststore. <p class="p">Default
-                                            is <span class="ph" id="task_z54_1qr_fw__d91005e3487">SunX509</span>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_z54_1qr_fw__d91573e3487">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -1365,9 +1367,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -1375,9 +1377,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e1849 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e1852 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e1852 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d486972e1855 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -1405,9 +1407,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e2223">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e2226">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e2226">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e2229">Description</th>
 
                                 </tr>
 
@@ -1415,10 +1417,10 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2223 ">Data Format <a class="xref" href="HTTPClient.html#concept_jrj_hmh_jw" title="The HTTP Client processor writes the server response to the specified field in the record.">
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2226 ">Data Format <a class="xref" href="HTTPClient.html#concept_jrj_hmh_jw" title="The HTTP Client processor writes the server response to the specified field in the record.">
                                             <img class="image" id="task_z54_1qr_fw__image_usk_thj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2226 ">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2229 ">
                                         <div class="p">Data format of the response: <ul class="ul" id="task_z54_1qr_fw__ul_xs3_3fv_2v">
                                                 <li class="li">JSON</li>
 
@@ -1450,9 +1452,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d484617e2290">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d486972e2293">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d484617e2293">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d486972e2296">Description</th>
 
                                 </tr>
 
@@ -1460,9 +1462,9 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d484617e2290 ">Maximum Object Length (chars)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d486972e2293 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d484617e2293 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d486972e2296 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1472,17 +1474,17 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d484617e2290 ">Charset</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d486972e2293 ">Charset</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d484617e2293 ">Character encoding of the data to be processed.</td>
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d486972e2296 ">Character encoding of the data to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d484617e2290 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_z54_1qr_fw__d91127e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d486972e2293 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d91695e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d484617e2293 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d486972e2296 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1504,9 +1506,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e2373">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e2376">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e2376">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e2379">Description</th>
 
                                 </tr>
 
@@ -1514,9 +1516,9 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2376 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2379 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1527,40 +1529,40 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_z54_1qr_fw__d91005e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_z54_1qr_fw__d91573e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2376 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2379 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2376 ">One or more characters to use to define records. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Include Custom Delimiter</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2376 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2379 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Include Custom Delimiter</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e2376 ">Character encoding of the files to be processed.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2379 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d486972e2379 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e2373 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_z54_1qr_fw__d91127e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d486972e2376 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d91695e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e2376 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d486972e2379 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1583,9 +1585,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d484617e2491">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d486972e2494">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d484617e2494">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d486972e2497">Description</th>
 
                                 </tr>
 
@@ -1593,9 +1595,9 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2491 ">Delimiter Element</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2494 ">Delimiter Element</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2494 ">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2497 ">
                                         <p class="p">XML element that acts as a delimiter. Omit a delimiter to
                                             treat the entire XML document as one field.</p>
 
@@ -1604,9 +1606,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d484617e2491 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d486972e2494 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d484617e2494 ">
+                                    <td class="entry" valign="top" width="70%" headers="d486972e2497 ">
                                         <p class="p">The maximum number of characters in a field. Longer
                                             fields are diverted to the pipeline for error handling. </p>
 
@@ -1618,17 +1620,17 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e2491 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d486972e2494 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e2494 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d486972e2497 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d484617e2491 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_z54_1qr_fw__d91127e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d486972e2494 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d91695e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d484617e2494 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d486972e2497 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1650,9 +1652,9 @@ For example, enter the claims in
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" align="left" valign="top" width="30%" id="d484617e2588">Logging Property</th>
+                                    <th class="entry" align="left" valign="top" width="30%" id="d486972e2591">Logging Property</th>
 
-                                    <th class="entry" align="left" valign="top" width="70%" id="d484617e2591">Description</th>
+                                    <th class="entry" align="left" valign="top" width="70%" id="d486972e2594">Description</th>
 
                                 </tr>
 
@@ -1660,22 +1662,22 @@ For example, enter the claims in
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" align="left" valign="top" width="30%" headers="d484617e2588 ">Enable Request Logging</td>
+                                    <td class="entry" align="left" valign="top" width="30%" headers="d486972e2591 ">Enable Request Logging</td>
 
-                                    <td class="entry" align="left" valign="top" width="70%" headers="d484617e2591 ">Enables logging request and response data.</td>
+                                    <td class="entry" align="left" valign="top" width="70%" headers="d486972e2594 ">Enables logging request and response data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" align="left" valign="top" width="30%" headers="d484617e2588 ">Log Level <a class="xref" href="HTTPClient.html#concept_dhg_gmk_hdb" title="The HTTP Client processor can log request and response data to the Data Collector log.">
+                                    <td class="entry" align="left" valign="top" width="30%" headers="d486972e2591 ">Log Level <a class="xref" href="HTTPClient.html#concept_dhg_gmk_hdb" title="The HTTP Client processor can log request and response data to the Data Collector log.">
                                             <img class="image" id="task_z54_1qr_fw__image_exx_41q_ft" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" align="left" valign="top" width="70%" headers="d484617e2591 ">The level of detail to be
+                                    <td class="entry" align="left" valign="top" width="70%" headers="d486972e2594 ">The level of detail to be
                                         logged. Choose one of the available options. <div class="p">The
                                             following list is in order of lowest to highest level of
                                             logging. When you select a level, messages generated by
                                             the levels above the selected level are also written to
-                                            the log:<ul class="ul" id="task_z54_1qr_fw__d91005e3151">
+                                            the log:<ul class="ul" id="task_z54_1qr_fw__d91573e3151">
                                                 <li class="li">Severe - Only messages indicating serious
                                                   failures.</li>
 
@@ -1704,11 +1706,11 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" align="left" valign="top" width="30%" headers="d484617e2588 ">Verbosity</td>
+                                    <td class="entry" align="left" valign="top" width="30%" headers="d486972e2591 ">Verbosity</td>
 
-                                    <td class="entry" align="left" valign="top" width="70%" headers="d484617e2591 ">
+                                    <td class="entry" align="left" valign="top" width="70%" headers="d486972e2594 ">
                                         <div class="p">The type of data to include in logged
-                                messages:<ul class="ul" id="task_z54_1qr_fw__d94240e44">
+                                messages:<ul class="ul" id="task_z54_1qr_fw__d94808e44">
                                 <li class="li">Headers_Only - Includes request and response headers.</li>
 
                                 <li class="li">Payload_Text - Includes request and response headers as well as
@@ -1725,9 +1727,9 @@ For example, enter the claims in
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" align="left" valign="top" width="30%" headers="d484617e2588 ">Max Entity Size</td>
+                                    <td class="entry" align="left" valign="top" width="30%" headers="d486972e2591 ">Max Entity Size</td>
 
-                                    <td class="entry" align="left" valign="top" width="70%" headers="d484617e2591 ">
+                                    <td class="entry" align="left" valign="top" width="70%" headers="d486972e2594 ">
                                         <p class="p">The maximum size of message data to write to the
                             log. Use to limit the volume of data written to the <span class="ph">Data Collector</span> log for any single message.</p>
 

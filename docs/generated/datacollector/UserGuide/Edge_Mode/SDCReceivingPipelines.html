@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Receiving Pipelines" /><meta name="abstract" content="Data Collector receiving pipelines run in the standalone execution mode. You design and run receiving pipelines in Data Collector." /><meta name="description" content="Data Collector receiving pipelines run in the standalone execution mode. You design and run receiving pipelines in Data Collector." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_lqx_vtq_4bb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Data Collector Receiving Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+  <!--
+  Copyright 2018 StreamSets Inc.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines">Edge Pipelines</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_lqx_vtq_4bb">
+ <h1 class="title topictitle1">Data Collector Receiving Pipelines</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        receiving pipelines run in the standalone execution mode. You design and run receiving
+        pipelines in <span class="ph">Data Collector</span>.</p>
+
+        <p class="p">A <span class="ph">Data Collector</span>
+            receiving pipeline <span class="ph">reads data from the edge sending pipeline destination.
+                    Some systems require an intermediary message broker. The <span class="ph">Data Collector</span> receiving
+                    pipeline performs more complex processing on the data as needed, and then it
+                    writes the data to the final destinations. </span></p>
+
+        <p class="p">Optionally, you can also design the <span class="ph">Data Collector</span>
+            receiving pipeline to monitor the data being processed and then send data to an edge
+            receiving pipeline running on <span class="ph">SDC Edge</span>.
+            The edge receiving pipeline acts on the data to control the edge device.</p>
+
+        <p class="p">The <span class="ph">Data Collector</span>
+            receiving pipeline includes the corresponding origin to read from the destination in the
+            edge sending pipeline. For example, if the edge sending pipeline writes to a CoAP Client
+            destination, then the <span class="ph">Data Collector</span>
+            receiving pipeline uses a CoAP Server origin to read the data.</p>
+
+        <p class="p">The MQTT stages require using an intermediary MQTT broker. The edge sending pipeline uses
+            an MQTT Publisher destination to write to an MQTT broker. The MQTT broker temporarily
+            stores the data until the MQTT Subscriber origin in the <span class="ph">Data Collector</span>
+            receiving pipeline reads the data. </p>
+
+        <p class="p">The CoAP, HTTP and WebSocket stages can directly communicate with each other. They do not
+            require an intermediary storage location. </p>
+
+        <div class="p"><span class="ph">Data Collector</span>
+            receiving pipelines support a limited number of stages. The following table lists the
+            supported stages:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lqx_vtq_4bb__table_ijw_tqs_4bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d185168e90">Stage Type</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d185168e93">Supported Stages</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185168e90 ">Origins</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185168e93 ">
+                                <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
+                                    <li class="li">CoAP Server</li>
+
+                                    <li class="li">HTTP Server </li>
+
+                                    <li class="li">MQTT Subscriber</li>
+
+                                    <li class="li">WebSocket Server</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185168e90 ">Processors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185168e93 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185168e90 ">Destinations</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185168e93 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185168e90 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185168e93 ">Any</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+    </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
