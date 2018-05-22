@@ -98,12 +98,12 @@ public class SyncPreviewer implements Previewer {
   private volatile PreviewPipeline previewPipeline;
 
   public SyncPreviewer(
-    String id,
-    String user,
-    String name,
-    String rev,
-    PreviewerListener previewerListener,
-    ObjectGraph objectGraph
+      String id,
+      String user,
+      String name,
+      String rev,
+      PreviewerListener previewerListener,
+      ObjectGraph objectGraph
   ) {
     objectGraph.inject(this);
     this.id = id;
@@ -139,7 +139,7 @@ public class SyncPreviewer implements Previewer {
   public void validateConfigs(long timeoutMillis) throws PipelineException {
     changeState(PreviewStatus.VALIDATING, null);
     try {
-      previewPipeline = buildPreviewPipeline(0, 0, null, false, true);
+      previewPipeline = buildPreviewPipeline(0, 0, null, false, true, false);
       List<Issue> stageIssues = previewPipeline.validateConfigs();
       PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
       changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null, null));
@@ -148,20 +148,20 @@ public class SyncPreviewer implements Previewer {
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
         changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-          e.toString()));
+            e.toString()));
       } else {
         changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-          e.toString()));
+            e.toString()));
         throw e;
       }
     } catch (PipelineStoreException e) {
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-        e.toString()));
+          e.toString()));
       throw e;
     } catch (Throwable e) {
       //Wrap stage exception in PipelineException
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-        e.toString()));
+          e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
     } finally {
       PipelineEL.unsetConstantsInContext();
@@ -208,23 +208,24 @@ public class SyncPreviewer implements Previewer {
       boolean skipLifecycleEvents,
       String stopStage,
       List<StageOutput> stagesOverride,
-      long timeoutMillis
+      long timeoutMillis,
+      boolean testOrigin
   ) throws PipelineException {
     changeState(PreviewStatus.RUNNING, null);
     try {
-      previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets, skipLifecycleEvents);
+      previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets, skipLifecycleEvents, testOrigin);
       PreviewPipelineOutput output = previewPipeline.run(stagesOverride);
       changeState(PreviewStatus.FINISHED, new PreviewOutputImpl(PreviewStatus.FINISHED, output.getIssues(),
-        output.getBatchesOutput(), null));
+          output.getBatchesOutput(), null));
     } catch (PipelineRuntimeException e) {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
         changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-          e.toString()));
+            e.toString()));
       } else {
         changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e.getIssues(), null,
-          e.toString()));
+            e.toString()));
         throw e;
       }
     } catch (PipelineStoreException e) {
@@ -311,15 +312,16 @@ public class SyncPreviewer implements Previewer {
       int batchSize,
       String endStageInstanceName,
       boolean skipTargets,
-      boolean skipLifecycleEvents
-  ) throws PipelineException, StageException {
+      boolean skipLifecycleEvents,
+      boolean testOrigin
+  ) throws PipelineException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     PipelineEL.setConstantsInContext(pipelineConf, userContext);
     batches = Math.min(maxBatches, batches);
-    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.<String, String>emptyMap());
+    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.emptyMap());
     PreviewPipelineRunner runner = new PreviewPipelineRunner(
         name,
         rev,
@@ -328,24 +330,26 @@ public class SyncPreviewer implements Previewer {
         batchSize,
         batches,
         skipTargets,
-        skipLifecycleEvents
+        skipLifecycleEvents,
+        testOrigin
     );
     return new PreviewPipelineBuilder(
-      stageLibrary,
-      configuration,
-      name,
-      rev,
-      pipelineConf,
-      endStageInstanceName,
-      blobStoreTask,
-      lineagePublisherTask
+        stageLibrary,
+        configuration,
+        name,
+        rev,
+        pipelineConf,
+        endStageInstanceName,
+        blobStoreTask,
+        lineagePublisherTask,
+        testOrigin
     ).build(userContext, runner);
   }
 
   private RawSourcePreviewer createRawSourcePreviewer(
       StageDefinition sourceStageDef,
       MultivaluedMap<String, String> previewParams
-      ) throws PipelineRuntimeException, PipelineStoreException {
+  ) throws PipelineRuntimeException {
 
     RawSourceDefinition rawSourceDefinition = sourceStageDef.getRawSourceDefinition();
     List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
@@ -356,12 +360,12 @@ public class SyncPreviewer implements Previewer {
     Class previewerClass;
     try {
       previewerClass = sourceStageDef.getStageClassLoader().loadClass(sourceStageDef.getRawSourceDefinition()
-        .getRawSourcePreviewerClass());
+          .getRawSourcePreviewerClass());
     } catch (ClassNotFoundException e) {
       //Try loading from this class loader
       try {
         previewerClass = getClass().getClassLoader().loadClass(
-          sourceStageDef.getRawSourceDefinition().getRawSourcePreviewerClass());
+            sourceStageDef.getRawSourceDefinition().getRawSourcePreviewerClass());
       } catch (ClassNotFoundException e1) {
         throw new RuntimeException(e1);
       }
@@ -424,11 +428,11 @@ public class SyncPreviewer implements Previewer {
     this.previewerListener.statusChange(id, previewStatus);
   }
 
-  public StageDefinition getSourceStageDef(PipelineConfiguration pipelineConf) {
+  private StageDefinition getSourceStageDef(PipelineConfiguration pipelineConf) {
     StageDefinition sourceStageDef = null;
     for(StageConfiguration stageConf : pipelineConf.getStages()) {
       StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-        false);
+          false);
       if(stageDefinition.getType() == StageType.SOURCE) {
         sourceStageDef = stageDefinition;
       }

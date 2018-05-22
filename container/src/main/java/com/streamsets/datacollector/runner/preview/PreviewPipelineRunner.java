@@ -83,6 +83,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private final int batches;
   private final boolean skipTargets;
   private final boolean skipLifecycleEvents;
+  private final boolean testOrigin;
   private final MetricRegistry metrics;
   private final List<List<StageOutput>> batchesOutput;
   private final String name;
@@ -109,7 +110,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       int batchSize,
       int batches,
       boolean skipTargets,
-      boolean skipLifecycleEvents
+      boolean skipLifecycleEvents,
+      boolean testOrigin
   ) {
     this.name = name;
     this.rev = rev;
@@ -119,6 +121,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.batches = batches;
     this.skipTargets = skipTargets;
     this.skipLifecycleEvents = skipLifecycleEvents;
+    this.testOrigin = testOrigin;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
     batchesOutput = Collections.synchronizedList(new ArrayList<>());

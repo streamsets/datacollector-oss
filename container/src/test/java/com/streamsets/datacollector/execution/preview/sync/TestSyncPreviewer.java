@@ -49,13 +49,15 @@ public class TestSyncPreviewer extends TestPreviewer {
     Mockito.doReturn(previewPipelineRunner).when(pipeline).getRunner();
     PreviewPipeline previewPipeline = new PreviewPipeline("","", pipeline, new Issues());
     Mockito.doReturn(previewPipeline).when(spyPreviewer).buildPreviewPipeline(Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyBoolean());
-    spyPreviewer.start(1, 1, true, true,"", null, -1);
+        Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.anyBoolean());
+    spyPreviewer.start(1, 1, true, true,"", null,
+        -1, false);
     Mockito.verify(pipeline, Mockito.times(1)).destroy(true, PipelineStopReason.FINISHED);
     // Check if preview returns non empty issue list
     Mockito.doReturn(Arrays.asList(Mockito.mock(Issue.class))).when(pipeline).init(true);
     try {
-      spyPreviewer.start(1, 1, true, true,"", null, -1);
+      spyPreviewer.start(1, 1, true, true,"", null,
+          -1, false);
     } catch (Exception e) {
       // expected as issues is non empty
     }

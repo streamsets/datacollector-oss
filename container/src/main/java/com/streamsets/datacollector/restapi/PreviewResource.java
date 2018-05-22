@@ -132,6 +132,7 @@ public class PreviewResource {
       @QueryParam("endStage") String endStageInstanceName,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
       @QueryParam("edge") @DefaultValue("false") boolean edge,
+      @QueryParam("testOrigin") @DefaultValue("true") boolean testOrigin,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
   ) throws PipelineException {
     if (stageOutputsToOverrideJson == null) {
@@ -174,7 +175,8 @@ public class PreviewResource {
           skipLifecycleEvents,
           endStageInstanceName,
           BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson),
-          timeout
+          timeout,
+          testOrigin
       );
       PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();

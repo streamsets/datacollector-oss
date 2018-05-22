@@ -560,7 +560,8 @@ public class TestRemoteDataCollector {
         boolean skipLifecycleEvents,
         String stopStage,
         List<StageOutput> stagesOverride,
-        long timeoutMillis
+        long timeoutMillis,
+        boolean testOrigin
     ) throws PipelineException {
 
     }

@@ -33,38 +33,36 @@ public interface Previewer {
 
   // Implementations receive a PreviewerListener at <init> time, the listener is owned by the Manager
 
-  public String getId();
+  String getId();
 
-  public String getName();
+  String getName();
 
-  public String getRev();
+  String getRev();
 
-  public void validateConfigs(long timeoutMillis) throws PipelineException;
+  void validateConfigs(long timeoutMillis) throws PipelineException;
 
-  public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
-      throws PipelineException;
+  RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams) throws PipelineException;
 
-  /**
-   * Start preview
-   */
-  public void start(
+  // Start preview
+  void start(
       int batches,
       int batchSize,
       boolean skipTargets,
       boolean skipLifecycleEvents,
       String stopStage,
       List<StageOutput> stagesOverride,
-      long timeoutMillis
+      long timeoutMillis,
+      boolean testOrigin
   ) throws PipelineException;
 
-  public void stop();
+  void stop();
 
   // in the case of the synchronous one the only acceptable value is -1 (wait until it finishes)
   // in the case of the asynchronous one acceptable values are 0 (dispatch and wait) and greater (dispatch and block for millis)
-  public boolean waitForCompletion(long timeoutMillis) throws PipelineException;
+  boolean waitForCompletion(long timeoutMillis) throws PipelineException;
 
-  public PreviewStatus getStatus();
+  PreviewStatus getStatus();
 
-  public PreviewOutput getOutput();
+  PreviewOutput getOutput();
 
 }

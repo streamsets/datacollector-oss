@@ -88,7 +88,8 @@ public class AsyncPreviewer implements Previewer {
       final boolean skipLifecycleEvents,
       final String stopStage,
       final List<StageOutput> stagesOverride,
-      final long timeoutMillis
+      final long timeoutMillis,
+      final boolean testOrigin
   ) {
     Callable<Object> callable = () -> {
       syncPreviewer.start(
@@ -98,7 +99,8 @@ public class AsyncPreviewer implements Previewer {
           skipLifecycleEvents,
           stopStage,
           stagesOverride,
-          timeoutMillis
+          timeoutMillis,
+          testOrigin
       );
       return null;
     };
