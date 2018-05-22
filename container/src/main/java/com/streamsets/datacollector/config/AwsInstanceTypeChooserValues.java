@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,10 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum PipelineGroups implements Label {
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  CLUSTER("Cluster"),
-  STATS("Statistics"),
-  EMR("EMR"),
-  ;
-
-  private final String label;
-
-  PipelineGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+public class AwsInstanceTypeChooserValues extends BaseEnumChooserValues<AwsInstanceType> {
+  public AwsInstanceTypeChooserValues() {
+    super(AwsInstanceType.class);
   }
 }
