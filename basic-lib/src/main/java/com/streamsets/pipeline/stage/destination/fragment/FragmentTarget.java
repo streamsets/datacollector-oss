@@ -34,7 +34,9 @@ import com.streamsets.pipeline.lib.fragment.FragmentConfigBean;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+
     },
     onlineHelpRefUrl =""
 )

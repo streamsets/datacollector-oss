@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.splunk;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
@@ -29,7 +30,16 @@ import com.streamsets.pipeline.stage.destination.http.HttpClientTargetConfig;
     description = "Writes data to Splunk via its HTTP Collector.",
     icon = "splunk.png",
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Splunk.html#task_rc1_wqn_xdb"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Splunk.html#task_rc1_wqn_xdb",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+
+    }
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

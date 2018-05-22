@@ -32,7 +32,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
     },
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Trash.html#task_ad4_qyl_zq"
 )

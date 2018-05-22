@@ -34,7 +34,8 @@ import com.streamsets.pipeline.lib.coap.Groups;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
     },
     recordsByRef = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/CoAPClient.html#task_d2p_w3n_sz"

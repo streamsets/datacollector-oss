@@ -38,7 +38,9 @@ import java.util.Iterator;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+
     },
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Delay.html#task_jh5_qxf_wbb"
 )

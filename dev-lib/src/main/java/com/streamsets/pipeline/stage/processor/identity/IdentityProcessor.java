@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EMR_BATCH,
         ExecutionMode.EDGE
     },
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"

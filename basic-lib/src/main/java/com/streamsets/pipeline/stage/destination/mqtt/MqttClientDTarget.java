@@ -36,7 +36,9 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+
     },
     recordsByRef = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MQTTPublisher.html#task_vbn_cyt_lz",

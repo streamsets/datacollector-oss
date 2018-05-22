@@ -34,7 +34,9 @@ import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+
     },
   upgrader = KafkaTargetUpgrader.class,
   onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/KProducer.html#task_q4d_4yl_zq"

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
   version = 5,
   label = "Hadoop FS",
   description = "Reads data from Hadoop file system",
-  execution = ExecutionMode.CLUSTER_BATCH,
+  execution = {ExecutionMode.CLUSTER_BATCH , ExecutionMode.EMR_BATCH },
   libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
   icon = "hdfs.png",
   privateClassLoader = true,
