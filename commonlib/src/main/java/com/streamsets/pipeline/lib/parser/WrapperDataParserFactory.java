@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
 import java.io.File;
@@ -95,7 +96,7 @@ public class WrapperDataParserFactory extends DataParserFactory {
     @Override
     public Record parse() throws IOException, DataParserException {
       try {
-        return dataParser.parse();
+        return CreateByRef.call( () -> dataParser.parse());
       } catch (Throwable ex) {
         ExceptionUtils.throwUndeclared(normalizeException(ex));
       }
