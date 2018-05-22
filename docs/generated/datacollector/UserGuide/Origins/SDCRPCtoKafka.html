@@ -2,8 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="SDC RPC to Kafka" /><meta name="abstract" content="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline." /><meta name="description" content="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_tdk_slk_pw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>SDC RPC to Kafka</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline. However, the SDC ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="SDC RPC to Kafka (Deprecated)" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_tdk_slk_pw" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>SDC RPC to Kafka (Deprecated)</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -43,15 +42,16 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_tdk_slk_pw">
- <h1 class="title topictitle1">SDC RPC to Kafka</h1>
+ <h1 class="title topictitle1">SDC RPC to Kafka (Deprecated)</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes
-        it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline. </p>
+ <div class="body conbody">
+        <p class="p">The SDC RPC to Kafka origin reads data from
+            one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to
+            Kafka origin in an SDC RPC destination pipeline. However, the SDC RPC to Kafka origin is
+            now deprecated and will be removed in a future release. We recommend using the <a class="xref" href="SDC_RPCorigin.html#concept_agb_5c1_ct" title="The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC origin reads data passed from an SDC RPC destination. Use the SDC RPC origin as part of an SDC RPC destination pipeline.">SDC RPC origin</a>.</p>
 
-        <p class="p">Use the SDC RPC to Kafka origin when you
-            have multiple SDC RPC origin pipelines with data that you want to write to Kafka without
-            additional processing. </p>
+        <p class="p">Use the SDC RPC to Kafka origin when you have multiple SDC RPC origin pipelines with data
+            that you want to write to Kafka without additional processing. </p>
 
         <p class="p">Like the SDC RPC origin, the SDC RPC to Kafka origin reads data from an SDC RPC
             destination in another pipeline. However, the SDC RPC to Kafka origin is optimized to
@@ -184,7 +184,7 @@
             as necessary.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_vhc_jgc_rw__d77381e36">
+                user-defined values for the following properties:<ul class="ul" id="concept_vhc_jgc_rw__d77914e36">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -205,11 +205,8 @@
  <h2 class="title topictitle2">Enabling Kafka Security</h2>
 
  <div class="body conbody">
-  <p class="p">When using <span class="ph">Kafka version 0.9.0.0 or later</span>,
-            you can configure the SDC RPC to Kafka origin to connect securely through SSL/TLS,
-            Kerberos, or both. </p>
-
-        <p class="p">Earlier versions of Kafka do not support security. </p>
+  <p class="p">You can configure the SDC RPC to Kafka origin to
+            connect securely to Kafka through SSL/TLS, Kerberos, or both. </p>
 
  </div>
 
@@ -218,23 +215,22 @@
 
  <div class="body conbody">
         <p class="p">Perform the following steps to enable the SDC RPC
-            to Kafka origin to use SSL/TLS to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>. </p>
+            to Kafka origin to use SSL/TLS to connect to Kafka. </p>
 
         <div class="p">
-            <ol class="ol" id="concept_xsb_5xc_rw__d58425e27">
-                <li class="li" id="concept_xsb_5xc_rw__d58425e29">To use SSL/TLS to connect, first make sure Kafka is
+            <ol class="ol" id="concept_xsb_5xc_rw__d58882e25">
+                <li class="li" id="concept_xsb_5xc_rw__d58882e27">To use SSL/TLS to connect, first make sure Kafka is
                     configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
 
-                <li class="li" id="concept_xsb_5xc_rw__d58425e35">On the <span class="ph uicontrol">General</span> tab of the stage, set
-                    the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka 0.9.0.0 or a
-                    later version.</li>
+                <li class="li" id="concept_xsb_5xc_rw__d58882e33">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                    the <span class="ph uicontrol">Stage Library</span> property to the appropriate Apache
+                    Kafka version.</li>
 
-                <li class="li" id="concept_xsb_5xc_rw__d58425e44">On the <span class="keyword wintitle">Connection</span> tab, add the
-                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
-                    set it to <span class="ph uicontrol">SSL</span>.</li>
+                <li class="li" id="concept_xsb_5xc_rw__d58882e42">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
+                    property and set it to <strong class="ph b">SSL</strong>.</li>
 
-                <li class="li" id="concept_xsb_5xc_rw__d58425e56">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_xsb_5xc_rw__d58425e58">
+                <li class="li" id="concept_xsb_5xc_rw__d58882e54">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_xsb_5xc_rw__d58882e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -242,7 +238,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_xsb_5xc_rw__d58425e68">
+                        following properties: <ul class="ul" id="concept_xsb_5xc_rw__d58882e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -252,7 +248,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_xsb_5xc_rw__d58425e81">
+                            well:<ul class="ul" id="concept_xsb_5xc_rw__d58882e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -270,7 +266,7 @@
         </div>
 
         <p class="p">For example, the following properties allow the stage to use SSL/TLS to
-            connect to Kafka 0.9.0.0 with client authentication:</p>
+            connect to Kafka with client authentication:</p>
 
         <img class="image" id="concept_xsb_5xc_rw__image_vrc_qzc_rw" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
     </div>
@@ -282,26 +278,27 @@
  <div class="body conbody">
   <p class="p">When
             you use Kerberos authentication, <span class="ph">Data Collector</span>
-            uses the Kerberos principal and keytab to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>.
-            Perform the following steps to enable the SDC RPC to Kafka origin to use Kerberos to
-            connect to Kafka.</p>
+            uses the Kerberos principal and keytab to connect to Kafka. Perform the following steps
+            to enable the SDC RPC to Kafka origin to use Kerberos to connect to Kafka.</p>
 
         <div class="p">
             <ol class="ol">
-                <li class="li" id="concept_fyp_vcd_rw__d58517e41">To use Kerberos, first make sure Kafka is configured for
+                <li class="li" id="concept_fyp_vcd_rw__d58936e39">To use Kerberos, first make sure Kafka is configured for
                     Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
 
-                <li class="li" id="concept_fyp_vcd_rw__d58517e47">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                <li class="li" id="concept_fyp_vcd_rw__d58936e45">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
                     in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
 
-                <li class="li" id="concept_fyp_vcd_rw__d58517e54">Add the Java Authentication and Authorization
+                <li class="li" id="concept_fyp_vcd_rw__d58936e52">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation type:<ul class="ul" id="concept_fyp_vcd_rw__d58517e56">
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation</span> - Add the properties
-                            to the JAAS configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                            properties to a client login section in the file named
-                                <samp class="ph codeph">KafkaClient</samp>:<pre class="pre codeblock">KafkaClient {
+                    installation and authentication type:<ul class="ul" id="concept_fyp_vcd_rw__d58936e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
@@ -312,17 +309,61 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/kafka_client.keytab"
-    principal="kafka-client-1/sdc-01.streamsets.net@EXAMPLE.COM";
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
 </li>
 
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation</span> - Add the
-                            properties to the <strong class="ph b">Data Collector Advanced Configuration Snippet
-                                (Safety Valve) for generated-ldap-login-append.conf</strong> field for
-                            the StreamSets service in Cloudera Manager. Add the properties to the
-                            field as
-                                follows:<pre class="pre codeblock">KafkaClient {
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
@@ -333,7 +374,7 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
-    principal="kafka-client-1/_HOST@EXAMPLE.COM";
+    principal="sdc/_HOST@EXAMPLE.COM";
 };</pre>
 </div>
 <p class="p">Cloudera
@@ -344,14 +385,14 @@
                     </ul>
 </li>
 
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the Stage Library
-                    property to Apache Kafka 0.9.0.0 or a later version.</li>
+                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
+                        Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_fyp_vcd_rw__d58517e100">On the <span class="keyword wintitle">Connection</span> tab, add the
+                <li class="li" id="concept_fyp_vcd_rw__d58936e135">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_fyp_vcd_rw__d58517e113">Then, add the
+                <li class="li" id="concept_fyp_vcd_rw__d58936e148">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to the same Kerberos principal name that you just defined in the JAAS
                     configuration properties. </li>
@@ -361,9 +402,9 @@
         </div>
 
         <p class="p">For example, the following Kafka properties enable connecting to Kafka
-            0.9.0.0 with Kerberos:</p>
+            with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_fyp_vcd_rw__d58517e125" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="88" width="639" /></p>
+        <p class="p"><img class="image" id="concept_fyp_vcd_rw__d58936e160" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="99" width="580" /></p>
 
  </div>
 
@@ -373,13 +414,14 @@
 
  <div class="body conbody">
   <p class="p">You
-            can enable the SDC RPC to Kafka origin to use SSL/TLS and Kerberos to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>.</p>
+            can enable the SDC RPC to Kafka origin to use SSL/TLS and Kerberos to connect to
+            Kafka.</p>
 
-        <div class="p"><span class="ph" id="concept_hx4_3yd_rw__d58664e30">To use SSL/TLS and Kerberos, combine the required
+        <div class="p"><span class="ph" id="concept_hx4_3yd_rw__d59110e28">To use SSL/TLS and Kerberos, combine the required
                 steps to enable each and set the security.protocol property as follows:</span>
-            <ol class="ol" id="concept_hx4_3yd_rw__d58664e33">
-                <li class="li" id="concept_hx4_3yd_rw__d58664e35">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_hx4_3yd_rw__d58664e37">
+            <ol class="ol" id="concept_hx4_3yd_rw__d59110e31">
+                <li class="li" id="concept_hx4_3yd_rw__d59110e33">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_hx4_3yd_rw__d59110e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -392,12 +434,14 @@
 
                 <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation type:<ul class="ul" id="concept_hx4_3yd_rw__d58517e56">
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation</span> - Add the properties
-                            to the JAAS configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                            properties to a client login section in the file named
-                                <samp class="ph codeph">KafkaClient</samp>:<pre class="pre codeblock">KafkaClient {
+                    installation and authentication type:<ul class="ul" id="concept_hx4_3yd_rw__d58936e54">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            the
+                                file:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
@@ -408,17 +452,61 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/kafka_client.keytab"
-    principal="kafka-client-1/sdc-01.streamsets.net@EXAMPLE.COM";
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</pre>
+</div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
+</div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
+                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
+                                <samp class="ph codeph">ldap-login.conf</samp>
+                                file:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</pre>
+<div class="p">For
+                                example:<pre class="pre codeblock">KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
 </li>
 
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation</span> - Add the
-                            properties to the <strong class="ph b">Data Collector Advanced Configuration Snippet
-                                (Safety Valve) for generated-ldap-login-append.conf</strong> field for
-                            the StreamSets service in Cloudera Manager. Add the properties to the
-                            field as
-                                follows:<pre class="pre codeblock">KafkaClient {
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
@@ -429,7 +517,7 @@
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
-    principal="kafka-client-1/_HOST@EXAMPLE.COM";
+    principal="sdc/_HOST@EXAMPLE.COM";
 };</pre>
 </div>
 <p class="p">Cloudera
@@ -440,10 +528,10 @@
                     </ul>
 </li>
 
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the Stage Library
-                    property to Apache Kafka 0.9.0.0 or a later version.</li>
+                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
+                        Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_hx4_3yd_rw__d58664e56">On the <span class="keyword wintitle">Connection</span> tab, add the
+                <li class="li" id="concept_hx4_3yd_rw__d59110e57">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> property and set it to
                         <span class="ph uicontrol">SASL_SSL</span>.</li>
 
@@ -452,8 +540,8 @@
                     and set it to the same Kerberos principal name that you just defined in the JAAS
                     configuration properties. </li>
 
-                <li class="li">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_hx4_3yd_rw__d58425e58">
+                <li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_hx4_3yd_rw__d58882e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -461,7 +549,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_hx4_3yd_rw__d58425e68">
+                        following properties: <ul class="ul" id="concept_hx4_3yd_rw__d58882e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -471,7 +559,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_hx4_3yd_rw__d58425e81">
+                            well:<ul class="ul" id="concept_hx4_3yd_rw__d58882e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -506,14 +594,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_il5_gtl_pw__d47184e613" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_il5_gtl_pw__d47641e613" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d389754e693">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d391854e771">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d389754e696">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d391854e774">Description</th>
 
                                 </tr>
 
@@ -521,31 +609,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e693 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e771 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e696 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e693 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d389754e696 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d391854e774 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e693 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e771 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e696 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d391854e774 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e693 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_il5_gtl_pw__d47184e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e771 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e696 ">Error record handling for the stage: <ul class="ul" id="task_il5_gtl_pw__d47184e672">
+                                    <td class="entry" valign="top" width="70%" headers="d391854e774 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e771 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_il5_gtl_pw__d47641e668" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d391854e774 ">Error record handling for the stage: <ul class="ul" id="task_il5_gtl_pw__d47641e672">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -576,9 +664,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d389754e781">Kafka Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d391854e859">Kafka Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d389754e784">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d391854e862">Description</th>
 
                                 </tr>
 
@@ -586,9 +674,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e781 ">Broker URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e859 ">Broker URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e784 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry" valign="top" width="70%" headers="d391854e862 ">Connection string for the Kafka broker. Use the following
                                         format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URIs.</p>
@@ -597,17 +685,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e781 ">Topic</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e859 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e784 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d391854e862 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e781 ">Max Message Size (KB) <a class="xref" href="SDCRPCtoKafka.html#concept_ezk_btx_pw" title="Configure the SDC RPC to Kafka maximum batch request size and Kafka message size properties in relationship to each other and to the maximum message size configured in Kafka.">
+                                    <td class="entry" valign="top" width="30%" headers="d391854e859 ">Max Message Size (KB) <a class="xref" href="SDCRPCtoKafka.html#concept_ezk_btx_pw" title="Configure the SDC RPC to Kafka maximum batch request size and Kafka message size properties in relationship to each other and to the maximum message size configured in Kafka.">
                                             <img class="image" id="task_il5_gtl_pw__image_omh_qky_pw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e784 ">Maximum size of the message to write to Kafka. <div class="note warning"><span class="warningtitle">Warning:</span> Must be smaller than the maximum message
+                                    <td class="entry" valign="top" width="70%" headers="d391854e862 ">Maximum size of the message to write to Kafka. <div class="note warning"><span class="warningtitle">Warning:</span> Must be smaller than the maximum message
                                             size configured in Kafka.</div>
 <p class="p">Default is 900 KB.
                                         </p>
@@ -616,11 +704,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e781 ">Kafka Configuration <a class="xref" href="SDCRPCtoKafka.html#concept_vhc_jgc_rw">
+                                    <td class="entry" valign="top" width="30%" headers="d391854e859 ">Kafka Configuration <a class="xref" href="SDCRPCtoKafka.html#concept_vhc_jgc_rw">
                                             <img class="image" id="task_il5_gtl_pw__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e784 ">
+                                    <td class="entry" valign="top" width="70%" headers="d391854e862 ">
                                         <p class="p">Additional Kafka configuration
                                             properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add properties.
@@ -652,9 +740,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d389754e895">SDC RPC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d391854e973">SDC RPC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d389754e898">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d391854e976">Description</th>
 
                                 </tr>
 
@@ -662,36 +750,36 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e895 ">RPC Listening Port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e973 ">RPC Listening Port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e898 ">Port number to listen to for data.
+                                    <td class="entry" valign="top" width="70%" headers="d391854e976 ">Port number to listen to for data.
                                         Must match one of the port numbers associated with the SDC
                                         RPC destination that provides the data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e895 ">Max Concurrent Requests <a class="xref" href="SDCRPCtoKafka.html#concept_p3b_5ms_pw" title="You can specify the maximum number of requests the SDC RPC to Kafka origin handles at one time.">
+                                    <td class="entry" valign="top" width="30%" headers="d391854e973 ">Max Concurrent Requests <a class="xref" href="SDCRPCtoKafka.html#concept_p3b_5ms_pw" title="You can specify the maximum number of requests the SDC RPC to Kafka origin handles at one time.">
                                             <img class="image" id="task_il5_gtl_pw__image_b2n_wrr_pw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e898 ">Maximum number of concurrent requests allowed at one
+                                    <td class="entry" valign="top" width="70%" headers="d391854e976 ">Maximum number of concurrent requests allowed at one
                                         time.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e895 ">RPC ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e973 ">RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e898 ">User-defined ID. Must match the RPC ID
+                                    <td class="entry" valign="top" width="70%" headers="d391854e976 ">User-defined ID. Must match the RPC ID
                                         defined in the SDC RPC destination.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e895 ">Max Batch Request Size (MB) <a class="xref" href="SDCRPCtoKafka.html#concept_ezk_btx_pw" title="Configure the SDC RPC to Kafka maximum batch request size and Kafka message size properties in relationship to each other and to the maximum message size configured in Kafka.">
+                                    <td class="entry" valign="top" width="30%" headers="d391854e973 ">Max Batch Request Size (MB) <a class="xref" href="SDCRPCtoKafka.html#concept_ezk_btx_pw" title="Configure the SDC RPC to Kafka maximum batch request size and Kafka message size properties in relationship to each other and to the maximum message size configured in Kafka.">
                                             <img class="image" id="task_il5_gtl_pw__image_xvk_nky_pw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e898 ">Maximum amount of data to be requested and processed at
+                                    <td class="entry" valign="top" width="70%" headers="d391854e976 ">Maximum amount of data to be requested and processed at
                                         one time. <p class="p">Default is 100 MB.</p>
 </td>
 
@@ -715,9 +803,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d389754e984">TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d391854e1062">TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d389754e987">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d391854e1065">Description</th>
 
                                 </tr>
 
@@ -725,9 +813,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Use TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Use TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -735,10 +823,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
-                                            <img class="image" id="task_il5_gtl_pw__d47184e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_il5_gtl_pw__d47641e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">The path to the keystore file. Enter an absolute path to
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">The path to the keystore file. Enter an absolute path to
                                         the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -748,10 +836,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Keystore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Keystore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">Type of keystore to use. Use one of the following
-                                            types:<ul class="ul" id="task_il5_gtl_pw__d47184e3385">
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_il5_gtl_pw__d47641e3385">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -763,9 +851,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Keystore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Keystore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">Password to the keystore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">Password to the keystore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -776,27 +864,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Keystore Key Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Keystore Key Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">The algorithm used to manage the keystore. <p class="p">Default is
                                                 <span class="ph">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_il5_gtl_pw__d47184e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_il5_gtl_pw__d47641e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -805,9 +893,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -815,9 +903,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d389754e984 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d391854e1062 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d389754e987 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d391854e1065 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher

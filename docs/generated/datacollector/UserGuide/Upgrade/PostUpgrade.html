@@ -67,9 +67,9 @@
             You can customize the <span class="ph">Data Collector</span>
             version range. For example, if you use <span class="ph">Control Hub</span>
             on-premises version 3.1.0 and you upgrade registered <span class="ph">Data Collector</span>s to
-            version <span class="ph">3.2.0.0</span>, you must configure the maximum <span class="ph">Data Collector</span>
+            version <span class="ph">3.3.0</span>, you must configure the maximum <span class="ph">Data Collector</span>
             version that can work with <span class="ph">Control Hub</span> to
-            version <span class="ph">3.2.0.0</span>.</p>
+            version <span class="ph">3.3.0</span>.</p>
 
         <p class="p">To modify the <span class="ph">Data Collector</span>
             version range:</p>
@@ -82,11 +82,45 @@
 
                 <li class="li">Click the <span class="ph uicontrol">Component Version Range</span> icon: <img class="image" id="concept_dzn_cdy_1cb__image_hd3_dfy_1cb" src="../Graphics/icon_OrganizationConfig.png" height="16" width="14" />.</li>
 
-                <li class="li">Enter <span class="ph">3.2.0.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
+                <li class="li">Enter <span class="ph">3.3.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
 
             </ol>
 
         </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_jzf_b3b_xdb">
+    <h2 class="title topictitle2">Update Pipelines to Use Spark 2.1 or Later</h2>
+
+    <div class="body conbody">
+        <p class="p">With version 3.3.0, <span class="ph">Data Collector</span>
+            removes support for Spark 1.x and introduces cluster streaming mode with support for
+            Kafka security features such as SSL/TLS and Kerberos authentication using Spark 2.1 or
+            later and Kafka 0.10.0.0 or later. For more information about these changes, see <a class="xref" href="PreUpgrade.html#concept_zgm_vj2_mdb" title="Data Collector version 3.3.0 introduces cluster streaming mode with support for Kafka security features such as SSL/TLS and Kerberos authentication using Spark 2.1 or later and Kafka 0.10.0.0 or later.">Upgrade to Spark 2.1 or Later</a>.</p>
+
+        <p class="p">After upgrading the Cloudera CDH distribution, Hortonworks Hadoop distribution, or Kafka
+            system to the required version and then upgrading <span class="ph">Data Collector</span>,
+            you must update pipelines to use Spark 2.1 or later. Pipelines that use the earlier
+            systems will not run until you perform these tasks:</p>
+
+        <ol class="ol" id="concept_jzf_b3b_xdb__ol_t1f_w3b_xdb">
+            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install the
+                    stage library</a> for the upgraded system.</li>
+
+            <li class="li">In the pipeline, edit the stage and select the appropriate stage library.</li>
+
+            <li class="li">If the pipeline includes a Spark Evaluator processor and the Spark application was
+                previously built with Spark 2.0 or earlier, rebuild it with Spark 2.1. <p class="p">Or if you
+                    used Scala to write the custom Spark class, and the application was compiled
+                    with Scala 2.10, recompile it with Scala 2.11.</p>
+</li>
+
+            <li class="li">If the pipeline includes a Spark executor and the Spark application was previously
+                built with Spark 2.0 or earlier, rebuild it with Spark 2.1 and Scala 2.11. </li>
+
+        </ol>
 
     </div>
 

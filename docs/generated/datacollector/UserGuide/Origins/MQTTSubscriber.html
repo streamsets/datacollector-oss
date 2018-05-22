@@ -95,7 +95,7 @@
         <p class="p">The MQTT Subscriber origin creates a record header
             attribute that includes information about the origins of the record.</p>
 
-        <p class="p"><span class="ph" id="concept_fwm_2kn_scb__d48117e20">You can use the record:attribute or
+        <p class="p"><span class="ph" id="concept_fwm_2kn_scb__d48574e20">You can use the record:attribute or
                 record:attributeOrDefault functions to access the information in the attributes. For
                 more information about working with record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_rd2_ghz_dz">Working with Header Attributes</a>.</span></p>
 
@@ -157,7 +157,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_bxn_fxq_mz__ul_evg_nsl_mcb">
+                                    following delimited format types:<ul class="ul" id="concept_bxn_fxq_mz__ul_vyp_ksl_mcb">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -196,25 +196,9 @@
 
                               <dd class="dd">You can also replace a string constant with null values.</dd>
 
-                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
-                                    origin cannot continue processing data in the file. Records
-                                    already processed from the file are passed to the pipeline. The
-                                    behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_bxn_fxq_mz__d46891e1247">
-                                          <li class="li">Discard - The origin continues processing with the
-                                                next file, leaving the partially-processed file in
-                                                the directory. </li>
-
-                                          <li class="li">To Error - The origin continues processing with the
-                                                next file. If a post-processing error directory is
-                                                configured for the stage, the origin moves the
-                                                partially-processed file to the error directory.
-                                                Otherwise, it leaves the file in the directory.</li>
-
-                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
-
-                                    </ul>
-</dd>
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
 
                         
          
@@ -225,24 +209,8 @@
                                     array.</dd>
 
                               <dd class="dd">When an object exceeds the maximum object length defined for the
-                                    origin, the origin cannot continue processing data in the file.
-                                    Records already processed from the file are passed to the
-                                    pipeline. The behavior of the origin is then based on the error
-                                    handling configured for the stage:<ul class="ul" id="concept_bxn_fxq_mz__d46891e1282">
-                                          <li class="li">Discard - The origin continues processing with the
-                                                next file, leaving the partially-processed file in
-                                                the directory. </li>
-
-                                          <li class="li">To Error - The origin continues processing with the
-                                                next file. If a post-processing error directory is
-                                                configured for the stage, the origin moves the
-                                                partially-processed file to the error directory.
-                                                Otherwise, it leaves the file in the directory.</li>
-
-                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
-
-                                    </ul>
-</dd>
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
 
                         
          
@@ -261,20 +229,22 @@
 
                         
          
-                        <dt class="dt dlterm">Protobuf</dt>
+                              <dt class="dt dlterm">Protobuf</dt>
 
-                        <dd class="dd">Generates a record for every protobuf message. </dd>
+                              <dd class="dd">Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
 
-                        <dd class="dd">Protobuf messages must match the specified message type and be described
-                              in the descriptor file. </dd>
+                              <dd class="dd">Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
 
-                        <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot continue
-                              processing data in the file. The origin handles the file based on file
-                              error handling properties and continues reading the next file. </dd>
+                              <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message. </dd>
 
-                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+                              <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
 
-                  
+                        
          
                               <dt class="dt dlterm">SDC Record</dt>
 
@@ -311,7 +281,7 @@
                               <dd class="dd">Generates records based on a user-defined delimiter element. Use
                                     an XML element directly under the root element or define a
                                     simplified XPath expression. If you do not define a delimiter
-                                    element, the origin treats the XML file as a single record. </dd>
+                                    element, the origin treats the XML file as a single record.</dd>
 
                               <dd class="dd">Generated records include XML attributes and namespace
                                     declarations as fields in the record by default. You can
@@ -320,44 +290,29 @@
 
                               <dd class="dd">You can include XPath information for each parsed XML element and
                                     XML attribute in field attributes. This also places each
-                                    namespace in an xmlns record header attribute. </dd>
-
-                              <dd class="dd">
-                                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes and record header attributes are
+                                    namespace in an xmlns record header attribute. <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes and record header attributes are
                         written to destination systems automatically only when you use the SDC RPC
                         data format in destinations. For more information about working with field
                         attributes and record header attributes, and how to include them in records,
                         see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a> and <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></div>
-
-                              </dd>
+</dd>
 
                               <dd class="dd">When a record exceeds the user-defined maximum record length, the
-                                    origin cannot continue processing data in the file. Records
-                                    already processed from the file are passed to the pipeline. The
-                                    behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_bxn_fxq_mz__d46891e1563">
-                                          <li class="li">Discard - The origin continues processing with the
-                                                next file, leaving the partially-processed file in
-                                                the directory. </li>
-
-                                          <li class="li">To Error - The origin continues processing with the
-                                                next file. If a post-processing error directory is
-                                                configured for the stage, the origin moves the
-                                                partially-processed file to the error directory.
-                                                Otherwise, it leaves the file in the directory.</li>
-
-                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
-
-                                    </ul>
-</dd>
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
 
                               <dd class="dd">Use the XML data format to process valid XML documents. For more
-                                    information about XML processing, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a>. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_bxn_fxq_mz__d46891e1580">If
-                                                you want to process invalid XML documents, you can
-                                                try using the text data format with custom
-                                                delimiters. For more information, see <a class="xref" href="../Data_Formats/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span>
+                                    information about XML processing, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a>.</dd>
+
+                              <dd class="dd">
+                                    <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph">If you want to process invalid XML
+                                                documents, you can try using the text data format
+                                                with custom delimiters. For more information, see
+                                                  <a class="xref" href="../Data_Formats/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span>
                                     </div>
-</dd>
+
+                              </dd>
 
                         
      </dl>
@@ -380,14 +335,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e425" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e425" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d328401e497">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d330607e464">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d328401e500">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d330607e467">Description</th>
 
                                 </tr>
 
@@ -395,24 +350,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e497 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e464 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e500 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e497 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e500 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e467 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e497 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e464 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e500 ">Error record handling for the stage: <ul class="ul" id="task_wnz_mxt_lz__d47184e475">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e467 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e464 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e467 ">Error record handling for the stage: <ul class="ul" id="task_wnz_mxt_lz__d47641e475">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -442,9 +397,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e576">MQTT Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e543">MQTT Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e579">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e546">Description</th>
 
                                 </tr>
 
@@ -452,9 +407,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d328401e576 ">Broker URL</td>
+      <td class="entry" valign="top" width="30%" headers="d330607e543 ">Broker URL</td>
 
-      <td class="entry" valign="top" width="70%" headers="d328401e579 ">MQTT Broker URL. Enter in the following
+      <td class="entry" valign="top" width="70%" headers="d330607e546 ">MQTT Broker URL. Enter in the following
         format:<pre class="pre codeblock">&lt;tcp | ssl&gt;://&lt;hostname&gt;:&lt;port&gt;</pre>
 <p class="p">Use ssl for secure
         connections to the broker.</p>
@@ -466,9 +421,9 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d328401e576 ">Client ID</td>
+      <td class="entry" valign="top" width="30%" headers="d330607e543 ">Client ID</td>
 
-      <td class="entry" valign="top" width="70%" headers="d328401e579 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
+      <td class="entry" valign="top" width="70%" headers="d330607e546 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
         broker.<div class="p">You can define an expression that evaluates to the client ID. For example, you can
         enter the following expression to use the unique pipeline ID as the client
         ID:<pre class="pre codeblock">${pipeline:id()}</pre>
@@ -478,19 +433,19 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e576 ">Topic Filter <a class="xref" href="MQTTSubscriber.html#concept_tdy_24q_mz" title="The MQTT Subscriber origin reads messages from one or more topics on the MQTT broker. A topic is a string that the broker uses to filter messages for each connected client.">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e543 ">Topic Filter <a class="xref" href="MQTTSubscriber.html#concept_tdy_24q_mz" title="The MQTT Subscriber origin reads messages from one or more topics on the MQTT broker. A topic is a string that the broker uses to filter messages for each connected client.">
                                             <img class="image" id="task_wnz_mxt_lz__image_off_y2h_mw" src="../Graphics/icon_moreInfo.png" height="14" width="14" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e579 ">Topics to subscribe to. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d330607e546 ">Topics to subscribe to. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to read from additional
                                         topics. </td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d328401e576 ">Quality of Service</td>
+      <td class="entry" valign="top" width="30%" headers="d330607e543 ">Quality of Service</td>
 
-      <td class="entry" valign="top" width="70%" headers="d328401e579 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_wnz_mxt_lz__d46981e4323">
+      <td class="entry" valign="top" width="70%" headers="d330607e546 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_wnz_mxt_lz__d47438e4324">
         <li class="li">At Most Once (0)</li>
 
         <li class="li">At Least Once (1)</li>
@@ -505,9 +460,9 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e576 ">Client Persistence Mechanism</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e543 ">Client Persistence Mechanism</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e579 ">Determines the persistence mechanism that the origin uses
+                                    <td class="entry" valign="top" width="70%" headers="d330607e546 ">Determines the persistence mechanism that the origin uses
                                         to guarantee message delivery when the quality of service
                                         level is at least once or exactly once. Select one of the
                                         following options:<ul class="ul" id="task_wnz_mxt_lz__ul_oq3_gdr_mz">
@@ -527,9 +482,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e576 ">Client Persistence Data Directory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e543 ">Client Persistence Data Directory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e579 ">Local directory on the <span class="ph">Data Collector</span> machine where the origin temporarily stores messages in a
+                                    <td class="entry" valign="top" width="70%" headers="d330607e546 ">Local directory on the <span class="ph">Data Collector</span> machine where the origin temporarily stores messages in a
                                         file when you configure file persistence.<p class="p">The user who
                                             starts <span class="ph">Data Collector</span> must have read and write access to this
                                             directory.</p>
@@ -538,9 +493,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e576 ">Keep Alive Interval (secs)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e543 ">Keep Alive Interval (secs)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e579 ">Maximum time in seconds to allow the connection to the
+                                    <td class="entry" valign="top" width="70%" headers="d330607e546 ">Maximum time in seconds to allow the connection to the
                                         MQTT broker to remain idle. After the origin receives no
                                         messages for this amount of time, the connection is closed.
                                         The origin must reconnect to the MQTT broker.<p class="p">Default is
@@ -550,9 +505,9 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d328401e576 ">Use Credentials</td>
+      <td class="entry" valign="top" width="30%" headers="d330607e543 ">Use Credentials</td>
 
-      <td class="entry" valign="top" width="70%" headers="d328401e579 ">Enables entering credentials on the Credentials tab. Use when the MQTT broker requires
+      <td class="entry" valign="top" width="70%" headers="d330607e546 ">Enables entering credentials on the Credentials tab. Use when the MQTT broker requires
        a user name and password.</td>
 
      </tr>
@@ -568,7 +523,7 @@
                 <span class="ph cmd">On the <span class="keyword wintitle">Credentials</span> tab, enter the MQTT credentials to use
                     if you enabled credentials.</span>
                 <div class="itemgroup info">
-                    <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_wnz_mxt_lz__d46891e4741">To
+                    <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_wnz_mxt_lz__d47348e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 
@@ -584,9 +539,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e796">TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e763">TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e799">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e766">Description</th>
 
                                 </tr>
 
@@ -594,9 +549,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Use TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Use TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -604,10 +559,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">The path to the truststore file. Enter an absolute path
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">The path to the truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -617,9 +572,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Truststore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Truststore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -631,9 +586,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">Password to the truststore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -644,27 +599,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Truststore Trust Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">The algorithm used to manage the truststore. <p class="p">Default
-                                            is <span class="ph" id="task_wnz_mxt_lz__d47184e3487">SunX509</span>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_wnz_mxt_lz__d47641e3487">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -673,9 +628,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -683,9 +638,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e796 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e763 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e799 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d330607e766 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -713,9 +668,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1045">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1012">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1048">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1015">Description</th>
 
                                 </tr>
 
@@ -723,10 +678,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1045 ">Data Format <a class="xref" href="HTTPServer.html#concept_anf_ss4_qy">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1012 ">Data Format <a class="xref" href="HTTPServer.html#concept_anf_ss4_qy">
                                         <img class="image" id="task_wnz_mxt_lz__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1048 ">Type of data to be processed. Use one of the
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1015 ">Type of data to be processed. Use one of the
                                         following options:<ul class="ul" id="task_wnz_mxt_lz__ul_c52_h4g_sy">
                                             <li class="li">Binary</li>
 
@@ -764,14 +719,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e1157" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1157" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1139">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1106">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1142">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1109">Description</th>
 
                                 </tr>
 
@@ -779,10 +734,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1139 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1106 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1142 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e1109 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -798,19 +753,20 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1139 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1106 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1142 ">File name pattern that represents the files to process within the compressed
-        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
-        example, *.json.<p class="p">Default is *, which processes all files.</p>
+       <td class="entry" valign="top" width="70%" headers="d330607e1109 ">For archive and compressed archive files, file name pattern that represents the files
+        to process within the compressed directory. You can use UNIX-style wildcards, such as an
+        asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
+         files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1189">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1139 ">Max Data Size (bytes)</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1189">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1106 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1142 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1109 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -827,14 +783,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e1224" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1224" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1226">Datagram Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1193">Datagram Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1229">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1196">Description</th>
 
                                 </tr>
 
@@ -842,9 +798,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Datagram Packet Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Datagram Packet Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 ">Packet format of the data: <ul class="ul" id="task_wnz_mxt_lz__ul_q1q_yp4_4x">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 ">Packet format of the data: <ul class="ul" id="task_wnz_mxt_lz__ul_q1q_yp4_4x">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -859,19 +815,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 ">TypesDB File Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 ">TypesDB File Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">Path to a user-provided types.db
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">Path to a user-provided types.db
                                             file. Overrides the default types.db file.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Convert Hi-Res Time &amp;
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Convert Hi-Res Time &amp;
                                         Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">Converts the collectd high
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">Converts the collectd high
                                             resolution time format interval and timestamp to UNIX
                                             time, in milliseconds.</span><p class="p">For collectd data only.</p>
 </td>
@@ -879,18 +835,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Exclude Interval</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Exclude Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">Excludes the interval field from
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">Excludes the interval field from
                                             output record.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Auth File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Auth File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">Path to an optional authentication
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">Path to an optional authentication
                                             file. Use an authentication file to accept signed and
                                             encrypted data.</span><p class="p">For collectd data only.</p>
 </td>
@@ -898,11 +854,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 "><span class="ph">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 "><span class="ph">Record Generation Mode <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">
                                                 <img class="image" id="task_wnz_mxt_lz__image_jrf_wqm_3bb" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></span>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">Determines the type of
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">Determines the type of
                                             values to include in the record. Select one of the
                                             following options:</span><ul class="ul" id="task_wnz_mxt_lz__ul_zgh_m4l_3bb">
                                             <li class="li">Raw Only</li>
@@ -918,10 +874,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 "><span class="ph">Max Templates in
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 "><span class="ph">Max Templates in
                                             Cache</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">The maximum number of
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">The maximum number of
                                             templates to store in the template cache. For more
                                             information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph">Default is -1
                                                 for an unlimited cache size.</span></p>
@@ -931,10 +887,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1226 "><span class="ph">Template Cache
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1193 "><span class="ph">Template Cache
                                             Timeout (ms)</span></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1229 "><span class="ph">The maximum number
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1196 "><span class="ph">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
                                             the cache. For more information about templates, see
@@ -946,17 +902,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1229 ">Character encoding of the messages to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d330607e1196 ">Character encoding of the messages to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1226 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1193 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1229 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e1196 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -973,14 +929,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e1380" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1380" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1429">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1396">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1432">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1399">Description</th>
 
                                 </tr>
 
@@ -988,10 +944,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1432 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e1399 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1007,19 +963,20 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1429 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1396 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1432 ">File name pattern that represents the files to process within the compressed
-        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
-        example, *.json.<p class="p">Default is *, which processes all files.</p>
+       <td class="entry" valign="top" width="70%" headers="d330607e1399 ">For archive and compressed archive files, file name pattern that represents the files
+        to process within the compressed directory. You can use UNIX-style wildcards, such as an
+        asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
+         files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1412">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Delimiter Format Type</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1412">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_wnz_mxt_lz__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1048,27 +1005,27 @@
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1425">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Header Line</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1425">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1434">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Allow Extra Columns</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1434">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Allow Extra Columns</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">When processing data with a header line, allows
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1444">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Extra Column Prefix</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1444">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Extra Column Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <samp class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</samp>. <p class="p">For
@@ -1077,20 +1034,20 @@
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1458">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Max Record Length (chars)</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1458">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1469">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Delimiter Character</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1469">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1104,25 +1061,25 @@
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1488">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Escape Character</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1488">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr id="task_wnz_mxt_lz__d47184e1497">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1506">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e1512" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wnz_mxt_lz__d47641e1497">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Root field type to use:<ul class="ul" id="task_wnz_mxt_lz__d47184e1516">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr id="task_wnz_mxt_lz__d47641e1506">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e1512" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Root field type to use:<ul class="ul" id="task_wnz_mxt_lz__d47641e1516">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1137,40 +1094,40 @@
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1527">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Lines to Skip</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1527">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1536">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Parse NULLs</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1536">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1545">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1429 ">NULL Constant</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1545">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1396 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1432 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1399 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1429 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1396 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1432 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e1399 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1187,14 +1144,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e1590" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1590" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1722">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1689">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1725">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1692">Description</th>
 
                                 </tr>
 
@@ -1202,10 +1159,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1722 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1689 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1725 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e1692 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1221,20 +1178,21 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1722 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1689 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1725 ">File name pattern that represents the files to process within the compressed
-        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
-        example, *.json.<p class="p">Default is *, which processes all files.</p>
+       <td class="entry" valign="top" width="70%" headers="d330607e1692 ">For archive and compressed archive files, file name pattern that represents the files
+        to process within the compressed directory. You can use UNIX-style wildcards, such as an
+        asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
+         files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1622">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1722 ">JSON Content</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1622">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1689 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1725 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_wnz_mxt_lz__d47184e1631">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1692 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_wnz_mxt_lz__d47641e1631">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1246,10 +1204,10 @@
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e1642">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1722 ">Maximum Object Length (chars)</td>
+                                <tr id="task_wnz_mxt_lz__d47641e1642">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1689 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1725 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1692 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1259,17 +1217,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1722 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1689 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1725 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d330607e1692 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1722 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1689 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1725 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e1692 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1291,9 +1249,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e1867">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e1834">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e1870">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e1837">Description</th>
 
                                 </tr>
 
@@ -1301,11 +1259,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1867 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e1739" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1834 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e1739" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1870 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_wnz_mxt_lz__d47184e1743">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1837 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_wnz_mxt_lz__d47641e1743">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1330,9 +1288,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1867 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1834 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1870 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1837 ">Maximum length of a log line. The origin truncates longer
                                         lines. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
@@ -1340,9 +1298,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e1867 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e1834 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e1870 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d330607e1837 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1351,17 +1309,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1867 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1834 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1870 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d330607e1837 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e1867 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e1834 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e1870 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e1837 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1394,14 +1352,14 @@
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e1856" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1856" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr>
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d328401e2043">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d330607e2010">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d328401e2046">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d330607e2013">Description</th>
 
                                             </tr>
 
@@ -1409,10 +1367,10 @@
 
                                         <tbody class="tbody">
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e2043 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e2010 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e2046 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_wnz_mxt_lz__d47184e1885">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e2013 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_wnz_mxt_lz__d47641e1885">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1431,17 +1389,17 @@
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e2043 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e2010 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e2046 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e2013 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d328401e2043 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d330607e2010 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d328401e2046 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d330607e2013 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1463,14 +1421,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e2055" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e1952" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e2120">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e2087">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e2123">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e2090">Description</th>
 
                                 </tr>
 
@@ -1478,10 +1436,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2120 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2087 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2123 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e2090 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1497,31 +1455,32 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2120 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2087 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2123 ">File name pattern that represents the files to process within the compressed
-        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
-        example, *.json.<p class="p">Default is *, which processes all files.</p>
+       <td class="entry" valign="top" width="70%" headers="d330607e2090 ">For archive and compressed archive files, file name pattern that represents the files
+        to process within the compressed directory. You can use UNIX-style wildcards, such as an
+        asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
+         files.</p>
 </td>
 
       </tr>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2120 ">Protobuf Descriptor File </td>
+                                <tr id="task_wnz_mxt_lz__d47641e1984">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2087 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2123 ">Descriptor file (.desc) to use. The descriptor file must
-                                        be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
-                                                <p class="p"><span class="ph">For more information about environment variables, see
-                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
-                                            see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2090 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data Collector</span> resources directory,
+                                            <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
+                                            generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. <span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2120 ">Message Type</td>
+                                <tr id="task_wnz_mxt_lz__d47641e2003">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2087 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2123 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2090 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1530,11 +1489,11 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2120 ">Delimited Messages</td>
+                                <tr id="task_wnz_mxt_lz__d47641e2018">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2087 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2123 ">Indicates if a file might include more than one protobuf
-                                        message.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2090 ">Indicates if a message might include more than one
+                                        protobuf message.</td>
 
                                 </tr>
 
@@ -1550,14 +1509,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e2157" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e2157" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e2283">SDC Record Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e2250">SDC Record Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e2286">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e2253">Description</th>
 
                                 </tr>
 
@@ -1565,10 +1524,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2283 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2250 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2286 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e2253 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1584,11 +1543,12 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2283 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2250 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2286 ">File name pattern that represents the files to process within the compressed
-        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
-        example, *.json.<p class="p">Default is *, which processes all files.</p>
+       <td class="entry" valign="top" width="70%" headers="d330607e2253 ">For archive and compressed archive files, file name pattern that represents the files
+        to process within the compressed directory. You can use UNIX-style wildcards, such as an
+        asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
+         files.</p>
 </td>
 
       </tr>
@@ -1610,9 +1570,9 @@ Use a message type defined in the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e2361">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e2328">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e2364">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e2331">Description</th>
 
                                 </tr>
 
@@ -1620,9 +1580,9 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2364 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2331 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1633,40 +1593,40 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2364 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2331 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2364 ">One or more characters to use to define records. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Include Custom Delimiter</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2364 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2331 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Include Custom Delimiter</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2364 ">Character encoding of the files to be processed.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2331 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d330607e2331 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2361 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2328 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2364 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e2331 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1683,14 +1643,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47184e2575" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wnz_mxt_lz__d47641e2575" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d328401e2476">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d330607e2443">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d328401e2479">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d330607e2446">Description</th>
 
                                 </tr>
 
@@ -1698,10 +1658,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e1228" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2479 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d46981e1232">
+       <td class="entry" valign="top" width="70%" headers="d330607e2446 ">The compression format of the files:<ul class="ul" id="task_wnz_mxt_lz__d47438e1233">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1716,14 +1676,14 @@ Use a message type defined in the
 
       </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e2602">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Delimiter Element <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">
-                                            <img class="image" id="task_wnz_mxt_lz__d47184e2608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wnz_mxt_lz__d47641e2602">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Delimiter Element <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">
+                                            <img class="image" id="task_wnz_mxt_lz__d47641e2608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2479 ">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2446 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
-                                            the following:<ul class="ul" id="task_wnz_mxt_lz__d47184e2614">
+                                            the following:<ul class="ul" id="task_wnz_mxt_lz__d47641e2614">
                                                 <li class="li">An XML element directly under the root element.
                                                   <p class="p">Use the XML element name without surrounding
                                                   angle brackets ( &lt; &gt; ) . For example, msg
@@ -1746,11 +1706,11 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e2633">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Include Field XPaths <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">
+                                <tr id="task_wnz_mxt_lz__d47641e2633">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Include Field XPaths <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2479 ">Includes the XPath to each parsed XML element and XML
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2446 ">Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p class="p">When not selected,
                                             this information is not included in the record. By
@@ -1767,10 +1727,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e2652">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Namespaces </td>
+                                <tr id="task_wnz_mxt_lz__d47641e2652">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Namespaces </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2479 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2446 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -1784,10 +1744,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e2677">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Output Field Attributes</td>
+                                <tr id="task_wnz_mxt_lz__d47641e2677">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Output Field Attributes</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2479 ">Includes XML attributes and namespace declarations in the
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2446 ">Includes XML attributes and namespace declarations in the
                                         record as field attributes. When not selected, XML
                                         attributes and namespace declarations are included in the
                                         record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
@@ -1800,10 +1760,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_wnz_mxt_lz__d47184e2694">
-                                    <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Max Record Length (chars) </td>
+                                <tr id="task_wnz_mxt_lz__d47641e2694">
+                                    <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Max Record Length (chars) </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d328401e2479 ">
+                                    <td class="entry" valign="top" width="70%" headers="d330607e2446 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling. </p>
 
@@ -1815,17 +1775,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2479 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d330607e2446 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d328401e2476 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wnz_mxt_lz__d46981e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d330607e2443 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wnz_mxt_lz__d47438e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d328401e2479 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d330607e2446 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

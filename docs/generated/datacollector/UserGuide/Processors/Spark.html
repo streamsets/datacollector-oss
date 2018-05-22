@@ -78,10 +78,7 @@
  <h2 class="title topictitle2">Spark Versions and Stage Libraries</h2>
 
  <div class="body conbody">
-  <p class="p">The Spark Evaluator processor supports <span class="ph">Spark versions 1.3 through 2.x</span>. </p>
-
-        <div class="note important"><span class="importanttitle">Important:</span> Spark version 1.x is now deprecated and will be removed in version 3.3.0.0. We highly
-                  recommend that you <a class="xref" href="../Upgrade/PreUpgrade.html#concept_zgm_vj2_mdb" title="When Data Collector first introduced cluster streaming mode with Spark 1.3 and Kafka 0.8.0.0, Kafka didn’t support security features such as SSL/TLS and Kerberos authentication. With Spark 2.1, Data Collector introduced updated Kafka stages with support for these security features when used with Kafka 0.9.0.0 or later.">upgrade to Spark 2.1 or later</a>.</div>
+  <p class="p">The Spark Evaluator processor supports only <span class="ph">Spark version 2.1 or later</span>. </p>
 
         <div class="p">When you use the Spark Evaluator processor, make sure the Spark version is the same
             across all related components, as follows:<ul class="ul" id="concept_nbj_1jb_c1b__ul_yct_nqb_c1b">
@@ -253,8 +250,8 @@
             included in the stage library for the Cloudera CDH version 5.9 distribution of Hadoop,
             build the application against Spark integrated into Cloudera CDH version 5.9.</p>
 
-        <p class="p">If you used Scala to write the custom Spark class, build the application so that it is
-            compatible with Scala 2.10.</p>
+        <p class="p">If you used Scala to write the custom Spark class, compile the application with Scala
+            2.11.</p>
 
     </div>
 
@@ -298,14 +295,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d91005e5322" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d91573e5322" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d514896e443">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d517262e427">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d514896e446">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d517262e430">Description</th>
 
                                 </tr>
 
@@ -313,31 +310,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_g1p_gqn_zx__d91005e5377" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_g1p_gqn_zx__d91573e5377" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -349,10 +346,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_g1p_gqn_zx__d91005e5393" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_g1p_gqn_zx__d91573e5393" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -363,10 +360,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e443 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_g1p_gqn_zx__d91005e5411" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e427 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_g1p_gqn_zx__d91573e5411" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e446 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d91005e5415">
+                                    <td class="entry" valign="top" width="70%" headers="d517262e430 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d91573e5415">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -397,9 +394,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d514896e567">Spark Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d517262e551">Spark Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d514896e570">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d517262e554">Description</th>
 
                                 </tr>
 
@@ -407,9 +404,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e567 ">Parallelism</td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e551 ">Parallelism</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e570 ">For standalone mode, the number of partitions to create
+                                    <td class="entry" valign="top" width="70%" headers="d517262e554 ">For standalone mode, the number of partitions to create
                                         per batch of records. For example, if set to 4, then the
                                         Spark Transformer simultaneously runs 4 parallel jobs to
                                         process the batch. <p class="p">Set the value based on the number of
@@ -423,9 +420,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e567 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d517262e551 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e570 ">For standalone mode, the name of the Spark application.
+                                    <td class="entry" valign="top" width="70%" headers="d517262e554 ">For standalone mode, the name of the Spark application.
                                         Spark displays this application name in the log files. <p class="p">If
                                             you run pipelines that include multiple Spark Evaluator
                                             processors, be sure to use a unique application name for
@@ -438,11 +435,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e567 ">Spark Transformer Class
+                                    <td class="entry" valign="top" width="30%" headers="d517262e551 ">Spark Transformer Class
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e570 ">Fully qualified name of the custom Spark class that
+                                    <td class="entry" valign="top" width="70%" headers="d517262e554 ">Fully qualified name of the custom Spark class that
                                         implements the StreamSets Spark Transformer API. Enter the
                                         class name using the following
                                             format:<pre class="pre codeblock">com.streamsets.spark.&lt;custom class&gt;</pre>
@@ -461,11 +458,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d514896e567 ">Init Method Arguments
+                                    <td class="entry" valign="top" width="30%" headers="d517262e551 ">Init Method Arguments
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h3p_p6v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d514896e570 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
+                                    <td class="entry" valign="top" width="70%" headers="d517262e554 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
                                         the custom Spark class. Enter arguments as required by your
                                         custom Spark class.<p class="p">In standalone mode, enter a constant
                                             or an expression for the argument value. In cluster

@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Deploy Pipelines to SDC Edge" /><meta name="abstract" content="After designing edge pipelines in Data Collector, you deploy the edge pipelines to SDC Edge installed on an edge device. You run the edge pipelines on SDC Edge." /><meta name="description" content="After designing edge pipelines in Data Collector, you deploy the edge pipelines to SDC Edge installed on an edge device. You run the edge pipelines on SDC Edge." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ldf_ycf_3db" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Deploy Pipelines to SDC Edge</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+  <!--
+  Copyright 2018 StreamSets Inc.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines">Edge Pipelines</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ldf_ycf_3db">
+    <h1 class="title topictitle1">Deploy Pipelines to SDC Edge</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc">After designing edge pipelines in <span class="ph">Data Collector</span>, you
+        deploy the edge pipelines to <span class="ph">SDC Edge</span>
+        installed on an edge device. You run the edge pipelines on <span class="ph">SDC Edge</span>.</p>
+
+        <div class="p">You can
+            use the following methods to deploy edge pipelines to <span class="ph">SDC Edge</span>:<ul class="ul" id="concept_ldf_ycf_3db__ul_tsz_hdf_3db">
+                <li class="li"><a class="xref" href="SDCEInstall.html#task_p45_s5k_pbb" title="Use Data Collector to download the SDC Edge executable along with your designed edge pipelines. The downloaded tarball includes the SDC Edge executable, the sample edge pipelines, and your selected edge pipelines.">Download the <span class="ph">Data Collector Edge</span> executable</a> along with your designed edge pipelines.<p class="p">When you
+                        first get started with <span class="ph">SDC Edge</span>, the easiest way to deploy pipelines to <span class="ph">SDC Edge</span> is to use <span class="ph">Data Collector</span> to download the <span class="ph">Data Collector Edge</span> executable along with your designed edge pipelines. After <span class="ph">SDC Edge</span> is installed, you'll need to use either the publishing or exporting
+                        method to deploy new or updated pipelines to <span class="ph">SDC Edge</span>. </p>
+</li>
+
+                <li class="li"><a class="xref" href="EdgePipelines_Deploy.html#task_isp_m2f_3db" title="When SDC Edge is running and is accessible by the Data Collector machine, you can use the publish method to deploy edge pipelines to SDC Edge.">Publish edge
+                        pipelines</a> directly to <span class="ph">SDC Edge</span>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is running and is accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+                <li class="li"><a class="xref" href="EdgePipelines_Deploy.html#task_rzb_zgm_pbb" title="If SDC Edge is not running or if it is not accessible by the Data Collector machine, you must use the export method to deploy edge pipelines to SDC Edge.">Export edge
+                        pipelines</a>, and then move them to <span class="ph">SDC Edge</span>.<p class="p">Use this method when <span class="ph">SDC Edge</span> is not running or when it is not accessible by the <span class="ph">Data Collector</span> machine.</p>
+</li>
+
+            </ul>
+</div>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_isp_m2f_3db">
+    <h2 class="title topictitle2">Publish Pipelines Directly</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When <span class="ph">SDC Edge</span> is
+        running and is accessible by the <span class="ph">Data Collector</span>
+        machine, you can use the publish method to deploy edge pipelines to <span class="ph">SDC Edge</span>.</p>
+
+        <div class="section context" id="task_isp_m2f_3db__context_bt1_jhb_4db">
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data Collector</span> can also automatically publish edge pipelines to <span class="ph">SDC Edge</span> when you start the edge pipeline from the <span class="ph">Data Collector</span>
+                UI, as explained in <a class="xref" href="EdgePipelines_Manage.html#task_byv_n2b_4db" title="When SDC Edge is accessible by the Data Collector machine and when the deployed edge pipeline has the Data Collector Edge URL property correctly configured, you can use the Data Collector UI to manage edge pipelines.">Using the Data Collector UI</a>.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the edge pipeline in the pipeline canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">General</span> tab, set the <span class="ph uicontrol">Data Collector
+                        Edge URL</span> property to the URL of the <span class="ph">SDC Edge</span> instance that you want to deploy the pipeline to.</span>
+                <div class="itemgroup info">The default URL is <samp class="ph codeph">http://localhost:18633</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the top toolbar, click the <span class="ph uicontrol">Publish Pipeline to Data Collector
+                        Edge</span> icon:</span>
+                <div class="itemgroup info"><img class="image" id="task_isp_m2f_3db__image_zdx_zwf_3db" src="../Graphics/EdgePipelinePublish.png" height="60" width="431" /></div>
+                <div class="itemgroup info">Data Collector publishes the pipeline to the
+                        <samp class="ph codeph">&lt;SDCEdge_home&gt;/data/pipelines</samp> directory on the edge
+                    device where <span class="ph">SDC Edge</span> is installed. </div>
+                <div class="itemgroup info">You can start and <a class="xref" href="EdgePipelines_Manage.html#concept_tqk_dbb_4db" title="After designing edge pipelines in Data Collector and then deploying the edge pipelines to SDC Edge, you can manage the pipelines on SDC Edge. Managing edge pipelines includes starting, stopping, resetting the origin, and monitoring the pipelines.">manage the pipeline on <span class="ph">SDC Edge</span></a>.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_rzb_zgm_pbb">
+    <h2 class="title topictitle2">Export Pipelines</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If <span class="ph">SDC Edge</span> is not
+        running or if it is not accessible by the <span class="ph">Data Collector</span>
+        machine, you must use the export method to deploy edge pipelines to <span class="ph">SDC Edge</span>.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand" id="task_rzb_zgm_pbb__step1">
+                <span class="ph cmd">Open the edge pipeline in the pipeline canvas.</span>
+            </li>
+<li class="li step stepexpand" id="task_rzb_zgm_pbb__step2">
+                <span class="ph cmd">From the <span class="ph uicontrol">Properties</span> panel, click the
+                        <span class="ph uicontrol">More</span> icon (<img class="image" id="task_rzb_zgm_pbb__image_n3g_rz5_xt" src="../Graphics/icon_MonMore.png" height="15" width="20" />) to view the pipeline configuration REST
+                    response data:</span>
+                <div class="itemgroup info"><img class="image" id="task_rzb_zgm_pbb__image_iwd_trc_vbb" src="../Graphics/EdgePipelineExportRESTResponse.png" height="154" width="203" /><p class="p">The browser displays the pipeline configuration
+                        in JSON format.</p>
+</div>
+            </li>
+<li class="li step stepexpand" id="task_rzb_zgm_pbb__step3">
+                <span class="ph cmd">In the browser, copy the complete contents of the pipeline configuration and
+                    save it to a text file named <samp class="ph codeph">pipeline.json</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the address bar of the browser, type <samp class="ph codeph">?get=info</samp> after the
+                    pipeline ID.</span>
+                <div class="itemgroup info">For
+                        example:<pre class="pre codeblock">https://localhost:18630/rest/v1/pipeline/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5<strong class="ph b">?get=info</strong></pre>
+<p class="p">The
+                        browser displays the pipeline information in JSON format.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the browser, copy the complete contents of the pipeline information and save
+                    it to a text file named <samp class="ph codeph">info.json</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the edge device where <span class="ph">SDC Edge</span> is installed, create a folder named with the pipeline ID in the following
+                    directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">&lt;SDCEdge_home&gt;/data/pipelines</pre>
+
+                    <div class="p">For
+                        example:<pre class="pre codeblock">&lt;SDCEdge_home&gt;/data/pipelines/EdgeSending76d9d551-217d-4b44-8b03-8fbe444962c5</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Copy the <samp class="ph codeph">pipeline.json</samp> and <samp class="ph codeph">info.json</samp> files
+                    that you created for the pipeline into this folder.</span>
+                <div class="itemgroup info"><p class="p">Now you can start and manage the pipeline on <span class="ph">SDC Edge</span> as described in <a class="xref" href="EdgePipelines_Manage.html#concept_rk3_2hm_pbb" title="When SDC Edge is not accessible by the Data Collector machine, you must use the command line and REST API to manage edge pipelines on Data Collector Edge (SDC Edge).">Sending Commands to SDC Edge</a>.</p>
+
+                    <p class="p">If you modify the same pipeline in <span class="ph">Data Collector</span>, view the pipeline configuration REST response data and then copy the
+                        updated data into the existing <samp class="ph codeph">pipeline.json</samp> in the <span class="ph">SDC Edge</span> installation. You do not need to update the <samp class="ph codeph">info.json</samp>
+                        file after you originally create it in the pipeline folder.</p>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

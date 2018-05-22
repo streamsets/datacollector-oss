@@ -1,0 +1,305 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Administer SDC Edge" /><meta name="abstract" content="Administering SDC Edge involves configuring, starting, shutting down, and viewing logs for the agent." /><meta name="description" content="Administering SDC Edge involves configuring, starting, shutting down, and viewing logs for the agent." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ahx_zvl_pbb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Administer SDC Edge</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+          
+          var prefix = "../../../index.html";
+          
+          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
+  <!--
+  Copyright 2018 StreamSets Inc.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+  <script type="text/javascript">
+    <!--
+    var parentWindow = window.name;
+    console.log("1. " + parentWindow);
+    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+        var currHash = window.location.hash.substr(1);
+        console.log("2. " + currHash);
+        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+
+        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
+            window.location.hash = "#datacollector/UserGuide/" + currHash;
+        }
+    }
+-->
+  </script>
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines">Edge Pipelines</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ahx_zvl_pbb">
+ <h1 class="title topictitle1">Administer SDC Edge</h1>
+
+ <p class="shortdesc">Administering <span class="ph">SDC Edge</span>
+        involves configuring, starting, shutting down, and viewing logs for the agent.</p>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hbv_3wl_pbb">
+ <h2 class="title topictitle2">Configuring SDC Edge</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can customize <span class="ph">SDC Edge</span> by
+        editing the <span class="ph">SDC Edge</span>
+        configuration file, <samp class="ph codeph">&lt;SDCEdge_home&gt;/etc/edge.conf</samp>.</p>
+
+  <p class="p">Use a text editor to edit the
+            configuration file. To enable the changes, shut down and then restart <span class="ph">SDC Edge</span>.</p>
+
+        <div class="p">The <span class="ph">SDC Edge</span>
+            configuration file includes the following general properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_ecg_xcg_3db" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d185493e88">General Property</th>
+
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d185493e91">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e88 ">max-batch-size</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e91 ">Maximum number of records included in a batch when the pipeline
+                                runs.<p class="p">Default is 1000.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e88 ">process-metrics-capture-interval</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e91 ">Frequency in milliseconds that metrics about the <span class="ph">SDC Edge</span> process,
+                            such as memory usage, are refreshed.<p class="p">Default is -1, which means that
+                                the metrics are refreshed when the HTTP REST API is
+                            called.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e88 ">bind-address</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e91 ">Address that <span class="ph">SDC Edge</span> binds to -
+                            localhost and the defined port number.<p class="p">Default port number is
+                                18633.</p>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+</div>
+
+        <p class="p">The <span class="ph">SDC Edge</span>
+            configuration file includes properties that define how <span class="ph">SDC Edge</span>
+            works with <span class="ph">Control Hub</span>.</p>
+
+        <div class="p">The configuration file includes the following <span class="ph">Control Hub</span>
+                properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hbv_3wl_pbb__table_a4p_ycg_3db" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d185493e169"><span class="ph">Control Hub</span>
+                            Property</th>
+
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d185493e174">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">enabled</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Specifies whether the <span class="ph">SDC Edge</span> is enabled
+                            to work with <span class="ph">Control Hub</span>.
+                                <p class="p">Default is false.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">base-url</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Base URL to access <span class="ph">Control Hub</span>. Enter the
+                            appropriate URL: <ul class="ul" id="concept_hbv_3wl_pbb__ul_hbf_vcg_3db">
+                                    <li class="li">For <span class="ph">Control Hub</span> cloud, use
+                                            <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
+
+                                    <li class="li">For <span class="ph">Control Hub</span> on-premises, use the URL provided by your system
+                                        administrator. For example,
+                                            <samp class="ph codeph">https://&lt;hostname&gt;:18631</samp>.</li>
+
+                                </ul>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">app-auth-token</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Authentication token for this <span class="ph">SDC Edge</span> instance
+                            when enabled to work with <span class="ph">Control Hub</span>. </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">job-labels</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Labels to assign to this <span class="ph">SDC Edge</span>. Use labels
+                            to group <span class="ph">Edge Data Collectors</span> registered with <span class="ph">Control Hub</span>. To assign
+                            multiple labels, enter a comma-separated list of labels. <p class="p">Default is
+                                "all", which you can use to run a job on all registered instances of
+                                    <span class="ph">SDC Edge</span>.
+                            </p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">events-recipient</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Name of the internal <span class="ph">Control Hub</span> messaging
+                            queue to which <span class="ph">SDC Edge</span> sends events. <p class="p">Do not change this value.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">ping-frequency</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> notifies <span class="ph">Control Hub</span> that it is
+                            running. <p class="p">Default is 6,000.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d185493e169 ">status-events-interval</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d185493e174 ">Frequency in milliseconds that <span class="ph">SDC Edge</span> informs <span class="ph">Control Hub</span> of the status
+                            of all local and published pipelines that are running on this <span class="ph">SDC Edge</span>.<p class="p">Default
+                                is 60,000.</p>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_zfb_lwl_pbb">
+ <h2 class="title topictitle2">Starting SDC Edge</h2>
+
+ <div class="body conbody">
+        <div class="p">To start <span class="ph">SDC Edge</span>, run the following command
+            from the <span class="ph">SDC Edge</span> home
+            directory:<pre class="pre codeblock">bin/edge</pre>
+</div>
+
+        <div class="p">To start <span class="ph">SDC Edge</span>
+            and an edge pipeline at the same time, run the following command from the <span class="ph">SDC Edge</span>
+            home directory:<pre class="pre codeblock">bin/edge -start=&lt;pipelineID&gt;</pre>
+</div>
+
+        <p class="p">To start <span class="ph">SDC Edge</span>
+            and an edge pipeline that uses parameters, see <a class="xref" href="EdgePipelines_Manage.html#concept_rk3_2hm_pbb" title="When SDC Edge is not accessible by the Data Collector machine, you must use the command line and REST API to manage edge pipelines on Data Collector Edge (SDC Edge).">Sending Commands to SDC Edge</a>.</p>
+
+        <p class="p">You can also modify the log level and the location where the log files are written when
+            you start <span class="ph">SDC Edge</span>,
+            as described in <a class="xref" href="SDCeAdminister.html#concept_ecy_hjx_scb" title="By default, SDC Edge writes log messages at the info severity level to the &lt;SDCEdge_home&gt;/log/edge.log file. To view the logs, simply open the edge.log file in a text editor.">Logs</a>.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_tyz_mwl_pbb">
+    <h2 class="title topictitle2">Shutting Down SDC Edge</h2>
+
+    <div class="body conbody">
+        <p class="p">To shut down <span class="ph">SDC Edge</span>,
+            type <span class="ph uicontrol">Ctrl+C</span> in the command prompt. </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ecy_hjx_scb">
+    <h2 class="title topictitle2">Logs</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"><span class="ph">By default, <span class="ph">SDC Edge</span> writes log messages at
+                the info severity level to the <samp class="ph codeph">&lt;SDCEdge_home&gt;/log/edge.log</samp> file.
+                To view the logs, simply open the <samp class="ph codeph">edge.log</samp> file in a text
+                editor.</span></p>
+
+        <p class="p">To modify the log level and the location where the
+            log files are written, use the appropriate command when you start <span class="ph">SDC Edge</span>:</p>
+
+        <ul class="ul" id="concept_ecy_hjx_scb__ul_fn1_spq_tcb">
+            <li class="li">To set the log level to debug for troubleshooting, run the following command from
+                the <span class="ph">SDC Edge</span> home
+                directory:<pre class="pre codeblock">bin/edge -debug</pre>
+</li>
+
+            <li class="li">
+                <div class="p">To write the log file to another directory, run the following command from the
+                        <span class="ph">SDC Edge</span> home
+                    directory:<pre class="pre codeblock">bin/edge -logDir=&lt;path&gt;</pre>
+</div>
+
+                <div class="p">For example:<pre class="pre codeblock">bin/edge -logDir=/var/sdce/log</pre>
+</div>
+
+            </li>
+
+            <li class="li">To send the log messages to the console, run the following command from the <span class="ph">SDC Edge</span> home
+                directory:<pre class="pre codeblock">bin/edge -logToConsole</pre>
+</li>
+
+        </ul>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" title="Edge Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Edge Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
