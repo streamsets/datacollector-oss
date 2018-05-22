@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="home.statsOptIn.headerLabel">Usage Statistics</h3>
+</div>
+<div class="modal-body">
+  <p> StreamSets would like to collect anonymized usage statics about features used, system performance, etc.
+    This information will help us to understand how you use the product and ensure that future improvements help the whole community.
+  </p>
+
+  <p>No sensitive information, such as connection information, pipeline names, etc. will be collected.
+  No personally identifiable information will be collected. How we use the data is described in our
+    <a href="https://streamsets.com/privacy-policy-2/" target="_blank">Privacy Policy</a>.
+  </p>
+
+  <div ng-if="!isLoading">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="$storage.runPreviewForFieldPaths"> {{'home.statsOptIn.optInLabel' | translate}}
+      </label>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="reset" class="btn btn-default" ng-click="cancel()"
+          translate="global.form.later">Later</button>
+  <button class="btn btn-primary" ng-click="save()"
+          translate="global.form.save">Save</button>
+</div>

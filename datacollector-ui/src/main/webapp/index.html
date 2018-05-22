@@ -282,6 +282,13 @@
                 <span translate="home.library.transferPermissions">Transfer Permissions</span>
               </a>
             </li>
+
+            <li ng-if="isAdmin">
+              <a href="javascript:;" ng-click="common.onStatOptInClick()">
+                <i class="fa fa-gear"></i>
+                <span translate="home.statsOptIn.headerLabel">Usage Statistics</span>
+              </a>
+            </li>
           </ul>
         </li>
 

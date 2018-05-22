@@ -1683,6 +1683,26 @@ angular.module('dataCollectorApp.common')
 
     api.system = {
       /**
+       * Get stats and opt in/out status
+       *
+       * @returns {*}
+       */
+      getStats: () => $http({
+        method: 'GET',
+        url: apiBase + '/system/stats'
+      }),
+
+      /**
+       * Set opt in/out status for stats
+       *
+       * @returns {*}
+       */
+      setOptInStatus: isOptIn => $http({
+        method: 'POST',
+        url: apiBase + '/system/stats?active=' + (!!isOptIn)
+      }),
+
+      /**
        * Get all support bundle generators
        *
        * @returns {*}

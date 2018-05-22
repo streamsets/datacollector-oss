@@ -20,6 +20,7 @@
         "resetLocalStorage": "Reset Browser Local Storage",
         "restart": "Restart",
         "shutdown": "Shutdown",
+        "statsOptIn": "Stat collection Opt In/Out",
         "usersAndGroups": "Users & Groups"
       },
       "clusterManager": "Cluster Manager",
@@ -119,6 +120,7 @@
       "lastModifiedOn": "Last Modified On",
       "lastStatusChange": "Timestamp",
       "lastUpdated": "Last Updated",
+      "later": "Later",
       "library": "Library",
       "listView": "List View",
       "loading": "Loading",
@@ -248,6 +250,10 @@
       "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'."
     },
     "createPipeline": "Create New Pipeline",
+    "statsOptIn": {
+      "headerLabel": "Usage Statistics",
+      "optInLabel": "Improve Data Collector by sending anonymized usage data."
+    },
     "commitPipelineHistory": {
       "committer": "Committed By",
       "commitTime": "Committed On",

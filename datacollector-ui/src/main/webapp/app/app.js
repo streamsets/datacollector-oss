@@ -196,6 +196,19 @@ angular.module('dataCollectorApp')
       },
 
       /**
+       * Show stats opt in/out Modal Dialog
+       */
+      onStatOptInClick: function() {
+        $modalStack.dismissAll();
+        $modal.open({
+          templateUrl: 'common/administration/statsOptIn/statsOptIn.tpl.html',
+          controller: 'StatsOptInController',
+          size: '',
+          backdrop: 'static'
+        });
+      },
+
+      /**
        * Open the Enable Control Hub Modal Dialog
        */
       onEnableDPMClick: function() {
@@ -555,6 +568,7 @@ angular.module('dataCollectorApp')
         $rootScope.common.userRoles = authService.getUserRoles().join(', ');
         $rootScope.common.userGroups = authService.getUserGroups().join(', ');
         $rootScope.userRoles = userRoles;
+        $rootScope.isAdmin = authService.isRemoteUserOrgAdmin() || authService.isAuthorized([userRoles.admin]);
         $rootScope.isAuthorized = authService.isAuthorized;
         $rootScope.common.isUserAdmin = authService.isUserAdmin();
 
@@ -588,8 +602,17 @@ angular.module('dataCollectorApp')
         if (configuration.isUIDebugEnabled()) {
           window.$rootScope = $rootScope;
         }
-      });
 
+        if ($rootScope.isAdmin) {
+          api.system.getStats()
+            .then(function (res) {
+              if (!res.data.opted) {
+                $rootScope.common.onStatOptInClick();
+              }
+            });
+        }
+
+      });
 
     api.pipelineAgent.getAllAlerts()
       .then(function(res) {
