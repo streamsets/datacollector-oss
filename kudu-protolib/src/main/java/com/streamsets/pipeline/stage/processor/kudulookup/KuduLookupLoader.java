@@ -242,7 +242,7 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
           predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsByteArray());
           break;
         case UNIXTIME_MICROS:
-          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsDatetime().getTime());
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsDatetime().getTime() * 1000L);
           break;
         default:
           throw new StageException(Errors.KUDU_33, type.getName());
