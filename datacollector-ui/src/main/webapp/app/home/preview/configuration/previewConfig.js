@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for Preview Configuration Modal Dialog.
- */
 
+// Controller for Preview Configuration Modal Dialog.
 angular
   .module('dataCollectorApp.home')
-  .controller('PreviewConfigModalInstanceController', function ($scope, $rootScope, $modalInstance, pipelineConfig,
-                                                                pipelineStatus, $timeout, pipelineService, api, pipelineConstant) {
+  .controller('PreviewConfigModalInstanceController', function (
+    $scope, $rootScope, $modalInstance, pipelineConfig, pipelineStatus, $timeout, pipelineService, api, pipelineConstant
+  ) {
     angular.extend($scope, {
       previewConfig: angular.copy(pipelineConfig.uiInfo.previewConfig),
       refreshCodemirror: false,
@@ -56,24 +55,26 @@ angular
       $scope.refreshCodemirror = true;
     });
 
-
-    if(pipelineStatus.executionMode !== pipelineConstant.CLUSTER &&
+    if (pipelineStatus.executionMode !== pipelineConstant.CLUSTER &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING) {
-      api.pipelineAgent.getSnapshotsInfo().then(function(res) {
-        if(res && res.data && res.data.length) {
-          $scope.snapshotsInfo = res.data;
-          $scope.snapshotsInfo = _.chain(res.data)
-            .filter(function(snapshotInfo) {
-              return !snapshotInfo.inProgress;
-            })
-            .sortBy('timeStamp')
-            .value();
+      api.pipelineAgent.getSnapshotsInfo().then(
+        function(res) {
+          if (res && res.data && res.data.length) {
+            $scope.snapshotsInfo = res.data;
+            $scope.snapshotsInfo = _.chain(res.data)
+              .filter(function(snapshotInfo) {
+                return !snapshotInfo.inProgress;
+              })
+              .sortBy('timeStamp')
+              .value();
+          }
+        },
+        function(res) {
+          $scope.common.errors = [res.data];
         }
-      }, function(res) {
-        $scope.common.errors = [res.data];
-      });
+      );
     }
 
   });

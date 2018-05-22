@@ -37,11 +37,6 @@ angular
       template: 'app/home/detail/configuration/configuration.tpl.html',
       iconClass: 'fa fa-gear'
     };
-    var rawPreviewTab = {
-      name: 'rawPreview',
-      template: 'app/home/detail/rawPreview/rawPreview.tpl.html',
-      iconClass: 'fa fa-eye'
-    };
     var summaryTab = {
       name: 'summary',
       template: 'app/home/detail/summary/summary.tpl.html',
@@ -104,7 +99,8 @@ angular
             if (clusterExecutionModePipeline) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
-              tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
+              tabsList =
+                [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
             }
           } else {
             tabsList = [infoTab, configurationTab, rulesTab, historyTab];
@@ -280,6 +276,8 @@ angular
 
             if (config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.errorStage.instanceName]);
+            } if (config.testOriginStage && issuesMap.stageIssues && issuesMap.stageIssues[config.testOriginStage.instanceName]) {
+              issues.push.apply(issues, issuesMap.stageIssues[config.testOriginStage.instanceName]);
             } else if (config.statsAggregatorStage && issuesMap.stageIssues &&
               issuesMap.stageIssues[config.statsAggregatorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.statsAggregatorStage.instanceName]);

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Module definition for Pipeline Graph Directive.
- */
 
+// Module definition for Pipeline Graph Directive.
 angular.module('pipelineGraphDirectives', [])
   .directive('pipelineGraph', function() {
     return {
@@ -26,8 +24,9 @@ angular.module('pipelineGraphDirectives', [])
       templateUrl: 'common/directives/pipelineGraph/pipelineGraph.tpl.html'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, $location, $modal,
-                                                  pipelineConstant, $translate, pipelineService){
+  .controller('PipelineGraphController', function(
+    $scope, $rootScope, $element, _, $filter, $location, $modal, pipelineConstant, $translate, pipelineService
+  ) {
 
     var showTransition = false;
     var graphErrorBadgeLabel = '';
@@ -568,9 +567,7 @@ angular.module('pipelineGraphDirectives', [])
       if (!relativeX) {
         thisGraph.moveNodeToVisibleArea(node);
       }
-
     };
-
 
     GraphCreator.prototype.selectNode = function(node) {
       var thisGraph = this,
@@ -585,7 +582,6 @@ angular.module('pipelineGraphDirectives', [])
       if (nodeExists) {
         thisGraph.replaceSelectNode(addedNode, node);
       }
-
     };
 
     GraphCreator.prototype.selectEdge = function(edge) {
@@ -731,24 +727,24 @@ angular.module('pipelineGraphDirectives', [])
           'r': 10
         });
 
-      //Output Connectors
+      // Output Connectors
       newGs.each(function(d) {
         var stageNode = d3.select(this);
 
         //Output Connectors
+        if (d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE &&
+          d.uiInfo.stageType !== pipelineConstant.EXECUTOR_STAGE_TYPE) {
 
-        if (d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE && d.uiInfo.stageType !== pipelineConstant.EXECUTOR_STAGE_TYPE) {
-
-          var totalLanes = d.outputLanes.length,
-            lanePredicatesConfiguration = _.find(d.configuration, function(configuration) {
-              return configuration.name === 'lanePredicates';
-            }),
-            outputStreamLabels = d.uiInfo.outputStreamLabels;
+          var totalLanes = d.outputLanes.length;
+          var lanePredicatesConfiguration = _.find(d.configuration, function (configuration) {
+            return configuration.name === 'lanePredicates';
+          });
+          var outputStreamLabels = d.uiInfo.outputStreamLabels;
           angular.forEach(d.outputLanes, function(lane, index) {
-            var y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) +
-              ((consts.rectHeight * (index))/totalLanes)),
-              lanePredicate = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index] : undefined,
-              outputStreamLabel = outputStreamLabels ? outputStreamLabels[index] : undefined;
+            var y = Math.round(((consts.rectHeight) / (2 * totalLanes)) +
+              ((consts.rectHeight * (index)) / totalLanes));
+            var lanePredicate = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index] : undefined;
+            var outputStreamLabel = outputStreamLabels ? outputStreamLabels[index] : undefined;
             stageNode
               .append('circle')
               .attr({
@@ -812,8 +808,8 @@ angular.module('pipelineGraphDirectives', [])
         .append('xhtml:span')
         .attr('class', 'node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip')
         .attr('title', function(d) {
-          var issues = thisGraph.issues.stageIssues[d.instanceName],
-            title = '<span class="stage-errors-tooltip">';
+          var issues = thisGraph.issues.stageIssues[d.instanceName];
+          var title = '<span class="stage-errors-tooltip">';
 
           angular.forEach(issues, function(issue) {
             title += pipelineService.getIssuesMessage(d, issue) + '<br>';
@@ -930,9 +926,10 @@ angular.module('pipelineGraphDirectives', [])
         })
         .attr('y', function(d) {
           if (d.outputLane) {
-            var totalLanes = d.source.outputLanes.length,
-              outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-              y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
+            var totalLanes = d.source.outputLanes.length;
+            var outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane);
+            var y = Math.round(((consts.rectHeight) / (2 * totalLanes)) +
+              ((consts.rectHeight * (outputLaneIndex)) / totalLanes));
 
             return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
           } else if (d.eventLane) {
@@ -942,7 +939,6 @@ angular.module('pipelineGraphDirectives', [])
 
       var pathNewGs= paths.enter()
         .append('g');
-
 
       pathNewGs
         .classed(consts.pathGClass, true)
@@ -1150,18 +1146,18 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     GraphCreator.prototype.panHome = function(onlyZoomIn) {
-      var thisGraph = this,
-        nodes = thisGraph.nodes,
-        consts = thisGraph.consts,
-        svgWidth = thisGraph.svg.style('width').replace('px', ''),
-        svgHeight = thisGraph.svg.style('height').replace('px', ''),
-        xScale,
-        yScale,
-        minX,
-        minY,
-        maxX,
-        maxY,
-        currentScale;
+      var thisGraph = this;
+      var nodes = thisGraph.nodes;
+      var consts = thisGraph.consts;
+      var svgWidth = thisGraph.svg.style('width').replace('px', '');
+      var svgHeight = thisGraph.svg.style('height').replace('px', '');
+      var xScale;
+      var yScale;
+      var minX;
+      var minY;
+      var maxX;
+      var maxY;
+      var currentScale;
 
       if (!nodes || nodes.length < 1) {
         return;
@@ -1204,9 +1200,7 @@ angular.module('pipelineGraphDirectives', [])
         $scope.state.currentScale = currentScale;
         this.zoom.translate([0, 0]).scale(currentScale).event(this.svg);
       }
-
     };
-
 
     GraphCreator.prototype.panLeft = function() {
       var translatePos = this.zoom.translate();
@@ -1260,7 +1254,6 @@ angular.module('pipelineGraphDirectives', [])
       showTransition = true;
       this.zoom.translate([0,0]).event(this.svg);
     };
-
 
     GraphCreator.prototype.clearStartAndEndNode = function() {
       var thisGraph = this;
@@ -1319,7 +1312,7 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     /** MAIN SVG **/
-    var graphContainer, svg, graph, toolbar, graphWarning;
+    var graphContainer, svg, graph, graphWarning;
 
     $scope.$on('updateGraph', function(event, options) {
       var nodes = options.nodes,
@@ -1336,7 +1329,6 @@ angular.module('pipelineGraphDirectives', [])
         graphContainer = d3.select($element[0]);
         svg = graphContainer.select('svg');
         graphWarning = graphContainer.select('.warning-toolbar');
-
         graph = new GraphCreator(svg, nodes, edges || [], issues);
         graph.setIdCt(2);
       }
@@ -1366,7 +1358,6 @@ angular.module('pipelineGraphDirectives', [])
         graph.panHome(true);
       }
     });
-
 
     angular.extend($scope, {
       state: {
@@ -1479,7 +1470,7 @@ angular.module('pipelineGraphDirectives', [])
         }
         if (selectedNode) {
 
-          if (selectedNode.uiInfo.stageType == pipelineConstant.SOURCE_STAGE_TYPE ) {
+          if (selectedNode.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE ) {
             var modalInstance = $modal.open({
                 templateUrl: 'common/directives/pipelineGraph/deleteOrigin.tpl.html',
                 controller: 'DeleteOriginModalInstanceController',
@@ -1487,11 +1478,9 @@ angular.module('pipelineGraphDirectives', [])
                 backdrop: 'static'
               });
 
-            modalInstance.result.then(function (configInfo) {
+            modalInstance.result.then(function() {
               deleteSelectedNode(selectedNode);
               $scope.$emit('onOriginStageDelete', selectedNode);
-            }, function () {
-
             });
           } else {
             deleteSelectedNode(selectedNode);
@@ -1499,7 +1488,7 @@ angular.module('pipelineGraphDirectives', [])
         } else if (selectedEdge) {
           var edgeIndex = graph.edges.indexOf(selectedEdge);
           if (edgeIndex !== -1) {
-            //Update pipeline target input lanes.
+            // Update pipeline target input lanes.
 
             if (selectedEdge.eventLane) {
               selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
@@ -1542,7 +1531,6 @@ angular.module('pipelineGraphDirectives', [])
 
     $scope.$on('selectNode', function(event, stageInstance, moveToCenter) {
       if (stageInstance) {
-
         if (moveToCenter) {
           graph.moveNodeToCenter(stageInstance);
         } else {
@@ -1707,7 +1695,7 @@ angular.module('pipelineGraphDirectives', [])
       if (nodeIndex !== -1) {
         graph.nodes.splice(nodeIndex, 1);
 
-        //Remove the input lanes in all stages having output/event lanes of delete node.
+        // Remove the input lanes in all stages having output/event lanes of delete node.
         _.each(graph.edges, function(edge) {
           if (edge.source.instanceName === selectedNode.instanceName) {
             edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {

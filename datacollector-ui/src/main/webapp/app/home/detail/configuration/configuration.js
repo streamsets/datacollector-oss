@@ -30,6 +30,10 @@ angular
         issues.stageIssues[config.errorStage.instanceName] &&
         issues.stageIssues[config.errorStage.instanceName] === instanceName) {
         issues = issues.stageIssues[config.errorStage.instanceName];
+      } else if (config.testOriginStage && issues.stageIssues && instanceName &&
+        issues.stageIssues[config.testOriginStage.instanceName] &&
+        issues.stageIssues[config.testOriginStage.instanceName] === instanceName) {
+        issues = issues.stageIssues[config.testOriginStage.instanceName];
       } else if (config.statsAggregatorStage && issues.stageIssues && instanceName &&
         issues.stageIssues[config.statsAggregatorStage.instanceName] &&
         issues.stageIssues[config.statsAggregatorStage.instanceName] === instanceName) {
@@ -239,14 +243,16 @@ angular
        * Raw Source Preview
        */
       rawSourcePreview: function() {
-        api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
-          .then(function(res) {
-            $rootScope.common.errors = [];
-            $scope.rawSourcePreviewData = res.data ? res.data.previewString : '';
-          })
-          .catch(function(res) {
-            $rootScope.common.errors = [res.data];
-          });
+        api.pipelineAgent.rawSourcePreview(
+          $scope.activeConfigInfo.name,
+          0,
+          $scope.detailPaneConfig.uiInfo.rawSource.configuration
+        ).then(function(res) {
+          $rootScope.common.errors = [];
+          $scope.rawSourcePreviewData = res.data ? res.data.previewString : '';
+        }).catch(function(res) {
+          $rootScope.common.errors = [res.data];
+        });
       },
 
       /**
@@ -386,8 +392,13 @@ angular
       addToCustomField: function(stageInstance, config, configDefinitions) {
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
-          var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
-          complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
+          var complexFieldConfig = pipelineService.setDefaultValueForConfig(
+            complexFiledConfigDefinition,
+            stageInstance
+          );
+          complexFieldObj[complexFieldConfig.name] =
+            (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value :
+              undefined;
         });
         if (config.value) {
           config.value.push(complexFieldObj);
@@ -529,8 +540,7 @@ angular
        * exists and is specified.
        *
        * @param instance Instance of a stage or service.
-       * @param configDefinition Definition of the ValueChooser config
-       * @returns [{label:*, value:*}]
+       * @param definition Definition of the ValueChooser config
        */
       getValueChooserOptions: function(instance, definition) {
         var list = [];
@@ -599,6 +609,7 @@ angular
        *
        * @param stageInstance
        * @param stageDefinition
+       * @param services
        * @param groupName
        * @returns {*}
        */
@@ -703,14 +714,14 @@ angular
      */
     var isStageInstance = function(instance) {
       return !("service" in instance);
-    }
+    };
 
     /**
      * Return true if given instance is stage instance a source.
      */
-    var isSourceIstance = function(instance) {
+    var isSourceInstance = function(instance) {
       return isStageInstance(instance) && instance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE;
-    }
+    };
 
     /**
      * Update Stage Preview Data when stage selection changed.
@@ -719,7 +730,7 @@ angular
      */
     var updateFieldDataForStage = function(stageInstance) {
       //In case of processors and targets run the preview to get input fields & if current state of config is previewable.
-      if (isStageInstance(stageInstance) && !isSourceIstance(stageInstance) && !$scope.fieldPathsFetchInProgress) {
+      if (isStageInstance(stageInstance) && !isSourceInstance(stageInstance) && !$scope.fieldPathsFetchInProgress) {
         $scope.fieldPathsFetchInProgress = true;
 
         $scope.fieldPaths = [];
@@ -816,6 +827,12 @@ angular
         $scope.errorStageConfigActive = true;
       } else {
         $scope.errorStageConfigActive = options.errorStage;
+      }
+
+      if (options.configGroup && options.configGroup === 'testOriginStageConfig') {
+        $scope.testOriginStageConfigActive = true;
+      } else {
+        $scope.testOriginStageConfigActive = options.testOriginStage;
       }
 
       if (options.configGroup && options.configGroup === 'statsAggregatorStageConfig') {

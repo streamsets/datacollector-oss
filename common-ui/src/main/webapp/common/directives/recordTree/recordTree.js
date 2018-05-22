@@ -117,11 +117,11 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
           if(pathSplit && pathSplit.length > 0 ) {
             lastFieldName = pathSplit[pathSplit.length - 1];
 
-            //handle special case field name containing slash eg. /'foo/bar'
+            // handle special case field name containing slash eg. /'foo/bar'
             if(lastFieldName.indexOf("'") !== -1 &&
-              !(lastFieldName.charAt(0) == '\'' && lastFieldName.charAt(lastFieldName.length - 1) == '\'')) {
+              !(lastFieldName.charAt(0) === '\'' && lastFieldName.charAt(lastFieldName.length - 1) === '\'')) {
 
-              //If path contains slash inside name, split it by "/'"
+              // If path contains slash inside name, split it by "/'"
               pathSplit = path.split("/'");
               if(pathSplit.length > 0) {
                 lastFieldName = "'" + pathSplit[pathSplit.length - 1];

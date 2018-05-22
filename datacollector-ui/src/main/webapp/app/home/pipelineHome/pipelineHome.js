@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Pipeline Home module for displaying Pipeline home page content.
- */
 
+// Pipeline Home module for displaying Pipeline home page content.
 angular
   .module('dataCollectorApp.home')
   .config(['$routeProvider', function ($routeProvider) {
@@ -66,10 +64,10 @@ angular
     var metricsWatchListener;
     var errorsWatchListener;
 
-    //Remove search parameter if any, search parameter causing canvas arrow issue
+    // Remove search parameter if any, search parameter causing canvas arrow issue
     $location.search({});
 
-    //Clear potentially remaining notifications from previous page views
+    // Clear potentially remaining notifications from previous page views
     $rootScope.common.errors = [];
     $rootScope.common.successList = [];
 
@@ -281,7 +279,7 @@ angular
        * Fetches preview data for the pipeline and sets previewMode flag to true.
        *
        */
-      previewPipeline: function (showPreviewConfig) {
+      previewPipeline: function(showPreviewConfig) {
         //Clear Previous errors
         $rootScope.common.errors = [];
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
@@ -302,35 +300,23 @@ angular
           });
 
           modalInstance.result.then(function () {
-            $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
-            $scope.previewMode = true;
-            $rootScope.$storage.maximizeDetailPane = false;
-            $rootScope.$storage.minimizeDetailPane = false;
-            $scope.setGraphReadOnly(true);
-            $scope.setGraphPreviewMode(true);
-            $scope.$broadcast('previewPipeline');
-          }, function () {
-
+            prepareForPreview();
           });
         } else {
-          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
-          $scope.previewMode = true;
-          $rootScope.$storage.maximizeDetailPane = false;
-          $rootScope.$storage.minimizeDetailPane = false;
-          $scope.setGraphReadOnly(true);
-          $scope.setGraphPreviewMode(true);
-          $scope.$broadcast('previewPipeline');
+          prepareForPreview();
         }
       },
 
       /**
        * Sets previewMode flag to false.
        */
-      closePreview: function () {
+      closePreview: function() {
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
         $scope.setGraphPreviewMode(false);
-        //$scope.moveGraphToCenter();
+        if ($scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
+          $scope.refreshGraph();
+        }
       },
 
       /**
@@ -354,7 +340,7 @@ angular
       /**
        * Sets previewMode flag to false.
        */
-      closeSnapshot: function () {
+      closeSnapshot: function() {
         $scope.snapshotMode = false;
         $scope.setGraphPreviewMode(false);
         $scope.moveGraphToCenter();
@@ -519,6 +505,7 @@ angular
       getStageInstanceLabel: function (stageInstanceName) {
         var instance;
         var errorStage = $scope.pipelineConfig.errorStage;
+        var testOriginStage = $scope.pipelineConfig.testOriginStage;
         var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
         var startEventStage = $scope.pipelineConfig.startEventStages[0];
         var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
@@ -531,6 +518,10 @@ angular
 
         if (!instance && errorStage && errorStage.instanceName === stageInstanceName) {
           instance = errorStage;
+        }
+
+        if (!instance && testOriginStage && testOriginStage.instanceName === stageInstanceName) {
+          instance = testOriginStage;
         }
 
         if (!instance && statsAggregatorStage && statsAggregatorStage.instanceName === stageInstanceName) {
@@ -595,8 +586,8 @@ angular
               configGroup: issue.configGroup,
               configName: issue.configName
             });
-          } else if (pipelineConfig.errorStage && pipelineConfig.errorStage.instanceName === instanceName){
-            //Error Stage Configuration Issue
+          } else if (pipelineConfig.errorStage && pipelineConfig.errorStage.instanceName === instanceName) {
+            // Error Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
               selectedObject: undefined,
@@ -606,9 +597,20 @@ angular
               configName: issue.configName,
               errorStage: true
             });
+          } else if (pipelineConfig.testOriginStage && pipelineConfig.testOriginStage.instanceName === instanceName) {
+            // Test Origin Configuration Issue
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName,
+              testOriginStage: true
+            });
           } else if (pipelineConfig.statsAggregatorStage &&
-            pipelineConfig.statsAggregatorStage.instanceName === instanceName){
-            //StatsAggregator Stage Configuration Issue
+            pipelineConfig.statsAggregatorStage.instanceName === instanceName) {
+            // StatsAggregator Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
               selectedObject: undefined,
@@ -619,8 +621,8 @@ angular
               statsAggregatorStage: true
             });
           } else if (pipelineConfig.startEventStages[0] &&
-            pipelineConfig.startEventStages[0].instanceName === instanceName){
-            //StartEvent Stage Configuration Issue
+            pipelineConfig.startEventStages[0].instanceName === instanceName) {
+            // StartEvent Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
               selectedObject: undefined,
@@ -631,8 +633,8 @@ angular
               startEventStage: true
             });
           } else if (pipelineConfig.stopEventStages[0] &&
-            pipelineConfig.stopEventStages[0].instanceName === instanceName){
-            //StopEvent Stage Configuration Issue
+            pipelineConfig.stopEventStages[0].instanceName === instanceName) {
+            // StopEvent Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
               selectedObject: undefined,
@@ -973,12 +975,11 @@ angular
       if(!stageDefinition) {
         return undefined;
       }
-
       return stageDefinition.configGroupDefinition.groupNameToLabelMapList.map(function(group) {
         return {
           'group' : group,
           'configDefinitions': _.filter(stageDefinition.configDefinitions, function(configDefinition) {
-            return configDefinition.group == group.name;
+            return configDefinition.group === group.name;
           })
         };
       });
@@ -1077,6 +1078,7 @@ angular
               res.uiInfo = config.uiInfo;
               res.stages = config.stages;
               res.errorStage = config.errorStage;
+              res.testOriginStage = config.testOriginStage;
               res.statsAggregatorStage = config.statsAggregatorStage;
               res.startEventStages = config.startEventStages;
               res.stopEventStages = config.stopEventStages;
@@ -1093,7 +1095,7 @@ angular
           });
       } else {
 
-        //If Pipeline is running save only UI Info
+        // If Pipeline is running save only UI Info
 
         var uiInfoMap = {
           ':pipeline:': config.uiInfo
@@ -1104,8 +1106,7 @@ angular
         });
 
         api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.pipelineId, uiInfoMap)
-          .then(function (res) {
-
+          .then(function() {
             //Clear Previous errors
             $rootScope.common.errors = [];
 
@@ -1152,7 +1153,7 @@ angular
         $scope.isDPMPipelineDirty = true;
       }
 
-      //Force Validity Check - showErrors directive
+      // Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
       $scope.pipelineConfig = pipelineConfig || {};
@@ -1221,6 +1222,19 @@ angular
       }
 
       $scope.stageInstances = stageInstances;
+      var graphNodes = stageInstances;
+
+      if ($scope.previewMode &&
+        $scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
+        // Replace Original origin stage with test origin stage
+        graphNodes = JSON.parse(JSON.stringify(stageInstances));
+        var previewTestOriginStage = $scope.pipelineConfig.testOriginStage;
+        previewTestOriginStage.outputLanes = graphNodes[0].outputLanes;
+        previewTestOriginStage.eventLanes = graphNodes[0].eventLanes;
+        previewTestOriginStage.uiInfo.xPos = graphNodes[0].uiInfo.xPos;
+        previewTestOriginStage.uiInfo.yPos = graphNodes[0].uiInfo.yPos;
+        graphNodes[0] = previewTestOriginStage;
+      }
 
       // Initialize metadata for label support
       if (!$scope.pipelineConfig.metadata || _.isEmpty($scope.pipelineConfig.metadata)) {
@@ -1239,18 +1253,18 @@ angular
         }
       }
 
-      //Determine edges from input lanes and output lanes
-      //And also set flag sourceExists if pipeline Config contains source
+      // Determine edges from input lanes and output lanes
+      // And also set flag sourceExists if pipeline Config contains source
       edges = [];
       $scope.sourceExists = false;
-      angular.forEach($scope.stageInstances, function (sourceStageInstance) {
+      angular.forEach(graphNodes, function (sourceStageInstance) {
         if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
           $scope.sourceExists = true;
         }
 
         if (sourceStageInstance.outputLanes && sourceStageInstance.outputLanes.length) {
           angular.forEach(sourceStageInstance.outputLanes, function (outputLane) {
-            angular.forEach($scope.stageInstances, function (targetStageInstance) {
+            angular.forEach(graphNodes, function (targetStageInstance) {
               if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length &&
                 _.contains(targetStageInstance.inputLanes, outputLane)) {
                 edges.push({
@@ -1265,7 +1279,7 @@ angular
 
         if (sourceStageInstance.eventLanes && sourceStageInstance.eventLanes.length) {
           angular.forEach(sourceStageInstance.eventLanes, function (eventLane) {
-            angular.forEach($scope.stageInstances, function (targetStageInstance) {
+            angular.forEach(graphNodes, function (targetStageInstance) {
               if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length &&
                 _.contains(targetStageInstance.inputLanes, eventLane)) {
                 edges.push({
@@ -1298,16 +1312,16 @@ angular
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.selectedType = pipelineConstant.PIPELINE;
       } else {
-        //Check
+        // Check
 
         if ($scope.selectedType === pipelineConstant.PIPELINE) {
-          //In case of detail pane is Pipeline Configuration
+          // In case of detail pane is Pipeline Configuration
           $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
           $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
           $scope.selectedType = pipelineConstant.PIPELINE;
         } else if ($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
-          //In case of detail pane is stage instance
-          angular.forEach($scope.stageInstances, function (stageInstance) {
+          // In case of detail pane is stage instance
+          angular.forEach(graphNodes, function (stageInstance) {
             if (stageInstance.instanceName === $scope.detailPaneConfig.instanceName) {
               selectedStageInstance = stageInstance;
             }
@@ -1348,6 +1362,19 @@ angular
           $scope.errorStageConfigDefn = undefined;
         }
 
+        var testOriginStage = $scope.pipelineConfig.testOriginStage;
+        if (testOriginStage && testOriginStage.configuration && testOriginStage.configuration.length) {
+          $scope.testOriginStageConfig = testOriginStage;
+          $scope.testOriginStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === testOriginStage.library &&
+              stageLibrary.name === testOriginStage.stageName &&
+              stageLibrary.version === testOriginStage.stageVersion;
+          });
+        } else {
+          $scope.testOriginStageConfig = undefined;
+          $scope.testOriginStageConfigDefn = undefined;
+        }
+
         var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
         if (statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
           $scope.statsAggregatorStageConfig = statsAggregatorStage;
@@ -1360,7 +1387,6 @@ angular
           $scope.statsAggregatorStageConfig = undefined;
           $scope.statsAggregatorStageConfigDefn = undefined;
         }
-
 
         var startEventStage = $scope.pipelineConfig.startEventStages[0];
         if (startEventStage && startEventStage.configuration && startEventStage.configuration.length) {
@@ -1409,7 +1435,7 @@ angular
         }
 
         $scope.$broadcast('updateGraph', {
-          nodes: $scope.stageInstances,
+          nodes: graphNodes,
           edges: edges,
           issues: issuesMap,
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
@@ -1420,6 +1446,7 @@ angular
           pipelineRules: $scope.pipelineRules,
           triggeredAlerts: $scope.isPipelineRunning ? $scope.triggeredAlerts : [],
           errorStage: $scope.pipelineConfig.errorStage,
+          testOriginStage: $scope.pipelineConfig.testOriginStage,
           statsAggregatorStage: $scope.pipelineConfig.statsAggregatorStage,
           startEventStage: $scope.pipelineConfig.startEventStages[0],
           stopEventStage: $scope.pipelineConfig.stopEventStages[0],
@@ -1438,15 +1465,19 @@ angular
       var selectedObject = options.selectedObject;
       var type = options.type;
       var errorStage = $scope.pipelineConfig.errorStage;
+      var testOriginStage = $scope.pipelineConfig.testOriginStage;
       var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
       var startEventStage = $scope.pipelineConfig.startEventStages[0];
       var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
       var stageLibraryList = [];
       var optionsLength = Object.keys(options).length;
 
-      if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
-        ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.pipelineId === selectedObject.info.pipelineId) ||
-          (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
+      if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type &&
+        $scope.selectedObject && selectedObject && optionsLength <= 2 &&
+        ((type === pipelineConstant.PIPELINE &&
+          $scope.selectedObject.info.pipelineId === selectedObject.info.pipelineId) ||
+          (type === pipelineConstant.STAGE_INSTANCE &&
+            $scope.selectedObject.instanceName === selectedObject.instanceName))) {
         // Previous selection remain same
         return;
       }
@@ -1454,6 +1485,8 @@ angular
       $scope.selectedType = type;
       $scope.errorStageConfig = undefined;
       $scope.errorStageConfigDefn = undefined;
+      $scope.testOriginStageConfig = undefined;
+      $scope.testOriginStageConfigDefn = undefined;
       $scope.statsAggregatorStageConfig = undefined;
       $scope.statsAggregatorStageConfigDefn = undefined;
       $scope.startEventStageConfig = undefined;
@@ -1529,6 +1562,15 @@ angular
             return stageLibrary.library === errorStage.library &&
             stageLibrary.name === errorStage.stageName &&
             stageLibrary.version === errorStage.stageVersion;
+          });
+        }
+
+        if (testOriginStage && testOriginStage.configuration && testOriginStage.configuration.length) {
+          $scope.testOriginStageConfig = testOriginStage;
+          $scope.testOriginStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === testOriginStage.library &&
+              stageLibrary.name === testOriginStage.stageName &&
+              stageLibrary.version === testOriginStage.stageVersion;
           });
         }
 
@@ -1630,14 +1672,13 @@ angular
           }
         };
 
-        metricsWebSocket.onerror = function (evt) {
+        metricsWebSocket.onerror = function () {
           isWebSocketSupported = false;
           refreshPipelineMetrics();
         };
 
       } else {
-
-        //WebSocket is not support use polling to get Pipeline Metrics
+        // WebSocket is not support use polling to get Pipeline Metrics
         pipelineMetricsTimer = $timeout(
           function() {
             //console.log( 'Pipeline Metrics Timeout executed', Date.now() );
@@ -1664,9 +1705,6 @@ angular
               .catch(function(res) {
                 $rootScope.common.errors = [res.data];
               });
-          },
-          function() {
-            //console.log( 'Timer rejected!' );
           }
         );
 
@@ -1674,25 +1712,19 @@ angular
     };
 
     var getStageErrorCounts = function() {
-      var stageInstanceErrorCounts = {},
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var stageInstanceErrorCounts = {};
+      var pipelineMetrics = $rootScope.common.pipelineMetrics;
 
       if (pipelineMetrics && pipelineMetrics.meters) {
         angular.forEach($scope.stageInstances, function(stageInstance) {
-          var errorRecordsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'],
-            stageErrorsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'];
-
+          var errorRecordsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'];
+          var stageErrorsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'];
           if (errorRecordsMeter && stageErrorsMeter) {
             stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
               errorRecordsMeter.count +
               stageErrorsMeter.count
             );
-          } else {
-            // Failed to fetch metrics
-            // $rootScope.common.errors = ['Failed to fetch pipeline metrics'];
-            // console.log('Failed to fetch stage meter metrics');
           }
-
         });
       }
 
@@ -1754,8 +1786,8 @@ angular
     };
 
     var derivePipelineRunning = function() {
-      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
-        config = $scope.pipelineConfig;
+      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
+      var config = $scope.pipelineConfig;
       return (pipelineStatus && config && pipelineStatus.pipelineId === config.info.pipelineId &&
       _.contains(['STARTING', 'STARTING_ERROR', 'RUNNING', 'RUNNING_ERROR', 'RETRY', 'FINISHING', 'STOPPING', 'STOPPING_ERROR', 'CONNECTING', 'CONNECT_ERROR'], pipelineStatus.status));
     };
@@ -1789,7 +1821,7 @@ angular
           rules.configIssues = res.configIssues;
           rules.uuid = res.uuid;
 
-          angular.forEach(rules.metricsRuleDefinitions, function(rule, index) {
+          angular.forEach(rules.metricsRuleDefinitions, function(rule) {
             var savedRule = _.find(res.metricsRuleDefinitions, function(savedRule) {
               return savedRule.id === rule.id;
             });
@@ -1799,7 +1831,7 @@ angular
             }
           });
 
-          angular.forEach(rules.dataRuleDefinitions, function(rule, index) {
+          angular.forEach(rules.dataRuleDefinitions, function(rule) {
             var savedRule = _.find(res.dataRuleDefinitions, function(savedRule) {
               return savedRule.id === rule.id;
             });
@@ -1809,7 +1841,7 @@ angular
             }
           });
 
-          angular.forEach(rules.driftRuleDefinitions, function(rule, index) {
+          angular.forEach(rules.driftRuleDefinitions, function(rule) {
             var savedRule = _.find(res.driftRuleDefinitions, function(savedRule) {
               return savedRule.id === rule.id;
             });
@@ -1851,7 +1883,21 @@ angular
 
     };
 
-    //Event Handling
+    var prepareForPreview = function() {
+      $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
+      $scope.previewMode = true;
+      $rootScope.$storage.maximizeDetailPane = false;
+      $rootScope.$storage.minimizeDetailPane = false;
+      $scope.setGraphReadOnly(true);
+      $scope.setGraphPreviewMode(true);
+      $scope.$broadcast('previewPipeline');
+
+      if ($scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
+        $scope.refreshGraph();
+      }
+    };
+
+    // Event Handling
 
     $scope.$watch('activeConfigStatus.status', function (newValue) {
       if (newValue === 'FINISHED') {
@@ -1873,13 +1919,13 @@ angular
       if (!angular.equals(newValue, oldValue)) {
         configDirty = true;
 
-        //badRecordsHandling check
-        var badRecordHandlingConfig = _.find(newValue.configuration, function(c) {
-              return c.name === 'badRecordsHandling';
-            }),
-            badRecordHandlingConfigArr = (badRecordHandlingConfig && badRecordHandlingConfig.value) ?
-              (badRecordHandlingConfig.value).split('::') : undefined,
-            errorStageInst = newValue.errorStage;
+        // badRecordsHandling check
+        var badRecordHandlingConfig = _.find(newValue.configuration, function (c) {
+          return c.name === 'badRecordsHandling';
+        });
+        var badRecordHandlingConfigArr = (badRecordHandlingConfig && badRecordHandlingConfig.value) ?
+          (badRecordHandlingConfig.value).split('::') : undefined;
+        var errorStageInst = newValue.errorStage;
 
         if ((badRecordHandlingConfigArr && badRecordHandlingConfigArr.length === 3) &&
             (!errorStageInst || errorStageInst.library !== badRecordHandlingConfigArr[0] ||
@@ -1907,8 +1953,41 @@ angular
           }
         }
 
+        // testOriginStage check
+        var testOriginStageConfig = _.find(newValue.configuration, function (c) {
+          return c.name === 'testOriginStage';
+        });
+        var testOriginStageConfigArr = (testOriginStageConfig && testOriginStageConfig.value) ?
+          (testOriginStageConfig.value).split('::') : undefined;
+        var testOriginStageInst = newValue.testOriginStage;
 
-        //statsAggregatorStage check
+        if ((testOriginStageConfigArr && testOriginStageConfigArr.length === 3) &&
+          (!testOriginStageInst || testOriginStageInst.library !== testOriginStageConfigArr[0] ||
+            testOriginStageInst.stageName !== testOriginStageConfigArr[1] ||
+            testOriginStageInst.stageVersion !== testOriginStageConfigArr[2])) {
+
+          var testOriginStageConfigDefn = _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === testOriginStageConfigArr[0] &&
+              stageLibrary.name === testOriginStageConfigArr[1] &&
+              stageLibrary.version === testOriginStageConfigArr[2];
+          });
+
+          if (testOriginStageConfigDefn) {
+            var testOriginStageInstConfig;
+            if (testOriginStageInst && testOriginStageInst.stageName === testOriginStageConfigDefn.name  &&
+              testOriginStageInst.stageVersion === testOriginStageConfigDefn.version) {
+              testOriginStageInstConfig = testOriginStageInst.configuration;
+            }
+            newValue.testOriginStage = pipelineService.getNewStageInstance({
+              stage: testOriginStageConfigDefn,
+              pipelineConfig: $scope.pipelineConfig,
+              testOriginStage: true,
+              configuration: testOriginStageInstConfig
+            });
+          }
+        }
+
+        // statsAggregatorStage check
         var statsAggregatorStageConfig = _.find(newValue.configuration, function (c) {
           return c.name === 'statsAggregatorStage';
         });
@@ -1965,14 +2044,14 @@ angular
               startEventStageInst.stageVersion === startEventStage.version) {
               saConfig = startEventStageInst.configuration;
             }
-            eventStage = pipelineService.getNewStageInstance({
+            var startEventStageInstance = pipelineService.getNewStageInstance({
               stage: startEventStage,
               pipelineConfig: $scope.pipelineConfig,
               startEventStage: true,
               configuration: saConfig
             });
 
-            newValue.startEventStages = [ eventStage ]
+            newValue.startEventStages = [ startEventStageInstance ]
           }
         }
 
@@ -2001,14 +2080,14 @@ angular
               stopEventStageInst.stageVersion === stopEventStage.version) {
               saConfig = stopEventStageInst.configuration;
             }
-            eventStage = pipelineService.getNewStageInstance({
+            var stopEventStageInstance = pipelineService.getNewStageInstance({
               stage: stopEventStage,
               pipelineConfig: $scope.pipelineConfig,
               stopEventStage: true,
               configuration: saConfig
             });
 
-            newValue.stopEventStages = [ eventStage ]
+            newValue.stopEventStages = [ stopEventStageInstance ]
           }
         }
 
@@ -2226,14 +2305,14 @@ angular
 
     $scope.$on('onAlertClick', function(event, alert) {
       if (alert && alert.pipelineName === $scope.activeConfigInfo.pipelineId) {
-        var edges = $scope.edges,
-            edge;
+        var edges = $scope.edges;
+        var edge;
 
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
 
         if (alert.ruleDefinition.metricId) {
-          //Select Pipeline Config
+          // Select Pipeline Config
           $scope.$broadcast('selectNode');
           $scope.changeStageSelection({
             selectedObject: undefined,
@@ -2241,7 +2320,7 @@ angular
             detailTabName: 'summary'
           });
         } else {
-          //Select edge
+          // Select edge
           edge = _.find(edges, function(ed) {
             return ed.outputLane === alert.ruleDefinition.lane;
           });

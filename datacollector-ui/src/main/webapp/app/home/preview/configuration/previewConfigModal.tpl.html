@@ -16,12 +16,12 @@
         <option value="{{pipelineConstant.CONFIGURED_SOURCE}}"
                 ng-selected="previewConfig.previewSource === pipelineConstant.CONFIGURED_SOURCE">
           {{'home.previewPane.configuredSource' | translate}}</option>
+        <option value="{{pipelineConstant.TEST_ORIGIN}}"
+                ng-selected="previewConfig.previewSource === pipelineConstant.TEST_ORIGIN">
+          {{'home.previewPane.testOrigin' | translate}}</option>
         <option value="{{pipelineConstant.SNAPSHOT_SOURCE}}"
                 ng-selected="previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
           {{'home.previewPane.snapshotSource' | translate}}</option>
-        <!--option value="{{pipelineConstant.USER_PROVIDED}}"
-                ng-selected="previewConfig.previewSource === pipelineConstant.USER_PROVIDED">
-          {{'home.previewPane.userProvider' | translate}}</option-->
       </select>
     </div>
 

@@ -582,6 +582,8 @@
         "totalRunners": "Total runners",
         "availableRunners": "Available runners"
       },
+      "testOrigin": "Test Origin",
+      "testStageConfiguration": "Test Origin",
       "timeSeries": "Time Series",
       "timeSeriesTab": {
         "memoryConsumed": "Heap Memory Usage",
@@ -594,7 +596,7 @@
       "batchSize": "Preview Batch Size",
       "cancelPreview": "Cancel Preview",
       "configTitle": "Preview Configuration",
-      "configuredSource": "Configured Source",
+      "configuredSource": "Configured Origin",
       "previewSource": "Preview Source",
       "previewStage": "Preview Stage",
       "previewSingleStage": "Preview Single Stage",
@@ -616,6 +618,7 @@
       "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail.",
       "stageConfigTitle": "Stage Configuration",
       "streamCondition": "Stream Condition",
+      "testOrigin": "Test Origin",
       "timeout": "Preview Timeout (in milliseconds)",
       "writeToDestinations": "Write to Destinations and Executors",
       "writeToDestinationsTooltip": "Writes preview data to destination systems (both executors and destinations)",

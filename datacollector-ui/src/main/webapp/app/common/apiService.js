@@ -845,6 +845,7 @@ angular.module('dataCollectorApp.common')
        * @param endStage
        * @param timeout
        * @param edgeHttpUrl
+       * @param testOrigin
        * @returns {*}
        */
       createPreview: function(
@@ -857,7 +858,8 @@ angular.module('dataCollectorApp.common')
         stageOutputList,
         endStage,
         timeout,
-        edgeHttpUrl
+        edgeHttpUrl,
+        testOrigin
       ) {
         if (!batchSize) {
           batchSize = 10;
@@ -876,7 +878,8 @@ angular.module('dataCollectorApp.common')
             timeout: timeout,
             skipLifecycleEvents: skipLifecycleEvents,
             endStage: endStage,
-            edge: !!edgeHttpUrl
+            edge: !!edgeHttpUrl,
+            testOrigin: !!testOrigin
           },
           data: stageOutputList || []
         });
@@ -900,7 +903,6 @@ angular.module('dataCollectorApp.common')
           }
         });
       },
-
 
       /**
        * Fetches Preview Data

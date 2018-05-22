@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for Stop Event Configuration.
- */
+
+// Controller for Stop Event Configuration.
 angular
   .module('dataCollectorApp.home')
   .controller('StopEventConfigurationController', function ($scope) {
-    $scope.detailPaneConfig = $scope.stopEventStageConfig;
-    $scope.$watch('stopEventStageConfig', function() {
+    var initialize = function() {
       $scope.detailPaneConfig = $scope.stopEventStageConfig;
+      $scope.detailPaneServices = [];
+      angular.forEach($scope.detailPaneConfig.services, function(serviceConfig) {
+        $scope.detailPaneServices.push({
+          definition: pipelineService.getServiceDefinition(serviceConfig.service),
+          config: serviceConfig
+        });
+      });
+    };
+
+    $scope.$watch('stopEventStageConfig', function() {
+      initialize();
     });
+
+    initialize();
   });

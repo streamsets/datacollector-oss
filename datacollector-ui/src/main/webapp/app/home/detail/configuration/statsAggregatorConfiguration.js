@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for StatsAggregator Configuration.
- */
+
+// Controller for StatsAggregator Configuration.
 angular
   .module('dataCollectorApp.home')
   .controller('StatsAggregatorConfigurationController', function ($scope) {
-    $scope.detailPaneConfig = $scope.statsAggregatorStageConfig;
-    $scope.$watch('statsAggregatorStageConfig', function() {
+    var initialize = function() {
       $scope.detailPaneConfig = $scope.statsAggregatorStageConfig;
+      $scope.detailPaneServices = [];
+      angular.forEach($scope.detailPaneConfig.services, function(serviceConfig) {
+        $scope.detailPaneServices.push({
+          definition: pipelineService.getServiceDefinition(serviceConfig.service),
+          config: serviceConfig
+        });
+      });
+    };
+
+    $scope.$watch('statsAggregatorStageConfig', function() {
+      initialize();
     });
+
+    initialize();
   });

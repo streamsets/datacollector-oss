@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-// Controller for Error Configuration.
+ // Controller for Test Origin Stage Configuration.
 angular
   .module('dataCollectorApp.home')
-  .controller('ErrorConfigurationController', function ($scope) {
+  .controller('TestOriginConfigurationController', function ($scope, pipelineService) {
     var initialize = function() {
-      $scope.detailPaneConfig = $scope.errorStageConfig;
+      $scope.detailPaneConfig = $scope.testOriginStageConfig;
       $scope.detailPaneServices = [];
       angular.forEach($scope.detailPaneConfig.services, function(serviceConfig) {
         $scope.detailPaneServices.push({
@@ -29,7 +29,7 @@ angular
       });
     };
 
-    $scope.$watch('errorStageConfig', function() {
+    $scope.$watch('testOriginStageConfig', function() {
       initialize();
     });
 
