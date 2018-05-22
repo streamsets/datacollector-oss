@@ -1280,6 +1280,8 @@ public class BeanHelper {
         return ExecutionModeJson.SLAVE;
       case EDGE:
         return ExecutionModeJson.EDGE;
+      case EMR_BATCH:
+        return ExecutionModeJson.EMR_BATCH;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode: " + executionMode);
     }
@@ -1305,6 +1307,8 @@ public class BeanHelper {
         return ExecutionMode.SLAVE;
       case EDGE:
         return ExecutionMode.EDGE;
+      case EMR_BATCH:
+        return ExecutionMode.EMR_BATCH;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode: " + executionModeJson);
     }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.ErrorRecordPolicy;
@@ -30,6 +31,7 @@ import com.streamsets.datacollector.config.PipelineTestStageChooserValues;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.Dependency;
@@ -429,6 +431,9 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue = {"CLUSTER_YARN_STREAMING"}
   )
   public Map<String, String> sparkConfigs;
+
+  @ConfigDefBean
+  public AmazonEMRConfig amazonEMRConfig;
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

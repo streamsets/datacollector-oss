@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TestPipelineConfigUpgrader {
@@ -110,5 +111,8 @@ public class TestPipelineConfigUpgrader {
 
     Assert.assertEquals(1, testOriginStageConfigList.size());
     Assert.assertEquals(PipelineConfigBean.RAW_DATA_ORIGIN, testOriginStageConfigList.get(0).getValue());
+
+    //TODO verify EMR configs
   }
+
 }
