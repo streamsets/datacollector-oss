@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroorc.AvroOrcConfig;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
+import com.streamsets.pipeline.lib.converter.AvroParquetConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;

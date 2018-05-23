@@ -22,7 +22,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.SimpleJobCreator;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionCommonConfig;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
+import com.streamsets.pipeline.lib.converter.AvroParquetConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Before;

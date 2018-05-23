@@ -16,7 +16,7 @@
 
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert;
 
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConstants;
+import com.streamsets.pipeline.lib.converter.AvroParquetConstants;
 
 public abstract class AvroConversionCommonConstants {
   /**
