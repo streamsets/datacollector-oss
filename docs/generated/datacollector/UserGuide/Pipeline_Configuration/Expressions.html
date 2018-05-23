@@ -54,7 +54,7 @@
                   expressions to select the fields to use in some processors. </p>
 <p class="p">Use expression completion to determine where you can use an expression
                   and the expression elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d87259e3535">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d87273e3535">
                         <li class="li">Constants</li>
 
                         <li class="li">Datetime variables</li>
@@ -448,7 +448,7 @@ ${record:value("/'city&amp;state'"}</pre>
 
                     <dd class="dd">For example, the following expression defines the subset of fields where the
                         region attribute is set to the results of the storeId
-                        field:<pre class="pre codeblock">/*[${f:attribute('storeId') == record:value('/storeId')}]</pre>
+                        field:<pre class="pre codeblock">/*[${f:attribute('region') == record:value('/storeId')}]</pre>
 </dd>
 
                 
