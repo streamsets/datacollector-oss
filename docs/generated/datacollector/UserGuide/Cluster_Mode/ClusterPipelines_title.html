@@ -551,7 +551,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
             <li class="li">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
                     property and set it to <strong class="ph b">SSL</strong>.</li>
 <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d3481e56">
+                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d3482e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -559,7 +559,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d3481e66">
+                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d3482e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -569,7 +569,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_c2g_myp_tdb__d3481e79">
+                            well:<ul class="ul" id="concept_c2g_myp_tdb__d3482e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -629,7 +629,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 example:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
-    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
@@ -659,7 +659,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 example:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
-    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
@@ -718,14 +718,13 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 <li class="li">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
-                    and set it to the same Kerberos principal name that you just defined in the JAAS
-                    configuration properties. </li>
+                    and set it to <span class="ph uicontrol">kafka</span>. </li>
 
         </ol>
 
         <p class="p">For example, the following Kafka properties enable connecting to Kafka with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_rjl_rgq_tdb__image_cl5_bmq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="99" width="580" /></p>
+        <p class="p"><img class="image" id="concept_rjl_rgq_tdb__image_cl5_bmq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="95" width="639" /></p>
 
     </div>
 
@@ -742,7 +741,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
         <ol class="ol" id="concept_ijh_kmq_tdb__ol_tpp_vyq_tdb">
             <li class="li">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d3535e35">
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d3536e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -772,7 +771,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 example:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
-    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
@@ -802,7 +801,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 example:<pre class="pre codeblock">KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
-    keyTab="/etc/security/keytabs/kafka_client.keytab"
+    keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
 };</pre>
 </div>
@@ -862,11 +861,10 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
             <li class="li">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
-                    and set it to the same Kerberos principal name that you just defined in the JAAS
-                    configuration properties. </li>
+                    and set it to <span class="ph uicontrol">kafka</span>. </li>
 
             <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d3481e56">
+                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d3482e56">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -874,7 +872,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d3481e66">
+                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d3482e66">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -884,7 +882,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d3481e79">
+                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d3482e79">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -1003,9 +1001,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d36160e1656">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d36160e1662">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d36160e1659">Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d36160e1665">Requirement</th>
 
                         </tr>
 
@@ -1013,16 +1011,16 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1656 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1662 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1659 "><span class="ph">Spark version 2.1 or later</span></td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1665 "><span class="ph">Spark version 2.1 or later</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1656 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1662 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1659 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1665 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
                                     <ul class="ul" id="concept_kry_gn5_lx__ul_fkh_cyh_pdb">
                                     <li class="li">MapR 5.2.0 and MEP 4.0</li>
 
