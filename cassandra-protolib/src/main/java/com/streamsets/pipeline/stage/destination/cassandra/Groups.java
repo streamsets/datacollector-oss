@@ -21,7 +21,8 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   CASSANDRA("Cassandra"),
-  CREDENTIALS("Credentials")
+  CREDENTIALS("Credentials"),
+  TLS("TLS"),
   ;
 
   private final String label;

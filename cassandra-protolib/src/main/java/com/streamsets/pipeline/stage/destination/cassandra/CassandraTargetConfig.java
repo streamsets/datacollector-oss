@@ -18,9 +18,11 @@ package com.streamsets.pipeline.stage.destination.cassandra;
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,4 +152,7 @@ public class CassandraTargetConfig {
       triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
   )
   public CredentialValue password;
+
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfig = new TlsConfigBean();
 }
