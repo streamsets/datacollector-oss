@@ -284,7 +284,7 @@ public class AvroTypeUtil {
         break;
       case RECORD:
         GenericRecord avroRecord = (GenericRecord) value;
-        Map<String, Field> recordMap = new HashMap<>();
+        LinkedHashMap<String, Field> recordMap = new LinkedHashMap<>();
         for(Schema.Field field : schema.getFields()) {
           Field temp = avroToSdcField(record, fieldPath + FORWARD_SLASH + field.name(), field.schema(),
               avroRecord.get(field.name()));
@@ -292,7 +292,7 @@ public class AvroTypeUtil {
             recordMap.put(field.name(), temp);
           }
         }
-        f = Field.create(recordMap);
+        f = Field.createListMap(recordMap);
         break;
       case STRING:
         f = Field.create(Field.Type.STRING, value.toString());
@@ -810,6 +810,13 @@ public class AvroTypeUtil {
       case LONG:
         return jsonNode.getLongValue();
       case RECORD:
+        LinkedHashMap<String, Object> recordMap = new LinkedHashMap<>();
+        Iterator<Map.Entry<String, JsonNode>> recordFields = jsonNode.getFields();
+        while(recordFields.hasNext()) {
+          Map.Entry<String, JsonNode> next = recordFields.next();
+          recordMap.put(next.getKey(), getDefaultValue(next.getValue(), schema.getValueType()));
+        }
+        return recordMap;
       case MAP:
         Map<String, Object> map = new HashMap<>();
         Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.getFields();

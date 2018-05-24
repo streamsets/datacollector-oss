@@ -491,7 +491,7 @@ public class TestAvroTypeUtil {
 
     Record record = RecordCreator.create();
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord);
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("hari", map.get("name").getValueAsString());
@@ -585,7 +585,7 @@ public class TestAvroTypeUtil {
 
     Record record = RecordCreator.create();
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord);
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("hari", map.get("name").getValueAsString());
@@ -721,7 +721,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(2, valueAsList.size());
 
     Field field = valueAsList.get(1);
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("kiran", map.get("name").getValueAsString());
@@ -751,7 +751,7 @@ public class TestAvroTypeUtil {
 
 
     field = valueAsList.get(0);
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("hari", map.get("name").getValueAsString());
@@ -886,7 +886,7 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(valueAsMap.containsKey("Hari"));
     Field field = valueAsMap.get("Hari");
 
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("hari", map.get("name").getValueAsString());
@@ -917,7 +917,7 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(valueAsMap.containsKey("Kiran"));
     field = valueAsMap.get("Kiran");
 
-    Assert.assertEquals(Field.Type.MAP, field.getType());
+    Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
     Assert.assertEquals("kiran", map.get("name").getValueAsString());

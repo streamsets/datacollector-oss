@@ -95,13 +95,17 @@ public class TestProtobufDataParser {
   }
 
   private void verifyProtobuf3TestRecord(Record record) {
+    assertEquals(Field.Type.LIST_MAP, record.get().getType());
+
     assertTrue(record.has("/first_name"));
     assertTrue(record.has("/full_name"));
     assertTrue(record.has("/test_map"));
     assertTrue(record.has("/samples"));
 
     assertEquals("Adam", record.get("/first_name").getValueAsString());
+    assertEquals("Adam", record.get("[0]").getValueAsString());
     assertEquals("", record.get("/full_name").getValue());
+    assertEquals("", record.get("[1]").getValueAsString());
     List<Field> samples = record.get("/samples").getValueAsList();
     assertEquals(2, samples.size());
     assertEquals(1, samples.get(0).getValueAsInteger());

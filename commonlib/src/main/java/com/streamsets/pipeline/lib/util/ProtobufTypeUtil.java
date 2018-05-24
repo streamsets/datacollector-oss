@@ -292,7 +292,7 @@ public class ProtobufTypeUtil {
       Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
       Object message
   ) throws DataParserException {
-    Map<String, Field> sdcRecordMapFieldValue = new HashMap<>();
+    LinkedHashMap<String, Field> sdcRecordMapFieldValue = new LinkedHashMap<>();
 
     // get all the expected fields from the proto file
     Map<String, Descriptors.FieldDescriptor> protobufFields = new LinkedHashMap<>();
@@ -342,7 +342,7 @@ public class ProtobufTypeUtil {
       record.getHeader().setAttribute(PROTOBUF_UNKNOWN_FIELDS_PREFIX + path, new String(bytes, StandardCharsets.UTF_8));
     }
 
-    return Field.create(sdcRecordMapFieldValue);
+    return Field.createListMap(sdcRecordMapFieldValue);
   }
 
   /**
