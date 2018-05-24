@@ -40,6 +40,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockSettings;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -59,7 +65,8 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.streamsets.datacollector.publicrestapi.CredentialsDeploymentResource.DPM_AGENT_PUBLIC_KEY;
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(WebServerAgentCondition.class)
 public class TestCredentialsDeploymentResource extends JerseyTest{
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -72,15 +79,18 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
 
   @After
   public void tearDown() throws Exception {
-    System.clearProperty("streamsets.cluster.manager.credentials.required");
     System.clearProperty(DPM_AGENT_PUBLIC_KEY);
     super.tearDown();
+  }
+
+  private static void mockCheckForCredentialsRequiredToTrue() {
+    PowerMockito.stub(PowerMockito.method(WebServerAgentCondition.class, "shouldCheckForCredentials")).toReturn(true);
   }
 
   @Test
   public void testNonRunningRestAPI() {
     Response response = null;
-    System.setProperty("streamsets.cluster.manager.credentials.required", "true");
+    mockCheckForCredentialsRequiredToTrue();
     try {
       response = target("/v1/definitions").request().get();
       Assert.assertEquals(Response.Status.FORBIDDEN.getStatusCode(), response.getStatus());
@@ -118,7 +128,7 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
 
     Response response = null;
     KeyPair keys = generateKeys();
-    System.setProperty("streamsets.cluster.manager.credentials.required", "true");
+    mockCheckForCredentialsRequiredToTrue();
     System.setProperty(DPM_AGENT_PUBLIC_KEY, Base64.getEncoder().encodeToString(keys.getPublic().getEncoded()));
     String token = "Frenchies and Pandas";
     Signature sig = Signature.getInstance("SHA256withRSA");
@@ -202,8 +212,7 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
   @Test
   public void testResourcesThatDontNeedCredentials() throws Exception {
     Response response = null;
-    System.setProperty("streamsets.cluster.manager.credentials.required", "true");
-
+    mockCheckForCredentialsRequiredToTrue();
     try {
       response = target("/v1/cluster/callback").request().get();
       // It can be anything, but not 403

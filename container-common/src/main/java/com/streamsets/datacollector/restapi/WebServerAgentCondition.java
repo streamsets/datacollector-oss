@@ -25,9 +25,11 @@ public class WebServerAgentCondition {
 
   private static final AtomicBoolean receivedCredentials = new AtomicBoolean(false);
   private static final CountDownLatch blockOtherTasks = new CountDownLatch(1);
+  private static final boolean isCredentialsRequiredPropertyEnabled =
+      Boolean.valueOf(System.getProperty("streamsets.cluster.manager.credentials.required", "false"));
 
   private static boolean shouldCheckForCredentials() {
-    return Boolean.valueOf(System.getProperty("streamsets.cluster.manager.credentials.required", "false"));
+    return isCredentialsRequiredPropertyEnabled;
   }
 
   public static boolean canContinue() {
