@@ -74,11 +74,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-net-commonlib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.datastax.dse</groupId>
       <artifactId>dse-java-driver-core</artifactId>
       <version>${dse-driver.version}</version>
@@ -89,6 +84,10 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-stagesupport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-net-commonlib</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
