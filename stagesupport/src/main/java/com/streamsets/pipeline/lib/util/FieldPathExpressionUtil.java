@@ -80,9 +80,25 @@ public class FieldPathExpressionUtil {
       ELVars elVars,
       Record record
   ) throws ELEvalException {
+    return evaluateMatchingFieldPathsImpl(
+            fieldExpression,
+            elEval,
+            elVars,
+            record,
+            record.getEscapedFieldPaths()
+    );
+  }
+
+  private static List<String> evaluateMatchingFieldPathsImpl(
+      String fieldExpression,
+      ELEval elEval,
+      ELVars elVars,
+      Record record,
+      Iterable<String> recordEscapedFieldPaths
+  ) throws ELEvalException {
     RecordEL.setRecordInContext(elVars, record);
     List<String> matchingPaths = new LinkedList<>();
-    for (String fieldPath : record.getEscapedFieldPaths()) {
+    for (String fieldPath : recordEscapedFieldPaths) {
       if (pathMatches(record, fieldPath, fieldExpression, elEval, elVars)) {
         matchingPaths.add(fieldPath);
       }

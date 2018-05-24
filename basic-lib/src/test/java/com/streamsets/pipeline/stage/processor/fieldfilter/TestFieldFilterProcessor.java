@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 public class TestFieldFilterProcessor {
 
@@ -504,7 +506,7 @@ public class TestFieldFilterProcessor {
 @Test
   public void testWildCardKeep1() throws StageException {
     /*
-     * Use wil card in deep nested paths
+     * Use wild card in deep nested paths
      */
     Record record = createNestedRecord();
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
@@ -535,7 +537,7 @@ public class TestFieldFilterProcessor {
   @Test
   public void testWildCardKeep2() throws StageException {
     /*
-     * Use wil card in array within array
+     * Use wild card in array within array
      */
     Record record = createNestedRecord();
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
@@ -559,7 +561,7 @@ public class TestFieldFilterProcessor {
     }
 
     /*
-     * Use wil card in array
+     * Use wild card in array
      */
     record = createNestedRecord();
     runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
@@ -589,7 +591,7 @@ public class TestFieldFilterProcessor {
   public void testWildCardKeep3() throws StageException {
 
     /*
-     * Use wil card in map and array
+     * Use wild card in map and array
      */
     Record record = createNestedRecord();
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
@@ -619,7 +621,7 @@ public class TestFieldFilterProcessor {
     }
 
     /*
-     * Use wil card in map. Make sure the entire tree of elements is preserved
+     * Use wild card in map. Make sure the entire tree of elements is preserved
      */
     record = createNestedRecord();
     runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
@@ -648,6 +650,72 @@ public class TestFieldFilterProcessor {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testKeepMultiList1() throws StageException {
+
+    Record inputRecord = createMultiListRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+            .addConfiguration("fields", ImmutableList.of("[*][2]"))
+            .addConfiguration("filterOperation", FilterOperation.KEEP)
+            .addOutputLane("a").build();
+    runner.runInit();
+
+    List<Field> fields = new ArrayList<>();
+    for (int i = 0; i <= 10; i++) {
+      fields.add(i, Field.create(Field.Type.LIST, ImmutableList.of(Field.create(100 * i + 2))));
+    }
+    Record expectedRecord = RecordCreator.create("s", "s:1");
+    expectedRecord.set(Field.create(fields));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(inputRecord));
+      Record resultRecord = output.getRecords().get("a").get(0);
+      System.out.println(resultRecord.toString());
+      Assert.assertTrue(resultRecord.equals(expectedRecord));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testKeepMultiList2() throws StageException {
+
+    Record inputRecord = createMultiListRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("[2][*]"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    List<Field> fields = new ArrayList<>();
+    int i = 2;
+    fields.add( Field.create( Field.Type.LIST, ImmutableList.of(
+            Field.create(100*i+0),
+            Field.create(100*i+1),
+            Field.create(100*i+2),
+            Field.create(100*i+3),
+            Field.create(100*i+4),
+            Field.create(100*i+5),
+            Field.create(100*i+6),
+            Field.create(100*i+7),
+            Field.create(100*i+8),
+            Field.create(100*i+9),
+            Field.create(100*i+10)
+    )));
+
+    Record expectedRecord = RecordCreator.create("s", "s:1");
+    expectedRecord.set(Field.create(fields));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(inputRecord));
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(resultRecord.equals(expectedRecord));
+    } finally {
+      runner.runDestroy();
+    }
+
   }
 
   /********************************************************/
@@ -689,7 +757,7 @@ public class TestFieldFilterProcessor {
   }
 
   @Test
-  public void testRemoveNonExistingFiled() throws StageException {
+  public void testRemoveNonExistingField() throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
       .addConfiguration("fields", ImmutableList.of("/city"))
       .addConfiguration("filterOperation", FilterOperation.REMOVE)
@@ -916,6 +984,87 @@ public class TestFieldFilterProcessor {
     }
   }
 
+  @Test
+  public void testRemoveMultiList1() throws StageException {
+
+    Record inputRecord = createMultiListRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("[*][2]"))
+        .addConfiguration("filterOperation", FilterOperation.REMOVE)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    List<Field> fields = new ArrayList<>();
+    for (int i = 0; i <= 10; i++) {
+      fields.add(i, Field.create( Field.Type.LIST, ImmutableList.of(
+              Field.create(100*i+0),
+              Field.create(100*i+1),
+              Field.create(100*i+3),
+              Field.create(100*i+4),
+              Field.create(100*i+5),
+              Field.create(100*i+6),
+              Field.create(100*i+7),
+              Field.create(100*i+8),
+              Field.create(100*i+9),
+              Field.create(100*i+10)
+      )));
+    }
+    Record expectedRecord = RecordCreator.create("s", "s:1");
+    expectedRecord.set(Field.create(fields));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(inputRecord));
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(resultRecord.equals(expectedRecord));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRemoveMultiList2() throws StageException {
+
+    Record inputRecord = createMultiListRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("[2][*]"))
+        .addConfiguration("filterOperation", FilterOperation.REMOVE)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    List<Field> fields = new ArrayList<>();
+    for (int i = 0; i <= 10; i++) {
+      if (i==2) {
+        fields.add(i, Field.create( Field.Type.LIST, ImmutableList.of()));
+      }
+      else {
+        fields.add(i, Field.create( Field.Type.LIST, ImmutableList.of(
+                Field.create(100*i+0),
+                Field.create(100*i+1),
+                Field.create(100*i+2),
+                Field.create(100*i+3),
+                Field.create(100*i+4),
+                Field.create(100*i+5),
+                Field.create(100*i+6),
+                Field.create(100*i+7),
+                Field.create(100*i+8),
+                Field.create(100*i+9),
+                Field.create(100*i+10)
+        )));
+      }
+    }
+    Record expectedRecord = RecordCreator.create("s", "s:1");
+    expectedRecord.set(Field.create(fields));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(inputRecord));
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(resultRecord.equals(expectedRecord));
+    } finally {
+      runner.runDestroy();
+    }
+
+  }
+
   private Record createNestedRecord() {
     return createNestedRecord(false);
   }
@@ -1053,8 +1202,7 @@ public class TestFieldFilterProcessor {
     return record;
   }
 
-  private Record  createNestedRecordForRegex()
-  {
+  private Record  createNestedRecordForRegex() {
 
     Field name1 = Field.create("a");
     Field name2 = Field.create("b");
@@ -1137,8 +1285,29 @@ public class TestFieldFilterProcessor {
       Assert.assertEquals(record.get("/USA[1]/SantaClara/main/streets[0][0]/name21").getValueAsString(), "g");
       Assert.assertEquals(record.get("/USA[1]/SantaClara/main/streets[0][1]/name22").getValueAsString(), "h");
 
+    return record;
+  }
 
+  private Record createMultiListRecord() {
 
+    List<Field> fields = new ArrayList<>();
+    for (int i = 0; i <= 10; i++) {
+      fields.add(i, Field.create( Field.Type.LIST, ImmutableList.of(
+              Field.create(100*i+0),
+              Field.create(100*i+1),
+              Field.create(100*i+2),
+              Field.create(100*i+3),
+              Field.create(100*i+4),
+              Field.create(100*i+5),
+              Field.create(100*i+6),
+              Field.create(100*i+7),
+              Field.create(100*i+8),
+              Field.create(100*i+9),
+              Field.create(100*i+10)
+      )));
+    }
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fields));
     return record;
   }
 

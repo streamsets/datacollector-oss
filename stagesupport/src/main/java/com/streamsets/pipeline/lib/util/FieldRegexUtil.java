@@ -60,6 +60,7 @@ public class FieldRegexUtil {
     if(!hasWildCards(fieldPath)) {
       return Arrays.asList(fieldPath);
     }
+
     //Any reference to array index brackets [ ] must be escaped in the regex
     //Reference to * in map must be replaced by regex that matches a field name
     //Reference to * in array index must be replaced by \d+
