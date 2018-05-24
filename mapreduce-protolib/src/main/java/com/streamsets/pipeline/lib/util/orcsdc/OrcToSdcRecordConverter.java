@@ -314,11 +314,9 @@ public class OrcToSdcRecordConverter implements AutoCloseable {
           final long millis = tsColVec.time[rowNum];
           final int nanos = tsColVec.nanos[rowNum];
 
-          final int combinedNanos = nanos + (1000000 * (int) (millis % 1000));
-
           final LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(
               millis / 1000,
-              combinedNanos,
+              nanos,
               ZoneOffset.UTC
           );
           record.set(fieldPath, Field.createZonedDateTime(ZonedDateTime.of(localDateTime, ZoneOffset.UTC)));
