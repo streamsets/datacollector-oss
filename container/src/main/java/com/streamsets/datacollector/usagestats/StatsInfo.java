@@ -104,7 +104,7 @@ public class StatsInfo {
     if (roll) {
       doWithLock(() -> {
         if (!existingStats) {
-          ActiveStats activeStats = new ActiveStats();
+          ActiveStats activeStats = getActiveStats().roll();
           activeStats.setDataCollectorVersion(currentVersion);
           activeStats.setIdHash(currentIdHash);
           activeStats.setDpmEnabled(currentDpmEnabled);

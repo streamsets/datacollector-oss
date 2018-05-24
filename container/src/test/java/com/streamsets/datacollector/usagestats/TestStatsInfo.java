@@ -122,6 +122,9 @@ public class TestStatsInfo {
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
 
+    si.startSystem();
+    Assert.assertEquals(1, si.getActiveStats().getUpTime().getMultiplier());
+
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 1000));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
 
@@ -129,6 +132,8 @@ public class TestStatsInfo {
     Assert.assertEquals(StatsInfo.computeHash("id"), si.getActiveStats().getIdHash());
     Assert.assertTrue(si.getActiveStats().isDpmEnabled());
     Assert.assertTrue(si.getCollectedStats().isEmpty());
+
+    Assert.assertEquals(1, si.getActiveStats().getUpTime().getMultiplier());
   }
 
   @Test
