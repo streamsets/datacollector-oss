@@ -189,7 +189,10 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       List<Pair<String, String>> path = new LinkedList<>();
       // Last element in the list is the field itself; we don't need it
       for (int i = 0; i < pathElements.length - 1; i++) {
-        path.add(Pair.of(path.isEmpty() ? sobjectType.toLowerCase() : null, pathElements[i].toLowerCase()));
+        // Ignore redundant reference to object being queried - SDC-9067
+        if (!(i == 0 && sobjectType.equalsIgnoreCase(pathElements[i]))) {
+          path.add(Pair.of(path.isEmpty() ? sobjectType.toLowerCase() : null, pathElements[i].toLowerCase()));
+        }
       }
       references.add(path);
     }
