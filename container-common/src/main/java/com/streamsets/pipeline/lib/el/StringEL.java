@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringEL {
-  public static final String MEMOIZED = "memoized";
   private static final Logger LOG = LoggerFactory.getLogger(StringEL.class);
 
   private StringEL() {
@@ -176,7 +175,7 @@ public class StringEL {
     @ElParam("groupNumber") int groupNumber) {
     Utils.checkArgument(regEx != null, "Argument regEx for str:regExCapture() cannot be null.");
     if (string != null) {
-      Map<String, Pattern> patterns = (Map<String, Pattern>) ELEval.getVariablesInScope().getContextVariable(MEMOIZED);
+      Map<String, Pattern> patterns = (Map<String, Pattern>) ELEval.getVariablesInScope().getContextVariable(StringELConstants.MEMOIZED);
       Matcher matcher = getPattern(patterns, regEx).matcher(string);
       if (matcher.find()) {
         return matcher.group(groupNumber);

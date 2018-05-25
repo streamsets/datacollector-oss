@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringELConstants;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
@@ -34,8 +35,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.streamsets.pipeline.lib.el.StringEL.MEMOIZED;
 
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
@@ -65,7 +64,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     expressionVars = ELUtils.parseConstants(
         null, getContext(), Groups.EXPRESSIONS.name(), "constants", Errors.EXPR_01, issues
     );
-    expressionVars.addContextVariable(MEMOIZED, memoizedVars);
+    expressionVars.addContextVariable(StringELConstants.MEMOIZED, memoizedVars);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       ELUtils.validateExpression(expressionEval, expressionVars, expressionProcessorConfig.expression, getContext(),

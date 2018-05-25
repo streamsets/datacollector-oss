@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.StringELConstants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
@@ -251,7 +252,7 @@ public class TestStringEL {
     ELVariables variables = new ELVariables();
 
     Map<String, Pattern> memoizedRegex = new HashMap<>();
-    variables.addContextVariable(StringEL.MEMOIZED, memoizedRegex);
+    variables.addContextVariable(StringELConstants.MEMOIZED, memoizedRegex);
 
     final String regex = ".*";
 
