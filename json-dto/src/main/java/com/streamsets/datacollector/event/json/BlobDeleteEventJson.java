@@ -19,7 +19,7 @@ public class BlobDeleteEventJson extends BlobBaseEventJson {
 
   private String namespace;
   private String id;
-  private int version;
+  private long version;
 
   public String getNamespace() {
     return namespace;
@@ -37,11 +37,11 @@ public class BlobDeleteEventJson extends BlobBaseEventJson {
     this.id = id;
   }
 
-  public int getVersion() {
+  public long getVersion() {
     return version;
   }
 
-  public void setVersion(int version) {
+  public void setVersion(long version) {
     this.version = version;
   }
 }

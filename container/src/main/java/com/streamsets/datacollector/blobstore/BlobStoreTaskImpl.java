@@ -112,7 +112,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   }
 
   @Override
-  public synchronized void store(String namespace, String id, int version, String content) throws StageException {
+  public synchronized void store(String namespace, String id, long version, String content) throws StageException {
     Preconditions.checkArgument(BlobStore.VALID_NAMESPACE_PATTERN.matcher(namespace).matches());
     Preconditions.checkArgument(BlobStore.VALID_ID_PATTERN.matcher(id).matches());
 
@@ -136,7 +136,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   }
 
   @Override
-  public synchronized int latestVersion(String namespace, String id) throws StageException {
+  public synchronized long latestVersion(String namespace, String id) throws StageException {
     return getObjectDieIfNotExists(namespace, id).latestVersion();
   }
 
@@ -147,13 +147,13 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   }
 
   @Override
-  public synchronized Set<Integer> allVersions(String namespace, String id) {
+  public synchronized Set<Long> allVersions(String namespace, String id) {
     ObjectMetadata objectMetadata = getObject(namespace, id);
     return objectMetadata == null ? Collections.emptySet() : objectMetadata.allVersions();
   }
 
   @Override
-  public synchronized String retrieve(String namespace, String id, int version) throws StageException {
+  public synchronized String retrieve(String namespace, String id, long version) throws StageException {
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
     if(!objectMetadata.containsVersion(version)) {
@@ -168,7 +168,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   }
 
   @Override
-  public synchronized void delete(String namespace, String id, int version) throws StageException {
+  public synchronized void delete(String namespace, String id, long version) throws StageException {
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
     if(!objectMetadata.containsVersion(version)) {

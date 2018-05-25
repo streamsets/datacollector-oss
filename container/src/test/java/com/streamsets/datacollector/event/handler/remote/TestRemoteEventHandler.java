@@ -547,12 +547,12 @@ public class TestRemoteEventHandler {
     }
 
     @Override
-    public void blobStore(String namespace, String id, int version, String content) throws StageException {
+    public void blobStore(String namespace, String id, long version, String content) throws StageException {
       this.blobStoreCalled = true;
     }
 
     @Override
-    public void blobDelete(String namespace, String id, int version) throws StageException {
+    public void blobDelete(String namespace, String id, long version) throws StageException {
       this.blobDeleteCalled = true;
     }
 

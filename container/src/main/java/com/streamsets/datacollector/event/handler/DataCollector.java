@@ -68,10 +68,10 @@ public interface DataCollector {
   /**
    * Add a new object to DataCollector's blob store.
    */
-  void blobStore(String namespace, String id, int version, String content) throws StageException;
+  void blobStore(String namespace, String id, long version, String content) throws StageException;
 
   /**
    * Remove object from DataCollector's blob store.
    */
-  void blobDelete(String namespace, String id, int version) throws StageException;
+  void blobDelete(String namespace, String id, long version) throws StageException;
 }

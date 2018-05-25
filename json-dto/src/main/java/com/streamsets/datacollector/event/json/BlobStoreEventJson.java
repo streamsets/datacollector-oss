@@ -19,7 +19,7 @@ public class BlobStoreEventJson extends BlobBaseEventJson  {
 
   private String namespace;
   private String id;
-  private int version;
+  private long version;
   private String content;
 
   public String getNamespace() {
@@ -38,11 +38,11 @@ public class BlobStoreEventJson extends BlobBaseEventJson  {
     this.id = id;
   }
 
-  public int getVersion() {
+  public long getVersion() {
     return version;
   }
 
-  public void setVersion(int version) {
+  public void setVersion(long version) {
     this.version = version;
   }
 

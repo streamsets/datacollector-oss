@@ -19,7 +19,7 @@ public class BlobStoreEvent extends BlobBaseEvent {
 
   private String namespace;
   private String id;
-  private int version;
+  private long version;
   private String content;
 
   public BlobStoreEvent() {
@@ -28,7 +28,7 @@ public class BlobStoreEvent extends BlobBaseEvent {
   public BlobStoreEvent(
     String namespace,
     String id,
-    int version,
+    long version,
     String content
   ) {
     this.namespace = namespace;
@@ -53,11 +53,11 @@ public class BlobStoreEvent extends BlobBaseEvent {
     this.id = id;
   }
 
-  public int getVersion() {
+  public long getVersion() {
     return version;
   }
 
-  public void setVersion(int version) {
+  public void setVersion(long version) {
     this.version = version;
   }
 

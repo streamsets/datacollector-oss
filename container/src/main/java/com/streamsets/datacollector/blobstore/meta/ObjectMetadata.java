@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class ObjectMetadata {
 
-  private final Map<Integer, String> contentUuid;
+  private final Map<Long, String> contentUuid;
 
   public ObjectMetadata() {
     this.contentUuid = new HashMap<>();
@@ -34,31 +34,31 @@ public class ObjectMetadata {
 
   @JsonCreator
   public ObjectMetadata(
-    @JsonProperty("contentUuid") Map<Integer, String> contentUuid
+    @JsonProperty("contentUuid") Map<Long, String> contentUuid
   ) {
     this.contentUuid = contentUuid;
   }
 
   @JsonIgnore
-  public boolean containsVersion(int version) {
+  public boolean containsVersion(long version) {
     return contentUuid.containsKey(version);
   }
 
   @JsonIgnore
-  public void createContent(int version, String uuid) {
+  public void createContent(long version, String uuid) {
     contentUuid.put(version, uuid);
   }
 
   @JsonIgnore
-  public String uuidForVersion(int version) {
+  public String uuidForVersion(long version) {
     return contentUuid.get(version);
   }
 
   @JsonIgnore
-  public int latestVersion() {
-    int version = Integer.MIN_VALUE;
+  public long latestVersion() {
+    long version = Long.MIN_VALUE;
 
-    for(Integer v : contentUuid.keySet()) {
+    for(Long v : contentUuid.keySet()) {
       if(v > version) {
         version = v;
       }
@@ -68,12 +68,12 @@ public class ObjectMetadata {
   }
 
   @JsonIgnore
-  public void removeVersion(int version) {
+  public void removeVersion(long version) {
     contentUuid.remove(version);
   }
 
   @JsonIgnore
-  public Set<Integer> allVersions() {
+  public Set<Long> allVersions() {
     return new HashSet<>(contentUuid.keySet());
   }
 

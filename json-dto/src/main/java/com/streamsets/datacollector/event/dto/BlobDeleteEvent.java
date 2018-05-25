@@ -19,7 +19,7 @@ public class BlobDeleteEvent extends BlobBaseEvent {
 
   private String namespace;
   private String id;
-  private int version;
+  private long version;
 
   public BlobDeleteEvent() {
   }
@@ -27,7 +27,7 @@ public class BlobDeleteEvent extends BlobBaseEvent {
   public BlobDeleteEvent(
     String namespace,
     String id,
-    int version
+    long version
   ) {
     this.namespace = namespace;
     this.id = id;
@@ -50,11 +50,11 @@ public class BlobDeleteEvent extends BlobBaseEvent {
     this.id = id;
   }
 
-  public int getVersion() {
+  public long getVersion() {
     return version;
   }
 
-  public void setVersion(int version) {
+  public void setVersion(long version) {
     this.version = version;
   }
 }

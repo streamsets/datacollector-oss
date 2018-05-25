@@ -413,12 +413,12 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void blobStore(String namespace, String id, int version, String content) throws StageException {
+  public void blobStore(String namespace, String id, long version, String content) throws StageException {
     blobStoreTask.store(namespace, id, version, content);
   }
 
   @Override
-  public void blobDelete(String namespace, String id, int version) throws StageException {
+  public void blobDelete(String namespace, String id, long version) throws StageException {
     blobStoreTask.delete(namespace, id, version);
   }
 

@@ -111,7 +111,7 @@ public class BlobStoreTaskImplTest {
     store.store("policy", "1234", 4, "");
 
     assertEquals(15, store.latestVersion("policy", "1234"));
-    assertEquals(ImmutableSet.of(10, 15, 4), store.allVersions("policy", "1234"));
+    assertEquals(ImmutableSet.of(10L, 15L, 4L), store.allVersions("policy", "1234"));
   }
 
   @Test
@@ -137,11 +137,11 @@ public class BlobStoreTaskImplTest {
 
     store.delete("policy", "1234", 10);
     assertEquals(15, store.latestVersion("policy", "1234"));
-    assertEquals(ImmutableSet.of(15, 4), store.allVersions("policy", "1234"));
+    assertEquals(ImmutableSet.of(15L, 4L), store.allVersions("policy", "1234"));
 
     store.delete("policy", "1234", 15);
     assertEquals(4, store.latestVersion("policy", "1234"));
-    assertEquals(ImmutableSet.of(4), store.allVersions("policy", "1234"));
+    assertEquals(ImmutableSet.of(4L), store.allVersions("policy", "1234"));
 
     store.delete("policy", "1234", 4);
     assertEquals(Collections.emptySet(), store.allVersions("policy", "1234"));
