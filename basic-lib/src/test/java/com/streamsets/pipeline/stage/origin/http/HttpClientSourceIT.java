@@ -59,6 +59,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -281,6 +282,11 @@ public class HttpClientSourceIT extends JerseyTest {
       String queriedName = map.get(name);
       final String entity = "{\"name\": \"" + queriedName + "\"}\r\n";
       return entityOnlyOnFirstRequest(entity);
+    }
+
+    @HEAD
+    public Response headRequest() {
+      return Response.ok().build();
     }
   }
 
@@ -704,6 +710,85 @@ public class HttpClientSourceIT extends JerseyTest {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testStreamingHead() throws Exception {
+    // Validates that a HEAD request successfully gets headers and has exactly 1 record output with an empty body
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.client.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.headers.put("abcdef", "ghijkl");
+    conf.resourceUrl = getBaseUri() + "headers";
+    conf.client.readTimeoutMillis = 1000;
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.HEAD;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      List<Record> parsedRecords = getRecords(runner);
+      assertEquals(1, parsedRecords.size());
+
+      Map<String, Object> lowerCasedKeys = new HashMap<>();
+      parsedRecords.get(0).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
+      assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
+      assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
+
+    } finally {
+      runner.runDestroy();
+    }
+
+  }
+
+  @Test
+  public void testBatchHead() throws Exception {
+    // Validates that a HEAD request successfully gets headers and has exactly 1 record output with an empty body
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.client.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.POLLING;
+    conf.headers.put("abcdef", "ghijkl");
+    conf.resourceUrl = getBaseUri() + "headers";
+    conf.client.readTimeoutMillis = 1000;
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 5000;
+    conf.httpMethod = HttpMethod.HEAD;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+            .addOutputLane("lane")
+            .build();
+    runner.runInit();
+
+    try {
+      List<Record> parsedRecords = getRecords(runner);
+
+      assertEquals(1, parsedRecords.size());
+
+      Map<String, Object> lowerCasedKeys = new HashMap<>();
+      parsedRecords.get(0).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
+      assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
+      assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
+
+
+    } finally {
+      runner.runDestroy();
+    }
+
+  }
+
 
   @Test
   public void testStreamingPost() throws Exception {

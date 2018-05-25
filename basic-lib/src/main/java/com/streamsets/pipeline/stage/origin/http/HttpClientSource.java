@@ -551,7 +551,7 @@ public class HttpClientSource extends BaseSource {
     shouldMakeRequest |= (haveMorePages && conf.pagination.mode != PaginationMode.LINK_HEADER);
     shouldMakeRequest |= now > lastRequestCompletedTime + conf.pollingInterval &&
         conf.httpMode == HttpClientMode.POLLING;
-    shouldMakeRequest |= now > lastRequestCompletedTime && conf.httpMode == HttpClientMode.STREAMING;
+    shouldMakeRequest |= now > lastRequestCompletedTime && conf.httpMode == HttpClientMode.STREAMING && conf.httpMethod != HttpMethod.HEAD;
 
     return shouldMakeRequest;
   }
@@ -651,6 +651,36 @@ public class HttpClientSource extends BaseSource {
   void setResponse(Response response) {
     this.response = response;
   }
+
+  /**
+   * Used only for HEAD requests.  Sets up a record for output based on headers only
+   * with an empty body.
+   *
+   * @param batchMaker batch to add records to.
+   * @return the next source offset to commit
+   * @throws StageException if an unhandled error is encountered
+   */
+
+  String parseHeadersOnly(BatchMaker batchMaker) throws StageException {
+    HttpSourceOffset sourceOffset = new HttpSourceOffset(
+            getResolvedUrl(),
+            currentParameterHash,
+            System.currentTimeMillis(),
+            getCurrentPage()
+    );
+
+    Record record = getContext().createRecord(sourceOffset + "::0");
+    addResponseHeaders(record.getHeader());
+    record.set(Field.create(new HashMap()));
+
+    batchMaker.addRecord(record);
+    recordCount++;
+    incrementSourceOffset(sourceOffset, 1);
+    lastRequestCompletedTime = System.currentTimeMillis();
+    return sourceOffset.toString();
+
+  }
+
 
   /**
    * Increments the current source offset's startAt portion by the specified amount.
@@ -856,8 +886,11 @@ public class HttpClientSource extends BaseSource {
 
     if (getResponse().hasEntity()) {
       newSourceOffset = Optional.of(parseResponse(start, maxRecords, batchMaker));
-    }
+    } else if (conf.httpMethod.getLabel() == "HEAD") {
+      // Handle HEAD only requests, which have no body, by creating a blank record for output with headers.
+      newSourceOffset = Optional.of(parseHeadersOnly(batchMaker));
 
+    }
     return newSourceOffset;
   }
 
