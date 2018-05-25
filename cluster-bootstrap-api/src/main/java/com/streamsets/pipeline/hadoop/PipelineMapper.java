@@ -37,6 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,11 @@ public class PipelineMapper extends Mapper {
     ClusterFunction clusterFunction;
     try {
       properties = BootstrapCluster.getProperties();
-      clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(id);
+      NumberFormat numberFormat = NumberFormat.getInstance();
+      numberFormat.setMinimumIntegerDigits(6);
+      numberFormat.setGroupingUsed(false);
+      final String sdcId = numberFormat.format(id);
+      clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(sdcId);
     } catch (Exception ex) {
       if (ex instanceof RuntimeException) {
         throw (RuntimeException)ex;
