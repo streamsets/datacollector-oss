@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,7 +50,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   private static final String SET_ERRORS = "setErrors";
   private static final String CONTINUE_PROCESSING = "continueProcessing";
 
-  private static synchronized void initialize(Properties properties, Integer id, String rootDataDir) throws Exception {
+  private static synchronized void initialize(Properties properties, String id, String rootDataDir) throws Exception {
     if (initialized) {
       return;
     }
@@ -60,11 +59,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     System.setProperty("sdc.data.dir", dataDir.getAbsolutePath());
     // must occur before creating the EmbeddedSDCPool as
     // the hdfs target validation evaluates the sdc:id EL
-    NumberFormat numberFormat = NumberFormat.getInstance();
-    numberFormat.setMinimumIntegerDigits(6);
-    numberFormat.setGroupingUsed(false);
-    final String sdcId = numberFormat.format(id);
-    Utils.setSdcIdCallable(() -> sdcId);
+    Utils.setSdcIdCallable(() -> id);
     sdcPool = EmbeddedSDCPool.createPool(properties);
     initialized = true;
   }
@@ -77,7 +72,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     return initialized;
   }
 
-  public static ClusterFunction create(Properties properties, Integer id, String rootDataDir) throws Exception {
+  public static ClusterFunction create(Properties properties, String id, String rootDataDir) throws Exception {
     initialize(Utils.checkNotNull(properties, "Properties"), id, rootDataDir);
     ClusterFunctionImpl fn = new ClusterFunctionImpl();
     fn.setSparkProcessorCount(BootstrapCluster.getSparkProcessorLibraryNames().size());
