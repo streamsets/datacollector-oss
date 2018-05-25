@@ -79,3 +79,6 @@ export SDC_GC_LOGGING=${SDC_GC_LOGGING:-true}
 
 # SDC will by default only run on Oracle JDK, any other JDK has to be explicitly enabled
 export SDC_ALLOW_UNSUPPORTED_JDK=${SDC_ALLOW_UNSUPPORTED_JDK:-false}
+
+# For Cluster yarn streaming mode in CDH.
+export SPARK_KAFKA_VERSION=0.10
