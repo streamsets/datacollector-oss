@@ -338,13 +338,14 @@ public class BootstrapCluster {
     return transformers;
   }
 
-  public static Object getClusterFunction(Integer id) throws Exception {
+  public static Object getClusterFunction(String id) throws Exception {
     BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl", true,
-        sparkCL).getMethod("create", Properties.class, Integer.class, String.class).invoke(null, properties, id, dataDir);
+      return Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl", true, sparkCL)
+          .getMethod("create", Properties.class, String.class, String.class)
+          .invoke(null, properties, id, dataDir);
     } catch (Exception ex) {
       String msg = "Error trying to obtain ClusterFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
