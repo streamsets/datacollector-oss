@@ -79,4 +79,33 @@ public class S3TaskConfig {
     displayPosition = 40
   )
   public Map<String, String> tags = Collections.emptyMap();
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = "New Object Path",
+    description = "New path to which the object should be copied.",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = "COPY_OBJECT")
+    },
+    group = "#0",
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    elDefs = { RecordEL.class, TimeNowEL.class },
+    displayPosition = 30
+  )
+  public String copyTargetLocation;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Delete Original Object",
+    description = "Select if the original object should be removed after the copy.",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = "COPY_OBJECT")
+    },
+    group = "#0",
+    displayPosition = 30
+  )
+  public boolean dropAfterCopy;
+
 }

@@ -138,6 +138,67 @@ public class TestAmazonS3Executor {
   }
 
   @Test
+  public void testCopyObject() throws Exception {
+    String newName = UUID.randomUUID().toString();
+
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.taskType = TaskType.COPY_OBJECT;
+    config.taskConfig.copyTargetLocation = newName;
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .build();
+    runner.runInit();
+
+    try {
+      s3client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, IOUtils.toInputStream("content"), new ObjectMetadata()));
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      S3Object object = s3client.getObject(BUCKET_NAME, newName);
+      S3ObjectInputStream objectContent = object.getObjectContent();
+
+      List<String> stringList = IOUtils.readLines(objectContent);
+      Assert.assertEquals(1, stringList.size());
+      Assert.assertEquals("content", stringList.get(0));
+
+      Assert.assertTrue(s3client.doesObjectExist(BUCKET_NAME, objectName));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testCopyObjectDeleteOriginal() throws Exception {
+    String newName = UUID.randomUUID().toString();
+
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.taskType = TaskType.COPY_OBJECT;
+    config.taskConfig.dropAfterCopy = true;
+    config.taskConfig.copyTargetLocation = newName;
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .build();
+    runner.runInit();
+
+    try {
+      s3client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, IOUtils.toInputStream("dropAfterCopy"), new ObjectMetadata()));
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      S3Object object = s3client.getObject(BUCKET_NAME, newName);
+      S3ObjectInputStream objectContent = object.getObjectContent();
+
+      List<String> stringList = IOUtils.readLines(objectContent);
+      Assert.assertEquals(1, stringList.size());
+      Assert.assertEquals("dropAfterCopy", stringList.get(0));
+
+      Assert.assertFalse(s3client.doesObjectExist(BUCKET_NAME, objectName));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testApplyTags() throws Exception {
     AmazonS3ExecutorConfig config = getConfig();
     config.taskConfig.tags = ImmutableMap.of(

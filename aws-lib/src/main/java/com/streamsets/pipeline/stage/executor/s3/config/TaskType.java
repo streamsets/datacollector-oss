@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Label;
 
 public enum TaskType implements Label {
   CREATE_NEW_OBJECT("Create New Object"),
+  COPY_OBJECT("Copy Object"),
   CHANGE_EXISTING_OBJECT("Add Tags to Existing Object"),
   ;
 
