@@ -74,6 +74,7 @@
     <jks-credentialstore-lib>jks-credentialstore-lib</jks-credentialstore-lib>
     <jdbc-lib>jdbc-lib</jdbc-lib>
     <jms-lib>jms-lib</jms-lib>
+    <kinesis-lib>kinesis-lib</kinesis-lib>
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
@@ -222,6 +223,7 @@
     <module>jks-credentialstore-lib</module>
     <module>jdbc-lib</module>
     <module>jms-lib</module>
+    <module>kinesis-lib</module>
     <module>mysql-binlog-lib</module>
     <module>omniture-lib</module>
     <module>rabbitmq-lib</module>
