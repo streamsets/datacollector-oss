@@ -305,6 +305,17 @@ public abstract class WebServerTask extends AbstractTask {
     uiRewriteRule.setRegex("^/collector/.*");
     uiRewriteRule.setReplacement("/");
     handler.addRule(uiRewriteRule);
+
+    uiRewriteRule = new RewriteRegexRule();
+    uiRewriteRule.setRegex("^/app/.*");
+    uiRewriteRule.setReplacement("/");
+    handler.addRule(uiRewriteRule);
+
+    uiRewriteRule = new RewriteRegexRule();
+    uiRewriteRule.setRegex("^/adminApp/.*");
+    uiRewriteRule.setReplacement("/");
+    handler.addRule(uiRewriteRule);
+
     handler.setHandler(appHandler);
 
     HandlerCollection handlerCollection = new HandlerCollection();
