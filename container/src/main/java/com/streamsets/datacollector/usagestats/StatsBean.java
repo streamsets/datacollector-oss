@@ -27,6 +27,7 @@ public class StatsBean {
   private long startTime;
   private long endTime;
   private long upTime;
+  private long activePipelines;
   private long pipelineMilliseconds;
   private Map<String, Long> stageMilliseconds;
   private long recordsOM;
@@ -45,6 +46,7 @@ public class StatsBean {
     setEndTime(activeStats.getEndTime());
     setUpTime(activeStats.getUpTime().getAccumulatedTime());
     long pipelineMilliseconds = 0;
+    setActivePipelines(activeStats.getPipelines().size());
     for (UsageTimer timer : activeStats.getPipelines()) {
       pipelineMilliseconds += timer.getAccumulatedTime();
     }
@@ -109,6 +111,14 @@ public class StatsBean {
 
   public void setUpTime(long upTime) {
     this.upTime = upTime;
+  }
+
+  public long getActivePipelines() {
+    return activePipelines;
+  }
+
+  public void setActivePipelines(long activePipelines) {
+    this.activePipelines = activePipelines;
   }
 
   public long getPipelineMilliseconds() {

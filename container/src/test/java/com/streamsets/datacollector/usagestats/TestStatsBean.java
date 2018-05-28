@@ -49,6 +49,7 @@ public class TestStatsBean {
     Assert.assertEquals(1, sb.getStartTime());
     Assert.assertEquals(3, sb.getEndTime());
     Assert.assertEquals(3, sb.getRecordsOM());
+    Assert.assertEquals(2, sb.getActivePipelines());
     Assert.assertEquals(3, sb.getPipelineMilliseconds());
     Assert.assertEquals((Long) 1L, sb.getStageMilliseconds().get("s1"));
     Assert.assertEquals((Long) 2L, sb.getStageMilliseconds().get("s2"));
