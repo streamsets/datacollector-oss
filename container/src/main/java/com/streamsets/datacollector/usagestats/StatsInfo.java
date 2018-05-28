@@ -112,6 +112,8 @@ public class StatsInfo {
         } else {
           ActiveStats currentActiveStats = getActiveStats();
           setActiveStats(currentActiveStats.roll());
+          // setting the end time of the stats we are storing for collection
+          currentActiveStats.setEndTime(getActiveStats().getStartTime());
           getCollectedStats().add(new StatsBean(currentActiveStats));
           if (getCollectedStats().size() > 10) {
             getCollectedStats().remove(0);

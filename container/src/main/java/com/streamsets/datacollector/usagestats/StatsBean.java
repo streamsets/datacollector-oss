@@ -54,7 +54,11 @@ public class StatsBean {
     for (UsageTimer timer : activeStats.getStages()) {
       getStageMilliseconds().put(timer.getName(), timer.getAccumulatedTime());
     }
-    setRecordsOM((long) Math.log10(activeStats.getRecordCount()));
+    if (activeStats.getRecordCount() > 0) {
+      setRecordsOM((long) Math.log10(activeStats.getRecordCount()));
+    } else {
+      setRecordsOM(-1); // no records
+    }
   }
 
   public String getVersion() {
