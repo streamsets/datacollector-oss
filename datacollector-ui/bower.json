@@ -24,7 +24,7 @@
     "nvd3": "1.8.4",
     "angular-ui-select": "0.13.2",
     "ngstorage": "0.3.7",
-    "codemirror": "5.25.0",
+    "codemirror": "5.38.0",
     "angular-xeditable": "~0.1.9"
   },
   "devDependencies": {
