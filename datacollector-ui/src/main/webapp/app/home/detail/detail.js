@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for Detail Pane.
- */
 
+// Controller for Detail Pane.
 angular
   .module('dataCollectorApp.home')
   .controller('DetailController', function (

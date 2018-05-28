@@ -307,7 +307,7 @@ public abstract class WebServerTask extends AbstractTask {
     handler.addRule(uiRewriteRule);
 
     uiRewriteRule = new RewriteRegexRule();
-    uiRewriteRule.setRegex("^/app/.*");
+    uiRewriteRule.setRegex("^/sch/.*");
     uiRewriteRule.setReplacement("/");
     handler.addRule(uiRewriteRule);
 
