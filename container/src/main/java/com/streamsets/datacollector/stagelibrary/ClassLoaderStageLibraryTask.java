@@ -39,6 +39,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
@@ -46,6 +47,7 @@ import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtract
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
+import com.streamsets.datacollector.definition.StageLibraryDelegateDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -124,6 +126,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<ServiceDefinition> serviceList;
   private Map<Class, ServiceDefinition> serviceMap;
   private List<InterceptorDefinition> interceptorList;
+  private List<StageLibraryDelegateDefinitition> delegateList;
+  private Map<String, StageLibraryDelegateDefinitition> delegateMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
 
@@ -233,6 +237,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     serviceList = new ArrayList<>();
     serviceMap = new HashMap<>();
     interceptorList = new ArrayList<>();
+    delegateList = new ArrayList<>();
+    delegateMap = new HashMap<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
@@ -242,9 +248,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     serviceList = ImmutableList.copyOf(serviceList);
     serviceMap = ImmutableMap.copyOf(serviceMap);
     interceptorList = ImmutableList.copyOf(interceptorList);
-
-    // Various validations
-    validateAllServicesAvailable();
+    delegateList = ImmutableList.copyOf(delegateList);
+    delegateMap = ImmutableMap.copyOf(delegateMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -257,8 +262,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         return list;
       }
     });
+    validateAllServicesAvailable();
     validateStageVersions(stageList);
     validateServices(stageList, serviceList);
+    validateDelegates(delegateList);
 
     // initializing the list of targets that can be used for error handling
     ErrorHandlingChooserValues.setErrorHandlingOptions(this);
@@ -429,6 +436,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       int credentialStores = 0;
       int services = 0;
       int interceptors = 0;
+      int delegates = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -507,18 +515,29 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             LOG.debug("Loaded interceptor '{}'", def.getKlass().getCanonicalName());
             interceptorList.add(def);
           }
+
+          // Load Delegates
+          for(Class klass : loadClassesFromResource(libDef, cl, DELEGATE_DEFINITION_RESOURCE)) {
+            delegates++;
+            StageLibraryDelegateDefinitition def = StageLibraryDelegateDefinitionExtractor.get().extract(libDef, klass);
+            String key = createKey(libDef.getName(), def.getExportedInterface().getCanonicalName());
+            LOG.debug("Loaded delegate '{}'", def.getKlass().getCanonicalName());
+            delegateList.add(def);
+            delegateMap.put(key, def);
+          }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.info(
-        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services, '{}' interceptors and '{}' credentialStores in '{}ms'",
+        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services, '{}' interceptors, '{}' delegates and '{}' credentialStores in '{}ms'",
         libs,
         stages,
         lineagePublishers,
         services,
         interceptors,
+        delegates,
         credentialStores,
         System.currentTimeMillis() - start
       );
@@ -557,6 +576,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return list;
   }
 
+  @VisibleForTesting
   void validateStageVersions(List<StageDefinition> stageList) {
     boolean err = false;
     Map<String, Set<Integer>> stageVersions = new HashMap<>();
@@ -586,6 +606,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
+  @VisibleForTesting
   void validateServices(List<StageDefinition> stages, List<ServiceDefinition> services) {
     List<String> errors = new ArrayList<>();
 
@@ -603,6 +624,33 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     if(!errors.isEmpty()) {
       throw new RuntimeException(Utils.format("Validate errors when loading services: {}", errors));
+    }
+  }
+
+  @VisibleForTesting
+  void validateDelegates(List<StageLibraryDelegateDefinitition> delegateList) {
+    Set<String> errors = new HashSet<>();
+    Map<String, Set<Class>> delegatesPerStageLib = new HashMap<>();
+
+    // The current validation is only that each delegate interface can be exported max once from given stage library
+    for(StageLibraryDelegateDefinitition def : delegateList) {
+      String name = def.getLibraryDefinition().getName();
+
+      Set<Class> declaredDelegates = delegatesPerStageLib.computeIfAbsent(name, (n) -> new HashSet<>());
+
+      if(declaredDelegates.contains(def.getExportedInterface())) {
+        errors.add(Utils.format(
+          "Stage library '{}' exports delegate for '{}' more then once",
+          name,
+          def.getExportedInterface().getCanonicalName()
+        ));
+      }
+
+      declaredDelegates.add(def.getExportedInterface());
+    }
+
+    if(!errors.isEmpty()) {
+      throw new RuntimeException(Utils.format("Validate errors when loading delegates: {}", errors));
     }
   }
 
@@ -710,6 +758,16 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     LOG.info("Finished classpath validation in {} ms", System.currentTimeMillis() - startTime);
     return validators;
+  }
+
+  @Override
+  public List<StageLibraryDelegateDefinitition> getStageLibraryDelegateDefinitions() {
+    return delegateList;
+  }
+
+  @Override
+  public StageLibraryDelegateDefinitition getStageLibraryDelegateDefinition(String stageLibrary, Class exportedInterface) {
+    return delegateMap.get(createKey(stageLibrary, exportedInterface.getCanonicalName()));
   }
 
   ClassLoader getStageClassLoader(PrivateClassLoaderDefinition stageDefinition) {

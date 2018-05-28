@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
@@ -43,6 +44,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   String SERVICE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.SERVICES_FILE;
 
   String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
+
+  String DELEGATE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.DELEGATE_LIST_FILE;
 
   PipelineDefinition getPipeline();
 
@@ -72,4 +75,7 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   List<ClasspathValidatorResult> validateStageLibClasspath();
 
+  List<StageLibraryDelegateDefinitition> getStageLibraryDelegateDefinitions();
+
+  StageLibraryDelegateDefinitition getStageLibraryDelegateDefinition(String  stageLibrary, Class exportedInterface);
 }

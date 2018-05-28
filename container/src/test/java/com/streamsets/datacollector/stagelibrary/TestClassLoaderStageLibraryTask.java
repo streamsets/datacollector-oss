@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -171,5 +172,33 @@ public class TestClassLoaderStageLibraryTask {
     Mockito.when(definition.getProvides()).thenReturn(Runnable.class);
 
     library.validateServices(Collections.emptyList(), ImmutableList.of(definition, definition));
+  }
+
+  @Test
+  public void testValidateDelegates() {
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
+
+    StageLibraryDefinition stageLib = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(stageLib.getName()).thenReturn("all-alright");
+
+    StageLibraryDelegateDefinitition def = Mockito.mock(StageLibraryDelegateDefinitition.class);
+    Mockito.when(def.getLibraryDefinition()).thenReturn(stageLib);
+    Mockito.when(def.getExportedInterface()).thenReturn(Runnable.class);
+
+    library.validateDelegates(ImmutableList.of(def));
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testDuplicateDelegates() {
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
+
+    StageLibraryDefinition stageLib = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(stageLib.getName()).thenReturn("duplicate-one");
+
+    StageLibraryDelegateDefinitition def = Mockito.mock(StageLibraryDelegateDefinitition.class);
+    Mockito.when(def.getLibraryDefinition()).thenReturn(stageLib);
+    Mockito.when(def.getExportedInterface()).thenReturn(Runnable.class);
+
+    library.validateDelegates(ImmutableList.of(def, def));
   }
 }

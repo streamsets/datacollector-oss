@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -159,6 +160,16 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public List<ClasspathValidatorResult> validateStageLibClasspath() {
     return library.validateStageLibClasspath();
+  }
+
+  @Override
+  public List<StageLibraryDelegateDefinitition> getStageLibraryDelegateDefinitions() {
+    return library.getStageLibraryDelegateDefinitions();
+  }
+
+  @Override
+  public StageLibraryDelegateDefinitition getStageLibraryDelegateDefinition(String stageLibrary, Class exportedInterface) {
+    return library.getStageLibraryDelegateDefinition(stageLibrary, exportedInterface);
   }
 
   @Override
