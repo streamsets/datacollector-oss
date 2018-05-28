@@ -153,6 +153,70 @@ public class TestStatsCollectorTask {
   }
 
   @Test
+  public void testInitialOptingOut() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = new StatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, null);
+
+    task = Mockito.spy(task);
+    Runnable runnable = Mockito.mock(Runnable.class);
+    Mockito.doReturn(runnable).when(task).getRunnable();
+
+    task.init();
+
+    Assert.assertFalse(task.isOpted());
+    Assert.assertFalse(task.isActive());
+    task.setActive(false);
+    Assert.assertTrue(task.isOpted());
+    Assert.assertFalse(task.isActive());
+
+    task.stop();
+  }
+
+  @Test
+  public void testInitialOptingIn() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = new StatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, null);
+
+    task = Mockito.spy(task);
+    Runnable runnable = Mockito.mock(Runnable.class);
+    Mockito.doReturn(runnable).when(task).getRunnable();
+
+    task.init();
+
+    Assert.assertFalse(task.isOpted());
+    Assert.assertFalse(task.isActive());
+    task.setActive(false);
+    Assert.assertTrue(task.isOpted());
+    Assert.assertFalse(task.isActive());
+
+    task.stop();
+  }
+
+  @Test
   public void testOptedNo() throws Exception {
     File testDir = createTestDir();
 

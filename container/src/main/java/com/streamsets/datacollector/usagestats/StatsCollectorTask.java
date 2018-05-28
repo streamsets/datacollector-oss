@@ -286,7 +286,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   @Override
   public void setActive(boolean active) {
-    if (isActive() != active) {
+    if (!isOpted() || isActive() != active) {
       LOG.info("Setting stats collection to '{}'", active);
       try (OutputStream os = new FileOutputStream(optFile)) {
         ObjectMapperFactory.get().writeValue(
