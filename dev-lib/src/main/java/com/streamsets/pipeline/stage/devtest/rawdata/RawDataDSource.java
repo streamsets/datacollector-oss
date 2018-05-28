@@ -36,33 +36,42 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     upgrader = RawDataSourceUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html",
     services = @ServiceDependency(
-    service = DataFormatParserService.class,
-    configuration = {
-      @ServiceConfiguration(name = "displayFormats", value = "DELIMITED,JSON,LOG,SDC_JSON,TEXT,XML")
-    }
-  )
+        service = DataFormatParserService.class,
+        configuration = {
+            @ServiceConfiguration(name = "displayFormats", value = "DELIMITED,JSON,LOG,SDC_JSON,TEXT,XML"),
+            @ServiceConfiguration(name = "dataFormat", value = "JSON")
+        }
+    )
 )
 @ConfigGroups(value = RawDataSourceGroups.class)
 public class RawDataDSource extends DSource {
 
+  private static final String DEFAULT_RAW_DATA =
+      "{\n" +
+          "  \"f1\": \"abc\",\n" +
+          "  \"f2\": \"xyz\",\n" +
+          "  \"f3\": \"lmn\"\n" +
+          "}";
+
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.TEXT,
-    mode = ConfigDef.Mode.JSON,
-    label = "Raw Data",
-    evaluation = ConfigDef.Evaluation.IMPLICIT,
-    displayPosition = 20,
-    group = "RAW"
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      mode = ConfigDef.Mode.JSON,
+      label = "Raw Data",
+      defaultValue = DEFAULT_RAW_DATA,
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      displayPosition = 20,
+      group = "RAW"
   )
   public String rawData;
 
   @ConfigDef(
-    required = true,
-    defaultValue = "false",
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Stop After First Batch",
-    displayPosition = 30,
-    group = "RAW"
+      required = true,
+      defaultValue = "false",
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Stop After First Batch",
+      displayPosition = 30,
+      group = "RAW"
   )
   public boolean stopAfterFirstBatch = false;
 
