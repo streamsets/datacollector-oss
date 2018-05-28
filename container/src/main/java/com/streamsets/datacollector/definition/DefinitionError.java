@@ -91,8 +91,8 @@ public enum DefinitionError implements ErrorCode {
   DEF_400("Stage library '{}', file '{}' not found"),
   DEF_401("Stage library '{}', could not read file '{}': {}"),
 
-  // ServiceDefinitionExtractor
-  DEF_500("{} does not implement service interface {}"),
+  // General extractor errors
+  DEF_500("{} does not implement interface {}"),
 
   ;
 
