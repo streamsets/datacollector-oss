@@ -86,14 +86,4 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.parseQuery");
     Assert.assertEquals(configs.get(0).getValue(), true);
   }
-
-  @Test
-  public void upgradeV7TOV8() throws Exception {
-    List<Config> configs = new ArrayList<>(1);
-
-    configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 7, 8, configs);
-    Assert.assertEquals(1, configs.size());
-    Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.useNewParser");
-    Assert.assertEquals(configs.get(0).getValue(), false);
-  }
 }

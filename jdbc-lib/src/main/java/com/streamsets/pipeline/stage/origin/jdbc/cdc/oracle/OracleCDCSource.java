@@ -34,8 +34,6 @@ import com.streamsets.pipeline.lib.jdbc.PrecisionAndScale;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLListener;
-import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLParser;
-import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLParserUtils;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnparseableSQLException;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeException;
 import com.streamsets.pipeline.lib.operation.OperationType;
@@ -49,7 +47,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.parboiled.Parboiled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +74,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -265,7 +261,6 @@ public class OracleCDCSource extends BaseSource {
 
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
-  private final SQLParser sqlParser = Parboiled.createParser(SQLParser.class);
 
   public OracleCDCSource(HikariPoolConfigBean hikariConf, OracleCDCConfigBean oracleCDCConfigBean) {
     this.configBean = oracleCDCConfigBean;
@@ -702,31 +697,15 @@ public class OracleCDCSource extends BaseSource {
         attributes.get(SCN) + OFFSET_DELIM + attributes.get(SEQ);
     Record record = getContext().createRecord(id);
     if (configBean.parseQuery) {
-      Map<String, String> columns;
-      if (configBean.useNewParser) {
-        Set<String> columnsExpected = null;
-        if (configBean.allowNulls && table.isNotEmpty()) {
-          columnsExpected = tableSchemas.get(table).keySet();
-        }
-        columns = SQLParserUtils.process(
-            sqlParser,
-            sql,
-            operationCode,
-            configBean.allowNulls,
-            configBean.baseConfigBean.caseSensitive,
-            columnsExpected
-        );
-      } else {
-        // Walk it and attach our sqlListener
-        sqlListener.reset();
-        if (configBean.allowNulls && table.isNotEmpty()) {
-          sqlListener.setColumns(tableSchemas.get(table).keySet());
-        }
-
-        parseTreeWalker.walk(sqlListener, ParseUtil.getParserRuleContext(sql, operationCode));
-        columns = sqlListener.getColumns();
+      // Walk it and attach our sqlListener
+      sqlListener.reset();
+      if (configBean.allowNulls && table.isNotEmpty()) {
+        sqlListener.setColumns(tableSchemas.get(table).keySet());
       }
 
+      parseTreeWalker.walk(sqlListener, ParseUtil.getParserRuleContext(sql, operationCode));
+
+      Map<String, String> columns = sqlListener.getColumns();
       String rowId = columns.get(ROWID);
       columns.remove(ROWID);
       if (rowId != null) {
