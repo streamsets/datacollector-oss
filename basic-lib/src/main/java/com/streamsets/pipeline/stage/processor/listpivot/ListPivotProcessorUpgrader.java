@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public final class ListPivotProcessorUpgrader implements StageUpgrader{
 
@@ -35,10 +36,25 @@ public final class ListPivotProcessorUpgrader implements StageUpgrader{
   ) throws StageException {
     switch(fromVersion) {
       case 1:
+        if (toVersion == 3) {
+          upgradeV1ToV3(configs);
+        }
+        break;
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
   }
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("replaceListField", false));
+  }
+
+  private static void upgradeV1ToV3(List<Config> configs) {
+    upgradeV2ToV3(configs);
+  }
+
 }

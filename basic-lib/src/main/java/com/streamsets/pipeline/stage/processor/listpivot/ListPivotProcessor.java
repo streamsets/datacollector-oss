@@ -31,6 +31,7 @@ import java.util.Set;
 public class ListPivotProcessor extends SingleLaneRecordProcessor {
 
   private final boolean copyFields;
+  private final boolean replaceListField;
   private final String listPath;
   private final String newPath;
   private final boolean saveOriginalFieldName;
@@ -41,12 +42,14 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
       String listPath,
       String newPath,
       boolean copyFields,
+      boolean replaceListField,
       boolean saveOriginalFieldName,
       String originalFieldNamePath,
       OnStagePreConditionFailure onStagePreConditionFailure
   ) {
     this.listPath = listPath;
     this.copyFields = copyFields;
+    this.replaceListField = replaceListField;
     this.saveOriginalFieldName = saveOriginalFieldName;
     this.originalFieldNamePath = originalFieldNamePath;
     this.newPath = (StringUtils.isNotEmpty(newPath)) ? newPath : listPath;
@@ -108,15 +111,26 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
         entries.add(new PivotEntry(entry.getKey(), entry.getValue()));
       }
     }
+
     pivot(entries, record, batchMaker);
   }
 
   private void pivot(List<PivotEntry> entries, Record record, SingleLaneBatchMaker batchMaker) {
     int i = 1;
+
+    Record pivotRecord;
+    if ((replaceListField) ||
+        (newPath.equals(listPath))) {
+      pivotRecord = getContext().cloneRecord(record);
+      pivotRecord.delete(listPath);
+    } else {
+      pivotRecord = record;
+    }
+
     for (PivotEntry fieldEntry : entries) {
       Record newRec;
       String sourceIdPostfix = i++ + "";
-      newRec = getContext().cloneRecord(record, sourceIdPostfix);
+      newRec = getContext().cloneRecord(pivotRecord, sourceIdPostfix);
 
       if (copyFields) {
         newRec.set(newPath, fieldEntry.value);

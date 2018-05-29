@@ -36,7 +36,8 @@ public class TestListPivot {
 
   @Test
   public void testListPivot() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, null, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, false, null,
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -66,7 +67,8 @@ public class TestListPivot {
 
   @Test
   public void testListPivotMap() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, null, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, false, null,
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -101,7 +103,8 @@ public class TestListPivot {
 
   @Test
   public void testCopyFields() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, true, false, null, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, true, true, false, null,
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -140,7 +143,8 @@ public class TestListPivot {
 
   @Test
   public void testCopyFieldsNewPath() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", "/op", true, false, null, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", "/op", true, true, false, null,
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -179,7 +183,8 @@ public class TestListPivot {
 
   @Test
   public void testMapPivot() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, true, true, "/map_field_name", OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, true, true, true, "/map_field_name",
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -209,7 +214,8 @@ public class TestListPivot {
 
   @Test
   public void testInvalidConfigs() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, false, true, "/map_field_name", OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, false, false, true, "/map_field_name",
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -221,7 +227,8 @@ public class TestListPivot {
 
   @Test
   public void testPivotedItemsPathAndOriginalFieldNamePathSameValue() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/map_field", "/same", true, true, "/same", OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", "/same", true, true, true, "/same",
+        OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
