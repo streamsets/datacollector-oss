@@ -89,13 +89,11 @@ public class TestOracleCDCSourceUpgrader {
 
   @Test
   public void upgradeV7TOV8() throws Exception {
-    List<Config> configs = new ArrayList<>(2);
+    List<Config> configs = new ArrayList<>(1);
 
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 7, 8, configs);
-    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals(1, configs.size());
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.useNewParser");
     Assert.assertEquals(configs.get(0).getValue(), false);
-    Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.parseThreadPoolSize");
-    Assert.assertEquals(configs.get(1).getValue(), 1);
   }
 }
