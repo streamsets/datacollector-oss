@@ -118,9 +118,11 @@ public class OmnitureSource extends BaseSource {
     boolean useProxy = proxySettings != null;
     String proxyUsername = null;
     String proxyPassword = null;
+    String proxyUri = null;
     if(useProxy) {
       proxyUsername = proxySettings.resolveUsername(getContext(), "PROXY", "proxySettings.", errors);
       proxyPassword = proxySettings.resolvePassword(getContext(), "PROXY", "proxySettings.", errors);
+      proxyUri = proxySettings.proxyUri;
     }
 
     switch (httpMode) {
@@ -134,7 +136,7 @@ public class OmnitureSource extends BaseSource {
             sharedSecret,
             entityQueue,
             useProxy,
-            proxySettings.proxyUri,
+            proxyUri,
             proxyUsername,
             proxyPassword
         );
