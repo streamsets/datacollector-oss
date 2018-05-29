@@ -54,6 +54,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.ServiceRuntime;
+import com.streamsets.datacollector.runner.StageLibraryDelegateRuntime;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.Version;
@@ -647,6 +648,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
 
       declaredDelegates.add(def.getExportedInterface());
+
+      if(!StageLibraryDelegateRuntime.supports(def.getExportedInterface())) {
+        errors.add(Utils.format(
+          "Delegate interface {} is not supported by this runtime",
+          def.getExportedInterface()
+        ));
+      }
     }
 
     if(!errors.isEmpty()) {
