@@ -136,6 +136,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_401("Record '{}' has null or empty field '{}'"),
   JDBC_402("Columns '{}' are not present in {}"),
   JDBC_403("Could not parse SQL statement: {}"),
+  JDBC_404("No tables were found matching to configured schema and table patterns"), // Perfect error code!
 
   ;
 

@@ -96,6 +96,7 @@ import java.util.stream.Collectors;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_404;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_42;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
@@ -1439,7 +1440,18 @@ public class OracleCDCSource extends BaseSource {
 
   private void validateTablePresence(Statement statement, List<SchemaAndTable> schemaAndTables,
                                      List<ConfigIssue> issues) {
+    if (schemaAndTables.isEmpty()) {
+      LOG.error(JDBC_404.getMessage());
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.CDC.name(),
+              "oracleCDCConfigBean.baseConfigBean.tables",
+              JDBC_404
+          )
+      );
+    }
     for (SchemaAndTable schemaAndTable : schemaAndTables) {
+      LOG.info("Found table: '{}' in schema: '{}'", schemaAndTable.getTable(), schemaAndTable.getSchema());
       try {
         statement.execute("SELECT * FROM \"" + schemaAndTable.getSchema() + "\".\"" + schemaAndTable.getTable() +
                 "\" WHERE 1 = 0");
