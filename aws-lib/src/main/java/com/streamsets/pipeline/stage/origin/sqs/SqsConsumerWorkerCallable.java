@@ -30,10 +30,10 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.api.service.dataformats.DataParser;
+import com.streamsets.pipeline.api.service.dataformats.DataParserException;
+import com.streamsets.pipeline.api.service.dataformats.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -73,7 +73,6 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
   private final int numMessagesPerRequest;
   private final long maxBatchWaitTimeMs;
   private final int maxBatchSize;
-  private final DataParserFactory parserFactory;
   private final String awsRegionLabel;
   private final SqsAttributesOption sqsAttributesOption;
   private final ErrorRecordHandler errorRecordHandler;
@@ -92,7 +91,6 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
       int numMessagesPerRequest,
       long maxBatchWaitTimeMs,
       int maxBatchSize,
-      DataParserFactory parserFactory,
       String awsRegionLabel,
       SqsAttributesOption sqsAttributesOption,
       ErrorRecordHandler errorRecordHandler,
@@ -109,7 +107,6 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
     this.numMessagesPerRequest = numMessagesPerRequest;
     this.maxBatchWaitTimeMs = maxBatchWaitTimeMs;
     this.maxBatchSize = maxBatchSize;
-    this.parserFactory = parserFactory;
     this.awsRegionLabel = awsRegionLabel;
     this.sqsAttributesOption = sqsAttributesOption;
     this.errorRecordHandler = errorRecordHandler;
@@ -150,7 +147,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
           final String recordId = getRecordId(message, nextQueueUrl);
           DataParser parser = null;
           try {
-            parser = parserFactory.getParser(recordId, message.getBody());
+            parser = context.getService(DataFormatParserService.class).getParser(recordId, message.getBody());
             Record record = null;
             do {
               try {

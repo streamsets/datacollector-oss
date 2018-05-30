@@ -18,12 +18,10 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
 
@@ -79,23 +77,8 @@ public class SqsConsumerConfigBean {
   )
   public int numberOfMessagesPerRequest;
 
-  @ConfigDefBean(groups = "DATA_FORMAT")
-  public DataParserFormatConfig dataFormatConfig;
-
   @ConfigDefBean(groups = "ADVANCED")
   public ProxyConfig proxyConfig = new ProxyConfig();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "JSON",
-      label = "Data Format",
-      description = "Data format to use when receiving records from SQS",
-      displayPosition = 1,
-      group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
 
   @ConfigDef(
       required = true,

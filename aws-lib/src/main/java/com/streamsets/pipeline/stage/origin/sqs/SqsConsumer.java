@@ -27,8 +27,8 @@ import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
@@ -60,7 +60,6 @@ public class SqsConsumer extends BasePushSource {
   private final SqsConsumerConfigBean conf;
   private final BlockingQueue<Throwable> error = new SynchronousQueue<>();
 
-  private DataParserFactory parserFactory;
   private ExecutorService executorService;
 
   private ClientConfiguration clientConfiguration;
@@ -85,20 +84,8 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
 
-    conf.dataFormatConfig.stringBuilderPoolSize = getNumberOfThreads();
-
-    if (issues.isEmpty()) {
-      conf.dataFormatConfig.init(
-          getContext(),
-          conf.dataFormat,
-          Groups.SQS.name(),
-          SQS_DATA_FORMAT_CONFIG_PREFIX,
-          ONE_MB,
-          issues
-      );
-
-      parserFactory = conf.dataFormatConfig.getParserFactory();
-    }
+    // Propagate StringBuilder size to the service
+    getContext().getService(DataFormatParserService.class).setStringBuilderPoolSize(getNumberOfThreads());
 
     try {
       clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
@@ -200,7 +187,6 @@ public class SqsConsumer extends BasePushSource {
               conf.numberOfMessagesPerRequest,
               conf.maxBatchTimeMs,
               conf.maxBatchSize,
-              parserFactory,
               conf.region.getLabel(),
               conf.sqsAttributesOption,
               new DefaultErrorRecordHandler(getContext(), (ToErrorContext) getContext()),

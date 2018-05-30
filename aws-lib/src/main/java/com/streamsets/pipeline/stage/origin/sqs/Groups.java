@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   SQS("Amazon SQS"),
   ADVANCED("Advanced"),
-  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

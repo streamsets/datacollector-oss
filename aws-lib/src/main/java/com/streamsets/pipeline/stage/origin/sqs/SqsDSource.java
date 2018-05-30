@@ -22,22 +22,32 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Amazon SQS Consumer",
     description = "Reads messages from Amazon SQS",
     icon = "sqs.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonSQS.html#task_jxn_nnm_5bb"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonSQS.html#task_jxn_nnm_5bb",
+    upgrader = SqsUpgrader.class,
+    services = @ServiceDependency(
+      service = DataFormatParserService.class,
+      configuration = {
+        @ServiceConfiguration(name = "displayFormats", value = "AVRO,BINARY,DELIMITED,JSON,LOG,PROTOBUF,SDC_JSON,TEXT,XML")
+      }
+    )
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class SqsDSource extends DPushSource {
 
-  @ConfigDefBean(groups = {"SQS", "DATA_FORMAT", "ADVANCED"})
+  @ConfigDefBean(groups = {"SQS", "ADVANCED"})
   public SqsConsumerConfigBean sqsConfig;
 
   @Override
