@@ -23,10 +23,10 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1-SNAPSHOT</version>
   </parent>
   <artifactId>streamsets-datacollector-root-proto</artifactId>
-  <version>3.3.0</version>
+  <version>3.3.1-SNAPSHOT</version>
   <description>StreamSets Data Collector Root Prototype POM</description>
   <name>StreamSets Data Collector Root Prototype POM</name>
   <packaging>pom</packaging>
@@ -502,7 +502,7 @@
         <plugin>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-rbgen-maven-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1-SNAPSHOT</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
