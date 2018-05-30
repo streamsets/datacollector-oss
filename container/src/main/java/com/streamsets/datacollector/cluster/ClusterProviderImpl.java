@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -78,7 +79,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -153,6 +153,16 @@ public class ClusterProviderImpl implements ClusterProvider {
   private final YARNStatusParser yarnStatusParser;
   private final MesosStatusParser mesosStatusParser;
   private final Configuration configuration;
+  private static final String YARN_SPARK_APP_LOG_PATH = "${spark.yarn.app.container.log.dir}/sdc.log";
+  private static final String YARN_MAPREDUCE_APP_LOG_PATH = "${yarn.app.container.log.dir}/sdc.log";
+
+  @VisibleForTesting
+  static final Map<ExecutionMode, String> executionModeToAppLogPath =
+      new ImmutableMap.Builder<ExecutionMode, String>().
+          put(ExecutionMode.CLUSTER_YARN_STREAMING, YARN_SPARK_APP_LOG_PATH).
+          put(ExecutionMode.CLUSTER_BATCH, YARN_MAPREDUCE_APP_LOG_PATH).build();
+
+
   /**
    * Only null in the case of tests
    */
@@ -565,6 +575,16 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
+  private List<String> getLog4jConfig(ExecutionMode executionMode, String clusterLog4jFile) throws IOException {
+    List<String> log4jConfigs;
+    // Keep logging to stderr as default for keeping compatibility with Spark UI. Remove in next major release.
+    if (Boolean.valueOf(configuration.get("cluster.pipelines.logging.to.stderr", "true"))) {
+      log4jConfigs = ClusterLogConfigUtils.getLogContent(runtimeInfo, clusterLog4jFile);
+    } else {
+      log4jConfigs = ClusterLogConfigUtils.getLog4jConfigAndAddAppender(runtimeInfo, executionModeToAppLogPath.get(executionMode));
+    }
+    return log4jConfigs;
+  }
 
   @SuppressWarnings("unchecked")
   private ApplicationState startPipelineInternal(
@@ -853,7 +873,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.ofNullable
           (mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
-    } catch (IOException | URISyntaxException | RuntimeException ex) {
+    } catch (IOException | RuntimeException ex) {
       String msg = errorString("Error while preparing for cluster job submission: {}", ex);
       throw new RuntimeException(msg, ex);
     }
@@ -862,14 +882,14 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       List<String> lines = null;
       if (executionMode == ExecutionMode.CLUSTER_BATCH) {
-        lines = ClusterLogConfigUtils.getLogContent(runtimeInfo, "/cluster-mr-log4j.properties");
+        lines = getLog4jConfig(executionMode, "/cluster-mr-log4j.properties");
       } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
-        lines = ClusterLogConfigUtils.getLogContent(runtimeInfo, "/cluster-spark-log4j.properties");
+        lines = getLog4jConfig(executionMode, "/cluster-spark-log4j.properties");
       }
       if (lines != null) {
         Files.write(log4jProperties.toPath(), lines, Charset.defaultCharset());
       }
-    } catch (IOException | URISyntaxException ex) {
+    } catch (IOException ex) {
       String msg = errorString("copying log4j configuration: {}", ex);
       throw new RuntimeException(msg, ex);
     } finally {
