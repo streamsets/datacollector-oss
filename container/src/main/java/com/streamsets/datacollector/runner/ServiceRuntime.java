@@ -132,6 +132,22 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   }
 
   @Override // From DataFormatParserService
+  public void setStringBuilderPoolSize(int poolSize) {
+    LambdaUtil.privilegedWithClassLoader(
+      serviceBean.getDefinition().getStageClassLoader(),
+      () -> { ((DataFormatParserService)serviceBean.getService()).setStringBuilderPoolSize(poolSize); return null; }
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public int getStringBuilderPoolSize() {
+    return LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> ((DataFormatParserService)serviceBean.getService()).getStringBuilderPoolSize()
+    );
+  }
+
+  @Override // From DataFormatParserService
   public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
     ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
 

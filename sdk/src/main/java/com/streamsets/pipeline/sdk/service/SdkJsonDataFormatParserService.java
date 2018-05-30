@@ -78,6 +78,16 @@ public class SdkJsonDataFormatParserService extends BaseService implements DataF
     return "UTF-8";
   }
 
+  @Override
+  public void setStringBuilderPoolSize(int poolSize) {
+    // Throw away in this test case.
+  }
+
+  @Override
+  public int getStringBuilderPoolSize() {
+    return 1;
+  }
+
   private static class DataParserImpl implements DataParser {
 
     private final JsonObjectReader recordReader;

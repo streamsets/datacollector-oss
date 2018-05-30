@@ -121,6 +121,16 @@ public class DataParserServiceImpl extends BaseService implements DataFormatPars
     return dataFormatConfig.charset;
   }
 
+  @Override
+  public void setStringBuilderPoolSize(int poolSize) {
+    this.dataFormatConfig.stringBuilderPoolSize = poolSize;
+  }
+
+  @Override
+  public int getStringBuilderPoolSize() {
+    return this.dataFormatConfig.stringBuilderPoolSize;
+  }
+
   /**
    * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
    * service world. This will be removed once all stages gets migrated off the older code to services.
