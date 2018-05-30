@@ -162,22 +162,13 @@ public class RecordWriter {
 
   public void close() throws IOException, StageException {
     for (Map.Entry<String, DataLakeDataGenerator> entry : generators.entrySet()) {
-      entry.getValue().close();
       String dirPath = entry.getKey().substring(0, entry.getKey().lastIndexOf("/"));
-      outputStreamHelper.commitFile(dirPath);
+      entry.getValue().close();
       generators.remove(dirPath);
+      outputStreamHelper.commitFile(dirPath);
     }
     generators.clear();
     outputStreamHelper.clearStatus();
-  }
-
-  public void commitOldFile(String filePath) throws IOException, StageException {
-    DataLakeDataGenerator generator = generators.get(filePath);
-
-    Utils.checkArgument(generator != null, "Generator cannot be null");
-
-    generator.commitFile();
-    generators.remove(filePath);
   }
 
   public static Date getRecordTime(
@@ -198,7 +189,9 @@ public class RecordWriter {
 
   public void flush(String filePath) throws IOException {
     DataLakeDataGenerator generator = generators.get(filePath);
-    Utils.checkNotNull(generator, "File path does not exist: '" + filePath + "'");
+    if (generator == null) {
+      return;
+    }
     generator.flush();
   }
 

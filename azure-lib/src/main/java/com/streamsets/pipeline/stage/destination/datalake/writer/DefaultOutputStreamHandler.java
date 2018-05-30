@@ -69,11 +69,8 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   public CountingOutputStream getOutputStream(String filePath)
       throws StageException, IOException {
     ADLFileOutputStream stream;
-    if (!client.checkExists(filePath)) {
-      stream = client.createFile(filePath, IfExists.FAIL);
-    } else {
-      stream = client.getAppendStream(filePath);
-    }
+    // we should open the new file, never append to existing file
+    stream = client.createFile(filePath, IfExists.FAIL);
 
     countingOutputStream = new CountingOutputStream(stream);
 
@@ -82,8 +79,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
 
   @Override
   public void commitFile(String dirPath) throws IOException {
-    String filePath = dirPath + "/" +
-        tempFileName.replaceFirst(TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId, uniquePrefix + "-" + UUID.randomUUID());
+    String filePath = dirPath + "/" + uniquePrefix + "-" + UUID.randomUUID() + getExtention();
     client.rename(dirPath + "/" + tempFileName, filePath);
     closedPaths.add(filePath);
   }

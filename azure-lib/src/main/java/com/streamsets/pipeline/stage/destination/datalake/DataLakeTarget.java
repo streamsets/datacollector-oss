@@ -249,34 +249,28 @@ public class DataLakeTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    super.destroy();
-    try {
-      if(writer != null) {
-        try {
-          writer.close();
-        } catch (StageException | IOException ex) {
-          String errorMessage = ex.toString();
-          if (ex instanceof ADLException) {
-            errorMessage = ex.getMessage();
-            if (errorMessage == null) {
-              errorMessage = ((ADLException) ex).remoteExceptionMessage;
-            }
+    if (writer != null) {
+      try {
+        writer.close();
+        writer.issueCachedEvents();
+      } catch (StageException | IOException ex) {
+        String errorMessage = ex.toString();
+        if (ex instanceof ADLException) {
+          errorMessage = ex.getMessage();
+          if (errorMessage == null) {
+            errorMessage = ((ADLException) ex).remoteExceptionMessage;
           }
-          LOG.error(Errors.ADLS_04.getMessage(), errorMessage, ex);
         }
+        LOG.error(Errors.ADLS_04.getMessage(), errorMessage, ex);
       }
-
-      if (scheduledExecutor != null && !scheduledExecutor.isTerminated()) {
-        scheduledExecutor.shutdown();
-
-        while (!scheduledExecutor.isShutdown()) {
-          Thread.sleep(100);
-        }
-      }
-    } catch (InterruptedException ex) {
-      LOG.error("interrupted: {}", ex.toString(), ex);
-      Thread.currentThread().interrupt();
     }
+
+    if (scheduledExecutor != null && !scheduledExecutor.isTerminated()) {
+      scheduledExecutor.shutdown();
+      scheduledExecutor = null;
+    }
+
+    super.destroy();
   }
 
   @Override
