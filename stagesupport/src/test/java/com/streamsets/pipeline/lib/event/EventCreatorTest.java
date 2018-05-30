@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -75,6 +76,11 @@ public class EventCreatorTest {
 
     @Override
     public Set<String> getEscapedFieldPaths() {
+      return null;
+    }
+
+    @Override
+    public List<String> getEscapedFieldPathsOrdered() {
       return null;
     }
 

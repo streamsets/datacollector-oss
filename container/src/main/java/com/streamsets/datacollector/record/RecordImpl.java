@@ -377,8 +377,13 @@ public class RecordImpl implements Record, Cloneable {
     return gatherPaths(true);
   }
 
-  private Set<String> gatherPaths(boolean includeSingleQuotes) {
-    Set<String> paths = new LinkedHashSet<>();
+  @Override
+  public List<String> getEscapedFieldPathsOrdered() {
+    return new ArrayList<>(gatherPathsOrdered(true));
+  }
+
+  private LinkedHashSet<String> gatherPathsOrdered(boolean includeSingleQuotes) {
+    LinkedHashSet<String> paths = new LinkedHashSet<>();
     if (value != null) {
       paths.add("");
       switch (value.getType()) {
@@ -398,7 +403,11 @@ public class RecordImpl implements Record, Cloneable {
     return paths;
   }
 
-  private void gatherPaths(String base, Map<String, Field> map, Set<String> paths, boolean includeSingleQuotes) {
+  private Set<String> gatherPaths(boolean includeSingleQuotes) {
+    return gatherPathsOrdered(includeSingleQuotes);
+  }
+
+  private void gatherPaths(String base, Map<String, Field> map, LinkedHashSet<String> paths, boolean includeSingleQuotes) {
     base += "/";
     if (map != null) {
       for (Map.Entry<String, Field> entry : map.entrySet()) {
@@ -436,7 +445,7 @@ public class RecordImpl implements Record, Cloneable {
     }
   }
 
-  private void gatherPaths(String base, List<Field> list, Set<String> paths, boolean includeSingleQuotes) {
+  private void gatherPaths(String base, List<Field> list, LinkedHashSet<String> paths, boolean includeSingleQuotes) {
     if (list != null) {
       for (int i = 0; i < list.size(); i++) {
         paths.add(base + "[" + i + "]");

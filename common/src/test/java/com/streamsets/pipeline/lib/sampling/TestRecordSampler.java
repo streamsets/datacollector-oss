@@ -198,6 +198,11 @@ public class TestRecordSampler {
         }
 
         @Override
+        public List<String> getEscapedFieldPathsOrdered() {
+          return null;
+        }
+
+        @Override
         public Field set(String fieldPath, Field newField) {
           return null;
         }

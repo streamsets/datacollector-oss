@@ -63,7 +63,7 @@ public class FieldPathExpressionUtil {
       ELEval elEval,
       ELVars elVars,
       Record record,
-      Set<String> recordEscapedFieldPaths
+      Iterable<String> recordEscapedFieldPaths
   ) throws ELEvalException {
     if (isFieldPathExpressionFast(fieldExpression)) {
       // this field path expression actually does contain an EL expression, so need to evaluate against all fields

@@ -56,7 +56,7 @@ public class FieldRegexUtil {
     return false;
   }
 
-  public static List<String> getMatchingFieldPaths(String fieldPath, Set<String> fieldPaths) {
+  public static List<String> getMatchingFieldPaths(String fieldPath, Iterable<String> fieldPaths) {
     if(!hasWildCards(fieldPath)) {
       return Arrays.asList(fieldPath);
     }
