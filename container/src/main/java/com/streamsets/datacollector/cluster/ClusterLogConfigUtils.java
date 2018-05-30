@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,14 +26,18 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ClusterLogConfigUtils {
 
   public static final String LOG4J_LOGGER = "log4j.logger";
+  private static final Pattern APPENDER_FILE_PATTERN =
+     Pattern.compile("(\\s*log4j\\.appender\\..*\\.File\\s*=)(.*)", Pattern.CASE_INSENSITIVE);
 
-  public static List<String> getLogContent(RuntimeInfo runtimeInfo, String clusterLogFile) throws IOException,
-  URISyntaxException {
+  public static List<String> getLogContent(RuntimeInfo runtimeInfo, String clusterLogFile) throws IOException
+  {
     List<String> log4JloggerLines = new ArrayList<>();
     List<String> allLogLines = new ArrayList<>();
     try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(runtimeInfo.getConfigDir(),
@@ -49,4 +54,22 @@ public class ClusterLogConfigUtils {
     }
     return allLogLines;
   }
+
+  public static List<String> getLog4jConfigAndAddAppender(RuntimeInfo runtimeInfo, String appenderFile) throws
+      IOException {
+    List<String> log4JloggerLines = new ArrayList<>();
+    try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(runtimeInfo.getConfigDir(),
+        runtimeInfo.getLog4jPropertiesFileName()
+    )))) {
+      bufferedReader.lines().forEach(line -> {
+        Matcher matcher = APPENDER_FILE_PATTERN.matcher(line);
+        if (matcher.matches()) {
+          line = matcher.group(1) + appenderFile;
+        }
+        log4JloggerLines.add(line);
+      });
+    }
+    return log4JloggerLines;
+  }
+
 }
