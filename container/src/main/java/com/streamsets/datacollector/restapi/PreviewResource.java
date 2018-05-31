@@ -64,7 +64,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/v1")
 @Api(value = "preview")
@@ -144,16 +146,17 @@ public class PreviewResource {
       Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
       if (edgeHttpUrlConfig != null) {
         EdgeUtil.publishEdgePipeline(pipelineConfiguration, null);
+        Map<String, Object> params = new HashMap<>();
+        params.put("bathces", batches);
+        params.put("batchSize", batchSize);
+        params.put("skipTargets", skipTargets);
+        params.put("endStage", endStageInstanceName);
+        params.put("timeout", timeout);
+        params.put("testOrigin", testOrigin);
         return EdgeUtil.proxyRequestPOST(
             (String)edgeHttpUrlConfig.getValue(),
             "/rest/v1/pipeline/" + pipelineId + "/preview",
-            ImmutableMap.of(
-                "bathces", batches,
-                "batchSize", batchSize,
-                "skipTargets", skipTargets,
-                "endStage", endStageInstanceName + "",
-                "timeout", timeout
-            ),
+            params,
             stageOutputsToOverrideJson
         );
       }
