@@ -187,7 +187,7 @@ public class TestClusterProviderImpl {
     File f = new File(runtimeInfo.getConfigDir());
     Assert.assertTrue(f.mkdirs());
     Assert.assertTrue(configFile.createNewFile());
-    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, null, Mockito.mock(Configuration.class)));
+    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, null, null));
     Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_BATCH),
         Mockito.any(PipelineConfiguration.class),
@@ -622,8 +622,7 @@ public class TestClusterProviderImpl {
     conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, keytab.getAbsolutePath());
     conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, SecurityConfiguration.KERBEROS_PRINCIPAL_DEFAULT);
 
-    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf),
-        conf));
+    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf), null));
     Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_BATCH),
         Mockito.any(PipelineConfiguration.class),
