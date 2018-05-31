@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector</artifactId>
-  <version>3.3.1-SNAPSHOT</version>
+  <version>3.3.0-0003</version>
   <description>StreamSets Data Collector</description>
   <name>StreamSets Data Collector</name>
   <packaging>pom</packaging>
