@@ -915,7 +915,6 @@ public class ClusterRunner extends AbstractRunner {
       registerEmailNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(),rev);
       registerWebhookNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(), rev);
 
-      Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
       Map<String, String> sourceInfo = new HashMap<>();
       File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
       // create pipeline and get the parallelism info from the source
@@ -934,14 +933,15 @@ public class ClusterRunner extends AbstractRunner {
       // This is needed for UI
       runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
       slaveCallbackManager.clearSlaveList();
-      ApplicationState applicationState = clusterHelper.submit(pipelineConf,
+      ApplicationState applicationState = clusterHelper.submit(
+          pipelineConf,
+          pipelineConfigBean,
           stageLibrary,
           credentialStoresTask,
           new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()),
           new File(runtimeInfo.getStaticWebDir()),
           bootstrapDir,
-          environment,
           sourceInfo,
           SUBMIT_TIMEOUT_SECS,
           getRules(),

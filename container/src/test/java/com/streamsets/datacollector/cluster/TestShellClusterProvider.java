@@ -68,7 +68,7 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-public class TestClusterProviderImpl {
+public class TestShellClusterProvider {
 
   @Rule
   public TemporaryFolder tempFolder= new TemporaryFolder();
@@ -79,21 +79,24 @@ public class TestClusterProviderImpl {
   private File webDir;
   private File bootstrapLibDir;
   private PipelineConfiguration pipelineConf;
+  private PipelineConfigBean pipelineConfigBean;
   private File sparkManagerShell;
   private URLClassLoader classLoader;
   private StageLibraryTask stageLibrary;
   private Map<String, String> env;
   private Map<String, String> sourceInfo;
-  private ClusterProviderImpl sparkProvider;
+  private ShellClusterProvider sparkProvider;
   private final String SDC_TEST_PREFIX = "dummy";
 
 
   @Before
   public void setup() throws Exception {
     tempDir = File.createTempFile(getClass().getSimpleName(), "");
-    sparkManagerShell = new File(tempDir, "_cluster-manager");
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
+    File libexecDir = new File(tempDir, "libexec");
+    Assert.assertTrue(libexecDir.mkdir());
+    sparkManagerShell = new File(libexecDir, "_cluster-manager");
     providerTemp = new File(tempDir, "provider-temp");
     Assert.assertTrue(providerTemp.mkdir());
     Assert.assertTrue(sparkManagerShell.createNewFile());
@@ -179,6 +182,10 @@ public class TestClusterProviderImpl {
     };
     stageLibrary = MockStages.createStageLibrary(classLoader);
     env = new HashMap<>();
+
+    pipelineConfigBean = new PipelineConfigBean();
+    pipelineConfigBean.clusterLauncherEnv = env;
+
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
@@ -187,19 +194,21 @@ public class TestClusterProviderImpl {
     File f = new File(runtimeInfo.getConfigDir());
     Assert.assertTrue(f.mkdirs());
     Assert.assertTrue(configFile.createNewFile());
-    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, null, Mockito.mock(Configuration.class)));
-    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+    sparkProvider = Mockito.spy(new ShellClusterProvider(runtimeInfo, null, Mockito.mock(Configuration.class)));
+    Mockito.doReturn(new MockSystemProcessFactory()).when(sparkProvider).getSystemProcessFactory();
+
+    Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_BATCH),
         Mockito.any(PipelineConfiguration.class),
         Mockito.any(StageLibraryTask.class)
     );
-    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+    Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_YARN_STREAMING),
         Mockito.any(PipelineConfiguration.class),
         Mockito.any(StageLibraryTask.class)
     );
-    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN).when(sparkProvider)
-        .findClusterBootstrapJar(
+    Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN).when(sparkProvider)
+           .findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_MESOS_STREAMING),
         Mockito.any(PipelineConfiguration.class),
         Mockito.any(StageLibraryTask.class)
@@ -232,7 +241,7 @@ public class TestClusterProviderImpl {
     Files.createSymbolicLink(link1.toPath(), dir1.toPath());
     Files.createSymbolicLink(link2.toPath(), link1.toPath());
     Files.createSymbolicLink(new File(srcDir, "dir1").toPath(), link2.toPath());
-    File clone = ClusterProviderImpl.createDirectoryClone(srcDir, srcDir.getName(), dstDir);
+    File clone = ShellClusterProvider.createDirectoryClone(srcDir, srcDir.getName(), dstDir);
     File cloneF1 = new File(new File(clone, "dir1"), "f1");
     Assert.assertTrue(cloneF1.isFile());
   }
@@ -241,13 +250,9 @@ public class TestClusterProviderImpl {
   public void testMoreThanOneAppId() throws Throwable {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
-    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        stageLibrary,
+    Assert.assertNotNull(sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, stageLibrary,
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -291,13 +296,9 @@ public class TestClusterProviderImpl {
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null, "2.6", "x"));
-    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        MockStages.createClusterStreamingStageLibrary(classLoader),
+    Assert.assertNotNull(sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, MockStages.createClusterStreamingStageLibrary(classLoader),
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -317,8 +318,9 @@ public class TestClusterProviderImpl {
         ),
         null
     ).getId());
-    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
-      MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertEquals(
+        ShellClusterProvider.CLUSTER_TYPE_YARN,
+      MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
             "<masked>/spark-streaming-kafka-1.2" +
@@ -348,13 +350,9 @@ public class TestClusterProviderImpl {
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null, "2.6", "x"));
-    ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        MockStages.createClusterStreamingStageLibrary(classLoader),
+    ApplicationState appState = sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, MockStages.createClusterStreamingStageLibrary(classLoader),
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -376,8 +374,9 @@ public class TestClusterProviderImpl {
     );
     Assert.assertNotNull(appState.getId());
     Assert.assertNotNull(appState.getDirId());
-    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
-      MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertEquals(
+        ShellClusterProvider.CLUSTER_TYPE_MESOS,
+      MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(RuntimeInfo.UNDEF + "/" + appState.getDirId().get() +
         "/streamsets-datacollector-mesos-bootstrap-1.7.0.0.jar"));
   }
@@ -409,13 +408,8 @@ public class TestClusterProviderImpl {
         Mockito.any(StageLibraryTask.class)
     );
     Assert.assertNotNull(sparkProvider.startPipeline(
-        new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        MockStages.createClusterMapRStreamingStageLibrary(classLoader),
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, MockStages.createClusterMapRStreamingStageLibrary(classLoader),
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -436,8 +430,9 @@ public class TestClusterProviderImpl {
         ),
         null
     ).getId());
-    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
-        MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE)
+    Assert.assertEquals(
+        ShellClusterProvider.CLUSTER_TYPE_YARN,
+        MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE)
     );
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/maprfs-5.1" +
@@ -449,8 +444,8 @@ public class TestClusterProviderImpl {
 
   @Test
   public void testClusterBoostrapRegex() throws Exception {
-    Properties props = ClusterProviderImpl.readDataCollectorProperties(Thread.currentThread().getContextClassLoader());
-    Assert.assertEquals("abc", props.getProperty(ClusterProviderImpl.CLUSTER_BOOTSTRAP_JAR_REGEX +
+    Properties props = ShellClusterProvider.readDataCollectorProperties(Thread.currentThread().getContextClassLoader());
+    Assert.assertEquals("abc", props.getProperty(ShellClusterProvider.CLUSTER_BOOTSTRAP_JAR_REGEX +
         ExecutionMode.CLUSTER_YARN_STREAMING +
         "_Foo"));
   }
@@ -477,13 +472,9 @@ public class TestClusterProviderImpl {
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
       "aaa", null, null, null, true, null, "x", "y"));
-    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        MockStages.createClusterBatchStageLibrary(classLoader),
+    Assert.assertNotNull(sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, MockStages.createClusterBatchStageLibrary(classLoader),
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -503,7 +494,7 @@ public class TestClusterProviderImpl {
         ),
         null
         ).getId());
-    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertEquals(ShellClusterProvider.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/avro-1.7.7" +
             ".jar," + "<masked>/avro-mapred-1.7.7.jar"
@@ -518,13 +509,9 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add("Caused by: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]");
     MockSystemProcess.output.add("\tat com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)");
     try {
-      sparkProvider.startPipeline(new MockSystemProcessFactory(),
-          sparkManagerShell,
-          providerTemp,
-          env,
-          sourceInfo,
-          pipelineConf,
-          stageLibrary,
+      sparkProvider.startPipeline(
+          providerTemp, sourceInfo,
+          pipelineConf, pipelineConfigBean, stageLibrary,
           Mockito.mock(CredentialStoresTask.class),
           etcDir,
           resourcesDir,
@@ -555,13 +542,9 @@ public class TestClusterProviderImpl {
     String id = "application_1429587312661_0025";
     MockSystemProcess.output.add(" " + id + " ");
     MockSystemProcess.output.add(" " + id + " ");
-    Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConf,
-        stageLibrary,
+    Assert.assertEquals(id, sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConf, pipelineConfigBean, stageLibrary,
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -582,7 +565,8 @@ public class TestClusterProviderImpl {
         null
         ).getId());
       Assert.assertArrayEquals(
-        new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster", "--executor-memory", "512m",
+        new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
+            "--executor-memory", "512m",
             "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
@@ -607,7 +591,7 @@ public class TestClusterProviderImpl {
     System.setProperty("java.security.auth.login.config", "/etc/kafka-client-jaas.conf");
     File keytab = new File(resourcesDir, "sdc.keytab");
     keytab.createNewFile();
-    String principal = Utils.format("{}/{}", "sdc", InetAddress.getLocalHost().getHostName());
+    String principal = "sdc/foohost";
 
     PipelineConfiguration pipelineConfKrb = pipelineConf.createWithNewConfig(new Config("kerberosPrincipal", "sdc"))
         .createWithNewConfig(new Config("kerberosKeytab", keytab.getAbsolutePath()));
@@ -620,23 +604,21 @@ public class TestClusterProviderImpl {
     Configuration conf = new Configuration();
     conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
     conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, keytab.getAbsolutePath());
-    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, SecurityConfiguration.KERBEROS_PRINCIPAL_DEFAULT);
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "sdc/foohost");
 
-    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf),
+    sparkProvider = Mockito.spy(new ShellClusterProvider(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf),
         conf));
-    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+    Mockito.doReturn(new MockSystemProcessFactory()).when(sparkProvider).getSystemProcessFactory();
+
+    Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_BATCH),
         Mockito.any(PipelineConfiguration.class),
         Mockito.any(StageLibraryTask.class)
     );
 
-    Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(),
-        sparkManagerShell,
-        providerTemp,
-        env,
-        sourceInfo,
-        pipelineConfKrb,
-        stageLibrary,
+    Assert.assertEquals(id, sparkProvider.startPipeline(
+        providerTemp, sourceInfo,
+        pipelineConfKrb, pipelineConfigBean, stageLibrary,
         Mockito.mock(CredentialStoresTask.class),
         etcDir,
         resourcesDir,
@@ -657,7 +639,8 @@ public class TestClusterProviderImpl {
         null
         ).getId());
     Assert.assertArrayEquals(
-        new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster", "--executor-memory", "512m",
+        new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
+            "--executor-memory", "512m",
             "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
@@ -704,10 +687,10 @@ public class TestClusterProviderImpl {
       Assert.assertEquals("fooVal", gotProperties.getProperty("foo"));
       Assert.assertEquals("true", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
       Assert.assertEquals(
-          Configuration.FileRef.DELIMITER + ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
+          Configuration.FileRef.DELIMITER + ShellClusterProvider.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
           gotProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
       );
-      List<String> gotLines = Files.readAllLines(new File(etcDir, ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN).toPath(),
+      List<String> gotLines = Files.readAllLines(new File(etcDir, ShellClusterProvider.CLUSTER_DPM_APP_TOKEN).toPath(),
           Charset.defaultCharset()
       );
       Assert.assertEquals(1, gotLines.size());
@@ -759,7 +742,7 @@ public class TestClusterProviderImpl {
     sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
     Assert.assertEquals("true", sdcProperties.getProperty(RemoteSSOService.DPM_ENABLED));
     Assert.assertEquals(Configuration.FileRef.DELIMITER +
-            ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
+            ShellClusterProvider.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
         sdcProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
     );
   }
@@ -803,7 +786,7 @@ public class TestClusterProviderImpl {
 
   @Test
   public void testExclude() throws Throwable {
-    Assert.assertTrue(ClusterProviderImpl.exclude(Arrays.asList("scala.*"), "scala-library.jar"));
-    Assert.assertFalse(ClusterProviderImpl.exclude(Arrays.asList("^scala.*"), "Xscala-library.jar"));
+    Assert.assertTrue(ShellClusterProvider.exclude(Arrays.asList("scala.*"), "scala-library.jar"));
+    Assert.assertFalse(ShellClusterProvider.exclude(Arrays.asList("^scala.*"), "Xscala-library.jar"));
   }
 }

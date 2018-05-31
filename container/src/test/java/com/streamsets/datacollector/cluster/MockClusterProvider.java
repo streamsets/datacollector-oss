@@ -17,9 +17,9 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.lib.security.acl.dto.Acl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +40,9 @@ public class MockClusterProvider implements ClusterProvider {
   public String appId = null;
 
   @Override
-  public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
-                           PipelineConfiguration pipelineConfiguration)
+  public void killPipeline(
+      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+  )
     throws TimeoutException {
     LOG.info("killPipeline");
     if (killTimesOut) {
@@ -50,8 +51,9 @@ public class MockClusterProvider implements ClusterProvider {
   }
 
   @Override
-  public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
-                           PipelineConfiguration pipelineConfiguration) throws TimeoutException {
+  public ClusterPipelineStatus getStatus(
+      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+  ) throws TimeoutException {
     LOG.info("isRunning");
     if (isRunningTimesOut) {
       throw new TimeoutException();
@@ -71,13 +73,8 @@ public class MockClusterProvider implements ClusterProvider {
 
   @Override
   public ApplicationState startPipeline(
-      SystemProcessFactory systemProcessFactory,
-      File sparkManager,
-      File tempDir,
-      Map<String, String> environment,
-      Map<String, String> sourceInfo,
-      PipelineConfiguration pipelineConfiguration,
-      StageLibraryTask stageLibrary,
+      File tempDir, Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration, PipelineConfigBean pipelineConfigBean, StageLibraryTask stageLibrary,
       CredentialStoresTask credentialStoresTask,
       File etcDir,
       File resourcesDir,

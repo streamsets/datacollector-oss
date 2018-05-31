@@ -75,13 +75,13 @@ public class TestClusterLogConfigUtils {
 
     List<String> lines = ClusterLogConfigUtils.getLog4jConfigAndAddAppender(
         runtimeInfo,
-        ClusterProviderImpl.executionModeToAppLogPath.get(ExecutionMode.CLUSTER_BATCH)
+        ShellClusterProvider.executionModeToAppLogPath.get(ExecutionMode.CLUSTER_BATCH)
     );
     Assert.assertEquals(defaultLogLines.size(), lines.size());
 
     for (int i = 0; i < lines.size(); i++) {
       if (i == 4) {
-        Assert.assertEquals(" log4j.appender.streamsets.File=" + ClusterProviderImpl.executionModeToAppLogPath.get(
+        Assert.assertEquals(" log4j.appender.streamsets.File=" + ShellClusterProvider.executionModeToAppLogPath.get(
             ExecutionMode.CLUSTER_BATCH), lines.get(4));
       } else {
         Assert.assertEquals(defaultLogLines.get(i), lines.get(i));

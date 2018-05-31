@@ -115,11 +115,13 @@ public class TestClusterRunner {
     executorService = new SafeScheduledExecutorService(2, "ClusterRunnerExecutor");
     emptyCL = new URLClassLoader(new URL[0]);
     tempDir = Files.createTempDir();
-    System.setProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT, "true");
-    System.setProperty("sdc.testing-mode", "true");
-    sparkManagerShell = new File(tempDir, "_cluster-manager");
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
+    System.setProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT, "true");
+    System.setProperty("sdc.testing-mode", "true");
+    File libexecDir = new File(tempDir, "libexec");
+    Assert.assertTrue(libexecDir.mkdir());
+    sparkManagerShell = new File(libexecDir, "_cluster-manager");
     Assert.assertTrue(sparkManagerShell.createNewFile());
     sparkManagerShell.setExecutable(true);
     MockSystemProcess.isAlive = false;
@@ -146,8 +148,8 @@ public class TestClusterRunner {
     pipelineStoreTask.save("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0", "description"
       , mockPipelineConf);
 
-    clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
-      emptyCL, emptyCL, null);
+    clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, emptyCL, emptyCL, null);
+
     setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
     aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>(),
         Mockito.mock(UserGroupManager.class));
