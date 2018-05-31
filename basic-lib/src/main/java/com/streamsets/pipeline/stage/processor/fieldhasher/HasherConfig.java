@@ -32,11 +32,24 @@ public class HasherConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Use Field Separator",
-      description = "Separate fields with null before hashing",
+      description = "Separator character to insert between fields before hashing",
       displayPosition = 5,
       group = "FIELD_HASHING"
   )
   public boolean useSeparator;
+
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.CHARACTER,
+          defaultValue = "\u0000",
+          dependsOn = "useSeparator",
+          triggeredByValue = "true",
+          label = "Field Separator",
+          description = "Character to separate fields",
+          displayPosition = 8,
+          group = "FIELD_HASHING"
+  )
+  public Character separatorCharacter = '\u0000';
 
   @ConfigDef(
       required = false,

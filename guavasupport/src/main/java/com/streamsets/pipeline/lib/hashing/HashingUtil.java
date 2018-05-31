@@ -81,25 +81,28 @@ public final class HashingUtil {
   public static RecordFunnel getRecordFunnel(
       Collection<String> fieldsToHash,
       boolean includeRecordHeader,
-      boolean useSeparators) {
+      boolean useSeparators,
+      char separator) {
     if(fieldsToHash == null || fieldsToHash.isEmpty()) {
       return new RecordFunnel();
     }
-    return new RecordFunnel(fieldsToHash, includeRecordHeader, useSeparators);
+    return new RecordFunnel(fieldsToHash, includeRecordHeader, useSeparators, separator);
   }
 
   public static class RecordFunnel implements Funnel<Record> {
     private Collection<String> fieldsToHash = null;
     private boolean includeRecordHeader = false;
     private boolean useSeparators = false;
+    private Character separator = '\u0000';
 
-    public RecordFunnel() {
+    private RecordFunnel() {
     }
 
-    public RecordFunnel(Collection<String> fieldsToHash, boolean includeRecordHeader, boolean useSeparators) {
+    public RecordFunnel(Collection<String> fieldsToHash, boolean includeRecordHeader, boolean useSeparators, Character separator) {
       this.fieldsToHash = fieldsToHash;
       this.includeRecordHeader = includeRecordHeader;
       this.useSeparators = useSeparators;
+      this.separator = separator;
     }
 
     protected List<String> getFieldsToHash(Record record) {
@@ -186,7 +189,7 @@ public final class HashingUtil {
           sink.putBoolean(true);
         }
         if(useSeparators) {
-          sink.putByte((byte) 0);
+          sink.putString(java.nio.CharBuffer.wrap(new char[] {separator}), Charset.forName("UTF-8"));
         }
       }
 
@@ -198,8 +201,9 @@ public final class HashingUtil {
           } else {
             sink.putBoolean(true);
           }
+
           if(useSeparators) {
-            sink.putByte((byte) 0);
+            sink.putString(java.nio.CharBuffer.wrap(new char[] {separator}), Charset.forName("UTF-8"));
           }
         }
       }

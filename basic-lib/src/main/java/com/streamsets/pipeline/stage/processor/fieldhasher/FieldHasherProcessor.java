@@ -200,7 +200,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
           recordHasherConfig.targetField,
           recordHasherConfig.headerAttribute,
           recordHasherConfig.includeRecordHeaderForHashing,
-          hasherConfig.recordHasherConfig.useSeparator
+          hasherConfig.recordHasherConfig.useSeparator,
+          hasherConfig.separatorCharacter
       );
     }
 
@@ -287,7 +288,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
           targetFieldHasherConfig.targetField,
           targetFieldHasherConfig.headerAttribute,
           false,
-          hasherConfig.useSeparator
+          hasherConfig.useSeparator,
+          hasherConfig.separatorCharacter
           );
     } else {
       //Perform individual one to one hashing.
@@ -297,7 +299,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
             fieldHasherConfig.hashType,
             ImmutableList.of(fieldToHashForThisConfig),
             false,
-            hasherConfig.useSeparator
+            hasherConfig.useSeparator,
+            hasherConfig.separatorCharacter
             );
         Field newField = Field.create(hashVal);
         record.set(fieldToHashForThisConfig, newField);
@@ -313,14 +316,22 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       String targetField,
       String headerAttribute,
       boolean includeRecordHeader,
-      boolean useSeparator
+      boolean useSeparator,
+      char separator
   ) throws StageException {
     // If there is nothing to hash, don't create bogus output hash
     if(fieldsToHashForThisConfig.isEmpty()) {
       return;
     }
 
-    String hashVal = generateHash(record, hashType, fieldsToHashForThisConfig, includeRecordHeader, useSeparator);
+    String hashVal = generateHash(
+        record,
+        hashType,
+        fieldsToHashForThisConfig,
+        includeRecordHeader,
+        useSeparator,
+        separator
+    );
     if (!targetField.isEmpty()) {
       Field newField = Field.create(hashVal);
       //Handle already existing field.
@@ -349,14 +360,16 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       HashType hashType,
       Collection<String> fieldsToHash,
       boolean includeRecordHeader,
-      boolean useSeparator
+      boolean useSeparator,
+      char separator
   ) throws StageException {
     try {
       HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
       HashingUtil.RecordFunnel recordFunnel = HashingUtil.getRecordFunnel(
           fieldsToHash,
           includeRecordHeader,
-          useSeparator
+          useSeparator,
+          separator
       );
       return hasher.hashObject(record, recordFunnel).toString();
     } catch (IllegalArgumentException e) {

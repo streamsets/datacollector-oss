@@ -71,6 +71,10 @@ import java.util.regex.Pattern;
 @PrepareForTest(FieldHasherProcessor.class)
 public class TestFieldHasherProcessor {
 
+  final String DATA1 = "one";
+  final String DATA2 = "two";
+  final String DATA3 = "three";
+
   // make switching easy.
   private static boolean OLD_WAY = true;
 
@@ -94,7 +98,8 @@ public class TestFieldHasherProcessor {
         HashingUtil.getRecordFunnel(
             validFieldsToHash,
             includeRecordHeaderForHashing,
-            useSeparator
+            useSeparator,
+                '\u0000'
         );
     return hasher.hashObject(record, recordFunnel).toString();
   }
@@ -569,9 +574,6 @@ public class TestFieldHasherProcessor {
   @Test
   public void testMultiStringMD5NoSeparator() throws StageException {
     // new way - after SDC-6540.
-    final String DATA1 = "one";
-    final String DATA2 = "two";
-    final String DATA3 = "three";
     HasherConfig hasherConfig = createTargetFieldHasherProcessor(
         ImmutableList.of("/x", "/y", "/z"),
         HashType.MD5,
@@ -586,12 +588,7 @@ public class TestFieldHasherProcessor {
     runner.runInit();
 
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("x", Field.create(Field.Type.STRING, DATA1));
-      map.put("y", Field.create(Field.Type.STRING, DATA2));
-      map.put("z", Field.create(Field.Type.STRING, DATA3));
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
+      Record record = createRec(DATA1, DATA2, DATA3);
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(1, output.getRecords().get("a").size());
@@ -599,13 +596,131 @@ public class TestFieldHasherProcessor {
       Assert.assertTrue(field.getValue() instanceof Map);
 
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 4);   //field count
-      Assert.assertTrue(result.containsKey("x"));
-      Assert.assertTrue(result.containsKey("y"));
-      Assert.assertTrue(result.containsKey("z"));
-      Assert.assertTrue(result.containsKey("hash"));
+      verifyResult(result);
 
       Assert.assertEquals(DigestUtils.md5Hex(DATA1+DATA2+DATA3), result.get("hash").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultiStringMD5WithNullSeparator() throws StageException {
+    final String HASH = "20203d8ffaeb6033607ae5f4b3a9d8cd";
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/x", "/y", "/z"),
+        HashType.MD5,
+        "/hash",
+        ""
+    );
+    hasherConfig.useSeparator = true;
+    // with default value for hasherConfig.separatorCharacter -- should be null.
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+
+      Record record = createRec(DATA1, DATA2, DATA3);
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+
+      Map<String, Field> result = field.getValueAsMap();
+      verifyResult(result);
+
+      Assert.assertEquals(HASH, result.get("hash").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultiStringMD5WithPipeSeparator() throws StageException {
+    final String HASH = "b078798a7e3947c2e6688bcef15999a9";
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/x", "/y", "/z"),
+        HashType.MD5,
+        "/hash",
+        ""
+    );
+    hasherConfig.useSeparator = true;
+    hasherConfig.separatorCharacter = '|';
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+
+      Record record = createRec(DATA1, DATA2, DATA3);
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+
+      Map<String, Field> result = field.getValueAsMap();
+      verifyResult(result);
+
+      Assert.assertEquals(HASH, result.get("hash").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private Record createRec(String data1, String data2, String data3) {
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("x", Field.create(Field.Type.STRING, data1));
+    map.put("y", Field.create(Field.Type.STRING, data2));
+    map.put("z", Field.create(Field.Type.STRING, data3));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    return record;
+  }
+
+  private void verifyResult(Map<String, Field> result) {
+    Assert.assertTrue(result.size() == 4);   //field count
+    Assert.assertTrue(result.containsKey("x"));
+    Assert.assertTrue(result.containsKey("y"));
+    Assert.assertTrue(result.containsKey("z"));
+    Assert.assertTrue(result.containsKey("hash"));
+  }
+
+  @Test
+  public void testMultiStringMD5WithSnowmanSeparator() throws StageException {
+    final String HASH = "c2cfa6fe1276b6954a1162cb8d5ac17c";
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/x", "/y", "/z"),
+        HashType.MD5,
+        "/hash",
+        ""
+    );
+    hasherConfig.useSeparator = true;
+    hasherConfig.separatorCharacter = '\u26c4';
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Record record = createRec(DATA1, DATA2, DATA3);
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+
+      Map<String, Field> result = field.getValueAsMap();
+      verifyResult(result);
+
+      Assert.assertEquals(HASH, result.get("hash").getValue());
     } finally {
       runner.runDestroy();
     }
