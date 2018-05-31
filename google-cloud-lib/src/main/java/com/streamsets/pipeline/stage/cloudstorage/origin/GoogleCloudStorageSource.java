@@ -90,8 +90,8 @@ public class GoogleCloudStorageSource extends BaseSource {
       if(result != 0) {
         return result;
       }
-      //same modified time. Use name to sort
-      return o1.getName().compareTo(o2.getName());
+      //same modified time. Use generatedid (bucket/blob name/timestamp) to sort
+      return o1.getGeneratedId().compareTo(o2.getGeneratedId());
     }).maximumSize(gcsOriginConfig.maxResultQueueSize).create();
     antPathMatcher = new AntPathMatcher();
 
@@ -124,46 +124,49 @@ public class GoogleCloudStorageSource extends BaseSource {
     maxBatchSize = Math.min(maxBatchSize, gcsOriginConfig.basicConfig.maxBatchSize);
 
     long minTimestamp = 0;
-    String blobId = "";
+    String blobGeneratedId = "";
     String fileOffset = START_FILE_OFFSET;
 
     if (!Strings.isNullOrEmpty(lastSourceOffset)) {
       minTimestamp = getMinTimestampFromOffset(lastSourceOffset);
       fileOffset = getFileOffsetFromOffset(lastSourceOffset);
-      blobId = getBlobIdFromOffset(lastSourceOffset);
+      blobGeneratedId = getBlobIdFromOffset(lastSourceOffset);
     }
 
     if (minMaxPriorityQueue.isEmpty()) {
-      poolForFiles(minTimestamp);
+      poolForFiles(minTimestamp, blobGeneratedId, fileOffset);
     }
-
-    if (minMaxPriorityQueue.isEmpty()) {
-      //No more data available
-      if (noMoreDataRecordCount > 0 || noMoreDataErrorCount > 0) {
-        LOG.info("sending no-more-data event.  records {} errors {} files {} ",
-            noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount);
-        CommonEvents.NO_MORE_DATA.create(getContext())
-            .with("record-count", noMoreDataRecordCount)
-            .with("error-count", noMoreDataErrorCount)
-            .with("file-count", noMoreDataFileCount)
-            .createAndSend();
-        noMoreDataRecordCount = 0;
-        noMoreDataErrorCount = 0;
-        noMoreDataFileCount = 0;
-      }
-      return lastSourceOffset;
-    }
-
     // Process Blob
     if (parser == null) {
-      blob = minMaxPriorityQueue.pollFirst();
+      //Get next eligible blob to read, if none throw no more data event
+      do {
+        blob = minMaxPriorityQueue.pollFirst();
+        //We don't have any spooled files to read from and we don't have anything available from the existing parser
+        //(in case of sdc restart with stored offset, we still want some blob to be available for us to start reading)
+        if (blob == null) {
+          //No more data available
+          if (noMoreDataRecordCount > 0 || noMoreDataErrorCount > 0) {
+            LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+                noMoreDataRecordCount,
+                noMoreDataErrorCount,
+                noMoreDataFileCount
+            );
+            CommonEvents.NO_MORE_DATA.create(getContext()).with("record-count", noMoreDataRecordCount).with("error" +
+                    "-count",
+                noMoreDataErrorCount
+            ).with("file-count", noMoreDataFileCount).createAndSend();
+            noMoreDataRecordCount = 0;
+            noMoreDataErrorCount = 0;
+            noMoreDataFileCount = 0;
+          }
+          return lastSourceOffset;
+        }
+      } while (!isBlobEligible(blob, minTimestamp, blobGeneratedId, fileOffset));
 
-      if (blobId.equals(blob.getGeneratedId()) && fileOffset.equals("-1")) {
-        return lastSourceOffset;
-      }
-
-      fileOffset = START_FILE_OFFSET;
-      blobId = blob.getGeneratedId();
+      //If we are picking up from where we left off from previous offset
+      //(i.e after sdc restart use the last offset, else use start file offset)
+      fileOffset = (blobGeneratedId.equals(blob.getGeneratedId()))? fileOffset : START_FILE_OFFSET;
+      blobGeneratedId = blob.getGeneratedId();
 
       if (gcsOriginConfig.dataFormat == DataFormat.WHOLE_FILE) {
         GCSFileRef.Builder gcsFileRefBuilder = new GCSFileRef.Builder()
@@ -191,10 +194,10 @@ public class GoogleCloudStorageSource extends BaseSource {
         Optional.ofNullable(blob.getMetadata()).ifPresent(metadata::putAll);
 
         parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory()
-            .getParser(blobId, metadata, gcsFileRefBuilder.build());
+            .getParser(blobGeneratedId, metadata, gcsFileRefBuilder.build());
       } else {
         parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory().getParser(
-            blobId,
+            blobGeneratedId,
             Channels.newInputStream(blob.reader()),
             fileOffset
         );
@@ -220,42 +223,48 @@ public class GoogleCloudStorageSource extends BaseSource {
             break;
           }
         } catch (RecoverableDataParserException e) {
-          LOG.error("Error when parsing record from object '{}' at offset '{}'. Reason : {}", blobId, fileOffset, e);
+          LOG.error("Error when parsing record from object '{}' at offset '{}'. Reason : {}", blobGeneratedId, fileOffset, e);
           getContext().toError(e.getUnparsedRecord(), e.getErrorCode(), e.getParams());
         }
       }
     } catch (IOException | DataParserException e) {
-      LOG.error("Error when parsing records from Object '{}'. Reason : {}, moving to next file", blobId, e);
-      getContext().reportError(Errors.GCS_00, blobId, fileOffset ,e);
+      LOG.error("Error when parsing records from Object '{}'. Reason : {}, moving to next file", blobGeneratedId, e);
+      getContext().reportError(Errors.GCS_00, blobGeneratedId, fileOffset ,e);
       fileOffset = END_FILE_OFFSET;
       noMoreDataErrorCount++;
       try {
         errorBlobHandler.handleError(blob.getBlobId());
       } catch (StorageException se) {
-        LOG.error("Error handling failed for {}. Reason{}", blobId, e);
-        getContext().reportError(Errors.GCS_06, blobId, se);
+        LOG.error("Error handling failed for {}. Reason{}", blobGeneratedId, e);
+        getContext().reportError(Errors.GCS_06, blobGeneratedId, se);
       }
     }
-    return String.format(OFFSET_FORMAT, minTimestamp, fileOffset, blobId);
+    return String.format(OFFSET_FORMAT, minTimestamp, fileOffset, blobGeneratedId);
   }
 
-  private void poolForFiles(long minTimeStamp) {
+  private void poolForFiles(long minTimeStamp, String currentBlobGeneratedId, String currentFileOffset) {
     Page<Blob> blobs = storage.list(
         gcsOriginConfig.bucketTemplate,
         Storage.BlobListOption.prefix(GcsUtil.normalizePrefix(gcsOriginConfig.commonPrefix))
     );
     blobs.iterateAll().forEach(blob ->  {
-      if (isBlobEligible(blob, minTimeStamp)) {
+      if (isBlobEligible(blob, minTimeStamp, currentBlobGeneratedId, currentFileOffset)) {
         minMaxPriorityQueue.add(blob);
       }
     });
   }
 
-  private boolean isBlobEligible(Blob blob, long minTimeStamp) {
+  private boolean isBlobEligible(Blob blob, long minTimeStamp, String currentBlobGeneratedId, String currentFileOffset) {
     String blobName = blob.getName();
     String prefixToMatch =  blobName.substring(
         GcsUtil.normalizePrefix(gcsOriginConfig.commonPrefix).length(), blobName.length());
-    return blob.getSize() > 0 && blob.getUpdateTime() > minTimeStamp
+    return blob.getSize() > 0 &&
+        //blob update time > current offset time
+        (blob.getUpdateTime() > minTimeStamp
+            //blob offset time = current offset time, but lexicographically greater than current offset
+            || (blob.getUpdateTime() == minTimeStamp && blob.getGeneratedId().compareTo(currentBlobGeneratedId) > 0)
+            //blob id same as current id and did not read till end of the file
+            || blob.getGeneratedId().equals(currentBlobGeneratedId) && !END_FILE_OFFSET.equals(currentFileOffset))
         && antPathMatcher.match(gcsOriginConfig.prefixPattern, prefixToMatch);
   }
 
