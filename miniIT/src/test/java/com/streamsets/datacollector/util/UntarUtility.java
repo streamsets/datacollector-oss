@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -58,6 +59,9 @@ public class UntarUtility {
       (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);
     TarArchiveEntry entry = null;
     while ((entry = (TarArchiveEntry) debInputStream.getNextEntry()) != null) {
+      if(!isEntryNameValid(entry.getName())) {
+        throw new IOException("Malformed archive, invalid entry: " + entry.getName());
+      }
       final File outputFile = new File(outputDir, entry.getName());
       if (entry.isDirectory()) {
         LOG.info(String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
@@ -106,5 +110,10 @@ public class UntarUtility {
     out.close();
 
     return unTar(outputFile, outputDir);
+  }
+
+  @VisibleForTesting
+  public static boolean isEntryNameValid(String entryName) {
+    return entryName.contains("/");
   }
 }
