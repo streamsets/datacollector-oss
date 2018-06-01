@@ -29,8 +29,10 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.math.BigDecimal;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Types;
 import java.util.Calendar;
 import java.util.Date;
+import javax.validation.constraints.AssertTrue;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -346,5 +348,87 @@ public class TestJDBCBaseRecordWriter {
     } catch (SQLException ex) {
       Assert.fail("Wrong SQLException:" + ex.getMessage());
     }
+  }
+
+  @Test
+  public void testType() throws StageException {
+    JdbcBaseRecordWriter writer = new JdbcGenericRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE",
+        false, //rollback
+        new LinkedList<JdbcFieldColumnParamMapping>(),
+        PreparedStatementCache.UNLIMITED_CACHE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader(),
+        false
+    );
+
+    /* isColumnTypeNumeric() - true assertions */
+
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.BIT));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.TINYINT));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.SMALLINT));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.INTEGER));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.BIGINT));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.DECIMAL));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.NUMERIC));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.FLOAT));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.REAL));
+    Assert.assertTrue(writer.isColumnTypeNumeric(Types.DOUBLE));
+
+    /* isColumnTypeNumeric() - false assertion */
+
+    Assert.assertFalse(writer.isColumnTypeNumeric(Types.CHAR));
+    Assert.assertFalse(writer.isColumnTypeNumeric(Types.DATE));
+    Assert.assertFalse(writer.isColumnTypeNumeric(Types.TIMESTAMP_WITH_TIMEZONE));
+    Assert.assertFalse(writer.isColumnTypeNumeric(Types.TIME_WITH_TIMEZONE));
+
+    /* isColumnTypeText() - true assertions */
+
+    Assert.assertTrue(writer.isColumnTypeText(Types.CHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.VARCHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.BLOB));
+    Assert.assertTrue(writer.isColumnTypeText(Types.LONGVARCHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.NCHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.NVARCHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.LONGNVARCHAR));
+    Assert.assertTrue(writer.isColumnTypeText(Types.SQLXML));
+    Assert.assertTrue(writer.isColumnTypeText(Types.CLOB));
+    Assert.assertTrue(writer.isColumnTypeText(Types.NCLOB));
+
+    /* isColumnTypeText() - false assertions */
+
+    Assert.assertFalse(writer.isColumnTypeText(Types.INTEGER));
+    Assert.assertFalse(writer.isColumnTypeText(Types.DATE));
+    Assert.assertFalse(writer.isColumnTypeText(Types.TIME_WITH_TIMEZONE));
+    Assert.assertFalse(writer.isColumnTypeText(Types.TIMESTAMP_WITH_TIMEZONE));
+
+    /* isColumnTypeDate() - true assertions */
+
+    Assert.assertTrue(writer.isColumnTypeDate(Types.DATE));
+    Assert.assertTrue(writer.isColumnTypeDate(Types.TIME));
+    Assert.assertTrue(writer.isColumnTypeDate(Types.TIMESTAMP));
+
+    /* isColumnTypeDate() - false assertions */
+
+    Assert.assertFalse(writer.isColumnTypeDate(Types.INTEGER));
+    Assert.assertFalse(writer.isColumnTypeDate(Types.TIMESTAMP_WITH_TIMEZONE));
+    Assert.assertFalse(writer.isColumnTypeDate(Types.TIME_WITH_TIMEZONE));
+
+    /* isColumnTypeBinary() - true assertions */
+
+    Assert.assertTrue(writer.isColumnTypeBinary(Types.BINARY));
+    Assert.assertTrue(writer.isColumnTypeBinary(Types.LONGVARBINARY));
+    Assert.assertTrue(writer.isColumnTypeBinary(Types.VARBINARY));
+
+    /* isColumnTypeBinary() - false assertions */
+
+    Assert.assertFalse(writer.isColumnTypeDate(Types.INTEGER));
+    Assert.assertFalse(writer.isColumnTypeDate(Types.TIMESTAMP_WITH_TIMEZONE));
+    Assert.assertFalse(writer.isColumnTypeDate(Types.TIME_WITH_TIMEZONE));
+    
   }
 }
