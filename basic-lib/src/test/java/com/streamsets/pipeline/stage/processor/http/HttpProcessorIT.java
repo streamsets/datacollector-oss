@@ -50,6 +50,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -322,6 +323,18 @@ public class HttpProcessorIT extends JerseyTest {
     }
   }
 
+  @Path("/test/head")
+  @Produces(MediaType.TEXT_PLAIN)
+  public static class TestHead {
+    @HEAD
+    public Response head() {
+      return Response.ok()
+              .header("x-test-header", "StreamSets")
+              .header("x-list-header", ImmutableList.of("a", "b"))
+              .build();
+    }
+  }
+
   @Path("/test/xml/get")
   @Produces(MediaType.APPLICATION_XML)
   public static class TestXmlGet {
@@ -351,6 +364,7 @@ public class HttpProcessorIT extends JerseyTest {
             TestPut.class,
             HttpStageTestUtil.TestPostCustomType.class,
             TestXmlGet.class,
+            TestHead.class,
             StreamTokenResetResource.class,
             Auth2Resource.class,
             Auth2ResourceOwnerWithIdResource.class,
@@ -359,6 +373,37 @@ public class HttpProcessorIT extends JerseyTest {
             TestTimeEL.class
         )
     );
+  }
+
+  @Test
+  public void testHttpHead() throws Exception {
+    HttpProcessorConfig conf = new HttpProcessorConfig();
+    conf.httpMethod = HttpMethod.HEAD;
+    conf.outputField = "/output";
+    conf.dataFormat = DataFormat.TEXT;
+    conf.resourceUrl = getBaseUri() + "test/head";
+    conf.headerOutputLocation = HeaderOutputLocation.HEADER;
+
+    Record record = RecordCreator.create();
+    record.set("/", Field.create(new HashMap<String, Field>()));
+
+    List<Record> records = ImmutableList.of(record);
+    Processor processor = new HttpProcessor(conf);
+    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+            .addOutputLane("lane")
+            .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> outputRecords = output.getRecords().get("lane");
+      assertTrue(runner.getErrorRecords().isEmpty());
+      assertEquals(1, outputRecords.size());
+      assertTrue(outputRecords.get(0).has("/output"));
+      assertEquals("StreamSets", outputRecords.get(0).getHeader().getAttribute("x-test-header"));
+      assertEquals("[a, b]", outputRecords.get(0).getHeader().getAttribute("x-list-header"));
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
