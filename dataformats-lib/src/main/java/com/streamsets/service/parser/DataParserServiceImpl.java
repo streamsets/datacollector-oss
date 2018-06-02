@@ -21,13 +21,18 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseService;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.service.lib.ShimUtil;
 
@@ -129,6 +134,31 @@ public class DataParserServiceImpl extends BaseService implements DataFormatPars
   @Override
   public int getStringBuilderPoolSize() {
     return this.dataFormatConfig.stringBuilderPoolSize;
+  }
+
+  @Override
+  public boolean isWholeFileFormat() {
+    return this.dataFormat == DataFormat.WHOLE_FILE;
+  }
+
+  @Override
+  public long suggestedWholeFileBufferSize() {
+    return this.dataFormatConfig.wholeFileMaxObjectLen;
+  }
+
+  @Override
+  public Double wholeFileRateLimit() throws StageException  {
+    // TODO: There is no point in evaluating this every time, but that is what current code in S3 and other places does,
+    // so we moved the logic here as is. Once all stages will be converted over, we will refactore this to evaluate only
+    // once during init() and add ConfigIssue if the validation fails.
+    ELEval rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
+    ELVars rateLimitElVars = getContext().createELVars();
+    return FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, dataFormatConfig.rateLimit);
+  }
+
+  @Override
+  public boolean isWholeFileChecksumRequired() {
+    return this.dataFormatConfig.verifyChecksum;
   }
 
   /**

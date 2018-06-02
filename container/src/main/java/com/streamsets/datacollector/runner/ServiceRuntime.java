@@ -23,6 +23,7 @@ import com.streamsets.datacollector.runner.service.DataParserServiceWrapper;
 import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
@@ -144,6 +145,38 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
     return LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),
         () -> ((DataFormatParserService)serviceBean.getService()).getStringBuilderPoolSize()
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public boolean isWholeFileFormat() {
+    return LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> ((DataFormatParserService)serviceBean.getService()).isWholeFileFormat()
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public long suggestedWholeFileBufferSize() {
+    return LambdaUtil.privilegedWithClassLoader(
+      serviceBean.getDefinition().getStageClassLoader(),
+      () -> ((DataFormatParserService)serviceBean.getService()).suggestedWholeFileBufferSize()
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public Double wholeFileRateLimit() throws StageException {
+    return LambdaUtil.privilegedWithClassLoader(
+      serviceBean.getDefinition().getStageClassLoader(),
+      () -> ((DataFormatParserService)serviceBean.getService()).wholeFileRateLimit()
+    );
+  }
+
+  @Override // From DataFormatParserService
+  public boolean isWholeFileChecksumRequired() {
+    return LambdaUtil.privilegedWithClassLoader(
+      serviceBean.getDefinition().getStageClassLoader(),
+      () -> ((DataFormatParserService)serviceBean.getService()).isWholeFileChecksumRequired()
     );
   }
 
