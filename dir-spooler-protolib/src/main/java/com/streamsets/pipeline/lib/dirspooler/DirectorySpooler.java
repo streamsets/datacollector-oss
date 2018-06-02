@@ -21,6 +21,8 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,6 +269,7 @@ public class DirectorySpooler {
   private WrappedFile archiveDirPath;
   private WrappedFile errorArchiveDirPath;
   private PriorityBlockingQueue<WrappedFile> filesQueue;
+  private Set<WrappedFile> filesSet;
   private WrappedFile previousFile;
   private ScheduledExecutorService scheduledExecutor;
   private boolean waitForPathAppearance;
@@ -326,6 +329,7 @@ public class DirectorySpooler {
 
       // 11 is the DEFAULT_INITIAL_CAPACITY -- seems pretty random, but lets use the same one.
       filesQueue = new PriorityBlockingQueue<>(11, pathComparator);
+      filesSet = new HashSet<>(); //Set to speed up "contains" search for filesQueue
 
       spoolQueueMeter = context.createMeter("spoolQueue");
 
@@ -446,8 +450,9 @@ public class DirectorySpooler {
         LOG.warn("File cannot be added to the queue: " + file.toString());
       }
     }
-    if (!filesQueue.contains(file)) {
+    if (!filesSet.contains(file)) {
       filesQueue.add(file);
+      filesSet.add(file);
       spoolQueueMeter.mark(filesQueue.size());
     } else {
       LOG.debug("File '{}' already in queue, ignoring", file);
@@ -483,6 +488,7 @@ public class DirectorySpooler {
     try {
       LOG.debug("Polling for file, waiting '{}' ms", TimeUnit.MILLISECONDS.convert(wait, timeUnit));
       next = filesQueue.poll(wait, timeUnit);
+      filesSet.remove(next); // clear entry from mirror of filesQueue "search only" set
     } catch (InterruptedException ex) {
       next = null;
     } finally {
