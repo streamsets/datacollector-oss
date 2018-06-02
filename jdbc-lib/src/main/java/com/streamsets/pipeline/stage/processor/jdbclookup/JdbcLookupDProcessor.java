@@ -40,7 +40,6 @@ import java.util.List;
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
-    recordsByRef = true,
     upgrader = JdbcLookupProcessorUpgrader.class,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JDBCLookup.html#task_kbr_2cy_hw"
 )
