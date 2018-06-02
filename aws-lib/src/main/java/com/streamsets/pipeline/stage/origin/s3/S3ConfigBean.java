@@ -61,19 +61,6 @@ public class S3ConfigBean {
   @ConfigDefBean(groups = "ADVANCED")
   public ProxyConfig proxyConfig;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    label = "Data Format",
-    displayPosition = 1,
-    group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDefBean(groups = {"S3"})
-  public DataParserFormatConfig dataFormatConfig;
-
   @ConfigDefBean(groups = {"ERROR_HANDLING"})
   public S3ErrorConfig errorConfig;
 
@@ -98,22 +85,7 @@ public class S3ConfigBean {
   public boolean enableMetaData = false;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
-        dataFormat,
-        S3_DATA_FORMAT_CONFIG_PREFIX,
-        context,
-        issues
-    );
-
     s3FileConfig.init(context, issues);
-    dataFormatConfig.init(
-        context,
-        dataFormat,
-        Groups.S3.name(),
-        S3_DATA_FORMAT_CONFIG_PREFIX,
-        s3FileConfig.overrunLimit,
-        issues
-    );
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation

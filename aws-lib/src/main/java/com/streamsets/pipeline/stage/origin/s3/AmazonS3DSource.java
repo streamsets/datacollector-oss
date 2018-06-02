@@ -22,11 +22,12 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
-
-import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 @StageDef(
-    version = 9,
+    version = 10,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",
@@ -35,7 +36,13 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     resetOffset = true,
     producesEvents = true,
     upgrader = AmazonS3SourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonS3.html#task_gfj_ssv_yq"
+    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonS3.html#task_gfj_ssv_yq",
+    services = @ServiceDependency(
+      service = DataFormatParserService.class,
+      configuration = {
+        @ServiceConfiguration(name = "displayFormats", value = "AVRO,DELIMITED,EXCEL,JSON,LOG,PROTOBUF,SDC_JSON,TEXT,WHOLE_FILE,XML")
+      }
+    )
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
@@ -46,7 +53,6 @@ public class AmazonS3DSource extends DSource {
 
   @Override
   protected Source createSource() {
-    s3ConfigBean.dataFormatConfig.avroSchemaSource = SOURCE;
     return new AmazonS3Source(s3ConfigBean);
   }
 }

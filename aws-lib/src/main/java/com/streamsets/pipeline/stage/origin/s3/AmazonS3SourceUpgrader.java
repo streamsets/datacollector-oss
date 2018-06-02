@@ -19,17 +19,19 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AmazonS3SourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
-    switch(fromVersion) {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs);
         // fall through
@@ -53,9 +55,12 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs, context);
         break;
       default:
-        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
     return configs;
   }
@@ -157,6 +162,22 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
   private static void upgradeV8ToV9(List<Config> configs) {
     configs.add(new Config(S3ConfigBean.S3_SSE_CONFIG_PREFIX + "useCustomerSSEKey", false));
+  }
 
+  private static void upgradeV9ToV10(List<Config> configs, Context context) {
+    List<Config> dataFormatConfigs = configs.stream()
+      .filter(c -> c.getName().startsWith("s3ConfigBean.dataFormat"))
+      .collect(Collectors.toList());
+
+    // Remove those configs
+    configs.removeAll(dataFormatConfigs);
+
+    // Remove SQS specific prefix
+    dataFormatConfigs = dataFormatConfigs.stream()
+      .map(c -> new Config(c.getName().replace("s3ConfigBean.", ""), c.getValue()))
+      .collect(Collectors.toList());
+
+    // And finally register new service
+    context.registerService(DataFormatParserService.class, dataFormatConfigs);
   }
 }
