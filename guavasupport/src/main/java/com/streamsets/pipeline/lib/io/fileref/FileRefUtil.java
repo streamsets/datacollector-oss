@@ -228,7 +228,7 @@ public final class FileRefUtil {
         )
     );
   }
-  public static ELEval createElEvalForRateLimit(Stage.Context context) {
+  public static ELEval createElEvalForRateLimit(ProtoConfigurableEntity.ELContext context) {
     return context.createELEval("rateLimit");
   }
 

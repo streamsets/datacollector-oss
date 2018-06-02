@@ -17,15 +17,14 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.InputStream;
@@ -55,7 +54,7 @@ public class TestVerifyChecksumWrapperStream {
     testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     testDir.mkdirs();
     FileRefTestUtil.writePredefinedTextToFile(testDir);
-    context = ContextInfoCreator.createTargetContext("target", false, OnRecordError.TO_ERROR);
+    context = Mockito.mock(Stage.Context.class);
     checksum = Files.hash(
         Paths.get(FileRefTestUtil.getSourceFilePath(testDir)).toFile(),
         HashingUtil.getHasher(hashType)

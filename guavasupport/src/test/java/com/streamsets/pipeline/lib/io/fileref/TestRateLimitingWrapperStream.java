@@ -17,9 +17,7 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,7 +50,7 @@ public class TestRateLimitingWrapperStream {
     testDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDir.mkdirs());
     FileRefTestUtil.writePredefinedTextToFile(testDir);
-    context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
+    context = Mockito.mock(Stage.Context.class);
   }
 
   @After

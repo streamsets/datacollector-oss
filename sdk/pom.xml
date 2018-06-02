@@ -66,6 +66,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-guavasupport</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-container-common</artifactId>
       <scope>compile</scope>
     </dependency>

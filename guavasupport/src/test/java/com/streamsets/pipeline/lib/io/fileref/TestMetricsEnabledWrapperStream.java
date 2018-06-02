@@ -16,14 +16,15 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.File;
@@ -34,17 +35,38 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TestMetricsEnabledWrapperStream {
   private File testDir;
   private Stage.Context context;
+  private MapGauge gauge;
+
+  public static class MapGauge implements Gauge<Map<String, Object>> {
+
+    private final Map<String, Object> stateMap;
+
+    public MapGauge() {
+      stateMap = new ConcurrentHashMap<>();
+      stateMap.put(FileRefUtil.COMPLETED_FILE_COUNT, 0l);
+    }
+
+    @Override
+    public Map<String, Object> getValue() {
+      return stateMap;
+    }
+  }
 
   @Before
   public void setup() throws Exception {
     testDir = new File("target", UUID.randomUUID().toString());
     testDir.mkdirs();
     FileRefTestUtil.writePredefinedTextToFile(testDir);
-    context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
+    gauge = new MapGauge();
+    context = Mockito.mock(Stage.Context.class);
+    Mockito.when(context.createGauge(Mockito.any(), Mockito.any())).thenReturn(gauge);
+    Mockito.when(context.getGauge(Mockito.any())).thenReturn(gauge);
+    Mockito.when(context.getMeter(Mockito.any())).thenReturn(new Meter());
   }
 
   @After
