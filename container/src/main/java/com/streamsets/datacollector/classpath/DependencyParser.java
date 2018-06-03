@@ -54,7 +54,7 @@ public class DependencyParser {
     // Hortonworks
     "-([0-9]+(\\.[0-9]+){4,}-[0-9]+)",
     // CDH
-    "-([0-9.]+-cdh[0-9.]+)",
+    "-([0-9.]+-cdh[0-9.]+(-beta1)?)",
     "-([0-9.]+-kafka-[0-9.]+)",
     // MapR
     "-([0-9.]+-mapr-beta)",

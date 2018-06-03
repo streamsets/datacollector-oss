@@ -158,6 +158,7 @@ public class DependencyParserExhaustiveTest {
       {"spark-core_2.10-1.6.0-cdh5.10.1.jar", new Dependency("spark", "1.6.0-cdh5.10.1")},
       {"spark-core_2.10-1.6.1-mapr-1607.jar", new Dependency("spark", "1.6.1-mapr-1607")},
       {"spark-core_2.11-2.1.0.cloudera1.jar", new Dependency("spark", "2.1.0.cloudera1")},
+      {"spark-core_2.11-2.2.0-cdh6.0.0-beta1.jar", new Dependency("spark", "2.2.0-cdh6.0.0-beta1")},
       {"spark-streaming-kafka_2.10-1.6.1.2.4.2.0-258.jar", new Dependency("spark", "1.6.1.2.4.2.0-258")},
       {"spring-aop-4.3.8.RELEASE.jar", new Dependency("spring-aop", "4.3.8.RELEASE")},
       {"streamsets-datacollector-apache-kafka_0_10-lib-3.0.0.0.jar", new Dependency("streamsets", "3.0.0.0")},
