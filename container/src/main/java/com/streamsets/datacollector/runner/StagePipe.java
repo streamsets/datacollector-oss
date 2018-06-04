@@ -227,16 +227,17 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
+  public void process(PipeBatch pipeBatch) throws StageException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this, getStage().getPreInterceptors());
     ErrorSink errorSink = pipeBatch.getErrorSink();
     EventSink eventSink = pipeBatch.getEventSink();
     ProcessedSink processedSink = pipeBatch.getProcessedSink();
+    SourceResponseSink sourceResponseSink = pipeBatch.getSourceResponseSink();
     String previousOffset = pipeBatch.getPreviousOffset();
 
     // Filter batch by stage's preconditions
-    getStage().setSinks(errorSink, eventSink, processedSink);
+    getStage().setSinks(errorSink, eventSink, processedSink, sourceResponseSink);
     Batch batch = new FilterRecordBatch(batchImpl, predicates, getStage().getContext());
 
     long start = System.currentTimeMillis();
@@ -247,7 +248,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         batchMaker,
         errorSink,
         eventSink,
-        processedSink
+        processedSink,
+        sourceResponseSink
     );
     if (isSource()) {
       pipeBatch.setNewOffset(newOffset);

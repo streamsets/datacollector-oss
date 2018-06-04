@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * BatchContext implementation keeping all the state for given Batch while the pipeline is running the origin's code.
@@ -141,5 +142,10 @@ public class BatchContextImpl implements BatchContext {
 
   public long getStartTime() {
     return startTime;
+  }
+
+  @Override
+  public List<Record> getSourceResponseRecords() {
+    return pipeBatch.getSourceResponseSink().getResponseRecords();
   }
 }

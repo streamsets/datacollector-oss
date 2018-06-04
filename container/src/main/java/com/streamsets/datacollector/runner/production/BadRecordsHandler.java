@@ -78,8 +78,9 @@ public class BadRecordsHandler {
           // Error stage can't generate error records
           null,
           // And also can't generate events
+          null,
+          // Doesn't yet suport user defined metrics
           null
-          // Doesn't yet support user defined metrics
       );
     }
   }

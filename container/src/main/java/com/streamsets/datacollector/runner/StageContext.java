@@ -58,9 +58,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StageContext extends ProtoContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context {
+public class StageContext extends ProtoContext implements
+    Source.Context, PushSource.Context, Target.Context, Processor.Context {
   private static final String JOB_ID = "JOB_ID";
-
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final Stage.UserContext userContext;
@@ -71,6 +71,7 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
   private ErrorSink errorSink;
   private EventSink eventSink;
   private ProcessedSink processedSink;
+  private SourceResponseSink sourceResponseSink;
   private long lastBatchTime;
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
@@ -326,6 +327,10 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
     processedSink = sink;
   }
 
+  public void setSourceResponseSink(SourceResponseSink sourceResponseSink) {
+    this.sourceResponseSink = sourceResponseSink;
+  }
+
   ReportErrorDelegate reportErrorDelegate;
   public void setReportErrorDelegate(ReportErrorDelegate delegate) {
     this.reportErrorDelegate = delegate;
@@ -486,6 +491,11 @@ public class StageContext extends ProtoContext implements Source.Context, PushSo
       recordImpl.setInitialRecord(false);
     }
     eventSink.addEvent(stageInfo.getInstanceName(), recordImpl);
+  }
+
+  @Override
+  public void toSourceResponse(Record record) {
+    sourceResponseSink.addResponse(record);
   }
 
   @Override

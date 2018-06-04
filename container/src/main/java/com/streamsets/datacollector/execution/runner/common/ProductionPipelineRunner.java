@@ -58,6 +58,7 @@ import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.ProcessedSink;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
+import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
@@ -346,7 +347,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
       "Invalid lifecycle event stage type: " + stageRuntime.getDefinition().getType()
     );
-    stageRuntime.execute(null, 1000, batch, null, errorSink, new EventSink(), new ProcessedSink());
+    stageRuntime.execute(null, 1000, batch, null, errorSink, new EventSink(), new ProcessedSink(), new SourceResponseSink());
 
     // Pipeline lifecycle stage generating error record is fatal error
     if(!errorSink.getErrorRecords().isEmpty()) {

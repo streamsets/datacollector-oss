@@ -161,11 +161,17 @@ public class StageRuntime implements PushSourceContextDelegate {
     this.context = context;
   }
 
-  public void setSinks(ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) {
+  public void setSinks(
+      ErrorSink errorSink,
+      EventSink eventSink,
+      ProcessedSink processedSink,
+      SourceResponseSink sourceResponseSink
+  ) {
     context.setReportErrorDelegate(reportErrorDelegate == null ? errorSink : reportErrorDelegate);
     context.setErrorSink(errorSink);
     context.setEventSink(eventSink);
     context.setProcessedSink(processedSink);
+    context.setSourceResponseSink(sourceResponseSink);
   }
 
   @SuppressWarnings("unchecked")
@@ -203,11 +209,17 @@ public class StageRuntime implements PushSourceContextDelegate {
     return issues;
   }
 
-  String execute(Callable<String> callable, ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) throws StageException {
+  String execute(
+      Callable<String> callable,
+      ErrorSink errorSink,
+      EventSink eventSink,
+      ProcessedSink processedSink,
+      SourceResponseSink sourceResponseSink
+  ) throws StageException {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       context.setPushSourceContextDelegate(this);
-      setSinks(errorSink, eventSink, processedSink);
+      setSinks(errorSink, eventSink, processedSink, sourceResponseSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
 
       try {
@@ -226,7 +238,7 @@ public class StageRuntime implements PushSourceContextDelegate {
       }
 
     } finally {
-      setSinks(null, null, null);
+      setSinks(null, null, null, null);
       Thread.currentThread().setContextClassLoader(mainClassLoader);
     }
   }
@@ -245,7 +257,7 @@ public class StageRuntime implements PushSourceContextDelegate {
         }
       };
 
-      execute(callable, null, null, null);
+      execute(callable, null, null, null, null);
   }
 
   public String execute(
@@ -255,7 +267,8 @@ public class StageRuntime implements PushSourceContextDelegate {
       final BatchMaker batchMaker,
       ErrorSink errorSink,
       EventSink eventSink,
-      ProcessedSink processedSink
+      ProcessedSink processedSink,
+      SourceResponseSink sourceResponseSink
   ) throws StageException {
     Callable<String> callable = () -> {
       String newOffset = null;
@@ -276,14 +289,14 @@ public class StageRuntime implements PushSourceContextDelegate {
       return newOffset;
     };
 
-    return execute(callable, errorSink, eventSink, processedSink);
+    return execute(callable, errorSink, eventSink, processedSink, sourceResponseSink);
   }
 
   public void destroy(ErrorSink errorSink, EventSink eventSink, ProcessedSink processedSink) {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
 
     try {
-      setSinks(errorSink, eventSink, processedSink);
+      setSinks(errorSink, eventSink, processedSink, null);
 
       // Firstly destroy stage itself
       LambdaUtil.withClassLoader(
@@ -306,7 +319,7 @@ public class StageRuntime implements PushSourceContextDelegate {
       // Do not eventSink and errorSink to null when in preview mode AND current thread
       // is different from the one executing stages because stages might send error to errorSink.
       if (!context.isPreview() || runnerThread == (Thread.currentThread().getId())) {
-        setSinks(null, null, null);
+        setSinks(null, null, null,null);
       }
 
       // We release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)

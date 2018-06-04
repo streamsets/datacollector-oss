@@ -47,6 +47,7 @@ public class FullPipeBatch implements PipeBatch {
   private final ErrorSink errorSink;
   private final EventSink eventSink;
   private final ProcessedSink processedSink;
+  private final SourceResponseSink sourceResponseSink;
   private String newOffset;
   private int inputRecords;
   private int outputRecords;
@@ -62,6 +63,7 @@ public class FullPipeBatch implements PipeBatch {
     errorSink = new ErrorSink();
     eventSink = new EventSink();
     processedSink = new ProcessedSink();
+    sourceResponseSink = new SourceResponseSink();
   }
 
   @VisibleForTesting
@@ -284,6 +286,11 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public ProcessedSink getProcessedSink() {
     return processedSink;
+  }
+
+  @Override
+  public SourceResponseSink getSourceResponseSink() {
+    return sourceResponseSink;
   }
 
   @Override

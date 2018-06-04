@@ -22,6 +22,7 @@ import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.ProcessedSink;
+import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.pipeline.api.Record;
@@ -38,6 +39,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   private final ErrorSink errorSink;
   private final EventSink eventSink;
   private final ProcessedSink processedSink;
+  private final SourceResponseSink sourceResponseSink;
 
   public StagePreviewPipeBatch(String instanceName, List<Record> inputRecords) {
     this.instanceName = instanceName;
@@ -46,6 +48,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
     errorSink = new ErrorSink();
     eventSink = new EventSink();
     processedSink = new ProcessedSink();
+    sourceResponseSink = new SourceResponseSink();
   }
 
   @Override
@@ -115,6 +118,11 @@ public class StagePreviewPipeBatch implements PipeBatch {
   @Override
   public ProcessedSink getProcessedSink() {
     return processedSink;
+  }
+
+  @Override
+  public SourceResponseSink getSourceResponseSink() {
+    return sourceResponseSink;
   }
 
   @Override

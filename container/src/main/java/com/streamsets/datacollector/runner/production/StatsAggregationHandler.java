@@ -54,8 +54,9 @@ public class StatsAggregationHandler {
           // Stats stage can't generate error records
           null,
           // And also can't generate events
-          null
+          null,
           // Doesn't support user defined metrics
+          null
       );
     }
   }

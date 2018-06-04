@@ -87,7 +87,7 @@ public class TestStageRuntime {
     runtime.execute(() -> {
       Assert.assertFalse(CreateByRef.isByRef());
       return null;
-    }, null, null, null);
+    }, null, null, null, null);
 
     // by value, preview
     Mockito.when(def.getRecordsByRef()).thenReturn(false);
@@ -95,7 +95,7 @@ public class TestStageRuntime {
     runtime.execute(() -> {
       Assert.assertFalse(CreateByRef.isByRef());
       return null;
-    }, null, null, null);
+    }, null, null, null, null);
 
     // by ref, no preview
     Mockito.when(def.getRecordsByRef()).thenReturn(true);
@@ -103,7 +103,7 @@ public class TestStageRuntime {
     runtime.execute(() -> {
       Assert.assertTrue(CreateByRef.isByRef());
       return null;
-    }, null, null, null);
+    }, null, null, null, null);
 
     // by ref, preview
     Mockito.when(def.getRecordsByRef()).thenReturn(true);
@@ -111,7 +111,7 @@ public class TestStageRuntime {
     runtime.execute(() -> {
       Assert.assertFalse(CreateByRef.isByRef());
       return null;
-    }, null, null, null);
+    }, null, null, null, null);
   }
 
   @Test
