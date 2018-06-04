@@ -251,7 +251,6 @@
             </exclusions>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
@@ -264,7 +263,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
+
 
         <!--
         <dependency>
@@ -725,9 +724,7 @@
                                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
                                 -->
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
-                                <!--
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
-                                -->
                                 <!-- Tests are failing compilation -->
                                 <!--                                <source>${basedir}/../hbase-protolib/src/test/java</source> -->
                                 <!--                                <source>${basedir}/../hive-protolib/src/test/java</source> -->
@@ -748,11 +745,9 @@
                         </goals>
                         <configuration>
                             <resources>
-                                <!--
                                 <resource>
                                     <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
                                 </resource>
-                                -->
                                 <!--
                                 <resource>
                                     <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
