@@ -84,6 +84,23 @@ public class TestSQLParser {
                   }
                 }
             },
+            {
+                " update \"SYS\".\"MANYCOLS\" A set A.\"SALARY\" = '1998.483' " +
+                    "where A.\"ID\" = '1' and A.\"NAME\" IS NULL and" +
+                    " A.\"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+                    "A.\"SALARY\" = '1332.322' and A.\"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')" +
+                    " and A.rowid = 'Addajkdajkd'",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("SALARY", "1998.483");
+                    put("NAME", null);
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS')");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+                    put("ROWID", "Addajkdajkd");
+                  }
+                }
+            },
             {" update \"SYS\".\"MANYCOLS\" set \"SALARY=\" = '1998.483' " +
                 "where \"ID\" = '1' and \"NAME\" = '=sdc' and" +
                 " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
@@ -139,6 +156,21 @@ public class TestSQLParser {
                 "delete from \"SYS\".\"MANYCOLS\" where \"ID\" = '10' and \"NAME\" = 'stream' and " +
                     "\"HIREDATE\" = TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS') and " +
                     "\"SALARY\" = '10000.1' and \"LASTLOGIN\" IS NULL and ROWID = 'AASDDxs'\n",
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "10");
+                    put("NAME", "stream");
+                    put("HIREDATE", "TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS')");
+                    put("SALARY", "10000.1");
+                    put("LASTLOGIN", null);
+                    put("ROWID", "AASDDxs");
+                  }
+                }
+            },
+            {
+                "delete from \"SYS\".\"MANYCOLS\" A where A.\"ID\" = '10' and A.\"NAME\" = 'stream' and " +
+                    "A.\"HIREDATE\" = TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS') and " +
+                    "A.\"SALARY\" = '10000.1' and A.\"LASTLOGIN\" IS NULL and A.ROWID = 'AASDDxs'\n",
                 new HashMap<String, String>() {
                   {
                     put("ID", "10");

@@ -50,9 +50,10 @@ public class SQLParser extends BaseParser<Object> {
   }
 
   Rule Escaped(String s) {
-    return ZeroOrMore(FirstOf(
-        Sequence(String("'"), s),
-        Sequence(TestNot(AnyOf(s)), ANY)
+    return ZeroOrMore(
+        FirstOf(
+            Sequence(String("'"), s),
+            Sequence(TestNot(AnyOf(s)), ANY)
         )
     ).suppressSubnodes();
   }
@@ -68,6 +69,18 @@ public class SQLParser extends BaseParser<Object> {
   Rule EmptyFunc() {
     return Sequence(FuncName(), Ch('('), Ch(')'));
   }
+
+  Rule TableAliasColname() {
+    return FirstOf(
+        Sequence(
+            OneOrMore(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'))),
+            Ch('.'),
+            ColumnName()
+        ),
+        ColumnName()
+    );
+  }
+
   Rule FuncName() {
     return OneOrMore(FirstOf(
         CharRange('0', '9'),
@@ -125,7 +138,7 @@ public class SQLParser extends BaseParser<Object> {
   Rule ColumnNameValue() {
     return Sequence(
         WhiteSpace(),
-        ColumnName(),
+        TableAliasColname(),
         WhiteSpace(),
         FirstOf(Ch('='), IgnoreCase("IS")),
         WhiteSpace(),
@@ -152,6 +165,17 @@ public class SQLParser extends BaseParser<Object> {
     );
   }
 
+  Rule TableAlias() {
+    return ZeroOrMore(
+        Sequence(
+            WhiteSpace(),
+            Sequence(TestNot(IgnoreCase("SET")), TestNot(IgnoreCase("WHERE")), TestNot('(')),
+            OneOrMore(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'))),
+            WhiteSpace()
+        )
+    );
+  }
+
   Rule Update() {
     return Sequence(
         WhiteSpace(),
@@ -160,6 +184,7 @@ public class SQLParser extends BaseParser<Object> {
         Schema(),
         Ch('.'),
         Table(),
+        TableAlias(),
         WhiteSpace(),
         IgnoreCase("SET"),
         ColumnNameValue(),
@@ -179,6 +204,7 @@ public class SQLParser extends BaseParser<Object> {
         Schema(),
         Ch('.'),
         Table(),
+        TableAlias(),
         WhiteSpace(),
         WhereClause()
     );
