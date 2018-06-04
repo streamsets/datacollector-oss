@@ -96,7 +96,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "UTF-8",
     label = "Charset",
     displayPosition = 1000,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
   )
@@ -113,7 +113,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "CSV",
     label = "Delimiter Format",
     displayPosition = 310,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -126,7 +126,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "NO_HEADER",
     label = "Header Line",
     displayPosition = 320,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -140,7 +140,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Replace New Line Characters",
     description = "Replaces new lines characters with configured string constant",
     displayPosition = 330,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -153,7 +153,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "New Line Character Replacement",
     description = "String that will be used to substitute new line characters. Using empty string will remove the new line characters.",
     displayPosition = 335,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "csvReplaceNewLines",
     triggeredByValue = "true"
   )
@@ -165,7 +165,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "|",
     label = "Delimiter Character",
     displayPosition = 340,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -177,7 +177,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "\\",
     label = "Escape Character",
     displayPosition = 350,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -189,7 +189,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "\"",
     label = "Quote Character",
     displayPosition = 360,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -203,7 +203,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "MULTIPLE_OBJECTS",
     label = "JSON Content",
     displayPosition = 370,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "JSON"
   )
@@ -219,7 +219,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Text Field Path",
     description = "String field that will be written to the destination",
     displayPosition = 380,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
   )
@@ -234,7 +234,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Record Separator",
       description = "Value to insert in output between records, defaults to newline",
       displayPosition = 385,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT",
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -247,7 +247,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     defaultValue = "ERROR",
     label = "On Missing Field",
     displayPosition = 387,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
   )
@@ -261,7 +261,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Insert Record Separator If No Text",
     description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
     displayPosition = 390,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependencies = {
       @Dependency(configName = "textFieldMissingAction", triggeredByValues = "IGNORE")
     }
@@ -290,7 +290,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       description = "Overrides the schema included in the data (if any). Optionally use the " +
           "runtime:loadResource function to use a schema stored in a file",
       displayPosition = 410,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "INLINE")
@@ -413,7 +413,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Include Schema",
       description = "Includes the Avro schema in the output",
       displayPosition = 470,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO")
       }
@@ -426,7 +426,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       defaultValue = "NULL",
       label = "Avro Compression Codec",
       displayPosition = 480,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO"
   )
@@ -442,7 +442,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Binary Field Path",
     description = "Field to write data to Kafka",
     displayPosition = 420,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "BINARY"
   )
@@ -458,7 +458,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Protobuf Descriptor File",
     description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
     displayPosition = 430,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
   )
@@ -471,7 +471,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     description = "Fully Qualified Message Type name. Use format <packageName>.<messageTypeName>",
     label = "Message Type",
     displayPosition = 440,
-    group = "DATA_FORMAT",
+    group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
   )
@@ -487,7 +487,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       description = "File Name Expression",
       label = "File Name Expression",
       displayPosition = 450,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -500,7 +500,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "File Exists",
       description = "The action to perform when the file already exists.",
       displayPosition = 470,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -514,7 +514,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Include Checksum in Events",
       description = "Includes checksum information in whole file transfer events.",
       displayPosition = 480,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -527,7 +527,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Checksum Algorithm",
       description = "The checksum algorithm for calculating checksum for the file.",
       displayPosition = 490,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependsOn = "includeChecksumInTheEvents",
       triggeredByValue = "true"
   )
@@ -543,7 +543,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Pretty Format",
       description = "Format XML with human readable indentation (requires more bytes on output).",
       displayPosition = 500,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
       }
@@ -557,7 +557,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Validate Schema",
       description = "Validate that resulting record corresponds to given schema(s).",
       displayPosition = 510,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
       }
@@ -570,7 +570,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "XML Schema",
       description = "XML schema that should be used to validate serialized record.",
       displayPosition = 520,
-      group = "DATA_FORMAT",
+      group = "#0",
       dependencies = {
           @Dependency(configName = "xmlValidateSchema", triggeredByValues = "true")
     }

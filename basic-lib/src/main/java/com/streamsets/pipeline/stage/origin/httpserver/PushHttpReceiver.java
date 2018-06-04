@@ -44,6 +44,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PushHttpReceiver implements HttpReceiver {
   private static final String PATH_HEADER = "path";
   private static final String QUERY_STRING_HEADER = "queryString";
+  public static final String METHOD_HEADER = "method";
   static final String MAXREQUEST_SYS_PROP = "com.streamsets.httpserverpushsource.maxrequest.mb";
 
   private static int getMaxRequestSizeMBLimit() {
@@ -58,7 +59,11 @@ public class PushHttpReceiver implements HttpReceiver {
   private DataParserFactory parserFactory;
   private AtomicLong counter = new AtomicLong();
 
-  PushHttpReceiver(HttpConfigs httpConfigs, int maxRequestSizeMB, DataParserFormatConfig dataParserFormatConfig) {
+  public PushHttpReceiver(
+      HttpConfigs httpConfigs,
+      int maxRequestSizeMB,
+      DataParserFormatConfig dataParserFormatConfig
+  ) {
     this.httpConfigs = httpConfigs;
     this.maxRequestSizeMB = maxRequestSizeMB;
     this.dataParserFormatConfig = dataParserFormatConfig;
@@ -117,27 +122,30 @@ public class PushHttpReceiver implements HttpReceiver {
     return maxRequestSize;
   }
 
-  InputStream createBoundInputStream(InputStream is) throws IOException {
+  protected InputStream createBoundInputStream(InputStream is) throws IOException {
     return new OverrunInputStream(is, getMaxRequestSize(), true);
   }
   @Override
-  public boolean process(HttpServletRequest req, InputStream is) throws IOException {
+  public boolean process(HttpServletRequest req, InputStream is, HttpServletResponse resp) throws IOException {
     // Capping the size of the request based on configuration to avoid OOME
     is = createBoundInputStream(is);
 
     // Create new batch (we create it up front for metrics gathering purposes
     BatchContext batchContext = getContext().startBatch();
 
-    Map<String, String> customHeaderAttributes = new HashMap<>();
-    customHeaderAttributes.put(PATH_HEADER, StringUtils.stripToEmpty(req.getServletPath()));
-    customHeaderAttributes.put(QUERY_STRING_HEADER, StringUtils.stripToEmpty(req.getQueryString()));
-    Enumeration<String> headerNames = req.getHeaderNames();
-    if (headerNames != null) {
-      while (headerNames.hasMoreElements()) {
-        String headerName = headerNames.nextElement();
-        customHeaderAttributes.put(headerName, req.getHeader(headerName));
-      }
+    List<Record> records = parseRequestPayload(req, is);
+
+    // dispatch records to batch
+    for (Record record : records) {
+      batchContext.getBatchMaker().addRecord(record);
     }
+
+    // Send batch to the rest of the pipeline for further processing
+    return getContext().processBatch(batchContext);
+  }
+
+  protected List<Record> parseRequestPayload(HttpServletRequest req, InputStream is) throws IOException {
+    Map<String, String> customHeaderAttributes = getCustomHeaderAttributes(req);
 
     // parse request into records
     List<Record> records = new ArrayList<>();
@@ -154,13 +162,23 @@ public class PushHttpReceiver implements HttpReceiver {
       throw new IOException(ex);
     }
 
-    // dispatch records to batch
-    for (Record record : records) {
-      batchContext.getBatchMaker().addRecord(record);
+    return records;
+  }
+
+  protected Map<String, String> getCustomHeaderAttributes(HttpServletRequest req) {
+    Map<String, String> customHeaderAttributes = new HashMap<>();
+    customHeaderAttributes.put(PATH_HEADER, StringUtils.stripToEmpty(req.getServletPath()));
+    customHeaderAttributes.put(QUERY_STRING_HEADER, StringUtils.stripToEmpty(req.getQueryString()));
+    customHeaderAttributes.put(METHOD_HEADER, StringUtils.stripToEmpty(req.getMethod()));
+    Enumeration<String> headerNames = req.getHeaderNames();
+    if (headerNames != null) {
+      while (headerNames.hasMoreElements()) {
+        String headerName = headerNames.nextElement();
+        customHeaderAttributes.put(headerName, req.getHeader(headerName));
+      }
     }
 
-    // Send batch to the rest of the pipeline for further processing
-    return getContext().processBatch(batchContext);
+    return customHeaderAttributes;
   }
 
 }

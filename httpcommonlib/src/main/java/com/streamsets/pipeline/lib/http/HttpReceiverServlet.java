@@ -42,8 +42,8 @@ public class HttpReceiverServlet extends HttpServlet {
   private final HttpReceiver receiver;
   private final BlockingQueue<Exception> errorQueue;
   private final Meter invalidRequestMeter;
-  private final Meter errorRequestMeter;
-  private final Meter requestMeter;
+  protected final Meter errorRequestMeter;
+  protected final Meter requestMeter;
   private final Timer requestTimer;
   private volatile boolean shuttingDown;
 
@@ -56,12 +56,12 @@ public class HttpReceiverServlet extends HttpServlet {
     requestTimer = context.createTimer("requests");
   }
 
-  HttpReceiver getReceiver() {
+  protected HttpReceiver getReceiver() {
     return receiver;
   }
 
   @VisibleForTesting
-  boolean validateAppId(HttpServletRequest req, HttpServletResponse res)
+  protected boolean validateAppId(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
     boolean valid = false;
     String ourAppId = null;
@@ -156,7 +156,7 @@ public class HttpReceiverServlet extends HttpServlet {
             }
           }
           LOG.debug("Processing request from '{}'", requestor);
-          if (getReceiver().process(req, is)) {
+          if (getReceiver().process(req, is, resp)) {
             resp.setStatus(HttpServletResponse.SC_OK);
             requestMeter.mark();
           } else {
@@ -183,7 +183,7 @@ public class HttpReceiverServlet extends HttpServlet {
     return shuttingDown;
   }
 
-  void setShuttingDown() {
+  public void setShuttingDown() {
     shuttingDown = true;
   }
 

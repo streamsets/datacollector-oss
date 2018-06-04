@@ -52,7 +52,7 @@ public class TestHttpReceiver {
     List<byte[]> fragments = new ArrayList<>();
     Mockito.when(fragmenter.fragment(Mockito.eq(is), Mockito.eq(1), Mockito.eq(2))).thenReturn(fragments);
 
-    receiver.process(req, is);
+    receiver.process(req, is, null);
     Mockito.verify(fragmenter, Mockito.times(1)).fragment(Mockito.eq(is), Mockito.eq(1), Mockito.eq(2));
     Mockito.verify(writer, Mockito.times(1)).write(Mockito.eq(fragments));
 

@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.BaseStage;
+import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.http.HttpReceiverServer;
@@ -33,7 +34,7 @@ public abstract class AbstractHttpServerProtoSource<R extends HttpReceiver, C ex
   private final HttpConfigs httpConfigs;
 
   private R receiver;
-  protected HttpReceiverServer server;
+  protected AbstractHttpReceiverServer server;
 
   private BlockingQueue<Exception> errorQueue;
   private List<Exception> errorList;
@@ -57,10 +58,14 @@ public abstract class AbstractHttpServerProtoSource<R extends HttpReceiver, C ex
     if (issues.isEmpty()) {
       errorQueue = new ArrayBlockingQueue<>(100);
       errorList = new ArrayList<>(100);
-      server = new HttpReceiverServer(httpConfigs, receiver, getErrorQueue());
+      server = getHttpReceiver();
       issues.addAll(server.init(getContext()));
     }
     return issues;
+  }
+
+  protected AbstractHttpReceiverServer getHttpReceiver() {
+    return  new HttpReceiverServer(httpConfigs, receiver, getErrorQueue());
   }
 
   @Override
@@ -76,7 +81,7 @@ public abstract class AbstractHttpServerProtoSource<R extends HttpReceiver, C ex
   }
 
   @VisibleForTesting
-  BlockingQueue<Exception> getErrorQueue() {
+  protected BlockingQueue<Exception> getErrorQueue() {
     return errorQueue;
   }
 

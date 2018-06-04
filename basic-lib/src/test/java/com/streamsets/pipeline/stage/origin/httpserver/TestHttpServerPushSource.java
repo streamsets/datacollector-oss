@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.httpserver;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
+import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConstants;
 import com.streamsets.pipeline.lib.http.HttpReceiverServer;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
@@ -31,6 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.awaitility.Duration;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -47,7 +49,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import static org.awaitility.Awaitility.await;
-import org.mockito.internal.util.reflection.Whitebox;
 
 public class TestHttpServerPushSource {
 
@@ -218,7 +219,7 @@ public class TestHttpServerPushSource {
     }
   }
 
-  public static Callable<Boolean> isServerRunning(HttpReceiverServer httpServer ) {
+  public static Callable<Boolean> isServerRunning(AbstractHttpReceiverServer httpServer ) {
     return new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {

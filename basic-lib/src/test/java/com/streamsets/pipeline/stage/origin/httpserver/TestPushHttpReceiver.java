@@ -139,7 +139,7 @@ public class TestPushHttpReceiver {
 
     Mockito.doReturn(parserFactory).when(receiver).getParserFactory();
 
-    receiver.process(Mockito.mock(HttpServletRequest.class), is);
+    receiver.process(Mockito.mock(HttpServletRequest.class), is, null);
 
     Mockito.verify(receiver, Mockito.times(1)).createBoundInputStream(Mockito.eq(is));
     Mockito.verify(receiver, Mockito.times(1)).getMaxRequestSize();

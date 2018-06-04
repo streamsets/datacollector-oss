@@ -38,6 +38,6 @@ public interface HttpReceiver {
 
   boolean validate(HttpServletRequest req, HttpServletResponse res) throws IOException;
 
-  boolean process(HttpServletRequest req, InputStream is) throws IOException;
+  boolean process(HttpServletRequest req, InputStream is, HttpServletResponse resp) throws IOException;
 
 }

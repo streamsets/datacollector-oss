@@ -88,7 +88,7 @@ public class HttpReceiverWithFragmenterWriter implements HttpReceiver {
   }
 
   @Override
-  public boolean process(HttpServletRequest req, InputStream is) throws IOException {
+  public boolean process(HttpServletRequest req, InputStream is, HttpServletResponse resp) throws IOException {
     String requestor = req.getRemoteAddr() + ":" + req.getRemotePort();
     LOG.debug("Processing request from '{}'", requestor);
     List<byte[]> fragments =

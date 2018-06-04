@@ -129,7 +129,7 @@ public class TestReceiverServer {
       Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
       Mockito.when(receiver.validate(Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)))
           .thenReturn(true);
-      Mockito.when(receiver.process(Mockito.any(), Mockito.any())).thenReturn(true);
+      Mockito.when(receiver.process(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
       conn = (HttpURLConnection) new URL("http://localhost:" + port + "/path").openConnection();
       conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "id");
       conn.setDoOutput(true);
@@ -139,14 +139,14 @@ public class TestReceiverServer {
       Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.any(HttpServletRequest.class), Mockito.any
           (HttpServletResponse.class));
       Mockito.verify(receiver, Mockito.times(1)).process(Mockito.any(HttpServletRequest.class), Mockito.any
-          (InputStream.class));
+          (InputStream.class), Mockito.any());
 
       // valid put
       Mockito.reset(receiver);
       Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
       Mockito.when(receiver.validate(Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)))
           .thenReturn(true);
-      Mockito.when(receiver.process(Mockito.any(), Mockito.any())).thenReturn(true);
+      Mockito.when(receiver.process(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
       conn = (HttpURLConnection) new URL("http://localhost:" + port + "/path").openConnection();
       conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "id");
       conn.setDoOutput(true);
@@ -156,7 +156,7 @@ public class TestReceiverServer {
       Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.any(HttpServletRequest.class), Mockito.any
           (HttpServletResponse.class));
       Mockito.verify(receiver, Mockito.times(1)).process(Mockito.any(HttpServletRequest.class), Mockito.any
-          (InputStream.class));
+          (InputStream.class), Mockito.any());
 
       // invalid post
       Mockito.reset(receiver);
@@ -172,7 +172,7 @@ public class TestReceiverServer {
       Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.any(HttpServletRequest.class), Mockito.any
           (HttpServletResponse.class));
       Mockito.verify(receiver, Mockito.times(0)).process(Mockito.any(HttpServletRequest.class), Mockito.any
-          (InputStream.class));
+          (InputStream.class), Mockito.any());
     } finally {
       server.destroy();
     }
