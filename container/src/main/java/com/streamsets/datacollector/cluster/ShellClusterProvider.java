@@ -23,6 +23,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.SecurityConfiguration;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
@@ -64,15 +65,17 @@ public class ShellClusterProvider extends BaseClusterProvider {
   private static final String MAPR_UNAME_PWD_SECURITY_ENABLED_KEY = "maprlogin.password.enabled";
 
   private final File clusterManagerScript;
+  private StageLibraryTask stageLibraryTask;
   private final YARNStatusParser yarnStatusParser;
   private final MesosStatusParser mesosStatusParser;
 
   public ShellClusterProvider(
       RuntimeInfo runtimeInfo,
       @Nullable SecurityConfiguration securityConfiguration,
-      Configuration conf
+      Configuration conf,
+      StageLibraryTask stageLibraryTask
   ) {
-    super(runtimeInfo, securityConfiguration, conf);
+    super(runtimeInfo, securityConfiguration, conf, stageLibraryTask);
     clusterManagerScript = new File(runtimeInfo.getLibexecDir(), "_cluster-manager");
     Utils.checkState(
         clusterManagerScript.isFile(),
@@ -84,6 +87,7 @@ public class ShellClusterProvider extends BaseClusterProvider {
     );
     this.yarnStatusParser = new YARNStatusParser();
     this.mesosStatusParser = new MesosStatusParser();
+
   }
 
   protected SystemProcessFactory getSystemProcessFactory() {
@@ -125,8 +129,14 @@ public class ShellClusterProvider extends BaseClusterProvider {
   }
 
   @Override
-  public void killPipeline(File tempDir, String appId, PipelineConfiguration pipelineConfiguration)
+  public void killPipeline(
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  )
       throws TimeoutException, IOException {
+    String appId = applicationState.getAppId();
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
     addKerberosConfiguration(environment);
@@ -154,16 +164,18 @@ public class ShellClusterProvider extends BaseClusterProvider {
 
   @Override
   public ClusterPipelineStatus getStatus(
-      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration, PipelineConfigBean pipelineConfigBean
   ) throws TimeoutException, IOException {
-
+    String appId = applicationState.getAppId();
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
     addKerberosConfiguration(environment);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(clusterManagerScript.getAbsolutePath());
     args.add("status");
-    args.add(appId);
+    args.add(applicationState.getAppId());
     ExecutionMode executionMode = PipelineBeanCreator.get()
                                                      .getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
@@ -175,11 +187,12 @@ public class ShellClusterProvider extends BaseClusterProvider {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
         logOutput(appId, process);
-        throw new TimeoutException(errorString("YARN status command for {} timed out.", appId));
+        throw new TimeoutException(errorString("YARN status command for {} timed out.", applicationState.getAppId()));
       }
       if (process.exitValue() != 0) {
         logOutput(appId, process);
-        throw new IllegalStateException(errorString("Status command for {} failed with exit code {}.", appId,
+        throw new IllegalStateException(errorString("Status command for {} failed with exit code {}.",
+            applicationState.getAppId(),
             process.exitValue()));
       }
       logOutput(appId, process);
@@ -195,6 +208,16 @@ public class ShellClusterProvider extends BaseClusterProvider {
     }
   }
 
+  @Override
+  public void cleanUp(
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws IOException {
+    // NO-OP
+  }
+
+  @Override
   protected ApplicationState startPipelineExecute(
       File outputDir,
       Map<String, String> sourceInfo,
@@ -212,7 +235,8 @@ public class ShellClusterProvider extends BaseClusterProvider {
       File log4jProperties,
       String mesosHostingJarDir,
       String mesosURL,
-      String clusterBootstrapApiJar, List<Issue> errors
+      String clusterBootstrapApiJar,
+      List<Issue> errors
   ) throws IOException {
     ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<>());
     Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
@@ -300,7 +324,7 @@ public class ShellClusterProvider extends BaseClusterProvider {
           String appId = applicationIds.iterator().next();
           logOutput(appId, process);
           ApplicationState applicationState = new ApplicationState();
-          applicationState.setId(appId);
+          applicationState.setAppId(appId);
           applicationState.setSdcToken(clusterToken);
           if (mesosHostingJarDir != null) {
             applicationState.setDirId(mesosHostingJarDir);

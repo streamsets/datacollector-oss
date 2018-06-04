@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -37,11 +38,14 @@ public class MockClusterProvider implements ClusterProvider {
   public boolean isRunningCommandFails = false;
   public boolean isSucceeded = false;
   public boolean isRunning = true;
-  public String appId = null;
+  public String appId = "appId";
 
   @Override
   public void killPipeline(
-      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
   )
     throws TimeoutException {
     LOG.info("killPipeline");
@@ -52,7 +56,9 @@ public class MockClusterProvider implements ClusterProvider {
 
   @Override
   public ClusterPipelineStatus getStatus(
-      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration, PipelineConfigBean pipelineConfigBean
   ) throws TimeoutException {
     LOG.info("isRunning");
     if (isRunningTimesOut) {
@@ -92,7 +98,16 @@ public class MockClusterProvider implements ClusterProvider {
       throw new TimeoutException();
     }
     ApplicationState applicationState = new ApplicationState();
-    applicationState.setId(appId);
+    applicationState.setAppId(appId);
     return applicationState;
+  }
+
+  @Override
+  public void cleanUp(
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws IOException {
+
   }
 }

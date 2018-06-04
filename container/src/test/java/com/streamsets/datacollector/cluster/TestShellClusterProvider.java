@@ -35,7 +35,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -52,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -194,7 +192,8 @@ public class TestShellClusterProvider {
     File f = new File(runtimeInfo.getConfigDir());
     Assert.assertTrue(f.mkdirs());
     Assert.assertTrue(configFile.createNewFile());
-    sparkProvider = Mockito.spy(new ShellClusterProvider(runtimeInfo, null, Mockito.mock(Configuration.class)));
+    sparkProvider = Mockito.spy(new ShellClusterProvider(runtimeInfo, null, Mockito.mock(Configuration.class),
+        stageLibrary));
     Mockito.doReturn(new MockSystemProcessFactory()).when(sparkProvider).getSystemProcessFactory();
 
     Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
@@ -271,7 +270,7 @@ public class TestShellClusterProvider {
             Collections.emptyList()
         ),
         null
-        ).getId());
+        ).getAppId());
   }
 
   @Test
@@ -317,7 +316,7 @@ public class TestShellClusterProvider {
             Collections.<Config>emptyList()
         ),
         null
-    ).getId());
+    ).getAppId());
     Assert.assertEquals(
         ShellClusterProvider.CLUSTER_TYPE_YARN,
       MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
@@ -372,7 +371,7 @@ public class TestShellClusterProvider {
         ),
         null
     );
-    Assert.assertNotNull(appState.getId());
+    Assert.assertNotNull(appState.getAppId());
     Assert.assertNotNull(appState.getDirId());
     Assert.assertEquals(
         ShellClusterProvider.CLUSTER_TYPE_MESOS,
@@ -429,7 +428,7 @@ public class TestShellClusterProvider {
             Collections.<Config>emptyList()
         ),
         null
-    ).getId());
+    ).getAppId());
     Assert.assertEquals(
         ShellClusterProvider.CLUSTER_TYPE_YARN,
         MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE)
@@ -493,7 +492,7 @@ public class TestShellClusterProvider {
             Collections.<Config>emptyList()
         ),
         null
-        ).getId());
+        ).getAppId());
     Assert.assertEquals(ShellClusterProvider.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/avro-1.7.7" +
@@ -530,7 +529,7 @@ public class TestShellClusterProvider {
               Collections.<Config>emptyList()
           ),
           null
-      ).getId();
+      ).getAppId();
       Assert.fail("Expected IO Exception");
     } catch (IOException ex) {
       Assert.assertTrue("Incorrect message: " + ex, ex.getMessage().contains("No valid credentials provided"));
@@ -563,7 +562,7 @@ public class TestShellClusterProvider {
             Collections.<Config>emptyList()
         ),
         null
-        ).getId());
+        ).getAppId());
       Assert.assertArrayEquals(
         new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
             "--executor-memory", "512m",
@@ -607,7 +606,7 @@ public class TestShellClusterProvider {
     conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "sdc/foohost");
 
     sparkProvider = Mockito.spy(new ShellClusterProvider(runtimeInfo, new SecurityConfiguration(runtimeInfo, conf),
-        conf));
+        conf, stageLibrary));
     Mockito.doReturn(new MockSystemProcessFactory()).when(sparkProvider).getSystemProcessFactory();
 
     Mockito.doReturn(ShellClusterProvider.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
@@ -637,7 +636,7 @@ public class TestShellClusterProvider {
             Collections.<Config>emptyList()
         ),
         null
-        ).getId());
+        ).getAppId());
     Assert.assertArrayEquals(
         new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
             "--executor-memory", "512m",

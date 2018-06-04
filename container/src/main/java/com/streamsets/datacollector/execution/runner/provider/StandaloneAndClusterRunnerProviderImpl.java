@@ -50,6 +50,7 @@ public class StandaloneAndClusterRunnerProviderImpl implements RunnerProvider {
       case CLUSTER_BATCH:
       case CLUSTER_YARN_STREAMING:
       case CLUSTER_MESOS_STREAMING:
+      case EMR_BATCH:
         objectGraph = objectGraph.plus(ClusterRunnerInjectorModule.class);
         modules.add(new ClusterRunnerModule(name, rev, objectGraph));
         break;

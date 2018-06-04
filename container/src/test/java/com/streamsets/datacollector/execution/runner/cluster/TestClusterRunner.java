@@ -93,7 +93,7 @@ public class TestClusterRunner {
   private static final String REV = "0";
   private static final ApplicationState APPLICATION_STATE = new ApplicationState();
   static {
-    APPLICATION_STATE.setId(APPID);
+    APPLICATION_STATE.setAppId(APPID);
   }
   private File tempDir;
   private File sparkManagerShell;
@@ -374,7 +374,8 @@ public class TestClusterRunner {
   public void testPipelineStatusStopped() throws Exception {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
-    Runner clusterRunner = createClusterRunner();
+    Runner clusterRunner = Mockito.spy(createClusterRunner());
+    Mockito.doReturn(Mockito.mock(PipelineConfiguration.class)).when(clusterRunner).getPipelineConfiguration();
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
@@ -393,24 +394,6 @@ public class TestClusterRunner {
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
-  }
-
-  @Test
-  public void testPipelineStatusStart() throws Exception {
-    setState(PipelineStatus.EDITED);
-    Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStart("admin", null);
-    Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
-    try {
-      clusterRunner.prepareForStart("admin", null);
-      Assert.fail("Expected exception but didn't get any");
-    } catch (PipelineRunnerException e) {
-      assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
-    } catch (Exception e) {
-      Assert.fail("Expected PipelineRunnerException but got " + e);
-    }
-    clusterRunner.start("admin");
-    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -448,13 +431,13 @@ public class TestClusterRunner {
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
-    assertEquals(APPID, appState.getId());
+    assertEquals(APPID, appState.getAppId());
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
-    assertNull(appState.getId());
+    assertNull(appState.getAppId());
   }
 
   @Test
@@ -613,6 +596,17 @@ public class TestClusterRunner {
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
+  }
+
+  @Test
+  public void testPipelineStatusStart() throws Exception {
+    setState(PipelineStatus.EDITED);
+    Runner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStart("admin", null);
+    Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
+
+    clusterRunner.start("admin");
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
   @Test

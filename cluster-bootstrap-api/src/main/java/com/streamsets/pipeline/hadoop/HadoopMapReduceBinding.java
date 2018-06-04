@@ -36,9 +36,9 @@ public class HadoopMapReduceBinding implements ClusterBinding {
   private Properties properties;
   private Job job;
   // JVM heap for map task
-  private static final String MAPREDUCE_JAVA_OPTS = "mapreduce.map.java.opts";
+  public static final String MAPREDUCE_JAVA_OPTS = "mapreduce.map.java.opts";
   // Total physical memory in MB for a map task
-  static final String MAPREDUCE_MAP_MEMORY_MB = "mapreduce.map.memory.mb";
+  public static final String MAPREDUCE_MAP_MEMORY_MB = "mapreduce.map.memory.mb";
 
   public HadoopMapReduceBinding(String[] args) {
     this.args = args;
@@ -94,7 +94,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
   }
 
   // visible for testing (can't annotate as can't depend on Guava)
-  static Integer getMapMemoryMb(String javaOpts, Configuration conf) {
+  public static Integer getMapMemoryMb(String javaOpts, Configuration conf) {
     String[] javaOptsArray = javaOpts.split(" ");
     Integer upperLimitMemory = null;
     for (String opts : javaOptsArray) {

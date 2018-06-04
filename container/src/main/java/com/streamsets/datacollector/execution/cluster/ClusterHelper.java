@@ -51,10 +51,10 @@ public class ClusterHelper {
   private Configuration configuration;
 
   public ClusterHelper(RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration,
-                       File tempDir, Configuration conf) {
+                       File tempDir, Configuration conf, StageLibraryTask stageLibraryTask) {
     this(
         new SystemProcessFactory(),
-        new ClusterProviderSelector(runtimeInfo, securityConfiguration, conf),
+        new ClusterProviderSelector(runtimeInfo, securityConfiguration, conf, stageLibraryTask),
         tempDir,
         null,
         null,
@@ -120,18 +120,30 @@ public class ClusterHelper {
     );
   }
 
-  public void kill(final ApplicationState applicationState, final PipelineConfiguration pipelineConfiguration)
+  public void kill(
+      final ApplicationState applicationState,
+      final PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  )
     throws TimeoutException, IOException {
-    clusterProvider.killPipeline(
-        tempDir, applicationState.getId(),
-      pipelineConfiguration);
+    clusterProvider.killPipeline(tempDir, applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 
-  public ClusterPipelineStatus getStatus(final ApplicationState applicationState,
-    final PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
-    return clusterProvider.getStatus(
-        tempDir, applicationState.getId(),
-      pipelineConfiguration);
+  public void cleanUp(
+      final ApplicationState applicationState,
+      final PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  )
+      throws IOException {
+    clusterProvider.cleanUp(applicationState, pipelineConfiguration, pipelineConfigBean);
+  }
+
+  public ClusterPipelineStatus getStatus(
+      final ApplicationState applicationState,
+      final PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws TimeoutException, IOException {
+    return clusterProvider.getStatus(tempDir, applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 
   private static String errorString(String template, Object... args) {

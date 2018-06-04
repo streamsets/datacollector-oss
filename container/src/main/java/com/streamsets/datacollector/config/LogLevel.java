@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.cluster;
+package com.streamsets.datacollector.config;
 
-public enum ClusterPipelineStatus {
-  STARTING("STARTING"),
-  RUNNING("RUNNING"),
-  SUCCEEDED("SUCCEEDED"),
-  FAILED("FAILED"),
-  KILLED("KILLED");
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-  private final String state;
+@GenerateResourceBundle
+public enum LogLevel implements Label {
 
-  ClusterPipelineStatus(String state) {
-    this.state = state;
+  OFF("OFF"),
+  FATAL("FATAL"),
+  ERROR("ERROR"),
+  WARN("WARN"),
+  INFO("INFO"),
+  DEBUG("DEBUG"),
+  TRACE("TRACE");
+
+
+  private final String label;
+
+  LogLevel(String label) {
+    this.label = label;
   }
 
-  public String getState() {
-    return state;
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

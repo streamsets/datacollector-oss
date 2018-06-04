@@ -16,17 +16,20 @@
 package com.streamsets.datacollector.cluster;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class ApplicationState {
-  private static final String ID = "id";
+  private static final String APP_ID = "id";
   private static final String dirID = "dirId";
   private static final String SDC_TOKEN = "sdcToken";
+  private static final String EMR_CONFIG = "emrConfig";
   private final Map<String, Object> backingMap;
 
   public ApplicationState() {
@@ -36,8 +39,14 @@ public class ApplicationState {
     this();
     if (map != null) {
       for (Map.Entry<String, Object> entry : map.entrySet()) {
+
         if (entry.getValue() != null) {
-          this.backingMap.put(entry.getKey(), entry.getValue());
+          if (entry.getKey().equals(EMR_CONFIG)) {
+            Properties properties = new ObjectMapper().convertValue(entry.getValue(), Properties.class);
+            this.backingMap.put(entry.getKey(), properties);
+          } else {
+            this.backingMap.put(entry.getKey(), entry.getValue());
+          }
         }
       }
     }
@@ -59,17 +68,25 @@ public class ApplicationState {
     }
   }
 
+  public Properties getEmrConfig() {
+    return (Properties) backingMap.get(EMR_CONFIG);
+  }
+
+  public void setEmrConfig(Properties properties) {
+    this.backingMap.put(EMR_CONFIG, properties);
+  }
+
   public Optional<String> getDirId() {
     return Optional.fromNullable((String)backingMap.get(dirID));
   }
 
-  public String getId() {
-    return (String) backingMap.get(ID);
+  public String getAppId() {
+    return (String) backingMap.get(APP_ID);
   }
 
-  public void setId(String id) {
-    if (id != null) {
-      this.backingMap.put(ID, id);
+  public void setAppId(String appId) {
+    if (appId != null) {
+      this.backingMap.put(APP_ID, appId);
     }
   }
 

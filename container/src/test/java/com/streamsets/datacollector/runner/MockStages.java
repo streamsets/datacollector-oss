@@ -1203,11 +1203,13 @@ public class MockStages {
         null,
         createPipelineConfigs(),
         null,
+        Collections.emptyList(),
         stages,
         getErrorStageConfig(),
         getStatsAggregatorStageConfig(),
         Collections.emptyList(),
-        Collections.emptyList()
+        Collections.emptyList(),
+        null
     );
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");

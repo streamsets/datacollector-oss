@@ -32,6 +32,7 @@ import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageBean;
+import com.streamsets.datacollector.creation.StageLibraryDelegateCreator;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.WebServerTask;
@@ -55,6 +56,7 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.util.SystemProcess;
@@ -153,36 +155,35 @@ public abstract class BaseClusterProvider implements ClusterProvider {
 
   private final Configuration configuration;
 
-  private final File clusterManagerScript;
-
   private final Logger log;
 
-  private final YARNStatusParser yarnStatusParser;
-  private final MesosStatusParser mesosStatusParser;
-
-  @VisibleForTesting
-  BaseClusterProvider() {
-    this(null, null, null);
-  }
+  private final StageLibraryTask stageLibraryTask;
 
   public BaseClusterProvider(RuntimeInfo runtimeInfo,
                              @Nullable SecurityConfiguration securityConfiguration,
-                             Configuration conf) {
+                             Configuration conf,
+                             StageLibraryTask stageLibraryTask) {
     log = LoggerFactory.getLogger(getClass());
     this.runtimeInfo = runtimeInfo;
+    this.stageLibraryTask = stageLibraryTask;
     this.securityConfiguration = securityConfiguration;
     this.configuration = conf;
-    clusterManagerScript = new File(runtimeInfo.getLibexecDir(), "_cluster-manager");
-    Utils.checkState(
-        clusterManagerScript.isFile(),
-        errorString("_cluster-manager does not exist: {}", clusterManagerScript)
+  }
+
+
+  protected ClusterJob getClusterJobDelegator(PipelineConfiguration pipelineConfiguration) {
+    PipelineBean pipelineBean = PipelineBeanCreator.get().create(false,
+        stageLibraryTask,
+        pipelineConfiguration,
+        new ArrayList<>()
     );
-    Utils.checkState(
-        clusterManagerScript.canExecute(),
-        errorString("_cluster-manager is not executable: {}", clusterManagerScript)
+    StageConfiguration stageConf = pipelineBean.getOrigin().getConfiguration();
+    StageDefinition stageDef = stageLibraryTask.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
+    return StageLibraryDelegateCreator.get().createAndInitialize(stageLibraryTask,
+        configuration,
+        stageDef.getLibrary(),
+        ClusterJob.class
     );
-    this.yarnStatusParser = new YARNStatusParser();
-    this.mesosStatusParser = new MesosStatusParser();
   }
 
   protected RuntimeInfo getRuntimeInfo() {
@@ -799,7 +800,6 @@ public abstract class BaseClusterProvider implements ClusterProvider {
         IOUtils.closeQuietly(clusterLog4jProperties);
       }
     }
-
     return startPipelineExecute(
         outputDir,
         sourceInfo,

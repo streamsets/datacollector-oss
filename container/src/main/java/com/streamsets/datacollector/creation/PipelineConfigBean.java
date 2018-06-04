@@ -21,6 +21,8 @@ import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.ErrorRecordPolicy;
 import com.streamsets.datacollector.config.ErrorRecordPolicyChooserValues;
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
+import com.streamsets.datacollector.config.LogLevel;
+import com.streamsets.datacollector.config.LogLevelChooserValues;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
@@ -297,9 +299,10 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 150,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
   )
   public long clusterSlaveMemory;
+
 
   @ConfigDef(
       required = true,
@@ -310,7 +313,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 110,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
   )
   public String clusterSlaveJavaOpts;
 
@@ -338,6 +341,19 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue = {"CLUSTER_MESOS_STREAMING"}
   )
   public String mesosDispatcherURL;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "INFO",
+      label = "Log level",
+      displayPosition = 140,
+      group = "CLUSTER",
+      dependsOn = "executionMode",
+      triggeredByValue = {"EMR_BATCH"}
+  )
+  @ValueChooserModel(LogLevelChooserValues.class)
+  public LogLevel logLevel;
 
   @ConfigDef(
       required = true,

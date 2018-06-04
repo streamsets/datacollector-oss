@@ -17,8 +17,12 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.StageLibraryDelegateCreator;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.SecurityConfiguration;
@@ -26,6 +30,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,14 +43,18 @@ public class ClusterProviderSelector implements ClusterProvider {
   private final RuntimeInfo runtimeInfo;
   private final SecurityConfiguration securityConfiguration;
   private final Configuration configuration;
+  private final StageLibraryTask stageLibraryTask;
 
   public ClusterProviderSelector(
-      RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration, Configuration configuration
+      RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration, Configuration configuration,
+      StageLibraryTask stageLibraryTask
   ) {
     this.runtimeInfo = runtimeInfo;
     this.securityConfiguration = securityConfiguration;
     this.configuration = configuration;
+    this.stageLibraryTask = stageLibraryTask;
   }
+
 
   ClusterProvider getProvider(PipelineConfiguration pipelineConfiguration) {
     ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<>());
@@ -53,9 +62,9 @@ public class ClusterProviderSelector implements ClusterProvider {
       case CLUSTER_BATCH:
       case CLUSTER_YARN_STREAMING:
       case CLUSTER_MESOS_STREAMING:
-        return new ShellClusterProvider(runtimeInfo, securityConfiguration, configuration);
+        return new ShellClusterProvider(runtimeInfo, securityConfiguration, configuration, stageLibraryTask);
       case EMR_BATCH:
-        return new EmrClusterProvider(runtimeInfo, securityConfiguration, configuration);
+        return new EmrClusterProvider(runtimeInfo, securityConfiguration, configuration, stageLibraryTask);
       default:
         throw new IllegalArgumentException(String.format("Unexpected executionMode '%s'", executionMode));
     }
@@ -63,23 +72,27 @@ public class ClusterProviderSelector implements ClusterProvider {
 
   @Override
   public void killPipeline(
-      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
   ) throws TimeoutException, IOException {
     getProvider(pipelineConfiguration).killPipeline(
-        tempDir,
-        appId,
-        pipelineConfiguration
+        tempDir, applicationState,
+        pipelineConfiguration, pipelineConfigBean
     );
   }
 
   @Override
   public ClusterPipelineStatus getStatus(
-      File tempDir, String appId, PipelineConfiguration pipelineConfiguration
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration, PipelineConfigBean pipelineConfigBean
   ) throws TimeoutException, IOException {
-    return getProvider(pipelineConfiguration).getStatus(
-        tempDir,
-        appId,
-        pipelineConfiguration
+    return getProvider(pipelineConfiguration).getStatus(tempDir,
+        applicationState,
+        pipelineConfiguration,
+        pipelineConfigBean
     );
   }
 
@@ -112,5 +125,14 @@ public class ClusterProviderSelector implements ClusterProvider {
         ruleDefinitions,
         acl
     );
+  }
+
+  @Override
+  public void cleanUp(
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws IOException {
+    getProvider(pipelineConfiguration).cleanUp(applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 }

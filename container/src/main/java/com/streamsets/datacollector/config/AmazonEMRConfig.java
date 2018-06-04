@@ -118,7 +118,7 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Cluster Name",
+      label = "Cluster Name Prefix",
       group = "EMR",
       displayPosition = 200,
       dependencies = {
@@ -126,7 +126,7 @@ public class AmazonEMRConfig {
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
       }
   )
-  public String clusterName;
+  public String clusterPrefix;
 
   @ConfigDef(
       required = true,
@@ -350,7 +350,7 @@ public class AmazonEMRConfig {
   private static final String USER_REGION = "userRegion";
   private static final String S3_STAGING_URI = "s3StagingUri";
   private static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
-  private static final String CLUSTER_NAME = "clusterName";
+  private static final String CLUSTER_PREFIX = "clusterPrefix";
   private static final String CLUSTER_ID = "clusterId";
   private static final String SERVICE_ROLE = "serviceRole";
   private static final String JOB_FLOW_ROLE = "jobFlowRole";
@@ -370,7 +370,7 @@ public class AmazonEMRConfig {
     props.setProperty(USER_REGION, getUserRegion());
     props.setProperty(S3_STAGING_URI, s3StagingUri);
     props.setProperty(PROVISION_NEW_CLUSTER, Boolean.toString(provisionNewCluster));
-    props.setProperty(CLUSTER_NAME, clusterName);
+    props.setProperty(CLUSTER_PREFIX, clusterPrefix);
     props.setProperty(CLUSTER_ID, clusterId);
     props.setProperty(SERVICE_ROLE, serviceRole);
     props.setProperty(JOB_FLOW_ROLE, jobFlowRole);

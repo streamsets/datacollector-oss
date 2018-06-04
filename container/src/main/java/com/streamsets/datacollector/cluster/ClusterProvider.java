@@ -30,11 +30,20 @@ import java.util.concurrent.TimeoutException;
 
 public interface ClusterProvider {
 
-  void killPipeline(File tempDir, String appId, PipelineConfiguration pipelineConfiguration)
-      throws TimeoutException, IOException;
+  void killPipeline(
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws TimeoutException, IOException;
 
-  ClusterPipelineStatus getStatus(File tempDir, String appId, PipelineConfiguration pipelineConfiguration)
-      throws TimeoutException, IOException;
+
+  ClusterPipelineStatus getStatus(
+      File tempDir,
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws TimeoutException, IOException;
 
 
   ApplicationState startPipeline(
@@ -53,6 +62,12 @@ public interface ClusterProvider {
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  )
-    throws TimeoutException, IOException;
+  ) throws TimeoutException, IOException;
+
+
+  void cleanUp(
+      ApplicationState applicationState,
+      PipelineConfiguration pipelineConfiguration,
+      PipelineConfigBean pipelineConfigBean
+  ) throws IOException;
 }
