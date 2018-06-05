@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sforce.soap.partner.PartnerConnection;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -26,7 +29,9 @@ import org.eclipse.jetty.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -34,6 +39,7 @@ import java.util.concurrent.TimeoutException;
 public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
   private static final Logger LOG = LoggerFactory.getLogger(PlatformEventRecordCreator.class);
   private static final String UNEXPECTED_TYPE = "Unexpected type: ";
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private final ForceConfigBean conf;
   private Schema schema;
   private String platformEventName;
@@ -76,15 +82,27 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
     String soapEndpoint = partnerConnection.getConfig().getServiceEndpoint();
     String restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
 
-    String path = "/services/data/v41.0/event/eventSchema/" + schemaId;
+    // Need to explicitly request expanded schema due to change in Salesforce Summer '18 - SDC-9169
+    String path = "/services/data/v43.0/event/eventSchema/" + schemaId + "?payloadFormat=EXPANDED";
     try {
       String json = httpClient.newRequest(restEndpoint + path)
           .header("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId())
           .send()
           .getContentAsString();
 
-      return new Schema.Parser().parse(json);
-    } catch (InterruptedException | TimeoutException | ExecutionException e ) {
+      // Don't parse the expanded schema directly as
+      // (1) It contains more than we need
+      // (2) Avro schema parser doesn't like 'expanded-record' type
+      Map<String, Object> expandedSchema = (Map<String, Object>)(OBJECT_MAPPER.readValue(json, Object.class));
+      List<Object> fields1 = (List<Object>)expandedSchema.get("fields");
+      Map<String, Object> field1 = (Map<String, Object>)fields1.get(0);
+      Map<String, Object> type1 = (Map<String, Object>)field1.get("type");
+      List<Object> fields2 = (List<Object>)type1.get("fields");
+      Map<String, Object> field2 = (Map<String, Object>)fields2.get(1);
+      Map<String, Object> type2 = (Map<String, Object>)field2.get("type");
+
+      return new Schema.Parser().parse(OBJECT_MAPPER.writeValueAsString(type2));
+    } catch (InterruptedException | TimeoutException | ExecutionException | IOException e ) {
       throw new StageException(Errors.FORCE_21, platformEventName, e);
     }
   }
