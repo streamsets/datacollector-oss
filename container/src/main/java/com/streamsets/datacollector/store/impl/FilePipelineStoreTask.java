@@ -675,7 +675,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineFragmentConfiguration pipelineFragmentConfiguration = new PipelineFragmentConfiguration(
           uuid,
           PipelineFragmentConfigBean.VERSION,
-          SCHEMA_VERSION,
+          FRAGMENT_SCHEMA_VERSION,
           pipelineTitle,
           pipelineId,
           pipelineId,
