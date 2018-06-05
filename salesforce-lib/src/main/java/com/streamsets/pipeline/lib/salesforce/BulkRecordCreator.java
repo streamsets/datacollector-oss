@@ -54,11 +54,11 @@ public class BulkRecordCreator extends SobjectRecordCreator {
       String fieldName = parts[parts.length - 1];
 
       // Now process the actual field itself
-      com.sforce.soap.partner.Field sfdcField = metadataCache.get(parent).nameToField.get(fieldName.toLowerCase());
+      com.sforce.soap.partner.Field sfdcField = getFieldMetadata(parent, fieldName);
 
       Field field = createField(row.get(i), sfdcField);
       if (conf.createSalesforceNsHeaders) {
-        setHeadersOnField(field, metadataCache.get(parent).nameToField.get(fieldName.toLowerCase()));
+        setHeadersOnField(field, getFieldMetadata(parent, fieldName));
       }
       map.put(fieldPath, field);
     }

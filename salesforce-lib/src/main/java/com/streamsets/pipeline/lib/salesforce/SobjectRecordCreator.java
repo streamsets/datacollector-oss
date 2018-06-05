@@ -71,7 +71,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       "time",
       "url"
   );
-  private static final List<String> DECIMAL_TYPES = Arrays.asList(
+  public static final List<String> DECIMAL_TYPES = Arrays.asList(
       "currency",
       "double",
       "percent"
@@ -383,5 +383,9 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     }
 
     return attributeMap;
+  }
+
+  public com.sforce.soap.partner.Field getFieldMetadata(String objectType, String fieldName) {
+    return metadataCache.get(objectType).nameToField.get(fieldName.toLowerCase());
   }
 }

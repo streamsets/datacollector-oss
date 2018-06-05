@@ -63,6 +63,7 @@ import soql.SOQLParser;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class ForceSource extends BaseSource {
   private static final String CONF_PREFIX = "conf";
 
   static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
+  private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
 
   private final ForceSourceConfigBean conf;
 
@@ -675,7 +677,7 @@ public class ForceSource extends BaseSource {
       if (offsetField == null || offsetField.getValue() == null) {
         throw new StageException(Errors.FORCE_22, conf.offsetColumn);
       }
-      String offset = offsetField.getValue().toString();
+      String offset = fixOffset(conf.offsetColumn, offsetField.getValue().toString());
       nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
       final String sourceId = conf.soqlQuery + "::" + offset;
 
@@ -710,6 +712,24 @@ public class ForceSource extends BaseSource {
     }
 
     return nextSourceOffset;
+  }
+
+  // SDC-9078 - coerce scientific notation away when decimal field scale is zero
+  // since Salesforce doesn't like scientific notation in queries
+  private String fixOffset(String offsetColumn, String offset) {
+    com.sforce.soap.partner.Field sfdcField = ((SobjectRecordCreator)recordCreator).getFieldMetadata(sobjectType, offsetColumn);
+    if (SobjectRecordCreator.DECIMAL_TYPES.contains(sfdcField.getType().toString())
+        && sfdcField.getScale() == 0
+        && offset.contains("E")) {
+      BigDecimal val = new BigDecimal(offset);
+      offset = val.toPlainString();
+      if (val.compareTo(MAX_OFFSET_INT) > 0) {
+        // We need the ".0" suffix since Salesforce doesn't like integer
+        // bigger than 2147483647
+        offset += ".0";
+      }
+    }
+    return offset;
   }
 
   private void processMetaMessage(Message message, String nextSourceOffset) throws StageException {

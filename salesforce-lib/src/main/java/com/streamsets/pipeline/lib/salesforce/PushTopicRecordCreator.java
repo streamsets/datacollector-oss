@@ -60,10 +60,10 @@ public class PushTopicRecordCreator extends SobjectRecordCreator {
     for (Map.Entry<String, Object> entry : sobject.entrySet()) {
       String key = entry.getKey();
       Object val = entry.getValue();
-      com.sforce.soap.partner.Field sfdcField = metadataCache.get(sobjectType).nameToField.get(key.toLowerCase());
+      com.sforce.soap.partner.Field sfdcField = getFieldMetadata(sobjectType, key);
       Field field = createField(val, sfdcField);
       if (conf.createSalesforceNsHeaders) {
-        setHeadersOnField(field, metadataCache.get(sobjectType).nameToField.get(key.toLowerCase()));
+        setHeadersOnField(field, getFieldMetadata(sobjectType, key));
       }
       map.put(key, field);
     }
