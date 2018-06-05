@@ -669,10 +669,12 @@ public class KafkaTargetConfig {
           }
           //Never seen this topic name before
           try {
+            Map<String, Object> kafkaConfigs = new HashMap<>(kafkaProducerConfigs);
+            kafkaValidationUtil.createTopicIfNotExists(result, kafkaConfigs, metadataBrokerList);
             int partitionCount = kafkaValidationUtil.getPartitionCount(
                 metadataBrokerList,
                 result,
-                new HashMap<String, Object>(kafkaProducerConfigs),
+                kafkaConfigs,
                 messageSendMaxRetries,
                 retryBackoffMs
             );

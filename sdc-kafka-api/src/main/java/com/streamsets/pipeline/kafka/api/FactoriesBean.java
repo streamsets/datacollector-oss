@@ -42,7 +42,8 @@ public abstract class FactoriesBean {
   private final static Set<String> subclassNames = ImmutableSet.of(
     "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean"
+    "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
+    "com.streamsets.pipeline.kafka.impl.MapR52Streams09FactoriesBean"
   );
 
   static {

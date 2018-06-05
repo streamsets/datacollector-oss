@@ -89,22 +89,15 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       valid = false;
     } else {
       List<PartitionInfo> partitionInfos;
-      KafkaProducer<String, String> kafkaProducer = null;
+      // Use KafkaConsumer to check if topic exists.
+      // Using producer causes unintentionally creating a topic if not exist.
       KafkaConsumer<String, String> kafkaConsumer = null;
       try {
-        if (producer) {
-          kafkaProducer = createProducerTopicMetadataClient(
-              metadataBrokerList,
-              kafkaClientConfigs
-          );
-          partitionInfos = kafkaProducer.partitionsFor(topic);
-        } else {
           kafkaConsumer = createTopicMetadataClient(
               metadataBrokerList,
               kafkaClientConfigs
           );
           partitionInfos = kafkaConsumer.partitionsFor(topic);
-        }
         if (null == partitionInfos || partitionInfos.isEmpty()) {
           issues.add(
               context.createConfigIssue(
@@ -122,15 +115,21 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
         issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList, e.toString()));
         valid = false;
       } finally {
-        if (kafkaProducer != null) {
-          kafkaProducer.close();
-        }
         if (kafkaConsumer != null) {
           kafkaConsumer.close();
         }
       }
     }
     return valid;
+  }
+
+  @Override
+  public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList) throws StageException {
+    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(
+        metadataBrokerList,
+        kafkaClientConfigs
+    );
+    kafkaProducer.partitionsFor(topic);
   }
 
   private KafkaConsumer<String, String> createTopicMetadataClient(

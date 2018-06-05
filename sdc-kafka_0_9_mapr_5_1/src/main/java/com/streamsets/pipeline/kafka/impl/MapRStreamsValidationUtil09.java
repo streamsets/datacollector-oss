@@ -126,6 +126,21 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     return valid;
   }
 
+  /**
+   * Should be called only by MapR Streams Producer. It creates a topic using KafkaProducer.
+   * @param topic
+   * @param kafkaClientConfigs
+   * @param metadataBrokerList
+   * @throws StageException
+   */
+  @Override
+  public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList)
+      throws StageException {
+    // Stream topic can be created through KafkaProducer if Stream Path exists already
+    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
+    kafkaProducer.partitionsFor(topic);
+  }
+
   @Override
   public List<HostAndPort> validateKafkaBrokerConnectionString(
     List<Stage.ConfigIssue> issues,
@@ -150,7 +165,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     return kafkaBrokers;
   }
 
-  private KafkaConsumer<String, String> createTopicMetadataClient() {
+  protected KafkaConsumer<String, String> createTopicMetadataClient() {
     Properties props = new Properties();
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "sdcTopicMetadataClient");
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
@@ -159,7 +174,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     return new KafkaConsumer<>(props);
   }
 
-  private KafkaProducer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
+  protected KafkaProducer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
     Properties props = new Properties();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "topicMetadataClient");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_SERIALIZER);

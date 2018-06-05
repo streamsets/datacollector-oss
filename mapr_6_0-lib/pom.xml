@@ -39,8 +39,8 @@
     <hadoop.version>2.7.0-mapr-1710</hadoop.version>
     <hive.version>2.1.1-mapr-1710</hive.version>
     <zookeeper.version>3.4.5-mapr-1604</zookeeper.version>
-    <spark.version>1.6.1-mapr-1710</spark.version>
- </properties>
+    <mapr.version>6.0.0-mapr</mapr.version>
+  </properties>
 
   <dependencies>
     <!-- MapR Hadoop client -->
@@ -105,6 +105,13 @@
       <groupId>org.apache.zookeeper</groupId>
       <artifactId>zookeeper</artifactId>
       <version>${zookeeper.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mapr.hadoop</groupId>
+      <artifactId>maprfs</artifactId>
+      <version>${mapr.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -225,7 +232,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-09-mapr51</artifactId>
+      <artifactId>streamsets-datacollector-sdc-kafka-09-mapr52</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>

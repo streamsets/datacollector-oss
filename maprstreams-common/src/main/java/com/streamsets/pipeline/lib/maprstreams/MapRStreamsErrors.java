@@ -28,6 +28,9 @@ public enum MapRStreamsErrors implements ErrorCode {
 
   // MapR Streams Producer
   MAPRSTREAMS_20("Error writing data to the MapR Streams: {}"),
+  MAPRSTREAMS_21("Wrong format of topic name: {}"),
+  MAPRSTREAMS_22("Failed to create a stream '{}' : "),
+  MAPRSTREAMS_23("Operation failed while getting streams data : {}"),
 
   // MapR Streams Consumer
 

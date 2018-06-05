@@ -62,4 +62,7 @@ public interface SdcKafkaValidationUtil {
 
   public String getVersion();
 
+  public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList)
+      throws StageException;
+
 }

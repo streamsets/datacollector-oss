@@ -442,12 +442,14 @@ public class MapRStreamsTargetConfig {
           }
           //Never seen this topic name before
           try {
+            Map<String, Object> kafkaConfigs = kafkaProducerConfigs == null ?
+                Collections.<String, Object>emptyMap() :
+                new HashMap<String, Object>(kafkaProducerConfigs);
+            kafkaValidationUtil.createTopicIfNotExists(result, kafkaConfigs, null);
             int partitionCount = kafkaValidationUtil.getPartitionCount(
                 null,
                 result,
-                kafkaProducerConfigs == null ?
-                    Collections.<String, Object>emptyMap() :
-                    new HashMap<String, Object>(kafkaProducerConfigs),
+                kafkaConfigs,
                 0,
                 0
             );
