@@ -107,6 +107,7 @@ public class TestStagePipe {
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getProcessedSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getSourceResponseSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(produce);
 
@@ -199,6 +200,7 @@ public class TestStagePipe {
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getProcessedSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getSourceResponseSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(process);
   }
@@ -257,6 +259,7 @@ public class TestStagePipe {
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getProcessedSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getSourceResponseSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(write);
   }
@@ -318,6 +321,7 @@ public class TestStagePipe {
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getProcessedSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getSourceResponseSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(write);
   }
