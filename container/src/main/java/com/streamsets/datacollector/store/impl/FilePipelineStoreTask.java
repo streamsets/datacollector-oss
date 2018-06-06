@@ -51,6 +51,7 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LogUtil;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
@@ -223,11 +224,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           description,
           stageLibrary.getPipeline().getPipelineDefaultConfigs(),
           Collections.emptyMap(),
+          null,
           Collections.emptyList(),
           null,
           null,
           Collections.emptyList(),
-          Collections.emptyList()
+          Collections.emptyList(),
+          getDefaultTestOriginStageInstance()
       );
 
       if (!draft) {
@@ -684,11 +687,27 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           Collections.emptyList(),
           Collections.emptyMap(),
           stageLibrary.getPipelineFragment().getPipelineFragmentDefaultConfigs(),
-          null
+          getDefaultTestOriginStageInstance()
       );
       pipelineFragmentConfiguration.setPipelineInfo(info);
       return pipelineFragmentConfiguration;
     }
+  }
+
+  private StageConfiguration getDefaultTestOriginStageInstance() {
+    StageConfiguration testOriginStageInstance = PipelineConfigurationUtil.getStageConfigurationWithDefaultValues(
+        stageLibrary,
+        PipelineConfigBean.DEFAULT_TEST_ORIGIN_LIBRARY_NAME,
+        PipelineConfigBean.DEFAULT_TEST_ORIGIN_STAGE_NAME,
+        PipelineConfigBean.DEFAULT_TEST_ORIGIN_STAGE_NAME + "_TestOriginStage",
+        "Test Origin - "
+    );
+    if (testOriginStageInstance != null) {
+      testOriginStageInstance.setOutputLanes(
+          ImmutableList.of(testOriginStageInstance.getInstanceName() + "OutputLane1")
+      );
+    }
+    return testOriginStageInstance;
   }
 
 }

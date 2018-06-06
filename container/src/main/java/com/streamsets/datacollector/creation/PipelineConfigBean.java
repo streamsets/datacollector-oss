@@ -69,8 +69,15 @@ public class PipelineConfigBean implements Stage {
   private static final String TRASH_TARGET = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1";
 
-  public static final String RAW_DATA_ORIGIN = "streamsets-datacollector-dev-lib" +
-      "::com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource::3";
+  public static final String DEFAULT_TEST_ORIGIN_LIBRARY_NAME = "streamsets-datacollector-dev-lib";
+
+  public static final String DEFAULT_TEST_ORIGIN_STAGE_NAME =
+      "com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource";
+
+  public static final String DEFAULT_TEST_ORIGIN_STAGE_VERSION = "3";
+
+  public static final String RAW_DATA_ORIGIN = DEFAULT_TEST_ORIGIN_LIBRARY_NAME + "::" +
+      DEFAULT_TEST_ORIGIN_STAGE_NAME + "::" + DEFAULT_TEST_ORIGIN_STAGE_VERSION;
 
   public static final String EDGE_HTTP_URL_DEFAULT = "http://localhost:18633";
 
