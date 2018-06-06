@@ -470,6 +470,7 @@ public class ClusterRunner extends AbstractRunner {
           }
         });
       }
+      pipelineConf.setTestOriginStage(null);
       UserContext runningUser = new UserContext(user,
           runtimeInfo.isDPMEnabled(),
           configuration.get(
