@@ -554,6 +554,13 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Pulsar libs -->
+
+    <fileSet>
+      <directory>${basedir}/../${apache-pulsar_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
