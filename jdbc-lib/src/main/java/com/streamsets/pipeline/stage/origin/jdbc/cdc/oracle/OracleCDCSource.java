@@ -97,6 +97,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_404;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_405;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_42;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
@@ -868,7 +869,12 @@ public class OracleCDCSource extends BaseSource {
         }
       } catch (ExecutionException e) {
         try {
-          errorRecordHandler.onError(JDBC_43, recordFuture.sql);
+          final Throwable cause = e.getCause();
+          if (cause instanceof UnparseableSQLException) {
+            errorRecordHandler.onError(JDBC_43, recordFuture.sql);
+          } else {
+            errorRecordHandler.onError(JDBC_405, cause);
+          }
         } catch (StageException stageException) {
           addToStageExceptionsQueue(stageException);
         }
@@ -1273,11 +1279,18 @@ public class OracleCDCSource extends BaseSource {
       }
     }
 
-    if (configBean.parseQuery && configBean.bufferLocally) {
-      parsingExecutor = Executors.newFixedThreadPool(
-          configBean.parseThreadPoolSize,
-          new ThreadFactoryBuilder().setNameFormat("Oracle CDC Origin Parse Thread - %d").build()
-      );
+    if (configBean.bufferLocally) {
+      if (configBean.parseQuery) {
+        parsingExecutor = Executors.newFixedThreadPool(
+            configBean.parseThreadPoolSize,
+            new ThreadFactoryBuilder().setNameFormat("Oracle CDC Origin Parse Thread - %d").build()
+        );
+      } else {
+        parsingExecutor =
+            Executors.newSingleThreadExecutor(
+                new ThreadFactoryBuilder().setNameFormat("Oracle CDC Origin Parse Thread - %d").build()
+        );
+      }
     }
 
     if (configBean.txnWindow >= configBean.logminerWindow) {

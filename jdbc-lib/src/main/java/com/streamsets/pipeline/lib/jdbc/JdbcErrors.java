@@ -137,6 +137,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_402("Columns '{}' are not present in {}"),
   JDBC_403("Could not parse SQL statement: {}"),
   JDBC_404("No tables were found matching to configured schema and table patterns"), // Perfect error code!
+  JDBC_405("Error while generating records: {}")
 
   ;
 
