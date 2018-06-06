@@ -802,14 +802,14 @@ public class OracleCDCSource extends BaseSource {
   private boolean handleUnsupportedFieldTypes(Record r, String error) {
     switch (configBean.unsupportedFieldOp) {
       case SEND_TO_PIPELINE:
-        LOG.warn(Utils.format(UNSUPPORTED_SEND_TO_PIPELINE, error, r.getHeader().getAttribute(TABLE)));
+        LOG.debug(Utils.format(UNSUPPORTED_SEND_TO_PIPELINE, error, r.getHeader().getAttribute(TABLE)));
         return true;
       case TO_ERROR:
-        LOG.warn(Utils.format(UNSUPPORTED_TO_ERR, error, r.getHeader().getAttribute(TABLE)));
+        LOG.debug(Utils.format(UNSUPPORTED_TO_ERR, error, r.getHeader().getAttribute(TABLE)));
         getContext().toError(r, JDBC_85, error, r.getHeader().getAttribute(TABLE));
         return false;
       case DISCARD:
-        LOG.warn(Utils.format(UNSUPPORTED_DISCARD, error, r.getHeader().getAttribute(TABLE)));
+        LOG.debug(Utils.format(UNSUPPORTED_DISCARD, error, r.getHeader().getAttribute(TABLE)));
         return false;
       default:
         throw new IllegalStateException("Unknown Record Handling option");
