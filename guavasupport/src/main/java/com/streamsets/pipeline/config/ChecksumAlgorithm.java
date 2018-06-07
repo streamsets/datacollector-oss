@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
 public enum ChecksumAlgorithm implements Label {
@@ -42,4 +43,16 @@ public enum ChecksumAlgorithm implements Label {
     return this.hashType;
   }
 
+  public static ChecksumAlgorithm forApi(WholeFileChecksumAlgorithm other) {
+    switch (other) {
+      case MD5: return MD5;
+      case SHA1: return SHA1;
+      case SHA256: return SHA256;
+      case SHA512: return SHA512;
+      case MURMUR3_32: return MURMUR3_32;
+      case MURMUR3_128: return MURMUR3_128;
+      default:
+        throw new IllegalArgumentException("Unknown algorithm: " + other.name());
+    }
+  }
 }

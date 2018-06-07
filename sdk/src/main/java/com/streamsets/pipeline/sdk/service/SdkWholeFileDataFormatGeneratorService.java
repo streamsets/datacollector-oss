@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,93 +16,83 @@
 package com.streamsets.pipeline.sdk.service;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseService;
-import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
-import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
-import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-
 
 @ServiceDef(
   provides = DataFormatGeneratorService.class,
   version = 1,
-  label = "(Test) Runner implementation of very simple DataFormatGeneratorService that will always output JSON."
+  label = "(Test) Runner implementation of very simple DataFormatGeneratorService that will always work with whole file format."
 )
-public class SdkJsonDataFormatGeneratorService extends BaseService implements DataFormatGeneratorService {
+public class SdkWholeFileDataFormatGeneratorService extends BaseService implements DataFormatGeneratorService {
+
+  private String wholeFileNamePath;
+  private WholeFileExistsAction existsAction;
+  private boolean includeChecksumInTheEvents;
+  private WholeFileChecksumAlgorithm checksumAlgorithm;
+
+  public SdkWholeFileDataFormatGeneratorService() {
+    this("/fileName", WholeFileExistsAction.OVERWRITE, false, WholeFileChecksumAlgorithm.MD5);
+  }
+
+  public SdkWholeFileDataFormatGeneratorService(
+    String wholeFileNamePath,
+    WholeFileExistsAction existsAction,
+    boolean includeChecksumInTheEvents,
+    WholeFileChecksumAlgorithm checksumAlgorithm
+  ) {
+    this.wholeFileNamePath = wholeFileNamePath;
+    this.existsAction = existsAction;
+    this.includeChecksumInTheEvents = includeChecksumInTheEvents;
+    this.checksumAlgorithm = checksumAlgorithm;
+  }
+
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    ContextExtensions ext = ((ContextExtensions) getContext());
-    JsonRecordWriter recordWriter = ext.createJsonRecordWriter(new OutputStreamWriter(os, Charset.defaultCharset()), Mode.MULTIPLE_OBJECTS);
-
-    return new DataGeneratorImpl(recordWriter);
+    throw new UnsupportedOperationException("Only Whole File Format is supported");
   }
 
   @Override
   public boolean isPlainTextCompatible() {
-    return true;
+    throw new UnsupportedOperationException("Only Whole File Format is supported");
   }
 
   @Override
   public String getCharset() {
-    return "UTF-8";
+    throw new UnsupportedOperationException("Only Whole File Format is supported");
   }
 
   @Override
   public boolean isWholeFileFormat() {
-    return false;
+    return true;
   }
 
   @Override
-  public String wholeFileFilename(Record record) {
-    return null;
+  public String wholeFileFilename(Record record) throws StageException {
+    return record.get(wholeFileNamePath).getValueAsString();
   }
 
   @Override
   public WholeFileExistsAction wholeFileExistsAction() {
-    return null;
+    return existsAction;
   }
 
   @Override
   public boolean wholeFileIncludeChecksumInTheEvents() {
-    return false;
+    return includeChecksumInTheEvents;
   }
 
   @Override
   public WholeFileChecksumAlgorithm wholeFileChecksumAlgorithm() {
-    return null;
-  }
-
-  private static class DataGeneratorImpl implements DataGenerator {
-
-    private final JsonRecordWriter recordWriter;
-    DataGeneratorImpl(JsonRecordWriter recordWriter) {
-      this.recordWriter = recordWriter;
-    }
-
-    @Override
-    public void write(Record record) throws IOException, DataGeneratorException {
-      recordWriter.write(record);
-    }
-
-    @Override
-    public void flush() throws IOException {
-      recordWriter.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-      recordWriter.close();
-    }
+    return checksumAlgorithm;
   }
 }

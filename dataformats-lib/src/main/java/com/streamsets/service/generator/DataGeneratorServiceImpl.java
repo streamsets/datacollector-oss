@@ -20,13 +20,19 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseService;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
+import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
+import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.service.lib.ShimUtil;
 import org.slf4j.Logger;
@@ -106,6 +112,35 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
   @Override
   public String getCharset() {
     return dataGeneratorFormatConfig.charset;
+  }
+
+  @Override
+  public boolean isWholeFileFormat() {
+    return dataFormat == DataFormat.WHOLE_FILE;
+  }
+
+  @Override
+  public String wholeFileFilename(Record record) throws StageException  {
+    ELEval eval = getContext().createELEval("fileNameEL");
+    ELVars vars = getContext().createELVars();
+    RecordEL.setRecordInContext(vars, record);
+
+    return eval.eval(vars, dataGeneratorFormatConfig.fileNameEL, String.class);
+  }
+
+  @Override
+  public WholeFileExistsAction wholeFileExistsAction() {
+    return null;
+  }
+
+  @Override
+  public boolean wholeFileIncludeChecksumInTheEvents() {
+    return false;
+  }
+
+  @Override
+  public WholeFileChecksumAlgorithm wholeFileChecksumAlgorithm() {
+    return null;
   }
 
   /**
