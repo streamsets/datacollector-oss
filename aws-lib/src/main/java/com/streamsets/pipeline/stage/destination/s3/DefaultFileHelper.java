@@ -24,7 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -73,7 +74,7 @@ final class DefaultFileHelper extends FileHelper {
     // wrap with gzip compression output stream if required
     OutputStream out = (s3TargetConfigBean.compress)? new GZIPOutputStream(bOut) : bOut;
 
-    DataGenerator generator = s3TargetConfigBean.getGeneratorFactory().getGenerator(out);
+    DataGenerator generator = context.getService(DataFormatGeneratorService.class).getGenerator(out);
     Record currentRecord;
 
     while (recordIterator.hasNext()) {

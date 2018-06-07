@@ -31,6 +31,8 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
@@ -39,6 +41,7 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.service.SdkWholeFileDataFormatGeneratorService;
 import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -92,19 +95,19 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     S3
   }
 
-  private final String fileNameEL;
+  private final String fileNamePath;
   private final SourceType source;
-  private final ChecksumAlgorithm checksumAlgorithm;
+  private final WholeFileChecksumAlgorithm checksumAlgorithm;
   private final boolean withFileNamePrefix;
 
 
   public TestAmazonS3TargetForWholeFile(
-      String fileNameEL,
+      String fileNamePath,
       boolean withFileNamePrefix,
       SourceType source,
-      ChecksumAlgorithm checksumAlgorithm
-      ) {
-    this.fileNameEL = fileNameEL;
+      WholeFileChecksumAlgorithm checksumAlgorithm
+  ) {
+    this.fileNamePath = fileNamePath;
     this.withFileNamePrefix = withFileNamePrefix;
     this.source = source;
     this.checksumAlgorithm = checksumAlgorithm;
@@ -114,16 +117,16 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
   public static Collection<Object[]> data() throws Exception {
     List<Object[]> finalData = new ArrayList<>();
     List<Object[]> array = Arrays.asList(new Object[][]{
-        {"${record:value('/fileInfo/filename')}", true, SourceType.LOCAL},
-        {"${record:value('/fileInfo/filename')}", false, SourceType.LOCAL},
-        {"${record:value('/fileInfo/objectKey')}", true, SourceType.S3},
-        {"${record:value('/fileInfo/objectKey')}", false, SourceType.S3}
+        {"/fileInfo/filename", true, SourceType.LOCAL},
+        {"/fileInfo/filename", false, SourceType.LOCAL},
+        {"/fileInfo/objectKey", true, SourceType.S3},
+        {"/fileInfo/objectKey", false, SourceType.S3}
     });
-    List<ChecksumAlgorithm> supportedChecksumAlgorithms =
+    List<WholeFileChecksumAlgorithm> supportedChecksumAlgorithms =
         Arrays.asList(
-            ChecksumAlgorithm.values()
+            WholeFileChecksumAlgorithm.values()
         );
-    for (ChecksumAlgorithm checksumAlgorithm : supportedChecksumAlgorithms) {
+    for (WholeFileChecksumAlgorithm checksumAlgorithm : supportedChecksumAlgorithms) {
       for (Object[] anArray : array) {
         Object[] data = new Object[4];
         data[0] = anArray[0];
@@ -279,7 +282,6 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     s3Config.delimiter = DELIMITER;
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
-    s3TargetConfigBean.dataFormat = DataFormat.WHOLE_FILE;
     s3TargetConfigBean.partitionTemplate = "";
     s3TargetConfigBean.fileNamePrefix = withFileNamePrefix? "sdc" : "";
     s3TargetConfigBean.timeDriverTemplate = "${time:now()}";
@@ -289,14 +291,6 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     s3TargetConfigBean.proxyConfig = new ProxyConfig();
     s3TargetConfigBean.tmConfig = new TransferManagerConfig();
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
-
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-    dataGeneratorFormatConfig.fileNameEL = fileNameEL;
-    dataGeneratorFormatConfig.wholeFileExistsAction = WholeFileExistsAction.OVERWRITE;
-    dataGeneratorFormatConfig.includeChecksumInTheEvents = true;
-    dataGeneratorFormatConfig.checksumAlgorithm = checksumAlgorithm;
-
-    s3TargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 
     return new AmazonS3Target(s3TargetConfigBean);
   }
@@ -344,7 +338,14 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
   @Test
   public void testWholeFileRecordWrites() throws Exception {
     AmazonS3Target amazonS3Target = createS3targetWithWholeFile();
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkWholeFileDataFormatGeneratorService(
+        fileNamePath,
+        com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction.OVERWRITE,
+        true,
+        checksumAlgorithm
+        ))
+      .build();
     targetRunner.runInit();
     try {
       targetRunner.runWrite(getRecords());
@@ -376,7 +377,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
           objectKey = objectKey.substring(4);
         }
 
-        String checksum = HashingUtil.getHasher(checksumAlgorithm.getHashType()).hashString(SAMPLE_TEXT_FOR_FILE.get(
+        String checksum = HashingUtil.getHasher(ChecksumAlgorithm.forApi(checksumAlgorithm).getHashType()).hashString(SAMPLE_TEXT_FOR_FILE.get(
             objectKey), Charset.defaultCharset()).toString();
         Assert.assertEquals(checksum, eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
       }
@@ -389,6 +390,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
   public void testWholeFileInvalidRecord() throws Exception {
     AmazonS3Target amazonS3Target = createS3targetWithWholeFile();
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+        .addService(DataFormatGeneratorService.class, new SdkWholeFileDataFormatGeneratorService())
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
     targetRunner.runInit();

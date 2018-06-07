@@ -32,7 +32,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -132,7 +132,7 @@ public class AmazonS3Target extends BaseTarget {
           issues
       );
     }
-    if (s3TargetConfigBean.dataFormat == DataFormat.WHOLE_FILE) {
+    if (getContext().getService(DataFormatGeneratorService.class).isWholeFileFormat()) {
       fileHelper = new WholeFileHelper(getContext(), s3TargetConfigBean, transferManager, issues);
     } else {
       fileHelper = new DefaultFileHelper(getContext(), s3TargetConfigBean, transferManager);

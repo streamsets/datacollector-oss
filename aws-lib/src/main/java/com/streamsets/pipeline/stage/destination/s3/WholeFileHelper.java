@@ -27,19 +27,14 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.WholeFileExistsAction;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -47,12 +42,13 @@ import java.util.Iterator;
 import java.util.List;
 
 final class WholeFileHelper extends FileHelper {
-  private ELEval fileNameELEval;
+  private final DataFormatGeneratorService generatorService;
   private static final String SIZE = "size";
   private static final Logger LOGGER = LoggerFactory.getLogger(WholeFileHelper.class);
 
   WholeFileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager, List<Stage.ConfigIssue> configIssues) {
     super(context, s3TargetConfigBean, transferManager);
+    generatorService = context.getService(DataFormatGeneratorService.class);
     //init adds the config issues
     init(configIssues);
   }
@@ -67,36 +63,15 @@ final class WholeFileHelper extends FileHelper {
           )
       );
     }
-    //This initializes the metrics for the stage when the data format is whole file.
-    DataGeneratorFactory dgFactory = s3TargetConfigBean.dataGeneratorFormatConfig.getDataGeneratorFactory();
-    try (DataGenerator dg = dgFactory.getGenerator(new ByteArrayOutputStream())) {
-      //NOOP
-    } catch (IOException e) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.S3.getLabel(),
-              S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataFormat",
-              Errors.S3_40,
-              e.getMessage()
-          )
-      );
-    }
-    this.fileNameELEval = context.createELEval("fileNameEL");
   }
 
   private String getFileNameFromFileNameEL(String keyPrefix, Record record) throws StageException {
-    Utils.checkState(fileNameELEval != null, "File Name EL Evaluator is null");
-    ELVars vars = context.createELVars();
-    RecordEL.setRecordInContext(vars, record);
-    StringBuilder fileName = new StringBuilder();
-    fileName = fileName.append(keyPrefix);
-    fileName.append(fileNameELEval.eval(vars, s3TargetConfigBean.dataGeneratorFormatConfig.fileNameEL, String.class));
-    return fileName.toString();
+    return keyPrefix + generatorService.wholeFileFilename(record);
   }
 
   private void checkForWholeFileExistence(String bucket, String objectKey) throws OnRecordErrorException {
     boolean fileExists = s3TargetConfigBean.s3Config.getS3Client().doesObjectExist(bucket, objectKey);
-    WholeFileExistsAction wholeFileExistsAction =s3TargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction;
+    WholeFileExistsAction wholeFileExistsAction = generatorService.wholeFileExistsAction();
     if (fileExists && wholeFileExistsAction == WholeFileExistsAction.TO_ERROR) {
       throw new OnRecordErrorException(Errors.S3_51, objectKey);
     }
@@ -149,8 +124,8 @@ final class WholeFileHelper extends FileHelper {
             context,
             fileRef,
             InputStream.class,
-            s3TargetConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents,
-            s3TargetConfigBean.dataGeneratorFormatConfig.checksumAlgorithm,
+            generatorService.wholeFileIncludeChecksumInTheEvents(),
+            ChecksumAlgorithm.forApi(generatorService.wholeFileChecksumAlgorithm()),
             new FileRefStreamCloseEventHandler(eventRecord)
         );
         //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.

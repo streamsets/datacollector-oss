@@ -28,12 +28,14 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.service.SdkJsonDataFormatGeneratorService;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -112,7 +114,9 @@ public class TestAmazonS3Target {
     String prefix = "testWriteTextData";
     String suffix = "txt";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
@@ -138,7 +142,9 @@ public class TestAmazonS3Target {
     String prefix = "testWriteToTwoBuckets";
     String suffix = "txt";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
@@ -164,6 +170,7 @@ public class TestAmazonS3Target {
     final String suffix = "txt";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     targetRunner.runInit();
@@ -190,7 +197,9 @@ public class TestAmazonS3Target {
     final String prefix = "testWriteTextData";
     final String suffix = ".txt";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
   }
@@ -203,7 +212,9 @@ public class TestAmazonS3Target {
     //partition by the record id
     String partition = "${record:id()}";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, partition, false, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
@@ -226,48 +237,14 @@ public class TestAmazonS3Target {
   }
 
   @Test
-  public void testWriteTextDataWithCompression() throws Exception {
-
-    String prefix = "testWriteTextDataWithCompression";
-    String suffix = "";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, true, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
-    targetRunner.runInit();
-
-    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
-
-    //Make sure the prefix is empty
-    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
-    Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
-
-    targetRunner.runWrite(logRecords);
-    targetRunner.runDestroy();
-
-    //check that prefix contains 1 file
-    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
-    Assert.assertEquals(1, objectListing.getObjectSummaries().size());
-    S3ObjectSummary objectSummary = objectListing.getObjectSummaries().get(0);
-
-    //get contents of file and check data - should have 9 lines
-    S3Object object = s3client.getObject(BUCKET_NAME, objectSummary.getKey());
-    S3ObjectInputStream objectContent = object.getObjectContent();
-
-    Assert.assertTrue(object.getKey().endsWith(".gz"));
-
-    List<String> stringList = IOUtils.readLines(new GZIPInputStream(objectContent));
-    Assert.assertEquals(9, stringList.size());
-    for(int i = 0 ; i < 9; i++) {
-      Assert.assertEquals(TestUtil.TEST_STRING + i, stringList.get(i));
-    }
-  }
-
-  @Test
   public void testWriteEmptyBatch() throws Exception {
 
     String prefix = "testWriteEmptyBatch";
     String suffix = "";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     targetRunner.runInit();
 
     List<Record> logRecords = new ArrayList<>();
@@ -309,7 +286,6 @@ public class TestAmazonS3Target {
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.compress = useCompression;
-    s3TargetConfigBean.dataFormat = DataFormat.TEXT;
     s3TargetConfigBean.partitionTemplate = partition;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
     s3TargetConfigBean.timeDriverTemplate = "${time:now()}";
@@ -321,19 +297,6 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
     s3TargetConfigBean.fileNameSuffix = suffix;
 
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-    dataGeneratorFormatConfig.avroSchema = null;
-    dataGeneratorFormatConfig.binaryFieldPath = "/";
-    dataGeneratorFormatConfig.charset = "UTF-8";
-    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
-    dataGeneratorFormatConfig.csvReplaceNewLines = false;
-    dataGeneratorFormatConfig.csvHeader = CsvHeader.IGNORE_HEADER;
-    dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
-    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
-    dataGeneratorFormatConfig.textFieldPath = "/";
-
-    s3TargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
-
     return new AmazonS3Target(s3TargetConfigBean);
   }
 
@@ -341,7 +304,9 @@ public class TestAmazonS3Target {
   public void testEventRecords() throws Exception {
     String prefix = "testEventRecords";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, "");
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .addService(DataFormatGeneratorService.class, new SdkJsonDataFormatGeneratorService())
+      .build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
@@ -359,34 +324,5 @@ public class TestAmazonS3Target {
     Assert.assertTrue(eventRecord.has("/objectKey"));
     Assert.assertEquals(BUCKET_NAME, eventRecord.get("/bucket").getValueAsString());
     targetRunner.runDestroy();
-  }
-
-  @Test
-  public void testEmptyPrefixForNonWholeFileFormat() throws Exception {
-    String prefix = "testEventRecords";
-    String suffix = "";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
-    targetConfigBean.fileNamePrefix = "";
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
-
-    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
-    Assert.assertEquals(1, issues.size());
-  }
-
-  @Test
-  public void testEmptyPrefixForWholeFileFormat() throws Exception {
-    String prefix = "testEventRecords";
-    String suffix = "";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
-    S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
-    targetConfigBean.dataFormat = DataFormat.WHOLE_FILE;
-    targetConfigBean.dataGeneratorFormatConfig.fileNameEL = "sample";
-    targetConfigBean.fileNamePrefix = "";
-
-    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
-
-    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
-    Assert.assertEquals(0, issues.size());
   }
 }

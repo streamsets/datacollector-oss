@@ -19,22 +19,20 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AmazonS3TargetUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(
-      String library,
-      String stageName,
-      String stageInstance,
-      int fromVersion,
-      int toVersion,
-      List<Config> configs
-  ) throws StageException {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    int fromVersion = context.getFromVersion();
+    int toVersion = context.getToVersion();
+
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
@@ -86,6 +84,12 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 9:
         upgradeV9ToV10(configs);
+        if(toVersion == 10) {
+          break;
+        }
+        // fall through
+      case 10:
+        upgradeV10toV11(configs, context);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -218,4 +222,22 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
   }
+
+  private void upgradeV10toV11(List<Config> configs, Context context) {
+    List<Config> dataFormatConfigs = configs.stream()
+      .filter(c -> c.getName().startsWith("s3TargetConfigBean.dataFormat"))
+      .collect(Collectors.toList());
+
+    // Remove those configs
+    configs.removeAll(dataFormatConfigs);
+
+    // Provide proper prefix
+    dataFormatConfigs = dataFormatConfigs.stream()
+      .map(c -> new Config(c.getName().replace("s3TargetConfigBean.", ""), c.getValue()))
+      .collect(Collectors.toList());
+
+    // And finally register new service
+    context.registerService(DataFormatGeneratorService.class, dataFormatConfigs);
+  }
+
 }

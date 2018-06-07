@@ -87,7 +87,7 @@ public class TestUtil {
     List<String> stringList = IOUtils.readLines(objectContent);
     Assert.assertEquals(9, stringList.size());
     for (int i = 0; i < 9; i++) {
-      Assert.assertEquals(TestUtil.TEST_STRING + i, stringList.get(i));
+      Assert.assertEquals("\"" + TestUtil.TEST_STRING + i + "\"", stringList.get(i));
     }
   }
 
