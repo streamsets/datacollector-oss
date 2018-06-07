@@ -19,19 +19,16 @@ public class BlobDeleteEvent extends BlobBaseEvent {
 
   private String namespace;
   private String id;
-  private long version;
 
   public BlobDeleteEvent() {
   }
 
   public BlobDeleteEvent(
     String namespace,
-    String id,
-    long version
+    String id
   ) {
     this.namespace = namespace;
     this.id = id;
-    this.version = version;
   }
 
   public String getNamespace() {
@@ -50,11 +47,4 @@ public class BlobDeleteEvent extends BlobBaseEvent {
     this.id = id;
   }
 
-  public long getVersion() {
-    return version;
-  }
-
-  public void setVersion(long version) {
-    this.version = version;
-  }
 }

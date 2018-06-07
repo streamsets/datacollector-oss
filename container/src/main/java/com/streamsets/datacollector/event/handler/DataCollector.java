@@ -71,6 +71,11 @@ public interface DataCollector {
   void blobStore(String namespace, String id, long version, String content) throws StageException;
 
   /**
+   * Remove all versions of given object from DataCollector's blob store.
+   */
+  void blobDelete(String namespace, String id) throws StageException;
+
+  /**
    * Remove object from DataCollector's blob store.
    */
   void blobDelete(String namespace, String id, long version) throws StageException;

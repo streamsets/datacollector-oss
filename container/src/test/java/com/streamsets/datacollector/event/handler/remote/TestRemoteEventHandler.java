@@ -36,7 +36,7 @@ import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
-import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobDeleteVersionEvent;
 import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.EventType;
@@ -127,7 +127,7 @@ public class TestRemoteEventHandler {
       pipelineBaseEventJson.setUser("user");
 
       BlobStoreEvent blobStoreEvent = new BlobStoreEvent("n", "a", 1, "X");
-      BlobDeleteEvent blobDeleteEvent = new BlobDeleteEvent("n", "a", 1);
+      BlobDeleteVersionEvent blobDeleteEvent = new BlobDeleteVersionEvent("n", "a", 1);
 
       List<ServerEventJson> serverEventJsonList = new ArrayList<ServerEventJson>();
       try {
@@ -206,7 +206,7 @@ public class TestRemoteEventHandler {
         setServerEvent(
             serverEventJson10,
             id10.toString(),
-            EventType.BLOB_DELETE,
+            EventType.BLOB_DELETE_VERSION,
             false,
             true,
             jsonDto.serialize(blobDeleteEvent)
@@ -548,6 +548,11 @@ public class TestRemoteEventHandler {
 
     @Override
     public void blobStore(String namespace, String id, long version, String content) throws StageException {
+      this.blobStoreCalled = true;
+    }
+
+    @Override
+    public void blobDelete(String namespace, String id) throws StageException {
       this.blobStoreCalled = true;
     }
 

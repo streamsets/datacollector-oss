@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobDeleteVersionEvent;
 import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
@@ -45,6 +46,7 @@ import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.BlobDeleteEventJson;
+import com.streamsets.datacollector.event.json.BlobDeleteVersionEventJson;
 import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
@@ -131,6 +133,9 @@ public class MessagingJsonToFromDto {
         break;
       case BLOB_DELETE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteEventJson((BlobDeleteEvent) event);
+        break;
+      case BLOB_DELETE_VERSION:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteVersionEventJson((BlobDeleteVersionEvent) event);
         break;
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
         eventJson =
@@ -247,6 +252,13 @@ public class MessagingJsonToFromDto {
         };
         BlobStoreEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobStoreEventDto(eventJson));
+        break;
+      }
+      case BLOB_DELETE_VERSION: {
+        TypeReference<BlobDeleteVersionEventJson> typeRef = new TypeReference<BlobDeleteVersionEventJson>() {
+        };
+        BlobDeleteVersionEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobDeleteVersionEventDto(eventJson));
         break;
       }
       case BLOB_DELETE: {

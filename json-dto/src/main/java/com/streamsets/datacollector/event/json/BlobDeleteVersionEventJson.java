@@ -15,25 +15,15 @@
  */
 package com.streamsets.datacollector.event.json;
 
-public class BlobDeleteEventJson extends BlobBaseEventJson {
+public class BlobDeleteVersionEventJson extends BlobDeleteEventJson {
 
-  private String namespace;
-  private String id;
+  private long version;
 
-  public String getNamespace() {
-    return namespace;
+  public long getVersion() {
+    return version;
   }
 
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
+  public void setVersion(long version) {
+    this.version = version;
   }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
 }

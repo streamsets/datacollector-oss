@@ -30,6 +30,7 @@ import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
 import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
+import com.streamsets.datacollector.event.dto.BlobDeleteVersionEvent;
 import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
@@ -66,10 +67,8 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.DisconnectedSecurityUtils;
-import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.jetbrains.annotations.Nullable;
@@ -538,8 +537,15 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             BlobDeleteEvent blobDeleteEvent = (BlobDeleteEvent)event;
             remoteDataCollector.blobDelete(
               blobDeleteEvent.getNamespace(),
-              blobDeleteEvent.getId(),
-              blobDeleteEvent.getVersion()
+              blobDeleteEvent.getId()
+            );
+            break;
+          case BLOB_DELETE_VERSION:
+            BlobDeleteVersionEvent blobDeleteVersionEvent = (BlobDeleteVersionEvent)event;
+            remoteDataCollector.blobDelete(
+              blobDeleteVersionEvent.getNamespace(),
+              blobDeleteVersionEvent.getId(),
+              blobDeleteVersionEvent.getVersion()
             );
             break;
           case SYNC_ACL:

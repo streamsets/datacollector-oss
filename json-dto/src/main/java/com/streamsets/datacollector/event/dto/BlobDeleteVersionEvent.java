@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.json;
+package com.streamsets.datacollector.event.dto;
 
-public class BlobDeleteEventJson extends BlobBaseEventJson {
+public class BlobDeleteVersionEvent extends BlobDeleteEvent {
 
-  private String namespace;
-  private String id;
+  private long version;
 
-  public String getNamespace() {
-    return namespace;
+  public BlobDeleteVersionEvent() {
   }
 
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
+  public BlobDeleteVersionEvent(
+    String namespace,
+    String id,
+    long version
+  ) {
+    super(namespace, id);
+    this.version = version;
   }
 
-  public String getId() {
-    return id;
+  public long getVersion() {
+    return version;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setVersion(long version) {
+    this.version = version;
   }
-
 }
