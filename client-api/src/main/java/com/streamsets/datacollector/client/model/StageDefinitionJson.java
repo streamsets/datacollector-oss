@@ -51,7 +51,8 @@ public class StageDefinitionJson   {
     CLUSTER_YARN_STREAMING("CLUSTER_YARN_STREAMING"),
     CLUSTER_MESOS_STREAMING("CLUSTER_MESOS_STREAMING"),
     SLAVE("SLAVE"),
-    EDGE("EDGE")
+    EDGE("EDGE"),
+    EMR_BATCH("EMR_BATCH"),
     ;
 
     private final String value;
