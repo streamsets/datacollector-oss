@@ -134,7 +134,7 @@ public class PreviewResource {
       @QueryParam("endStage") String endStageInstanceName,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
       @QueryParam("edge") @DefaultValue("false") boolean edge,
-      @QueryParam("testOrigin") @DefaultValue("true") boolean testOrigin,
+      @QueryParam("testOrigin") @DefaultValue("false") boolean testOrigin,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
   ) throws PipelineException {
     if (stageOutputsToOverrideJson == null) {

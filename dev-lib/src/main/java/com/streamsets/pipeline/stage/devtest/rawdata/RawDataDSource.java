@@ -60,7 +60,7 @@ public class RawDataDSource extends DSource {
       label = "Raw Data",
       defaultValue = DEFAULT_RAW_DATA,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
-      displayPosition = 20,
+      displayPosition = 1,
       group = "RAW"
   )
   public String rawData;
@@ -70,7 +70,7 @@ public class RawDataDSource extends DSource {
       defaultValue = "false",
       type = ConfigDef.Type.BOOLEAN,
       label = "Stop After First Batch",
-      displayPosition = 30,
+      displayPosition = 2,
       group = "RAW"
   )
   public boolean stopAfterFirstBatch = false;

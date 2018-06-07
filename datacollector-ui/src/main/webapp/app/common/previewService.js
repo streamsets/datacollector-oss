@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Service for providing access to the Preview/Snapshot utility functions.
- */
+
+ // Service for providing access to the Preview/Snapshot utility functions.
 angular.module('dataCollectorApp.common')
   .service('previewService', function(api, $q, $translate, $timeout) {
     var self = this;
@@ -29,7 +28,6 @@ angular.module('dataCollectorApp.common')
       translations = _translations;
     });
 
-
     /**
      * Returns Preview input lane & output lane data for the given Stage Instance.
      *
@@ -39,12 +37,12 @@ angular.module('dataCollectorApp.common')
      */
     this.getPreviewDataForStage = function (batchData, stageInstance) {
       var stagePreviewData = {
-          input: [],
-          output: [],
-          errorRecords: [],
-          stageErrors: [],
-          newRecords: []
-        };
+        input: [],
+        output: [],
+        errorRecords: [],
+        stageErrors: [],
+        newRecords: []
+      };
 
       angular.forEach(batchData, function (stageOutput) {
         if(stageOutput.instanceName === stageInstance.instanceName) {
@@ -197,22 +195,22 @@ angular.module('dataCollectorApp.common')
       var deferred = $q.defer();
       api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, true, [], edge.target.instanceName)
         .then(
-        function (res) {
-          var checkStatusDefer = $q.defer();
-          checkForPreviewStatus(res.data.previewerId, checkStatusDefer);
-          return checkStatusDefer.promise;
-        },
-        function(res) {
-          deferred.reject(res);
-        })
+          function (res) {
+            var checkStatusDefer = $q.defer();
+            checkForPreviewStatus(res.data.previewerId, checkStatusDefer);
+            return checkStatusDefer.promise;
+          },
+          function(res) {
+            deferred.reject(res);
+          })
         .then(
-        function(previewData) {
-          var stagePreviewData = self.getPreviewDataForEdge(previewData.batchesOutput[0], edge);
-          deferred.resolve(stagePreviewData.input);
-        },
-        function(res) {
-          deferred.reject(res);
-        });
+          function(previewData) {
+            var stagePreviewData = self.getPreviewDataForEdge(previewData.batchesOutput[0], edge);
+            deferred.resolve(stagePreviewData.input);
+          },
+          function(res) {
+            deferred.reject(res);
+          });
 
       return deferred.promise;
     };
@@ -302,7 +300,7 @@ angular.module('dataCollectorApp.common')
           var lanePredicate = lanePredicatesConfiguration.value[index];
           if(lanePredicate && lanePredicate.predicate) {
             info += ', <span class="predicate-label">' + translations['global.form.condition'] +
-            ': </span><span class="predicate-value">' + escapeHtml(lanePredicate.predicate) + '</span>';
+              ': </span><span class="predicate-value">' + escapeHtml(lanePredicate.predicate) + '</span>';
           }
         } else {
           var outputStreamLabels = stageInstance.uiInfo.outputStreamLabels,
