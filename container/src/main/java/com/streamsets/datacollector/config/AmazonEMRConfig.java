@@ -239,7 +239,7 @@ public class AmazonEMRConfig {
   public String masterSecurityGroup;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Slave Security Group",
       group = "EMR",
