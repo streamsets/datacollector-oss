@@ -44,7 +44,6 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-@HideConfigs(value = {"s3TargetConfigBean.dataGeneratorFormatConfig.includeSchema"})
 public class AmazonS3DTarget extends DTarget {
 
   @ConfigDefBean()

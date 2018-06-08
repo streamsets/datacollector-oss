@@ -225,7 +225,7 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
   private void upgradeV10toV11(List<Config> configs, Context context) {
     List<Config> dataFormatConfigs = configs.stream()
-      .filter(c -> c.getName().startsWith("s3TargetConfigBean.dataFormat"))
+      .filter(c -> c.getName().startsWith("s3TargetConfigBean.dataGeneratorFormat") || c.getName().startsWith("s3TargetConfigBean.dataFormat"))
       .collect(Collectors.toList());
 
     // Remove those configs
