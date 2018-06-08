@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   HADOOP_FS("Hadoop FS"),
   DATA_FORMAT("Data Format"),
+  S3 ("S3")
   ;
 
   private final String label;

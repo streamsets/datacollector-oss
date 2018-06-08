@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DClusterSourceOffsetCo
 import com.streamsets.pipeline.api.impl.ClusterSource;
 
 @StageDef(
-  version = 5,
+  version = 6,
   label = "Hadoop FS",
   description = "Reads data from Hadoop file system",
   execution = {ExecutionMode.CLUSTER_BATCH , ExecutionMode.EMR_BATCH },

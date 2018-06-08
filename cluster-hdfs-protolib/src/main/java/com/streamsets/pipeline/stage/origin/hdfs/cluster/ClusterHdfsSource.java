@@ -159,6 +159,23 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     getHadoopConfiguration(issues);
 
+    try {
+      String awsAccessKey = conf.awsAccessKey.get();
+      if (!awsAccessKey.isEmpty()) {
+        hadoopConf.set("fs.s3a.access.key", awsAccessKey);
+      }
+    } catch (StageException ex) {
+      issues.add(getContext().createConfigIssue("S3", "awsAccessKey", ex.getErrorCode(), ex.getParams()));
+    }
+    try {
+      String awsSecretKey = conf.awsSecretKey.get();
+      if (!awsSecretKey.isEmpty()) {
+        hadoopConf.set("fs.s3a.secret.key", awsSecretKey);
+      }
+    } catch (StageException ex) {
+      issues.add(getContext().createConfigIssue("S3", "awsSecretKey", ex.getErrorCode(), ex.getParams()));
+    }
+
     validateHadoopFS(issues);
 
     // This is for getting no of splits - no of executors

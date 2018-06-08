@@ -109,6 +109,44 @@ public class TestClusterHdfsSource {
     Mockito.verify(clusterHdfsSource, Mockito.times(1)).getUGI();
   }
 
+  @Test
+  public void testAwsAccessSecretKeyEmpty() throws Exception {
+    List<String> dirPaths = Arrays.asList("dummy");
+    ClusterHdfsConfigBean conf = getConfigBean(dirPaths);
+    conf.awsAccessKey = () -> "";
+    conf.awsSecretKey = () -> "";
+    ClusterHdfsSource clusterHdfsSource = createSource(conf);
+    try {
+      clusterHdfsSource.init(
+          null,
+          ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR, ImmutableList.of("lane"))
+      );
+      Assert.assertNull(clusterHdfsSource.getConfiguration().get("fs.s3a.access.key"));
+      Assert.assertNull(clusterHdfsSource.getConfiguration().get("fs.s3a.secret.key"));
+    } finally {
+      clusterHdfsSource.destroy();
+    }
+  }
+
+  @Test
+  public void testAwsAccessSecretKeyPresent() throws Exception {
+    List<String> dirPaths = Arrays.asList("dummy");
+    ClusterHdfsConfigBean conf = getConfigBean(dirPaths);
+    conf.awsAccessKey = () -> "access";
+    conf.awsSecretKey = () -> "secret";
+    ClusterHdfsSource clusterHdfsSource = createSource(conf);
+    try {
+      clusterHdfsSource.init(
+          null,
+          ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR, ImmutableList.of("lane"))
+      );
+      Assert.assertEquals("access", clusterHdfsSource.getConfiguration().get("fs.s3a.access.key"));
+      Assert.assertEquals("secret", clusterHdfsSource.getConfiguration().get("fs.s3a.secret.key"));
+    } finally {
+      clusterHdfsSource.destroy();
+    }
+  }
+
   private ClusterHdfsConfigBean getConfigBean(List<String> dirPaths) {
     ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
     conf.hdfsUri = "";

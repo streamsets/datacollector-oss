@@ -81,4 +81,19 @@ public class TestClusterHdfsSourceUpgrader {
     Assert.assertTrue(configValues.containsKey("clusterHDFSConfigBean.dataFormatConfig.textMaxLineLen"));
     Assert.assertEquals(1024, configValues.get("clusterHDFSConfigBean.dataFormatConfig.textMaxLineLen"));
   }
+
+  @Test
+  public void testUpgradeV5toV6() throws StageException {
+    List<Config> configs = new ArrayList<>();
+
+    ClusterHdfsSourceUpgrader clusterHdfsSourceUpgrader = new ClusterHdfsSourceUpgrader();
+    clusterHdfsSourceUpgrader.upgrade("a", "b", "c", 5, 6, configs);
+
+    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals("awsAccessKey", configs.get(0).getName());
+    Assert.assertEquals("", configs.get(0).getValue());
+    Assert.assertEquals("awsSecretKey", configs.get(1).getName());
+    Assert.assertEquals("", configs.get(1).getValue());
+  }
+
 }

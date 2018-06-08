@@ -17,7 +17,9 @@ package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -140,4 +142,23 @@ public class ClusterHdfsConfigBean {
       max = Integer.MAX_VALUE
   )
   public int maxBatchSize;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "AWS access key",
+      group = "S3",
+      displayPosition = 110
+  )
+  public CredentialValue awsAccessKey = () -> "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "AWS secret key",
+      group = "S3",
+      displayPosition = 120
+  )
+  public CredentialValue awsSecretKey = () -> "";
+
 }

@@ -59,11 +59,19 @@ public class ClusterHdfsSourceUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config("awsAccessKey", ""));
+    configs.add(new Config("awsSecretKey", ""));
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
