@@ -900,7 +900,7 @@ public class ClusterRunner extends AbstractRunner {
     LOG.info("Cleaning up application");
     try {
       clusterHelper.cleanUp(appState, pipelineConfiguration, pipelineConfigBean);
-    } catch (IOException ex) {
+    } catch (IOException|StageException ex) {
       LOG.error("Error cleaning up application: {}", ex, ex);
     }
     Optional<String> dirID = appState.getDirId();

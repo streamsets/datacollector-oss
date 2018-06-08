@@ -17,7 +17,9 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 import java.util.Properties;
 
@@ -52,7 +54,7 @@ public class AmazonEMRConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "AWS access key",
       group = "EMR",
       displayPosition = 110,
@@ -60,11 +62,11 @@ public class AmazonEMRConfig {
       @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
   }
   )
-  public String accessKey = "";
+  public CredentialValue accessKey = () -> "";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "AWS secret key",
       group = "EMR",
       displayPosition = 120,
@@ -72,7 +74,7 @@ public class AmazonEMRConfig {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
       }
   )
-  public String secretKey = "";
+  public CredentialValue secretKey = () -> "";
 
   @ConfigDef(
       required = true,
@@ -363,10 +365,10 @@ public class AmazonEMRConfig {
   private static final String ENABLE_EMR_DEBUGGING = "enableEmrDebugging";
   private static final String S3_LOG_URI = "s3LogUri";
 
-  public Properties convertToProperties() {
+  public Properties convertToProperties() throws StageException {
     Properties props = new Properties();
-    props.setProperty(ACCESS_KEY, accessKey);
-    props.setProperty(SECRET_KEY, secretKey);
+    props.setProperty(ACCESS_KEY, accessKey.get());
+    props.setProperty(SECRET_KEY, secretKey.get());
     props.setProperty(USER_REGION, getUserRegion());
     props.setProperty(S3_STAGING_URI, s3StagingUri);
     props.setProperty(PROVISION_NEW_CLUSTER, Boolean.toString(provisionNewCluster));

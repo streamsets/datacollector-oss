@@ -21,6 +21,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.pipeline.api.StageException;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public interface ClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException;
+  ) throws TimeoutException, IOException, StageException;
 
 
   ClusterPipelineStatus getStatus(
@@ -43,7 +44,7 @@ public interface ClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException;
+  ) throws TimeoutException, IOException, StageException;
 
 
   ApplicationState startPipeline(
@@ -62,12 +63,12 @@ public interface ClusterProvider {
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  ) throws TimeoutException, IOException;
+  ) throws TimeoutException, IOException, StageException;
 
 
   void cleanUp(
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws IOException;
+  ) throws IOException, StageException;
 }

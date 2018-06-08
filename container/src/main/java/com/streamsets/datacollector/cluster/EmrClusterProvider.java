@@ -25,6 +25,7 @@ import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration).getClient(pipelineConfigBean
@@ -90,7 +91,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration).getClient(pipelineConfigBean
@@ -109,7 +110,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws IOException {
+  ) throws IOException, StageException {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration)
@@ -143,7 +144,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
       String mesosURL,
       String clusterBootstrapApiJar,
       List<Issue> errors
-  ) throws IOException {
+  ) throws IOException, StageException {
     jarsToShip = Sets.newHashSet(jarsToShip);
     jarsToShip.add(bootstrapJar.getAbsolutePath());
     File stagingDriverJar = new File(stagingDir,  new File(clusterBootstrapApiJar).getName());

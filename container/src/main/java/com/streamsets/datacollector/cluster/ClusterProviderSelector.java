@@ -30,6 +30,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class ClusterProviderSelector implements ClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     getProvider(pipelineConfiguration).killPipeline(
         tempDir, applicationState,
         pipelineConfiguration, pipelineConfigBean
@@ -88,7 +89,7 @@ public class ClusterProviderSelector implements ClusterProvider {
       File tempDir,
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration, PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     return getProvider(pipelineConfiguration).getStatus(tempDir,
         applicationState,
         pipelineConfiguration,
@@ -110,7 +111,7 @@ public class ClusterProviderSelector implements ClusterProvider {
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     return getProvider(pipelineConfiguration).startPipeline(
         tempDir, sourceInfo,
         pipelineConfiguration, pipelineConfigBean, stageLibrary,
@@ -132,7 +133,7 @@ public class ClusterProviderSelector implements ClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws IOException {
+  ) throws IOException, StageException {
     getProvider(pipelineConfiguration).cleanUp(applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 }

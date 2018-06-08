@@ -56,6 +56,7 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -447,7 +448,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  ) throws IOException, TimeoutException {
+  ) throws IOException, TimeoutException, StageException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
       String msg = Utils.format("Could not create staging directory: {}", stagingDir);
@@ -510,7 +511,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       File stagingDir,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  ) throws IOException, TimeoutException {
+  ) throws IOException, TimeoutException, StageException {
 
     // create libs.tar.gz file for pipeline
     Map<String, List<URL>> streamsetsLibsCl = new HashMap<>();
@@ -856,7 +857,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       String clusterBootstrapApiJar,
 
       List<Issue> errors
-  ) throws IOException;
+  ) throws IOException, StageException;
 
 
   private void extractClassLoaderInfo(

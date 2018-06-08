@@ -30,6 +30,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
@@ -100,7 +101,7 @@ public class ClusterHelper {
       final long timeout,
       RuleDefinitions ruleDefinitions,
       Acl acl
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
 
     return clusterProvider.startPipeline(
         tempDir,
@@ -125,7 +126,7 @@ public class ClusterHelper {
       final PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
   )
-    throws TimeoutException, IOException {
+    throws TimeoutException, IOException, StageException {
     clusterProvider.killPipeline(tempDir, applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 
@@ -134,7 +135,7 @@ public class ClusterHelper {
       final PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
   )
-      throws IOException {
+      throws IOException, StageException {
     clusterProvider.cleanUp(applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 
@@ -142,7 +143,7 @@ public class ClusterHelper {
       final ApplicationState applicationState,
       final PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  ) throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException, StageException {
     return clusterProvider.getStatus(tempDir, applicationState, pipelineConfiguration, pipelineConfigBean);
   }
 
