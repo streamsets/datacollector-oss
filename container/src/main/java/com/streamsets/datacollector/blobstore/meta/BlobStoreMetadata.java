@@ -58,4 +58,9 @@ public class BlobStoreMetadata {
   public NamespaceMetadata getNamespace(String namespace) {
     return namespaces.get(namespace);
   }
+
+  @JsonIgnore
+  public void removeNamespace(String namespace) {
+    namespaces.remove(namespace);
+  }
 }

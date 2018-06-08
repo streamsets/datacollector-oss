@@ -31,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class BlobStoreTaskImplTest {
 
-  private static RuntimeInfo createRuntimeInfo() throws Exception{
+  private static RuntimeInfo createRuntimeInfo() throws Exception {
     RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
     when(runtimeInfo.getDataDir()).thenReturn(Files.createTempDirectory("blob-store-test").toString());
 
@@ -146,7 +146,7 @@ public class BlobStoreTaskImplTest {
     store.delete("policy", "1234", 4);
     assertEquals(Collections.emptySet(), store.allVersions("policy", "1234"));
 
-    assertTrue(store.exists("policy", "1234"));
+    assertFalse(store.exists("policy", "1234"));
   }
 
   @Test
@@ -161,6 +161,6 @@ public class BlobStoreTaskImplTest {
     store.deleteAllVersions("policy", "1234");
 
     assertEquals(Collections.emptySet(), store.allVersions("policy", "1234"));
-    assertTrue(store.exists("policy", "1234"));
+    assertFalse(store.exists("policy", "1234"));
   }
 }

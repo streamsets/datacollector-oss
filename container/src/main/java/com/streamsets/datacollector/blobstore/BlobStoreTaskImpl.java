@@ -183,6 +183,19 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
       throw new StageException(BlobStoreError.BLOB_STORE_0008, e.toString(), e);
     }
 
+    NamespaceMetadata namespaceMetadata = metadata.getNamespace(namespace);
+
+    // If this is the last version of given object, let's also remove the whole object
+    if(objectMetadata.isEmpty()) {
+      namespaceMetadata.removeObject(id);
+    }
+
+    // And propagate the same delete up
+    if(namespaceMetadata.isEmpty()) {
+      metadata.removeNamespace(namespace);
+    }
+
+    saveMetadata();
   }
 
   private void saveMetadata() throws StageException {
