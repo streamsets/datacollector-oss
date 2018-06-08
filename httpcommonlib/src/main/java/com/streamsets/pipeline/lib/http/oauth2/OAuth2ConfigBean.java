@@ -72,6 +72,7 @@ import java.util.Map;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_25;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_26;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_27;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_33;
 
 public class OAuth2ConfigBean {
 
@@ -89,7 +90,13 @@ public class OAuth2ConfigBean {
   public static final String PASSWORD_KEY = "password";// NOSONAR
   public static final String RESOURCE_OWNER_GRANT = "password";
 
-  public static final String ACCESS_TOKEN_KEY = "access_token";
+  // RFC-6749 name for access token:
+  private static final String ACCESS_TOKEN_RFC = "access_token";
+  // SalesForce uses this name for access token (SDC-9185 for discussion):
+  private static final String ACCESS_TOKEN_SF = "accessToken";
+  // Google JWT auth may use this style (SDC-8089 for discussion):
+  private static final String ACCESS_TOKEN_GOOGLE = "id_token";
+
   private static final String PREFIX = "conf.client.oauth2.";
 
   public static final String RSA = "RSA";
@@ -301,8 +308,21 @@ public class OAuth2ConfigBean {
 
     if (issues.isEmpty()) {
       String accessToken = obtainAccessToken(webClient);
-      filter = new OAuth2HeaderFilter(parseAccessToken(accessToken));
-      webClient.register(filter);
+      if (!accessToken.isEmpty()) {
+        String token = parseAccessToken(accessToken);
+        if (token.isEmpty()) {
+          issues.add(context.createConfigIssue("#0",
+              "",
+              HTTP_33,
+              ACCESS_TOKEN_RFC,
+              ACCESS_TOKEN_SF,
+              ACCESS_TOKEN_GOOGLE
+          ));
+        } else {
+          filter = new OAuth2HeaderFilter(token);
+          webClient.register(filter);
+        }
+      }
     }
   }
 
@@ -398,7 +418,19 @@ public class OAuth2ConfigBean {
   @VisibleForTesting
   String parseAccessToken(String tokenJson) throws IOException {
     JsonNode node = OBJECT_MAPPER.reader().readTree(tokenJson);
-    return node.findValue(ACCESS_TOKEN_KEY).asText();
+
+    String answer = "";
+    if (node.has(ACCESS_TOKEN_RFC)) {
+      answer = node.findValue(ACCESS_TOKEN_RFC).asText();
+
+    } else if (node.has(ACCESS_TOKEN_SF)) {
+      answer = node.findValue(ACCESS_TOKEN_SF).asText();
+
+    } else if (node.has(ACCESS_TOKEN_GOOGLE)) {
+      answer = node.findValue(ACCESS_TOKEN_GOOGLE).asText();
+    }
+
+    return answer;
   }
 
   private Entity generateRequestEntity() throws IOException, StageException {
