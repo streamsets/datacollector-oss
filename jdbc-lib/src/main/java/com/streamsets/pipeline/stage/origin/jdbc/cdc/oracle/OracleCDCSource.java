@@ -461,7 +461,7 @@ public class OracleCDCSource extends BaseSource {
         recordQueue.put(
             new RecordOffset(
                 dummyRecord,
-                new Offset(VERSION_UNCOMMITTED, startTime, lastCommitSCN.toPlainString(), sequenceNumber)
+                new Offset(version, startTime, lastCommitSCN.toPlainString(), sequenceNumber)
             )
         );
         selectChanges = getSelectChangesStatement();
