@@ -15,21 +15,28 @@
  */
 package com.streamsets.pipeline.stage.bigquery.lib;
 
+import com.google.api.services.bigquery.Bigquery.Jobs.GetQueryResults;
 import com.google.auth.Credentials;
 import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.BigQuery.QueryResultsOption;
+import com.google.cloud.bigquery.BigQueryError;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.FieldValue;
+import com.google.cloud.bigquery.Job;
+import com.google.cloud.bigquery.JobId;
+import com.google.cloud.bigquery.JobInfo;
 import com.google.cloud.bigquery.LegacySQLTypeName;
-import com.google.cloud.bigquery.QueryRequest;
+import com.google.cloud.bigquery.QueryJobConfiguration;
 import com.google.cloud.bigquery.QueryResponse;
-import com.google.cloud.bigquery.QueryResult;
 import com.google.cloud.bigquery.StandardSQLTypeName;
+import com.google.cloud.bigquery.TableResult;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +96,7 @@ public class BigQueryDelegate {
   private final Map<FieldValue.Attribute, BiFunction<com.google.cloud.bigquery.Field, FieldValue, Field>> transforms =
       ImmutableMap.of(
           FieldValue.Attribute.PRIMITIVE, this::fromPrimitiveField,
-          FieldValue.Attribute.RECORD, (s, v) -> Field.create(fieldsToMap(s.getFields(), v.getRecordValue())),
+          FieldValue.Attribute.RECORD, (s, v) -> Field.create(fieldsToMap(s.getSubFields(), v.getRecordValue())),
           FieldValue.Attribute.REPEATED, (s, v) -> Field.create(fromRepeatedField(s, v.getRepeatedValue()))
       );
 
@@ -113,9 +120,9 @@ public class BigQueryDelegate {
     this.clock = clock;
 
     if (useLegacySql) {
-      asRecordFieldTypeFunction = field -> LEGACY_SQL_TYPES.get(field.getType().getValue());
+      asRecordFieldTypeFunction = field -> LEGACY_SQL_TYPES.get(field.getType());
     } else {
-      asRecordFieldTypeFunction = field -> STANDARD_SQL_TYPES.get(field.getType().getValue().getStandardType());
+      asRecordFieldTypeFunction = field -> STANDARD_SQL_TYPES.get(field.getType().getStandardType());
     }
   }
 
@@ -133,62 +140,94 @@ public class BigQueryDelegate {
 
   /**
    * Executes a query request and returns the results. A timeout is required to avoid
-   * waiting for an indeterminate amount of time. If the query fails to complete within the timeout it is aborted.
+   * waiting for an indeterminate amount of time. If the query fails to complete within the
+   * timeout it is aborted.
    *
-   * @param queryRequest request describing the query to execute
+   * @param queryConfig request describing the query to execute
    * @param timeout maximum amount of time to wait for job completion before attempting to cancel
    * @return result of the query.
-   * @throws StageException if the query does not complete within the requested timeout or there is an error
-   * executing the query.
+   * @throws StageException if the query does not complete within the requested timeout or
+   * there is an error executing the query.
    */
-  public QueryResult runQuery(QueryRequest queryRequest, long timeout) throws
+  public TableResult runQuery(QueryJobConfiguration queryConfig, long timeout, long pageSize) throws
       StageException {
     checkArgument(timeout >= 1000, "Timeout must be at least one second.");
     Instant maxTime = Instant.now().plusMillis(timeout);
 
-    QueryResponse response = bigquery.query(queryRequest);
-    while(!response.jobCompleted()) {
+    // Create a job ID so that we can safely retry.
+    JobId jobId = JobId.of(UUID.randomUUID().toString());
+    JobInfo jobInfo = JobInfo.newBuilder(queryConfig).setJobId(jobId).build();
+    Job queryJob = bigquery.create(jobInfo);
+
+    // Check for errors
+    if (queryJob == null) {
+      LOG.error("Job no longer exists: {}", jobInfo);
+      throw new RuntimeException("Job no longer exists: "+jobInfo);
+    } else if (queryJob.getStatus().getError() != null) {
+      BigQueryError error = queryJob.getStatus().getError();
+      LOG.error("Query Job execution error: {}", error);
+      throw new StageException(Errors.BIGQUERY_02, error);
+    }
+
+    //Should consider using .waitFor(RetryOption.totalTimeout())
+    while(!queryJob.isDone()) {
       if (Instant.now(clock).isAfter(maxTime) || !ThreadUtil.sleep(100)) {
-        if (bigquery.cancel(response.getJobId())) {
-          LOG.info("Job {} cancelled successfully.", response.getJobId());
+        if (bigquery.cancel(queryJob.getJobId())) {
+          LOG.info("Job {} cancelled successfully.", queryJob.getJobId());
         } else {
-          LOG.warn("Job {} not found", response.getJobId());
+          LOG.warn("Job {} not found", queryJob.getJobId());
         }
         throw new StageException(Errors.BIGQUERY_00);
       }
-      response = bigquery.getQueryResults(response.getJobId());
     }
 
-    if (response.hasErrors()) {
-      String errorMsg = response.getExecutionErrors().get(0).toString();
+
+    if (queryJob.getStatus().getError() != null) {
+      String errorMsg = queryJob.getStatus().getError().toString();
       throw new StageException(Errors.BIGQUERY_02, errorMsg);
     }
 
     // Get the results.
-    return response.getResult();
+    TableResult result = null;
+    try {
+      result = queryJob.getQueryResults(QueryResultsOption.pageSize(pageSize));
+    } catch (InterruptedException e) {
+      String errorMsg = e.getMessage();
+      throw new StageException(Errors.BIGQUERY_02, errorMsg);
+    }
+
+    return result;
   }
 
   /**
-   * Returns the SDC record {@link Field} type mapped from a BigQuery {@link com.google.cloud.bigquery.Field} type.
+   * Returns the SDC record {@link Field} type mapped from a
+   * BigQuery {@link com.google.cloud.bigquery.Field} type.
    *
    * @param field A BigQuery {@link com.google.cloud.bigquery.Field}
    * @return SDC record {@link Field.Type}
    */
   public Field.Type asRecordFieldType(com.google.cloud.bigquery.Field field) {
     Field.Type type = asRecordFieldTypeFunction.apply(field);
-    return checkNotNull(type, Utils.format("Unsupported type '{}'", field.getType().getValue()));
+    return checkNotNull(type, Utils.format("Unsupported type '{}'", field.getType()));
   }
 
   /**
-   * Converts a list of BigQuery fields to SDC Record fields. The provided parameters must have matching lengths.
-   * If not, an unchecked exception will be thrown. This method is called when the resulting container type
-   * should be a {@link Field.Type#LIST_MAP}
+   * Converts a list of BigQuery fields to SDC Record fields.
+   * The provided parameters must have matching lengths.
    *
-   * @param schema List of {@link com.google.cloud.bigquery.Field} representing the schema at the current level of
-   * nesting. For example, if processing a {@link LegacySQLTypeName#RECORD} or {@link StandardSQLTypeName#STRUCT}
-   * this would only include the fields for that particular data structure and not the entire result set.
-   * @param values List of {@link FieldValue} representing the values to set in the generated fields.
-   * @return Specifically, a LinkedHashMap as the return value of this method is expected to be used to create a
+   * If not, an unchecked exception will be thrown. This method is called when the resulting
+   * container type should be a {@link Field.Type#LIST_MAP}
+   *
+   * @param schema List of {@link com.google.cloud.bigquery.Field} representing the schema
+   * at the current level of nesting. For example, if processing a
+   * {@link LegacySQLTypeName#RECORD} or {@link StandardSQLTypeName#STRUCT}
+   * this would only include the fields for that particular data structure and not the entire
+   * result set.
+   *
+   * @param values List of {@link FieldValue} representing the values to set in the generated
+   * fields.
+   * @return Specifically, a LinkedHashMap as the return value of this method is expected to be
+   * used to create a
    * {@link Field.Type#LIST_MAP} field.
    */
   public LinkedHashMap<String, Field> fieldsToMap( // NOSONAR
@@ -209,7 +248,10 @@ public class BigQueryDelegate {
       if (value.getAttribute().equals(FieldValue.Attribute.PRIMITIVE)) {
         root.put(field.getName(), fromPrimitiveField(field, value));
       } else if (value.getAttribute().equals(FieldValue.Attribute.RECORD)) {
-        root.put(field.getName(), Field.create(fieldsToMap(field.getFields(), value.getRecordValue())));
+        root.put(
+            field.getName(),
+            Field.create(fieldsToMap(field.getSubFields(), value.getRecordValue()))
+        );
       } else if (value.getAttribute().equals(FieldValue.Attribute.REPEATED)) {
         root.put(field.getName(), Field.create(fromRepeatedField(field, value.getRepeatedValue())));
       }
@@ -218,23 +260,31 @@ public class BigQueryDelegate {
   }
 
   /**
-   * Repeated fields are simply fields that may appear more than once. In SDC we will represent them as a list
-   * field. For example a repeated field of type RECORD would be a {@link Field.Type#LIST} of
-   * {@link Field.Type#LIST_MAP} and a repeated field of type STRING would be a {@link Field.Type#LIST} of
-   * {@link Field.Type#STRING}.
+   * Repeated fields are simply fields that may appear more than once. In SDC we will
+   * represent them as a list field. For example a repeated field of type RECORD would be a
+   * {@link Field.Type#LIST} of
+   * {@link Field.Type#LIST_MAP} and a repeated field of type STRING would be
+   * a {@link Field.Type#LIST} of {@link Field.Type#STRING}.
    *
    * @param schema The field metadata for the repeated field
    * @param repeatedValue a list of individual field values that represent the repeated field
-   * @return a list of SDC record fields. Intended to be used for creating a {@link Field.Type#LIST} {@link Field}
+   * @return a list of SDC record fields.
+   * Intended to be used for creating a {@link Field.Type#LIST} {@link Field}
    */
-  public List<Field> fromRepeatedField(com.google.cloud.bigquery.Field schema, List<FieldValue> repeatedValue) {
+  public List<Field> fromRepeatedField(com.google.cloud.bigquery.Field schema,
+      List<FieldValue> repeatedValue) {
+
     if (repeatedValue.isEmpty()) {
       return Collections.emptyList();
     }
     FieldValue.Attribute repeatedFieldType = repeatedValue.get(0).getAttribute();
 
-    BiFunction<com.google.cloud.bigquery.Field, FieldValue, Field> transform = transforms.get(repeatedFieldType);
-    return repeatedValue.stream().map( v -> transform.apply(schema, v)).collect(Collectors.toList());
+    BiFunction<com.google.cloud.bigquery.Field, FieldValue, Field> transform =
+        transforms.get(repeatedFieldType);
+    return repeatedValue
+        .stream()
+        .map( v -> transform.apply(schema, v))
+        .collect(Collectors.toList());
   }
 
   public Field fromPrimitiveField(com.google.cloud.bigquery.Field field, FieldValue value) {

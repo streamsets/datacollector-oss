@@ -16,25 +16,29 @@
 
 package com.streamsets.pipeline.stage.pubsub.origin;
 
+
 import com.google.api.gax.batching.FlowControlSettings;
 import com.google.api.gax.batching.FlowController;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
-import com.google.api.gax.grpc.ChannelProvider;
-import com.google.cloud.pubsub.v1.PagedResponseWrappers;
+import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
+import com.google.api.gax.rpc.TransportChannel;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.cloud.pubsub.v1.TopicAdminSettings;
+
+import com.google.pubsub.v1.ProjectSubscriptionName;
+
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.iam.v1.TestIamPermissionsResponse;
 import com.google.pubsub.v1.ProjectName;
-import com.google.pubsub.v1.SubscriptionName;
+import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.Topic;
-import com.google.pubsub.v1.TopicName;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -61,6 +65,7 @@ import java.util.concurrent.TimeUnit;
 import static com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig.CONF_CREDENTIALS_CREDENTIALS_PROVIDER;
 
 public class PubSubSource extends BasePushSource {
+
   private static final Logger LOG = LoggerFactory.getLogger(PubSubSource.class);
   private static final String PUBSUB_SUBSCRIPTIONS_GET_PERMISSION = "pubsub.subscriptions.get";
 
@@ -113,11 +118,26 @@ public class PubSubSource extends BasePushSource {
     List<ConfigIssue> issues = super.init();
 
     conf.dataFormatConfig.stringBuilderPoolSize = getNumberOfThreads();
-    if (conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.PUBSUB.name(), "conf.dataFormat.", issues)) {
+
+    boolean init = conf.dataFormatConfig
+        .init(
+            getContext(),
+            conf.dataFormat,
+            Groups.PUBSUB.name(),
+            "conf.dataFormat.",
+            issues
+        );
+
+    if (init) {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
 
-    conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
+    conf.credentials
+        .getCredentialsProvider(
+            getContext(),
+            issues
+        )
+        .ifPresent(p -> credentialsProvider = p);
 
     if (issues.isEmpty()) {
       issues.addAll(testPermissions(conf));
@@ -131,7 +151,12 @@ public class PubSubSource extends BasePushSource {
 
     TopicAdminSettings settings;
     try {
-      settings = TopicAdminSettings.defaultBuilder().setCredentialsProvider(credentialsProvider).build();
+      settings =
+          (TopicAdminSettings) TopicAdminSettings
+              .newBuilder()
+              .setCredentialsProvider(credentialsProvider)
+              .build();
+
     } catch (IOException e) {
       LOG.error(Errors.PUBSUB_04.getMessage(), e.toString(), e);
       issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(),
@@ -140,15 +165,24 @@ public class PubSubSource extends BasePushSource {
     }
 
     try (TopicAdminClient topicAdminClient = TopicAdminClient.create(settings)) {
-      PagedResponseWrappers.ListTopicsPagedResponse listTopicsResponse = topicAdminClient.listTopics(ProjectName
-          .newBuilder()
-          .setProject(conf.credentials.projectId)
-          .build());
+      TopicAdminClient.ListTopicsPagedResponse listTopicsResponse = topicAdminClient
+          .listTopics(
+              ProjectName
+              .newBuilder()
+              .setProject(conf.credentials.projectId)
+              .build()
+          );
 
       for (Topic topic : listTopicsResponse.iterateAll()) {
-        PagedResponseWrappers.ListTopicSubscriptionsPagedResponse listSubscriptionsResponse = topicAdminClient
-            .listTopicSubscriptions(
-            TopicName.create(conf.credentials.projectId, topic.getNameAsTopicName().getTopic()));
+        TopicAdminClient.ListTopicSubscriptionsPagedResponse listSubscriptionsResponse =
+            topicAdminClient
+                .listTopicSubscriptions(
+                    ProjectTopicName
+                        .of(
+                            conf.credentials.projectId,
+                            topic.getName()
+                        )
+                );
         for (String s : listSubscriptionsResponse.iterateAll()) {
           LOG.info("Subscription '{}' exists for topic '{}'", s, topic.getName());
         }
@@ -156,7 +190,11 @@ public class PubSubSource extends BasePushSource {
 
       List<String> permissions = new LinkedList<>();
       permissions.add(PUBSUB_SUBSCRIPTIONS_GET_PERMISSION);
-      SubscriptionName subscriptionName = SubscriptionName.create(conf.credentials.projectId, conf.subscriptionId);
+      ProjectSubscriptionName subscriptionName = ProjectSubscriptionName
+          .of(
+              conf.credentials.projectId,
+              conf.subscriptionId
+          );
       TestIamPermissionsResponse testedPermissions =
           topicAdminClient.testIamPermissions(subscriptionName.toString(), permissions);
       if (testedPermissions.getPermissionsCount() != 1) {
@@ -183,7 +221,11 @@ public class PubSubSource extends BasePushSource {
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     SynchronousQueue<MessageReplyConsumerBundle> workQueue = new SynchronousQueue<>();
 
-    SubscriptionName subscriptionName = SubscriptionName.create(conf.credentials.projectId, conf.subscriptionId);
+    ProjectSubscriptionName subscriptionName = ProjectSubscriptionName
+        .of(
+            conf.credentials.projectId,
+            conf.subscriptionId
+        );
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
 
@@ -203,11 +245,12 @@ public class PubSubSource extends BasePushSource {
         .setExecutorThreadCount(conf.advanced.numThreadsPerSubscriber)
         .build();
 
-    ChannelProvider channelProvider = getChannelProvider();
+    InstantiatingGrpcChannelProvider channelProvider = getChannelProvider();
+
     FlowControlSettings flowControlSettings = getFlowControlSettings();
 
     for (int i = 0; i < conf.advanced.numSubscribers; i++) {
-      Subscriber s = Subscriber.defaultBuilder(subscriptionName, new MessageReceiverImpl(workQueue))
+      Subscriber s = Subscriber.newBuilder(subscriptionName, new MessageReceiverImpl(workQueue))
           .setCredentialsProvider(credentialsProvider)
           .setExecutorProvider(executorProvider)
           .setChannelProvider(channelProvider)
@@ -236,9 +279,9 @@ public class PubSubSource extends BasePushSource {
   }
 
   /**
-   * Returns a flow control setting such that a subscriber will block if it has buffered more messages than can
-   * be processed in a single batch times the number of record processors. Since the flow control settings are
-   * per subscriber, we should divide by the number of subscribers to avoid buffering too much data in each subscriber.
+   * Returns a flow control setting such that a subscriber will block if it has buffered more messages than can be
+   * processed in a single batch times the number of record processors. Since the flow control settings are per
+   * subscriber, we should divide by the number of subscribers to avoid buffering too much data in each subscriber.
    *
    * @return settings based on the stage configuration.
    */
@@ -255,8 +298,9 @@ public class PubSubSource extends BasePushSource {
    *
    * @return channel provider based on the stage configuration.
    */
-  private ChannelProvider getChannelProvider() {
-    return SubscriptionAdminSettings.defaultGrpcChannelProviderBuilder()
+  private InstantiatingGrpcChannelProvider getChannelProvider() {
+    return SubscriptionAdminSettings
+        .defaultGrpcTransportProviderBuilder()
         .setMaxInboundMessageSize(MAX_INBOUND_MESSAGE_SIZE)
         .setEndpoint(Strings.isNullOrEmpty(conf.advanced.customEndpoint) ? SubscriptionAdminSettings
             .getDefaultEndpoint() : conf.advanced.customEndpoint)

@@ -21,6 +21,7 @@ import com.google.api.gax.core.CredentialsProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.common.base.Throwables;
 import com.google.protobuf.ByteString;
+import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
 import com.streamsets.pipeline.api.Batch;
@@ -97,12 +98,12 @@ public class PubSubTarget extends BaseTarget {
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
     }
 
-    TopicName topic = TopicName.create(conf.credentials.projectId, conf.topicId);
+    ProjectTopicName topic = ProjectTopicName.of(conf.credentials.projectId, conf.topicId);
 
     conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
 
     try {
-      publisher = Publisher.defaultBuilder(topic).setCredentialsProvider(credentialsProvider).build();
+      publisher = Publisher.newBuilder(topic).setCredentialsProvider(credentialsProvider).build();
     } catch (IOException e) {
       LOG.error(Errors.PUBSUB_07.getMessage(), conf.topicId, e.toString(), e);
       issues.add(getContext().createConfigIssue(

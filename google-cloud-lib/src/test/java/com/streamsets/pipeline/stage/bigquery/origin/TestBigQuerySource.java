@@ -19,9 +19,12 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.FieldValue;
+import com.google.cloud.bigquery.FieldValueList;
+import com.google.cloud.bigquery.Job;
 import com.google.cloud.bigquery.JobId;
-import com.google.cloud.bigquery.QueryResponse;
-import com.google.cloud.bigquery.QueryResult;
+import com.google.cloud.bigquery.JobInfo;
+import com.google.cloud.bigquery.JobStatus;
+import com.google.cloud.bigquery.TableResult;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -46,6 +49,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -58,7 +62,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 public class TestBigQuerySource {
   private BigQuery mockBigquery;
   private JobId jobId;
-  private QueryResult mockResult;
+  private TableResult mockResult;
 
   @Parameterized.Parameters
   public static Collection<Object[]> streams() {
@@ -75,7 +79,7 @@ public class TestBigQuerySource {
   public void setUp() throws Exception {
     mockBigquery = mock(BigQuery.class);
     jobId = JobId.of("test-project", "datacollector");
-    mockResult = mock(QueryResult.class);
+    mockResult = mock(TableResult.class);
 
     mockStatic(ServiceAccountCredentials.class);
     mockStatic(GoogleCredentials.class);
@@ -111,27 +115,31 @@ public class TestBigQuerySource {
     conf.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     conf.query = "SELECT * FROM [test:table]";
 
-    QueryResponse mockQueryResponse = mock(QueryResponse.class);
+
+    Job mockJob = mock(Job.class);
+    JobStatus mockJobStatus = mock(JobStatus.class);
+
     // First pretend we haven't finished running the query, second time around its completed.
-    when(mockQueryResponse.jobCompleted()).thenReturn(false).thenReturn(true);
-    when(mockQueryResponse.getJobId()).thenReturn(jobId);
-    when(mockQueryResponse.hasErrors()).thenReturn(false);
+    when(mockJob.isDone()).thenReturn(false).thenReturn(true);
+    when(mockJob.getJobId()).thenReturn(jobId);
+    when(mockJobStatus.getError()).thenReturn(null);
+    when(mockJob.getStatus()).thenReturn(mockJobStatus);
 
-    when(mockBigquery.query(any())).thenReturn(mockQueryResponse);
-    when(mockBigquery.getQueryResults(jobId)).thenReturn(mockQueryResponse);
-
-    QueryResult mockQueryResult = mock(QueryResult.class);
-    when(mockQueryResponse.getResult()).thenReturn(mockQueryResult);
-
-    List<List<FieldValue>> resultSet = new ArrayList<>(1);
+    List<FieldValueList> resultSet = new ArrayList<>(1);
     resultSet.add(TestBigQueryDelegate.createTestValues());
 
     when(mockResult.getSchema()).thenReturn(TestBigQueryDelegate.createTestSchema());
+    when(mockResult.iterateAll()).thenReturn(resultSet);
     when(mockResult.getValues()).thenReturn(resultSet);
+
+    when(mockJob.getQueryResults()).thenReturn(mockResult);
+
+    when(mockBigquery.create((JobInfo)any())).thenReturn(mockJob);
+    when(mockBigquery.cancel(jobId)).thenReturn(true);
 
     BigQuerySource bigquerySource = spy(new BigQuerySource(conf));
     doReturn(mockBigquery).when(bigquerySource).getBigQuery(any());
-    doReturn(mockResult).when(bigquerySource).runQuery(any());
+    doReturn(mockResult).when(bigquerySource).runQuery(any(), anyLong());
 
     SourceRunner runner = new SourceRunner.Builder(BigQueryDSource.class, bigquerySource)
         .addOutputLane("lane")

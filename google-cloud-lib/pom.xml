@@ -35,6 +35,8 @@
   <properties>
     <gcp-beta.version>0.25.0-beta</gcp-beta.version>
     <gcp-gcs.version>1.3.1</gcp-gcs.version>
+    <gcp-ps.version>1.32.0</gcp-ps.version>
+    <gcp-bigquery.version>1.33.0</gcp-bigquery.version>
     <netty.version>4.1.14.Final</netty.version>
   </properties>
 
@@ -43,12 +45,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigquery</artifactId>
-      <version>${gcp-beta.version}</version>
+      <version>${gcp-bigquery.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>${gcp-beta.version}</version>
+      <version>${gcp-ps.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
