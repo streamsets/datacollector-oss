@@ -185,7 +185,7 @@ public class TestSpoolDirSource {
       source.offset = 1;
       source.maxBatchSize = 10;
 
-      Thread.sleep(1000);
+      Thread.sleep(5000L);
 
       PushSourceRunner runner3 = new PushSourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
 
@@ -551,7 +551,7 @@ public class TestSpoolDirSource {
     }
 
     // for ctime delays, there's no way to set ctime (change timestamp) explicitly by rule
-    Thread.sleep(1000L);
+    Thread.sleep(5000L);
 
     File current = new File(conf.spoolDir,"a.log");
     try(FileOutputStream outputStream = new FileOutputStream(current)) {
