@@ -208,6 +208,7 @@ public class OracleCDCSource extends BaseSource {
   private String selectString;
   private String version;
   private ZoneId zoneId;
+  private Record dummyRecord;
   private boolean useLocalBuffering;
 
   private Gauge<Map<String, Object>> delay;
@@ -282,6 +283,9 @@ public class OracleCDCSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
+    if (dummyRecord == null) {
+      dummyRecord = getContext().createRecord("DUMMY");
+    }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     int recordGenerationAttempts = 0;
     boolean recordsProduced = false;
@@ -320,8 +324,12 @@ public class OracleCDCSource extends BaseSource {
             if (recordOffset.record instanceof EventRecord) {
               getContext().toEvent((EventRecord) recordOffset.record);
             } else {
-              batchMaker.addRecord(recordOffset.record);
-              recordsProduced = true;
+              // Make sure we move the offset forward even if no real data was produced, so that we don't end up
+              // pointing to a start time which is very old.
+              if (recordOffset.record != dummyRecord) {
+                batchMaker.addRecord(recordOffset.record);
+                recordsProduced = true;
+              }
             }
             nextOffset = recordOffset.offset.toString();
           } else {
@@ -450,6 +458,12 @@ public class OracleCDCSource extends BaseSource {
       error = false;
       generationStarted = true;
       try {
+        recordQueue.put(
+            new RecordOffset(
+                dummyRecord,
+                new Offset(VERSION_UNCOMMITTED, startTime, lastCommitSCN.toPlainString(), sequenceNumber)
+            )
+        );
         selectChanges = getSelectChangesStatement();
         if (!useLocalBuffering) {
           selectChanges.setBigDecimal(1, lastCommitSCN);
@@ -666,7 +680,10 @@ public class OracleCDCSource extends BaseSource {
             startTime = adjustStartTime(endTime);
             endTime = getEndTimeForStartTime(startTime);
           }
-          startLogMinerUsingGivenDates(startTime.format(dateTimeColumnHandler.dateFormatter), endTime.format(dateTimeColumnHandler.dateFormatter));
+          startLogMinerUsingGivenDates(
+              startTime.format(dateTimeColumnHandler.dateFormatter),
+              endTime.format(dateTimeColumnHandler.dateFormatter)
+          );
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
           try {
