@@ -82,6 +82,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +115,32 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private static final String YARN_SITE_XML = "yarn-site.xml";
   private static final String HDFS_SITE_XML = "hdfs-site.xml";
   private static final String MAPRED_SITE_XML = "mapred-site.xml";
+
+  private static final String CLUSTER_HDFS_SOURCE_CONFIG = "cluster-hdfs-source.properties";
+  private static final String REQUIRE_HADOOP_CONF_KEY = "require.hadoop.conf";
+  private static final String REQUIRE_URI_AUTHORITY_KEY = "require.uri.authority";
+
+  private static final boolean REQUIRE_HADOOP_CONF;
+  private static final boolean REQUIRE_URI_AUTHORITY;
+
+  static {
+    boolean hadoopConf = true;
+    boolean uriAuthority = true;
+    try (InputStream is = Thread.currentThread()
+                                .getContextClassLoader()
+                                .getResourceAsStream(CLUSTER_HDFS_SOURCE_CONFIG)) {
+      if (is != null) {
+        Properties properties = new Properties();
+        properties.load(is);
+        hadoopConf = Boolean.parseBoolean(properties.getProperty(REQUIRE_HADOOP_CONF_KEY, "true"));
+        uriAuthority = Boolean.parseBoolean(properties.getProperty(REQUIRE_URI_AUTHORITY_KEY, "true"));
+      }
+    } catch (IOException ex) {
+      //ignore
+    }
+    REQUIRE_HADOOP_CONF = hadoopConf;
+    REQUIRE_URI_AUTHORITY = uriAuthority;
+  }
 
   private final Producer producer;
   private final Consumer consumer;
@@ -462,7 +490,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   protected boolean shouldHadoopConfigsExist() {
-    return true;
+    return REQUIRE_HADOOP_CONF;
   }
 
   protected void getHadoopConfiguration(List<ConfigIssue> issues) {
@@ -677,7 +705,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   protected boolean isURIAuthorityRequired() {
-    return true;
+    return REQUIRE_URI_AUTHORITY;
   }
 
   @VisibleForTesting

@@ -239,6 +239,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../emr-protolib/src/test/resources</directory>
+                                    <directory>${basedir}/../emr-protolib/src/main/resources</directory>
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>

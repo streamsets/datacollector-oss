@@ -144,12 +144,17 @@ public class ClusterHDFSSourceIT {
       conf.hdfsConfDir = dummyEtcConfigsAbsent.getName();
       conf.dataFormat = DataFormat.TEXT;
       conf.dataFormatConfig.textMaxLineLen = 1024;
+      ClusterHdfsSource clusterHdfsSource = createSource(conf);
+      if (!clusterHdfsSource.shouldHadoopConfigsExist()) {
+        return;
+      }
       SourceRunner sourceRunner =
-        new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
+        new SourceRunner.Builder(ClusterHdfsDSource.class, clusterHdfsSource)
         .addOutputLane("lane")
         .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
         .setResourcesDir(resourcesDir)
         .build();
+
 
       verifyForTestConfigsAbsent(sourceRunner, 3);
 
@@ -229,13 +234,20 @@ public class ClusterHDFSSourceIT {
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_02"));
 
-      conf.hdfsUri = "hdfs:///noauthority";
-      clusterHdfsSource = createSource(conf);
-      issues = clusterHdfsSource.init(null, ContextInfoCreator
-          .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane"), resourcesDir));
-      assertEquals(String.valueOf(issues), 1, issues.size());
-      assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
+      if (clusterHdfsSource.isURIAuthorityRequired()) {
+        conf.hdfsUri = "hdfs:///noauthority";
+        clusterHdfsSource = createSource(conf);
+        issues = clusterHdfsSource.init(null,
+            ContextInfoCreator.createSourceContext("myInstance",
+                false,
+                OnRecordError.TO_ERROR,
+                ImmutableList.of("lane"),
+                resourcesDir
+            )
+        );
+        assertEquals(String.valueOf(issues), 1, issues.size());
+        assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
+      }
 
       conf.hdfsUri = "hdfs://localhost:50000";
       clusterHdfsSource = createSource(conf);
