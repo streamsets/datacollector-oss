@@ -147,12 +147,10 @@ public class StageRuntime implements PushSourceContextDelegate {
     return stageBean.getStage();
   }
 
-  // Java doesn't allow casting of List<InterceptorRuntime> to List<Interceptor>, so we "hack it" a bit here
   public List<InterceptorRuntime> getPreInterceptors() {
     return preInterceptors;
   }
 
-  // Java doesn't allow casting of List<InterceptorRuntime> to List<Interceptor>, so we "hack it" a bit here
   public List<InterceptorRuntime> getPostInterceptors() {
     return postInterceptors;
   }
@@ -193,6 +191,9 @@ public class StageRuntime implements PushSourceContextDelegate {
       try {
         interceptor.getContext().setAllowCreateStage(true);
         issues.addAll(interceptor.init());
+
+        // Propagate issues from "sub-stages"
+        issues.addAll(interceptor.getContext().getIssues());
       } finally {
         interceptor.getContext().setAllowCreateStage(false);
       }
@@ -319,6 +320,10 @@ public class StageRuntime implements PushSourceContextDelegate {
 
       for(InterceptorRuntime interceptor : Iterables.concat(preInterceptors, postInterceptors)) {
         interceptor.destroy();
+
+        for(DetachedStageRuntime stageRuntime : interceptor.getContext().getStageRuntimes()) {
+          stageRuntime.runDestroy();
+        }
       }
     } finally {
       // Do not eventSink and errorSink to null when in preview mode AND current thread

@@ -23,6 +23,7 @@ import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InterceptorContext implements Interceptor.Context {
@@ -65,6 +67,17 @@ public class InterceptorContext implements Interceptor.Context {
    * List of issues for dependent stages.
    */
   private List issues = new ArrayList<>();
+  public List<Issue> getIssues() {
+    return issues;
+  }
+
+  /**
+   * Return list of all created stages
+   */
+  private List<DetachedStageRuntime> stageRuntimes = new ArrayList<>();
+  public List<DetachedStageRuntime> getStageRuntimes() {
+    return Collections.unmodifiableList(stageRuntimes);
+  }
 
   public InterceptorContext(
     BlobStore blobStore,
@@ -151,12 +164,17 @@ public class InterceptorContext implements Interceptor.Context {
       lineagePublisherDelegator,
       issues
     );
-
     if(stageRuntime == null) {
       return null;
     }
 
-    // TODO: SDC-9239: Wire lifecycle of Detached stages in Interceptor context
+    stageRuntimes.add(stageRuntime);
+
+    List localIssues = stageRuntime.runInit();
+    if(!localIssues.isEmpty()) {
+      issues.addAll(localIssues);
+      return null;
+    }
 
     return (S)stageRuntime;
   }

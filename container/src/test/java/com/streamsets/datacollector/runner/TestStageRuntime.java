@@ -148,14 +148,22 @@ public class TestStageRuntime {
   public void testInterceptorInit() throws Exception {
     Mockito.verify(preInterceptor, Mockito.never()).init();
     Mockito.verify(preInterceptorContext, Mockito.never()).setAllowCreateStage(Mockito.anyBoolean());
+    Mockito.verify(preInterceptorContext, Mockito.never()).getStageRuntimes();
+
     Mockito.verify(postInterceptor, Mockito.never()).init();
     Mockito.verify(postInterceptorContext, Mockito.never()).setAllowCreateStage(Mockito.anyBoolean());
+    Mockito.verify(postInterceptorContext, Mockito.never()).getStageRuntimes();
+
     runtime.init();
+
     Mockito.verify(preInterceptor, Mockito.times(1)).init();
     Mockito.verify(preInterceptorContext, Mockito.times(1)).setAllowCreateStage(true);
     Mockito.verify(preInterceptorContext, Mockito.times(1)).setAllowCreateStage(false);
+    Mockito.verify(preInterceptorContext, Mockito.times(1)).getIssues();
+
     Mockito.verify(postInterceptor, Mockito.times(1)).init();
     Mockito.verify(postInterceptorContext, Mockito.times(1)).setAllowCreateStage(true);
     Mockito.verify(postInterceptorContext, Mockito.times(1)).setAllowCreateStage(false);
+    Mockito.verify(postInterceptorContext, Mockito.times(1)).getIssues();
   }
 }

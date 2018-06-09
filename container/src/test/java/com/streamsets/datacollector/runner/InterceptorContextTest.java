@@ -16,10 +16,12 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -29,6 +31,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class InterceptorContextTest {
@@ -46,7 +52,7 @@ public class InterceptorContextTest {
       blobStore,
       configuration,
       "stageInstance",
-      Mockito.mock(StageLibraryTask.class),
+      MockStages.createStageLibrary(),
       "pipelineId",
       "pipelineTitle",
       "rev",
@@ -72,5 +78,21 @@ public class InterceptorContextTest {
   public void testCreateStageGuardNotAllowed() throws Exception {
     context.setAllowCreateStage(false);
     context.createStage(null, Processor.class);
+  }
+
+  @Test
+  public void testCreateStage() throws Exception {
+    // Create mocked JSON stage
+    StageConfiguration stageConf = MockStages.createProcessor("p", Collections.emptyList(), Collections.emptyList());
+    StageConfigurationJson stageConfigurationJson = new StageConfigurationJson(stageConf);
+    String json = ObjectMapperFactory.get().writeValueAsString(stageConfigurationJson);
+
+    context.setAllowCreateStage(true);
+    Processor processor = context.createStage(json, Processor.class);
+
+    assertNotNull(processor);
+    assertEquals(0, context.getIssues().size());
+    assertEquals(1, context.getStageRuntimes().size());
+    assertEquals(processor, context.getStageRuntimes().get(0));
   }
 }
