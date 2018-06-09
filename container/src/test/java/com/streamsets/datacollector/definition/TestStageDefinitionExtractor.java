@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -39,6 +40,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -280,6 +282,14 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  @StageDef(version = 1, label = "Hidden stage", onlineHelpRefUrl = "")
+  @HideStage(HideStage.Type.FIELD_PROCESSOR)
+  public static class HiddenStage extends BaseProcessor {
+    @Override
+    public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+    }
+  }
+
   private static final StageLibraryDefinition MOCK_LIB_DEF =
       new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties(),
                                  null, null, null);
@@ -319,6 +329,9 @@ public class TestStageDefinitionExtractor {
     Assert.assertTrue(service.getConfiguration().containsKey("importance"));
     Assert.assertEquals("Czech", service.getConfiguration().get("country"));
     Assert.assertEquals("high", service.getConfiguration().get("importance"));
+
+    Assert.assertNotNull(def.getHideStage());
+    Assert.assertEquals(0, def.getHideStage().size());
   }
 
   @Test
@@ -485,6 +498,15 @@ public class TestStageDefinitionExtractor {
 
     StageDefinition def = StageDefinitionExtractor.get().extract(libDef, ProducesEventsTarger.class, "x");
     Assert.assertTrue(def.isProducingEvents());
+  }
+
+  @Test
+  public void testExtractHideStage() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, HiddenStage.class, "x");
+
+    Assert.assertNotNull(def.getHideStage());
+    Assert.assertEquals(1, def.getHideStage().size());
+    Assert.assertEquals(HideStage.Type.FIELD_PROCESSOR, def.getHideStage().get(0));
   }
 
 }

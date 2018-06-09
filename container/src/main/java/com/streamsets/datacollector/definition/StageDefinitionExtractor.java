@@ -27,6 +27,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineFragmentConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
@@ -228,6 +229,13 @@ public abstract class StageDefinitionExtractor {
         boolean recordsByRef = sDef.recordsByRef();
         List<ServiceDependencyDefinition> services = extractServiceDependencies(sDef);
 
+        // Should the stage be hidden from canvas? If so, where else should it be displayed?
+        HideStage hideStageDef = klass.getAnnotation(HideStage.class);
+        List<HideStage.Type> hideStage = new ArrayList<>();
+        if(hideStageDef != null) {
+          hideStage.addAll(Arrays.asList(hideStageDef.value()));
+        }
+
         // If not a stage library, then dont add stage system configs
         if (!PipelineBeanCreator.PIPELINE_LIB_DEFINITION.equals(libraryDef.getName())) {
           List<ConfigDefinition> systemConfigs =
@@ -309,7 +317,8 @@ public abstract class StageDefinitionExtractor {
             pipelineLifecycleStage,
             offsetCommitController,
             producesEvents,
-            services
+            services,
+            hideStage
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);

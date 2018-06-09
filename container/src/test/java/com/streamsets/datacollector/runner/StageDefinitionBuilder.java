@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
@@ -68,6 +69,7 @@ public class StageDefinitionBuilder {
   boolean offsetCommitTrigger = false;
   boolean producesEvents = false;
   List<ServiceDependencyDefinition> services = Collections.emptyList();
+  List<HideStage.Type> hideStage = Collections.emptyList();
 
   public StageDefinitionBuilder(ClassLoader cl, Class<? extends Stage> klass, String name) {
     this.libraryDefinition = createLibraryDef(cl);
@@ -164,6 +166,11 @@ public class StageDefinitionBuilder {
     return this;
   }
 
+  public StageDefinitionBuilder withHideStage(List<HideStage.Type> hideStage) {
+    this.hideStage = hideStage;
+    return this;
+  }
+
   public StageDefinition build() {
     return new StageDefinition(
       libraryDefinition,
@@ -194,7 +201,8 @@ public class StageDefinitionBuilder {
       pipelineLifecycleStage,
       offsetCommitTrigger,
       producesEvents,
-      services
+      services,
+      hideStage
     );
   }
 

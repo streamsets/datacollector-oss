@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageType;
@@ -70,6 +71,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final boolean offsetCommitTrigger;
   private final boolean producesEvents;
   private final List<ServiceDependencyDefinition> services;
+  private final List<HideStage.Type> hideStage;
 
   // localized version
   private StageDefinition(
@@ -102,7 +104,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
       boolean producesEvents,
-      List<ServiceDependencyDefinition> services
+      List<ServiceDependencyDefinition> services,
+      List<HideStage.Type> hideStage
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -148,6 +151,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.offsetCommitTrigger = offsetCommitTrigger;
     this.producesEvents = producesEvents;
     this.services = Collections.unmodifiableList(services);
+    this.hideStage = Collections.unmodifiableList(hideStage);
   }
 
   @SuppressWarnings("unchecked")
@@ -188,6 +192,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     producesEvents = def.producesEvents;
     pipelineLifecycleStage = def.pipelineLifecycleStage;
     services = def.services;
+    hideStage = def.hideStage;
   }
 
   public StageDefinition(
@@ -219,7 +224,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
       boolean producesEvents,
-      List<ServiceDependencyDefinition> services
+      List<ServiceDependencyDefinition> services,
+      List<HideStage.Type> hideStage
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -264,6 +270,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.offsetCommitTrigger = offsetCommitTrigger;
     this.producesEvents = producesEvents;
     this.services = Collections.unmodifiableList(services);
+    this.hideStage = Collections.unmodifiableList(hideStage);
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -546,7 +553,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         pipelineLifecycleStage,
         offsetCommitTrigger,
         producesEvents,
-        services
+        services,
+        hideStage
     );
   }
 
@@ -587,6 +595,11 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   public List<ServiceDependencyDefinition> getServices() {
     return services;
   }
+
+  public List<HideStage.Type> getHideStage() {
+    return hideStage;
+  }
+
 }
 
 
