@@ -425,4 +425,19 @@ public class TestPipelineConfigurationValidator {
     Assert.assertFalse(validator.getIssues().hasIssues());
     Assert.assertTrue(validator.getOpenLanes().isEmpty());
   }
+
+  @Test
+  public void testHiddenStageOnPipelineCanvas() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineWithHiddenStage();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0037.name(), issues.get(0).getErrorCode());
+  }
 }

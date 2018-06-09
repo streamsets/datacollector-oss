@@ -72,6 +72,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0034("Value for configuration '{}' cannot be greater then '{}'"),
   VALIDATION_0035("Value for configuration '{}' cannot be less then '{}'"),
   VALIDATION_0036("{} cannot have event streams '{}'"),
+  VALIDATION_0037("Stage can't be on the main pipeline canvas"),
 
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),

@@ -435,6 +435,13 @@ public class PipelineFragmentConfigurationValidator {
         );
         preview = false;
       }
+
+      // Hidden stages can't appear on the main canvas
+      if(!stageDef.getHideStage().isEmpty()) {
+        issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0037));
+        preview = false;
+      }
+
       for (String lane : stageConf.getInputLanes()) {
         if (!TextUtils.isValidName(lane)) {
           // stage instance input lane has an invalid name (it must match '[0-9A-Za-z_]+')

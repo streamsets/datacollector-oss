@@ -50,6 +50,7 @@ import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Executor;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
@@ -778,7 +779,9 @@ public class MockStages {
           .withProducingEvents(true)
           .build();
 
-
+        StageDefinition hiddenPDef = new StageDefinitionBuilder(cl, MProcessor.class, "hiddenProcessor")
+          .withHideStage(Collections.singletonList(HideStage.Type.FIELD_PROCESSOR))
+          .build();
         StageDefinition pDef = new StageDefinitionBuilder(cl, MProcessor.class, "processorName")
           .build();
 
@@ -931,6 +934,7 @@ public class MockStages {
               socDef,
               seDef,
               pushSourceDef,
+              hiddenPDef,
               pDef,
               tDef,
               tEventDef,
@@ -1526,6 +1530,27 @@ public class MockStages {
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
     return pipelineConfiguration;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineWithHiddenStage() {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+      .withOutputLanes("s")
+      .build();
+    stages.add(source);
+    StageConfiguration processor = new StageConfigurationBuilder("p", "hiddenProcessor")
+      .withInputLanes("s")
+      .withOutputLanes("p")
+      .build();
+    stages.add(processor);
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+      .withInputLanes("p")
+      .build();
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
