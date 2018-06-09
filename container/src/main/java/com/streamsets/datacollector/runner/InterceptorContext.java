@@ -20,6 +20,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 public class InterceptorContext implements Interceptor.Context {
@@ -53,5 +54,10 @@ public class InterceptorContext implements Interceptor.Context {
   @Override
   public BlobStore getBlobStore() {
     return blobStore;
+  }
+
+  @Override
+  public <S extends Stage> S createStage(String jsonDefinition, Class<S> klass) {
+    throw new UnsupportedOperationException();
   }
 }
