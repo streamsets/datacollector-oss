@@ -45,6 +45,10 @@ public class InterceptorRuntime implements Interceptor {
     this.context = context;
   }
 
+  public InterceptorContext getContext() {
+    return context;
+  }
+
   public List<Issue> init() {
     //TODO: Parameters should be passed in constructor similarly as we're passing StageConfiguration for stages
     return (List)init(Collections.emptyMap(), context);

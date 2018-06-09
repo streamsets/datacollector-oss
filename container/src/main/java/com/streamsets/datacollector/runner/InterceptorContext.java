@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.ConfigIssue;
@@ -28,6 +29,14 @@ public class InterceptorContext implements Interceptor.Context {
   private final BlobStore blobStore;
   private final Configuration configuration;
   private final String stageInstanceName;
+
+  /**
+   * Flag to configure if createStage method should be allowed or not.
+   */
+  private boolean allowCreateStage = false;
+  public void setAllowCreateStage(boolean allowCreateStage) {
+    this.allowCreateStage = allowCreateStage;
+  }
 
   public InterceptorContext(
     BlobStore blobStore,
@@ -58,6 +67,15 @@ public class InterceptorContext implements Interceptor.Context {
 
   @Override
   public <S extends Stage> S createStage(String jsonDefinition, Class<S> klass) {
-    throw new UnsupportedOperationException();
+    if(!allowCreateStage) {
+      throw new IllegalStateException("Method createStage can only be called during initialization phase!");
+    }
+
+    if(Strings.isNullOrEmpty(jsonDefinition)) {
+      return null;
+    }
+
+    // TODO: To be replaced with actual implementation
+    return null;
   }
 }

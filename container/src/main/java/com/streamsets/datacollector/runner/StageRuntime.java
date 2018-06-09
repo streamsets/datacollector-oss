@@ -190,7 +190,12 @@ public class StageRuntime implements PushSourceContextDelegate {
 
     // Initialize the interceptors that are created for this stage
     for(InterceptorRuntime interceptor : Iterables.concat(preInterceptors, postInterceptors)) {
-      issues.addAll(interceptor.init());
+      try {
+        interceptor.getContext().setAllowCreateStage(true);
+        issues.addAll(interceptor.init());
+      } finally {
+        interceptor.getContext().setAllowCreateStage(false);
+      }
     }
 
     // Firstly init() all services, so that Stage's init() can already use the Services if needed
