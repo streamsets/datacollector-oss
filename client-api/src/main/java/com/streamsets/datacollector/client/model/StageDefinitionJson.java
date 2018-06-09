@@ -83,6 +83,7 @@ public class StageDefinitionJson   {
   private String outputStreamLabelProviderClass = null;
   private List<String> outputStreamLabels = new ArrayList<String>();
   private List<ServiceDependencyDefinitionJson> services = null;
+  private List<String> hideStage = null;
   private List<ExecutionModesEnum> executionModes = new ArrayList<ExecutionModesEnum>();
   private String description = null;
   private Boolean privateClassLoader = null;
@@ -283,6 +284,18 @@ public class StageDefinitionJson   {
   }
   public void setServices(List<ServiceDependencyDefinitionJson> services) {
     this.services = services;
+  }
+
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("hideStage")
+  public List<String> getHideStage() {
+    return hideStage;
+  }
+  public void setHideStage(List<String>hideStage ) {
+    this.hideStage = hideStage;
   }
 
 

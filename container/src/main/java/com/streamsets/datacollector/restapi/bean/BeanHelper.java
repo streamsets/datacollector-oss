@@ -54,6 +54,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageType;
 
 import java.util.ArrayList;
@@ -1369,6 +1370,16 @@ public class BeanHelper {
 
     return services.stream()
       .map(ServiceConfigurationJson::getServiceConfiguration)
+      .collect(Collectors.toList());
+  }
+
+  public static List<String> wrapHideStage(List<HideStage.Type> hideStage) {
+    if(hideStage == null) {
+      return null;
+    }
+
+    return hideStage.stream()
+      .map(HideStage.Type::name)
       .collect(Collectors.toList());
   }
 }

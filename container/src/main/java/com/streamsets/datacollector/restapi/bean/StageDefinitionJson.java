@@ -144,4 +144,8 @@ public class StageDefinitionJson {
   public List<ServiceDependencyDefinitionJson> getServices() {
     return BeanHelper.wrapServiceDependencyDefinitions(stageDefinition.getServices());
   }
+
+  public List<String> getHideStage() {
+    return BeanHelper.wrapHideStage(stageDefinition.getHideStage());
+  }
 }
