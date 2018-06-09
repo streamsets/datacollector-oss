@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum OffsetFieldType implements Label {
   OBJECTID("ObjectId"),
   STRING("String"),
+  DATE("Date")
   ;
 
   private final String label;

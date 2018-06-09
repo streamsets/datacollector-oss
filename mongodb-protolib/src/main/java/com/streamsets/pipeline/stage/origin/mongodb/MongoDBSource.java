@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +46,11 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
   private ObjectId initialObjectId;
   private String initialId; // Used only when Offset Field is String type
+  private Date initialDate; // MongoDB does not support LocalDateTime yet
   private boolean EOSreached = false; //end of stream reached
   private long recordsSinceLastNMREvent = 0;
   private long errorRecordsSinceLastNMREvent = 0;
+  private final SimpleDateFormat dateFormatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
 
   public MongoDBSource(MongoSourceConfigBean configBean) {
     super(configBean);
@@ -60,7 +63,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
     if (configBean.offsetType == OffsetFieldType.STRING) {
       initialId = configBean.initialOffset; // Ok to be empty
     } else {
-      // Initial offset is required if offset type is ObjectId.
+      // Initial offset is required if offset type is ObjectId or Date.
       if (configBean.initialOffset == null || configBean.initialOffset.isEmpty()) {
         issues.add(
             getContext().createConfigIssue(
@@ -74,6 +77,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
       }
       try {
         initialObjectId = new ObjectId(new SimpleDateFormat(TIMESTAMP_FORMAT).parse(configBean.initialOffset));
+        initialDate = dateFormatter.parse(configBean.initialOffset);
       } catch (ParseException e) {
         issues.add(
             getContext().createConfigIssue(
@@ -121,11 +125,12 @@ public class MongoDBSource extends AbstractMongoDBSource {
           continue;
         }
 
-        // validate the date type of offset field is ObjectId
+        // validate the date type of offset field is ObjectId or Date
         Object offsetFieldObject = doc.get(configBean.offsetField);
         if (offsetFieldObject == null
             || (configBean.offsetType == OffsetFieldType.OBJECTID && !(offsetFieldObject instanceof ObjectId))
-            || (configBean.offsetType == OffsetFieldType.STRING && !(offsetFieldObject instanceof String))) {
+            || (configBean.offsetType == OffsetFieldType.STRING && !(offsetFieldObject instanceof String))
+            || (configBean.offsetType == OffsetFieldType.DATE && !(offsetFieldObject instanceof Date))) {
           LOG.debug(Errors.MONGODB_05.getMessage(), doc.toString(), configBean.offsetType.getLabel());
           errorRecordHandler.onError(Errors.MONGODB_05, doc, configBean.offsetType.getLabel());
           ++errorRecordsSinceLastNMREvent;
@@ -181,7 +186,15 @@ public class MongoDBSource extends AbstractMongoDBSource {
       if (configBean.offsetType == OffsetFieldType.STRING) {
         return doc.get(keys[i]).toString();
       }
-      return doc.getObjectId(keys[i]).toHexString();
+      else if(configBean.offsetType == OffsetFieldType.OBJECTID) {
+        return doc.getObjectId(keys[i]).toHexString();
+      }
+      else if(configBean.offsetType == OffsetFieldType.DATE){
+        return dateFormatter.format(doc.getDate(keys[i]));
+      }
+      else {
+        throw new StageException(Errors.MONGODB_20, configBean.offsetType);
+      }
     }
 
     if (!doc.containsKey(keys[i])) {
@@ -192,30 +205,39 @@ public class MongoDBSource extends AbstractMongoDBSource {
     return parseSourceOffset((Document)doc.get(keys[i]), keys, i+1);
   }
 
-  private void prepareCursor(int maxBatchSize, String offsetField, String lastSourceOffset) {
+  private void prepareCursor(int maxBatchSize, String offsetField, String lastSourceOffset) throws StageException {
     String stringOffset = "";
     ObjectId objectIdOffset = null;
+    Date dateOffset = null;
     if (null == cursor) {
       if (null == lastSourceOffset || lastSourceOffset.isEmpty()) {
         objectIdOffset = initialObjectId;
         stringOffset = initialId;
+        dateOffset = initialDate;
       } else {
         if (configBean.offsetType == OffsetFieldType.STRING)
           stringOffset = lastSourceOffset;
-        else
+        else if (configBean.offsetType == OffsetFieldType.OBJECTID)
           objectIdOffset = new ObjectId(lastSourceOffset);
+        else if (configBean.offsetType == OffsetFieldType.DATE) {
+          try {
+            dateOffset = dateFormatter.parse(lastSourceOffset);
+          } catch (ParseException ex) {
+            throw new StageException(Errors.MONGODB_21, lastSourceOffset);
+          }
+        }
       }
       LOG.debug("Getting new cursor with params: {} {} {}",
           maxBatchSize,
           offsetField,
-          configBean.offsetType == OffsetFieldType.STRING ? stringOffset : objectIdOffset);
+          configBean.offsetType == OffsetFieldType.STRING ? stringOffset : configBean.offsetType == OffsetFieldType.OBJECTID ? objectIdOffset : dateOffset);
 
       if (configBean.isCapped) {
         cursor = mongoCollection
             .find()
             .filter(Filters.gt(
                 offsetField,
-                configBean.offsetType == OffsetFieldType.STRING ?  stringOffset : objectIdOffset
+                configBean.offsetType ==  OffsetFieldType.STRING ? stringOffset : configBean.offsetType == OffsetFieldType.OBJECTID ? objectIdOffset : dateOffset
             ))
             .cursorType(CursorType.TailableAwait)
             .batchSize(maxBatchSize)
@@ -225,7 +247,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
             .find()
             .filter(Filters.gt(
                 offsetField,
-                configBean.offsetType == OffsetFieldType.STRING ? stringOffset : objectIdOffset
+                configBean.offsetType ==  OffsetFieldType.STRING ? stringOffset : configBean.offsetType == OffsetFieldType.OBJECTID ? objectIdOffset : dateOffset
             ))
             .sort(Sorts.ascending(offsetField))
             .cursorType(CursorType.NonTailable)

@@ -40,6 +40,8 @@ public enum Errors implements ErrorCode {
   MONGODB_17("Error writing records to Mongo : {}"),
   MONGODB_18("Operation '{}' requires unique key to be configured"),
   MONGODB_19("Initial Offset is required when the offset field is ObjectId type"),
+  MONGODB_20("Unknown Offset type : {}"),
+  MONGODB_21("Error parsing {} to Date"),
 
   MONGODB_30("Oplog Document Missing the follow mandatory fields '{}'"),
   MONGODB_31("Oplog Offset Invalid, Cannot parse offset '{}'," +

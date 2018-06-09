@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +56,8 @@ public class MongoDBSourceIT {
   private static final String BSON_COLLECTION = "bson";
   private static final String STRING_ID_COLLECTION = "stringId";
   private static final String CAPPED_STRING_ID_COLLECTION = "cappedStringId";
+  private static final String DATE_COLLECTION = "date";
+  private static final String CAPPED_DATE_COLLECTION = "cappedDate";
 
   private static final int TEST_COLLECTION_SIZE = 4;
   private static final int ONE_MB = 1000 * 1000;
@@ -63,6 +66,9 @@ public class MongoDBSourceIT {
   private static final UUID uuidValue = UUID.randomUUID();
   private static final int MONGO_PORT = 27017;
   private static int timestamp;
+
+  private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
 
   @ClassRule
   public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
@@ -86,6 +92,8 @@ public class MongoDBSourceIT {
     db.createCollection(BSON_COLLECTION);
     db.createCollection(STRING_ID_COLLECTION);
     db.createCollection(CAPPED_STRING_ID_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
+    db.createCollection(DATE_COLLECTION);
+    db.createCollection(CAPPED_DATE_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
 
 
     MongoCollection<Document> capped = db.getCollection(CAPPED_COLLECTION);
@@ -387,6 +395,82 @@ public class MongoDBSourceIT {
   }
 
   @Test
+  public void testDateOffset() throws Exception {
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":" + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(DATE_COLLECTION)
+        .offsetField("date")
+        .isCapped(false)
+        .setOffsetType(OffsetFieldType.DATE)
+        .maxBatchWaitTime(100)
+        .readPreference(ReadPreferenceLabel.NEAREST)
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+            .addOutputLane("lane")
+            .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+    insertDocsWithDateField(DATE_COLLECTION);
+
+    final int maxBatchSize = 2;
+
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals("First batch should contain 2 records",2, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Second batch should contain 1 records",1, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Last batch should have 0 records",0, parsedRecords.size());
+  }
+
+  @Test
+  public void testDateOffsetCappedCollection() throws Exception {
+    MongoDBSource origin = new MongoDBSourceBuilder()
+            .connectionString("mongodb://" + mongoContainerIp + ":" + mongoContainerMappedPort)
+            .database(DATABASE_NAME)
+            .collection(CAPPED_DATE_COLLECTION)
+            .offsetField("date")
+            .isCapped(true)
+            .setOffsetType(OffsetFieldType.DATE)
+            .maxBatchWaitTime(100)
+            .readPreference(ReadPreferenceLabel.NEAREST)
+            .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+            .addOutputLane("lane")
+            .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+    insertDocsWithDateField(CAPPED_DATE_COLLECTION);
+
+    final int maxBatchSize = 2;
+
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals("First batch should contain 2 records",2, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Second batch should contain 1 record",1, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Last batch should have 0 records",0, parsedRecords.size());
+  }
+
+  @Test
   public void testStringOffset() throws Exception {
 
     MongoDBSource origin = new MongoDBSourceBuilder()
@@ -417,7 +501,7 @@ public class MongoDBSourceIT {
 
     output = runner.runProduce(output.getNewOffset(), maxBatchSize);
     parsedRecords = output.getRecords().get("lane");
-    assertEquals("Second batch should contain 2 records",1, parsedRecords.size());
+    assertEquals("Second batch should contain 1 records",1, parsedRecords.size());
 
     output = runner.runProduce(output.getNewOffset(), maxBatchSize);
     parsedRecords = output.getRecords().get("lane");
@@ -479,6 +563,19 @@ public class MongoDBSourceIT {
 
     MongoCollection<Document> collection = db.getCollection(collectionName);
     collection.insertOne(new Document("value", "document 12345"));
+
+    mongo.close();
+  }
+
+  private void insertDocsWithDateField(String collectionName) throws Exception
+  {
+    MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
+    MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
+
+    MongoCollection<Document> collection = db.getCollection(collectionName);
+    collection.insertOne(new Document("date", dateFormatter.parse("2015-06-01 00:00:00")));
+    collection.insertOne(new Document("date", dateFormatter.parse("2015-06-02 00:00:00")));
+    collection.insertOne(new Document("date", dateFormatter.parse("2015-06-03 00:00:00")));
 
     mongo.close();
   }
