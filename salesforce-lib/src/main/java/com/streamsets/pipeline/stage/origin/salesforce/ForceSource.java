@@ -719,11 +719,10 @@ public class ForceSource extends BaseSource {
   private String fixOffset(String offsetColumn, String offset) {
     com.sforce.soap.partner.Field sfdcField = ((SobjectRecordCreator)recordCreator).getFieldMetadata(sobjectType, offsetColumn);
     if (SobjectRecordCreator.DECIMAL_TYPES.contains(sfdcField.getType().toString())
-        && sfdcField.getScale() == 0
         && offset.contains("E")) {
       BigDecimal val = new BigDecimal(offset);
       offset = val.toPlainString();
-      if (val.compareTo(MAX_OFFSET_INT) > 0) {
+      if (val.compareTo(MAX_OFFSET_INT) > 0 && !offset.contains(".")) {
         // We need the ".0" suffix since Salesforce doesn't like integer
         // bigger than 2147483647
         offset += ".0";
