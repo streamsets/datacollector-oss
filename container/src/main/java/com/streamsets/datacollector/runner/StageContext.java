@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
@@ -180,7 +181,11 @@ public class StageContext extends ProtoContext implements
       int runnerId,
       boolean isPreview,
       MetricRegistry metrics,
-      StageRuntime stageRuntime,
+      List<ConfigDefinition> configDefinitions,
+      OnRecordError onRecordError,
+      List<String> outputLanes,
+      Map<String, Object> constants,
+      Stage.Info stageInfo,
       long pipelineMaxMemory,
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee,
@@ -194,14 +199,14 @@ public class StageContext extends ProtoContext implements
   ) {
     super(
       configuration,
-      getConfigToElDefMap(stageRuntime.getDefinition().getConfigDefinitions()),
-      stageRuntime.getConstants(),
+      getConfigToElDefMap(configDefinitions),
+      constants,
       emailSender,
       metrics,
       pipelineId,
       rev,
       runnerId,
-      stageRuntime.getInfo().getInstanceName(),
+      stageInfo.getInstanceName(),
       stageType,
       null,
       runtimeInfo.getResourcesDir()
@@ -211,9 +216,9 @@ public class StageContext extends ProtoContext implements
     this.userContext = userContext;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
-    this.stageInfo = stageRuntime.getInfo();
-    this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
-    onRecordError = stageRuntime.getOnRecordError();
+    this.stageInfo = stageInfo;
+    this.outputLanes = ImmutableList.copyOf(outputLanes);
+    this.onRecordError = onRecordError;
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;

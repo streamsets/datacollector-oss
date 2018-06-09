@@ -402,7 +402,21 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
-  private StageBean createStageBean(
+  /**
+   * Create new instance of StageBean.
+   *
+   * This method can be used outside of pipeline context (for example for detached stage).
+   *
+   * @param forExecution If the instance is going to be used for execution (and for example private classloaders must be respected)
+   * @param library Stage Library from which a definition will be loaded
+   * @param stageConf Stage configuration
+   * @param errorStage True if the stage needs to be declared as error stage
+   * @param pipelineLifecycleStage True if the stage needs to be declared as pipeline lifecycle stage
+   * @param constants Pipeline constants (runtime parameters)
+   * @param errors List where all errors will be persisted
+   * @return New StageBean instance or null on any error
+   */
+  public StageBean createStageBean(
       boolean forExecution,
       StageLibraryTask library,
       StageConfiguration stageConf,

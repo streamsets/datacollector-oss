@@ -352,6 +352,7 @@ public class Pipeline {
 
             // Initialize and convert them to source-less pipeline runner
             pipes.add(createSourceLessRunner(
+              stageLib,
               name,
               rev,
               configuration,
@@ -617,6 +618,7 @@ public class Pipeline {
       if (pipelineBean != null) {
         // Origin runtime and pipe
         StageRuntime originRuntime = createAndInitializeStageRuntime(
+          stageLib,
           pipelineConf,
           pipelineBean,
           pipelineBean.getOrigin(),
@@ -643,6 +645,7 @@ public class Pipeline {
 
         // Generate runtime and pipe for the first source-less pipeline runner
         pipes.add(createSourceLessRunner(
+          stageLib,
           pipelineName,
           rev,
           configuration,
@@ -665,6 +668,7 @@ public class Pipeline {
 
         // Error stage handling
         errorStage = createAndInitializeStageRuntime(
+          stageLib,
           pipelineConf,
           pipelineBean,
           pipelineBean.getErrorStage(),
@@ -692,6 +696,7 @@ public class Pipeline {
         StatsAggregationHandler statsAggregationHandler = null;
         if (pipelineBean.getStatsAggregatorStage() != null) {
           statsAggregator = createAndInitializeStageRuntime(
+            stageLib,
             pipelineConf,
             pipelineBean,
             pipelineBean.getStatsAggregatorStage(),
@@ -725,6 +730,7 @@ public class Pipeline {
         StageRuntime stopEventStageRuntime = null;
         if(pipelineBean.getStartEventStages().size() == 1) {
           startEventStageRuntime = createAndInitializeStageRuntime(
+            stageLib,
             pipelineConf,
             pipelineBean,
             pipelineBean.getStartEventStages().get(0),
@@ -744,6 +750,7 @@ public class Pipeline {
         }
         if(pipelineBean.getStopEventStages().size() == 1) {
           stopEventStageRuntime = createAndInitializeStageRuntime(
+            stageLib,
             pipelineConf,
             pipelineBean,
             pipelineBean.getStopEventStages().get(0),
@@ -821,6 +828,7 @@ public class Pipeline {
   }
 
   private static PipeRunner createSourceLessRunner(
+    StageLibraryTask stageLib,
     String pipelineName,
     String rev,
     Configuration configuration,
@@ -851,6 +859,7 @@ public class Pipeline {
       Map<String, Object> sharedRunnerMap = sharedRunnerMaps.get(i);
 
       stages.add(createAndInitializeStageRuntime(
+        stageLib,
         pipelineConf,
         pipelineBean,
         stageBean,
@@ -963,7 +972,8 @@ public class Pipeline {
     return pipesBuilder.build();
   }
 
-  private static StageRuntime createAndInitializeStageRuntime(
+  public static StageRuntime createAndInitializeStageRuntime(
+    StageLibraryTask stageLib,
     PipelineConfiguration pipelineConfiguration,
     PipelineBean pipelineBean,
     StageBean stageBean,
@@ -1012,7 +1022,20 @@ public class Pipeline {
       interceptorRuntime.setContext(new InterceptorContext(
         blobStore,
         configuration,
-        stageBean.getConfiguration().getInstanceName()
+        stageBean.getConfiguration().getInstanceName(),
+        stageLib,
+        pipelineName,
+        pipelineConfiguration.getTitle(),
+        pipelineRev,
+        userContext,
+        pipelineRunner.getMetrics(),
+        pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
+        getExecutionMode(pipelineConfiguration),
+        getDeliveryGuarantee(pipelineConfiguration),
+        pipelineRunner.getRuntimeInfo(),
+        emailSender,
+        startTime,
+        new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask)
       ));
 
       preInterceptors.add(interceptorRuntime);
@@ -1024,7 +1047,20 @@ public class Pipeline {
       interceptorRuntime.setContext(new InterceptorContext(
         blobStore,
         configuration,
-        stageBean.getConfiguration().getInstanceName()
+        stageBean.getConfiguration().getInstanceName(),
+        stageLib,
+        pipelineName,
+        pipelineConfiguration.getTitle(),
+        pipelineRev,
+        userContext,
+        pipelineRunner.getMetrics(),
+        pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
+        getExecutionMode(pipelineConfiguration),
+        getDeliveryGuarantee(pipelineConfiguration),
+        pipelineRunner.getRuntimeInfo(),
+        emailSender,
+        startTime,
+        new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask)
       ));
 
       postInterceptors.add(interceptorRuntime);
@@ -1056,7 +1092,11 @@ public class Pipeline {
         runnerId,
         pipelineRunner.isPreview(),
         pipelineRunner.getMetrics(),
-        stageRuntime,
+        stageRuntime.getDefinition().getConfigDefinitions(),
+        stageRuntime.getOnRecordError(),
+        stageRuntime.getConfiguration().getOutputLanes(),
+        stageRuntime.getConstants(),
+        stageRuntime.getInfo(),
         pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),

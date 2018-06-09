@@ -70,6 +70,9 @@ public enum CreationError implements ErrorCode {
   CREATION_071("Execution mode not set"),
 
   CREATION_080("Configuration value is required for Webhook URL"),
+
+  // Detached stage support
+  CREATION_0900("Can't parse stage definition: {}"),
   ;
 
   private final String msg;

@@ -16,37 +16,36 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.BlobStore;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.Processor;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class InterceptorContextTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-  private BlobStore blobStore;
-  private Configuration configuration;
-  private InterceptorContext context;
+public class DetachedStageTest {
 
-  @Before
-  public void setUp() {
-    this.blobStore = Mockito.mock(BlobStore.class);
-    this.configuration = Mockito.mock(Configuration.class);
+  @Test
+  public void createProcessor() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    StageConfiguration stageConf = MockStages.createProcessor("p", Collections.emptyList(), Collections.emptyList());
+    List<Issue> issues = new ArrayList<>();
 
-    this.context = new InterceptorContext(
-      blobStore,
-      configuration,
-      "stageInstance",
-      Mockito.mock(StageLibraryTask.class),
+    DetachedStageRuntime stageRuntime = DetachedStage.get().createDetachedStage(
+      stageConf,
+      lib,
       "pipelineId",
       "pipelineTitle",
       "rev",
@@ -57,20 +56,13 @@ public class InterceptorContextTest {
       DeliveryGuarantee.AT_LEAST_ONCE,
       Mockito.mock(RuntimeInfo.class),
       Mockito.mock(EmailSender.class),
+      Mockito.mock(Configuration.class),
       0,
-      Mockito.mock(LineagePublisherDelegator.class)
+      new LineagePublisherDelegator.NoopDelegator(),
+      issues
     );
-  }
 
-  @Test
-  public void testCreateStageGuardAllowed() throws Exception {
-    context.setAllowCreateStage(true);
-    assertNull(context.createStage(null, Processor.class));
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void testCreateStageGuardNotAllowed() throws Exception {
-    context.setAllowCreateStage(false);
-    context.createStage(null, Processor.class);
+    assertNotNull(stageRuntime);
+    assertEquals(0, issues.size());
   }
 }
