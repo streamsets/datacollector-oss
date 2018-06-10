@@ -17,10 +17,14 @@ package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import org.mockito.Mockito;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Pipeline.Builder test specific builder (yes builder of a builder) that will provide mock defaults and allow user to
@@ -37,6 +41,7 @@ public class MockPipelineBuilder {
   private long startTime;
   private BlobStoreTask blobStoreTask;
   private LineagePublisherTask lineagePublisherTask;
+  private List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
   private Observer observer;
 
   public MockPipelineBuilder() {
@@ -50,6 +55,7 @@ public class MockPipelineBuilder {
     this.startTime = System.currentTimeMillis();
     this.blobStoreTask = Mockito.mock(BlobStoreTask.class);
     this.lineagePublisherTask = Mockito.mock(LineagePublisherTask.class);
+    this.interceptorConfs = Collections.emptyList();
     this.observer = null;
   }
 
@@ -108,6 +114,11 @@ public class MockPipelineBuilder {
     return this;
   }
 
+  public MockPipelineBuilder withInterceptorConfigurations(List<PipelineStartEvent.InterceptorConfiguration> confs) {
+    this.interceptorConfs = confs;
+    return this;
+  }
+
   public Pipeline.Builder build() {
     return new Pipeline.Builder(
       stageLib,
@@ -119,7 +130,8 @@ public class MockPipelineBuilder {
       pipelineConf,
       startTime,
       blobStoreTask,
-      lineagePublisherTask
+      lineagePublisherTask,
+      interceptorConfs
     ).setObserver(observer);
   }
 

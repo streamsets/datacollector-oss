@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Observer;
@@ -36,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class ProductionPipelineBuilder {
@@ -80,13 +83,14 @@ public class ProductionPipelineBuilder {
       PipelineConfiguration pipelineConf,
       long startTime
   ) throws PipelineRuntimeException, StageException {
-    return build(userContext, pipelineConf, startTime, null);
+    return build(userContext, pipelineConf, startTime, Collections.emptyList(), null);
   }
 
   public ProductionPipeline build(
       UserContext userContext,
       PipelineConfiguration pipelineConf,
       long startTime,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Map<String, Object> runtimeParameters
   ) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
@@ -104,7 +108,8 @@ public class ProductionPipelineBuilder {
         pipelineConf,
         startTime,
         blobStoreTask,
-        lineagePublisherTask
+        lineagePublisherTask,
+        interceptorConfs
     ).setObserver(observer).build(runner, runtimeParameters);
 
     SourceOffsetTracker sourceOffsetTracker;

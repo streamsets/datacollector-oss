@@ -29,6 +29,7 @@ import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
@@ -581,7 +582,8 @@ public class Pipeline {
         PipelineConfiguration pipelineConf,
         long startTime,
         BlobStoreTask blobStore,
-        LineagePublisherTask lineagePublisherTask
+        LineagePublisherTask lineagePublisherTask,
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
     ) {
       this.stageLib = stageLib;
       this.name = name;
@@ -594,7 +596,11 @@ public class Pipeline {
       this.startTime = startTime;
       this.blobStore = blobStore;
       this.lineagePublisherTask = lineagePublisherTask;
-      this.interceptorCreatorContextBuilder = new InterceptorCreatorContextBuilder(blobStore, configuration);
+      this.interceptorCreatorContextBuilder = new InterceptorCreatorContextBuilder(
+        blobStore,
+        configuration,
+        interceptorConfs
+      );
     }
 
     public Builder setObserver(Observer observer) {

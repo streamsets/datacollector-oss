@@ -884,6 +884,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           runningUser,
           pipelineConfiguration,
           getState().getTimeStamp(),
+          context.getInterceptorConfigurations(),
           runtimeParameters
         );
         prodPipeline.registerStatusListener(this);

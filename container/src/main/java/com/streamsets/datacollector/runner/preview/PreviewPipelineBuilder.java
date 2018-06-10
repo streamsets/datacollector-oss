@@ -164,7 +164,8 @@ public class PreviewPipelineBuilder {
        pipelineConf,
        System.currentTimeMillis(),
        blobStoreTask,
-       lineagePublisherTask
+       lineagePublisherTask,
+       Collections.emptyList()
      );
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {

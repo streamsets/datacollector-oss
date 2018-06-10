@@ -550,12 +550,12 @@ public class ManagerResource {
     Runner runner = manager.getRunner(pipelineId, rev);
     if (startPipeline && runner != null) {
       runner.startAndCaptureSnapshot(
-        new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build(),
-        snapshotName,
-        snapshotLabel,
-        batches,
-        batchSize
-      );
+          new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build(),
+          snapshotName,
+          snapshotLabel,
+          batches,
+          batchSize
+        );
     } else {
       Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
           "Pipeline doesn't exist or it is not running currently");

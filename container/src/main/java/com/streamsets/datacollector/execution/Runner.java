@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
@@ -64,6 +65,13 @@ public interface Runner {
      * Returns null if the parameters are not specified at all.
      */
     public Map<String, Object> getRuntimeParameters();
+
+    /**
+     * Optional interceptor configuration.
+     *
+     * Returns empty list if the interceptors and not specified at all.
+     */
+    public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfigurations();
   }
 
   //each Runner has its own status transition rules

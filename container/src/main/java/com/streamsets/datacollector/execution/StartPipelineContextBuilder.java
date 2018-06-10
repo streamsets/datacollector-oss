@@ -15,6 +15,10 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,13 +32,16 @@ public class StartPipelineContextBuilder {
   private static class StartPipelineContextImpl implements Runner.StartPipelineContext {
     private final String user;
     private final Map<String, Object> runtimeParameters;
+    private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfigurations;
 
     StartPipelineContextImpl(
       String user,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfigurations
     ) {
       this.user = user;
       this.runtimeParameters = runtimeParameters;
+      this.interceptorConfigurations = interceptorConfigurations;
     }
 
     @Override
@@ -46,10 +53,16 @@ public class StartPipelineContextBuilder {
     public Map<String, Object> getRuntimeParameters() {
       return runtimeParameters;
     }
+
+    @Override
+    public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfigurations() {
+      return interceptorConfigurations;
+    }
   }
 
   private final String user;
-  private Map<String, Object> runtimeParameters;
+  private Map<String, Object> runtimeParameters = null;
+  private List<PipelineStartEvent.InterceptorConfiguration> interceptorConfigurations = Collections.emptyList();
 
   public StartPipelineContextBuilder(String name) {
     this.user = name;
@@ -60,10 +73,18 @@ public class StartPipelineContextBuilder {
     return this;
   }
 
+  public StartPipelineContextBuilder withInterceptorConfigurations(List<PipelineStartEvent.InterceptorConfiguration> configs) {
+    if(configs != null) {
+      this.interceptorConfigurations = configs;
+    }
+    return this;
+  }
+
   public Runner.StartPipelineContext build() {
     return new StartPipelineContextImpl(
-      user,
-      runtimeParameters
+        user,
+        runtimeParameters,
+        interceptorConfigurations
     );
   }
 }

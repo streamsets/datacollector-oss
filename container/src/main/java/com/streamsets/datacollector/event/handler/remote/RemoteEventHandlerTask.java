@@ -480,6 +480,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           case START_PIPELINE:
             PipelineStartEvent pipelineStartEvent = (PipelineStartEvent) event;
             Runner.StartPipelineContext startPipelineContext = new StartPipelineContextBuilder(pipelineStartEvent.getUser())
+              .withInterceptorConfigurations(pipelineStartEvent.getInterceptorConfiguration())
               .build();
             remoteDataCollector.start(
                 startPipelineContext,

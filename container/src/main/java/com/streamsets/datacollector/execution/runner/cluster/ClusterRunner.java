@@ -481,7 +481,7 @@ public class ClusterRunner extends AbstractRunner {
       );
       PipelineEL.setConstantsInContext(pipelineConf, runningUser);
       this.startPipelineContext = context;
-      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context.getUser(), name, rev, pipelineConf), getAcl(name), runtimeParameters);
+      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, name, rev, pipelineConf), getAcl(name), runtimeParameters);
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;
@@ -689,13 +689,13 @@ public class ClusterRunner extends AbstractRunner {
 
   @VisibleForTesting
   ClusterSourceInfo getClusterSourceInfo(
-      String user,
+      StartPipelineContext context,
       String name,
       String rev,
       PipelineConfiguration pipelineConf
   ) throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineRunnerException {
 
-    ProductionPipeline p = createProductionPipeline(user, name, rev, configuration, pipelineConf);
+    ProductionPipeline p = createProductionPipeline(context, name, rev, configuration, pipelineConf);
     Pipeline pipeline = p.getPipeline();
     try {
       List<Issue> issues = pipeline.init(false);
@@ -705,7 +705,7 @@ public class ClusterRunner extends AbstractRunner {
         Map<String, Object> attributes = new HashMap<>();
         attributes.putAll(getAttributes());
         attributes.put("issues", new IssuesJson(new Issues(issues)));
-        validateAndSetStateTransition(user, PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
+        validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
         throw e;
       }
     } finally {
@@ -751,7 +751,7 @@ public class ClusterRunner extends AbstractRunner {
  }
 
   private ProductionPipeline createProductionPipeline(
-      String user,
+      StartPipelineContext context,
       String name,
       String rev,
       Configuration configuration,
@@ -782,13 +782,13 @@ public class ClusterRunner extends AbstractRunner {
       blobStoreTask,
       lineagePublisherTask
     );
-    return builder.build(new UserContext(user,
+    return builder.build(new UserContext(context.getUser(),
         runtimeInfo.isDPMEnabled(),
         configuration.get(
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
         )
-    ), pipelineConfiguration, getState().getTimeStamp(), null);
+    ), pipelineConfiguration, getState().getTimeStamp(), context.getInterceptorConfigurations(), null);
   }
 
   static class ManagerRunnable implements Runnable {

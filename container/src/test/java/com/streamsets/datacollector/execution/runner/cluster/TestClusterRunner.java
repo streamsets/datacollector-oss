@@ -545,7 +545,7 @@ public class TestClusterRunner {
   public void testGetParallelism() throws PipelineException, StageException {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     ClusterSourceInfo clusterSourceInfo =
-      clusterRunner.getClusterSourceInfo("admin", NAME, REV,
+      clusterRunner.getClusterSourceInfo(new StartPipelineContextBuilder("admin").build(), NAME, REV,
         MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH) // creates ClusterMSource
                                                                                           // which
         // has parallelism 25
@@ -560,7 +560,7 @@ public class TestClusterRunner {
       null, 0, 0);
     try {
       MockStages.ClusterMSource.MOCK_VALIDATION_ISSUES = true;
-      clusterRunner.getClusterSourceInfo("admin", NAME, REV,
+      clusterRunner.getClusterSourceInfo(new StartPipelineContextBuilder("admin").build(), NAME, REV,
         MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH));
       fail("Expected PipelineRuntimeException but didn't get any");
     } catch (PipelineRuntimeException pe) {
