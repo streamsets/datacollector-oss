@@ -19,6 +19,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.manager.TestSlaveManager;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -75,7 +76,7 @@ public class TestSlaveStandaloneRunner {
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
-    runner.start("admin");
+    runner.start(new StartPipelineContextBuilder("admin").build());
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     runner.stop("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.STOPPED));
@@ -88,7 +89,7 @@ public class TestSlaveStandaloneRunner {
     Manager pipelineManager = new SlavePipelineManager(plus);
     pipelineManager.init();
     Runner runner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
-    runner.start("admin");
+    runner.start(new StartPipelineContextBuilder("admin").build());
     final Runner newerPipelineRunner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
     await().until(desiredPipelineState(newerPipelineRunner, PipelineStatus.START_ERROR));
     PipelineState state = newerPipelineRunner.getState();
@@ -103,7 +104,7 @@ public class TestSlaveStandaloneRunner {
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
-    runner.start("admin");
+    runner.start(new StartPipelineContextBuilder("admin").build());
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     runner.onDataCollectorStop("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.DISCONNECTED));
@@ -116,7 +117,7 @@ public class TestSlaveStandaloneRunner {
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
-    runner.start("admin");
+    runner.start(new StartPipelineContextBuilder("admin").build());
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     TestUtil.EMPTY_OFFSET = true;
     await().until(desiredPipelineState(runner, PipelineStatus.FINISHED));

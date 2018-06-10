@@ -334,8 +334,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
-      // TODO Auto-generated method stub
+    public void prepareForStart(StartPipelineContext context) throws PipelineException {
 
     }
 
@@ -346,30 +345,13 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void start(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
-        StageException {
-      // TODO Auto-generated method stub
+    public void start(StartPipelineContext context) throws PipelineException, StageException {
+
     }
 
     @Override
-    public void start(
-        String user,
-        Map<String, Object> runtimeParameters
-    ) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
-        StageException {
-      // TODO Auto-generated method stub
-    }
+    public void startAndCaptureSnapshot(StartPipelineContext context, String snapshotName, String snapshotLabel, int batches, int batchSize) throws PipelineException, StageException {
 
-    @Override
-    public void startAndCaptureSnapshot(
-        String user,
-        Map<String, Object> runtimeParameters,
-        String snapshotName,
-        String snapshotLabel,
-        int batches,
-        int batchSize
-    ) throws PipelineException, StageException {
-      // TODO Auto-generated method stub
     }
 
     @Override

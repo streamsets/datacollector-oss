@@ -43,6 +43,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
@@ -357,7 +358,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
             runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
           }
-          retryOrStart(user);
+          this.startPipelineContext = new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build();
+          retryOrStart(startPipelineContext);
           break;
         default:
           LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
@@ -367,13 +369,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  private void retryOrStart(String user) throws PipelineException, StageException {
+  private void retryOrStart(StartPipelineContext context) throws PipelineException, StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0 || pipelineState.getStatus() == PipelineStatus.DISCONNECTED) {
-      prepareForStart(user, runtimeParameters);
-      start(user, runtimeParameters);
+      prepareForStart(context);
+      start(context);
     } else {
-      validateAndSetStateTransition(user, PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
+      validateAndSetStateTransition(context.getUser(), PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
       isRetrying = true;
       metricsForRetry = getState().getMetrics();
     }
@@ -690,7 +692,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
           metricString, retryAttempt, nextRetryTimeStamp);
       if (toStatus == PipelineStatus.RETRY) {
-        retryFuture = scheduleForRetries(user, runnerExecutor);
+        retryFuture = scheduleForRetries(runnerExecutor);
       }
     }
     eventListenerManager.broadcastStateChange(
@@ -729,7 +731,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(StartPipelineContext context) throws PipelineStoreException, PipelineRunnerException {
     PipelineState fromState = getState();
     checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(PipelineStatus.STARTING), ContainerError.CONTAINER_0102,
         fromState.getStatus(), PipelineStatus.STARTING);
@@ -738,7 +740,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
     }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
-    validateAndSetStateTransition(user, PipelineStatus.STARTING, null, attributes);
+    validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, null, context.getRuntimeParameters());
     token = UUID.randomUUID().toString();
   }
 
@@ -755,22 +757,22 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-    startPipeline(user, runtimeParameters);
+  public void start(StartPipelineContext context) throws PipelineException, StageException {
+    startPipeline(context);
     LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }
   }
 
-  private void startPipeline(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+  private void startPipeline(StartPipelineContext context) throws PipelineException, StageException {
     Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
       try {
         LOG.info("Starting pipeline {} {}", name, rev);
-        UserContext runningUser = new UserContext(user,
+        UserContext runningUser = new UserContext(context.getUser(),
             runtimeInfo.isDPMEnabled(),
             configuration.get(
                 RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
@@ -799,7 +801,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
         maxRetries = pipelineConfigBean.retryAttempts;
-        this.runtimeParameters = runtimeParameters;
+        this.runtimeParameters = context.getRuntimeParameters();
+        this.startPipelineContext = context;
 
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
@@ -953,7 +956,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, taskBuilder.build());
       } catch (Exception e) {
-        validateAndSetStateTransition(user, PipelineStatus.START_ERROR, e.toString(), null);
+        validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), null);
         throw e;
       }
     }
@@ -961,15 +964,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void startAndCaptureSnapshot(
-      String user,
-      Map<String, Object> runtimeParameters,
+      StartPipelineContext context,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
-    startPipeline(user, runtimeParameters);
-    captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize, false);
+    startPipeline(context);
+    captureSnapshot(context.getUser(), snapshotName, snapshotLabel, batches, batchSize, false);
     LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();

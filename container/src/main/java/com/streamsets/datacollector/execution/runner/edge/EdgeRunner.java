@@ -38,6 +38,7 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
@@ -165,7 +166,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
+  public void prepareForStart(StartPipelineContext context) throws PipelineException {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
@@ -185,7 +186,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
     if (toState != null) {
       this.pipelineStateStore.saveState(
-          user,
+          context.getUser(),
           pipelineId,
           rev,
           BeanHelper.unwrapState(toState.getStatus()),
@@ -211,14 +212,12 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void start(String user, Map<String, Object> runtimeParameters) {
-    // We are Edge pipeline in prepareForStart call
+  public void start(StartPipelineContext context) throws PipelineException, StageException {
   }
 
   @Override
   public void startAndCaptureSnapshot(
-      String user,
-      Map<String, Object> runtimeParameters,
+      StartPipelineContext context,
       String snapshotName,
       String snapshotLabel,
       int batches,

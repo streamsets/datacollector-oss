@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.http.ServerNotYetRunningException;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -100,7 +101,7 @@ public class MiniITDataCollector implements DataCollector {
     this.pipelineRev = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getLastRev();
     createAndSave(pipelineName);
     runner = pipelineManager.getRunner(pipelineName, pipelineRev);
-    runner.start(realPipelineConfig.getInfo().getCreator());
+    runner.start(new StartPipelineContextBuilder(realPipelineConfig.getInfo().getCreator()).build());
   }
 
   @Override
@@ -122,7 +123,7 @@ public class MiniITDataCollector implements DataCollector {
   public void startPipeline() throws Exception {
     Utils.checkNotNull(pipelineName, "No pipeline to run");
     runner = pipelineManager.getRunner(pipelineName, pipelineRev);
-    runner.start(realPipelineConfig.getInfo().getCreator());
+    runner.start(new StartPipelineContextBuilder(realPipelineConfig.getInfo().getCreator()).build());
   }
 
   @Override

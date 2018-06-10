@@ -116,8 +116,8 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
-    runner.prepareForStart(user, attributes);
+  public void prepareForStart(StartPipelineContext context) throws PipelineException {
+    runner.prepareForStart(context);
   }
 
   @Override
@@ -126,28 +126,21 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void start(String user) throws PipelineException, StageException {
+  public void start(StartPipelineContext context) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.start(user);
-  }
-
-  @Override
-  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-    aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.start(user, runtimeParameters);
+    runner.start(context);
   }
 
   @Override
   public void startAndCaptureSnapshot(
-      String user,
-      Map<String, Object> runtimeParameters,
+      StartPipelineContext context,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+    runner.startAndCaptureSnapshot(context, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override

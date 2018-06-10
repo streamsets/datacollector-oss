@@ -98,7 +98,7 @@ public class TestRunner {
     }
 
     @Override
-    public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
+    public void prepareForStart(StartPipelineContext context) throws PipelineException {
 
     }
 
@@ -108,24 +108,12 @@ public class TestRunner {
     }
 
     @Override
-    public void start(String user) throws PipelineException, StageException {
+    public void start(StartPipelineContext context) throws PipelineException, StageException {
 
     }
 
     @Override
-    public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-
-    }
-
-    @Override
-    public void startAndCaptureSnapshot(
-        String user,
-        Map<String, Object> runtimeParameters,
-        String snapshotName,
-        String snapshotLabel,
-        int batches,
-        int batchSize
-    ) throws PipelineException, StageException {
+    public void startAndCaptureSnapshot(StartPipelineContext context, String snapshotName, String snapshotLabel, int batches, int batchSize) throws PipelineException, StageException {
 
     }
 
@@ -301,7 +289,7 @@ public class TestRunner {
     }
 
     @Override
-    public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException {
+    public void prepareForStart(StartPipelineContext context) throws PipelineException {
 
     }
 
@@ -311,24 +299,12 @@ public class TestRunner {
     }
 
     @Override
-    public void start(String user) throws PipelineException, StageException {
+    public void start(StartPipelineContext context) throws PipelineException, StageException {
 
     }
 
     @Override
-    public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-
-    }
-
-    @Override
-    public void startAndCaptureSnapshot(
-        String user,
-        Map<String, Object> runtimeParameters,
-        String snapshotName,
-        String snapshotLabel,
-        int batches,
-        int batchSize
-    ) throws PipelineException, StageException {
+    public void startAndCaptureSnapshot(StartPipelineContext context, String snapshotName, String snapshotLabel, int batches, int batchSize) throws PipelineException, StageException {
 
     }
 

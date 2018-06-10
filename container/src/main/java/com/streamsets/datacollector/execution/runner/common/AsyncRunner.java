@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.execution.runner.common;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -139,23 +138,17 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(StartPipelineContext context) throws PipelineStoreException, PipelineRunnerException {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call start() instead.");
   }
 
   @Override
-  public void start(String user) throws PipelineException, StageException {
-    start(user, null);
-  }
-
-  @Override
   public synchronized void start(
-      String user,
-      Map<String, Object> runtimeParameters
+    StartPipelineContext context
   ) throws PipelineException, StageException {
-    runner.prepareForStart(user, runtimeParameters);
+    runner.prepareForStart(context);
     Callable<Object> callable = () -> {
-       runner.start(user, runtimeParameters);
+       runner.start(context);
        return null;
     };
     runnerExecutor.submit(callable);
@@ -163,8 +156,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
 
   @Override
   public void startAndCaptureSnapshot(
-      String user,
-      Map<String, Object> runtimeParameters,
+      StartPipelineContext context,
       String snapshotName,
       String snapshotLabel,
       int batches,
@@ -173,9 +165,9 @@ public class AsyncRunner implements Runner, PipelineInfo {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    runner.prepareForStart(user, runtimeParameters);
+    runner.prepareForStart(context);
     Callable<Object> callable = () -> {
-      runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+      runner.startAndCaptureSnapshot(context, snapshotName, snapshotLabel, batches, batchSize);
       return null;
     };
     runnerExecutor.submit(callable);

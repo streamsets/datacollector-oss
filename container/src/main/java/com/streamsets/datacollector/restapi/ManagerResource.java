@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
@@ -187,7 +188,7 @@ public class ManagerResource {
 
       try {
         Runner runner = manager.getRunner(pipelineId, rev);
-        runner.start(user, runtimeParameters);
+        runner.start(new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build());
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
             .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
@@ -242,7 +243,7 @@ public class ManagerResource {
 
         Runner runner = manager.getRunner( pipelineId, "0");
         try {
-          runner.start(user);
+          runner.start(new StartPipelineContextBuilder(user).build());
           successEntities.add(runner.getState());
         } catch (Exception ex) {
           errorMessages.add("Failed starting pipeline: " + pipelineId + ". Error: " + ex.getMessage());
@@ -548,7 +549,13 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     Runner runner = manager.getRunner(pipelineId, rev);
     if (startPipeline && runner != null) {
-      runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+      runner.startAndCaptureSnapshot(
+        new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build(),
+        snapshotName,
+        snapshotLabel,
+        batches,
+        batchSize
+      );
     } else {
       Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
           "Pipeline doesn't exist or it is not running currently");

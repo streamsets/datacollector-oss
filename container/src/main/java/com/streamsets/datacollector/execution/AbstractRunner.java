@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -60,6 +61,8 @@ public abstract  class AbstractRunner implements Runner {
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
   protected Map<String, Object> runtimeParameters;
+  // Start Pipeline Context that was used during last start() and will be reused on pipeline retry
+  protected StartPipelineContext startPipelineContext;
 
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
@@ -164,7 +167,6 @@ public abstract  class AbstractRunner implements Runner {
   }
 
   protected ScheduledFuture<Void> scheduleForRetries(
-      String user,
       ScheduledExecutorService runnerExecutor
   ) throws PipelineStoreException {
     long delay = 0;
@@ -173,17 +175,13 @@ public abstract  class AbstractRunner implements Runner {
     if (retryTimeStamp > currentTime) {
       delay = retryTimeStamp - currentTime;
     }
+    Preconditions.checkNotNull(startPipelineContext, "Can't retry pipeline, previous start context was not saved");
     LOG.info("Scheduling retry in '{}' milliseconds", delay);
     return runnerExecutor.schedule(() -> {
       LOG.info("Starting the runner now");
-      prepareForStart(user, runtimeParameters);
-      start(user, runtimeParameters);
+      prepareForStart(startPipelineContext);
+      start(startPipelineContext);
       return null;
     }, delay, TimeUnit.MILLISECONDS);
-  }
-
-  @Override
-  public void start(String user) throws PipelineException, StageException {
-    start(user, null);
   }
 }

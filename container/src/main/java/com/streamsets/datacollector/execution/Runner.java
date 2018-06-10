@@ -49,6 +49,23 @@ public interface Runner {
   //All impls must register all PipelineListeners (the above instance may or may not implement this interface)
   //    and dispatch pipeline start/stop calls to them.
 
+  /**
+   * Context with everything that the framework need in order to start a pipeline.
+   */
+  public static interface StartPipelineContext {
+    /**
+     * User that is attempting to start a pipeline.
+     */
+    public String getUser();
+
+    /**
+     * Optional runtime parameters.
+     *
+     * Returns null if the parameters are not specified at all.
+     */
+    public Map<String, Object> getRuntimeParameters();
+  }
+
   //each Runner has its own status transition rules
 
   // pipeline name
@@ -92,21 +109,17 @@ public interface Runner {
   public void forceQuit(String user) throws PipelineException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
-  public void prepareForStart(String user, Map<String, Object> attributes) throws PipelineException;
+  public void prepareForStart(StartPipelineContext context) throws PipelineException;
 
   // Sets the state to STOPPING. Should be called before doing a stop on async runners.
   public void prepareForStop(String user) throws PipelineException;
 
-  // starts the pipeline
-  public void start(String user) throws PipelineException, StageException;
-
-  // starts the pipeline with parameterization support
-  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException;
+  // Start pipeline
+  public void start(StartPipelineContext context) throws PipelineException, StageException;
 
   // starts the pipeline and then triggers a snapshot request
   public void startAndCaptureSnapshot(
-      String user,
-      Map<String, Object> runtimeParameters,
+      StartPipelineContext context,
       String snapshotName,
       String snapshotLabel,
       int batches,

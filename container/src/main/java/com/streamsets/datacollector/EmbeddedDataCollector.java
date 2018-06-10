@@ -22,6 +22,7 @@ import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.ServerNotYetRunningException;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -109,7 +110,7 @@ public class EmbeddedDataCollector implements DataCollector {
       // we need to skip enforcement user groups in scope.
       GroupsInScope.executeIgnoreGroups(() -> {
         runner = pipelineManager.getRunner(pipelineName, pipelineRev);
-        runner.start(pipelineUser);
+        runner.start(new StartPipelineContextBuilder(pipelineUser).build());
         return null;
       });
       return null;

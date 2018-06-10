@@ -36,6 +36,7 @@ import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
@@ -145,7 +146,7 @@ public class RemoteDataCollector implements DataCollector {
           MDC.put(LogConstants.USER, user);
           PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
           LogUtil.injectPipelineInMDC(pipelineInfo.getTitle(), name);
-          manager.getRunner(name, rev).start(user);
+          manager.getRunner(name, rev).start(new StartPipelineContextBuilder(user).build());
         }
         return null;
       });
