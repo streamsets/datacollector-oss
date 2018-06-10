@@ -58,6 +58,7 @@ import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.io.DataStore;
@@ -416,7 +417,7 @@ public class TestRemoteEventHandler {
     public boolean blobDeleteCalled;
 
     @Override
-    public void start(String user, String name, String rev) throws PipelineException, StageException {
+    public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
       startCalled++;
       if (errorInjection) {
         throw new PipelineException(ContainerError.CONTAINER_0001);

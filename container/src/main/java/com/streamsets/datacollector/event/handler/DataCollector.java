@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -31,7 +32,7 @@ import com.streamsets.pipeline.api.StageException;
 
 public interface DataCollector {
 
-  void start(String user, String name, String rev) throws PipelineException, StageException;
+  void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException;
 
   void stop(String user, String name, String rev) throws PipelineException;
 

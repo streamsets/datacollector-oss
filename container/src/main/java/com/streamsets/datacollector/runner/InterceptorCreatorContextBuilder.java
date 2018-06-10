@@ -118,11 +118,11 @@ public class InterceptorCreatorContextBuilder {
     }
 
     return new ContextImpl(
-      blobStore,
-      sdcConf,
-      stageType,
-      interceptorType,
-      actualParameters
+        blobStore,
+        sdcConf,
+        stageType,
+        interceptorType,
+        actualParameters
     );
   }
 

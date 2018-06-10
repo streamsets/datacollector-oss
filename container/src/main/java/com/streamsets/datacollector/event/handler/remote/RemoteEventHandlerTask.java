@@ -53,6 +53,8 @@ import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -477,8 +479,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           }
           case START_PIPELINE:
             PipelineStartEvent pipelineStartEvent = (PipelineStartEvent) event;
+            Runner.StartPipelineContext startPipelineContext = new StartPipelineContextBuilder(pipelineStartEvent.getUser())
+              .build();
             remoteDataCollector.start(
-                pipelineStartEvent.getUser(),
+                startPipelineContext,
                 pipelineStartEvent.getName(),
                 pipelineStartEvent.getRev()
             );

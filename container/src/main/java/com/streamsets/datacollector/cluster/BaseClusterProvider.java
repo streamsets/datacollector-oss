@@ -525,11 +525,11 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     Set<String> jarsToShip = new LinkedHashSet<>();
     List<Issue> errors = new ArrayList<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(
-      false,
-      stageLibrary,
-      pipelineConfiguration,
-      null,
-      errors
+        false,
+        stageLibrary,
+        pipelineConfiguration,
+        null,
+        errors
     );
     if (!errors.isEmpty()) {
       String msg = Utils.format("Found '{}' configuration errors: {}", errors.size(), errors);

@@ -129,7 +129,7 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void start(String user, String name, String rev) throws PipelineException, StageException {
+  public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
     //TODO we should receive the groups from DPM, SDC-6793
 
     try {
@@ -143,10 +143,10 @@ public class RemoteDataCollector implements DataCollector {
               pipelineState.getStatus()
           );
         } else {
-          MDC.put(LogConstants.USER, user);
+          MDC.put(LogConstants.USER, context.getUser());
           PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
           LogUtil.injectPipelineInMDC(pipelineInfo.getTitle(), name);
-          manager.getRunner(name, rev).start(new StartPipelineContextBuilder(user).build());
+          manager.getRunner(name, rev).start(context);
         }
         return null;
       });
