@@ -15,8 +15,8 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
 public class InterceptorDefinition implements PrivateClassLoaderDefinition {
   private final StageLibraryDefinition libraryDefinition;
@@ -24,14 +24,14 @@ public class InterceptorDefinition implements PrivateClassLoaderDefinition {
   private final ClassLoader classLoader;
 
   private final int version;
-  private final Class<? extends DefaultInterceptorCreator> defaultCreator;
+  private final Class<? extends InterceptorCreator> defaultCreator;
 
   public InterceptorDefinition(
     StageLibraryDefinition libraryDefinition,
     Class<? extends Interceptor> klass,
     ClassLoader classLoader,
     int version,
-    Class<? extends DefaultInterceptorCreator> defaultCreator
+    Class<? extends InterceptorCreator> defaultCreator
   ) {
     this.libraryDefinition = libraryDefinition;
     this.klass = klass;
@@ -56,7 +56,7 @@ public class InterceptorDefinition implements PrivateClassLoaderDefinition {
     return version;
   }
 
-  public Class<? extends DefaultInterceptorCreator> getDefaultCreator() {
+  public Class<? extends InterceptorCreator> getDefaultCreator() {
     return defaultCreator;
   }
 

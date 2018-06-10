@@ -18,10 +18,9 @@ package com.streamsets.datacollector.definition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.interceptor.BaseInterceptor;
-import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.InterceptorDef;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class InterceptorDefinitionExtractorTest {
 
-  public static class DummyCreator implements DefaultInterceptorCreator {
+  public static class DummyCreator implements InterceptorCreator {
     @Override
     public Interceptor create(Context context) {
       return null;
@@ -42,7 +41,7 @@ public class InterceptorDefinitionExtractorTest {
 
   @InterceptorDef(
     version = 666,
-    defaultCreator = DummyCreator.class
+    creator = DummyCreator.class
   )
   public static class DummyInterceptor extends BaseInterceptor {
     @Override

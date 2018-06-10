@@ -18,20 +18,22 @@ package com.streamsets.datacollector.runner;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.StageType;
-import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
-public class DefaultInterceptorCreatorContext implements DefaultInterceptorCreator.Context {
+import java.util.Map;
+
+public class InterceptorCreatorContext implements InterceptorCreator.Context {
 
   private final BlobStore blobStore;
   private final Configuration configuration;
   private final StageType stageType;
-  private final DefaultInterceptorCreator.InterceptorType interceptorType;
+  private final InterceptorCreator.InterceptorType interceptorType;
 
-  public DefaultInterceptorCreatorContext(
+  public InterceptorCreatorContext(
     BlobStore blobStore,
     Configuration configuration,
     StageType stageType,
-    DefaultInterceptorCreator.InterceptorType interceptorType
+    InterceptorCreator.InterceptorType interceptorType
   ) {
     this.blobStore = blobStore;
     this.configuration = configuration;
@@ -55,7 +57,12 @@ public class DefaultInterceptorCreatorContext implements DefaultInterceptorCreat
   }
 
   @Override
-  public DefaultInterceptorCreator.InterceptorType getInterceptorType() {
+  public InterceptorCreator.InterceptorType getInterceptorType() {
     return interceptorType;
+  }
+
+  @Override
+  public Map<String, String> getParameters() {
+    return null;
   }
 }

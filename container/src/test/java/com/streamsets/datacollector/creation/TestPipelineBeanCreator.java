@@ -45,7 +45,6 @@ import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
@@ -55,8 +54,8 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.interceptor.BaseInterceptor;
-import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.InterceptorDef;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.ServiceDef;
@@ -358,7 +357,7 @@ public class TestPipelineBeanCreator {
   public static class AggregatingMyTarget extends MyTarget {
   }
 
-  public static class MyDefaultInterceptorCreator implements DefaultInterceptorCreator {
+  public static class MyDefaultInterceptorCreator implements InterceptorCreator {
     @Override
     public Interceptor create(Context context) {
       return new MyInterceptor(context.getStageType().name() + " " + context.getInterceptorType().name());
@@ -367,7 +366,7 @@ public class TestPipelineBeanCreator {
 
   @InterceptorDef(
     version = 1,
-    defaultCreator = MyDefaultInterceptorCreator.class
+    creator = MyDefaultInterceptorCreator.class
   )
   public static class MyInterceptor extends BaseInterceptor {
     public final String str;

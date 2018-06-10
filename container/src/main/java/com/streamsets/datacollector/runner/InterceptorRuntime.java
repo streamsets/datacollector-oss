@@ -22,9 +22,7 @@ import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Runtime version of interceptor that wraps all methods of the interceptor to make sure that the proper classloader
@@ -50,15 +48,14 @@ public class InterceptorRuntime implements Interceptor {
   }
 
   public List<Issue> init() {
-    //TODO: Parameters should be passed in constructor similarly as we're passing StageConfiguration for stages
-    return (List)init(Collections.emptyMap(), context);
+    return (List)init(context);
   }
 
   @Override
-  public List<ConfigIssue> init(Map<String, String> parameters, Context context) {
+  public List<ConfigIssue> init(Context context) {
     return LambdaUtil.privilegedWithClassLoader(
         bean.getDefinition().getStageClassLoader(),
-        () -> bean.getInterceptor().init(parameters, context)
+        () -> bean.getInterceptor().init(context)
     );
   }
 

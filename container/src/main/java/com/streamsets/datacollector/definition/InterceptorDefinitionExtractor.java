@@ -19,8 +19,8 @@ import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.interceptor.DefaultInterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import com.streamsets.pipeline.api.interceptor.InterceptorDef;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class InterceptorDefinitionExtractor {
 
     InterceptorDef def = klass.getAnnotation(InterceptorDef.class);
     int version = def.version();
-    Class<? extends DefaultInterceptorCreator> defaultCreator = def.defaultCreator();
+    Class<? extends InterceptorCreator> defaultCreator = def.creator();
 
     return new InterceptorDefinition(
       libraryDef,
