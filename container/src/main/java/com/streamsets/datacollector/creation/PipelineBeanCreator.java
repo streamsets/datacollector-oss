@@ -29,7 +29,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
-import com.streamsets.datacollector.runner.InterceptorCreatorContext;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
@@ -145,9 +145,10 @@ public abstract class PipelineBeanCreator {
       boolean forExecution,
       StageLibraryTask library,
       PipelineConfiguration pipelineConf,
+      InterceptorCreatorContextBuilder interceptorContextBuilder,
       List<Issue> errors
   ) {
-    return create(forExecution, library, pipelineConf, errors, null);
+    return create(forExecution, library, pipelineConf, interceptorContextBuilder, errors, null);
   }
 
   /**
@@ -162,6 +163,7 @@ public abstract class PipelineBeanCreator {
       boolean forExecution,
       StageLibraryTask library,
       PipelineConfiguration pipelineConf,
+      InterceptorCreatorContextBuilder interceptorContextBuilder,
       List<Issue> errors,
       Map<String, Object> runtimeParameters
   ) {
@@ -186,6 +188,7 @@ public abstract class PipelineBeanCreator {
             false,
             false,
             resolvedConstants,
+            interceptorContextBuilder,
             errors
         );
 
@@ -193,6 +196,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+            interceptorContextBuilder,
             resolvedConstants,
             errors
         );
@@ -208,6 +212,7 @@ public abstract class PipelineBeanCreator {
             false,
             false,
             resolvedConstants,
+            interceptorContextBuilder,
             errors
         );
       }
@@ -222,6 +227,7 @@ public abstract class PipelineBeanCreator {
             true,
             false,
             resolvedConstants,
+            interceptorContextBuilder,
             errors
         );
       } else {
@@ -242,6 +248,7 @@ public abstract class PipelineBeanCreator {
             false,
             true,
             resolvedConstants,
+            interceptorContextBuilder,
             errors
         );
       }
@@ -255,6 +262,7 @@ public abstract class PipelineBeanCreator {
             false,
             true,
             resolvedConstants,
+            interceptorContextBuilder,
             errors
         );
       }
@@ -299,6 +307,7 @@ public abstract class PipelineBeanCreator {
     boolean forExecution,
     StageLibraryTask library,
     List<StageConfiguration> stageConfigurations,
+    InterceptorCreatorContextBuilder interceptorContextBuilder,
     Map<String, Object> constants,
     List<Issue> errors
   ) {
@@ -312,6 +321,7 @@ public abstract class PipelineBeanCreator {
           false,
           false,
           constants,
+          interceptorContextBuilder,
           errors
       );
 
@@ -328,6 +338,7 @@ public abstract class PipelineBeanCreator {
    * class loader with the first given runner. That includes stages with private class loader as well.
    *
    * @param pipelineStageBeans First runner that should be duplicated.
+   * @param interceptorCreatorContextBuilder Builder for interceptor context
    * @param constants Pipeline constants
    * @param errors Any generated errors will be stored in this list
    *
@@ -336,6 +347,7 @@ public abstract class PipelineBeanCreator {
   public PipelineStageBeans duplicatePipelineStageBeans(
     StageLibraryTask stageLib,
     PipelineStageBeans pipelineStageBeans,
+    InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
     Map<String, Object> constants,
     List<Issue> errors
   ) {
@@ -354,6 +366,7 @@ public abstract class PipelineBeanCreator {
           ClassLoaderReleaser.NOOP_RELEASER,
           original.getConfiguration(),
           services::get,
+          interceptorCreatorContextBuilder,
           constants,
           errors
       );
@@ -423,6 +436,7 @@ public abstract class PipelineBeanCreator {
       boolean errorStage,
       boolean pipelineLifecycleStage,
       Map<String, Object> constants,
+      InterceptorCreatorContextBuilder interceptorContextBuilder,
       List<Issue> errors
   ) {
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
@@ -457,6 +471,7 @@ public abstract class PipelineBeanCreator {
         library,
         stageConf,
         serviceClass -> library.getServiceDefinition(serviceClass, true),
+        interceptorContextBuilder,
         constants,
         errors
       );
@@ -560,6 +575,7 @@ public abstract class PipelineBeanCreator {
       ClassLoaderReleaser classLoaderReleaser,
       StageConfiguration stageConf,
       Function<Class, ServiceDefinition> serviceDefinitionResolver,
+      InterceptorCreatorContextBuilder interceptorContextBuilder,
       Map<String, Object> pipelineConstants,
       List<Issue> errors
   ) {
@@ -607,8 +623,8 @@ public abstract class PipelineBeanCreator {
       stage,
       classLoaderReleaser,
       services,
-      createDefaultInterceptors(stageLib, stageDef, InterceptorCreator.InterceptorType.PRE_STAGE, errors),
-      createDefaultInterceptors(stageLib, stageDef, InterceptorCreator.InterceptorType.POST_STAGE, errors)
+      createInterceptors(stageLib, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.PRE_STAGE, errors),
+      createInterceptors(stageLib, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.POST_STAGE, errors)
     );
   }
 
@@ -658,18 +674,22 @@ public abstract class PipelineBeanCreator {
   }
 
   /**
-   * Create default interceptors for given stage.
+   * Create interceptors for given stage.
    */
-  public List<InterceptorBean> createDefaultInterceptors(
+  public List<InterceptorBean> createInterceptors(
     StageLibraryTask stageLib,
     StageDefinition stageDefinition,
+    InterceptorCreatorContextBuilder contextBuilder,
     InterceptorCreator.InterceptorType interceptorType,
     List<Issue> issues
   ) {
     List<InterceptorBean> beans = new ArrayList<>();
+    if(contextBuilder == null) {
+      return beans;
+    }
 
     for(InterceptorDefinition definition : stageLib.getInterceptorDefinitions()) {
-      InterceptorBean bean = createDefaultInterceptor(stageLib, definition, stageDefinition, interceptorType, issues);
+      InterceptorBean bean = createInterceptor(stageLib, definition, stageDefinition, contextBuilder, interceptorType, issues);
       if (bean != null) {
         beans.add(bean);
       }
@@ -683,10 +703,11 @@ public abstract class PipelineBeanCreator {
    * return null as the underlying interface for default creation allows it as well -
    * in such case no interceptor is needed.
    */
-  public InterceptorBean createDefaultInterceptor(
+  public InterceptorBean createInterceptor(
     StageLibraryTask stageLib,
     InterceptorDefinition definition,
     StageDefinition stageDefinition,
+    InterceptorCreatorContextBuilder contextBuilder,
     InterceptorCreator.InterceptorType interceptorType,
     List<Issue> issues
   ) {
@@ -695,10 +716,9 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(definition.getStageClassLoader());
 
       InterceptorCreator creator = definition.getDefaultCreator().newInstance();
-      // TODO: This method is missing both blobStore and configuration
-      Interceptor interceptor = creator.create(new InterceptorCreatorContext(
-        null,
-        null,
+      Interceptor interceptor = creator.create(contextBuilder.buildFor(
+        definition.getLibraryDefinition().getName(),
+        definition.getKlass().getName(),
         stageDefinition.getType(),
         interceptorType
       ));

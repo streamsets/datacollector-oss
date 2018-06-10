@@ -27,6 +27,7 @@ import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -404,6 +405,7 @@ public class TestPipelineBeanCreator {
       Mockito.mock(ClassLoaderReleaser.class),
       stageConf,
       s -> serviceDef,
+      null,
       constants,
       issues
     );
@@ -467,6 +469,7 @@ public class TestPipelineBeanCreator {
       Mockito.mock(ClassLoaderReleaser.class),
       stageConf,
       s -> serviceDef,
+      null,
       constants,
       issues
     );
@@ -563,7 +566,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
 
     Assert.assertNotNull(bean);
 
@@ -602,7 +605,7 @@ public class TestPipelineBeanCreator {
     // pass runtime parameters
     Map<String, Object> runtimeParameters = ImmutableMap.of("MEMORY_LIMIT", 2000);
     issues = new ArrayList<>();
-    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues, runtimeParameters);
+    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues, runtimeParameters);
     Assert.assertNotNull(bean);
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
@@ -662,7 +665,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
 
     Assert.assertNotNull(bean);
 
@@ -714,6 +717,7 @@ public class TestPipelineBeanCreator {
       releaser,
       stageConf,
       s -> null,
+      null,
       constants,
       issues
     );
@@ -771,7 +775,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
 
     MySource source = (MySource) bean.getOrigin().getStage();
 
@@ -838,7 +842,8 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+    InterceptorCreatorContextBuilder contextBuilder = new InterceptorCreatorContextBuilder(null, null);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, contextBuilder, issues);
 
     Assert.assertNotNull(bean.getOrigin());
     Assert.assertEquals(1, bean.getOrigin().getPreInterceptors().size());

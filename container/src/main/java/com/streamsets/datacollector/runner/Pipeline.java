@@ -101,6 +101,7 @@ public class Pipeline {
   private final long startTime;
   private final BlobStoreTask blobStore;
   private final LineagePublisherTask lineagePublisherTask;
+  private final InterceptorCreatorContextBuilder interceptorContextBuilder;
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
   private boolean stopEventStageInitialized;
@@ -128,6 +129,7 @@ public class Pipeline {
       long startTime,
       BlobStoreTask blobStore,
       LineagePublisherTask lineagePublisherTask,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
       StageRuntime startEventStage,
       StageRuntime stopEventStage
   ) {
@@ -155,6 +157,7 @@ public class Pipeline {
     this.startTime = startTime;
     this.blobStore = blobStore;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
   }
@@ -335,6 +338,7 @@ public class Pipeline {
             PipelineStageBeans beans = PipelineBeanCreator.get().duplicatePipelineStageBeans(
               stageLib,
               pipelineBean.getPipelineStageBeans(),
+              interceptorContextBuilder,
               originPipe.getStage().getConstants(),
               localIssues
             );
@@ -559,6 +563,7 @@ public class Pipeline {
     private final long startTime;
     private final BlobStoreTask blobStore;
     private final LineagePublisherTask lineagePublisherTask;
+    private final InterceptorCreatorContextBuilder interceptorCreatorContextBuilder;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
         new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
@@ -589,6 +594,7 @@ public class Pipeline {
       this.startTime = startTime;
       this.blobStore = blobStore;
       this.lineagePublisherTask = lineagePublisherTask;
+      this.interceptorCreatorContextBuilder = new InterceptorCreatorContextBuilder(blobStore, configuration);
     }
 
     public Builder setObserver(Observer observer) {
@@ -608,6 +614,7 @@ public class Pipeline {
           true,
           stageLib,
           pipelineConf,
+          interceptorCreatorContextBuilder,
           errors,
           runtimeParameters
       );
@@ -793,6 +800,7 @@ public class Pipeline {
             startTime,
             blobStore,
             lineagePublisherTask,
+            interceptorCreatorContextBuilder,
             startEventStageRuntime,
             stopEventStageRuntime
           );

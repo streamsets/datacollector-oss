@@ -31,6 +31,7 @@ import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.execution.runner.common.Constants;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -222,7 +223,13 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
   private boolean loadAndValidatePipelineConfig() {
     List<Issue> errors = new ArrayList<>();
 
-    pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
+    pipelineBean = PipelineBeanCreator.get().create(
+      false,
+      stageLibrary,
+      pipelineConfiguration,
+      null,
+      errors
+    );
     StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineConfiguration);
     IssueCreator issueCreator = IssueCreator.getPipeline();
     for (ConfigDefinition confDef : PipelineBeanCreator.PIPELINE_DEFINITION.getConfigDefinitions()) {

@@ -176,6 +176,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false,
         stageLibraryTask,
         pipelineConfiguration,
+        null,
         new ArrayList<>()
     );
     StageConfiguration stageConf = pipelineBean.getOrigin().getConfiguration();
@@ -523,7 +524,13 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     String clusterToken = UUID.randomUUID().toString();
     Set<String> jarsToShip = new LinkedHashSet<>();
     List<Issue> errors = new ArrayList<>();
-    PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
+    PipelineBean pipelineBean = PipelineBeanCreator.get().create(
+      false,
+      stageLibrary,
+      pipelineConfiguration,
+      null,
+      errors
+    );
     if (!errors.isEmpty()) {
       String msg = Utils.format("Found '{}' configuration errors: {}", errors.size(), errors);
       throw new IllegalStateException(msg);
