@@ -28,6 +28,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.validation.DetachedStageValidator;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -128,9 +129,14 @@ public abstract class DetachedStage {
     LineagePublisherDelegator lineagePublisherDelegator,
     List<Issue> errors
   ) {
-    // TODO SDC-9238: Run validation and upgrade during DetachedStage construction
+    // Firstly validate that the configuration is correct and up to date
+    DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
+    stageConf = validator.validate();
+    if(!errors.isEmpty()) {
+      return null;
+    }
 
-    // Create stageBean - that will create new instance and properly propagate all the
+    // Then stageBean that will create new instance and properly propagate all the
     StageBean stageBean = PipelineBeanCreator.get().createStageBean(
       true,
       stageLibrary,

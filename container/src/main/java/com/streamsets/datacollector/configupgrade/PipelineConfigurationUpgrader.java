@@ -57,8 +57,16 @@ public class PipelineConfigurationUpgrader {
   protected PipelineConfigurationUpgrader() {
   }
 
+  /**
+   * Upgrade whole pipeline at once and return updated variant.
+   *
+   * @param library Stage Library
+   * @param pipelineConf Existing Pipeline Configuration
+   * @param issues Issues
+   * @return Upgraded pipeline configuration or null on any error
+   */
   public PipelineConfiguration upgradeIfNecessary(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> issues) {
-    Preconditions.checkArgument(issues.size() == 0, "Given list of issues must be empty.");
+    Preconditions.checkArgument(issues.isEmpty(), "Given list of issues must be empty.");
     boolean upgrade;
 
     // Firstly upgrading schema if needed, then data
@@ -79,6 +87,25 @@ public class PipelineConfigurationUpgrader {
       pipelineConf = upgrade(library, pipelineConf, issues);
     }
     return (issues.isEmpty()) ? pipelineConf : null;
+  }
+
+  /**
+   * Upgrade detached stage (stage not associated directly with the pipeline).
+   *
+   * @param libraryTask Stage Library
+   * @param stageConf Existing stage configuration
+   * @param issues Issues
+   * @return Upgraded stage configuration or null on any error
+   */
+  public StageConfiguration upgradeIfNecessary(StageLibraryTask libraryTask, StageConfiguration stageConf, List<Issue> issues) {
+    Preconditions.checkArgument(issues.isEmpty(), "Given list of issues must be empty.");
+    boolean upgrade = needsUpgrade(libraryTask, stageConf, issues);
+
+    if(upgrade) {
+      stageConf = upgradeIfNeeded(libraryTask, stageConf, issues);
+    }
+
+    return issues.isEmpty() ? stageConf : null;
   }
 
   private boolean needsSchemaUpgrade(PipelineConfiguration pipelineConf, List<Issue> ownIssues) {

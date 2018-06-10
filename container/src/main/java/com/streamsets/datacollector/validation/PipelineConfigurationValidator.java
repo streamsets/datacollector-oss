@@ -64,10 +64,11 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
-    canPreview = resolveLibraryAliases();
+    resolveLibraryAliases();
+
     // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
     // upgrade is not successful.
-    canPreview &= upgradePipeline() && addMissingConfigs();
+    canPreview = upgradePipeline() && addPipelineMissingConfigs();
     canPreview &= sortStages(false);
     if (CollectionUtils.isNotEmpty(pipelineConfiguration.getFragments())) {
       canPreview &= sortStages(true);
@@ -109,7 +110,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     return pipelineConfiguration;
   }
 
-  protected boolean resolveLibraryAliases() {
+  protected void resolveLibraryAliases() {
+    // This will resolve all stages inside the pipeline canvas
+    super.resolveLibraryAliases();
+
     List<StageConfiguration> stageConfigurations = new ArrayList<>();
 
     if(pipelineConfiguration.getStatsAggregatorStage() != null) {
@@ -119,15 +123,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       stageConfigurations.add(pipelineConfiguration.getErrorStage());
     }
 
-    stageConfigurations.addAll(pipelineConfiguration.getStages());
-    for (StageConfiguration stageConf : stageConfigurations) {
-      String name = stageConf.getLibrary();
-      if (isLibraryAlias(name)) {
-        stageConf.setLibrary(resolveLibraryAlias(name));
-      }
-      resolveStageAlias(stageConf);
-    }
-    return true;
+    stageConfigurations.addAll(pipelineConfiguration.getStartEventStages());
+    stageConfigurations.addAll(pipelineConfiguration.getStopEventStages());
+
+    ValidationUtil.resolveLibraryAliases(stageLibrary, stageConfigurations);
   }
 
   @VisibleForTesting
@@ -151,7 +150,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     return upgradeIssues.isEmpty();
   }
 
-  private boolean addMissingConfigs() {
+  private boolean addPipelineMissingConfigs() {
     for (ConfigDefinition configDef : stageLibrary.getPipeline().getConfigDefinitions()) {
       String configName = configDef.getName();
       Config config = pipelineConfiguration.getConfiguration(configName);
@@ -162,12 +161,23 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
         pipelineConfiguration.addConfiguration(config);
       }
     }
-    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
-      addMissingConfigsToStage(stageConf);
-    }
+
+    addMissingConfigs();
 
     if(pipelineConfiguration.getErrorStage() != null) {
-      addMissingConfigsToStage(pipelineConfiguration.getErrorStage());
+      ValidationUtil.addMissingConfigsToStage(stageLibrary, pipelineConfiguration.getErrorStage());
+    }
+
+    if(pipelineConfiguration.getStatsAggregatorStage() != null) {
+      ValidationUtil.addMissingConfigsToStage(stageLibrary, pipelineConfiguration.getStatsAggregatorStage());
+    }
+
+    for(StageConfiguration stageConfiguration : pipelineConfiguration.getStartEventStages()) {
+      ValidationUtil.addMissingConfigsToStage(stageLibrary, stageConfiguration);
+    }
+
+    for(StageConfiguration stageConfiguration : pipelineConfiguration.getStopEventStages()) {
+      ValidationUtil.addMissingConfigsToStage(stageLibrary, stageConfiguration);
     }
 
     return true;
@@ -219,11 +229,11 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       Config config = pipelineConfs.getConfig(confDef.getName());
       // No need to validate bad records, its validated before in PipelineBeanCreator.create()
       if (!confDef.getGroup().equals(PipelineGroups.BAD_RECORDS.name()) && confDef.isRequired()
-        && (config == null || isNullOrEmpty(confDef, config))) {
-        validateRequiredField(confDef, pipelineConfs, issueCreator);
+        && (config == null || ValidationUtil.isNullOrEmpty(confDef, config))) {
+        ValidationUtil.validateRequiredField(confDef, pipelineConfs, issueCreator, errors);
       }
-      if (confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
-        validatedNumberConfig(config, confDef, pipelineConfs, issueCreator);
+      if (confDef.getType() == ConfigDef.Type.NUMBER && !ValidationUtil.isNullOrEmpty(confDef, config)) {
+        ValidationUtil.validatedNumberConfig(config, confDef, pipelineConfs, issueCreator, errors);
       }
     }
 
