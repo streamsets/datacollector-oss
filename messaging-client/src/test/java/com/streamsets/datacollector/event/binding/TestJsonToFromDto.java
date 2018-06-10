@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Permission;
 import com.streamsets.lib.security.acl.dto.ResourceType;
@@ -46,7 +47,7 @@ public class TestJsonToFromDto {
   @Test
   public void testPipelineClientEventJson() throws Exception {
     UUID uuid = UUID.randomUUID();
-    PipelineBaseEvent pde = new PipelineBaseEvent("name1", "rev1", "user1");
+    PipelineStartEvent pde = new PipelineStartEvent("name1", "rev1", "user1", null);
     ClientEvent clientEvent = new ClientEvent(uuid.toString(), Arrays.asList("SDC1"),
       true, false, EventType.START_PIPELINE, pde, "org1");
     String payload = MessagingJsonToFromDto.INSTANCE.serialize(pde);

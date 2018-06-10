@@ -40,6 +40,7 @@ import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
@@ -475,7 +476,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             break;
           }
           case START_PIPELINE:
-            PipelineBaseEvent pipelineStartEvent = (PipelineBaseEvent) event;
+            PipelineStartEvent pipelineStartEvent = (PipelineStartEvent) event;
             remoteDataCollector.start(
                 pipelineStartEvent.getUser(),
                 pipelineStartEvent.getName(),

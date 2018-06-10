@@ -25,6 +25,7 @@ import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
@@ -41,6 +42,7 @@ import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
+import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
@@ -69,6 +71,18 @@ public abstract class MessagingDtoJsonMapper {
   public abstract PipelineStopAndDeleteEventJson toPipelineStopAndDeleteEventJson(PipelineStopAndDeleteEvent event);
 
   public abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
+
+  public abstract PipelineStartEvent asPipelineStartEventDto(PipelineStartEventJson pipelineActionEventJson);
+
+  public abstract PipelineStartEventJson toPipelineStartEventJson(PipelineStartEvent event);
+
+  public abstract PipelineStartEvent.InterceptorConfiguration asInterceptorConfigurationDto(
+    PipelineStartEventJson.InterceptorConfigurationJson json
+  );
+
+  public abstract PipelineStartEventJson.InterceptorConfigurationJson toInterceptorConfigurationJson(
+    PipelineStartEvent.InterceptorConfiguration conf
+  );
 
   public abstract PipelineStopAndDeleteEvent asPipelineStopAndDeleteEventDto(
       PipelineStopAndDeleteEventJson pipelineStopAndDeleteEventJson
