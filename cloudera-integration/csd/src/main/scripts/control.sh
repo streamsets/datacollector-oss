@@ -46,6 +46,7 @@ log "DPM_PASSWORD: (omitted)"
 log "SDC_JAVA_OPTS: $SDC_JAVA_OPTS"
 log "SDC_CURL_OPTS: $SDC_CURL_OPTS"
 log "DPM_TOKEN_REGENERATE: $DPM_TOKEN_REGENERATE"
+log "CUSTOMER_ID: $CUSTOMER_ID"
 log "DEBUG: $DEBUG"
 log "Running from: $0"
 
@@ -161,6 +162,11 @@ function start {
   support_bundle_redaction_configuration
   prepend_file_content $CONF_DIR/sdc-security.policy $SDC_DIST/etc/sdc-security.policy
   prepend_file_content $CONF_DIR/sdc-env.sh $SDC_DIST/libexec/sdc-env.sh
+
+  # (Re)Generate customer.id file
+  if [[ ! -z $CUSTOMER_ID  ]]; then
+    echo $CUSTOMER_ID > $SDC_DATA/customer.id
+  fi
 
   # Source environment (at this point merged the CM config and parcel default)
   source "$CONF_DIR"/sdc-env.sh

@@ -62,7 +62,8 @@
           "DPM_PASSWORD": "${dpm.password}",
           "SDC_JAVA_OPTS": "${java.opts}",
           "SDC_CURL_OPTS": "${curl.opts}",
-          "DEBUG": "${debug.control.script}"
+          "DEBUG": "${debug.control.script}",
+          "CUSTOMER_ID": "${customer.id}"
         }
       },
       "kerberosPrincipals" : [
@@ -287,6 +288,13 @@
         ]
       },
       "parameters": [
+        {
+          "name": "customer.id",
+          "label": "Customer ID",
+          "description": "Customer ID that will be used when contacting StreamSets support.",
+          "type": "string",
+          "default": ""
+        },
         {
           "name": "sdc.base.http.url",
           "label": "Data collector base URL",
