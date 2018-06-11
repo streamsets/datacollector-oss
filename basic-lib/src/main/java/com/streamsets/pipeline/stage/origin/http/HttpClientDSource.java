@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     resetOffset = true,
     recordsByRef = true,
     upgrader = HttpClientSourceUpgrader.class,
