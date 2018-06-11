@@ -18,6 +18,8 @@ package com.streamsets.datacollector.usagestats;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class ActiveStats {
+  private final Logger LOG = LoggerFactory.getLogger(ActiveStats.class);
+
   public static final String VERSION = "1.0";
 
   private long startTime;
@@ -155,6 +159,7 @@ public class ActiveStats {
   }
 
   public ActiveStats startPipeline(PipelineConfiguration pipeline) {
+    LOG.debug("Starting UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
     // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
     if (pipelines.computeIfAbsent(
         pipeline.getPipelineId(),
@@ -169,12 +174,33 @@ public class ActiveStats {
   }
 
   public ActiveStats stopPipeline(PipelineConfiguration pipeline) {
+    LOG.debug("Stopping UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
     // we only stop the pipeline stats if not running already (to avoid stage stats going out of wak)
-    if (pipelines.get(pipeline.getPipelineId()).stopIfRunning()) {
-      for (StageConfiguration stageConfiguration : pipeline.getStages()) {
-        String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
-        stages.get(name).stop();
+    UsageTimer pipelineUsageTimer = pipelines.get(pipeline.getPipelineId());
+    if (pipelineUsageTimer != null) {
+      if (pipelines.get(pipeline.getPipelineId()).stopIfRunning()) {
+        for (StageConfiguration stageConfiguration : pipeline.getStages()) {
+          String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
+          UsageTimer stageUsageTimer = stages.get(name);
+          if (stageUsageTimer != null) {
+            if (!stageUsageTimer.stopIfRunning()) {
+              LOG.warn(
+                  "UsageTimer for '{}' stage not not running on stopPipeline for '{}' pipeline",
+                  name,
+                  pipeline.getPipelineId()
+              );
+            }
+          } else {
+            LOG.warn(
+                "UsageTimer for '{}' stage not found on stopPipeline for '{}' pipeline",
+                name,
+                pipeline.getPipelineId()
+            );
+          }
+        }
       }
+    } else {
+      LOG.warn("UsageTimer for '{}' pipeline not found", pipeline.getPipelineId());
     }
     return this;
   }
