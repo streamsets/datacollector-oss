@@ -190,18 +190,6 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Query Timeout",
-      description = "Time to wait before timing out a LogMiner query and returning the batch.",
-      displayPosition = 140,
-      group = "CDC",
-      elDefs = TimeEL.class,
-      defaultValue = "${5 * MINUTES}"
-  )
-  public int queryTimeout;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
       label = "JDBC Fetch Size",
       description = "To reduce latency, set this lower if the write rate to the tables is low.",
       displayPosition = 145,

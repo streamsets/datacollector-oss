@@ -31,8 +31,10 @@ import java.util.stream.Collectors;
 
 public class OracleCDCSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance,
-                              int fromVersion, int toVersion, List<Config> configs) throws StageException {
+  public List<Config> upgrade(
+      String library, String stageName, String stageInstance,
+      int fromVersion, int toVersion, List<Config> configs
+  ) throws StageException {
     switch (fromVersion) {
       case 1:
         configs = upgradeV1ToV2(configs);
@@ -71,7 +73,13 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 7:
-        return upgradeV7ToV8(configs);
+        configs = upgradeV7ToV8(configs);
+        if (toVersion == 8) {
+          return configs;
+        }
+        // fall through
+      case 8:
+        return upgradeV8ToV9(configs);
 
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -108,8 +116,8 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
   private static List<Config> upgradeV5ToV6(List<Config> configs) {
     List<Config> configsToSave = configs.stream().filter(config ->
         config.getName().equals("oracleCDCConfigBean.baseConfigBean.database") ||
-        config.getName().equals("oracleCDCConfigBean.baseConfigBean.tables") ||
-        config.getName().equals("oracleCDCConfigBean.baseConfigBean.excludePattern")
+            config.getName().equals("oracleCDCConfigBean.baseConfigBean.tables") ||
+            config.getName().equals("oracleCDCConfigBean.baseConfigBean.excludePattern")
     ).collect(Collectors.toList());
 
     configs.removeAll(configsToSave);
@@ -157,5 +165,11 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
     configs.add(new Config("oracleCDCConfigBean.useNewParser", false));
     configs.add(new Config("oracleCDCConfigBean.parseThreadPoolSize", 1));
     return configs;
+  }
+
+  private static List<Config> upgradeV8ToV9(List<Config> configs) {
+    return configs.parallelStream()
+        .filter(config -> !config.getName().equals("oracleCDCConfigBean.queryTimeout"))
+        .collect(Collectors.toList());
   }
 }

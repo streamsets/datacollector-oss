@@ -473,7 +473,6 @@ public class OracleCDCSource extends BaseSource {
             selectChanges.setBigDecimal(4, lastCommitSCN);
           }
         }
-        selectChanges.setQueryTimeout(configBean.queryTimeout);
         selectChanges.setFetchSize(configBean.jdbcFetchSize);
         resultSet = selectChanges.executeQuery();
         while (resultSet.next() && !getContext().isStopped()) {
@@ -998,9 +997,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
-    LocalDateTime sessionMax = startTime.plusSeconds(configBean.logminerWindow);
-    LocalDateTime now = nowAtDBTz();
-    return (sessionMax.isAfter(now) ? now : sessionMax);
+    return startTime.plusSeconds(configBean.logminerWindow);
   }
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {

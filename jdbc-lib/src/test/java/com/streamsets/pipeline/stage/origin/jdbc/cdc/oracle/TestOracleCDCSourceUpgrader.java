@@ -98,4 +98,13 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.parseThreadPoolSize");
     Assert.assertEquals(configs.get(1).getValue(), 1);
   }
+
+  @Test
+  public void upgradeV8TOV9() throws Exception {
+    List<Config> configs = new ArrayList<>(1);
+    configs.add(new Config("oracleCDCConfigBean.queryTimeout", 10));
+
+    configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 8, 9, configs);
+    Assert.assertTrue(configs.isEmpty());
+  }
 }
