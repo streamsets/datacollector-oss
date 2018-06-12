@@ -39,6 +39,7 @@
     <commons-lang.version>3.4</commons-lang.version>
     <commons-io.version>2.4</commons-io.version>
     <joda.version>2.8</joda.version>
+    <jackson.version>2.8.9</jackson.version>
     <antlr.version>4.5.3</antlr.version>
     <mockrunner-jdbc.version>1.1.2</mockrunner-jdbc.version>
   </properties>
@@ -117,6 +118,16 @@
       <groupId>org.parboiled</groupId>
       <artifactId>parboiled-java</artifactId>
       <version>1.1.8</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.2</version>
     </dependency>
 
     <!-- Test Dependencies -->

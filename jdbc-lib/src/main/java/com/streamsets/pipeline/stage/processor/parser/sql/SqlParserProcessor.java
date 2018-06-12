@@ -37,7 +37,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.Groups;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.SchemaAndTable;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.zaxxer.hikari.HikariDataSource;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
+package com.streamsets.pipeline.stage.origin.jdbc.cdc;
 
 import org.apache.commons.lang3.StringUtils;
 import com.streamsets.pipeline.api.impl.Utils;

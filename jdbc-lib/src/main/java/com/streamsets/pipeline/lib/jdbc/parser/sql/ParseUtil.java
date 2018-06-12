@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
 import com.streamsets.pipeline.lib.operation.OperationType;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.SchemaAndTable;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
