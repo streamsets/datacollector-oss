@@ -41,7 +41,7 @@ public class ELSupport {
       name = "size",
       description = "Returns the size of a map")
   public static int size(@ElParam ("map") Map map) {
-    return map.size();
+    return map != null ? map.size() : -1;
   }
 
   @ElFunction(
@@ -49,7 +49,7 @@ public class ELSupport {
       name = "isEmptyMap",
       description = "Returns true if a map is empty")
   public static boolean isEmptyMap(@ElParam ("map") Map map) {
-    return map.isEmpty();
+    return map == null || map.isEmpty();
   }
 
   @ElFunction(
@@ -65,7 +65,7 @@ public class ELSupport {
       name = "length",
       description = "Returns the length of a list")
   public static int length(@ElParam ("list") List list) {
-    return list.size();
+    return list != null ? list.size() : -1;
   }
 
   @ElFunction(
@@ -73,6 +73,6 @@ public class ELSupport {
       name = "isEmptyList",
       description = "Returns true if a list is empty")
   public static boolean isEmptyList(@ElParam ("list") List list) {
-    return list.isEmpty();
+    return list == null || list.isEmpty();
   }
 }

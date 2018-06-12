@@ -757,4 +757,120 @@ public class TestExpressionProcessor {
     }
   }
 
+  @Test
+  public void testLengthNullable() throws Exception {
+
+    ExpressionProcessorConfig expressionProcessorConfig;
+    ProcessorRunner runner;
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("a", Field.create(123));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${length(NULL)}";
+    expressionProcessorConfig.fieldToSet = "/setme";
+
+    runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+            .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+            .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testSizeNullable() throws Exception {
+
+    ExpressionProcessorConfig expressionProcessorConfig;
+    ProcessorRunner runner;
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("a", Field.create(123));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${size(NULL)}";
+    expressionProcessorConfig.fieldToSet = "/setme";
+
+    runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+            .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+            .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testIsEmptyMapNullable() throws Exception {
+
+    ExpressionProcessorConfig expressionProcessorConfig;
+    ProcessorRunner runner;
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("a", Field.create(123));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${isEmptyMap(NULL)}";
+    expressionProcessorConfig.fieldToSet = "/setme";
+
+    runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+            .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+            .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testIsEmptyListNullable() throws Exception {
+
+    ExpressionProcessorConfig expressionProcessorConfig;
+    ProcessorRunner runner;
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("a", Field.create(123));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${isEmptyList(NULL)}";
+    expressionProcessorConfig.fieldToSet = "/setme";
+
+    runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+            .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+            .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
