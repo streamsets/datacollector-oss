@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.websocket.Groups;
     label = "WebSocket Client",
     description = "Uses a WebSocket client to read from a resource URL",
     icon = "websockets.png",
-    execution = {ExecutionMode.STANDALONE},
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WebSocketClient.html#task_u4n_rzk_fbb",
     upgrader = WebSocketClientSourceUpgrader.class
