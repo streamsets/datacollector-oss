@@ -60,6 +60,21 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>${hadoop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- Leave this dependency right here so it takes precedence in the classpath over jersey 1.9 brought in by
         hadoop/hive test classes which wrongfully includes the javax.ws.rs-api classes from an older version of the
