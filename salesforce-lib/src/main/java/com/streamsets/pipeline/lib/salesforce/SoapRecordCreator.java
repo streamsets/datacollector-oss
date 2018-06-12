@@ -22,11 +22,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SoapRecordCreator extends SobjectRecordCreator {
+  private static final String QUERY_RESULT = "QueryResult";
+  private static final String RECORDS = "records";
+
   public SoapRecordCreator(Stage.Context context, ForceInputConfigBean conf, String sobjectType) {
     super(context, conf, sobjectType);
   }
@@ -61,7 +66,19 @@ public class SoapRecordCreator extends SobjectRecordCreator {
       }
 
       if (obj.hasChildren()) {
-        map.put(key, Field.createListMap(addFields(obj, columnsToTypes)));
+        if (QUERY_RESULT.equals(obj.getXmlType().getLocalPart())) {
+          // Nested subquery - need to make an array
+          Iterator<XmlObject> records = obj.getChildren(RECORDS);
+          List<Field> recordList = new ArrayList<>();
+          while (records.hasNext()) {
+            XmlObject record = records.next();
+            recordList.add(Field.createListMap(addFields(record, columnsToTypes)));
+          }
+          map.put(key, Field.create(recordList));
+        } else {
+          // Following a relationship
+          map.put(key, Field.createListMap(addFields(obj, columnsToTypes)));
+        }
       } else {
         Object val = obj.getValue();
         if ("Id".equalsIgnoreCase(key) && null == val) {

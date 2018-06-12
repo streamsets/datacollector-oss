@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
+import com.sforce.soap.partner.ChildRelationship;
 import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
@@ -97,12 +98,28 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   class ObjectMetadata {
     Map<String, Field> nameToField;
     Map<String, Field> relationshipToField;
+    Map<String, String> childRelationships;
 
     ObjectMetadata(
-        Map<String, Field> fieldMap, Map<String, Field> relationshipMap
+        Map<String, Field> fieldMap,
+        Map<String, Field> relationshipMap,
+        Map<String, String> childRelationships
     ) {
       this.nameToField = fieldMap;
       this.relationshipToField = relationshipMap;
+      this.childRelationships = childRelationships;
+    }
+
+    Field getFieldFromName(String name) {
+      return nameToField.get(name.toLowerCase());
+    }
+
+    Field getFieldFromRelationship(String relationshipName) {
+      return relationshipToField.get(relationshipName.toLowerCase());
+    }
+
+    String getChildSObjectType(String relationshipName) {
+      return childRelationships.get(relationshipName.toLowerCase());
     }
   }
 
@@ -141,21 +158,49 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
 
     metadataCache = new LinkedHashMap<>();
 
+    // Prepopulate the metadata cache with the sobject type, since we know we'll need it
+    // and we can use it to figure out relationship types for subqueries
+    try {
+      getAllReferences(partnerConnection, metadataCache, Collections.emptyList(), new String[]{sobjectType}, 1);
+    } catch (ConnectionException e) {
+      throw new StageException(Errors.FORCE_21, sobjectType, e);
+    }
+
     if (query != null) {
       SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(query);
 
       for (SOQLParser.FieldListContext flc : statementContext.fieldList()) {
-        for (SOQLParser.FieldElementContext fec : flc.fieldElement()) {
-          String fieldName = fec.getText();
-          String[] pathElements = fieldName.split("\\.");
-          // Handle references
-          extractReferences(references, pathElements);
-        }
+        getReferencesFromFieldList(partnerConnection, metadataCache, sobjectType, references, flc);
+      }
+    }
+  }
+
+  private void getReferencesFromFieldList(
+      PartnerConnection partnerConnection,
+      Map<String, ObjectMetadata> metadataMap,
+      String objectType,
+      List<List<Pair<String, String>>> references,
+      SOQLParser.FieldListContext flc
+  ) throws StageException {
+    for (SOQLParser.FieldElementContext fec : flc.fieldElement()) {
+      SOQLParser.SubqueryContext subquery = fec.subquery();
+      if (subquery != null) {
+        // Recurse into subqueries
+        getReferencesFromFieldList(partnerConnection,
+            metadataMap,
+            metadataMap.get(objectType).getChildSObjectType(subquery.objectList().getText()),
+            references,
+            subquery.fieldList());
+      } else {
+        String fieldName = fec.getText();
+        String[] pathElements = fieldName.split("\\.");
+        // Handle references
+        extractReferences(references, pathElements);
       }
     }
 
     try {
-      getAllReferences(partnerConnection, metadataCache, references, new String[]{sobjectType}, METADATA_DEPTH);
+      getAllReferences(partnerConnection, metadataMap, references, new String[]{objectType}, METADATA_DEPTH);
     } catch (ConnectionException e) {
       throw new StageException(Errors.FORCE_21, sobjectType, e);
     }
@@ -202,7 +247,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     buildMetadataCacheFromQuery(partnerConnection, null);
   }
 
-    // Recurse through the tree of referenced types, building a metadata query for each level
+  // Recurse through the tree of referenced types, building a metadata query for each level
   // Salesforce constrains the depth of the tree to 5, so we don't need to worry about
   // infinite recursion
   private void getAllReferences(
@@ -222,24 +267,36 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       int copyTo = Math.min(typeIndex + MAX_METADATA_TYPES, allTypes.length);
       String[] types = Arrays.copyOfRange(allTypes, typeIndex, copyTo);
 
-      for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
-        Map<String, Field> fieldMap = new LinkedHashMap<>();
-        Map<String, Field> relationshipMap = new LinkedHashMap<>();
-        for (Field field : result.getFields()) {
-          fieldMap.put(field.getName().toLowerCase(), field);
-          String relationshipName = field.getRelationshipName();
-          if (relationshipName != null) {
-            relationshipMap.put(relationshipName.toLowerCase(), field);
+      // Special case - we prepopulate the cache with the root sobject type - don't repeat
+      // ourselves
+      if (types.length > 1 || !metadataMap.containsKey(types[0])) {
+        for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
+          Map<String, Field> fieldMap = new LinkedHashMap<>();
+          Map<String, Field> relationshipMap = new LinkedHashMap<>();
+          for (Field field : result.getFields()) {
+            fieldMap.put(field.getName().toLowerCase(), field);
+            String relationshipName = field.getRelationshipName();
+            if (relationshipName != null) {
+              relationshipMap.put(relationshipName.toLowerCase(), field);
+            }
           }
+          Map<String, String> childRelationships = new LinkedHashMap<>();
+          for (ChildRelationship child : result.getChildRelationships()) {
+            if (child.getRelationshipName() != null) {
+              childRelationships.put(child.getRelationshipName().toLowerCase(),
+                  child.getChildSObject().toLowerCase());
+            }
+          }
+          metadataMap.put(result.getName().toLowerCase(), new ObjectMetadata(fieldMap,
+              relationshipMap, childRelationships));
         }
-        metadataMap.put(result.getName().toLowerCase(), new ObjectMetadata(fieldMap, relationshipMap));
       }
 
       for (List<Pair<String, String>> path : references) {
         // Top field name in the path should be in the metadata now
         if (!path.isEmpty()) {
           Pair<String, String> top = path.get(0);
-          Field field = metadataMap.get(top.getLeft()).relationshipToField.get(top.getRight());
+          Field field = metadataMap.get(top.getLeft()).getFieldFromRelationship(top.getRight());
           Set<String> sobjectNames = metadataMap.keySet();
           for (String ref : field.getReferenceTo()) {
             ref = ref.toLowerCase();
@@ -386,6 +443,6 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   }
 
   public com.sforce.soap.partner.Field getFieldMetadata(String objectType, String fieldName) {
-    return metadataCache.get(objectType).nameToField.get(fieldName.toLowerCase());
+    return metadataCache.get(objectType).getFieldFromName(fieldName);
   }
 }
