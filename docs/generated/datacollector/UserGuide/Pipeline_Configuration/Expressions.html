@@ -1,48 +1,251 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Use the expression language to configure expressions and conditions in processors, such as the Expression Evaluator or Stream Selector. Some destination properties also allow the expression language, ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Expression Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_rjh_ntz_qr" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_fjx_g31_1s" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_bs4_5nm_2s" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ofb_1cm_xq" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Expression Configuration</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Use the expression language to configure expressions and conditions in processors, such as the Expression Evaluator or Stream Selector. Some destination properties also allow the expression language, ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Expression Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html" /><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_rjh_ntz_qr" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_fjx_g31_1s" /><meta name="DC.Relation" scheme="URI" content="RuntimeValues.html#concept_bs4_5nm_2s" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ofb_1cm_xq" /><title>Expression Configuration</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ofb_1cm_xq-d46e21027" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr" title="Implicit and Explicit Validation"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html" title="Configuring a Pipeline"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_ofb_1cm_xq">
- <h1 class="title topictitle1">Expression Configuration</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_izr_f2p_rq-d46e19535" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cgm_ktz_2t-d46e19559" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_twq_nhx_rr-d46e19583" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineMemory.html#concept_twq_nhx_rr">Pipeline Memory</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_erj_qg4_qv-d46e19607" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_alb_b3y_cbb-d46e19631" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h5b_kcr_kz-d46e19655" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
+                        change the values for each pipeline run without having to         edit the pipeline. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jcw_n4t_51b-d46e20628" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
+         <li><span data-tocid="concept_mp1_t3l_rz-d46e20682" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
+         <li><span data-tocid="concept_mtn_k4j_rz-d46e20830" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dd1_n3f_5z-d46e20854" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Configuration</a></span></span></li>
+         <li><span data-tocid="concept_azs_swf_jr-d46e21003" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_ofb_1cm_xq-d46e21027" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_bkb_tcm_xq-d46e21160" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_bkb_tcm_xq">Basic Syntax</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Precede all expressions with a dollar sign and enclose them with curly brackets, as   follows: <code class="ph codeph">${&lt;expression&gt;}</code>.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_kk2_mbm_xq-d46e21188" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_kk2_mbm_xq">Using Field Names in Expressions</a></span></span></li>
+               <li><span data-tocid="concept_hjk_b4l_vq-d46e21265" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_hjk_b4l_vq">Referencing Field Names and Field Paths</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When a pipeline is valid for preview, you can generally select fields from a list. When                 a list is not available
+                              or when you are defining a new field name, you need to use                 the appropriate format for the field name.  
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ir4_rxt_3cb-d46e21386" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb">Field Path Expressions</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use field path expressions in certain processors to determine the set of         fields that you want the processor
+                              to use.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_tns_krz_sr-d46e21637" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_tns_krz_sr">Expression Completion in Properties</a></span></span></li>
+               <li><span data-tocid="concept_fmr_ggh_fr-d46e21856" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_fmr_ggh_fr">Data Type Coercion</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When an expression requires, the expression language attempts implicit data type   conversion - a.k.a. data type coercion.
+                              When coercion is not possible, <span class="ph">Data Collector</span> passes the   error records to the stage for error handling.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="task_xlv_jdw_kq-d46e21985" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ofb_1cm_xq">
+ <h1 class="title topictitle1" id="ariaid-title1">Expression Configuration</h1>
 
  <div class="body conbody">
     <p class="p">Use the expression language to configure expressions and conditions in
@@ -54,7 +257,7 @@
                   expressions to select the fields to use in some processors. </p>
 <p class="p">Use expression completion to determine where you can use an expression
                   and the expression elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d87273e3535">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d88e3537">
                         <li class="li">Constants</li>
 
                         <li class="li">Datetime variables</li>
@@ -78,28 +281,22 @@
 
  </div>
 
-  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="Expression Language">Expression Language</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">Using Runtime Parameters</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors.">Using Runtime Properties</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a></div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_bkb_tcm_xq">
- <h2 class="title topictitle2">Basic Syntax</h2>
+  
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_bkb_tcm_xq">
+ <h2 class="title topictitle2" id="ariaid-title2">Basic Syntax</h2>
 
  
  <div class="body conbody"><p class="shortdesc">Precede all expressions with a dollar sign and enclose them with curly brackets, as
-  follows: <samp class="ph codeph">${&lt;expression&gt;}</samp>.</p>
+  follows: <code class="ph codeph">${&lt;expression&gt;}</code>.</p>
 
   <p class="p">For example, to add 2
    + 2, use the following syntax: ${2 + 2}.</p>
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_kk2_mbm_xq">
- <h2 class="title topictitle2">Using Field Names in Expressions</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_kk2_mbm_xq">
+ <h2 class="title topictitle2" id="ariaid-title3">Using Field Names in Expressions</h2>
 
  <div class="body conbody">
   <p class="p">When a pipeline is valid for preview,
@@ -107,8 +304,7 @@
    the appropriate format for the field name.</p>
 
   <div class="p">When you use a field name in an expression, use the following
-   syntax:<pre class="pre codeblock">${record:value("/&lt;field name&gt;")}</pre>
-</div>
+   syntax:<pre class="pre codeblock"><code>${record:value("/&lt;field name&gt;")}</code></pre></div>
 
   <div class="p">
    <div class="note note"><span class="notetitle">Note:</span> You can use single or double quotation marks to surround a field name.</div>
@@ -119,15 +315,14 @@
    values from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value('/DATE')} ${record:value('/TIME')}
-${record:value("/DATE")} ${record:value("/TIME")}</pre>
-
+   <pre class="pre codeblock"><code>${record:value('/DATE')} ${record:value('/TIME')}
+${record:value("/DATE")} ${record:value("/TIME")}</code></pre>
   </div>
 
  </div>
 
-<div class="topic concept nested2" id="concept_xnp_453_ft">
- <h3 class="title topictitle3">Field Names with Special Characters</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_xnp_453_ft">
+ <h3 class="title topictitle3" id="ariaid-title4">Field Names with Special Characters</h3>
 
  
  <div class="body conbody"><p class="shortdesc">You can use quotation marks and the backslash character to handle special characters in
@@ -140,12 +335,10 @@ ${record:value("/DATE")} ${record:value("/TIME")}</pre>
      <dt class="dt dlterm">Use quotation marks around field names with special characters</dt>
 
      <dd class="dd">When a field name includes special characters, surround the field name with single or
-      double quotation marks as follows: <pre class="pre codeblock">/"&lt;field w/specialcharacter&gt;"</pre>
-Some
-      examples:<pre class="pre codeblock">/"Stream$ets"
+      double quotation marks as follows: <pre class="pre codeblock"><code>/"&lt;field w/specialcharacter&gt;"</code></pre>Some
+      examples:<pre class="pre codeblock"><code>/"Stream$ets"
 /'city&amp;state'
-/"product names"</pre>
-</dd>
+/"product names"</code></pre></dd>
 
     
     
@@ -155,12 +348,11 @@ Some
       double quotation marks. But make sure to alternate between the types when nesting quotation
       marks. </dd>
 
-     <dd class="dd">For example: </dd>
+     <dd class="dd ddexpand">For example: </dd>
 
-     <dd class="dd">
-      <pre class="pre codeblock">${record:value('/"Stream$ets"'}
-${record:value("/'city&amp;state'"}</pre>
-
+     <dd class="dd ddexpand">
+      <pre class="pre codeblock"><code>${record:value('/"Stream$ets"'}
+${record:value("/'city&amp;state'"}</code></pre>
      </dd>
 
     
@@ -169,15 +361,13 @@ ${record:value("/'city&amp;state'"}</pre>
 
      <dd class="dd">To use a quotation mark or backslash in a field name, use a backslash ( \ ).</dd>
 
-     <dd class="dd">Add additional backslashes as necessary to escape quotation marks. </dd>
+     <dd class="dd ddexpand">Add additional backslashes as necessary to escape quotation marks. </dd>
 
-     <dd class="dd">For example, to use a field named "ID's" as a required field, you would use a single
-      backslash: <pre class="pre codeblock">/ID\'s</pre>
-</dd>
+     <dd class="dd ddexpand">For example, to use a field named "ID's" as a required field, you would use a single
+      backslash: <pre class="pre codeblock"><code>/ID\'s</code></pre></dd>
 
-     <dd class="dd">To use the same field in an expression, you might need additional backslashes as
-      follows:<pre class="pre codeblock">${record:value('/ID\\'s')}</pre>
-</dd>
+     <dd class="dd ddexpand">To use the same field in an expression, you might need additional backslashes as
+      follows:<pre class="pre codeblock"><code>${record:value('/ID\\'s')}</code></pre></dd>
 
     
    </dl>
@@ -185,10 +375,10 @@ ${record:value("/'city&amp;state'"}</pre>
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_hjk_b4l_vq">
- <h2 class="title topictitle2">Referencing Field Names and Field Paths</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_hjk_b4l_vq">
+ <h2 class="title topictitle2" id="ariaid-title5">Referencing Field Names and Field Paths</h2>
 
  
  <div class="body conbody"><p class="shortdesc">When a pipeline is valid for preview, you can generally select fields from a list. When
@@ -210,14 +400,12 @@ ${record:value("/'city&amp;state'"}</pre>
                                                 <div class="p">With simple maps or JSON objects, the fields are
                                                   one level removed from the root. Reference the
                                                   field as
-                                                  follows:<pre class="pre codeblock">/&lt;field name&gt;</pre>
-</div>
+                                                  follows:<pre class="pre codeblock"><code>/&lt;field name&gt;</code></pre></div>
 
                                                 <div class="p">So, to reference a CITY field in a simple JSON
-                                                  object, enter <samp class="ph codeph">/CITY</samp>. A simple
+                                                  object, enter <code class="ph codeph">/CITY</code>. A simple
                                                   expression that calls the field might look like
-                                                  this:<pre class="pre codeblock">${record:value('/CITY')}</pre>
-</div>
+                                                  this:<pre class="pre codeblock"><code>${record:value('/CITY')}</code></pre></div>
 
                                         </dd>
 
@@ -228,16 +416,14 @@ ${record:value("/'city&amp;state'"}</pre>
                                         <dd class="dd">
                                                 <div class="p">To reference a field in a complex map or JSON
                                                   object, include the path to the field, as follows:
-                                                  <pre class="pre codeblock">/&lt;path to field&gt;/&lt;field name&gt;</pre>
-</div>
+                                                  <pre class="pre codeblock"><code>/&lt;path to field&gt;/&lt;field name&gt;</code></pre></div>
 
                                                 <div class="p">For example, the following field path describes
                                                   an employeeName field several levels deep in a
                                                   JSON object:
-                                                  <samp class="ph codeph">/region/division/group/employeeName</samp>.
+                                                  <code class="ph codeph">/region/division/group/employeeName</code>.
                                                   An expression that calls the field might look like
-                                                  this:<pre class="pre codeblock">${record:value("/region/division/group/employeeName")}</pre>
-</div>
+                                                  this:<pre class="pre codeblock"><code>${record:value("/region/division/group/employeeName")}</code></pre></div>
 
                                         </dd>
 
@@ -247,19 +433,17 @@ ${record:value("/'city&amp;state'"}</pre>
 
                                         <dd class="dd">To reference a field in an array or list, include the
                                                 index and path to the field, as
-                                                follows:<pre class="pre codeblock">[&lt;index value&gt;]/&lt;path to field&gt;/&lt;field name&gt;</pre>
-</dd>
+                                                follows:<pre class="pre codeblock"><code>[&lt;index value&gt;]/&lt;path to field&gt;/&lt;field name&gt;</code></pre></dd>
 
-                                        <dd class="dd">For example, the following field path describes the same
+                                        <dd class="dd ddexpand">For example, the following field path describes the same
                                                 employeeName field in the third region index in an
                                                 array:
-                                                <samp class="ph codeph">[2]/east/HR/employeeName</samp>.</dd>
+                                                <code class="ph codeph">[2]/east/HR/employeeName</code>.</dd>
 
-                                        <dd class="dd">An expression that calls the field might look like
-                                                this:<pre class="pre codeblock">${record:value('[2]/east/HR/employeeName')}</pre>
-</dd>
+                                        <dd class="dd ddexpand">An expression that calls the field might look like
+                                                this:<pre class="pre codeblock"><code>${record:value('[2]/east/HR/employeeName')}</code></pre></dd>
 
-                                        <dd class="dd">Delimited records can be structured as lists. For more
+                                        <dd class="dd ddexpand">Delimited records can be structured as lists. For more
                                                 information, see <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
 
                                 
@@ -268,8 +452,7 @@ ${record:value("/'city&amp;state'"}</pre>
 
                                         <dd class="dd">To reference text when a record is a line of text, use
                                                 the following field name:
-                                                <pre class="pre codeblock">/text</pre>
-</dd>
+                                                <pre class="pre codeblock"><code>/text</code></pre></dd>
 
                                 
                         </dl>
@@ -278,8 +461,8 @@ ${record:value("/'city&amp;state'"}</pre>
 
  </div>
 
-<div class="topic concept nested2" id="concept_vqr_sqc_wr">
-  <h3 class="title topictitle3">Wildcard Use for Arrays and Maps</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_vqr_sqc_wr">
+  <h3 class="title topictitle3" id="ariaid-title6">Wildcard Use for Arrays and Maps</h3>
 
   
   <div class="body conbody"><p class="shortdesc">In some processors, you can use the asterisk wildcard (*) as indices in an array or key
@@ -291,8 +474,7 @@ ${record:value("/'city&amp;state'"}</pre>
 
           <dd class="dd">Matches all values for the specified index in an array. For example, the following
             field path represents the social security number of every employee in every
-            division:<pre class="pre codeblock">/Division[*]/Employee[*]/SSN</pre>
-</dd>
+            division:<pre class="pre codeblock"><code>/Division[*]/Employee[*]/SSN</code></pre></dd>
 
         
         
@@ -300,8 +482,7 @@ ${record:value("/'city&amp;state'"}</pre>
 
           <dd class="dd">Matches all values for the specified keys in a map. For example, the following field
             path represents all employee information in the first
-            division:<pre class="pre codeblock">/Division[0]/Employee[*]/*</pre>
-</dd>
+            division:<pre class="pre codeblock"><code>/Division[0]/Employee[*]/*</code></pre></dd>
 
         
       </dl>
@@ -309,10 +490,10 @@ ${record:value("/'city&amp;state'"}</pre>
 
   </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_ir4_rxt_3cb">
-    <h2 class="title topictitle2">Field Path Expressions</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_ir4_rxt_3cb">
+    <h2 class="title topictitle2" id="ariaid-title7">Field Path Expressions</h2>
 
     
     <div class="body conbody"><p class="shortdesc">You can use field path expressions in certain processors to determine the set of
@@ -325,8 +506,8 @@ ${record:value("/'city&amp;state'"}</pre>
 
     </div>
 
-<div class="topic concept nested2" id="concept_bs3_dm5_3cb">
-    <h3 class="title topictitle3">Supported Stages</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_bs3_dm5_3cb">
+    <h3 class="title topictitle3" id="ariaid-title8">Supported Stages</h3>
 
     <div class="body conbody">
         <div class="p">You
@@ -349,9 +530,9 @@ ${record:value("/'city&amp;state'"}</pre>
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_nhd_5p5_3cb">
-    <h3 class="title topictitle3">Field Path Expression Syntax</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_nhd_5p5_3cb">
+    <h3 class="title topictitle3" id="ariaid-title9">Field Path Expression Syntax</h3>
 
     <div class="body conbody">
         <div class="p">When creating a field path expression,
@@ -364,9 +545,8 @@ ${record:value("/'city&amp;state'"}</pre>
                         slash ( / ) to indicate the location of the fields in relation to the root
                         field. Then, continue defining the field path as appropriate.</dd>
 
-                    <dd class="dd">For example, the following field path expression uses a wildcard to specify
-                        all fields in the record:<pre class="pre codeblock">/*</pre>
-</dd>
+                    <dd class="dd ddexpand">For example, the following field path expression uses a wildcard to specify
+                        all fields in the record:<pre class="pre codeblock"><code>/*</code></pre></dd>
 
                 
                 
@@ -377,15 +557,13 @@ ${record:value("/'city&amp;state'"}</pre>
                             <li class="li">Use the asterisk wildcard to represent one or more characters.<div class="p">For
                                     example, to perform an action on all fields in a Stores map
                                     field, you can use the following field path
-                                    expression:<pre class="pre codeblock">/Stores/*</pre>
-</div>
+                                    expression:<pre class="pre codeblock"><code>/Stores/*</code></pre></div>
 </li>
 
                             <li class="li">Use the question mark wildcard to represent exactly one character.
                                     <div class="p">For example, the following expression includes all fields
                                     that have a two-character prefix followed by an
-                                    underscore:<pre class="pre codeblock">/??_*</pre>
-</div>
+                                    underscore:<pre class="pre codeblock"><code>/??_*</code></pre></div>
 </li>
 
                         </ul>
@@ -399,9 +577,8 @@ ${record:value("/'city&amp;state'"}</pre>
                         name of the list field, specify the position surrounded by brackets ( [ ] ).
                         Note that position numbering starts with 0.</dd>
 
-                    <dd class="dd">For example, the following expression calls the fourth item in a colors list
-                        field:<pre class="pre codeblock">/colors[3]</pre>
-</dd>
+                    <dd class="dd ddexpand">For example, the following expression calls the fourth item in a colors list
+                        field:<pre class="pre codeblock"><code>/colors[3]</code></pre></dd>
 
                 
                 
@@ -412,32 +589,29 @@ ${record:value("/'city&amp;state'"}</pre>
                         complex expressions, surround the expression with brackets ( [ ] ), as
                         follows:</dd>
 
-                    <dd class="dd">
-                        <pre class="pre codeblock">/*[${&lt;complex expression&gt;}]</pre>
-
+                    <dd class="dd ddexpand">
+                        <pre class="pre codeblock"><code>/*[${&lt;complex expression&gt;}]</code></pre>
                     </dd>
 
-                    <dd class="dd">For example, the following expression returns all fields with an "info"
+                    <dd class="dd ddexpand">For example, the following expression returns all fields with an "info"
                         field attribute set to any
-                        value:<pre class="pre codeblock">/*[${f:attribute('info') == '*'}]</pre>
-</dd>
+                        value:<pre class="pre codeblock"><code>/*[${f:attribute('info') == '*'}]</code></pre></dd>
 
                 
                 
                     <dt class="dt dlterm">Field functions</dt>
 
                     <dd class="dd">Use field functions to determine the fields to use based on field-related
-                        information, such as <samp class="ph codeph">f:type</samp> for the datatype of the field,
-                            <samp class="ph codeph">f:value</samp> for the value of the field, or
-                            <samp class="ph codeph">f:attribute</samp> for an attribute or attribute value of the
+                        information, such as <code class="ph codeph">f:type</code> for the datatype of the field,
+                            <code class="ph codeph">f:value</code> for the value of the field, or
+                            <code class="ph codeph">f:attribute</code> for an attribute or attribute value of the
                         field.</dd>
 
-                    <dd class="dd">For example, you can use the Field Type Converter processor to convert all
+                    <dd class="dd ddexpand">For example, you can use the Field Type Converter processor to convert all
                         Integer fields with the following
-                        expression:<pre class="pre codeblock">/*[${f:type() == 'INTEGER'}]</pre>
-</dd>
+                        expression:<pre class="pre codeblock"><code>/*[${f:type() == 'INTEGER'}]</code></pre></dd>
 
-                    <dd class="dd">For more information about field functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field Functions</a>.</dd>
+                    <dd class="dd ddexpand">For more information about field functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field Functions</a>.</dd>
 
                 
                 
@@ -446,10 +620,9 @@ ${record:value("/'city&amp;state'"}</pre>
                     <dd class="dd">You can use other functions, such as record, string, or time functions, as
                         part of complex field path expressions. </dd>
 
-                    <dd class="dd">For example, the following expression defines the subset of fields where the
+                    <dd class="dd ddexpand">For example, the following expression defines the subset of fields where the
                         region attribute is set to the results of the storeId
-                        field:<pre class="pre codeblock">/*[${f:attribute('region') == record:value('/storeId')}]</pre>
-</dd>
+                        field:<pre class="pre codeblock"><code>/*[${f:attribute('region') == record:value('/storeId')}]</code></pre></dd>
 
                 
             </dl>
@@ -457,10 +630,10 @@ ${record:value("/'city&amp;state'"}</pre>
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_tns_krz_sr">
- <h2 class="title topictitle2">Expression Completion in Properties</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_tns_krz_sr">
+ <h2 class="title topictitle2" id="ariaid-title10">Expression Completion in Properties</h2>
 
  <div class="body conbody">
     <p class="p">Expression completion
@@ -473,8 +646,8 @@ ${record:value("/'city&amp;state'"}</pre>
 
   </div>
 
-<div class="topic concept nested2" id="concept_fwj_yq5_tr">
- <h3 class="title topictitle3">Tips for Expression Completion</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title11" id="concept_fwj_yq5_tr">
+ <h3 class="title topictitle3" id="ariaid-title11">Tips for Expression Completion</h3>
 
  
  <div class="body conbody"><p class="shortdesc">Use the following information and tips when you invoke expression
@@ -515,10 +688,10 @@ ${record:value("/'city&amp;state'"}</pre>
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_fmr_ggh_fr">
- <h2 class="title topictitle2">Data Type Coercion</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_fmr_ggh_fr">
+ <h2 class="title topictitle2" id="ariaid-title12">Data Type Coercion</h2>
 
  
  <div class="body conbody"><p class="shortdesc">When an expression requires, the expression language attempts implicit data type
@@ -536,10 +709,26 @@ ${record:value("/'city&amp;state'"}</pre>
 
  </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        <div class=" wh_related_links "><nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo relconcepts"><strong>Related concepts</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="Expression Language">Expression Language</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">Using Runtime Parameters</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors.">Using Runtime Properties</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a></div></div>
+</nav></div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -547,6 +736,25 @@ ${record:value("/'city&amp;state'"}</pre>
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

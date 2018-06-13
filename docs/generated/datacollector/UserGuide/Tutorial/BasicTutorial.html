@@ -1,49 +1,275 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Basic Tutorial" /><meta name="abstract" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="description" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_phf_cjt_ls" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Basic Tutorial</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Basic Tutorial" /><meta name="abstract" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="description" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_phf_cjt_ls" /><title>Basic Tutorial</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_phf_cjt_ls-d46e121794" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the   data in two branches, and writes
+                  all data to a file system. You'll use data preview to help   configure the pipeline, and you'll create a data alert and run
+                  the pipeline. 
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" title="Before You Begin"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" title="Extended Tutorial"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" title="Tutorial">Tutorial</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_phf_cjt_ls">
- <h1 class="title topictitle1">Basic Tutorial</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_is5_lrq_ks-d46e121746" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Overview.html">Tutorial Overview</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hg5_j2p_ms-d46e121770" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms">Before You Begin</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_phf_cjt_ls-d46e121794" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the   data in two branches, and writes
+                        all data to a file system. You'll use data preview to help   configure the pipeline, and you'll create a data alert and run
+                        the pipeline. 
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="task_jmz_3dn_ls-d46e121920" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_jmz_3dn_ls">Create a Pipeline and Define Pipeline Properties</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you configure a pipeline, you need to decide what to do with error records. You         can discard them or - more productively
+                              - write them to file, another pipeline, or to Kafka. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ftt_2vq_ks-d46e121945" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ftt_2vq_ks">Configure the Origin</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The origin represents the incoming data for the pipeline. When you configure the         origin, you define how to connect
+                              to the origin system, the type of data to be processed,         and other properties specific to the origin.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_xb5_2sf_4s-d46e121980" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_xb5_2sf_4s">Preview Data </a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To become more familiar with the data set and gather some important details for         pipeline configuration, let's preview
+                              the source data.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_br5_rzq_ks-d46e122025" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_br5_rzq_ks">Route Data with the Stream Selector</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To route data to different streams for processing, we use the Stream Selector         processor.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_cdx_kfm_ls-d46e122080" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_cdx_kfm_ls">Use Jython for Card Typing</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Next, we'll evaluate credit card numbers to determine the credit card type. You can         use an Expression Evaluator to
+                              do the same calculations, but with a short script, the Jython         Evaluator is easier.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_qbw_d3m_ls-d46e122146" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_qbw_d3m_ls">Mask Credit Card Numbers</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Now let's prevent sensitive information from reaching internal databases by using a         Field Masker to mask the credit
+                              card numbers. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_wsj_5tm_ls-d46e122222" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wsj_5tm_ls">Write to the Destination</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The <span class="ph">Data Collector</span> can         write data to many destinations. The Local FS destination writes to files in a local file         system. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_wgb_t4p_ms-d46e122311" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wgb_t4p_ms">Add a Corresponding Field with the Expression Evaluator</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Jython Evaluator script added a new field to the credit payments branch. To         ensure all records have the same structure,
+                              we'll use the Expression Evaluator to add the         same field to the non-credit branch. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ets_dkj_ps-d46e122407" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ets_dkj_ps">Create a Data Rule and Alert</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are         user-defined rules used to inspect
+                              data moving between two stages. They are a powerful way         to look for outliers and anomalous data. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_m21_dyj_ps-d46e122513" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_m21_dyj_ps">Run the Basic Pipeline</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the             <span class="ph uicontrol">Start</span> icon: <img class="image" src="datacollector/UserGuide/Tutorial/datacollector/UserGuide/Graphics/icon_ConfigStartPipeline.png" height="NaN" width="NaN" />.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_w4n_gjt_ls-d46e122634" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls">Extended Tutorial</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to         perform some data transformations
+                        and write to the Trash development destination. We'll also         use data preview to test stage configuration. 
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_phf_cjt_ls">
+ <h1 class="title topictitle1" id="ariaid-title1">Basic Tutorial</h1>
 
  
  <div class="body conbody"><p class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the
@@ -84,22 +310,21 @@
   
  </div>
 
-<div class="related-links"></div>
-<div class="topic task nested1" id="task_jmz_3dn_ls">
-    <h2 class="title topictitle2">Create a Pipeline and Define Pipeline Properties</h2>
+<article class="topic task nested1" aria-labelledby="ariaid-title2" id="task_jmz_3dn_ls">
+    <h2 class="title topictitle2" id="ariaid-title2">Create a Pipeline and Define Pipeline Properties</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">When you configure a pipeline, you need to decide what to do with error records. You
         can discard them or - more productively - write them to file, another pipeline, or to Kafka. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">Write error records to one of these locations as a convenient way to deal with error
                 records without having to stop the pipeline. </p>
 
             <p class="p">This tutorial writes the records to a local file, but if you prefer to write error
                 records to Kafka, feel free. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_jmz_3dn_ls__steps_hsz_b2n_ls"><li class="li step stepexpand">
                 <span class="ph cmd">If you aren't already, log in to the <span class="ph">Data Collector</span>. </span>
@@ -122,72 +347,67 @@
                 <div class="itemgroup info">An empty canvas displays:<p class="p"><img class="image" id="task_jmz_3dn_ls__image_jnr_wtk_5s" src="../Graphics/Tutorial-Canvas.png" height="331" width="538" /></p>
 </div>
                 <div class="itemgroup info">Note a few helpful areas: 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_ezq_5ys_lt" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_ezq_5ys_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:9.090909090909092%" /><col style="width:18.181818181818183%" /><col style="width:72.72727272727273%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="9.090909090909092%" id="d525368e166">Number</th>
+                                    <th class="entry cellrowborder" id="d454502e302">Number</th>
 
-                                    <th class="entry" valign="top" width="18.181818181818183%" id="d525368e169">Name</th>
+                                    <th class="entry cellrowborder" id="d454502e305">Name</th>
 
-                                    <th class="entry" valign="top" width="72.72727272727273%" id="d525368e172">Description</th>
+                                    <th class="entry cellrowborder" id="d454502e308">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 ">1</td>
+                                    <td class="entry cellrowborder" headers="d454502e302 ">1</td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Pipeline Creation Help Bar </td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Pipeline Creation Help Bar </td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">Indicates that the origin is missing and offers a list of
+                                    <td class="entry cellrowborder" headers="d454502e308 ">Indicates that the origin is missing and offers a list of
                                         origins to choose from. <p class="p">If the Pipeline Creation Help Bar
                                             does not display, you might have disabled it. To enable
-                                            it, in the top right corner of the <span class="ph">Data Collector</span> window, click the <span class="ph menucascade"><span class="ph uicontrol">Help</span> &gt; <span class="ph uicontrol">Settings</span></span>. Clear the <span class="ph uicontrol">Hide Pipeline
+                                            it, in the top right corner of the <span class="ph">Data Collector</span> window, click the <span class="ph menucascade"><span class="ph uicontrol">Help</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Settings</span></span>. Clear the <span class="ph uicontrol">Hide Pipeline
                                                 Creation Help Bar</span> option.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 ">2</td>
+                                    <td class="entry cellrowborder" headers="d454502e302 ">2</td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Issues icon</td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Issues icon</td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">Click to display the list of pipeline issues found by
+                                    <td class="entry cellrowborder" headers="d454502e308 ">Click to display the list of pipeline issues found by
                                         implicit validation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 ">3</td>
+                                    <td class="entry cellrowborder" headers="d454502e302 ">3</td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Stage library panel</td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Stage library panel</td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">Displays a list of available origins by default.</td>
+                                    <td class="entry cellrowborder" headers="d454502e308 ">Displays a list of available origins by default.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 ">4</td>
+                                    <td class="entry cellrowborder" headers="d454502e302 ">4</td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Stage menu</td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Stage menu</td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">Changes the stages that display in the stage library.
+                                    <td class="entry cellrowborder" headers="d454502e308 ">Changes the stages that display in the stage library.
                                         Displays all stages by default.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 ">5</td>
+                                    <td class="entry cellrowborder" headers="d454502e302 ">5</td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Properties panel / Preview panel / Monitor panel </td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Properties panel / Preview panel / Monitor panel </td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">When you configure a pipeline, the Properties panel
+                                    <td class="entry cellrowborder" headers="d454502e308 ">When you configure a pipeline, the Properties panel
                                         displays the properties of the pipeline or selected stage.
                                         You can resize, minimize and maximize the panel. <p class="p">When you
                                             preview data, the Preview panel displays the input and
@@ -205,17 +425,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="9.090909090909092%" headers="d525368e166 "><img class="image" id="task_jmz_3dn_ls__image_ryw_gzs_lt" src="../Graphics/icon_ConfigStageLibrary.png" height="19" width="22" /></td>
+                                    <td class="entry cellrowborder" headers="d454502e302 "><img class="image" id="task_jmz_3dn_ls__image_ryw_gzs_lt" src="../Graphics/icon_ConfigStageLibrary.png" height="19" width="22" /></td>
 
-                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d525368e169 ">Stage Library icon</td>
+                                    <td class="entry cellrowborder" headers="d454502e305 ">Stage Library icon</td>
 
-                                    <td class="entry" valign="top" width="72.72727272727273%" headers="d525368e172 ">Toggles the display of the Stage Library panel.</td>
+                                    <td class="entry cellrowborder" headers="d454502e308 ">Toggles the display of the Stage Library panel.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 </div>
             </li>
@@ -233,27 +452,22 @@
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.47252747252747%" /><col style="width:72.52747252747253%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.47252747252747%" id="d525368e323">Write to File Property</th>
+                                    <th class="entry cellrowborder" id="d454502e459">Write to File Property</th>
 
-                                    <th class="entry" valign="top" width="72.52747252747253%" id="d525368e326">Description</th>
+                                    <th class="entry cellrowborder" id="d454502e462">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d525368e323 ">Directory</td>
+                                    <td class="entry cellrowborder" headers="d454502e459 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d525368e326 ">Directory for error record files. Enter the directory
+                                    <td class="entry cellrowborder" headers="d454502e462 ">Directory for error record files. Enter the directory
                                         that you set up for the tutorial. We recommended:
-                                            <pre class="pre codeblock">/&lt;base directory&gt;/tutorial/error</pre>
-<div class="note note"><span class="notetitle">Note:</span> To
+                                            <pre class="pre codeblock"><code>/&lt;base directory&gt;/tutorial/error</code></pre><div class="note note"><span class="notetitle">Note:</span> To
                                             prevent validation errors, the directory must already
                                             exist.</div>
 </td>
@@ -261,9 +475,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d525368e323 ">Files Prefix</td>
+                                    <td class="entry cellrowborder" headers="d454502e459 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d525368e326 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry cellrowborder" headers="d454502e462 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data Collector</span> ID, but
                   that's more than we need here. </p>
 <p class="p">Delete the default and enter the following prefix:
@@ -273,44 +487,43 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d525368e323 ">Max File Size</td>
+                                    <td class="entry cellrowborder" headers="d454502e459 ">Max File Size</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d525368e326 ">For the tutorial, reduce the files size to something more
+                                    <td class="entry cellrowborder" headers="d454502e462 ">For the tutorial, reduce the files size to something more
                                         manageable, such as 5 or 1 MB.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
             </li>
 </ol>
 
-        <div class="section result">
+        <section class="section result">
             <p class="p">Now we'll start building the pipeline...</p>
 
-        </div>
+        </section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_ftt_2vq_ks">
-    <h2 class="title topictitle2">Configure the Origin</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_ftt_2vq_ks">
+    <h2 class="title topictitle2" id="ariaid-title3">Configure the Origin</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">The origin represents the incoming data for the pipeline. When you configure the
         origin, you define how to connect to the origin system, the type of data to be processed,
         and other properties specific to the origin.</p>
 
-        <div class="section context">The <span class="ph">Data Collector</span>
+        <section class="section context">The <span class="ph">Data Collector</span>
             provides a wide range of origins. We'll use the Directory origin to process the  sample
-            CSV file that you downloaded. </div>
+            CSV file that you downloaded. </section>
 
         <ol class="ol steps" id="task_ftt_2vq_ks__steps_ckz_gvq_ks"><li class="li step stepexpand">
-                <span class="ph cmd">To add the stage to the canvas, from the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span> &gt; <span class="ph uicontrol">Directory</span></span>. Or, in the Stage Library panel, click the
+                <span class="ph cmd">To add the stage to the canvas, from the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Directory</span></span>. Or, in the Stage Library panel, click the
                         <span class="ph uicontrol">Directory</span> origin: <img class="image" id="task_ftt_2vq_ks__image_cwb_2vt_lt" src="../Graphics/Tutorial_DirectoryIcon.png" height="13" width="17" />.</span>
                 <div class="itemgroup info">The origin displays in the canvas and the Properties panel displays the
                     properties for the stage.</div>
@@ -322,54 +535,50 @@
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_w5c_jyq_ks" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_w5c_jyq_ks" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d525368e455">Directory Property</th>
+                                    <th class="entry cellrowborder" id="d454502e593">Directory Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d525368e458">Value</th>
+                                    <th class="entry cellrowborder" id="d454502e596">Value</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e455 ">Files Directory</td>
+                                    <td class="entry cellrowborder" headers="d454502e593 ">Files Directory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e458 ">Directory where you saved the sample file. Enter an
-                                        absolute path.<p class="p">We recommended: <samp class="ph codeph">/&lt;base
-                                                directory&gt;/tutorial/origin</samp>.</p>
+                                    <td class="entry cellrowborder" headers="d454502e596 ">Directory where you saved the sample file. Enter an
+                                        absolute path.<p class="p">We recommended: <code class="ph codeph">/&lt;base
+                                                directory&gt;/tutorial/origin</code>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e455 ">File Name Pattern</td>
+                                    <td class="entry cellrowborder" headers="d454502e593 ">File Name Pattern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e458 ">The Directory origin processes only the files in the
+                                    <td class="entry cellrowborder" headers="d454502e596 ">The Directory origin processes only the files in the
                                         directory that match the file name pattern. <p class="p">The tutorial
-                                            sample file name is <samp class="ph codeph">nyc_taxi_data.csv</samp>.
+                                            sample file name is <code class="ph codeph">nyc_taxi_data.csv</code>.
                                             Since the file is the only file in the directory, you
                                             can use something generic, like the asterisk wild card
                                             (*) or *.csv.</p>
 <p class="p">If you had other .csv files in the
                                             directory that you didn't want to process, you might be
                                             more specific, like this:
-                                            <samp class="ph codeph">nyc_taxi*.csv</samp>. </p>
+                                            <code class="ph codeph">nyc_taxi*.csv</code>. </p>
 <p class="p">Or if you want to
                                             process files with prefixes for other cities, you might
-                                            use <samp class="ph codeph">*taxi*.csv</samp>.</p>
+                                            use <code class="ph codeph">*taxi*.csv</code>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e455 ">Read Order</td>
+                                    <td class="entry cellrowborder" headers="d454502e593 ">Read Order</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e458 ">This determines the read order when the directory
+                                    <td class="entry cellrowborder" headers="d454502e596 ">This determines the read order when the directory
                                         includes multiple files. You can read based on the
                                         last-modified timestamp or file name. Because it's simpler,
                                         let's use <span class="ph uicontrol">Last Modified Timestamp</span>.
@@ -378,8 +587,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -391,49 +599,45 @@
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_hnn_d15_lt" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_hnn_d15_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d525368e545">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d454502e683">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d525368e548">Description</th>
+                                    <th class="entry cellrowborder" id="d454502e686">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e545 ">Data Format</td>
+                                    <td class="entry cellrowborder" headers="d454502e683 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e548 ">The data in the sample file is delimited, so select
+                                    <td class="entry cellrowborder" headers="d454502e686 ">The data in the sample file is delimited, so select
                                             <span class="ph uicontrol">Delimited</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e545 ">Delimiter Format Type</td>
+                                    <td class="entry cellrowborder" headers="d454502e683 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e548 ">Since the sample file is a standard CSV file, use the
+                                    <td class="entry cellrowborder" headers="d454502e686 ">Since the sample file is a standard CSV file, use the
                                         default: <span class="ph uicontrol">Default CSV (ignores empty
                                             lines)</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e545 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d454502e683 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e548 ">The sample file includes a header, so select
+                                    <td class="entry cellrowborder" headers="d454502e686 ">The sample file includes a header, so select
                                             <span class="ph uicontrol">With Header Line</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e545 ">Root Field Type</td>
+                                    <td class="entry cellrowborder" headers="d454502e683 ">Root Field Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e548 ">This property determines how the <span class="ph">Data Collector</span> processes delimited data. Use the default
+                                    <td class="entry cellrowborder" headers="d454502e686 ">This property determines how the <span class="ph">Data Collector</span> processes delimited data. Use the default
                                             <span class="ph uicontrol">List-Map</span>. <p class="p">This allows you to
                                             use standard functions to process delimited data. With
                                             the List root field type, you need to use delimited data
@@ -443,32 +647,31 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
             </li>
 </ol>
 
-        <div class="section result">This is how the stage and pipeline should look at this point:<p class="p"><img class="image" id="task_ftt_2vq_ks__image_kj1_c5f_4s" src="../Graphics/Tutorial-Directory.png" height="466" width="735" /></p>
+        <section class="section result">This is how the stage and pipeline should look at this point:<p class="p"><img class="image" id="task_ftt_2vq_ks__image_kj1_c5f_4s" src="../Graphics/Tutorial-Directory.png" height="466" width="735" /></p>
 <p class="p">Notice the error icons on the page. When you hover over the Directory error
                 icon or click the Issues icon, a validation message states that the origin has open
                 streams - that means that it's not connected to anything yet. We'll take care of
                 that next.</p>
-</div>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_xb5_2sf_4s">
-    <h2 class="title topictitle2">Preview Data </h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title4" id="task_xb5_2sf_4s">
+    <h2 class="title topictitle2" id="ariaid-title4">Preview Data </h2>
 
     
     <div class="body taskbody"><p class="shortdesc">To become more familiar with the data set and gather some important details for
         pipeline configuration, let's preview the source data.</p>
 
-        <div class="section context">
+        <section class="section context">
             <div class="p">Here are some key details that we need to configure the pipeline: <ul class="ul" id="task_xb5_2sf_4s__ul_a41_hvh_4s">
                     <li class="li">The field that contains payment information - We'll use this to route data
                         in the Stream Selector. </li>
@@ -480,18 +683,18 @@
 </div>
 
             <p class="p">When you access data in a field, you specify the field path for the field. The field
-                path depends on the complexity of the record: <samp class="ph codeph">/&lt;fieldname&gt;</samp> for
-                simple records and <samp class="ph codeph">&lt;path to field&gt;/&lt;fieldname&gt;</samp> for more
+                path depends on the complexity of the record: <code class="ph codeph">/&lt;fieldname&gt;</code> for
+                simple records and <code class="ph codeph">&lt;path to field&gt;/&lt;fieldname&gt;</code> for more
                 complex records.  </p>
 
             <p class="p">Because we're using the List-Map root field type, we can use
-                    <samp class="ph codeph">/&lt;fieldname&gt;</samp>. </p>
+                    <code class="ph codeph">/&lt;fieldname&gt;</code>. </p>
 
             <p class="p">To start data preview, all stages must be connected and all required properties
                 defined - though not necessarily correctly. Since the origin is configured and the
                 only stage, the pipeline should be ready to preview as is. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_xb5_2sf_4s__steps_jxv_fpf_4s"><li class="li step stepexpand">
                 <span class="ph cmd">Above the pipeline canvas, click the <span class="ph uicontrol">Preview</span> icon:
@@ -510,32 +713,28 @@
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xb5_2sf_4s__table_z2x_325_lt" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xb5_2sf_4s__table_z2x_325_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d525368e710">Data Preview Property</th>
+                                    <th class="entry cellrowborder" id="d454502e851">Data Preview Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d525368e713">Description</th>
+                                    <th class="entry cellrowborder" id="d454502e854">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e710 ">Preview Source</td>
+                                    <td class="entry cellrowborder" headers="d454502e851 ">Preview Source</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e713 ">Use the default <span class="ph uicontrol">Configured Source</span>
+                                    <td class="entry cellrowborder" headers="d454502e854 ">Use the default <span class="ph uicontrol">Configured Source</span>
                                         to use the sample source data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e710 ">Write to Destinations and Executors</td>
+                                    <td class="entry cellrowborder" headers="d454502e851 ">Write to Destinations and Executors</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e713 ">By default, this property is not selected. In general,
+                                    <td class="entry cellrowborder" headers="d454502e854 ">By default, this property is not selected. In general,
                                         you should keep this property clear to avoid writing data to
                                         destination systems or triggering tasks in destination
                                         systems.</td>
@@ -543,17 +742,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e710 ">Show Field Type</td>
+                                    <td class="entry cellrowborder" headers="d454502e851 ">Show Field Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e713 ">By default, this property is selected. Keep it selected
+                                    <td class="entry cellrowborder" headers="d454502e854 ">By default, this property is selected. Keep it selected
                                         to see the data type of fields in the record. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d525368e710 ">Remember the Configuration</td>
+                                    <td class="entry cellrowborder" headers="d454502e851 ">Remember the Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d525368e713 ">Select to use these properties each time you run data
+                                    <td class="entry cellrowborder" headers="d454502e854 ">Select to use these properties each time you run data
                                         preview. <p class="p">When you select this option, the UI enters data
                                             preview without showing this dialog box again.
                                         </p>
@@ -562,8 +761,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -602,7 +800,7 @@
             </li>
 </ol>
 
-        <div class="section result">Now we know the following: <ul class="ul" id="task_xb5_2sf_4s__ul_glg_yj1_mt">
+        <section class="section result">Now we know the following: <ul class="ul" id="task_xb5_2sf_4s__ul_glg_yj1_mt">
                 <li class="li">Payment type information is in the <span class="ph uicontrol">payment_type </span>field and
                     credit card information is in the <span class="ph uicontrol">credit_card</span> field.</li>
 
@@ -614,19 +812,19 @@
                     type is "CRD". </li>
 
             </ul>
-</div>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_br5_rzq_ks">
-    <h2 class="title topictitle2">Route Data with the Stream Selector</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title5" id="task_br5_rzq_ks">
+    <h2 class="title topictitle2" id="ariaid-title5">Route Data with the Stream Selector</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">To route data to different streams for processing, we use the Stream Selector
         processor.</p>
 
-        <div class="section context"><p class="p">The Stream Selector routes data to different streams based on user-defined
+        <section class="section context"><p class="p">The Stream Selector routes data to different streams based on user-defined
                 conditions. Any data not captured by a user-defined condition routes to the default
                 stream.</p>
 <p class="p">We'll route credit card transactions to a credit card stream for
@@ -638,18 +836,17 @@
                 for error handling. If you configured the pipeline to write to file, that's where
                 error records go. </p>
 To represent data in a field, we use the
-                <samp class="ph codeph">record:value</samp> function. This returns field values associated with
+                <code class="ph codeph">record:value</code> function. This returns field values associated with
             the field.<div class="p">To capture records with credit card payments, use the following condition:
-                <pre class="pre codeblock">${record:value('/payment_type') == 'CRD'}</pre>
-</div>
+                <pre class="pre codeblock"><code>${record:value('/payment_type') == 'CRD'}</code></pre></div>
 <p class="p">Note that we
                 enclose expressions in a dollar sign and curly brackets. You can use single or
                 double quotation marks around strings. For more information about the expression
                 language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
-</div>
+</section>
 
         <ol class="ol steps" id="task_br5_rzq_ks__steps_xhx_3rk_ls"><li class="li step stepexpand">
-                <span class="ph cmd">From the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor to Connect</span> &gt; <span class="ph uicontrol">Stream Selector</span></span>. Or, in the Stage Library panel, select the <span class="ph uicontrol">Stream
+                <span class="ph cmd">From the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor to Connect</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Stream Selector</span></span>. Or, in the Stage Library panel, select the <span class="ph uicontrol">Stream
                         Selector</span> processor (<img class="image" id="task_br5_rzq_ks__image_rt1_3m1_mt" src="../Graphics/Tutorial_SSelector_icon.png" height="20" width="20" />) and connect the Directory origin to it. </span>
             </li>
 <li class="li step stepexpand">
@@ -681,8 +878,7 @@ To represent data in a field, we use the
                     the expression completion feature helps you select the function and ensure valid
                     syntax.</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">${record:value('/payment_type') == 'CRD'}</pre>
-
+                    <pre class="pre codeblock"><code>${record:value('/payment_type') == 'CRD'}</code></pre>
                 </div>
                 <div class="itemgroup info">All records that match this condition pass to the first output stream. All
                     other records are captured by the default condition and passed through the
@@ -690,21 +886,21 @@ To represent data in a field, we use the
             </li>
 </ol>
 
-        <div class="section result">The Stream Selector should look like this:<p class="p"><img class="image" id="task_br5_rzq_ks__image_t1s_png_4s" src="../Graphics/Tutorial-StreamSelector.png" height="286" width="684" /></p>
-</div>
+        <section class="section result">The Stream Selector should look like this:<p class="p"><img class="image" id="task_br5_rzq_ks__image_t1s_png_4s" src="../Graphics/Tutorial-StreamSelector.png" height="286" width="684" /></p>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_cdx_kfm_ls">
-    <h2 class="title topictitle2">Use Jython for Card Typing</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_cdx_kfm_ls">
+    <h2 class="title topictitle2" id="ariaid-title6">Use Jython for Card Typing</h2>
 
     
     <div class="body taskbody"><p class="shortdesc"> Next, we'll evaluate credit card numbers to determine the credit card type. You can
         use an Expression Evaluator to do the same calculations, but with a short script, the Jython
         Evaluator is easier.</p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">You can use custom scripts with the JavaScript Evaluator and the Jython Evaluator to
                 perform processing that is not easily performed using other <span class="ph">Data Collector</span> processors. When using scripts to handle list-map data, the script must treat the
                 data as maps.</p>
@@ -714,7 +910,7 @@ To represent data in a field, we use the
                 number. The script returns an error message if the record has a credit card payment
                 type without a corresponding credit card number. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_cdx_kfm_ls__steps_lnv_lfm_ls"><li class="li step stepexpand">
                 <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> processor to the canvas.</span>
@@ -774,7 +970,7 @@ To represent data in a field, we use the
                 <span class="ph cmd">In the <span class="ph uicontrol">Script</span> text box, review the information in the
                     comments, then delete it. Paste in the following script: </span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">try: 
+                    <pre class="pre codeblock"><code>try: 
   for record in records:
     cc = record.value['credit_card']
     if cc == '':
@@ -801,8 +997,7 @@ To represent data in a field, we use the
 
     output.write(record)
 except Exception as e:
-  error.write(record, e.message)</pre>
-
+  error.write(record, e.message)</code></pre>
                     <div class="p">
                         <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause Jython validation errors. For best
                             results, copy the script from the online help. Copying the script from
@@ -819,32 +1014,31 @@ except Exception as e:
             </li>
 </ol>
 
-        <div class="section result">In the Jython Evaluator, the script should look like this:<p class="p"><img class="image" id="task_cdx_kfm_ls__image_jt1_4ch_4s" src="../Graphics/Tutorial-Jython.png" height="406" width="490" /></p>
-</div>
+        <section class="section result">In the Jython Evaluator, the script should look like this:<p class="p"><img class="image" id="task_cdx_kfm_ls__image_jt1_4ch_4s" src="../Graphics/Tutorial-Jython.png" height="406" width="490" /></p>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_qbw_d3m_ls">
-    <h2 class="title topictitle2">Mask Credit Card Numbers</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_qbw_d3m_ls">
+    <h2 class="title topictitle2" id="ariaid-title7">Mask Credit Card Numbers</h2>
 
     
     <div class="body taskbody"><p class="shortdesc"> Now let's prevent sensitive information from reaching internal databases by using a
         Field Masker to mask the credit card numbers. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">The Field Masker provides fixed and variable-length masks to mask all data in a
                 field. To reveal specified positions in the data, you can use custom mask. To reveal
                 a group of positions within the data, you can use a regular expression mask to
                 define the structure of the data and then reveal one or more groups.</p>
 
             <div class="p">For the credit card numbers, we'll use the following regular expression to mask all
-                but the last four digits:<pre class="pre codeblock">(.*)([0-9]{4})</pre>
-</div>
+                but the last four digits:<pre class="pre codeblock"><code>(.*)([0-9]{4})</code></pre></div>
 
             <p class="p">The regular expression defines two groups so we can reveal the second group.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_qbw_d3m_ls__steps_wwy_fjm_ls"><li class="li step stepexpand">
                 <span class="ph cmd">Add a <span class="ph uicontrol">Field Masker</span> processor to the canvas and connect
@@ -865,70 +1059,65 @@ except Exception as e:
                     credit card number, configure the rest of the properties as follows:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbw_d3m_ls__table_ejl_msm_ls" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbw_d3m_ls__table_ejl_msm_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.49002849002849%" /><col style="width:71.5099715099715%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="28.49002849002849%" id="d525368e1263">Field Masker Property</th>
+                                    <th class="entry cellrowborder" id="d454502e1408">Field Masker Property</th>
 
-                                    <th class="entry" valign="top" width="71.5099715099715%" id="d525368e1266">Configuration</th>
+                                    <th class="entry cellrowborder" id="d454502e1411">Configuration</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d525368e1263 ">Mask Type</td>
+                                    <td class="entry cellrowborder" headers="d454502e1408 ">Mask Type</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d525368e1266 ">Regular Expression</td>
+                                    <td class="entry cellrowborder" headers="d454502e1411 ">Regular Expression</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d525368e1263 ">Regular Expression</td>
+                                    <td class="entry cellrowborder" headers="d454502e1408 ">Regular Expression</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d525368e1266 ">
-                                        <samp class="ph codeph">(.*)([0-9]{4})</samp></td>
+                                    <td class="entry cellrowborder" headers="d454502e1411 ">
+                                        <code class="ph codeph">(.*)([0-9]{4})</code></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d525368e1263 ">Groups to Show</td>
+                                    <td class="entry cellrowborder" headers="d454502e1408 ">Groups to Show</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d525368e1266 ">2</td>
+                                    <td class="entry cellrowborder" headers="d454502e1411 ">2</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
             </li>
 </ol>
 
-        <div class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="397" width="616" /></p>
-</div>
+        <section class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="397" width="616" /></p>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_wsj_5tm_ls">
-    <h2 class="title topictitle2">Write to the Destination</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_wsj_5tm_ls">
+    <h2 class="title topictitle2" id="ariaid-title8">Write to the Destination</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data Collector</span> can
         write data to many destinations. The Local FS destination writes to files in a local file
         system. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">When you configure the Local FS destination, you define the directory template. This
                 determines the naming convention for the output directories that are created. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_wsj_5tm_ls__steps_xdd_wwm_ls"><li class="li step stepexpand">
                 <span class="ph cmd">Add a <span class="ph uicontrol">Local FS</span> destination to the canvas and connect the
@@ -941,24 +1130,20 @@ except Exception as e:
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:29.49852507374631%" /><col style="width:70.50147492625369%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d525368e1373">Local FS Property</th>
+                                    <th class="entry cellrowborder" id="d454502e1520">Local FS Property</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d525368e1376">Configuration</th>
+                                    <th class="entry cellrowborder" id="d454502e1523">Configuration</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d525368e1373 ">Files Prefix</td>
+                                    <td class="entry cellrowborder" headers="d454502e1520 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d525368e1376 ">Defines a prefix for output file names.<p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry cellrowborder" headers="d454502e1523 ">Defines a prefix for output file names.<p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data Collector</span> ID, but
                   that's more than we need here. </p>
 Let's simplify and use "out_" instead.</td>
@@ -966,32 +1151,31 @@ Let's simplify and use "out_" instead.</td>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d525368e1373 ">Directory Template</td>
+                                    <td class="entry cellrowborder" headers="d454502e1520 ">Directory Template</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d525368e1376 ">By default, the directory template includes datetime
+                                    <td class="entry cellrowborder" headers="d454502e1523 ">By default, the directory template includes datetime
                                         variables to create a directory structure for output files.
                                         This is intended for writing large volumes of data. <p class="p">Since
                                             we only have the sample file to process, we don't need
                                             the datetime variables. Go ahead and delete the default
                                             and enter the directory where you want the files to be
                                             written. </p>
-<p class="p">We suggested: <samp class="ph codeph">/&lt;base
-                                                directory&gt;/tutorial/destination</samp>.</p>
+<p class="p">We suggested: <code class="ph codeph">/&lt;base
+                                                directory&gt;/tutorial/destination</code>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d525368e1373 ">Max File Size (MB)</td>
+                                    <td class="entry cellrowborder" headers="d454502e1520 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d525368e1376 ">For the tutorial, let's lower the file size to something
+                                    <td class="entry cellrowborder" headers="d454502e1523 ">For the tutorial, let's lower the file size to something
                                         manageable, like 5 or 1.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1002,54 +1186,54 @@ Let's simplify and use "out_" instead.</td>
                 <div class="itemgroup info">
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d525368e1445" class="stentry">Delimited Property</th>
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1592" class="stentry">Delimited Property</th>
 
-                            <th valign="bottom" align="left" id="d525368e1448" class="stentry">Configuration</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1595" class="stentry">Configuration</th>
+
+                        </tr>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d454502e1592" class="stentry">Data Format</td>
+
+                            <td style="vertical-align:top;" headers="d454502e1595" class="stentry">Delimited</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d525368e1445" class="stentry">Data Format</td>
+                            <td style="vertical-align:top;" headers="d454502e1592" class="stentry">Header Line</td>
 
-                            <td valign="top" headers="d525368e1448" class="stentry">Delimited</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d525368e1445" class="stentry">Header Line</td>
-
-                            <td valign="top" headers="d525368e1448" class="stentry">With Header Line</td>
+                            <td style="vertical-align:top;" headers="d454502e1595" class="stentry">With Header Line</td>
 
                         </tr>
-</table>
-
+</tbody></table>
+</div>
                 </div>
             </li>
 </ol>
 
-        <div class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_vkl_sgm_bbb" src="../Graphics/Tutorial-LocalFS.png" height="70" width="554" /></p>
+        <section class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_vkl_sgm_bbb" src="../Graphics/Tutorial-LocalFS.png" height="70" width="554" /></p>
 <p class="p"> Now, we'll go back to the Stream
                 Selector and complete the secondary branch.</p>
-</div>
+</section>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_wgb_t4p_ms">
-    <h2 class="title topictitle2">Add a Corresponding Field with the Expression Evaluator</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title9" id="task_wgb_t4p_ms">
+    <h2 class="title topictitle2" id="ariaid-title9">Add a Corresponding Field with the Expression Evaluator</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">The Jython Evaluator script added a new field to the credit payments branch. To
         ensure all records have the same structure, we'll use the Expression Evaluator to add the
         same field to the non-credit branch. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">This ensures that all records have the same format when written to the
                 destination.</p>
 
             <p class="p">To do this, let's use data preview to verify how the Jython Evaluator adds the credit
                 card type to records.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_wgb_t4p_ms__steps_mr4_2pp_ms"><li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="ph uicontrol">Preview</span> icon. </span>
@@ -1078,20 +1262,20 @@ Let's simplify and use "out_" instead.</td>
                 <span class="ph cmd">Configure the following <span class="ph uicontrol">Field Expression</span>
                     properties:</span>
                 <div class="itemgroup info">
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d525368e1581" class="stentry">Output Field</th>
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1730" class="stentry">Output Field</th>
 
-                            <th valign="bottom" align="left" id="d525368e1584" class="stentry">Expression</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d525368e1581" class="stentry">/credit_card_type</td>
-
-                            <td valign="top" headers="d525368e1584" class="stentry">n/a</td>
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1733" class="stentry">Expression</th>
 
                         </tr>
-</table>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d454502e1730" class="stentry">/credit_card_type</td>
 
+                            <td style="vertical-align:top;" headers="d454502e1733" class="stentry">n/a</td>
+
+                        </tr>
+</tbody></table>
+</div>
                 </div>
                 <div class="itemgroup info">This creates a credit_card_type field that indicates the information is not
                     applicable.</div>
@@ -1109,16 +1293,16 @@ Let's simplify and use "out_" instead.</td>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_ets_dkj_ps">
-    <h2 class="title topictitle2">Create a Data Rule and Alert</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title10" id="task_ets_dkj_ps">
+    <h2 class="title topictitle2" id="ariaid-title10">Create a Data Rule and Alert</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are
         user-defined rules used to inspect data moving between two stages. They are a powerful way
         to look for outliers and anomalous data. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">Data rules and alerts require a detailed understanding of the data passing through
                 the pipeline. For more general pipeline monitoring information, you can use metric
                 rules and alerts.</p>
@@ -1128,10 +1312,10 @@ Let's simplify and use "out_" instead.</td>
                 the record count reaches a specified threshold. </p>
 
             <p class="p">We'll use an expression with the record:value() function to identify when the credit
-                card number field, <samp class="ph codeph">/credit_card</samp>, is null. The function returns the
+                card number field, <code class="ph codeph">/credit_card</code>, is null. The function returns the
                 data in the specified field. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_ets_dkj_ps__steps_cw5_qqj_ps"><li class="li step stepexpand">
                 <span class="ph cmd">Between the <span class="ph uicontrol">Stream Selector</span> and the <span class="ph uicontrol">Jython
@@ -1147,44 +1331,44 @@ Let's simplify and use "out_" instead.</td>
                 <div class="itemgroup info">
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d525368e1695" class="stentry" width="30.3951367781155%">Data Rule Property</th>
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><col style="width:30.3951367781155%" /><col style="width:69.6048632218845%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1847" class="stentry">Data Rule Property</th>
 
-                            <th valign="bottom" align="left" id="d525368e1698" class="stentry" width="69.6048632218845%">Description</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d454502e1850" class="stentry">Description</th>
+
+                        </tr>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d454502e1847" class="stentry">Label</td>
+
+                            <td style="vertical-align:top;" headers="d454502e1850" class="stentry">Missing Card Numbers</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d525368e1695" class="stentry">Label</td>
+                            <td style="vertical-align:top;" headers="d454502e1847" class="stentry">Condition</td>
 
-                            <td valign="top" headers="d525368e1698" class="stentry">Missing Card Numbers</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d525368e1695" class="stentry">Condition</td>
-
-                            <td valign="top" headers="d525368e1698" class="stentry">${record:value("/credit_card") == ""}</td>
+                            <td style="vertical-align:top;" headers="d454502e1850" class="stentry">${record:value("/credit_card") == ""}</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d525368e1695" class="stentry">Sampling Percentage</td>
+                            <td style="vertical-align:top;" headers="d454502e1847" class="stentry">Sampling Percentage</td>
 
-                            <td valign="top" headers="d525368e1698" class="stentry">35</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d525368e1695" class="stentry">Alert Text</td>
-
-                            <td valign="top" headers="d525368e1698" class="stentry">At least 10 missing credit card numbers!</td>
+                            <td style="vertical-align:top;" headers="d454502e1850" class="stentry">35</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d525368e1695" class="stentry">Threshold Value</td>
+                            <td style="vertical-align:top;" headers="d454502e1847" class="stentry">Alert Text</td>
 
-                            <td valign="top" headers="d525368e1698" class="stentry">10</td>
+                            <td style="vertical-align:top;" headers="d454502e1850" class="stentry">At least 10 missing credit card numbers!</td>
 
                         </tr>
-</table>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d454502e1847" class="stentry">Threshold Value</td>
 
+                            <td style="vertical-align:top;" headers="d454502e1850" class="stentry">10</td>
+
+                        </tr>
+</tbody></table>
+</div>
                     <p class="p">This creates an alert that goes off after finding ten records that don't
                         include credit card numbers in the credit card payment stream.</p>
 
@@ -1208,15 +1392,15 @@ Let's simplify and use "out_" instead.</td>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_m21_dyj_ps">
-    <h2 class="title topictitle2">Run the Basic Pipeline</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title11" id="task_m21_dyj_ps">
+    <h2 class="title topictitle2" id="ariaid-title11">Run the Basic Pipeline</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the
             <span class="ph uicontrol">Start</span> icon: <img class="image" id="image_lgp_rxp_ts" src="../Graphics/icon_ConfigStartPipeline.png" height="18" width="16" />.</p>
 
-        <div class="section context">The UI enters Monitor mode and shows summary statistics in the Monitor panel. At
+        <section class="section context">The UI enters Monitor mode and shows summary statistics in the Monitor panel. At
             some point as the pipeline runs, the data alert triggers and the location of the
             triggered data alert turns red:<p class="p"><img class="image" id="task_m21_dyj_ps__image_gc3_vyr_ps" src="../Graphics/Tutorial-RunPipeline.png" height="426" width="708" /></p>
 Click the data alert icon to view the data
@@ -1235,14 +1419,23 @@ Click the data alert icon to view the data
 <p class="p">If you like, you can use data preview to step through the
                 pipeline to review how each stage processes the data. But if you hang in there, you
                 can do it with us in the extended tutorial. </p>
-</div>
+</section>
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1250,6 +1443,25 @@ Click the data alert icon to view the data
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

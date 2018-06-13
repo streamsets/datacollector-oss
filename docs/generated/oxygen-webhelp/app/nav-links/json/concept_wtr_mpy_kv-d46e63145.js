@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Base64 Field Encoder","id":"task_ekg_ppy_kv","href":"datacollector\/UserGuide\/Processors\/Base64Encoder.html#task_ekg_ppy_kv","menu": {"hasChildren":false,},"tocID":"task_ekg_ppy_kv-d46e63180","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Record","id":"concept_rzl_s1t_kz","href":"datacollector\/UserGuide\/Origins\/JDBCConsumer.html#concept_rzl_s1t_kz","menu": {"hasChildren":false,},"tocID":"concept_rzl_s1t_kz-d46e41762","topics":[]}]});

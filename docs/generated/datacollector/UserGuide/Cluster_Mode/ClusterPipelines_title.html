@@ -1,53 +1,189 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Cluster Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fpz_5r4_vs" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Cluster Pipelines</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Cluster Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fpz_5r4_vs" /><title>Cluster Pipelines</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_fpz_5r4_vs-d46e108587" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
 
-      http://www.apache.org/licenses/LICENSE-2.0
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
 
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_fpz_5r4_vs">
- <h1 class="title topictitle1">Cluster Pipelines</h1>
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_hmh_kfn_1s">
- <h2 class="title topictitle2">Cluster Pipeline Overview</h2>
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li class="active"><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hmh_kfn_1s-d46e108821" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_hmh_kfn_1s">Cluster Pipeline Overview</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You   can run a pipeline in standalone execution mode or cluster execution
+                        mode. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="task_gmd_msw_yr-d46e109309" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#task_gmd_msw_yr">Kafka Cluster Requirements</a></span></span></li>
+         <li><span data-tocid="concept_kry_gn5_lx-d46e110422" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_kry_gn5_lx">MapR Requirements</a></span></span></li>
+         <li><span data-tocid="task_akz_w5b_ws-d46e111006" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#task_akz_w5b_ws">HDFS Requirements</a></span></span></li>
+         <li><span data-tocid="concept_pdf_r5y_fz-d46e111220" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_pdf_r5y_fz">Cluster Pipeline Limitations</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_fpz_5r4_vs">
+ <h1 class="title topictitle1" id="ariaid-title1">Cluster Pipelines</h1>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_hmh_kfn_1s">
+ <h2 class="title topictitle2" id="ariaid-title2">Cluster Pipeline Overview</h2>
 
  
  <div class="body conbody"><p class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You
@@ -71,8 +207,8 @@
 
  </div>
 
-<div class="topic concept nested2" id="concept_rjc_4m5_lx">
-    <h3 class="title topictitle3">Cluster Batch and Streaming Execution Modes</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_rjc_4m5_lx">
+    <h3 class="title topictitle3" id="ariaid-title3">Cluster Batch and Streaming Execution Modes</h3>
 
     
     <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
@@ -89,18 +225,19 @@
                 <dd class="dd"><span class="ph">Data Collector</span> can process data from a Kafka cluster in cluster streaming mode. In cluster
                     streaming mode, <span class="ph">Data Collector</span> processes data continuously until you stop the pipeline. </dd>
 
-                <dd class="dd"><span class="ph">Data Collector</span> runs as an application within Spark Streaming, an open source
+                <dd class="dd ddexpand"><span class="ph">Data Collector</span> runs as an application within Spark Streaming, an open source
                     cluster-computing application. </dd>
 
-                <dd class="dd">Spark Streaming runs on either the Mesos or YARN cluster manager to process data
-                    from a Kafka cluster. The cluster manager and Spark Streaming spawn a <span class="ph">Data Collector</span> worker for each topic partition in the Kafka cluster. So each partition has a
-                        <span class="ph">Data Collector</span> worker to process data. </dd>
+                <dd class="dd ddexpand">Spark Streaming runs on either the Mesos or YARN cluster manager to process data
+                    from a Kafka cluster. The cluster manager and Spark Streaming spawn a <span class="ph">Data Collector</span> worker for each topic partition in the Kafka cluster. As a result, each
+                    partition has a <span class="ph">Data Collector</span> worker to process data. If you add a partition to the Kafka topic, you must
+                    restart the pipeline to enable the <span class="ph">Data Collector</span> to generate a new worker to read from the new partition. </dd>
 
-                <dd class="dd">When Spark Streaming runs on YARN, you can limit the number of workers spawned
+                <dd class="dd ddexpand">When Spark Streaming runs on YARN, you can limit the number of workers spawned
                     by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>. You can also use the Extra
                     Spark Configuration property to pass Spark configurations to the spark-submit
                     script. In addition, you can configure the Kafka Consumer origin in a cluster
-                    streaming pipeline on YARN to <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb" title="When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Kafka. You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS and Kerberos to connect to Kafka.">connect
+                    streaming pipeline on YARN to <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb">connect
                         securely</a> through SSL/TLS, Kerberos, or both.<p class="p">Use the Kafka Consumer
                         origin to process data from a Kafka cluster in cluster streaming
                     mode.</p>
@@ -124,9 +261,10 @@
                         <li class="li">Cluster streaming mode - In cluster streaming mode, <span class="ph">Data Collector</span> processes data continuously until you stop the pipeline. <span class="ph">Data Collector</span> runs as an application within Spark Streaming, an open source
                             cluster-computing application. <p class="p">Spark Streaming runs on a YARN cluster
                                 manager to process data from a MapR cluster. The cluster manager and
-                                Spark Streaming spawn a <span class="ph">Data Collector</span> worker for each topic partition in the MapR cluster. So each
-                                partition has a <span class="ph">Data Collector</span> worker to process data. You can limit the number of workers
-                                spawned by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>.</p>
+                                Spark Streaming spawn a <span class="ph">Data Collector</span> worker for each topic partition in the MapR cluster. As a result,
+                                each partition has a <span class="ph">Data Collector</span> worker to process data. If you add a partition to the MapR topic,
+                                you must restart the pipeline to enable <span class="ph">Data Collector</span> to generate a new worker to read from the new partition. You can
+                                limit the number of workers spawned by configuring the <a class="xref" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq__YarnStreaming-WorkerCount">Worker Count cluster pipeline property</a>.</p>
 <p class="p">Use the
                                 MapR Streams Consumer origin to process data from a MapR cluster in
                                 cluster streaming mode.</p>
@@ -141,7 +279,7 @@
 
                 <dd class="dd"><span class="ph">Data Collector</span> can process data from HDFS in cluster batch mode. In cluster batch mode, <span class="ph">Data Collector</span> processes all available data and then stops the pipeline. </dd>
 
-                <dd class="dd"><span class="ph">Data Collector</span> runs as an application on top of MapReduce, an open-source cluster-computing
+                <dd class="dd ddexpand"><span class="ph">Data Collector</span> runs as an application on top of MapReduce, an open-source cluster-computing
                     framework. MapReduce runs on a YARN cluster manager. YARN and MapReduce generate
                     additional worker nodes as needed. MapReduce creates one map task for each HDFS
                     block. <p class="p">Use the Hadoop FS origin to process data from HDFS in cluster batch
@@ -153,44 +291,43 @@
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_ywt_vp3_vdb">
-    <h3 class="title topictitle3">Data Collector Configuration</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_ywt_vp3_vdb">
+    <h3 class="title topictitle3" id="ariaid-title4">Data Collector Configuration</h3>
 
     <div class="body conbody">
         <div class="p">When running cluster pipelines, the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, defined on the master
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, defined on the master
             gateway node is propagated to the worker nodes with the exception of the following
                 properties:<ul class="ul" id="concept_ywt_vp3_vdb__ul_ydf_k4j_vdb">
-                <li class="li"><samp class="ph codeph">sdc.base.http.url</samp></li>
+                <li class="li"><code class="ph codeph">sdc.base.http.url</code></li>
 
-                <li class="li"><samp class="ph codeph">http.bindHost</samp></li>
+                <li class="li"><code class="ph codeph">http.bindHost</code></li>
 
             </ul>
 </div>
 
-        <p class="p">If you modify the <samp class="ph codeph">sdc.base.http.url</samp> and <samp class="ph codeph">http.bindHost</samp>
+        <p class="p">If you modify the <code class="ph codeph">sdc.base.http.url</code> and <code class="ph codeph">http.bindHost</code>
             properties on the master gateway node to configure a specific host name or port number
             or to configure a specific IP address that <span class="ph">Data Collector</span>
             binds to, the modified values are not propagated to the worker nodes. The worker nodes
-            always use the default values for the <samp class="ph codeph">sdc.base.http.url</samp> and
-                <samp class="ph codeph">http.bindHost</samp> properties so that the worker nodes can dynamically
+            always use the default values for the <code class="ph codeph">sdc.base.http.url</code> and
+                <code class="ph codeph">http.bindHost</code> properties so that the worker nodes can dynamically
             determine the host name and can bind to any IP address.</p>
 
         <div class="p">To prevent additional configuration properties from being propagated to the worker nodes,
-            add the following property to the <samp class="ph codeph">sdc.properties</samp> file on the master
+            add the following property to the <code class="ph codeph">sdc.properties</code> file on the master
             gateway
-            node:<pre class="pre codeblock">cluster.slave.configs.remove=&lt;property1&gt;,&lt;property2&gt;</pre>
-</div>
+            node:<pre class="pre codeblock"><code>cluster.slave.configs.remove=&lt;property1&gt;,&lt;property2&gt;</code></pre></div>
 
         <p class="p">For more information on configuring the <span class="ph">Data Collector</span>
             configuration file, see <a class="xref" href="../Configuration/DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">Data Collector Configuration</a>.</p>
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_rmd_hgp_cw">
- <h3 class="title topictitle3">HTTP Protocols</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_rmd_hgp_cw">
+ <h3 class="title topictitle3" id="ariaid-title5">HTTP Protocols</h3>
 
  
  <div class="body conbody"><p class="shortdesc">You can configure Data Collector to use HTTP or HTTPS when you run cluster pipelines. By
@@ -199,16 +336,16 @@
   <p class="p">To configure HTTPS when you run cluster pipelines, you must generate an SSL/TLS certificate for
             the gateway node and the worker nodes. You then specify the generated keystore file and
             keystore password file for the gateway and worker nodes in the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. You can optionally
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. You can optionally
             generate a truststore file for the gateway and worker nodes.</p>
 
         <p class="p"><span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_rdt_h54_cw">Configuring HTTPS for Cluster Pipelines</a>.</span></p>
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_cs4_lcg_j5">
-    <h3 class="title topictitle3">Checkpoint Storage for Streaming Pipelines</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_cs4_lcg_j5">
+    <h3 class="title topictitle3" id="ariaid-title6">Checkpoint Storage for Streaming Pipelines</h3>
 
     
     <div class="body conbody"><p class="shortdesc">When the <span class="ph">Data Collector</span> runs a
@@ -218,8 +355,7 @@
 
         <div class="p">The <span class="ph">Data Collector</span>
             stores the checkpoint metadata in the following path on HDFS or Amazon
-            S3:<pre class="pre codeblock">/user/$USER/.streamsets-spark-streaming/&lt;DataCollector ID&gt;/&lt;Kafka topic&gt;/&lt;consumer group&gt;/&lt;pipelineName&gt;</pre>
-</div>
+            S3:<pre class="pre codeblock"><code>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector ID&gt;/&lt;Kafka topic&gt;/&lt;consumer group&gt;/&lt;pipelineName&gt;</code></pre></div>
 
         <p class="p">When you run a cluster streaming pipeline on YARN, the <span class="ph">Data Collector</span>
             stores the metadata on HDFS. </p>
@@ -229,18 +365,18 @@
 
     </div>
 
-<div class="topic task nested3" id="task_gxz_h1q_k5">
-    <h4 class="title topictitle4">Configuring the Location for Mesos</h4>
+<article class="topic task nested3" aria-labelledby="ariaid-title7" id="task_gxz_h1q_k5">
+    <h4 class="title topictitle4" id="ariaid-title7">Configuring the Location for Mesos</h4>
 
     
     <div class="body taskbody"><p class="shortdesc">When you run a cluster pipeline on Mesos, the <span class="ph">Data Collector</span> can
         write checkpoint information to either HDFS or Amazon S3. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">To define the location for checkpoint
                 storage:</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_gxz_h1q_k5__steps_mt1_l1q_k5"><li class="li step stepexpand">
                 <span class="ph cmd">Configure the core-site.xml and hdfs-site.xml files to define where to write
@@ -251,16 +387,16 @@
                 <span class="ph cmd">Store the files within the <span class="ph">Data Collector</span> resources directory.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Enter the location of the files in the <span class="ph menucascade"><span class="ph uicontrol">Cluster</span> &gt; <span class="ph uicontrol">Checkpoint Configuration Directory</span></span> pipeline property.</span>
+                <span class="ph cmd">Enter the location of the files in the <span class="ph menucascade"><span class="ph uicontrol">Cluster</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Checkpoint Configuration Directory</span></span> pipeline property.</span>
             </li>
 </ol>
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested2" id="concept_xxz_nft_ls">
- <h3 class="title topictitle3">Error Handling Limitations</h3>
+</article>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_xxz_nft_ls">
+ <h3 class="title topictitle3" id="ariaid-title8">Error Handling Limitations</h3>
 
  <div class="body conbody">
   <div class="p">Please
@@ -277,9 +413,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_fk4_gd4_1s">
- <h3 class="title topictitle3">Monitoring and Snapshot</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_fk4_gd4_1s">
+ <h3 class="title topictitle3" id="ariaid-title9">Monitoring and Snapshot</h3>
 
  <div class="body conbody">
     <p class="p">The <span class="ph">Data Collector</span> UI allows
@@ -298,40 +434,36 @@
 
   </div>
 
-</div>
-</div>
-<div class="topic task nested1" id="task_gmd_msw_yr">
-    <h2 class="title topictitle2">Kafka Cluster Requirements</h2>
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title10" id="task_gmd_msw_yr">
+    <h2 class="title topictitle2" id="ariaid-title10">Kafka Cluster Requirements</h2>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <div class="p">Cluster mode pipelines that read from a Kafka cluster
                 have the following requirements: 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gmd_msw_yr__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gmd_msw_yr__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d36160e584">Component</th>
+                                <th class="entry cellrowborder" id="d21521e809">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d36160e587">Requirement</th>
+                                <th class="entry cellrowborder" id="d21521e812">Requirement</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e584 ">Spark Streaming for cluster streaming modes</td>
+                                <td class="entry cellrowborder" headers="d21521e809 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e587 "><span class="ph">Spark version 2.1 or later</span></td>
+                                <td class="entry cellrowborder" headers="d21521e812 "><span class="ph">Spark version 2.1 or later</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e584 ">Apache Kafka</td>
+                                <td class="entry cellrowborder" headers="d21521e809 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e587 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry cellrowborder" headers="d21521e812 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster version 0.10.0.0 or
                                     later. <p class="p">Spark Streaming on Mesos requires Apache Kafka on
                                         Apache Mesos.</p>
@@ -340,23 +472,27 @@
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 </div>
 
-            <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the Kafka topic, restart the pipeline to enable the
-                    <span class="ph">Data Collector</span> to generate a new worker to read from the new partition. </div>
+            <div class="note note"><span class="notetitle">Note:</span> By default, a Cloudera CDH cluster sets the Kafka-Spark integration version as
+                0.9. However, <span class="ph">Data Collector</span>
+                cluster streaming pipelines require version 0.10 of the Kafka-Spark integration. As
+                a result, the SPARK_KAFKA_VERSION environment variable is set to 0.10 by default in
+                the <span class="ph">Data Collector</span>
+                <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">environment configuration file</a> - <code class="ph codeph">sdc.env.sh</code> or
+                sdcd.env.sh. Do not change this environment variable value.</div>
 
-        </div>
+        </section>
 
     </div>
 
-<div class="topic concept nested2" id="concept_al2_cxh_cdb">
-    <h3 class="title topictitle3">Kafka Consumer Maximum Batch Size</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title11" id="concept_al2_cxh_cdb">
+    <h3 class="title topictitle3" id="ariaid-title11">Kafka Consumer Maximum Batch Size</h3>
 
     <div class="body conbody">
-        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer
+        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer
                 origin</a> in cluster mode, the Max Batch Size property is ignored. Instead, the
             effective batch size is &lt;Batch Wait Time&gt; x &lt;Rate Limit Per Partition&gt;. </p>
 
@@ -380,17 +516,17 @@
 
     </div>
 
-</div>
-<div class="topic task nested2" id="task_hhk_bfv_cy">
-    <h3 class="title topictitle3">Configuring Cluster YARN Streaming for Kafka</h3>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title12" id="task_hhk_bfv_cy">
+    <h3 class="title topictitle3" id="ariaid-title12">Configuring Cluster YARN Streaming for Kafka</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">Complete
                 the following steps to configure a cluster pipeline to read from a Kafka cluster on
                 YARN:</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and YARN as the cluster
@@ -403,45 +539,41 @@
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9573">The user environment variable defines the system
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10387">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9578">For example, say the user environment
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10392">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2795e9583">$sudo -u hdfs hadoop fs -mkdir /user/sdc
-$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
-</div>
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d459e10397"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2795e9626">If necessary, specify the location of the
-                    spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9629"><span class="ph">Data Collector</span> assumes that the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d459e10444">If necessary, specify the location of the
+                    spark-submit script that points to <span class="ph">Spark version 2.1 or later</span>.</span>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10450"><span class="ph">Data Collector</span> assumes that the
                     spark-submit script used to submit job requests to Spark Streaming is located in
-                    the following directory: <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9635">If the script is not in this directory, use
+                    the following directory: <pre class="pre codeblock"><code>/usr/bin/spark-submit</code></pre></div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10457">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9638">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10460">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9641"><span class="ph" id="task_hhk_bfv_cy__d2795e9642">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10463"><span class="ph" id="task_hhk_bfv_cy__d459e10464">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                        script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2795e9646">=/usr/bin/spark2-submit</span></pre>
-<div class="p">Or,
+                        script:</span><pre class="pre codeblock"><code>export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d459e10468">=/usr/bin/spark2-submit</span></code></pre><div class="p">Or,
                         if using Hortonworks Data Platform (HDP) 2.6 which includes Spark 2.2.0, the
                         spark-submit script is in the following directory by default:
                         /usr/hdp/2.6/spark2/bin/spark-submit. Then, you might use the following
                         command to define the location of the
-                        script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/usr/hdp/2.6/spark2/bin/spark-submit</pre>
+                        script:<pre class="pre codeblock"><code>export SPARK_SUBMIT_YARN_COMMAND=/usr/hdp/2.6/spark2/bin/spark-submit</code></pre></div>
 </div>
-</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2795e9654">
-                    <div class="note note" id="task_hhk_bfv_cy__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d459e10476">
+                    <div class="note note" id="task_hhk_bfv_cy__d459e10478"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -468,8 +600,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <div class="itemgroup info">YARN sets the Spark logging level to INFO by default. To change the logging
                         level:<ol class="ol" type="a" id="task_hhk_bfv_cy__ol_tzg_ggl_px">
                         <li class="li">Edit the log4j.properties file, located in the following directory:
-                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
-</li>
+                              <pre class="pre codeblock"><code>&lt;spark-home&gt;/conf/log4j.properties</code></pre></li>
 
                         <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
                               of INFO or lower, such as DEBUG or TRACE.</li>
@@ -481,7 +612,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d459e10538"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -510,20 +641,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 <li class="li step stepexpand">
                 <span class="ph cmd">If the Kafka cluster is configured to use SSL/TLS, Kerberos, or both, configure
                     the Kafka Consumer origin to securely connect to the cluster, as described in
-                        <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb" title="When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Kafka. You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS and Kerberos to connect to Kafka.">Enabling Security for Cluster YARN Streaming</a>.</span>
+                        <a class="xref" href="ClusterPipelines_title.html#concept_bb2_m5p_tdb">Enabling Security for Cluster YARN Streaming</a>.</span>
             </li>
 </ol>
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
-</div>
-</div>
-</div>
-<div class="topic concept nested2" id="concept_bb2_m5p_tdb">
-    <h3 class="title topictitle3">Enabling Security for Cluster YARN Streaming</h3>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="Kafka Consumer">Kafka Consumer</a></div></div>
+</nav>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title13" id="concept_bb2_m5p_tdb">
+    <h3 class="title topictitle3" id="ariaid-title13">Enabling Security for Cluster YARN Streaming</h3>
 
     <div class="body conbody">
         <p class="p">When using a cluster pipeline to read from a
@@ -532,8 +664,8 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-<div class="topic concept nested3" id="concept_c2g_myp_tdb">
-    <h4 class="title topictitle4">Enabling SSL/TLS</h4>
+<article class="topic concept nested3" aria-labelledby="ariaid-title14" id="concept_c2g_myp_tdb">
+    <h4 class="title topictitle4" id="ariaid-title14">Enabling SSL/TLS</h4>
 
     <div class="body conbody">
         <p class="p">Perform the following steps to enable the Kafka
@@ -551,7 +683,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
             <li class="li">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
                     property and set it to <strong class="ph b">SSL</strong>.</li>
 <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d3482e56">
+                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d259e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -559,7 +691,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d3482e66">
+                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d259e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -569,7 +701,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_c2g_myp_tdb__d3482e79">
+                            well:<ul class="ul" id="concept_c2g_myp_tdb__d259e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -593,9 +725,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
         <img class="image" id="concept_c2g_myp_tdb__image_dhf_4gq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
     </div>
 
-</div>
-<div class="topic concept nested3" id="concept_rjl_rgq_tdb">
-    <h4 class="title topictitle4">Enabling Kerberos (SASL)</h4>
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title15" id="concept_rjl_rgq_tdb">
+    <h4 class="title topictitle4" id="ariaid-title15">Enabling Kerberos (SASL)</h4>
 
     
     <div class="body conbody"><p class="shortdesc">When you use Kerberos authentication, <span class="ph">Data Collector</span> uses
@@ -612,32 +744,29 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
 <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d3359e54">
+                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d256e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
                             on the <span class="ph">Data Collector</span>
-                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
                             the
-                                file:<pre class="pre codeblock">KafkaClient {
+                                file:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
     principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 <div class="p">Then
                                 modify the SDC_JAVA_OPTS environment variable to include the
                                 following option that defines the path to the JAAS configuration
-                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
-</div>
+                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
 <p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
 </li>
@@ -646,23 +775,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 authentication</span> - If LDAP authentication is enabled in an
                             RPM or tarball installation, add the properties to the JAAS
                             configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
-                                <samp class="ph codeph">ldap-login.conf</samp>
-                                file:<pre class="pre codeblock">KafkaClient {
+                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
+                                <code class="ph codeph">KafkaClient</code> login section to the end of the
+                                <code class="ph codeph">ldap-login.conf</code>
+                                file:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
     principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 </li>
 
                         <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
@@ -681,23 +808,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 Configuration Snippet (Safety Valve) for
                                 generated-ldap-login-append.conf field.</p>
 <p class="p">Add the following
-                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
                                 field as
                                 follows:</p>
-<pre class="pre codeblock">KafkaClient {
+<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
     principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
     principal="sdc/_HOST@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 <p class="p">Cloudera
                                 Manager generates the appropriate keytab path and host name.
                             </p>
@@ -728,9 +853,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-</div>
-<div class="topic concept nested3" id="concept_ijh_kmq_tdb">
-    <h4 class="title topictitle4">Enabling SSL/TLS and Kerberos</h4>
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title16" id="concept_ijh_kmq_tdb">
+    <h4 class="title topictitle4" id="ariaid-title16">Enabling SSL/TLS and Kerberos</h4>
 
     
     <div class="body conbody"><p class="shortdesc">You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to
@@ -741,7 +866,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
         <ol class="ol" id="concept_ijh_kmq_tdb__ol_tpp_vyq_tdb">
             <li class="li">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d3536e35">
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d255e37">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -754,32 +879,29 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
             <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d3359e54">
+                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d256e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
                             on the <span class="ph">Data Collector</span>
-                            machine. Add the following <samp class="ph codeph">KafkaClient</samp> login section to
+                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
                             the
-                                file:<pre class="pre codeblock">KafkaClient {
+                                file:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
     principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 <div class="p">Then
                                 modify the SDC_JAVA_OPTS environment variable to include the
                                 following option that defines the path to the JAAS configuration
-                                file:<pre class="pre codeblock">-Djava.security.auth.login.config=&lt;JAAS config path&gt;</pre>
-</div>
+                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
 <p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
 </li>
@@ -788,23 +910,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 authentication</span> - If LDAP authentication is enabled in an
                             RPM or tarball installation, add the properties to the JAAS
                             configuration file used by <span class="ph">Data Collector</span> - the
-                                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. Add the following
-                                <samp class="ph codeph">KafkaClient</samp> login section to the end of the
-                                <samp class="ph codeph">ldap-login.conf</samp>
-                                file:<pre class="pre codeblock">KafkaClient {
+                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
+                                <code class="ph codeph">KafkaClient</code> login section to the end of the
+                                <code class="ph codeph">ldap-login.conf</code>
+                                file:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="&lt;keytab path&gt;"
     principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="/etc/security/keytabs/sdc.keytab"
     principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 </li>
 
                         <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
@@ -823,23 +943,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                                 Configuration Snippet (Safety Valve) for
                                 generated-ldap-login-append.conf field.</p>
 <p class="p">Add the following
-                                    <samp class="ph codeph">KafkaClient</samp> login section to the appropriate
+                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
                                 field as
                                 follows:</p>
-<pre class="pre codeblock">KafkaClient {
+<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
     principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
-};</pre>
-<div class="p">For
-                                example:<pre class="pre codeblock">KafkaClient {
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
     com.sun.security.auth.module.Krb5LoginModule required
     useKeyTab=true
     keyTab="_KEYTAB_PATH"
     principal="sdc/_HOST@EXAMPLE.COM";
-};</pre>
-</div>
+};</code></pre></div>
 <p class="p">Cloudera
                                 Manager generates the appropriate keytab path and host name.
                             </p>
@@ -864,7 +982,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     and set it to <span class="ph uicontrol">kafka</span>. </li>
 
             <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d3482e56">
+                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d259e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -872,7 +990,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d3482e66">
+                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d259e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -882,7 +1000,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d3482e79">
+                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d259e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -902,18 +1020,18 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-</div>
-</div>
-<div class="topic task nested2" id="task_kf1_fgv_cy">
-    <h3 class="title topictitle3">Configuring Cluster Mesos Streaming for Kafka</h3>
+</article>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title17" id="task_kf1_fgv_cy">
+    <h3 class="title topictitle3" id="ariaid-title17">Configuring Cluster Mesos Streaming for Kafka</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">Complete
                 the following steps to configure a cluster pipeline to read from a Kafka cluster on
                 Mesos:</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_kf1_fgv_cy__steps_jhp_wgv_cy"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and Mesos as the cluster
@@ -933,17 +1051,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <div class="itemgroup info">For example, say $SDC_USER is defined as <span class="ph filepath">sdc</span>. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
-                    permissions:<pre class="pre codeblock">$sudo -u hdfs hadoop fs -mkdir /user/sdc
-$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
-</div>
+                    permissions:<pre class="pre codeblock"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If necessary, specify the location of the
-                    spark-submit script.</span>
+                    spark-submit script that points to <span class="ph">Spark version 2.1 or later</span>.</span>
                 <div class="itemgroup info"><span class="ph">Data Collector</span> assumes that the
                     spark-submit script used to submit job requests to Spark Streaming is located in
-                    the following directory: <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-</div>
+                    the following directory: <pre class="pre codeblock"><code>/usr/bin/spark-submit</code></pre></div>
                 <div class="itemgroup info">If the script is not in this directory, use the SPARK_SUBMIT_MESOS_COMMAND
                     environment variable to define the location of the script.</div>
                 <div class="itemgroup info">The location of the script may differ depending
@@ -952,10 +1068,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                        script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
-</div>
+                        script:</span><pre class="pre codeblock"><code>export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></code></pre></div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d459e10478"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -982,45 +1097,42 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka Consumer</a></div>
-</div>
-</div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_kry_gn5_lx">
- <h2 class="title topictitle2">MapR Requirements</h2>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="Kafka Consumer">Kafka Consumer</a></div></div>
+</nav>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title18" id="concept_kry_gn5_lx">
+ <h2 class="title topictitle2" id="ariaid-title18">MapR Requirements</h2>
 
  <div class="body conbody">
         <div class="p">Cluster
             mode pipelines that read from a MapR cluster have the following requirements:
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kry_gn5_lx__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kry_gn5_lx__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d36160e1662">Component</th>
+                            <th class="entry cellrowborder" id="d21521e1901">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d36160e1665">Requirement</th>
+                            <th class="entry cellrowborder" id="d21521e1904">Requirement</th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1662 ">Spark Streaming for cluster streaming mode</td>
+                            <td class="entry cellrowborder" headers="d21521e1901 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1665 "><span class="ph">Spark version 2.1 or later</span></td>
+                            <td class="entry cellrowborder" headers="d21521e1904 "><span class="ph">Spark version 2.1 or later</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d36160e1662 ">MapR</td>
+                            <td class="entry cellrowborder" headers="d21521e1901 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d36160e1665 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
+                            <td class="entry cellrowborder" headers="d21521e1904 ">One of the following MapR and MapR Ecosystem Pack (MEP) versions:
                                     <ul class="ul" id="concept_kry_gn5_lx__ul_fkh_cyh_pdb">
                                     <li class="li">MapR 5.2.0 and MEP 4.0</li>
 
@@ -1032,25 +1144,21 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
-
-        <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the MapR topic, restart the pipeline to enable <span class="ph">Data Collector</span> to
-            generate a new worker to read from the new partition. </div>
 
  </div>
 
-<div class="topic task nested2" id="task_n2l_z45_lx">
-    <h3 class="title topictitle3">Configuring Cluster Batch Mode for MapR</h3>
+<article class="topic task nested2" aria-labelledby="ariaid-title19" id="task_n2l_z45_lx">
+    <h3 class="title topictitle3" id="ariaid-title19">Configuring Cluster Batch Mode for MapR</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">Complete the following steps to configure a cluster
                 pipeline to read from MapR in cluster batch mode.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of MapR and YARN.</span>
@@ -1069,9 +1177,8 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_n2l_z45_lx__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
-$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
-</div>
+                    permissions:<pre class="pre codeblock" id="task_n2l_z45_lx__d459e10513"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
@@ -1104,8 +1211,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         level:<ol class="ol" type="a" id="task_n2l_z45_lx__ol_f33_ghv_gy">
                         <li class="li">Edit the log4j.properties file. <div class="p">By default, the file is located in
                                 the following directory:
-                                <pre class="pre codeblock">/opt/mapr/hadoop/&lt;hadoop-version&gt;/conf/</pre>
-</div>
+                                <pre class="pre codeblock"><code>/opt/mapr/hadoop/&lt;hadoop-version&gt;/conf/</code></pre></div>
 </li>
 
                         <li class="li">Set the <span class="ph uicontrol">log4j.rootLogger</span> property to a severity
@@ -1118,7 +1224,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d459e10538"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -1145,14 +1251,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR FS</a></div>
-</div>
-</div>
-</div>
-<div class="topic task nested2" id="task_i3h_q3w_hx">
-    <h3 class="title topictitle3">Configuring Cluster Streaming Mode for MapR</h3>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR FS</a></div></div>
+</nav>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title20" id="task_i3h_q3w_hx">
+    <h3 class="title topictitle3" id="ariaid-title20">Configuring Cluster Streaming Mode for MapR</h3>
 
     
     <div class="body taskbody"><p class="shortdesc">Complete the following steps to configure a cluster pipeline to read from MapR in
@@ -1168,37 +1275,34 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9573">The user environment variable defines the system
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d459e10387">The user environment variable defines the system
                     user used to run Data Collector as a service. The file that defines the user
                     environment variable depends on your operating system. For more information, see
                         <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2795e9578">For example, say the user environment
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d459e10392">For example, say the user environment
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2795e9583">$sudo -u hdfs hadoop fs -mkdir /user/sdc
-$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
-</div>
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d459e10397"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If necessary, specify the location of the
-                    spark-submit script.</span>
+                    spark-submit script that points to <span class="ph">Spark version 2.1 or later</span>.</span>
                 <div class="itemgroup info"><span class="ph">Data Collector</span> assumes that the
                     spark-submit script used to submit job requests to Spark Streaming is located in
-                    the following directory: <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-</div>
+                    the following directory: <pre class="pre codeblock"><code>/usr/bin/spark-submit</code></pre></div>
                 <div class="itemgroup info">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
                 <div class="itemgroup info">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
                 <div class="itemgroup info">For example, say the spark-submit script is in the following directory:
-                        <samp class="ph codeph">/opt/mapr/spark/spark-2.1.0/bin/spark-submit</samp>. Then, you
+                        <code class="ph codeph">/opt/mapr/spark/spark-2.1.0/bin/spark-submit</code>. Then, you
                     might use the following command to define the location of the script:
-                    <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1.0/bin/spark-submit</pre>
-</div>
+                    <pre class="pre codeblock"><code>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1.0/bin/spark-submit</code></pre></div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2795e9656"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d459e10478"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data Collector</span> to
                         capture the change.</div>
 
@@ -1224,8 +1328,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <div class="itemgroup info">By default, MapR sets the Spark logging level to WARN. To change the logging
                         level:<ol class="ol" type="a" id="task_i3h_q3w_hx__ol_nfd_jgl_px">
                         <li class="li">Edit the log4j.properties file, located in the following directory:
-                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
-</li>
+                              <pre class="pre codeblock"><code>&lt;spark-home&gt;/conf/log4j.properties</code></pre></li>
 
                         <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
                               of INFO or lower, such as DEBUG or TRACE.</li>
@@ -1233,16 +1336,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   </ol>
 </div>
                 <div class="itemgroup info">For example, when using Spark 2.1.0, you would edit
-                        <samp class="ph codeph">/opt/mapr/spark/spark-2.1.0/conf/log4j.properties</samp>, and you
+                        <code class="ph codeph">/opt/mapr/spark/spark-2.1.0/conf/log4j.properties</code>, and you
                     might set the property as follows:
-                    <pre class="pre codeblock">log4j.rootCategory=INFO</pre>
-</div>
+                    <pre class="pre codeblock"><code>log4j.rootCategory=INFO</code></pre></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d459e10538"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -1269,22 +1371,23 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a></div>
-</div>
-</div>
-</div>
-</div>
-<div class="topic task nested1" id="task_akz_w5b_ws">
-    <h2 class="title topictitle2">HDFS Requirements</h2>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a></div></div>
+</nav>
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title21" id="task_akz_w5b_ws">
+    <h2 class="title topictitle2" id="ariaid-title21">HDFS Requirements</h2>
 
     <div class="body taskbody">
-        <div class="section context">Cluster mode pipelines that read from HDFS require the
+        <section class="section context">Cluster mode pipelines that read from HDFS require the
             Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).<p class="p">Complete the
                 following steps to configure a cluster mode pipeline to read from HDFS:
             </p>
-</div>
+</section>
 
         <ol class="ol steps" id="task_akz_w5b_ws__steps_ldn_rhw_cy"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of HDFS and YARN.</span>
@@ -1303,9 +1406,8 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
                     Kerberos. Then you might use the following commands to create the directory and
                     configure the necessary write
-                    permissions:<pre class="pre codeblock" id="task_akz_w5b_ws__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
-$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
-</div>
+                    permissions:<pre class="pre codeblock" id="task_akz_w5b_ws__d459e10513"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
@@ -1338,8 +1440,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                         level:<ol class="ol" type="a" id="task_akz_w5b_ws__ol_f33_ghv_gy">
                         <li class="li">Edit the log4j.properties file. <div class="p">By default, the file is located in
                                 the following directory:
-                            <pre class="pre codeblock">/etc/hadoop/conf</pre>
-</div>
+                            <pre class="pre codeblock"><code>/etc/hadoop/conf</code></pre></div>
 </li>
 
                         <li class="li">Set the <span class="ph uicontrol">log4j.rootLogger</span> property to a severity
@@ -1352,7 +1453,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
                     authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
-                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2795e9703"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                    and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d459e10538"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data Collector</span>. Standalone
                         pipelines do not require an absolute path.</div>
 </div>
@@ -1384,14 +1485,15 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface.">Hadoop FS</a></div>
-</div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_pdf_r5y_fz">
-    <h2 class="title topictitle2">Cluster Pipeline Limitations</h2>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface.">Hadoop FS</a></div></div>
+</nav>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title22" id="concept_pdf_r5y_fz">
+    <h2 class="title topictitle2" id="ariaid-title22">Cluster Pipeline Limitations</h2>
 
     <div class="body conbody">
         <div class="p">Please note the
@@ -1429,11 +1531,19 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1441,6 +1551,25 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

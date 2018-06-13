@@ -1,49 +1,380 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="JDBC Producer" /><meta name="abstract" content="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log." /><meta name="description" content="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kvs_3hh_ht" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>JDBC Producer</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="JDBC Producer" /><meta name="abstract" content="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log." /><meta name="description" content="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kvs_3hh_ht" /><title>JDBC Producer</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_kvs_3hh_ht-d46e82602" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Producer destination uses a JDBC connection to write data to a database         table. You can also use the JDBC
+                  Producer to write change capture data from a Microsoft SQL         Server change log. 
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr" title="InfluxDB"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b" title="JMS Producer"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_kvs_3hh_ht">
-    <h1 class="title topictitle1">JDBC Producer</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e74198" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e74222" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Aerospike destination writes data to Aerospike.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_avx_bnq_rt-d46e74279" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis         Firehose delivery system, use
+                        the Kinesis Firehose destination. To write data to Amazon         Kinesis Streams, use the Kinesis Producer destination.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jzm_kf4_zx-d46e75218" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e76151" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e76247" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e76403" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Cassandra destination writes data to a Cassandra cluster.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e76617" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
+                        Client destination writes data to a CoAP endpoint. Use         the destination to send requests to a CoAP resource URL.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e76716" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic         Cloud clusters (formerly
+                        Found clusters). The destination uses the Elasticsearch HTTP API to         write each record to Elasticsearch as a document.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hlx_r53_rx-d46e76936" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The         destination connects to Einstein
+                        Analytics to upload external data to a dataset.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e77226" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Flume destination writes data to a Flume source. When you write data to Flume, you     pass data to a Flume client. The
+                        Flume client passes data to hosts based on client configuration     properties. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e77325" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e77616" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li><span data-tocid="concept_p4n_jrl_nbb-d46e78197" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e79127" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e79412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e80642" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase destination writes data to an HBase cluster. The destination can write data       to HBase as text, binary data,
+                        or JSON strings. You can define the data format for each column       written to HBase.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e81025" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS         or MapR FS destination as
+                        part of the Drift Synchronization Solution for Hive. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e81620" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized   Row Columnar) file format.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_khl_sg5_lz-d46e81719" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client destination writes data to an HTTP endpoint. The destination sends         requests to an HTTP resource URL.
+                        Use the HTTP Client destination to perform a range of         standard requests or use an expression to determine the request
+                        for each record.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_inf_db_sr-d46e82544" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The InfluxDB destination writes data to an InfluxDB database.</p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_kvs_3hh_ht-d46e82602" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Producer destination uses a JDBC connection to write data to a database         table. You can also use the JDBC
+                        Producer to write change capture data from a Microsoft SQL         Server change log. 
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_aq1_lxp_fs-d46e82668" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_aq1_lxp_fs">Installing the JDBC Driver</a></span></span></li>
+               <li><span data-tocid="concept_plv_jpn_5y-d46e82690" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_plv_jpn_5y">Define the CRUD Operation</a></span></span></li>
+               <li><span data-tocid="concept_jnl_rmp_h1b-d46e82722" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_jnl_rmp_h1b">Single and Multi-row Operations</a></span></span></li>
+               <li><span data-tocid="task_cx3_lhh_ht-d46e82764" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#task_cx3_lhh_ht">Configuring a JDBC Producer</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Configure the JDBC Producer to use JDBC to write data to a database         table.</p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e82819" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li><span data-tocid="concept_oq2_5jl_zq-d46e83187" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kafka Producer destination writes data to a Kafka cluster. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e83993" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery         stream. Firehose automatically
+                        delivers the data to the Amazon S3 bucket or Amazon Redshift         table that you specify in the delivery stream.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_swk_h1j_yr-d46e84216" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Producer destination writes data to Amazon Kinesis Streams. To write data to         an Amazon Kinesis Firehose
+                        delivery system, use the Kinesis Firehose destination. To write         data to Amazon S3, use the Amazon S3 destination.
+                        
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e84373" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e84521" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e84672" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li><span data-tocid="concept_vxg_w2z_yv-d46e85346" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write         data to MapR DB as text, binary
+                        data, or JSON strings. You can define the data format for         each column written to MapR DB.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e85729" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e86100" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat         files or Hadoop sequence files.
+                        
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e87187" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Producer destination writes messages to MapR Streams.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_eth_k5n_4v-d46e87486" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e87768" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The         destination functions as an MQTT
+                        client that publishes messages, writing each record as a         message.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e87922" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Named Pipe destination writes data to a UNIX named pipe. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e88308" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Producer writes AMQP messages to a single RabbitMQ queue. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e88407" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis destination writes data to Redis. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e88693" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce destination writes data to Salesforce objects.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e88910" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC     destination passes data to one
+                        or more SDC RPC origins. Use the SDC RPC destination as part of     an SDC RPC origin pipeline.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e89067" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Solr destination writes data to a Solr node or cluster. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e89227" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_htf_ydj_wq-d46e89251" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e89276" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client destination writes data to a WebSocket endpoint. Use the         destination to send data to a WebSocket
+                        resource URL. 
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_kvs_3hh_ht">
+    <h1 class="title topictitle1" id="ariaid-title1">JDBC Producer</h1>
 
     
     <div class="body conbody"><p class="shortdesc">The JDBC Producer destination uses a JDBC connection to write data to a database
@@ -77,22 +408,21 @@
 
     </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_aq1_lxp_fs">
-  <h2 class="title topictitle2">Installing the JDBC Driver</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_aq1_lxp_fs">
+  <h2 class="title topictitle2" id="ariaid-title2">Installing the JDBC Driver</h2>
 
   <div class="body conbody">
     <p class="p">Before you use the JDBC Producer, <span class="ph">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </span></p>
 
     <p class="p"><span class="ph">For information about installing additional drivers, see
-                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></p>
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries</a>.</span></p>
 
   </div>
 
-</div>
-<div class="topic concept nested1" id="concept_plv_jpn_5y">
- <h2 class="title topictitle2">Define the CRUD Operation</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_plv_jpn_5y">
+ <h2 class="title topictitle2" id="ariaid-title3">Define the CRUD Operation</h2>
 
     <div class="body conbody">
         <p class="p">The JDBC Producer destination can insert,
@@ -107,7 +437,7 @@
                               operation record header attribute. The destination looks for the CRUD
                               operation to use in the sdc.operation.type record header attribute. </dd>
 
-                    <dd class="dd">The attribute can contain one of the following numeric values:<ul class="ul" id="concept_plv_jpn_5y__ul_smy_qf3_1y">
+                    <dd class="dd ddexpand">The attribute can contain one of the following numeric values:<ul class="ul" id="concept_plv_jpn_5y__ul_smy_qf3_1y">
                             <li class="li">1 for INSERT</li>
 
                             <li class="li">2 for DELETE</li>
@@ -117,7 +447,7 @@
                         </ul>
 </dd>
 
-                    <dd class="dd">If your pipeline includes a CRUD-enabled
+                    <dd class="dd ddexpand">If your pipeline includes a CRUD-enabled
                               origin that processes changed data, the destination simply reads the
                               operation type from the sdc.operation.type header attribute that the
                               origin generates. If your pipeline uses a non-CDC origin, you can use
@@ -133,7 +463,7 @@
                               properties. The destination uses the default operation when the
                               sdc.operation.type record header attribute is not set.</dd>
 
-                    <dd class="dd">You can also define how to handle records with
+                    <dd class="dd ddexpand">You can also define how to handle records with
                               unsupported operations defined in the sdc.operation.type header
                               attribute. The destination can discard them, send them to error, or
                               use the default operation. </dd>
@@ -144,9 +474,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_jnl_rmp_h1b">
- <h2 class="title topictitle2">Single and Multi-row Operations</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_jnl_rmp_h1b">
+ <h2 class="title topictitle2" id="ariaid-title4">Single and Multi-row Operations</h2>
 
  <div class="body conbody">
   <p class="p">JDBC Producer performs single-row operations by
@@ -172,71 +502,64 @@
         </div>
 
         <div class="p">When performing multi-row inserts, JDBC Producer uses the following SQL
-            statement:<pre class="pre codeblock">INSERT INTO &lt;table name&gt; (&lt;col1&gt;, &lt;col2&gt;, &lt;col3&gt;) 
+            statement:<pre class="pre codeblock"><code>INSERT INTO &lt;table name&gt; (&lt;col1&gt;, &lt;col2&gt;, &lt;col3&gt;) 
      VALUES (&lt;record1 field1&gt;,&lt;record1 field2&gt;,&lt;record1 field3&gt;), 
-     (&lt;r2 f1&gt;,&lt;r2 f2&gt;,&lt;r2 f3&gt;), (&lt;r3 f1&gt;,&lt;r3 f2&gt;,&lt;r3 f3&gt;),...;</pre>
-</div>
+     (&lt;r2 f1&gt;,&lt;r2 f2&gt;,&lt;r2 f3&gt;), (&lt;r3 f1&gt;,&lt;r3 f2&gt;,&lt;r3 f3&gt;),...;</code></pre></div>
 
         <div class="p">When performing multi-row deletes, JDBC Producer uses the following SQL statement for
             tables with a single primary key:
-            <pre class="pre codeblock">DELETE FROM &lt;table name&gt; WHERE &lt;primary key&gt; IN (&lt;key1&gt;, &lt;key2&gt;, &lt;key3&gt;,...);</pre>
-</div>
+            <pre class="pre codeblock"><code>DELETE FROM &lt;table name&gt; WHERE &lt;primary key&gt; IN (&lt;key1&gt;, &lt;key2&gt;, &lt;key3&gt;,...);</code></pre></div>
 
         <div class="p">JDBC Producer uses the following statement for tables with multiple primary keys:
-            <pre class="pre codeblock">DELETE FROM &lt;table name&gt; WHERE (&lt;pkey1&gt;, &lt;pkey2&gt;, &lt;pkey3&gt;)
-      IN ((&lt;key1-1&gt;, &lt;key1-2&gt;, &lt;key1-3&gt;),(&lt;key2-1&gt;, &lt;key2-2&gt;, &lt;key2-2&gt;),...);</pre>
-</div>
+            <pre class="pre codeblock"><code>DELETE FROM &lt;table name&gt; WHERE (&lt;pkey1&gt;, &lt;pkey2&gt;, &lt;pkey3&gt;)
+      IN ((&lt;key1-1&gt;, &lt;key1-2&gt;, &lt;key1-3&gt;),(&lt;key2-1&gt;, &lt;key2-2&gt;, &lt;key2-2&gt;),...);</code></pre></div>
 
  </div>
 
-</div>
-<div class="topic task nested1" id="task_cx3_lhh_ht">
-    <h2 class="title topictitle2">Configuring a JDBC Producer</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title5" id="task_cx3_lhh_ht">
+    <h2 class="title topictitle2" id="ariaid-title5">Configuring a JDBC Producer</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Configure the JDBC Producer to use JDBC to write data to a database
         table.</p>
 
-        <div class="section context"></div>
+        <section class="section context"></section>
 
         <ol class="ol steps" id="task_cx3_lhh_ht__steps_s3k_5hh_ht"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d18242e5201" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d16e5203" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d125376e274">General Property</th>
+                                    <th class="entry cellrowborder" id="d100879e348">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d125376e277">Description</th>
+                                    <th class="entry cellrowborder" id="d100879e351">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e274 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d100879e348 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e277 ">Stage name.</td>
+                                    <td class="entry cellrowborder" headers="d100879e351 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e274 ">Description</td>
+                                    <td class="entry cellrowborder" headers="d100879e348 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e277 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d100879e351 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e274 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_cx3_lhh_ht__d18242e5247" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d100879e348 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_cx3_lhh_ht__d16e5249" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e277 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d100879e351 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -248,10 +571,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e274 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_cx3_lhh_ht__d18242e5263" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d100879e348 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_cx3_lhh_ht__d16e5265" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e277 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d100879e351 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -262,10 +585,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e274 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_cx3_lhh_ht__d18242e5280" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d100879e348 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_cx3_lhh_ht__d16e5282" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e277 ">Error record handling for the stage: <ul class="ul" id="task_cx3_lhh_ht__d18242e5284">
+                                    <td class="entry cellrowborder" headers="d100879e351 ">Error record handling for the stage: <ul class="ul" id="task_cx3_lhh_ht__d16e5286">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -280,8 +603,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -291,41 +613,37 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__table_c1b_nhy_3t" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__table_c1b_nhy_3t" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d125376e388">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d100879e462">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d125376e391">Description</th>
+                                    <th class="entry cellrowborder" id="d100879e465">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">JDBC Connection String</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">JDBC Connection String</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
+       <td class="entry cellrowborder" headers="d100879e465 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
          Postgres, require the schema in the connection string. Use the connection string format
          required by the database.</p>
 </td>
 
       </tr>
     <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Use Credentials</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 "><span class="ph" id="task_cx3_lhh_ht__d18372e2335">Enables entering credentials on the Credentials tab. Use
+       <td class="entry cellrowborder" headers="d100879e465 "><span class="ph" id="task_cx3_lhh_ht__d23e2328">Enables entering credentials on the Credentials tab. Use
          when you do not include credentials in the JDBC connection string.</span></td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Schema Name</td>
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Schema Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 ">Optional database or schema name to use. <div class="p">Use when the database requires a fully-qualified table
+                                    <td class="entry cellrowborder" headers="d100879e465 ">Optional database or schema name to use. <div class="p">Use when the database requires a fully-qualified table
                                             name. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph">Oracle uses all caps for schema, table, and column names by
                         default. Names can be lower- or mixed-case only if the schema, table, or
                         column was created with quotation marks around the name.</span>
@@ -339,9 +657,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Table Name</td>
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 ">Database table name to use. Use the table name format
+                                    <td class="entry cellrowborder" headers="d100879e465 ">Database table name to use. Use the table name format
                                         required by the database. <div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph">Oracle uses all caps for schema, table, and column names by
                         default. Names can be lower- or mixed-case only if the schema, table, or
@@ -356,14 +674,13 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Field to Column Mapping</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Field to Column Mapping</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Use to override the default field to column mappings. By default, fields are written
+       <td class="entry cellrowborder" headers="d100879e465 ">Use to override the default field to column mappings. By default, fields are written
         to columns of the same name.<div class="p">When you override the mappings, you can define parameterized
          values to apply SQL functions to the field values before writing them to columns. For
          example, to convert a field value to an integer, enter the following for the parameterized
-         value:<pre class="pre codeblock">CAST(? AS INTEGER)</pre>
-</div>
+         value:<pre class="pre codeblock"><code>CAST(? AS INTEGER)</code></pre></div>
 <p class="p">The question mark (?) is substituted
          with the value of the field. Leave the default value of ? if you do not need to apply a SQL
          function.</p>
@@ -374,9 +691,9 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Enclose Object Names</td>
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Enclose Object Names</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 ">Encloses the database or schema name, table name, and
+                                    <td class="entry cellrowborder" headers="d100879e465 ">Encloses the database or schema name, table name, and
                                         column names in quotation marks when writing to the
                                         database. <p class="p">Enables using case-sensitive names or names
                                             with special characters. When not enabled, the JDBC
@@ -391,28 +708,28 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Change Log Format</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Change Log Format</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Format of change capture data. Use when processing change capture data. </td>
+       <td class="entry cellrowborder" headers="d100879e465 ">Format of change capture data. Use when processing change capture data. </td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Default Operation <a class="xref" href="JDBCProducer.html#concept_plv_jpn_5y">
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Default Operation <a class="xref" href="JDBCProducer.html#concept_plv_jpn_5y">
                                             <img class="image" id="task_cx3_lhh_ht__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 ">Default CRUD operation to
+                                    <td class="entry cellrowborder" headers="d100879e465 ">Default CRUD operation to
                                         perform if the sdc.operation.type record header attribute is
                                         not set. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Unsupported Operation Handling </td>
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Unsupported Operation Handling </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 ">Action to take when the
+                                    <td class="entry cellrowborder" headers="d100879e465 ">Action to take when the
                                         CRUD operation type defined in the sdc.operation.type record
-                                        header attribute is not supported:<ul class="ul" id="task_cx3_lhh_ht__d18242e8212">
+                                        header attribute is not supported:<ul class="ul" id="task_cx3_lhh_ht__d16e8214">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -427,16 +744,16 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Rollback Batch On Error</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Rollback Batch On Error</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Rolls back the entire batch when an error occurs within the batch. </td>
+       <td class="entry cellrowborder" headers="d100879e465 ">Rolls back the entire batch when an error occurs within the batch. </td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e388 ">Use Multi-Row Operation</td>
+                                    <td class="entry cellrowborder" headers="d100879e462 ">Use Multi-Row Operation</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e391 "><span class="ph">Determines how the stage processes records. Select to enable
+                                    <td class="entry cellrowborder" headers="d100879e465 "><span class="ph">Determines how the stage processes records. Select to enable
          inserting and deleting multiple records at a time. Before enabling this option, verify that
          the database supports the multi-row SQL statements used by the stage. </span> For more information, see <a class="xref" href="JDBCProducer.html#concept_jnl_rmp_h1b">Single and Multi-row Operations</a>.<p class="p"><span class="ph">By default, the stage
           performs single-row operations.</span></p>
@@ -445,9 +762,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Statement Parameter Limit</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Statement Parameter Limit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Defines the number of parameters allowed in the prepared statement for multi-row
+       <td class="entry cellrowborder" headers="d100879e465 ">Defines the number of parameters allowed in the prepared statement for multi-row
          inserts.<p class="p">Use -1 to disable the parameter limit. Default is -1.</p>
 </td>
 
@@ -455,9 +772,9 @@
 
                             
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e388 ">Additional JDBC Configuration Properties</td>
+       <td class="entry cellrowborder" headers="d100879e462 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e391 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry cellrowborder" headers="d100879e465 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -465,8 +782,7 @@
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -477,31 +793,27 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d18242e3790" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d16e3792" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d125376e617">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d100879e691">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d125376e620">Description</th>
+                                    <th class="entry cellrowborder" id="d100879e694">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e617 ">Username</td>
+                                    <td class="entry cellrowborder" headers="d100879e691 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e620 ">User name for the JDBC connection.</td>
+                                    <td class="entry cellrowborder" headers="d100879e694 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_cx3_lhh_ht__d18242e3821">
-                                    <td class="entry" valign="top" width="30%" headers="d125376e617 ">Password</td>
+                                <tr id="task_cx3_lhh_ht__d16e3823">
+                                    <td class="entry cellrowborder" headers="d100879e691 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e620 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_cx3_lhh_ht__d18309e4741">To
+                                    <td class="entry cellrowborder" headers="d100879e694 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_cx3_lhh_ht__d24e4743">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -509,8 +821,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -521,40 +832,35 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d18242e3846" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d16e3848" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d125376e694">Legacy Driver Property</th>
+                                    <th class="entry cellrowborder" id="d100879e768">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d125376e697">Description</th>
+                                    <th class="entry cellrowborder" id="d100879e771">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e694 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d100879e768 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e697 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d100879e771 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d125376e694 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d100879e768 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d125376e697 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d100879e771 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -563,80 +869,73 @@
                 <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure advanced
                     properties.</span>
                 <div class="itemgroup info">The defaults for these properties should work in most cases:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__table_wnj_hf3_p5" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__table_wnj_hf3_p5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d125376e749">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d100879e823">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d125376e752">Description</th>
+                                    <th class="entry cellrowborder" id="d100879e826">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Maximum Pool Size </td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry cellrowborder" headers="d100879e826 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Minimum Idle Connections</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry cellrowborder" headers="d100879e826 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Connection Timeout</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry cellrowborder" headers="d100879e826 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
-         <pre class="pre codeblock">${30 * SECONDS}</pre>
-</div>
+         <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Idle Timeout</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry cellrowborder" headers="d100879e826 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
-         30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
-</div>
+         30 minutes, defined as follows: <pre class="pre codeblock"><code>${30 * MINUTES}</code></pre></div>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Max Connection Lifetime</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry cellrowborder" headers="d100879e826 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
-         seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
-</div>
+         seconds, defined as follows: <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Transaction Isolation</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
+       <td class="entry cellrowborder" headers="d100879e826 ">Transaction isolation level used to connect to the database. <p class="p">Default is the default
          transaction isolation level set for the database. You can override the database default by
          setting the level to any of the following:</p>
-<ul class="ul" id="task_cx3_lhh_ht__d18372e2716">
+<ul class="ul" id="task_cx3_lhh_ht__d23e2709">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -651,19 +950,18 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d125376e749 ">Init Query</td>
+       <td class="entry cellrowborder" headers="d100879e823 ">Init Query</td>
 
-       <td class="entry" valign="top" width="70%" headers="d125376e752 ">SQL query to perform immediately after the stage connects to the database. Use to set
+       <td class="entry cellrowborder" headers="d100879e826 ">SQL query to perform immediately after the stage connects to the database. Use to set
         up the database session as needed. <p class="p">For example, the following query sets the time zone
-         for the session for a MySQL database: <samp class="ph codeph">SET time_zone =
-        timezone;</samp></p>
+         for the session for a MySQL database: <code class="ph codeph">SET time_zone =
+        timezone;</code></p>
 </td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 </div>
             </li>
@@ -671,10 +969,19 @@
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -682,6 +989,25 @@
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

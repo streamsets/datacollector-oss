@@ -1,53 +1,185 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Drift Synchronization Solution for Hive detects drift in incoming data and updates corresponding Hive tables. Previously known as the Hive Drift Solution, the Drift Synchronization Solution for ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Drift Synchronization Solution for Hive" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fjj_zcf_2w" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Drift Synchronization Solution for Hive</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Drift Synchronization Solution for Hive detects drift in incoming data and updates corresponding Hive tables. Previously known as the Hive Drift Solution, the Drift Synchronization Solution for ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Drift Synchronization Solution for Hive" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fjj_zcf_2w" /><title>Drift Synchronization Solution for Hive</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_fjj_zcf_2w-d46e102438" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
 
-      http://www.apache.org/licenses/LICENSE-2.0
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
 
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx" title="Dataflow Triggers"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Triggers</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_fjj_zcf_2w">
-    <h1 class="title topictitle1">Drift Synchronization Solution for Hive</h1>
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_phk_bdf_2w">
-    <h2 class="title topictitle2">Drift Synchronization Solution for Hive</h2>
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx" title="Dataflow Triggers"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li class="active"><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_phk_bdf_2w-d46e102672" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+         <li><span data-tocid="concept_zzs_fkg_2w-d46e102882" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_zzs_fkg_2w">Basic Avro Implementation</a></span></span></li>
+         <li><span data-tocid="concept_fkm_mzw_vz-d46e102954" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fkm_mzw_vz">Basic Parquet Implementation</a></span></span></li>
+         <li><span data-tocid="concept_y5w_dj3_fw-d46e103037" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_y5w_dj3_fw">Implementation Steps</a></span></span></li>
+         <li><span data-tocid="concept_a1w_kkn_fw-d46e103130" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_a1w_kkn_fw">Avro Case Study</a></span></span></li>
+         <li><span data-tocid="concept_vl3_v2f_zz-d46e103751" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_vl3_v2f_zz">Parquet Case Study</a></span></span></li>
+         <li><span data-tocid="concept_ry2_qkm_hw-d46e105039" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_ry2_qkm_hw">Hive Data Types</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_fjj_zcf_2w">
+    <h1 class="title topictitle1" id="ariaid-title1">Drift Synchronization Solution for Hive</h1>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_phk_bdf_2w">
+    <h2 class="title topictitle2" id="ariaid-title2">Drift Synchronization Solution for Hive</h2>
 
     <div class="body conbody">
         <p class="p">The <span class="ph">Drift Synchronization Solution for Hive</span>
@@ -68,8 +200,8 @@
 
     </div>
 
-<div class="topic concept nested2" id="concept_qtt_bzw_vz">
- <h3 class="title topictitle3">General Processing</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_qtt_bzw_vz">
+ <h3 class="title topictitle3" id="ariaid-title3">General Processing</h3>
 
  <div class="body conbody">
         <p class="p">The <span class="ph">Drift Synchronization Solution for Hive</span>
@@ -86,11 +218,11 @@
                         that describe the necessary changes and passes it to the Hive Metastore
                         destination.</dd>
 
-                    <dd class="dd">When the Hive Metastore destination receives a metadata record, it compares
+                    <dd class="dd ddexpand">When the Hive Metastore destination receives a metadata record, it compares
                         the proposed changes with the latest Hive metadata, and creates and updates
                         Hive tables as needed.</dd>
 
-                    <dd class="dd"><span class="ph">The destination can
+                    <dd class="dd ddexpand"><span class="ph">The destination can
                         create tables and partitions. It can add columns to tables and ignore
                         existing columns. It does not drop existing columns from tables.</span></dd>
 
@@ -146,9 +278,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_ndg_3zw_vz">
- <h3 class="title topictitle3">Parquet Processing</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_ndg_3zw_vz">
+ <h3 class="title topictitle3" id="ariaid-title4">Parquet Processing</h3>
 
  <div class="body conbody">
         <p class="p">Here are some differences in how <span class="ph">Drift Synchronization Solution for Hive</span>
@@ -163,7 +295,7 @@
                         destination to generate events. The destination then generates events each
                         time it closes an output file. </dd>
 
-                    <dd class="dd">Then, you use a MapReduce executor to kick off the Convert Avro to Parquet
+                    <dd class="dd ddexpand">Then, you use a MapReduce executor to kick off the Convert Avro to Parquet
                         MapReduce job each time it receives an event. </dd>
 
                 
@@ -191,13 +323,13 @@
                 
                     <dt class="dt dlterm">Uses temporary directories for Avro output files</dt>
 
-                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d42444e2645">adds .avro to the target directory that it
+                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d250e2647">adds .avro to the target directory that it
                         generates for each record. This allows the data-processing destination to
                         write the Avro files to a directory that Hive ignores as a temporary
                         directory.</span></p>
 <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_ndg_3zw_vz__d42444e2650">&lt;generated
-                  directory&gt;/.avro</samp>.</p>
+                  directories: <code class="ph codeph" id="concept_ndg_3zw_vz__d250e2652">&lt;generated
+                  directory&gt;/.avro</code>.</p>
 <span class="ph">You can configure
                               the MapReduce executor to write the Parquet files to the parent
                               generated directory and to delete the Avro files after processing
@@ -211,9 +343,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_u2t_fgy_1x">
- <h3 class="title topictitle3">Impala Support</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_u2t_fgy_1x">
+ <h3 class="title topictitle3" id="ariaid-title5">Impala Support</h3>
 
  <div class="body conbody">
   <p class="p">Data written by the <span class="ph">Drift Synchronization Solution for Hive</span>
@@ -238,9 +370,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_s3v_21p_hx">
-    <h3 class="title topictitle3">Flatten Records</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_s3v_21p_hx">
+    <h3 class="title topictitle3" id="ariaid-title6">Flatten Records</h3>
 
     <div class="body conbody">
         <p class="p">At this time, the <span class="ph">Drift Synchronization Solution for Hive</span> does not process records with nested fields. If necessary, you can use the <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener
@@ -249,10 +381,10 @@
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_zzs_fkg_2w">
-    <h2 class="title topictitle2">Basic Avro Implementation</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_zzs_fkg_2w">
+    <h2 class="title topictitle2" id="ariaid-title7">Basic Avro Implementation</h2>
 
     <div class="body conbody">
         <p class="p">You can use the Hive Metadata processor,
@@ -285,9 +417,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_fkm_mzw_vz">
- <h2 class="title topictitle2">Basic Parquet Implementation</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_fkm_mzw_vz">
+ <h2 class="title topictitle2" id="ariaid-title8">Basic Parquet Implementation</h2>
 
  <div class="body conbody">
         <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for Hive</span>
@@ -321,9 +453,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_y5w_dj3_fw">
-    <h2 class="title topictitle2">Implementation Steps</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_y5w_dj3_fw">
+    <h2 class="title topictitle2" id="ariaid-title9">Implementation Steps</h2>
 
     <div class="body conbody">
         <div class="p">To implement the <span class="ph">Drift Synchronization Solution for Hive</span>, perform the following steps:<ol class="ol" id="concept_y5w_dj3_fw__ol_zr1_3j3_fw">
@@ -349,14 +481,14 @@
 </li>
 
                         <li class="li">Configure the decimal field precision
-                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d42444e5722">When
+                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d250e5727">When
                                     processing data from the JDBC Query Consumer or JDBC Multitable
                                     Consumer origins, use the default attribute names, "precision"
-                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d42444e5724">origins
+                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d250e5729">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
                                           field.</span></p>
-<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d42444e5727">When processing data from other origins, you can use the
+<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d250e5732">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
                                           create precision and scale field attributes for Decimal
                                           fields. </span></p>
@@ -368,7 +500,7 @@
                             time basis, and data time zone.</li>
 
                     </ul>
-<p class="p">For more information about the Hive Metadata processor, see <a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries. You can configure the maximum size of the cache. When the cache reaches the specified limit, it uses the LRU eviction policy, which removes the least recently used data to allow for new entries to be written to the cache. You must configure Hive Metadata to use Hive and Hadoop configuration files and individual properties.">Hive Metadata</a>.</p>
+<p class="p">For more information about the Hive Metadata processor, see <a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a>.</p>
 </li>
 
                 <li class="li">To process metadata records generated by the processor and alter tables as
@@ -436,8 +568,7 @@
                                 <li class="li">Specify the Output Directory to use - To write the Parquet files
                                     to the parent directory of the .avro temporary directory, use
                                     the following
-                                    expression:<pre class="pre codeblock">${file:parentPath(file:parentPath(record:value('/filepath')))}</pre>
-</li>
+                                    expression:<pre class="pre codeblock"><code>${file:parentPath(file:parentPath(record:value('/filepath')))}</code></pre></li>
 
                                 <li class="li">Optionally configure additional Avro conversion properties.</li>
 
@@ -455,9 +586,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_a1w_kkn_fw">
- <h2 class="title topictitle2">Avro Case Study</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_a1w_kkn_fw">
+ <h2 class="title topictitle2" id="ariaid-title10">Avro Case Study</h2>
 
  <div class="body conbody">
   <p class="p">Let's say you have a <span class="ph">Data Collector</span>
@@ -491,8 +622,8 @@
 
  </div>
 
-<div class="topic concept nested2" id="concept_fzk_mmn_fw">
- <h3 class="title topictitle3">The Hive Metadata Processor</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title11" id="concept_fzk_mmn_fw">
+ <h3 class="title topictitle3" id="ariaid-title11">The Hive Metadata Processor</h3>
 
  <div class="body conbody">
   <div class="p">You set up the Kafka Consumer and connect it to the Hive Metadata processor. When you configure
@@ -509,14 +640,12 @@
                         to Kafka uses the "tag" header attribute to indicate the originating web
                         service. To use the tag attribute to write to tables, you use the following
                         expression for the table name:
-                        <pre class="pre codeblock">${record:attribute('tag')}</pre>
-</div>
+                        <pre class="pre codeblock"><code>${record:attribute('tag')}</code></pre></div>
 </li>
 
                 <li class="li">What partitions, if any, do you want to use? <div class="p">Let's create daily partitions
                         using datetime variables for the partition value expression as
-                        follows:<pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}</pre>
-</div>
+                        follows:<pre class="pre codeblock"><code>${YYYY()}-${MM()}-${DD()}</code></pre></div>
 </li>
 
                 <li class="li">How do you want to configure the precision and scale for decimal fields?
@@ -546,9 +675,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_vh3_s4n_fw">
- <h3 class="title topictitle3">The Hive Metastore Destination</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title12" id="concept_vh3_s4n_fw">
+ <h3 class="title topictitle3" id="ariaid-title12">The Hive Metastore Destination</h3>
 
  
  <div class="body conbody"><p class="shortdesc">Now to process the metadata records - and to automatically create and update tables in
@@ -582,9 +711,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_jzr_ypn_fw">
- <h3 class="title topictitle3">The Data-Processing Destination</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title13" id="concept_jzr_ypn_fw">
+ <h3 class="title topictitle3" id="ariaid-title13">The Data-Processing Destination</h3>
 
  <div class="body conbody">
         <p class="p">To write data to Hive using record header attributes, you can use
@@ -607,7 +736,7 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="327" width="478" /></p>
 
-        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d42444e3491">With this
+        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d250e3493">With this
                         configuration, the destination uses the information in record header
                         attributes to write data to HDFS. It writes each record to the directory in
                         the targetDirectory header attribute, using the Avro schema in the
@@ -623,9 +752,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_jlr_zlk_gw">
- <h3 class="title topictitle3">Processing Avro Data</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title14" id="concept_jlr_zlk_gw">
+ <h3 class="title topictitle3" id="ariaid-title14">Processing Avro Data</h3>
 
     
     <div class="body conbody"><p class="shortdesc">Now what happens when you start the pipeline?</p>
@@ -669,10 +798,10 @@
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_vl3_v2f_zz">
- <h2 class="title topictitle2">Parquet Case Study</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title15" id="concept_vl3_v2f_zz">
+ <h2 class="title topictitle2" id="ariaid-title15">Parquet Case Study</h2>
 
  <div class="body conbody">
         <p class="p">Let's say you have database data that you want to
@@ -709,8 +838,8 @@
 
     </div>
 
-<div class="topic concept nested2" id="concept_kp3_nmf_zz">
- <h3 class="title topictitle3">JDBC Query Consumer</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title16" id="concept_kp3_nmf_zz">
+ <h3 class="title topictitle3" id="ariaid-title16">JDBC Query Consumer</h3>
 
  <div class="body conbody">
   <p class="p">When you configure the origin, you configure it as you would for any normal pipeline. Specify
@@ -736,9 +865,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_kt2_zrf_zz">
- <h3 class="title topictitle3">The Hive Metadata Processor</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title17" id="concept_kt2_zrf_zz">
+ <h3 class="title topictitle3" id="ariaid-title17">The Hive Metadata Processor</h3>
 
  <div class="body conbody">
         <p class="p">Connect the JDBC Query Consumer origin to the Hive Metadata processor. When you configure
@@ -756,22 +885,19 @@
                     table by hardcoding the Table Name property. But since you want to write the
                     data to different tables based on the country of origin, let's use an expression
                     to pull the table name from the Country field, as
-                    follows:<pre class="pre codeblock">${record:value('/Country')}</pre>
-</div>
+                    follows:<pre class="pre codeblock"><code>${record:value('/Country')}</code></pre></div>
 </li>
 
             <li class="li">What partition do you want to use?<div class="p">Let's create a dt partition column for daily
                     partitions using datetime variables in the expression as follows:
-                    <pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}</pre>
-</div>
+                    <pre class="pre codeblock"><code>${YYYY()}-${MM()}-${DD()}</code></pre></div>
 </li>
 
             <li class="li">How do you want to configure the precision and scale expressions for decimal fields?
                     <div class="p">Since you have the JDBC Query Consumer generating record header attributes,
                     you can use the default expressions in the processor:
-                    <pre class="pre codeblock">${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}
-${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}</pre>
-</div>
+                    <pre class="pre codeblock"><code>${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}
+${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}</code></pre></div>
 <p class="p">With
                     these expressions, the processor uses the precision and scale that is written to
                     record header attributes by the JDBC Query Consumer for each decimal field in
@@ -807,14 +933,14 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                         directory.</span></p>
 
         <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_kt2_zrf_zz__d42444e2650">&lt;generated
-                  directory&gt;/.avro</samp>.</p>
+                  directories: <code class="ph codeph" id="concept_kt2_zrf_zz__d250e2652">&lt;generated
+                  directory&gt;/.avro</code>.</p>
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_mr2_y1g_zz">
- <h3 class="title topictitle3">The Hive Metastore Destination</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title18" id="concept_mr2_y1g_zz">
+ <h3 class="title topictitle3" id="ariaid-title18">The Hive Metastore Destination</h3>
 
  
  <div class="body conbody"><p class="shortdesc">Now to process the metadata records - and to automatically create and update Parquet
@@ -851,9 +977,9 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_oyq_qbh_zz">
- <h3 class="title topictitle3">The Data-Processing Destination</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title19" id="concept_oyq_qbh_zz">
+ <h3 class="title topictitle3" id="ariaid-title19">The Data-Processing Destination</h3>
 
  <div class="body conbody">
         <p class="p">To write data to Hive using record header attributes, you can use
@@ -900,9 +1026,9 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_gmh_b4h_zz">
-    <h3 class="title topictitle3">The MapReduce Executor</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title20" id="concept_gmh_b4h_zz">
+    <h3 class="title topictitle3" id="ariaid-title20">The MapReduce Executor</h3>
 
     <div class="body conbody">
         <p class="p">To convert the Avro files generated by the Hadoop FS destination, use the Convert Avro to
@@ -924,13 +1050,12 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
                 <li class="li">Output Directory - To write the Parquet files to the original directory where
                     the data was expected - rather than the .avro directory - use the following
-                        expression:<pre class="pre codeblock">${file:parentPath(file:parentPath(record:value('/filepath')))}</pre>
-<p class="p">The
-                            <samp class="ph codeph">file:parentPath</samp> function returns a file path without
+                        expression:<pre class="pre codeblock"><code>${file:parentPath(file:parentPath(record:value('/filepath')))}</code></pre><p class="p">The
+                            <code class="ph codeph">file:parentPath</code> function returns a file path without
                         the final separator. So this expression removes /.avro/&lt;filename&gt; from
                         the filepath.</p>
 <p class="p">For example, if the original filepath is:
-                        /sales/countries/nz/.avro/sdc-file, then <samp class="ph codeph">file:parentPath</samp>
+                        /sales/countries/nz/.avro/sdc-file, then <code class="ph codeph">file:parentPath</code>
                         returns the following output path: /sales/countries/nz.</p>
 </li>
 
@@ -949,9 +1074,9 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_enc_2wh_zz">
-    <h3 class="title topictitle3">Processing Parquet Data</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title21" id="concept_enc_2wh_zz">
+    <h3 class="title topictitle3" id="ariaid-title21">Processing Parquet Data</h3>
 
     <div class="body conbody">
         <div class="p">When the pipeline runs, the following actions occur:<ul class="ul" id="concept_enc_2wh_zz__ul_jqb_jfn_zz">
@@ -990,10 +1115,10 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_ry2_qkm_hw">
- <h2 class="title topictitle2">Hive Data Types</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title22" id="concept_ry2_qkm_hw">
+ <h2 class="title topictitle2" id="ariaid-title22">Hive Data Types</h2>
 
  <div class="body conbody">
         <p class="p">The following table lists the <span class="ph">Data Collector</span>
@@ -1003,146 +1128,149 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
   <div class="p">
             
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ry2_qkm_hw__table_bcm_jlm_hw" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ry2_qkm_hw__table_bcm_jlm_hw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d222068e1166"><span class="ph">Data Collector</span> Data Type</th>
+                            <th class="entry cellrowborder" id="d187411e1441"><span class="ph">Data Collector</span> Data Type</th>
 
-                            <th class="entry" valign="top" width="50%" id="d222068e1171">Hive Data Type</th>
+                            <th class="entry cellrowborder" id="d187411e1446">Hive Data Type</th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Boolean</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Boolean</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Boolean</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Boolean</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Byte</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Byte</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Char</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">String</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Not supported</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Date</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Char</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Date </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Datetime</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">String</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Date</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Decimal</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Double</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Double</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Date </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Float</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Datetime</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Float</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Integer</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Int</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Long</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Decimal</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Bigint</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">List</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Not supported</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Decimal</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">List-Map</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Double</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Map</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Not supported</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Double</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Short</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Float</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">Int</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">String</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">String</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Float</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d222068e1166 ">Time</td>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Integer</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d222068e1171 ">String</td>
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Long</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Bigint</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">List</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">List-Map</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Map</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Short</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">String</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">String</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d187411e1441 ">Time</td>
+
+                            <td class="entry cellrowborder" headers="d187411e1446 ">String</td>
 
                         </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 
         </div>
 
  </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx" title="Dataflow Triggers"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Triggers</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb" title="Drift Synchronization Solution for Postgres"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Postgres</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1150,6 +1278,25 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

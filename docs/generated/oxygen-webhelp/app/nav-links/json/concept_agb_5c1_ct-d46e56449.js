@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring an SDC RPC Origin","id":"task_lxh_1w2_ct","href":"datacollector\/UserGuide\/Origins\/SDC_RPCorigin.html#task_lxh_1w2_ct","menu": {"hasChildren":false,},"tocID":"task_lxh_1w2_ct-d46e56484","topics":[]}]});

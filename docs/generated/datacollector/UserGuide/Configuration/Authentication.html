@@ -1,49 +1,238 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="User Authentication" /><meta name="abstract" content="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication." /><meta name="description" content="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_dns_dvg_h5" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>User Authentication</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="User Authentication" /><meta name="abstract" content="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication." /><meta name="description" content="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_dns_dvg_h5" /><title>User Authentication</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_dns_dvg_h5-d46e5965" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_dns_dvg_h5">User Authentication</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your         organization
+                  has it. By default, <span class="ph">Data Collector</span> uses         file-based authentication.
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy" title="Roles and Permissions"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration">Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_dns_dvg_h5">
- <h1 class="title topictitle1">User Authentication</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span><ul class="nav nav-list">
+         <li class="active"><span data-tocid="concept_dns_dvg_h5-d46e5965" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_dns_dvg_h5">User Authentication</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your         organization
+                        has it. By default, <span class="ph">Data Collector</span> uses         file-based authentication.
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_x2j_5ts_g5-d46e6106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_x2j_5ts_g5">Configuring LDAP Authentication</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If your organization uses LDAP, configure <span class="ph">Data Collector</span> to use         LDAP authentication. After you configure LDAP authentication, users log in to <span class="ph">Data Collector</span> using         their LDAP username and password. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_wgy_rxt_5x-d46e6610" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_wgy_rxt_5x">Configuring File-Based Authentication</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If your organization does not use LDAP, configure <span class="ph">Data Collector</span> to use         the default file-based authentication. 
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_k1r_prc_yy-d46e6955" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a></span></span></li>
+         <li><span data-tocid="concept_pq5_xjq_kr-d46e7237" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr">Data Collector Configuration</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can edit the <span class="ph">Data Collector</span>    configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, to configure properties such as the host name and port     number and account information for email alerts. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rng_qym_qr-d46e9073" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a></span></span></li>
+         <li><span data-tocid="concept_pdv_qlw_ft-d46e9918" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries </a></span></span></li>
+         <li><span data-tocid="concept_pmc_jk1_1x-d46e10293" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span></span></li>
+         <li><span data-tocid="concept_bt1_bpj_r1b-d46e10389" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CredentialStores.html#concept_bt1_bpj_r1b">Credential Stores</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         pipeline stages communicate with external systems to read and write data. Many of these         external systems
+                        require credentials - user names or passwords - to access the data. When         you configure pipeline stages for these external
+                        systems, you define the credentials that         the stage uses to connect to the system.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bmq_gl1_mw-d46e12018" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Vault Secrets with Vault Functions (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_rg3_nxy_4cb-d46e12114" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/PublishMetadata.html#concept_rg3_nxy_4cb">Working with Data Governance Tools</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure <span class="ph">Data Collector</span> to         integrate with data governance tools, giving you visibility into data movement - where the         data came from,
+                        where it’s going to, and who is interacting with it.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jdj_4rg_1t-d46e13246" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/JMXMetrics-EnableExternalTools.html#concept_jdj_4rg_1t">Enabling External JMX Tools</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     uses JMX metrics to generate the graphical display of the status of a running pipeline. You can     provide the same
+                        JMX metrics to external tools if desired.
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_dns_dvg_h5">
+ <h1 class="title topictitle1" id="ariaid-title1">User Authentication</h1>
 
  
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
@@ -61,9 +250,8 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_x2j_5ts_g5">
- <h2 class="title topictitle2">Configuring LDAP Authentication</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_x2j_5ts_g5">
+ <h2 class="title topictitle2" id="ariaid-title2">Configuring LDAP Authentication</h2>
 
  
  <div class="body conbody"><p class="shortdesc">If your organization uses LDAP, configure <span class="ph">Data Collector</span> to use
@@ -87,64 +275,62 @@
 
     </div>
 
-<div class="topic task nested2" id="task_tjw_3ss_5x">
-    <h3 class="title topictitle3">Step 1. Configure LDAP Connection Information</h3>
+<article class="topic task nested2" aria-labelledby="ariaid-title3" id="task_tjw_3ss_5x">
+    <h3 class="title topictitle3" id="ariaid-title3">Step 1. Configure LDAP Connection Information</h3>
 
     
     <div class="body taskbody"><p class="shortdesc">To enable LDAP authentication, configure LDAP connection information in the <span class="ph">Data Collector</span>
-        configuration files, <samp class="ph codeph">sdc.properties</samp> and <samp class="ph codeph">ldap-login.conf</samp>,
-        located in the <samp class="ph codeph">$SDC_CONF</samp> directory.</p>
+        configuration files, <code class="ph codeph">sdc.properties</code> and <code class="ph codeph">ldap-login.conf</code>,
+        located in the <code class="ph codeph">$SDC_CONF</code> directory.</p>
 
-        <div class="section context"></div>
+        <section class="section context"></section>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">In  the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, enable LDAP
+                <span class="ph cmd">In  the <span class="ph">Data Collector</span> configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, enable LDAP
                     authentication by setting the
                         <span class="ph uicontrol">http.authentication.login.module</span> property to
                         <span class="ph uicontrol">ldap</span>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, define the HTTP
+                <span class="ph cmd">In the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file, define the HTTP
                     authentication type by setting the <span class="ph uicontrol">http.authentication</span>
                     property to <span class="ph uicontrol">basic</span>, <span class="ph uicontrol">digest</span>, or
                         <span class="ph uicontrol">form</span>.</span>
-                <div class="itemgroup info"><p class="p">The HTTP authentication type determines how passwords are transferred from the
-                    browser to <span class="ph">Data Collector</span> over HTTP.</p>
- <p class="p">Digest authentication encrypts user credentials. Basic and form authentication transfer user
-                        credentials as is. To ensure that user credentials are safely transmitted
-                        for basic and form authentication, configure <span class="ph">Data Collector</span> to use HTTPS and configure secure connections to LDAP using LDAPS or
+                <div class="itemgroup info"><p class="p">The HTTP authentication type determines how passwords are transferred from the browser to <span class="ph">Data Collector</span> over HTTP. Digest authentication encrypts user credentials. Basic and
+                        form authentication transfer user credentials as is. To ensure that user
+                        credentials are safely transmitted for basic and form authentication,
+                        configure <span class="ph">Data Collector</span> to use HTTPS and configure secure connections to LDAP using LDAPS or
                         StartTLS.</p>
+
+                    <p class="p">For a Microsoft Active Directory server, use basic or form
+                        authentication.</p>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In  the <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file, configure the
+                <span class="ph cmd">In  the <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file, configure the
                     connection information for the LDAP server.</span>
                 <div class="itemgroup info">In the file, configure the following properties: 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tjw_3ss_5x__table_g4g_hx4_s5" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tjw_3ss_5x__table_g4g_hx4_s5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d39827e198">LDAP Property</th>
+                                    <th class="entry cellrowborder" id="d25177e343">LDAP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39827e201">Description</th>
+                                    <th class="entry cellrowborder" id="d25177e346">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">debug</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">debug</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Enables LDAP debugging. Default is false.</td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Enables LDAP debugging. Default is false.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">useLdaps</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">useLdaps</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Secure LDAP connections using the LDAPS (LDAP over SSL)
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Secure LDAP connections using the LDAPS (LDAP over SSL)
                                         protocol. Default is false. <p class="p">You must complete additional
                                             steps to use LDAPS, see <a class="xref" href="Authentication.html#task_wyf_kkw_ty">Step 2. Configure Secure Connections to LDAP (Optional)</a>.</p>
 </td>
@@ -152,9 +338,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">useStartTLS</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">useStartTLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Secure LDAP connections using the StartTLS protocol.
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Secure LDAP connections using the StartTLS protocol.
                                         Default is false.<div class="p">You must complete additional steps to
                                             use StartTLS, see <a class="xref" href="Authentication.html#task_wyf_kkw_ty">Step 2. Configure Secure Connections to LDAP (Optional)</a>.
                                                 <div class="note note"><span class="notetitle">Note:</span> StartTLS and LDAPS cannot be used at the same
@@ -167,24 +353,24 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">contextFactory</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">contextFactory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">LDAP initial context factory. Default is
+                                    <td class="entry cellrowborder" headers="d25177e346 ">LDAP initial context factory. Default is
                                         com.sun.jndi.ldap.LdapCtxFactory.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">hostname</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">hostname</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">LDAP server host name.</td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">LDAP server host name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">port</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">LDAP server port. <p class="p">To use unencrypted connections or to
+                                    <td class="entry cellrowborder" headers="d25177e346 ">LDAP server port. <p class="p">To use unencrypted connections or to
                                             use connections secured with StartTLS, enter the LDAP
                                             port number, typically 389. To use connections secured
                                             with LDAPS, enter the port number for secure
@@ -194,48 +380,49 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">bindDn</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">bindDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Root distinguished name (DN) used to query the directory
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Root distinguished name (DN) used to query the directory
                                         server. This user must have privileges to search the
                                         directory. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">bindPassword</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">bindPassword</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Password for the root distinguished name. For additional
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Password for the root distinguished name. For additional
                                         security, save the password in the
-                                            <samp class="ph codeph">$SDC_CONF/ldap-bind-password.txt</samp> file
+                                            <code class="ph codeph">$SDC_CONF/ldap-bind-password.txt</code> file
                                         without additional characters, spaces, or line breaks. As a
                                         best practice, the file should have owner-only
                                             permissions.<p class="p">Default is @ldap-bind-password.txt@,
                                             which points to the
-                                                <samp class="ph codeph">ldap-bind-password.txt</samp> file for the
+                                                <code class="ph codeph">ldap-bind-password.txt</code> file for the
                                             password.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">forceBindingLogin</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">forceBindingLogin</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Determines if binding login checks are performed. Use one
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Determines if binding login checks are performed. Use one
                                         of the following options:<ul class="ul" id="task_tjw_3ss_5x__ul_dpb_z2z_s5">
                                             <li class="li">false - <span class="ph">Data Collector</span> performs the authentication based on information
                                                 received from the LDAP server. <p class="p">When set to false,
                                                   the bindDn user must have permission to access the
                                                   details, password, and group information for
-                                                  users. Use for Digest authentication.</p>
+                                                  users. Use for digest authentication.</p>
 </li>
 
                                             <li class="li">true - <span class="ph">Data Collector</span> passes the user credentials to the LDAP server
                                                 for authentication. <p class="p">When set to true, the bindDn
                                                   user must have permission to access the group
-                                                  information for users. Use for Basic or Form
+                                                  information for users. Use for a Microsoft Active
+                                                  Directory server, for basic or form
                                                   authentication, or when the password stored in the
-                                                  LDAP server is encrypted. Do not use for Digest
+                                                  LDAP server is encrypted. Do not use for digest
                                                   authentication.</p>
 </li>
 
@@ -246,83 +433,85 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">userBaseDn</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">userBaseDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Base DN under which user accounts are located. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">userIdAttribute</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the user ID attribute. Default is uid.</td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Base DN under which user accounts are located. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">userPasswordAttribute</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">userIdAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the attribute where the user password is stored.
-                                        Default is userPassword.</td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the user ID attribute. Default is uid.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">userObjectClass</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">userPasswordAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the user object class. Default is
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the attribute where the user password is stored.
+                                        Default is userPassword.<p class="p">For a Microsoft Active Directory
+                                            server, use an empty string.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">userObjectClass</td>
+
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the user object class. Default is
                                         inetOrgPerson.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">userFilter</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">userFilter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the user attribute used to log in to <span class="ph">Data Collector</span>. For example, LDAP users can log in using a username,
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the user attribute used to log in to <span class="ph">Data Collector</span>. For example, LDAP users can log in using a username,
                                         uid, or email address. Default is
-                                            <samp class="ph codeph">uid={user}</samp>.</td>
+                                            <code class="ph codeph">uid={user}</code>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">roleBaseDn</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">roleBaseDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Base DN to search for role membership. </td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Base DN to search for role membership. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">roleNameAttribute</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">roleNameAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the attribute for role names. Default is
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the attribute for role names. Default is
                                         roleName.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">roleMemberAttribute</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">roleMemberAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Name of the role attribute for user names. Default is
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Name of the role attribute for user names. Default is
                                         Member. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">roleObjectClass</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">roleObjectClass</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Role object class. Default is groupOfNames.</td>
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Role object class. Default is groupOfNames.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d39827e198 ">roleFilter</td>
+                                    <td class="entry cellrowborder" headers="d25177e343 ">roleFilter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39827e201 ">Specifies whether LDAP group members are determined by DN
+                                    <td class="entry cellrowborder" headers="d25177e346 ">Specifies whether LDAP group members are determined by DN
                                         or uid. Enter one of the following values:<ul class="ul" id="task_tjw_3ss_5x__ul_rtd_4fp_cy">
-                                            <li class="li"><samp class="ph codeph">"member={dn}"</samp> - Use when LDAP
+                                            <li class="li"><code class="ph codeph">"member={dn}"</code> - Use when LDAP
                                                 groups list members by full DN. </li>
 
-                                            <li class="li"><samp class="ph codeph">"memberUid={user}"</samp> - Use when LDAP
+                                            <li class="li"><code class="ph codeph">"memberUid={user}"</code> - Use when LDAP
                                                 groups list members by uid.</li>
 
                                         </ul>
@@ -332,8 +521,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 </div>
             </li>
@@ -341,18 +529,18 @@
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_elh_wyw_ty">
- <h3 class="title topictitle3">Example for OpenLDAP</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_elh_wyw_ty">
+ <h3 class="title topictitle3" id="ariaid-title4">Example for OpenLDAP</h3>
 
  
- <div class="body conbody"><p class="shortdesc">Let's look at an example <samp class="ph codeph">ldap-login.conf</samp> file and see how <span class="ph">Data Collector</span> uses
+ <div class="body conbody"><p class="shortdesc">Let's look at an example <code class="ph codeph">ldap-login.conf</code> file and see how <span class="ph">Data Collector</span> uses
         the LDAP connection information to authenticate LDAP users.</p>
 
-        <p class="p">The following example shows a <samp class="ph codeph">ldap-login.conf</samp> file for an OpenLDAP
+        <p class="p">The following example shows a <code class="ph codeph">ldap-login.conf</code> file for an OpenLDAP
             server:</p>
 
-        <pre class="pre codeblock">ldap {
+        <pre class="pre codeblock"><code>ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
   useLdaps="true"
@@ -373,25 +561,22 @@
   roleMemberAttribute="member"
   roleObjectClass="groupOfNames"
   roleFilter="member={dn}";
-}; </pre>
-
+}; </code></pre>
         <p class="p">When an LDAP user logs into <span class="ph">Data Collector</span>,
-                <span class="ph">Data Collector</span> uses the connection information in the <samp class="ph codeph">ldap-login.conf</samp> file to
+                <span class="ph">Data Collector</span> uses the connection information in the <code class="ph codeph">ldap-login.conf</code> file to
             authenticate the user. <span class="ph">Data Collector</span>
             completes the following steps to authenticate the LDAP user:</p>
 
         <ol class="ol" id="concept_elh_wyw_ty__ol_bwq_bl1_vx">
             <li class="li">When forceBindingLogin is set to false, checks if the user account is registered in
                 the configured LDAP server by sending the following query to the LDAP
-                    server:<pre class="pre codeblock">ldapsearch -LLL -H ldaps://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;userBaseDn&gt; (&amp;(objectClass=&lt;userObjectClass&gt;)(&lt;userIdAttribute&gt;=username)</pre>
-<p class="p">For
-                    example, let's use the sample <samp class="ph codeph">ldap-login.conf</samp> file configured
+                    server:<pre class="pre codeblock"><code>ldapsearch -LLL -H ldaps://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;userBaseDn&gt; (&amp;(objectClass=&lt;userObjectClass&gt;)(&lt;userIdAttribute&gt;=username)</code></pre><p class="p">For
+                    example, let's use the sample <code class="ph codeph">ldap-login.conf</code> file configured
                     above, assume that the password defined in
-                        <samp class="ph codeph">ldap-bind-password.txt</samp> is "password", and assume that a
-                    user logs in to <span class="ph">Data Collector</span> with the username of <samp class="ph codeph">jdoe</samp>. <span class="ph">Data Collector</span> sends the following query to the LDAP
+                        <code class="ph codeph">ldap-bind-password.txt</code> is "password", and assume that a
+                    user logs in to <span class="ph">Data Collector</span> with the username of <code class="ph codeph">jdoe</code>. <span class="ph">Data Collector</span> sends the following query to the LDAP
                     server:</p>
-<pre class="pre codeblock">ldapsearch -LLL -H ldaps://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=users,dc=example,dc=net" (&amp;(objectClass=inetOrgPerson)(uid=jdoe)</pre>
-<p class="p">If
+<pre class="pre codeblock"><code>ldapsearch -LLL -H ldaps://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=users,dc=example,dc=net" (&amp;(objectClass=inetOrgPerson)(uid=jdoe)</code></pre><p class="p">If
                     the user account doesn't exist, <span class="ph">Data Collector</span> fails the authentication. If the user account exists, <span class="ph">Data Collector</span> continues with the next authentication step.</p>
 <div class="note note"><span class="notetitle">Note:</span> When forceBindingLogin
                     is set to true, <span class="ph">Data Collector</span> does not send this query to the LDAP server. Instead, <span class="ph">Data Collector</span> passes the user credentials to the LDAP server for authentication. If the
@@ -400,13 +585,11 @@
 
             <li class="li">Checks which LDAP group the user account belongs to by sending the following query
                 to the LDAP
-                    server:<pre class="pre codeblock">ldapsearch -LLL -H ldaps://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;roleBaseDn&gt; (&amp;(objectClass=&lt;roleObjectClass&gt;)(member={dn})</pre>
-<p class="p">For
-                    example, using the sample <samp class="ph codeph">ldap-login.conf</samp> file configured
+                    server:<pre class="pre codeblock"><code>ldapsearch -LLL -H ldaps://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;roleBaseDn&gt; (&amp;(objectClass=&lt;roleObjectClass&gt;)(member={dn})</code></pre><p class="p">For
+                    example, using the sample <code class="ph codeph">ldap-login.conf</code> file configured
                     above, <span class="ph">Data Collector</span> sends the following query to the LDAP
                     server:</p>
-<pre class="pre codeblock">ldapsearch -LLL -H ldaps://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=groups,dc=example,dc=net" (&amp;(objectClass=groupOfNames)(member="cn=jdoe, ou=users,dc=example,dc=net")</pre>
-<p class="p">The
+<pre class="pre codeblock"><code>ldapsearch -LLL -H ldaps://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=groups,dc=example,dc=net" (&amp;(objectClass=groupOfNames)(member="cn=jdoe, ou=users,dc=example,dc=net")</code></pre><p class="p">The
                     LDAP server returns the names of the LDAP groups that the user belongs to. <span class="ph">Data Collector</span> uses the group names to determine the <span class="ph">Data Collector</span> roles mapped to the LDAP groups, as explained in <a class="xref" href="Authentication.html#concept_x3x_lts_5x">Step 3. Map LDAP Groups to Data Collector Roles</a>.</p>
 </li>
 
@@ -414,17 +597,17 @@
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_kkr_2zw_ty">
- <h3 class="title topictitle3">Example for Active Directory</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_kkr_2zw_ty">
+ <h3 class="title topictitle3" id="ariaid-title5">Example for Active Directory</h3>
 
  <div class="body conbody">
-        <p class="p">The following example shows a <samp class="ph codeph">ldap-login.conf</samp> file for a Microsoft
+        <p class="p">The following example shows a <code class="ph codeph">ldap-login.conf</code> file for a Microsoft
             Active Directory server. <span class="ph">Data Collector</span>
             completes the same steps to authenticate LDAP users in Active Directory as in
             OpenLDAP.</p>
 
-        <pre class="pre codeblock">ldap {
+        <pre class="pre codeblock"><code>ldap {
      com.streamsets.datacollector.http.LdapLoginModule required
      debug="true"
      useLdaps="true"
@@ -437,7 +620,7 @@
      forceBindingLogin="true"
      userBaseDn="ou=Department,dc=Company,dc=net"
      userIdAttribute="sAMAccountName"
-     userPasswordAttribute="userPassword"
+     userPasswordAttribute=""
      userObjectClass="person"
      userFilter="sAMAccountName={user}"
      roleBaseDn="ou=Department,dc=Company,dc=net"
@@ -445,23 +628,22 @@
      roleMemberAttribute="member"
      roleObjectClass="group"
      roleFilter="member={dn}";
-};</pre>
-
+};</code></pre>
  </div>
 
-</div>
-<div class="topic task nested2" id="task_wyf_kkw_ty">
-    <h3 class="title topictitle3">Step 2. Configure Secure Connections to LDAP (Optional)</h3>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title6" id="task_wyf_kkw_ty">
+    <h3 class="title topictitle3" id="ariaid-title6">Step 2. Configure Secure Connections to LDAP (Optional)</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <div class="p">You can optionally configure <span class="ph">Data Collector</span> to use one of the following methods to make secure connections to the LDAP server:<dl class="dl">
                     
                         <dt class="dt dlterm"><strong class="ph b" id="task_wyf_kkw_ty__docs-internal-guid-0484c741-e1bc-327d-64a0-c46d83a6fafd">LDAP
                                 over SSL (LDAPS)</strong></dt>
 
                         <dd class="dd">LDAPS uses SSL to encrypt LDAP connections. LDAPS the
-                                <samp class="ph codeph">ldaps://</samp> scheme.</dd>
+                                <code class="ph codeph">ldaps://</code> scheme.</dd>
 
                     
                     
@@ -469,7 +651,7 @@
 
                         <dd class="dd">StartTLS can wrap an unencrypted connection with TLS during the
                             connection process. This allows the same port to handle both unencrypted
-                            and encrypted connections. StartTLS uses the <samp class="ph codeph">ldap://</samp>
+                            and encrypted connections. StartTLS uses the <code class="ph codeph">ldap://</code>
                             scheme.</dd>
 
                     
@@ -480,7 +662,7 @@
                 Certificate Authority (CA) or not trusted by the default Java TrustStore, define the
                 truststore file and password to use in the SDC_JAVA_OPTS environment variable. </p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">In the <samp class="ph systemoutput">$SDC_CONF/ldap-login.conf</samp> file, set either
@@ -491,7 +673,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Set the <span class="ph uicontrol">port</span> property in the
-                        <samp class="ph codeph">ldap-login.conf</samp> file as required, based on the method that
+                        <code class="ph codeph">ldap-login.conf</code> file as required, based on the method that
                     you enabled:</span>
                 <ul class="ul choices" id="task_wyf_kkw_ty__choices_rf3_llw_ty">
                     <li class="li choice">useLdaps - Use the port number for secure connections, typically 636. </li>
@@ -503,11 +685,11 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable:</span>
-                <ul class="ul choices" id="task_wyf_kkw_ty__d6514e9512">
-                    <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
+                <ul class="ul choices" id="task_wyf_kkw_ty__d444e10323">
+                    <li class="li choice"><code class="ph codeph">javax.net.ssl.trustStore</code> - path to truststore
                         file</li>
 
-                    <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStorePassword</samp> - truststore
+                    <li class="li choice"><code class="ph codeph">javax.net.ssl.trustStorePassword</code> - truststore
                         password</li>
 
                 </ul>
@@ -517,14 +699,13 @@
                   type.</p>
 
                     <div class="p">For example, define the options as
-                        follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; -Djavax.net.ssl.trustStorePassword=&lt;password&gt;</strong> 
--Xmx1024m  -Xms1024m -server ${SDC_JAVA_OPTS}"                   </pre>
-</div>
+                        follows:<pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<strong class="ph b">-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; -Djavax.net.ssl.trustStorePassword=&lt;password&gt;</strong> 
+-Xmx1024m  -Xms1024m -server ${SDC_JAVA_OPTS}"                   </code></pre></div>
 
                     <p class="p">Or to secure the password, save the password in a text file and then define
                         the truststore password option as follows:
-                            <samp class="ph codeph">-Djavax.net.ssl.trustStorePassword=$(cat
-                            passwordfile.txt)</samp></p>
+                            <code class="ph codeph">-Djavax.net.ssl.trustStorePassword=$(cat
+                            passwordfile.txt)</code></p>
 
                 </div>
             </li>
@@ -536,9 +717,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_x3x_lts_5x">
- <h3 class="title topictitle3">Step 3. Map LDAP Groups to Data Collector Roles</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_x3x_lts_5x">
+ <h3 class="title topictitle3" id="ariaid-title7">Step 3. Map LDAP Groups to Data Collector Roles</h3>
 
  <div class="body conbody">
   <p class="p"><span class="ph">Data Collector</span>
@@ -557,84 +738,77 @@
 
         <p class="p">To map LDAP groups to <span class="ph">Data Collector</span>
             roles, in the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, configure the
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, configure the
                 <span class="ph uicontrol">http.authentication.ldap.role.mapping</span> property.</p>
 
         <p class="p"><span class="ph">Data Collector</span>
             provides the following roles: </p>
 
         
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x3x_lts_5x__table_x1c_kwy_5x" class="table" frame="border" border="1" rules="all">
-                
-                
-                <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x3x_lts_5x__table_x1c_kwy_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:12.5%" /><col style="width:87.5%" /></colgroup><thead class="thead" style="text-align:left;">
                     <tr>
-                        <th class="entry" valign="top" width="12.5%" id="d39827e817">Role</th>
+                        <th class="entry cellrowborder" id="d25177e972">Role</th>
 
-                        <th class="entry" valign="top" width="87.5%" id="d39827e820">Description</th>
+                        <th class="entry cellrowborder" id="d25177e975">Description</th>
 
                     </tr>
 
                 </thead>
-
-                <tbody class="tbody">
+<tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d39827e817 ">admin</td>
+                        <td class="entry cellrowborder" headers="d25177e972 ">admin</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d39827e820 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
+                        <td class="entry cellrowborder" headers="d25177e975 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
        below, as well as start and stop <span class="ph">Data Collector</span>, view <span class="ph">Data Collector</span> configuration, <span class="ph">Data Collector</span> metrics, and log information.
        Install libraries using the Package Manager. Generate support bundles.</td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d39827e817 ">manager</td>
+                        <td class="entry cellrowborder" headers="d25177e972 ">manager</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d39827e820 ">Start and stop pipelines, monitor pipelines, configure and reset
+                        <td class="entry cellrowborder" headers="d25177e975 ">Start and stop pipelines, monitor pipelines, configure and reset
        alerts. Take, review, and manage snapshots. </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d39827e817 ">creator</td>
+                        <td class="entry cellrowborder" headers="d25177e972 ">creator</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d39827e820 ">Create and configure pipelines and alerts, preview data, and
+                        <td class="entry cellrowborder" headers="d25177e975 ">Create and configure pipelines and alerts, preview data, and
        monitor the pipeline. Import pipelines.</td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d39827e817 ">guest</td>
+                        <td class="entry cellrowborder" headers="d25177e972 ">guest</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d39827e820 ">View pipelines and alerts, and general monitoring information.
+                        <td class="entry cellrowborder" headers="d25177e975 ">View pipelines and alerts, and general monitoring information.
        Export a pipeline. </td>
 
                     </tr>
 
                 </tbody>
-
-            </table>
+</table>
 </div>
 
      <div class="p">You can map multiple roles to the same group or vice versa. Use a semicolon to separate LDAP
             groups and commas to separate <span class="ph">Data Collector</span>
             roles, as
-            follows:<pre class="pre codeblock">&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;,&lt;additional SDC role&gt;);&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;... </pre>
-</div>
+            follows:<pre class="pre codeblock"><code>&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;,&lt;additional SDC role&gt;);&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;... </code></pre></div>
 
         <p class="p">When you have finished mapping LDAP groups to roles, restart <span class="ph">Data Collector</span> to
             enable the changes to the configuration file.</p>
 
      <div class="p">The following example maps the DEV LDAP group to the creator role, the OPS LDAP group to the
             manager role, and the SUPER LDAP group to both creator and
-            manager:<pre class="pre codeblock">DEV:creator;OPS:manager;SUPER:creator,manager</pre>
-</div>
+            manager:<pre class="pre codeblock"><code>DEV:creator;OPS:manager;SUPER:creator,manager</code></pre></div>
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_o4n_gvs_5x">
- <h3 class="title topictitle3">Step 4. Configure Multiple LDAP Servers (Optional)</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_o4n_gvs_5x">
+ <h3 class="title topictitle3" id="ariaid-title8">Step 4. Configure Multiple LDAP Servers (Optional)</h3>
 
  
  <div class="body conbody"><p class="shortdesc">If your organization has multiple LDAP servers, you can configure <span class="ph">Data Collector</span> to
@@ -649,7 +823,7 @@
 
                 <dd class="dd">To configure multiple LDAP servers, simply configure the connection information
                     for the additional LDAP servers in the
-                        <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp>. Then, restart <span class="ph">Data Collector</span> to enable the changes.</dd>
+                        <code class="ph codeph">$SDC_CONF/ldap-login.conf</code>. Then, restart <span class="ph">Data Collector</span> to enable the changes.</dd>
 
             
         </dl>
@@ -662,14 +836,14 @@
                     the additional LDAP servers in an advanced configuration snippet - or safety
                     valve - within Cloudera Manager.</dd>
 
-                <dd class="dd">In Cloudera Manager, select the StreamSets service, then click
+                <dd class="dd ddexpand">In Cloudera Manager, select the StreamSets service, then click
                         <span class="ph uicontrol">Configuration</span>. Select <span class="ph uicontrol">Use Safety Valve to Edit LDAP
                         Information</span>, and then configure the connection information for
                     all of the LDAP servers in the <span class="ph uicontrol">Data Collector Advanced Configuration
                         Snippet for ldap.login.conf</span> safety valve. </dd>
 
-                <dd class="dd">When you configure multiple LDAP servers in the safety valve, Cloudera Manager
-                    ignores all values entered for the <samp class="ph codeph">ldap.*</samp> properties in the
+                <dd class="dd ddexpand">When you configure multiple LDAP servers in the safety valve, Cloudera Manager
+                    ignores all values entered for the <code class="ph codeph">ldap.*</code> properties in the
                         <span class="ph uicontrol">Configuration</span> tab.</dd>
 
             
@@ -682,7 +856,7 @@
                 authenticated.</li>
 
             <li class="li">If the LDAP user accounts belong to different LDAP groups in each LDAP server,
-                include all of the group names when you map LDAP groups to <span class="ph">Data Collector</span> roles in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file.</li>
+                include all of the group names when you map LDAP groups to <span class="ph">Data Collector</span> roles in the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file.</li>
 
             <li class="li">If the additional LDAP servers use different passwords for bindDN - the root
                 distinguished name (DN) for the connection - then directly define the passwords in
@@ -692,7 +866,7 @@
 
         <div class="note note"><span class="notetitle">Note:</span> When you configure multiple LDAP servers, <span class="ph">Data Collector</span>
             attempts to connect to each server in the order listed in the
-                <samp class="ph codeph">ldap-login.conf</samp> file. If <span class="ph">Data Collector</span>
+                <code class="ph codeph">ldap-login.conf</code> file. If <span class="ph">Data Collector</span>
             successfully authenticates the user account in one of the LDAP servers, <span class="ph">Data Collector</span>
             still continues to authenticate with the remaining LDAP servers. This can cause the <span class="ph">Data Collector</span>
             log file to include login failure error messages. You can ignore these error
@@ -701,7 +875,7 @@
         <p class="p">The following example shows an <span class="keyword cmdname">ldap-login.conf</span> file configured to
             connect to two OpenLDAP servers, server1 and server2. Each server uses the same password
             for bindDN:</p>
-<pre class="pre codeblock">ldap {
+<pre class="pre codeblock"><code>ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
   useLdaps="false"
@@ -744,13 +918,12 @@
   roleMemberAttribute="member"
   roleObjectClass="groupOfNames"
   roleFilter="member={dn}";
-};</pre>
-
+};</code></pre>
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_fyr_dkv_1x">
- <h3 class="title topictitle3">Step 5. Enable LDAP Authentication for MapR Stages</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_fyr_dkv_1x">
+ <h3 class="title topictitle3" id="ariaid-title9">Step 5. Enable LDAP Authentication for MapR Stages</h3>
 
  
  <div class="body conbody"><p class="shortdesc">To use MapR stages with a <span class="ph">Data Collector</span>
@@ -759,32 +932,31 @@
 
   <p class="p">The MapR distribution for
             Hadoop uses the Java Authentication and Authorization Service (JAAS) to control security
-            features. The <samp class="ph codeph">$MAPR_HOME/conf/mapr.login.conf</samp> file specifies
+            features. The <code class="ph codeph">$MAPR_HOME/conf/mapr.login.conf</code> file specifies
             configuration parameters for JAAS.</p>
 
         <p class="p"><span class="ph">Data Collector</span>
             expects LDAP configuration to be in the JAAS configuration file
-                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> and overrides the
-                <samp class="ph codeph">java.security.auth.login.config</samp> system property to point to this
+                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> and overrides the
+                <code class="ph codeph">java.security.auth.login.config</code> system property to point to this
             file.</p>
 
         <p class="p">To avoid this conflict, copy the contents of the
-                <samp class="ph codeph">$MAPR_HOME/conf/mapr.login.conf</samp> file into the
-                <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file after you configure the LDAP
-            connection information in the <samp class="ph codeph">ldap-login.conf</samp> file.</p>
+                <code class="ph codeph">$MAPR_HOME/conf/mapr.login.conf</code> file into the
+                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file after you configure the LDAP
+            connection information in the <code class="ph codeph">ldap-login.conf</code> file.</p>
 
         <div class="p">For example, use the following command to append the contents of the
-                <samp class="ph codeph">mapr.login.conf</samp> file to the end of the
-                <samp class="ph codeph">ldap-login.conf</samp>
-            file:<pre class="pre codeblock">cat $MAPR_HOME/conf/mapr.login.conf &gt;&gt; $SDC_CONF/ldap-login.conf</pre>
-</div>
+                <code class="ph codeph">mapr.login.conf</code> file to the end of the
+                <code class="ph codeph">ldap-login.conf</code>
+            file:<pre class="pre codeblock"><code>cat $MAPR_HOME/conf/mapr.login.conf &gt;&gt; $SDC_CONF/ldap-login.conf</code></pre></div>
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_wgy_rxt_5x">
- <h2 class="title topictitle2">Configuring File-Based Authentication</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_wgy_rxt_5x">
+ <h2 class="title topictitle2" id="ariaid-title10">Configuring File-Based Authentication</h2>
 
  
  <div class="body conbody"><p class="shortdesc">If your organization does not use LDAP, configure <span class="ph">Data Collector</span> to use
@@ -801,26 +973,26 @@
 
  </div>
 
-<div class="topic task nested2" id="task_wh3_tdv_5x">
-    <h3 class="title topictitle3">Step 1. Configure Authentication Properties</h3>
+<article class="topic task nested2" aria-labelledby="ariaid-title11" id="task_wh3_tdv_5x">
+    <h3 class="title topictitle3" id="ariaid-title11">Step 1. Configure Authentication Properties</h3>
 
     <div class="body taskbody">
-        <div class="section context">Configure authentication
+        <section class="section context">Configure authentication
             properties in the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. <p class="p">When you use
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. <p class="p">When you use
                 file-based authentication, you can use the Basic, Digest, or Form type. By default,
                     <span class="ph">Data Collector</span> uses file-based authentication and uses the Form authentication type.
             </p>
-</div>
+</section>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, enable
+                <span class="ph cmd">In the <span class="ph">Data Collector</span> configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, enable
                     file-based authentication by setting the
                         <span class="ph uicontrol">http.authentication.login.module</span> property to
                         <span class="ph uicontrol">file</span>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, define the HTTP
+                <span class="ph cmd">In the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file, define the HTTP
                     authentication type by setting the <span class="ph uicontrol">http.authentication</span>
                     property to <span class="ph uicontrol">basic</span>, <span class="ph uicontrol">digest</span>, or
                         <span class="ph uicontrol">form</span>.</span>
@@ -844,12 +1016,12 @@
 
     </div>
 
-</div>
-<div class="topic task nested2" id="task_nsz_lp4_1r">
-    <h3 class="title topictitle3">Step 2. Configure Users, Groups, and Roles</h3>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title12" id="task_nsz_lp4_1r">
+    <h3 class="title topictitle3" id="ariaid-title12">Step 2. Configure Users, Groups, and Roles</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">For file-based
                 authentication, you configure the users that can log in to <span class="ph">Data Collector</span>. You assign roles to each user account and you can optionally create and assign
                 groups to the user accounts. </p>
@@ -874,67 +1046,61 @@
                 and execute permission to the Ops group. For more information, see <a class="xref" href="RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a>.</p>
 
             <div class="p">For file-based authentication, <span class="ph">Data Collector</span> provides the following user accounts with corresponding roles: 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsz_lp4_1r__table_ehn_sjl_yy" class="table" frame="border" border="1" rules="all">
-     
-     
-     
-     <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsz_lp4_1r__table_ehn_sjl_yy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:20%" /><col style="width:20%" /><col style="width:60%" /></colgroup><thead class="thead" style="text-align:left;">
       <tr>
-       <th class="entry" valign="top" width="20%" id="d39827e1299">User Login</th>
+       <th class="entry cellrowborder" id="d25177e1465">User Login</th>
 
-       <th class="entry" valign="top" width="20%" id="d39827e1302">Role</th>
+       <th class="entry cellrowborder" id="d25177e1468">Role</th>
 
-       <th class="entry" valign="top" width="60%" id="d39827e1305">Tasks</th>
+       <th class="entry cellrowborder" id="d25177e1471">Tasks</th>
 
       </tr>
 
      </thead>
-
-     <tbody class="tbody">
+<tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d39827e1299 "><samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp></td>
+       <td class="entry cellrowborder" headers="d25177e1465 "><code class="ph codeph">admin</code> / <code class="ph codeph">admin</code></td>
 
-       <td class="entry" valign="top" width="20%" headers="d39827e1302 ">Admin</td>
+       <td class="entry cellrowborder" headers="d25177e1468 ">Admin</td>
 
-       <td class="entry" valign="top" width="60%" headers="d39827e1305 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
+       <td class="entry cellrowborder" headers="d25177e1471 ">Perform any <span class="ph">Data Collector</span> task. Can perform all tasks listed
        below, as well as start and stop <span class="ph">Data Collector</span>, view <span class="ph">Data Collector</span> configuration, <span class="ph">Data Collector</span> metrics, and log information.
        Install libraries using the Package Manager. Generate support bundles.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d39827e1299 "><samp class="ph codeph">manager</samp> / <samp class="ph codeph">manager</samp></td>
+       <td class="entry cellrowborder" headers="d25177e1465 "><code class="ph codeph">manager</code> / <code class="ph codeph">manager</code></td>
 
-       <td class="entry" valign="top" width="20%" headers="d39827e1302 ">Manager</td>
+       <td class="entry cellrowborder" headers="d25177e1468 ">Manager</td>
 
-       <td class="entry" valign="top" width="60%" headers="d39827e1305 ">Start and stop pipelines, monitor pipelines, configure and reset
+       <td class="entry cellrowborder" headers="d25177e1471 ">Start and stop pipelines, monitor pipelines, configure and reset
        alerts. Take, review, and manage snapshots. </td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d39827e1299 "><samp class="ph codeph">creator</samp> / <samp class="ph codeph">creator</samp></td>
+       <td class="entry cellrowborder" headers="d25177e1465 "><code class="ph codeph">creator</code> / <code class="ph codeph">creator</code></td>
 
-       <td class="entry" valign="top" width="20%" headers="d39827e1302 ">Creator</td>
+       <td class="entry cellrowborder" headers="d25177e1468 ">Creator</td>
 
-       <td class="entry" valign="top" width="60%" headers="d39827e1305 ">Create and configure pipelines and alerts, preview data, and
+       <td class="entry cellrowborder" headers="d25177e1471 ">Create and configure pipelines and alerts, preview data, and
        monitor the pipeline. Import pipelines.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d39827e1299 "><samp class="ph codeph">guest</samp> / <samp class="ph codeph">guest</samp></td>
+       <td class="entry cellrowborder" headers="d25177e1465 "><code class="ph codeph">guest</code> / <code class="ph codeph">guest</code></td>
 
-       <td class="entry" valign="top" width="20%" headers="d39827e1302 ">Guest</td>
+       <td class="entry cellrowborder" headers="d25177e1468 ">Guest</td>
 
-       <td class="entry" valign="top" width="60%" headers="d39827e1305 ">View pipelines and alerts, and general monitoring information.
+       <td class="entry cellrowborder" headers="d25177e1471 ">View pipelines and alerts, and general monitoring information.
        Export a pipeline. </td>
 
       </tr>
 
      </tbody>
-
-    </table>
+</table>
 </div>
 </div>
 
@@ -943,73 +1109,66 @@
                 user groups:</p>
 
             
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsz_lp4_1r__table_dmw_rjl_yy" class="table" frame="border" border="1" rules="all">
-    
-    
-    
-    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nsz_lp4_1r__table_dmw_rjl_yy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:40%" /><col style="width:30%" /></colgroup><thead class="thead" style="text-align:left;">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d39827e1411">User Login</th>
+      <th class="entry cellrowborder" id="d25177e1577">User Login</th>
 
-      <th class="entry" valign="top" width="40%" id="d39827e1414">Roles</th>
+      <th class="entry cellrowborder" id="d25177e1580">Roles</th>
 
-      <th class="entry" valign="top" width="30%" id="d39827e1417">Group</th>
+      <th class="entry cellrowborder" id="d25177e1583">Group</th>
 
      </tr>
 
     </thead>
-
-    <tbody class="tbody">
+<tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d39827e1411 "><samp class="ph codeph">user1</samp> / <samp class="ph codeph">user1</samp></td>
+      <td class="entry cellrowborder" headers="d25177e1577 "><code class="ph codeph">user1</code> / <code class="ph codeph">user1</code></td>
 
-      <td class="entry" valign="top" width="40%" headers="d39827e1414 ">Manager and Creator</td>
+      <td class="entry cellrowborder" headers="d25177e1580 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d39827e1417 ">dev</td>
+      <td class="entry cellrowborder" headers="d25177e1583 ">dev</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d39827e1411 "><samp class="ph codeph">user2</samp> / <samp class="ph codeph">user2</samp></td>
+      <td class="entry cellrowborder" headers="d25177e1577 "><code class="ph codeph">user2</code> / <code class="ph codeph">user2</code></td>
 
-      <td class="entry" valign="top" width="40%" headers="d39827e1414 ">Manager and Creator</td>
+      <td class="entry cellrowborder" headers="d25177e1580 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d39827e1417 ">dev</td>
-
-     </tr>
-
-     <tr>
-      <td class="entry" valign="top" width="30%" headers="d39827e1411 "><samp class="ph codeph">user3</samp> / <samp class="ph codeph">user3</samp></td>
-
-      <td class="entry" valign="top" width="40%" headers="d39827e1414 ">Manager and Creator</td>
-
-      <td class="entry" valign="top" width="30%" headers="d39827e1417 ">test</td>
+      <td class="entry cellrowborder" headers="d25177e1583 ">dev</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d39827e1411 "><samp class="ph codeph">user4</samp> / <samp class="ph codeph">user4</samp></td>
+      <td class="entry cellrowborder" headers="d25177e1577 "><code class="ph codeph">user3</code> / <code class="ph codeph">user3</code></td>
 
-      <td class="entry" valign="top" width="40%" headers="d39827e1414 ">Manager and Creator</td>
+      <td class="entry cellrowborder" headers="d25177e1580 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d39827e1417 ">test</td>
+      <td class="entry cellrowborder" headers="d25177e1583 ">test</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d25177e1577 "><code class="ph codeph">user4</code> / <code class="ph codeph">user4</code></td>
+
+      <td class="entry cellrowborder" headers="d25177e1580 ">Manager and Creator</td>
+
+      <td class="entry cellrowborder" headers="d25177e1583 ">test</td>
 
      </tr>
 
     </tbody>
-
-   </table>
+</table>
 </div>
 
             <p class="p">Configure users and groups in the properties file for the type of authentication that
                 you use. For example, if you use basic authentication, use the
-                    <samp class="ph codeph">basic-realm.properties</samp> file.</p>
+                    <code class="ph codeph">basic-realm.properties</code> file.</p>
 
             <div class="p">To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. For example, you might use the following command to hash a password
                 so that the password is not displayed in the
-                prompt:<pre class="pre codeblock">read -s pw &amp;&amp; echo "$pw" | md5</pre>
-</div>
+                prompt:<pre class="pre codeblock"><code>read -s pw &amp;&amp; echo "$pw" | md5</code></pre></div>
 
             <p class="p">For basic and form authentication, hash the password alone. For example, when the
                 above command prompts you for the password, enter only the password.</p>
@@ -1019,18 +1178,16 @@
                 example, when the above command prompts you for the password, enter:</p>
 
             <div class="p">
-                <pre class="pre codeblock">&lt;user name&gt;:&lt;realm&gt;:&lt;password&gt;</pre>
-
+                <pre class="pre codeblock"><code>&lt;user name&gt;:&lt;realm&gt;:&lt;password&gt;</code></pre>
             </div>
 
             <p class="p">as follows:</p>
 
             <div class="p">
-                <pre class="pre codeblock">jdoe:digest-realm:JdoePass</pre>
-
+                <pre class="pre codeblock"><code>jdoe:digest-realm:JdoePass</code></pre>
             </div>
 
-        </div>
+        </section>
 
         <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
                 <span class="ph cmd">To configure users and groups, modify the properties file for the type of
@@ -1041,8 +1198,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For each new user, add a user definition using the following format:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">&lt;user name&gt;: MD5:&lt;md5-text&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...] [, group:&lt;group&gt;, group:&lt;additional group&gt;...]</pre>
-
+                    <pre class="pre codeblock"><code>&lt;user name&gt;: MD5:&lt;md5-text&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...] [, group:&lt;group&gt;, group:&lt;additional group&gt;...]</code></pre>
                 </div>
                 <div class="itemgroup info">
                     <div class="note note"><span class="notetitle">Note:</span> Assign one or more roles to each user. Be sure to include "user" in every
@@ -1050,8 +1206,7 @@
 
                     <div class="p">For example, the following line defines a user named jsmith assigned the
                         creator role and to the Development
-                        group:<pre class="pre codeblock">jsmith: MD5:6d0258c2440a7d19e916292b231e3190,user,creator,group:Development</pre>
-</div>
+                        group:<pre class="pre codeblock"><code>jsmith: MD5:6d0258c2440a7d19e916292b231e3190,user,creator,group:Development</code></pre></div>
 
                 </div>
             </li>
@@ -1062,11 +1217,20 @@
 
     </div>
 
-</div>
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Configuration/Config_title.html" title="Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1074,6 +1238,25 @@
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

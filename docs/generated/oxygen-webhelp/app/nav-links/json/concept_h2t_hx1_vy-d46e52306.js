@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","id":"concept_cbz_sz1_vy","href":"datacollector\/UserGuide\/Origins\/OracleCDC.html#concept_cbz_sz1_vy","menu": {"hasChildren":false,},"tocID":"concept_cbz_sz1_vy-d46e52530","topics":[]}]});

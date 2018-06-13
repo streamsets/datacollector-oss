@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","id":"concept_nly_sw2_px","href":"datacollector\/UserGuide\/Destinations\/AmazonS3.html#concept_nly_sw2_px","menu": {"hasChildren":false,},"tocID":"concept_nly_sw2_px-d46e74796","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","id":"concept_kwq_m54_vz","href":"datacollector\/UserGuide\/Destinations\/DataLakeStore.html#concept_kwq_m54_vz","menu": {"hasChildren":false,},"tocID":"concept_kwq_m54_vz-d46e75822","topics":[]}]});

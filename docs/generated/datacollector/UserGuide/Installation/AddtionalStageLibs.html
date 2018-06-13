@@ -1,48 +1,226 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Install additional stage libraries to use stages that are not included in the core RPM or core tarball installation of Data Collector . This is an optional step, but generally you'll want to install ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Install Additional Stage Libraries" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fb2_qmn_bz" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Install Additional Stage Libraries</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Install additional stage libraries to use stages that are not included in the core RPM or core tarball installation of Data Collector . This is an optional step, but generally you'll want to install ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Install Additional Stage Libraries" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CoreInstall_Overview.html#concept_vvw_p3m_s5" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fb2_qmn_bz" /><title>Install Additional Stage Libraries</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_fb2_qmn_bz-d46e4448" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install Additional Stage Libraries</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Installation/CoreInstall_Overview.html#concept_vvw_p3m_s5" title="Core Installation"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25" title="Installation with Cloudera Manager"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_fb2_qmn_bz">
- <h1 class="title topictitle1">Install Additional Stage Libraries</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_gbn_4lv_1r-d46e3898" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/InstallationAndConfig.html#concept_gbn_4lv_1r">Installation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can install <span class="ph">Data Collector</span> and start it     manually or run it as a service. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="task_bt1_zcp_kq-d46e4132" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Installing_the_DC.html#task_bt1_zcp_kq">Full Installation and Launch (Manual Start)</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_e45_3dr_bx-d46e4156" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/FullInstall_ServiceStart.html#concept_e45_3dr_bx">Full Installation and Launch (Service Start)</a></span></span></li>
+         <li><span data-tocid="concept_vvw_p3m_s5-d46e4328" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/CoreInstall_Overview.html#concept_vvw_p3m_s5">Core Installation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can download and install a core version of <span class="ph">Data Collector</span>, and         then install individual stage libraries as needed. Use the core installation to install only         the stage
+                        libraries that you want to use. The core installation allows <span class="ph">Data Collector</span> to use         less disk space.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_fb2_qmn_bz-d46e4448" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install Additional Stage Libraries</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_amc_cf3_dx-d46e4520" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a></span></span></li>
+               <li><span data-tocid="concept_h5k_jbl_nx-d46e4542" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_h5k_jbl_nx">Installing for Tarball Using the Package Manager</a></span></span></li>
+               <li><span data-tocid="concept_bnl_n3n_s5-d46e4574" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_bnl_n3n_s5">Installing for Tarball Using the Command Line</a></span></span></li>
+               <li><span data-tocid="concept_evs_xkm_s5-d46e4616" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a></span></span></li>
+               <li><span data-tocid="concept_fw3_zt3_tbb-d46e4668" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fw3_zt3_tbb">Legacy Stage Libraries</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_nb5_c3m_25-d46e4730" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25">Installation with Cloudera Manager</a></span></span></li>
+         <li><span data-tocid="concept_jxh_qxr_kv-d46e5022" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Installing_the_DC-Docker.html#concept_jxh_qxr_kv">Run Data Collector from Docker</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dsp_5j2_wdb-d46e5046" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/CloudInstall.html#concept_dsp_5j2_wdb">Installation with Cloud Service Providers</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can install the full <span class="ph">Data Collector</span> using         cloud service providers such as Microsoft Azure or Microsoft Azure HDInsight. When you         install <span class="ph">Data Collector</span>         using a cloud service provider, you install <span class="ph">Data Collector</span> as a         service. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jgs_qpg_2v-d46e5211" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v">MapR Prerequisites</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Due to licensing restrictions, StreamSets cannot distribute MapR libraries with <span class="ph">Data Collector</span>. As a         result, you must perform additional steps to enable the <span class="ph">Data Collector</span>         machine to connect to MapR. <span class="ph">Data Collector</span> does         not display MapR origins and destinations in stage library lists nor the MapR Streams         statistics aggregator
+                        in the pipeline properties until you perform these         prerequisites.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_p2w_x3z_yx-d46e5707" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/CreateAnotherDC.html#concept_p2w_x3z_yx">Creating Another Data Collector Instance</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_fc3_vly_py-d46e5732" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Uninstall.html#concept_fc3_vly_py">Uninstallation</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_fb2_qmn_bz">
+ <h1 class="title topictitle1" id="ariaid-title1">Install Additional Stage Libraries</h1>
 
  <div class="body conbody">
         <p class="p">Install additional stage libraries to use stages that are not included in the core RPM or
@@ -71,9 +249,8 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_amc_cf3_dx">
- <h2 class="title topictitle2">Installing for RPM</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_amc_cf3_dx">
+ <h2 class="title topictitle2" id="ariaid-title2">Installing for RPM</h2>
 
  <div class="body conbody">
   <p class="p">Use the following commands to install additional stage
@@ -86,51 +263,46 @@
                 <dd class="dd">Use the following command to install the stage libraries downloaded to the
                     current directory:</dd>
 
-                <dd class="dd">
-                    <pre class="pre codeblock">yum localinstall &lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,&lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,...</pre>
-
+                <dd class="dd ddexpand">
+                    <pre class="pre codeblock"><code>yum localinstall &lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,&lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,...</code></pre>
                 </dd>
 
-                <dd class="dd">Use the full name of the library package that you want to install, separating
+                <dd class="dd ddexpand">Use the full name of the library package that you want to install, separating
                     them with commas. Do not include spaces in the command. </dd>
 
-                <dd class="dd">For example, to install the Amazon S3 origin and destination, as well as the
+                <dd class="dd ddexpand">For example, to install the Amazon S3 origin and destination, as well as the
                     Kudu destination for <span class="ph">Data Collector</span> version <span class="ph">3.3.0</span>, use the following command:
-                    <pre class="pre codeblock">yum localinstall streamsets-datacollector-aws-lib-<span class="ph">3.3.0</span>-1.noarch.rpm,streamsets-datacollector-apache-kudu_1_0-lib-<span class="ph">3.3.0</span>-1.noarch.rpm </pre>
-</dd>
+                    <pre class="pre codeblock"><code>yum localinstall streamsets-datacollector-aws-lib-<span class="ph">3.3.0</span>-1.noarch.rpm,streamsets-datacollector-apache-kudu_1_0-lib-<span class="ph">3.3.0</span>-1.noarch.rpm </code></pre></dd>
 
             
             
                 <dt class="dt dlterm">To list the stage libraries installed on the current <span class="ph">Data Collector</span>:</dt>
 
                 <dd class="dd">Use the following
-                    command:<pre class="pre codeblock">yum list installed | grep streamsets</pre>
-</dd>
+                    command:<pre class="pre codeblock"><code>yum list installed | grep streamsets</code></pre></dd>
 
             
             
                 <dt class="dt dlterm">To uninstall libraries when necessary:</dt>
 
                 <dd class="dd">Use the following
-                    command:<pre class="pre codeblock">yum remove &lt;libraryID&gt;,&lt;libraryID&gt;,...</pre>
-</dd>
+                    command:<pre class="pre codeblock"><code>yum remove &lt;libraryID&gt;,&lt;libraryID&gt;,...</code></pre></dd>
 
-                <dd class="dd">Use the full name of the libraries that you want to uninstall, separating them
+                <dd class="dd ddexpand">Use the full name of the libraries that you want to uninstall, separating them
                     with commas. Do not include spaces in the command. </dd>
 
-                <dd class="dd">For example, to uninstall the Amazon S3 origin and destination, use the
+                <dd class="dd ddexpand">For example, to uninstall the Amazon S3 origin and destination, use the
                     following
-                    command:<pre class="pre codeblock">yum remove streamsets-datacollector-aws-lib</pre>
-</dd>
+                    command:<pre class="pre codeblock"><code>yum remove streamsets-datacollector-aws-lib</code></pre></dd>
 
             
         </dl>
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_h5k_jbl_nx">
- <h2 class="title topictitle2">Installing for Tarball Using the Package Manager</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_h5k_jbl_nx">
+ <h2 class="title topictitle2" id="ariaid-title3">Installing for Tarball Using the Package Manager</h2>
 
  <div class="body conbody">
   <p class="p">You can use the Package Manager
@@ -179,15 +351,15 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_bnl_n3n_s5">
- <h2 class="title topictitle2">Installing for Tarball Using the Command Line</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_bnl_n3n_s5">
+ <h2 class="title topictitle2" id="ariaid-title4">Installing for Tarball Using the Command Line</h2>
 
  <div class="body conbody">
-        <p class="p">You can use the <samp class="ph codeph">stagelibs</samp> command
+        <p class="p">You can use the <code class="ph codeph">stagelibs</code> command
             to install additional stage libraries for a core tarball installation.</p>
 
-        <p class="p">The <samp class="ph codeph">stagelibs</samp> command requires that curl version 7.18.1 or later and
+        <p class="p">The <code class="ph codeph">stagelibs</code> command requires that curl version 7.18.1 or later and
             sha1sum utilities are installed on the machine. Verify that these utilities are
             installed before running the command.</p>
 
@@ -196,11 +368,10 @@
                 
                     <dt class="dt dlterm">To view the list of available libraries:</dt>
 
-                    <dd class="dd">Run the following command from the <samp class="ph codeph">$SDC_DIST</samp>
-                        directory:<pre class="pre codeblock">bin/streamsets stagelibs -list</pre>
-</dd>
+                    <dd class="dd">Run the following command from the <code class="ph codeph">$SDC_DIST</code>
+                        directory:<pre class="pre codeblock"><code>bin/streamsets stagelibs -list</code></pre></dd>
 
-                    <dd class="dd">This provides a list of all available stage libraries and whether they are
+                    <dd class="dd ddexpand">This provides a list of all available stage libraries and whether they are
                         already installed. For more information about the stages installed with each
                         stage library, see <a class="xref" href="AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</dd>
 
@@ -208,22 +379,20 @@
                 
                     <dt class="dt dlterm">To install one or more stage libraries:</dt>
 
-                    <dd class="dd">Run the following command from the <samp class="ph codeph">$SDC_DIST</samp>
-                        directory:<pre class="pre codeblock">bin/streamsets stagelibs -install=&lt;libraryID&gt;,&lt;libraryID&gt;,...</pre>
-</dd>
+                    <dd class="dd">Run the following command from the <code class="ph codeph">$SDC_DIST</code>
+                        directory:<pre class="pre codeblock"><code>bin/streamsets stagelibs -install=&lt;libraryID&gt;,&lt;libraryID&gt;,...</code></pre></dd>
 
-                    <dd class="dd">Use the full name of the libraries that you want to install, separating them
+                    <dd class="dd ddexpand">Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>
 
-                    <dd class="dd">For example, to install the Amazon S3 origin and destination, as well as the
+                    <dd class="dd ddexpand">For example, to install the Amazon S3 origin and destination, as well as the
                         Cassandra destination, use the following command:
-                        <pre class="pre codeblock">bin/streamsets stagelibs -install\
-=streamsets-datacollector-aws-lib,streamsets-datacollector-cassandra_2-lib</pre>
-</dd>
+                        <pre class="pre codeblock"><code>bin/streamsets stagelibs -install\
+=streamsets-datacollector-aws-lib,streamsets-datacollector-cassandra_2-lib</code></pre></dd>
 
-                    <dd class="dd">When successful, the command line indicates that the stage libraries have
+                    <dd class="dd ddexpand">When successful, the command line indicates that the stage libraries have
                         been installed as follows:
-                        <pre class="pre codeblock">Downloading: https://archives.streamsets.com/datacollector/&lt;version&gt;/tarball\
+                        <pre class="pre codeblock"><code>Downloading: https://archives.streamsets.com/datacollector/&lt;version&gt;/tarball\
 /streamsets-datacollector-aws-lib-&lt;version&gt;-SNAPSHOT.tgz
 ######################################################################## 100.0%
 Downloading: https://archives.streamsets.com/datacollector/&lt;version&gt;/tarball\
@@ -235,45 +404,41 @@ streamsets-datacollector-rabbitmq-lib-&lt;version&gt;-SNAPSHOT.tgz
 
 Stage library streamsets-datacollector-aws-lib installed
 Stage library streamsets-datacollector-jdbc-lib installed
-Stage library streamsets-datacollector-rabbitmq-lib installed</pre>
-</dd>
+Stage library streamsets-datacollector-rabbitmq-lib installed</code></pre></dd>
 
                 
                 
                     <dt class="dt dlterm">To generate the command required to perform the current installation
                         (optional):</dt>
 
-                    <dd class="dd">You can use the <samp class="ph codeph">stagelibs</samp> command to generate the command
+                    <dd class="dd">You can use the <code class="ph codeph">stagelibs</code> command to generate the command
                         to install the libraries that are installed on the current <span class="ph">Data Collector</span>. This allows you to easily replicate the installation elsewhere. </dd>
 
-                    <dd class="dd">For example, say you installed three libraries above, and then installed
+                    <dd class="dd ddexpand">For example, say you installed three libraries above, and then installed
                         another two. You can generate the command required to install all five
                         libraries on additional machines.</dd>
 
-                    <dd class="dd">To generate an installation script based on the current <span class="ph">Data Collector</span> installation, run the following command from the
-                            <samp class="ph codeph">$SDC_DIST</samp>
-                        directory:<pre class="pre codeblock">bin/streamsets stagelibs -installScript</pre>
-</dd>
+                    <dd class="dd ddexpand">To generate an installation script based on the current <span class="ph">Data Collector</span> installation, run the following command from the
+                            <code class="ph codeph">$SDC_DIST</code>
+                        directory:<pre class="pre codeblock"><code>bin/streamsets stagelibs -installScript</code></pre></dd>
 
-                    <dd class="dd">The command returns an install command, such as the following:
-                        <pre class="pre codeblock">=================================================================================
+                    <dd class="dd ddexpand">The command returns an install command, such as the following:
+                        <pre class="pre codeblock"><code>=================================================================================
 streamsets stagelibs -install=streamsets-datacollector-apache-kafka_0_8_1-lib,\
 streamsets-datacollector-aws-lib,streamsets-datacollector-basic-lib,\
 streamsets-datacollector-cdh_kafka_1_3-lib,streamsets-datacollector-jdbc-lib,\
 streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
-=================================================================================</pre>
-</dd>
+=================================================================================</code></pre></dd>
 
                 
                 
                     <dt class="dt dlterm">To uninstall libraries when necessary:</dt>
 
                     <dd class="dd">To uninstall a library, run the following command from the
-                            <samp class="ph codeph">$SDC_DIST</samp>
-                        directory:<pre class="pre codeblock">bin/streamsets -uninstall=&lt;libraryID&gt;,&lt;libraryID&gt;,...</pre>
-</dd>
+                            <code class="ph codeph">$SDC_DIST</code>
+                        directory:<pre class="pre codeblock"><code>bin/streamsets -uninstall=&lt;libraryID&gt;,&lt;libraryID&gt;,...</code></pre></dd>
 
-                    <dd class="dd">Use the full name of the libraries that you want to uninstall, separating
+                    <dd class="dd ddexpand">Use the full name of the libraries that you want to uninstall, separating
                         them with commas. Do not include spaces in the command. </dd>
 
                 
@@ -282,39 +447,35 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_evs_xkm_s5">
-    <h2 class="title topictitle2">Available Stage Libraries</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_evs_xkm_s5">
+    <h2 class="title topictitle2" id="ariaid-title5">Available Stage Libraries</h2>
 
     <div class="body conbody">
         <div class="p">The following table describes the stages installed with each stage library:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_evs_xkm_s5__table_kyr_blm_s5" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_evs_xkm_s5__table_kyr_blm_s5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d224274e428">Stage Library Name</th>
+                            <th class="entry cellrowborder" id="d189476e525">Stage Library Name</th>
 
-                            <th class="entry" valign="top" width="50%" id="d224274e431">Included Stages </th>
+                            <th class="entry cellrowborder" id="d189476e528">Included Stages </th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-aerospike-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-aerospike-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Aerospike version 3.15.<p class="p">Includes the Aerospike
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Aerospike version 3.15.<p class="p">Includes the Aerospike
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kafka version 0.9.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kafka version 0.9.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -334,9 +495,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kafka version 0.10.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kafka version 0.10.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -356,9 +517,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kafka_0_11-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kafka_0_11-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kafka version 0.11.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_bzj_2zv_sbb">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kafka version 0.11.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_bzj_2zv_sbb">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -378,9 +539,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kafka_1_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kafka_1_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kafka version 1.0.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ql4_l2j_tbb">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kafka version 1.0.x.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ql4_l2j_tbb">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -400,63 +561,63 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kudu_1_3-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kudu_1_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kudu version 1.3.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kudu version 1.3.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kudu_1_4-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kudu_1_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kudu version 1.4.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kudu version 1.4.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kudu_1_5-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kudu_1_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kudu version 1.5.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kudu version 1.5.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kudu_1_6-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kudu_1_6-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kudu version 1.6.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kudu version 1.6.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-kudu_1_7-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-kudu_1_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kudu version 1.7.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kudu version 1.7.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Apache Solr version 6.1.<p class="p">Includes the Solr
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Apache Solr version 6.1.<p class="p">Includes the Solr
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-aws-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-aws-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Amazon Web Services 1.11.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Amazon Web Services 1.11.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
                                         <li class="li">Amazon S3 origin</li>
 
                                         <li class="li">Amazon SQS Consumer origin</li>
@@ -478,9 +639,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-azure-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-azure-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Microsoft Azure.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_cjf_frr_1bb">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Microsoft Azure.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_cjf_frr_1bb">
                                         <li class="li">Azure IoT/Event Hub Consumer origin</li>
 
                                         <li class="li">Azure Data Lake Store destination</li>
@@ -496,9 +657,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-basic-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-basic-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">Installs automatically with the core installation.<div class="p">Includes the
+                            <td class="entry cellrowborder" headers="d189476e528 ">Installs automatically with the core installation.<div class="p">Includes the
                                     following origins:<ul class="ul" id="concept_evs_xkm_s5__ul_kkp_bqh_cw">
                         <li class="li">CoAP Server</li>
 
@@ -532,7 +693,7 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 </div>
 <p class="p">Includes all processors <span class="ph">except the Groovy Evaluator, HBase Lookup, Hive Metadata
                         processor, Jython Evaluator, Kudu Lookup, Postgres Metadata processor Redis
-                        Lookup, and Spark Evaluator.</span></p>
+                        Lookup, Spark Evaluator, and SQL Parser.</span></p>
 <div class="p">Includes the following destinations:<ul class="ul" id="concept_evs_xkm_s5__ul_bps_cqh_cw">
                         <li class="li">CoAP Client</li>
 
@@ -568,27 +729,27 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-bigtable-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-bigtable-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Google Cloud Bigtable.<p class="p">Includes the Google Bigtable
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Google Cloud Bigtable.<p class="p">Includes the Google Bigtable
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cassandra_3-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cassandra_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_8-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_8-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.8 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -631,9 +792,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_9-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.9 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -676,9 +837,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_10-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_10-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.10 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -721,9 +882,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_11-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_11-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.11 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -766,9 +927,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_12-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_12-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.12 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -811,9 +972,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_13-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_13-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.13 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -860,9 +1021,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_5_14-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_5_14-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For the Cloudera CDH version 5.14 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -909,9 +1070,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_kjf_ntg_qw">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -932,9 +1093,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_kafka_2_1-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_kafka_2_1-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_scl_wym_pz">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -955,9 +1116,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_kafka_3_0-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_kafka_3_0-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera distribution of Apache Kafka 3.0.0
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera distribution of Apache Kafka 3.0.0
                                     (0.11.0).<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_jtg_xzv_sbb">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -978,9 +1139,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_spark_2_1_r1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_spark_2_1_r1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera distribution of Spark 2.1 release 1.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera distribution of Spark 2.1 release 1.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uv5_lbh_c1b">
                                         <li class="li">Spark Evaluator processor</li>
 
@@ -993,9 +1154,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_spark_2_1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_spark_2_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark 2.1.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark 2.1.
                                     <p class="p">Includes the Kafka Consumer origin for cluster mode
                                     pipelines. </p>
 </td>
@@ -1003,9 +1164,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_spark_2_2-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_spark_2_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark
                                     2.2.<p class="p">Includes the Kafka Consumer origin for cluster mode
                                     pipelines.</p>
 </td>
@@ -1013,9 +1174,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cdh_spark_2_3-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cdh_spark_2_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Cloudera CDH cluster Kafka with CDS powered by Spark
                                     2.3.<p class="p">Includes the Kafka Consumer origin for cluster mode
                                     pipelines.</p>
 </td>
@@ -1023,34 +1184,34 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-cyberark-credentialstore-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-cyberark-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the CyberArk credential store system.</td>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the CyberArk credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-dataformats-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-dataformats-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">Installs automatically with the core installation. <p class="p">Contains
+                            <td class="entry cellrowborder" headers="d189476e528 ">Installs automatically with the core installation. <p class="p">Contains
                                     parsers and generators for the data formats supported by <span class="ph">Data Collector</span>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-elasticsearch_5-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-elasticsearch_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Elasticsearch 1.x, 2.x, and 5.x.<p class="p">Includes the Elasticsearch
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Elasticsearch 1.x, 2.x, and 5.x.<p class="p">Includes the Elasticsearch
                                     origin and destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-google-cloud-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-google-cloud-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Google Cloud.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_dzd_5rq_v1b">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Google Cloud.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_dzd_5rq_v1b">
                                         <li class="li">Google BigQuery origin</li>
 
                                         <li class="li">Google Cloud Storage origin</li>
@@ -1070,18 +1231,18 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-groovy_2_4-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-groovy_2_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Groovy version 2.4. <p class="p">Includes the Groovy Evaluator
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Groovy version 2.4. <p class="p">Includes the Groovy Evaluator
                                     processor.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_4-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_4-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uh3_lhh_cw">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1119,9 +1280,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_4-hive1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_4-hive1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.4.x distribution of Apache Hive
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.4.x distribution of Apache Hive
                                 version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_qv2_sk5_5bb">
                                         <li class="li">Hive Metadata processor</li>
 
@@ -1138,9 +1299,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_5-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_5-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.5.x distribution of Apache Hadoop.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.5.x distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jcc_kjv_cy">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1187,18 +1348,18 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_5-flume-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_5-flume-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.5.x distribution of Apache
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.5.x distribution of Apache
                                     Flume.<p class="p">Includes the Flume destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_6-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_6-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.6.x distribution of Apache Hadoop.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.6.x distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_pz4_nhd_wz">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -1239,18 +1400,18 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_6-flume-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_6-flume-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.6.x distribution of Apache
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.6.x distribution of Apache
                                     Flume.<p class="p">Includes the Flume destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_6-hive2-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_6-hive2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.6.x distribution of Apache Hive
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.6.x distribution of Apache Hive
                                 version 2.1. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_tw3_nx5_5bb">
                                         <li class="li">Hive Metadata processor</li>
 
@@ -1267,9 +1428,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_6_1-hive1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_6_1-hive1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.6.1 distribution of Apache Hive
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.6.1 distribution of Apache Hive
                                 version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ehb_tx5_5bb">
                                         <li class="li">Hive Metadata processor</li>
 
@@ -1286,9 +1447,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-hdp_2_6_2-hive1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-hdp_2_6_2-hive1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hortonworks version 2.6.2 distribution of Apache Hive
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hortonworks version 2.6.2 distribution of Apache Hive
                                 version 1.x. <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_nvw_wx5_5bb">
                                         <li class="li">Hive Metadata processor</li>
 
@@ -1305,18 +1466,18 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-influxdb-0_9-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-influxdb-0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
+                            <td class="entry cellrowborder" headers="d189476e528 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-jdbc-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-jdbc-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For JDBC access to databases.</p>
 
                                 <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_apd_qbj_jx">
@@ -1336,6 +1497,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
                                         <li class="li">Postgres Metadata processor</li>
 
+                                        <li class="li">SQL Parser processor</li>
+
                                         <li class="li">JDBC Producer destination</li>
 
                                         <li class="li">JDBC Query executor</li>
@@ -1348,52 +1511,52 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-jks-credentialstore-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-jks-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Java keystore credential store system.</td>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Java keystore credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-jms-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-jms-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Java Messaging Services (JMS).<p class="p">Includes the JMS Consumer
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Java Messaging Services (JMS).<p class="p">Includes the JMS Consumer
                                     origin and JMS Producer destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-jython_2_7-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-jython_2_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Jython version 2.7.x. <p class="p">Includes the Jython Evaluator
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Jython version 2.7.x. <p class="p">Includes the Jython Evaluator
                                     processor.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-kinetica_6_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-kinetica_6_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kinetica 6.0.<p class="p">Includes the KineticaDB
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kinetica 6.0.<p class="p">Includes the KineticaDB
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-kinetica_6_1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-kinetica_6_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Kinetica 6.1.<p class="p">Includes the KineticaDB
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Kinetica 6.1.<p class="p">Includes the KineticaDB
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mapr_5_1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mapr_5_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MapR version 5.1.<p class="p">Includes:</p>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MapR version 5.1.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_egx_c3h_cw">
                                         <li class="li">MapR DB JSON origin</li>
@@ -1433,9 +1596,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mapr_5_2-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mapr_5_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MapR version 5.2.<p class="p">Includes:</p>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MapR version 5.2.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_rwr_fzf_nx">
                                         <li class="li">MapR DB JSON origin</li>
@@ -1479,9 +1642,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mapr_6_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mapr_6_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MapR version 6.0.<p class="p">Includes:</p>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MapR version 6.0.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_njh_b5m_pbb">
                                         <li class="li">MapR DB CDC origin</li>
@@ -1510,9 +1673,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mapr_6_0-mep4-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mapr_6_0-mep4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MapR 6.0, MapR Ecosystem Pack (MEP) version 4.
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MapR 6.0, MapR Ecosystem Pack (MEP) version 4.
                                     <p class="p">Includes:</p>
 <ul class="ul" id="concept_evs_xkm_s5__ul_nbk_zy5_5bb">
                                     <li class="li">MapR Streams Consumer origin for standalone and cluster mode
@@ -1532,9 +1695,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the MapR distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ayp_qbh_c1b">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the MapR distribution of Spark 2.1.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_ayp_qbh_c1b">
                                         <li class="li">Spark Evaluator processor</li>
 
                                         <li class="li">Spark executor</li>
@@ -1546,9 +1709,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mongodb_3-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mongodb_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MongoDB 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jwm_bln_wbb">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MongoDB 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jwm_bln_wbb">
                                         <li class="li">MongoDB origin</li>
 
                                         <li class="li">MongoDB Oplog origin</li>
@@ -1562,35 +1725,35 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-mysql-binlog-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-mysql-binlog-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For MySQL binary logs.<p class="p">Includes the MySQL Binary Log
+                            <td class="entry cellrowborder" headers="d189476e528 ">For MySQL binary logs.<p class="p">Includes the MySQL Binary Log
                                     origin.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-omniture-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-omniture-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Omniture.<p class="p">Includes the Omniture origin.</p>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Omniture.<p class="p">Includes the Omniture origin.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-rabbitmq-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-rabbitmq-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer
+                            <td class="entry cellrowborder" headers="d189476e528 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer
                                     origin and RabbitMQ Producer destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-redis-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-redis-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For Redis versions 2.8 and 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_oyy_2kx_cy">
+                            <td class="entry cellrowborder" headers="d189476e528 ">For Redis versions 2.8 and 3.0.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_oyy_2kx_cy">
                                         <li class="li">Redis Consumer origin</li>
 
                                         <li class="li">Redis Lookup processor</li>
@@ -1604,9 +1767,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-salesforce-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-salesforce-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">
+                            <td class="entry cellrowborder" headers="d189476e528 ">
                                 <p class="p">For Salesforce. </p>
 
                                 <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_sbt_gkx_cy">
@@ -1626,41 +1789,40 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-stats-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-stats-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 "> Installs automatically with the core installation. <p class="p"><span class="ph">StreamSets Control Hub</span> requires that the statistics stage library be installed on
+                            <td class="entry cellrowborder" headers="d189476e528 "> Installs automatically with the core installation. <p class="p"><span class="ph">StreamSets Control Hub</span> requires that the statistics stage library be installed on
                                     each registered <span class="ph">Data Collector</span>. </p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-vault-credentialstore-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-vault-credentialstore-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">For the Hashicorp Vault credential store system.</td>
+                            <td class="entry cellrowborder" headers="d189476e528 ">For the Hashicorp Vault credential store system.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e428 ">streamsets-datacollector-windows-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e525 ">streamsets-datacollector-windows-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e431 ">Installs automatically with the core installation. <p class="p">For
+                            <td class="entry cellrowborder" headers="d189476e528 ">Installs automatically with the core installation. <p class="p">For
                                     Windows. Includes the Windows Event Log origin.</p>
 </td>
 
                         </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_fw3_zt3_tbb">
-    <h2 class="title topictitle2">Legacy Stage Libraries</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_fw3_zt3_tbb">
+    <h2 class="title topictitle2" id="ariaid-title6">Legacy Stage Libraries</h2>
 
     <div class="body conbody">
         <p class="p">Legacy stage libraries
@@ -1688,24 +1850,20 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
         </div>
 
         <div class="p">The following table lists the legacy stage libraries:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fw3_zt3_tbb__table_itj_nw3_tbb" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fw3_zt3_tbb__table_itj_nw3_tbb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d224274e2388">Legacy Stage Library</th>
+                            <th class="entry cellrowborder" id="d189476e2490">Legacy Stage Library</th>
 
-                            <th class="entry" valign="top" width="50%" id="d224274e2391">Included Stages </th>
+                            <th class="entry cellrowborder" id="d189476e2493">Included Stages </th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_hfn_3yp_vw">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_hfn_3yp_vw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -1723,9 +1881,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_jfg_jyp_vw">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_jfg_jyp_vw">
                                         <li class="li">HTTP to Kafka origin</li>
 
                                         <li class="li">Kafka Consumer origin</li>
@@ -1743,36 +1901,36 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-apache-kudu_1_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-apache-kudu_1_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For Kudu version 1.0.x. <p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For Kudu version 1.0.x. <p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-apache-kudu_1_1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-apache-kudu_1_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For Kudu version 1.1.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For Kudu version 1.1.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-apache-kudu_1_2-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-apache-kudu_1_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For Kudu version 1.2.x.<p class="p">Includes the Kudu Lookup processor and
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For Kudu version 1.2.x.<p class="p">Includes the Kudu Lookup processor and
                                     Kudu destination.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_5_2-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_5_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">
                                 <p class="p">For the Cloudera CDH version 5.2 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -1803,9 +1961,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_5_3-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_5_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">
                                 <p class="p">For the Cloudera CDH version 5.3 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -1836,9 +1994,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_5_4-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_5_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">
                                 <p class="p">For the Cloudera CDH version 5.4 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -1877,9 +2035,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_5_5-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_5_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">
                                 <p class="p">For the Cloudera CDH version 5.5 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -1918,9 +2076,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_5_7-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_5_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">
                                 <p class="p">For the Cloudera CDH version 5.7 distribution of Apache Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -1963,9 +2121,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_pt3_nyp_vw">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -1984,9 +2142,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_fw3_zt3_tbb__ul_w1y_nyp_vw">
                                         <li class="li">HTTP to Kafka origin</li>
 
@@ -2005,9 +2163,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-hdp_2_2-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-hdp_2_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_j4w_kqm_s5">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -2053,9 +2211,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-hdp_2_3-lib </td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-hdp_2_3-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_nwd_jhh_cw">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -2101,9 +2259,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-hdp_2_3-hive1-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-hdp_2_3-hive1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">The Hortonworks version 2.3.x distribution of Apache Hive 1.x.
+                            <td class="entry cellrowborder" headers="d189476e2493 ">The Hortonworks version 2.3.x distribution of Apache Hive 1.x.
                                         <div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_nfx_3z3_tbb">
                                         <li class="li">Hive Metadata processor</li>
 
@@ -2120,9 +2278,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d224274e2388 ">streamsets-datacollector-mapr_5_0-lib</td>
+                            <td class="entry cellrowborder" headers="d189476e2490 ">streamsets-datacollector-mapr_5_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d224274e2391 ">For MapR version 5.0.<div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_f3l_b4w_2bb">
+                            <td class="entry cellrowborder" headers="d189476e2493 ">For MapR version 5.0.<div class="p">Includes:<ul class="ul" id="concept_fw3_zt3_tbb__ul_f3l_b4w_2bb">
                                         <li class="li">MapR FS Standalone origin</li>
 
                                         <li class="li">MapR FS destination</li>
@@ -2136,17 +2294,25 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -2154,6 +2320,25 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

@@ -1,49 +1,250 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Runtime Values" /><meta name="abstract" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="description" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h5b_kcr_kz" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Runtime Values</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Runtime Values" /><meta name="abstract" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="description" content="Runtime values are values that you define outside of the pipeline and use for stage and pipeline properties. You can change the values for each pipeline run without having to edit the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h5b_kcr_kz" /><title>Runtime Values</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_h5b_kcr_kz-d46e19655" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
+                  change the values for each pipeline run without having to         edit the pipeline. 
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb" title="Simple and Bulk Edit Mode"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b" title="Event Generation"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_h5b_kcr_kz">
-    <h1 class="title topictitle1">Runtime Values</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_izr_f2p_rq-d46e19535" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cgm_ktz_2t-d46e19559" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_twq_nhx_rr-d46e19583" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineMemory.html#concept_twq_nhx_rr">Pipeline Memory</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_erj_qg4_qv-d46e19607" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_alb_b3y_cbb-d46e19631" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_h5b_kcr_kz-d46e19655" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
+                        change the values for each pipeline run without having to         edit the pipeline. 
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_rjh_ntz_qr-d46e19791" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_rjh_ntz_qr">Using Runtime Parameters</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime parameters are parameters that you define in a pipeline and then call from         within that same pipeline. When
+                              you start the pipeline, you specify the parameter values to         use. Use runtime parameters to specify values for pipeline
+                              properties when you start the         pipeline.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_fjx_g31_1s-d46e20011" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_fjx_g31_1s">Using Runtime Properties</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data Collector</span> and call from     within a pipeline. With runtime properties, you can define different sets of values for     different <span class="ph">Data Collector</span>s.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_bs4_5nm_2s-d46e20274" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s">Using Runtime Resources</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Similar to runtime properties, runtime resources are values that you define in a file         local to the <span class="ph">Data Collector</span> and         call from within a pipeline. But with runtime resources, you can restrict the permissions         for the files
+                              to secure sensitive information. Use runtime resources to load sensitive         information from files at runtime.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_jcw_n4t_51b-d46e20628" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
+         <li><span data-tocid="concept_mp1_t3l_rz-d46e20682" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
+         <li><span data-tocid="concept_mtn_k4j_rz-d46e20830" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dd1_n3f_5z-d46e20854" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Configuration</a></span></span></li>
+         <li><span data-tocid="concept_azs_swf_jr-d46e21003" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_1cm_xq-d46e21027" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
+         <li><span data-tocid="task_xlv_jdw_kq-d46e21985" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_h5b_kcr_kz">
+    <h1 class="title topictitle1" id="ariaid-title1">Runtime Values</h1>
 
     
     <div class="body conbody"><p class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage
@@ -63,11 +264,11 @@
                 <dd class="dd">Use runtime parameters when you want to specify the values for pipeline
                     properties when you start the pipeline. </dd>
 
-                <dd class="dd">You define runtime parameters when you configure the pipeline, and then you call
+                <dd class="dd ddexpand">You define runtime parameters when you configure the pipeline, and then you call
                     the parameters from within that pipeline. When you start the pipeline, you
                     specify the parameter values to use. </dd>
 
-                <dd class="dd">Runtime parameters are defined for a single pipeline - only that pipeline can
+                <dd class="dd ddexpand">Runtime parameters are defined for a single pipeline - only that pipeline can
                     call them.<div class="note note"><span class="notetitle">Note:</span> In <span class="ph">Data Collector</span> versions earlier than 2.5.0.0, pipeline runtime parameters were named
                         pipeline constants. </div>
 </dd>
@@ -79,10 +280,10 @@
                 <dd class="dd">Use runtime properties when you want to define values for multiple pipeline
                     properties in a file.</dd>
 
-                <dd class="dd">You define runtime properties in a file local to the <span class="ph">Data Collector</span>, and then you call the properties from within a pipeline. At runtime, <span class="ph">Data Collector</span> loads the property values from the file. A runtime properties file can
+                <dd class="dd ddexpand">You define runtime properties in a file local to the <span class="ph">Data Collector</span>, and then you call the properties from within a pipeline. At runtime, <span class="ph">Data Collector</span> loads the property values from the file. A runtime properties file can
                     contain multiple properties.</dd>
 
-                <dd class="dd">Runtime properties are defined for the entire <span class="ph">Data Collector</span> - any pipeline can call them.</dd>
+                <dd class="dd ddexpand">Runtime properties are defined for the entire <span class="ph">Data Collector</span> - any pipeline can call them.</dd>
 
             
             
@@ -91,11 +292,11 @@
                 <dd class="dd">Use runtime resources when you want to secure sensitive information in files
                     with restricted permissions.</dd>
 
-                <dd class="dd">You define runtime resources in a file local to the <span class="ph">Data Collector</span>, and then you call the resources from within a pipeline. You can restrict the
+                <dd class="dd ddexpand">You define runtime resources in a file local to the <span class="ph">Data Collector</span>, and then you call the resources from within a pipeline. You can restrict the
                     permissions for the resource files to secure sensitive information. A resource
                     file must contain one piece of information.</dd>
 
-                <dd class="dd">Runtime resources are defined for the entire <span class="ph">Data Collector</span> - any pipeline can call them.</dd>
+                <dd class="dd ddexpand">Runtime resources are defined for the entire <span class="ph">Data Collector</span> - any pipeline can call them.</dd>
 
             
         </dl>
@@ -106,9 +307,8 @@
 
     </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_rjh_ntz_qr">
- <h2 class="title topictitle2">Using Runtime Parameters</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_rjh_ntz_qr">
+ <h2 class="title topictitle2" id="ariaid-title2">Using Runtime Parameters</h2>
 
  
  <div class="body conbody"><p class="shortdesc">Runtime parameters are parameters that you define in a pipeline and then call from
@@ -145,15 +345,15 @@
 
  </div>
 
-<div class="topic task nested2" id="task_zt3_sbt_kz">
-    <h3 class="title topictitle3">Step 1. Define Runtime Parameters</h3>
+<article class="topic task nested2" aria-labelledby="ariaid-title3" id="task_zt3_sbt_kz">
+    <h3 class="title topictitle3" id="ariaid-title3">Step 1. Define Runtime Parameters</h3>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">Define
                 runtime parameters when you configure the pipeline.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, click the <span class="ph uicontrol">Parameters</span>
@@ -163,15 +363,15 @@
                 <span class="ph cmd">Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon
                     and define the name and the default value for each parameter.</span>
                 <div class="itemgroup info">For example, define a parameter named JDBCConnectionString with the default
-                    value of <samp class="ph codeph">jdbc:mysql://localhost:3306/sample</samp>.</div>
+                    value of <code class="ph codeph">jdbc:mysql://localhost:3306/sample</code>.</div>
             </li>
 </ol>
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_v4k_gdt_kz">
- <h3 class="title topictitle3">Step 2. Call the Runtime Parameter</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_v4k_gdt_kz">
+ <h3 class="title topictitle3" id="ariaid-title4">Step 2. Call the Runtime Parameter</h3>
 
  
  <div class="body conbody"><p class="shortdesc">Use an expression to call a runtime parameter. You can use runtime parameters to
@@ -179,24 +379,20 @@
 
         <div class="p">To
             call a runtime parameter in a stage or pipeline property, use the following syntax:
-            <pre class="pre codeblock">${&lt;parameter name&gt;}</pre>
-</div>
+            <pre class="pre codeblock"><code>${&lt;parameter name&gt;}</code></pre></div>
 
         <div class="p">For example, to use the JDBCConnectionString runtime parameter for the JDBC Multitable
             Consumer origin, enter the following syntax for the JDBC Connection String
-            property:<pre class="pre codeblock">${JDBCConnectionString}</pre>
-</div>
+            property:<pre class="pre codeblock"><code>${JDBCConnectionString}</code></pre></div>
 
         <div class="p">You can call a runtime parameter from within an expression language function by simply
             entering the parameter name. For example, the following expression returns the value of
             the JDBCConnectionString runtime
-            parameter:<pre class="pre codeblock"> ${record:value(JDBCConnectionString)}</pre>
-</div>
+            parameter:<pre class="pre codeblock"><code> ${record:value(JDBCConnectionString)}</code></pre></div>
 
         <div class="p">You can use a runtime parameter to represent a part of a property. For example, you could
             use a RootDir runtime parameter and append the rest of the directory in the property as
-            follows:<pre class="pre codeblock">${RootDir}/logfiles</pre>
-</div>
+            follows:<pre class="pre codeblock"><code>${RootDir}/logfiles</code></pre></div>
 
         <p class="p">You can also call a runtime parameter in the code developed for a scripting processor.
             The method you use to call the runtime parameter depends on the following scripting
@@ -207,40 +403,38 @@
                 <dt class="dt dlterm">JavaScript Evaluator or Jython Evaluator processor</dt>
 
                 <dd class="dd">Use the following syntax in any of the processor scripts:
-                        <samp class="ph codeph">${&lt;parameter name&gt;}</samp>. For example, the following line of
+                        <code class="ph codeph">${&lt;parameter name&gt;}</code>. For example, the following line of
                     JavaScript code assigns the value of the NewFieldValue parameter to a map
-                    field:<pre class="pre codeblock">records[i].value.V= ${NewFieldValue}</pre>
-</dd>
+                    field:<pre class="pre codeblock"><code>records[i].value.V= ${NewFieldValue}</code></pre></dd>
 
             
             
                 <dt class="dt dlterm">Groovy Evaluator processor</dt>
 
-                <dd class="dd">Use the <samp class="ph codeph">sdcFunctions.pipelineParameters()</samp> method in any of the
+                <dd class="dd">Use the <code class="ph codeph">sdcFunctions.pipelineParameters()</code> method in any of the
                     processor scripts to return a map of all runtime parameters defined for the
                     pipeline. For example, the following line of Groovy code assigns the value of
                     the CompanyParam parameter to the Company Name
-                    field:<pre class="pre codeblock">record.value['Company Name'] = sdcFunctions.pipelineParameters()['CompanyParam']</pre>
-</dd>
+                    field:<pre class="pre codeblock"><code>record.value['Company Name'] = sdcFunctions.pipelineParameters()['CompanyParam']</code></pre></dd>
 
             
         </dl>
 
     </div>
 
-</div>
-<div class="topic task nested2" id="task_qgb_1kt_kz">
-    <h3 class="title topictitle3">Step 3. Start the Pipeline with Parameters</h3>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title5" id="task_qgb_1kt_kz">
+    <h3 class="title topictitle3" id="ariaid-title5">Step 3. Start the Pipeline with Parameters</h3>
 
     <div class="body taskbody">
-        <div class="section context" id="task_qgb_1kt_kz__context_msx_lkt_kz">
+        <section class="section context" id="task_qgb_1kt_kz__context_msx_lkt_kz">
             <div class="p">When you start the pipeline, specify
                 the values to use for the parameters. <div class="note note"><span class="notetitle">Note:</span> If you want to use the default parameter values, you
                     can simply click the <span class="ph uicontrol">Start</span> icon to start the
                     pipeline.</div>
 </div>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">From the pipeline canvas, click the <span class="ph uicontrol">More</span> icon, and then
@@ -262,20 +456,20 @@
 
     </div>
 
-</div>
-<div class="topic task nested2" id="task_awv_tlm_lz">
-    <h3 class="title topictitle3">Viewing Runtime Parameters</h3>
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title6" id="task_awv_tlm_lz">
+    <h3 class="title topictitle3" id="ariaid-title6">Viewing Runtime Parameters</h3>
 
     
     <div class="body taskbody"><p class="shortdesc"> When you monitor a pipeline started with parameters, you can view the parameter
         values that the pipeline is currently using. </p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">Before you can view
                 the current runtime parameter values, verify that the monitoring settings include
                 the Runtime Parameters chart.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="ph uicontrol">Summary</span> tab of the Monitor panel, click the
@@ -299,10 +493,10 @@
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_fjx_g31_1s">
-  <h2 class="title topictitle2">Using Runtime Properties</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_fjx_g31_1s">
+  <h2 class="title topictitle2" id="ariaid-title7">Using Runtime Properties</h2>
 
   
   <div class="body conbody"><p class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data Collector</span> and call from
@@ -332,13 +526,13 @@
 
   </div>
 
-<div class="topic concept nested2" id="concept_dys_tp1_1s">
-  <h3 class="title topictitle3">Step 1. Define Runtime Properties</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_dys_tp1_1s">
+  <h3 class="title topictitle3" id="ariaid-title8">Step 1. Define Runtime Properties</h3>
 
   <div class="body conbody">
     <p class="p">You can define
       runtime properties in the <span class="ph">Data Collector</span>
-      configuration file, <samp class="ph codeph">sdc.properties</samp>, or in a separate runtime properties file. </p>
+      configuration file, <code class="ph codeph">sdc.properties</code>, or in a separate runtime properties file. </p>
 
     <p class="p">If you define the properties in a separate runtime properties file, use the required
       procedure for your installation type.</p>
@@ -351,27 +545,22 @@
 
           <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data Collector</span>
             configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
-              <li class="li">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, configure the
+              <li class="li">In the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file, configure the
                   <strong class="ph b">runtime.conf.location</strong> property as
-                follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
-</li>
+                follows:<pre class="pre codeblock"><code>runtime.conf.location=embedded</code></pre></li>
 
-              <li class="li">To define the runtime properties in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>
+              <li class="li">To define the runtime properties in the <code class="ph codeph">$SDC_CONF/sdc.properties</code>
                 file, use either of the following formats:<ul class="ul" id="concept_dys_tp1_1s__ul_hf5_bwn_scb">
                   <li class="li">To use a value for a runtime property, use the following format:
-                    <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
-For example,
+                    <pre class="pre codeblock"><code>runtime.conf_&lt;property name&gt;=&lt;value&gt;</code></pre>For example,
                     the following runtime property defines a Hadoop FS directory template:
-                    <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
-</li>
+                    <pre class="pre codeblock"><code>runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</code></pre></li>
 
                   <li class="li">To use an environment variable for a runtime property, use the following
-                      format:<pre class="pre codeblock">runtime.conf_&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
-<div class="p">For
+                      format:<pre class="pre codeblock"><code>runtime.conf_&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</code></pre><div class="p">For
                       example, the following runtime property defines a base directory, setting it
                       to the HOME environment
-                      variable:<pre class="pre codeblock">runtime.conf_BaseDir=${env("HOME")}</pre>
-</div>
+                      variable:<pre class="pre codeblock"><code>runtime.conf_BaseDir=${env("HOME")}</code></pre></div>
 </li>
 
                 </ul>
@@ -390,41 +579,36 @@ For example,
           <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
             file for an RPM or tarball installation:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
               <li class="li">Create a text file and save it in a directory relative to the
-                  <samp class="ph codeph">$SDC_CONF</samp> directory.</li>
+                  <code class="ph codeph">$SDC_CONF</code> directory.</li>
 
               <li class="li">To define runtime properties in a separate text file, use either of the following
                   formats:<ul class="ul" id="concept_dys_tp1_1s__ul_xrw_wzn_scb">
                         <li class="li">
                               <div class="p">To use a value for a runtime property, use the following format:
-                                    <pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
-For example,
+                                    <pre class="pre codeblock"><code>&lt;property name&gt;=&lt;value&gt;</code></pre>For example,
                                     the following runtime property defines a Hadoop FS directory
-                                    template:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
-</div>
+                                    template:<pre class="pre codeblock"><code>HDFSDirTemplate=/HDFS/DirectoryTemplate</code></pre></div>
 
                         </li>
 
                         <li class="li">To use an environment variable for a runtime property, use the following
-                                    format:<pre class="pre codeblock">&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
-<div class="p">For
+                                    format:<pre class="pre codeblock"><code>&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</code></pre><div class="p">For
                                     example, the following runtime property defines a base
                                     directory, setting it to the HOME environment
-                                    variable:<pre class="pre codeblock">BaseDir=${env("HOME")}</pre>
-</div>
+                                    variable:<pre class="pre codeblock"><code>BaseDir=${env("HOME")}</code></pre></div>
 </li>
 
                   </ul>
 </li>
 
               <li class="li">In the <span class="ph">Data Collector</span>
-                configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, configure the
+                configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, configure the
                   <strong class="ph b">runtime.conf.location</strong> property to point to the relative location of the
                 separate runtime properties file. <p class="p">For example, the following separate runtime
-                  properties file is located in a <samp class="ph codeph">runtime</samp> directory that is
-                  relative to the <samp class="ph codeph">$SDC_CONF</samp>
+                  properties file is located in a <code class="ph codeph">runtime</code> directory that is
+                  relative to the <code class="ph codeph">$SDC_CONF</code>
                 directory:</p>
-<pre class="pre codeblock">runtime.conf.location=runtime/test-runtime.properties</pre>
-</li>
+<pre class="pre codeblock"><code>runtime.conf.location=runtime/test-runtime.properties</code></pre></li>
 
               <li class="li">Restart <span class="ph">Data Collector</span>
                 to enable the changes.</li>
@@ -442,21 +626,17 @@ For example,
                 of the following formats:<ul class="ul" id="concept_dys_tp1_1s__ul_kzq_b14_scb">
                         <li class="li">
                               <div class="p">To use a value for a runtime property, use the following format:
-                                    <pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
-For example,
+                                    <pre class="pre codeblock"><code>&lt;property name&gt;=&lt;value&gt;</code></pre>For example,
                                     the following runtime property defines a Hadoop FS directory
-                                    template:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
-</div>
+                                    template:<pre class="pre codeblock"><code>HDFSDirTemplate=/HDFS/DirectoryTemplate</code></pre></div>
 
                         </li>
 
                         <li class="li">To use an environment variable for a runtime property, use the following
-                                    format:<pre class="pre codeblock">&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</pre>
-<div class="p">For
+                                    format:<pre class="pre codeblock"><code>&lt;property name&gt;=${env("&lt;environment_variable&gt;")}</code></pre><div class="p">For
                                     example, the following runtime property defines a base
                                     directory, setting it to the HOME environment
-                                    variable:<pre class="pre codeblock">BaseDir=${env("HOME")}</pre>
-</div>
+                                    variable:<pre class="pre codeblock"><code>BaseDir=${env("HOME")}</code></pre></div>
 </li>
 
                   </ul>
@@ -470,18 +650,15 @@ For example,
               <li class="li">On the <span class="ph uicontrol">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
                   Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span> field,
                 add the following line to define the runtime properties file
-                  directory:<pre class="pre codeblock">ln -sf /&lt;directory&gt;/runtime.properties "${CONF_DIR}/runtime.properties"</pre>
-<div class="p">For
-                  example:<pre class="pre codeblock">ln -sf /opt/sdc-runtime/runtime.properties "${CONF_DIR}/runtime.properties"</pre>
-</div>
+                  directory:<pre class="pre codeblock"><code>ln -sf /&lt;directory&gt;/runtime.properties "${CONF_DIR}/runtime.properties"</code></pre><div class="p">For
+                  example:<pre class="pre codeblock"><code>ln -sf /opt/sdc-runtime/runtime.properties "${CONF_DIR}/runtime.properties"</code></pre></div>
 </li>
 
               <li class="li">In the <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
                   sdc.properties</span> field, configure the
                   <span class="ph uicontrol">runtime.conf.location</span> property to point to the separate
                 runtime properties file by adding the following
-                line:<pre class="pre codeblock">runtime.conf.location=runtime.properties </pre>
-</li>
+                line:<pre class="pre codeblock"><code>runtime.conf.location=runtime.properties </code></pre></li>
 
               <li class="li">Restart <span class="ph">Data Collector</span>
                 to enable the changes.</li>
@@ -499,39 +676,36 @@ For example,
 
   </div>
 
-</div>
-<div class="topic concept nested2" id="concept_pdh_glg_1s">
- <h3 class="title topictitle3">Step 2. Call the Runtime Property</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_pdh_glg_1s">
+ <h3 class="title topictitle3" id="ariaid-title9">Step 2. Call the Runtime Property</h3>
 
  
- <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:conf</samp> function to call a runtime property. You can use
+ <div class="body conbody"><p class="shortdesc">Use the <code class="ph codeph">runtime:conf</code> function to call a runtime property. You can use
         runtime properties to represent any stage or pipeline property that allows the use of the
         expression language. </p>
 
   <div class="p">To call
             a runtime property, use the following syntax:
-            <pre class="pre codeblock">${runtime:conf(&lt;property name&gt;)}</pre>
-</div>
+            <pre class="pre codeblock"><code>${runtime:conf(&lt;property name&gt;)}</code></pre></div>
 
     <div class="note note"><span class="notetitle">Note:</span> If you defined the runtime properties in the <span class="ph">Data Collector</span>
-      configuration file, enter just <samp class="ph codeph">&lt;property name&gt;</samp> and not <samp class="ph codeph">runtime.conf_&lt;property name&gt;</samp>.</div>
+      configuration file, enter just <code class="ph codeph">&lt;property name&gt;</code> and not <code class="ph codeph">runtime.conf_&lt;property name&gt;</code>.</div>
 
   <div class="p">For example, to use the HDFSDirTemplate runtime property for the Hadoop FS destination, enter
       the following syntax for the Directory Template
-      property:<pre class="pre codeblock">${runtime:conf('HDFSDirTemplate')}</pre>
-</div>
+      property:<pre class="pre codeblock"><code>${runtime:conf('HDFSDirTemplate')}</code></pre></div>
 
   <div class="p">You can use a runtime property to represent a part of a property. For example, you could use a
    RootDir runtime property and append the rest of the directory in the property as
-   follows:<pre class="pre codeblock">${runtime:conf('RootDir')}/logfiles</pre>
-</div>
+   follows:<pre class="pre codeblock"><code>${runtime:conf('RootDir')}/logfiles</code></pre></div>
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_bs4_5nm_2s">
- <h2 class="title topictitle2">Using Runtime Resources</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_bs4_5nm_2s">
+ <h2 class="title topictitle2" id="ariaid-title10">Using Runtime Resources</h2>
 
  
  <div class="body conbody"><p class="shortdesc">Similar to runtime properties, runtime resources are values that you define in a file
@@ -558,13 +732,13 @@ For example,
 
  </div>
 
-<div class="topic concept nested2" id="concept_jh2_ysm_2s">
- <h3 class="title topictitle3">Step 1. Define Runtime Resources</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title11" id="concept_jh2_ysm_2s">
+ <h3 class="title topictitle3" id="ariaid-title11">Step 1. Define Runtime Resources</h3>
 
  <div class="body conbody">
   <div class="p">Use the following steps
       to define runtime resources:<ol class="ol" id="concept_jh2_ysm_2s__ol_j2q_ftm_2s">
-        <li class="li">For each resource, create a text file and save it in the <samp class="ph codeph">$SDC_RESOURCES</samp>
+        <li class="li">For each resource, create a text file and save it in the <code class="ph codeph">$SDC_RESOURCES</code>
             directory.<p class="p">A file must contain one piece of information to be used when the resource
             is called. </p>
 </li>
@@ -583,20 +757,20 @@ For example,
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_aky_bwm_2s">
- <h3 class="title topictitle3">Step 2. Call the Runtime Resource</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title12" id="concept_aky_bwm_2s">
+ <h3 class="title topictitle3" id="ariaid-title12">Step 2. Call the Runtime Resource</h3>
 
  
- <div class="body conbody"><p class="shortdesc">Use the <samp class="ph codeph">runtime:loadResource</samp> or
-            <samp class="ph codeph">runtime:loadResourceRaw</samp> function to call a runtime resource. You can
+ <div class="body conbody"><p class="shortdesc">Use the <code class="ph codeph">runtime:loadResource</code> or
+            <code class="ph codeph">runtime:loadResourceRaw</code> function to call a runtime resource. You can
         use runtime resources to represent sensitive information in any stage or pipeline property
         that allows the use of the expression language. </p>
 
   <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> In most cases, you'll use the <samp class="ph codeph">runtime:loadResource</samp> function which
+            <div class="note note"><span class="notetitle">Note:</span> In most cases, you'll use the <code class="ph codeph">runtime:loadResource</code> function which
                 trims any leading or trailing whitespace characters from the file. However, if
-                needed, you can also use the <samp class="ph codeph">runtime:loadResourceRaw</samp> function which
+                needed, you can also use the <code class="ph codeph">runtime:loadResourceRaw</code> function which
                 includes any leading or trailing whitespace characters in the file.</div>
 
         </div>
@@ -604,21 +778,28 @@ For example,
         <p class="p">To
             call a runtime resource, use the following syntax: </p>
 
-  <pre class="pre codeblock">${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
-
+  <pre class="pre codeblock"><code>${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</code></pre>
   <div class="p">For example, the following expression returns the contents of the JDBCpassword.txt file,
             trimming any leading or trailing whitespace characters. The file contains a password and
             is restricted so only the owner can read the
-            file:<pre class="pre codeblock">${runtime:loadResource("JDBCpassword.txt", true)}</pre>
-</div>
+            file:<pre class="pre codeblock"><code>${runtime:loadResource("JDBCpassword.txt", true)}</code></pre></div>
 
  </div>
 
-</div>
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -626,6 +807,25 @@ For example,
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

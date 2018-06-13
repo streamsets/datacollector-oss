@@ -1,0 +1,383 @@
+/*
+ * ==============================================
+ * Skin for oXygen generated WebHelp.
+ * ==============================================
+ */
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Fonts.
+ *  
+ */
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700,300");
+
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Fight with bootstrap
+ *  
+ */
+.navbar-brand{
+    height:auto;
+}
+.navbar {
+    border:none;
+    border-radius:0;
+    margin:0;
+}
+a,
+a:hover,
+a:visited{
+    color: navy;
+}
+a:hover{
+    text-decoration: none;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Publication titles
+ *  
+ */
+ .wh_publication_title > a{
+     font-size: 1.5em;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Menu
+ *  
+ */
+.wh_top_menu {
+    font-size: 1.1em;
+    margin: .4em 0;
+}
+
+/* The submenus */
+.wh_top_menu ul ul {
+    background-color: #f4f4f4;
+}
+.wh_top_menu ul li:hover {
+    background-color: #f4f4f4;
+}
+.wh_top_menu ul ul li a:hover {
+    background: #e4e4e4;
+}
+.wh_top_menu ul ul li {
+    border-top-color: #e4e4e4;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Link to the index.
+ * 
+ */
+ .wh_indexterms_link a span{
+    display:none;
+}
+
+@media only screen and (max-width: 767px) {
+    .wh_indexterms_link a:before{
+        bottom: 0;
+    }
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Breadcrumb
+ *  
+ */
+.wh_breadcrumb ol {
+    background-color: #eeeeee;
+}
+.wh_breadcrumb ol{
+    color: #878787;
+}
+.wh_breadcrumb ol a {
+    color:inherit;
+}
+.wh_breadcrumb ol .active {
+    color: #5185cb;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tools and navigation
+ * 
+ */
+.wh_tools{
+    background-color: #eeeeee;
+    margin: 1em 0 2em;
+}
+
+.wh_print_link,
+.wh_navigation_links,
+.wh_navigation_links .navnext,
+.wh_navigation_links .navprev{
+}
+
+.webhelp_expand_collapse_sections,
+.wh_hide_highlight,
+.wh_print_link a,
+.wh_navigation_links a,
+.wh_navigation_links a:hover,
+.wh_navigation_links a:active,
+.wh_navigation_links a:visited,
+.wh_print_link a:before,
+.wh_navigation_links a:before,
+.wh_navigation_links a:hover:before,
+.wh_navigation_links a:active:before,
+.wh_navigation_links a:visited:before{
+    color: #347bb7;
+    text-decoration: none;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tiles
+ * 
+ */
+.wh_tile {
+    border-radius: .5em;
+    background-color: #eeeeee;
+}
+.wh_tile_shortdesc{
+    margin-top:0.5em;
+    text-align: center;
+}
+.wh_tile_title{
+    font-family:'Arial';
+    text-align: center;
+    font-size:1.1em;
+    text-decoration: none;
+}
+.wh_tile_title  a{
+}
+.wh_tile_shortdesc{
+    text-align: center;
+}
+.wh_tile_text:after{
+    background: linear-gradient(to bottom, rgba(238, 238, 238, 0), rgba(238, 238, 238, 1) 50%);
+}
+@media only screen and (max-width: 767px) {
+    .wh_tile > div{
+        height: auto;
+    }
+}
+
+/* 
+You can style some of the tiles in a special way. 
+Example:
+.wh_tiles *[data-id='getting_started']{
+    background-color:gray;
+}
+*/
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Search area
+ * 
+ */
+.wh_search_input{
+    margin:2em 0;
+}
+.wh_welcome:not(:empty){
+    font-size: 2.5em;
+    margin: 0 auto;
+    padding: 0 0 .5em 0;
+    text-shadow: none;
+    color:#040480;
+}
+.wh_search_textfield{
+    border: solid 1px #CCC;
+    border-radius: 5px;
+    padding: 0 .5em;
+    font-size: 1.2em;
+    line-height: 2em;
+    height: auto;
+}
+.wh_search_button{
+    border: solid 1px #CCC;
+    border-radius: 0 5px 5px 0;
+    padding: 0 .5em;
+}
+
+/* Search autocomplete */
+.ui-menu-item {
+    font-size: 1.4em;
+}
+
+.ui-menu-item .ui-state-active {
+    background-color: #346ec5;
+}
+
+/* Search relative path */
+.searchresult li .relativePath a {
+    color: #006621;
+}
+
+/* Search autocomplete icons */
+.search-autocomplete-proposal-type-history a,
+.search-autocomplete-proposal-type-history a:hover,
+.search-autocomplete-proposal-type-history a:visited,
+.search-autocomplete-proposal-type-history a:active{
+    text-decoration: none;
+    color:inherit;
+    font-size: 0.8em;
+}
+.ui-state-active .search-autocomplete-proposal-type-history a,
+.ui-state-active .search-autocomplete-proposal-type-history a:hover,
+.ui-state-active .search-autocomplete-proposal-type-history a:visited,
+.ui-state-active .search-autocomplete-proposal-type-history a:active{
+    color: #fff;
+}
+
+/* Active search page */
+#wh-search-pagination > ul > li.active > a {
+    background-color: #346ec5;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    border-color: #346ec5 !important;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Publication TOC
+ * 
+ */
+.wh_publication_toc{
+    border-radius: 3px;
+    background-color: #eeeeee;
+    padding: 1.5em 2em;
+    line-height: 2em;
+}
+.wh_publication_toc .active > .topicref a {
+    color: #5185cb;
+}
+.wh_publication_toc span, .wh_publication_toc a, .wh_publication_toc a:visited, .wh_publication_toc a:hover {
+    color: #7b7a7a;
+}
+.wh_publication_toc a:hover {
+    text-decoration: underline;
+}
+.topictitle3{
+    font-weight: 400
+}
+@media only screen and (max-width: 767px) {
+    .wh_publication_toc {
+        border-radius: 0;
+        padding: 1em 0.5em;
+        margin-top: 10px;
+    }
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Footer
+ * 
+ */
+.wh_footer{
+    text-align: center;
+    padding: 1em;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Topic content
+ * 
+ */
+
+.wh_topic_content,.wh_content_area {
+    color: #000000;
+    line-height: 1.7em
+}
+
+
+.wh_related_links,
+.wh_child_links,
+.wh_topic_content .related-links {
+    background-color: #eeeeee;
+    padding: 1.5em;
+    margin-top: 1.5em;
+}
+
+
+.related-links a,
+.related-links a:visited {
+    color: #5185cb;
+    padding-bottom: .3em;
+    display:inline-block;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Search results.
+ * 
+ */
+.searchresult {
+    list-style: none;
+}
+
+.searchresult li a {
+    color:#346ec5;
+}
+.searchresult .shortdesclink {
+    margin: .3em .5em 0 0;
+}
+.wh_search_expression{
+    font-weight:bold;
+}
+
+
+
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Index terms.
+ * 
+ */
+.wh_index_terms span.wh_first_letter {
+    color: #346ec5;
+}
+.wh_index_terms #indexList{
+    padding:0;
+}
+
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tree TOC for the main page.
+ * 
+ */
+.wh_main_page_toc{
+}

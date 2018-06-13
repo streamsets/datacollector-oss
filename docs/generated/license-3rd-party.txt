@@ -2,7 +2,7 @@ DO NOT TRANSLATE OR LOCALIZE.
 
 THIRD-PARTY SOFTWARE NOTICES 
 
-This product may be based on or incorporates copyrighted material from the files listed below (collectively, “Third Party Code”).  
+This product may be based on or incorporates copyrighted material from the files listed below (collectively, ï¿½Third Party Codeï¿½).  
 The Third Party Code is licensed to you under its original license terms which are provided below. 
 
 
@@ -16,21 +16,21 @@ oxygen-webhelp/search/stemmers/de_stemmer.js                        BSD 2-Clause
 oxygen-webhelp/search/stemmers/fr_stemmer.js                        BSD 2-Clause (Kasun Gajasinghe)
 oxygen-webhelp/search/stemmers/en_stemmer.js                        BSD 2-Clause (http://tartarus.org/~martin/PorterStemmer/)
 oxygen-webhelp/resources/skins/mobile/jquery.mobile-1.4.0           MIT License (http://jquery.org/license)
-oxygen-webhelp/resources/js/splitter.js                             MIT License (author Kristaps Kukurs)
 oxygen-webhelp/resources/js/parseuri.js                             MIT License (author Steven Levithan)
-oxygen-webhelp/resources/js/jquery-1.11.3.min.js                    MIT License (https://jquery.org/license/, see oxygen-webhelp/resources/js/jquery.MIT-License.txt)
-oxygen-webhelp/resources/js/jquery-3.1.1.min.js                     MIT License (https://jquery.org/license/, see oxygen-webhelp/resources/js/jquery.MIT-License.txt)
+oxygen-webhelp/lib/jquery-ui/jquery-ui.min.js                       MIT License (https://jqueryui.com/)
+oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js                     MIT License (https://jquery.org/license/, see oxygen-webhelp/resources/js/jquery.MIT-License.txt)
 oxygen-webhelp/resources/js/jquery.quicksearch.js                   MIT License (Deux Huit Huit (http://deuxhuithuit.com/))
 oxygen-webhelp/resources/js/jquery.plugin.min.js                    MIT License (http://keith-wood.name/licence.html)
-oxygen-webhelp/resources/js/jquery.highlight-3.js                   MIT License (Johann Burkard <http://johannburkard.de>)
-oxygen-webhelp/resources/js/jquery.cookie.js                        MIT License (https://github.com/carhartl/jquery-cookie)
-oxygen-webhelp/resources/js/jquery.ba-hashchange.min.js             MIT License (http://benalman.com/projects/jquery-hashchange-plugin/
+oxygen-webhelp/lib/jquery-highlight/jquery.highlight-3.js                   MIT License (Johann Burkard <http://johannburkard.de>)
+oxygen-webhelp/lib/jquery-cookie/jquery.cookie.js                        MIT License (https://github.com/carhartl/jquery-cookie)
 oxygen-webhelp/resources/js/base64.js                               CC BY 2.0 UK (http://www.webtoolkit.info/, see oxygen-webhelp/resources/js/base64.Creative-Commons-License.txt)
 oxygen-webhelp/resources/css/commonltr.css                          Apache-2.0 (part of DITA-OT, http://www.dita-ot.org/)
 oxygen-webhelp/resources/css/commonrtl.css                          Apache-2.0 (part of DITA-OT, http://www.dita-ot.org/)
 oxygen-webhelp/resources/css/jquery.realperson.css                  MIT License (http://keith-wood.name/licence.html)
 oxygen-webhelp/resources/css/jquery.cleditor.css                    MIT License (Chris Landowski, Premium Software, LLC)
 oxygen-webhelp/resources/bootstrap/                                 MIT License (CTwitter, https://github.com/twbs/bootstrap/blob/master/LICENSE)
+oxygen-webhelp/lib/maphighlight/jquery.maphilight.min.js            MIT License (David Lynch, https://github.com/kemayo/maphilight/blob/master/MIT-LICENSE.txt)
+oxygen-webhelp/lib/rwdImageMaps/jquery.rwdImageMaps.min.js          MIT License (Matt Stow, https://github.com/stowball/jQuery-rwdImageMaps/blob/master/LICENSE)
 oxygen-webhelp/feedback/resources/js/base64.js                      CC BY 2.0 UK (http://www.webtoolkit.info/)
 oxygen-webhelp/feedback/resources/js/jquery.cleditor.min.js         MIT License (Chris Landowski, Premium Software, LLC)
 oxygen-webhelp/feedback/resouces/js/jquery.plugin.min.js            MIT License (http://keith-wood.name/licence.html)
@@ -40,7 +40,7 @@ oxygen-webhelp/feedback/resouces/js/jquery-3.1.1.min.js             MIT License 
 oxygen-webhelp/feedback/resouces/js/parseuri.js                     MIT License (author Steven Levithan)
 oxygen-webhelp/feedback/resouces/css/jquery.realperson.css          MIT License (Keith Wood, http://keith-wood.name/licence.html)
 oxygen-webhelp/feedback/resources/css/jquery.cleditor.css           MIT License (Chris Landowski, Premium Software, LLC)
-oxygen-webhelp/resources/js/jquery.bootpag.js                       MIT License (https://github.com/botmonster/jquery-bootpag)
+oxygen-webhelp/lib/jquery-bootpag/jquery.bootpag.js                       MIT License (https://github.com/botmonster/jquery-bootpag)
 
 Additional Third Party Code in Oxygen WebHelp Plug-In (inside Oxygen XML) distribution:
 
@@ -53,7 +53,6 @@ dtd/xhtml1-symbol.ent                                          W3C (the original
 
 lib/xhtml-indexer.jar                                          BSD 3-Clause (see lib/xhtml-indexer.LICENSE.txt)
 
-xsl/dita/original/dita-utilities.xsl                           Apache-2.0 (part of DITA-OT, http://www.dita-ot.org/)
 xsl/dita/original/output-messages.xsl                          Apache-2.0 (part of DITA-OT, http://www.dita-ot.org/)
 xsl/dita/original/relpath_util.xsl                             Apache-2.0 (part of DITA4Publishers, http://www.dita4publishers.org/)
 

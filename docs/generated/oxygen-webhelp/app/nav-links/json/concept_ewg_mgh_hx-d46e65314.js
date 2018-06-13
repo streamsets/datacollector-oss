@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Full JSON Field Types","id":"concept_pmp_b1y_hx","href":"datacollector\/UserGuide\/Processors\/GeoIP.html#concept_pmp_b1y_hx","menu": {"hasChildren":false,},"tocID":"concept_pmp_b1y_hx-d46e65366","topics":[]}]});

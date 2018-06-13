@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a JSON Generator","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","id":"task_kgk_3w1_h1b","href":"datacollector\/UserGuide\/Processors\/JSONGenerator.html#task_kgk_3w1_h1b","menu": {"hasChildren":false,},"tocID":"task_kgk_3w1_h1b-d46e70174","topics":[]}]});

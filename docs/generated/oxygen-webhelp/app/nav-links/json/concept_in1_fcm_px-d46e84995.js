@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","id":"concept_tyc_scc_rx","href":"datacollector\/UserGuide\/Destinations\/LocalFS.html#concept_tyc_scc_rx","menu": {"hasChildren":false,},"tocID":"concept_tyc_scc_rx-d46e85078","topics":[]}]});

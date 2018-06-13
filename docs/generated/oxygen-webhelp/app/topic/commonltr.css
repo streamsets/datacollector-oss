@@ -1,0 +1,319 @@
+/*
+ | This file is part of the DITA Open Toolkit project hosted on 
+ | Sourceforge.net. See the accompanying license.txt file for 
+ | applicable licenses.
+*/
+
+/*
+ | (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved.
+ */
+
+
+/* 
+ * The Oxygen WebHelp Plugin redistributes this file under the terms of the 
+ * Apache Software Foundation License v2.0:
+ * 
+ * http://opensource.org/licenses/apache2.0.php
+ */
+
+.unresolved { background-color: skyblue; }
+.noTemplate { background-color: yellow; }
+
+.base { background-color: #ffffff; }
+
+/* Default of italics to set apart figure captions */
+.figcap { font-style: italic }
+.figdesc { font-style: normal }
+
+/* Use @frame to create frames on figures */
+.figborder { border-style: solid; padding-left : 3px; border-width : 2px; padding-right : 3px; margin-top: 1em; border-color : Silver;}
+.figsides { border-left : 2px solid; padding-left : 3px; border-right : 2px solid; padding-right : 3px; margin-top: 1em; border-color : Silver;}
+.figtop { border-top : 2px solid; margin-top: 1em; border-color : Silver;}
+.figbottom { border-bottom : 2px solid; border-color : Silver;}
+.figtopbot { border-top : 2px solid; border-bottom : 2px solid; margin-top: 1em; border-color : Silver;}
+
+/* Most link groups are created with <div>. Ensure they have space before and after. */
+.ullinks { list-style-type: none }
+.ulchildlink { margin-top: 1em; margin-bottom: 1em }
+.olchildlink { margin-top: 1em; margin-bottom: 1em }
+.linklist { margin-bottom: 1em }
+.linklistwithchild { margin-bottom: 1em  }
+.sublinklist { margin-bottom: 1em  }
+.relconcepts { margin-top: 1em; margin-bottom: 1em }
+.reltasks { margin-top: 1em; margin-bottom: 1em }
+.relref { margin-top: 1em; margin-bottom: 1em }
+.relinfo { margin-top: 1em; margin-bottom: 1em }
+.breadcrumb { font-size : smaller; margin-bottom: 1em }
+dt.prereq { margin-left : 20px;}
+
+/* Set heading sizes, getting smaller for deeper nesting */
+.topictitle1 { margin-top: 0; margin-bottom: .1em; font-size: 1.34em; }
+.topictitle2 { margin-top: 1pc; margin-bottom: .45em; font-size: 1.17em; }
+.topictitle3 { margin-top: 1pc; margin-bottom: .17em; font-size: 1.17em; font-weight: bold; }
+.topictitle4 { margin-top: .83em; font-size: 1.17em; font-weight: bold; }
+.topictitle5 { font-size: 1.17em; font-weight: bold; }
+.topictitle6 { font-size: 1.17em; font-style: italic; }
+.sectiontitle { margin-top: 1em; margin-bottom: 0; color: black; font-size: 1.17em; font-weight: bold;}
+.section { margin-top: 1em; margin-bottom: 1em }
+.example { margin-top: 1em; margin-bottom: 1em }
+div.tasklabel { margin-top: 1em; margin-bottom: 1em; }
+h2.tasklabel, h3.tasklabel, h4.tasklabel, h5.tasklabel, h6.tasklabel { font-size: 100%; }
+
+/* All note formats have the same default presentation */
+.note { margin-top: 1em; margin-bottom : 1em;}
+.notetitle { font-weight: bold }
+.notelisttitle { font-weight: bold }
+.tip { margin-top: 1em; margin-bottom : 1em;}
+.tiptitle { font-weight: bold }
+.fastpath { margin-top: 1em; margin-bottom : 1em;}
+.fastpathtitle { font-weight: bold }
+.important { margin-top: 1em; margin-bottom : 1em;}
+.importanttitle { font-weight: bold }
+.remember { margin-top: 1em; margin-bottom : 1em;}
+.remembertitle { font-weight: bold }
+.restriction { margin-top: 1em; margin-bottom : 1em;}
+.restrictiontitle { font-weight: bold }
+.attention { margin-top: 1em; margin-bottom : 1em;}
+.attentiontitle { font-weight: bold }
+.dangertitle { font-weight: bold }
+.danger { margin-top: 1em; margin-bottom : 1em;}
+.cautiontitle { font-weight: bold }
+.caution { font-weight: bold; margin-bottom : 1em; }
+.warningtitle { font-weight: bold }
+.warning { margin-top: 1em; margin-bottom : 1em;}
+
+/* Simple lists do not get a bullet */
+ul.simple { list-style-type: none }
+
+/* Used on the first column of a table, when rowheader="firstcol" is used */
+.firstcol { font-weight : bold;}
+
+/* Various basic phrase styles */
+.bold { font-weight: bold; }
+.boldItalic { font-weight: bold; font-style: italic; }
+.italic { font-style: italic; }
+.underlined { text-decoration: underline; }
+.uicontrol, .wintitle { font-weight: bold; }
+.parmname { font-weight: bold; }
+.kwd { font-weight: bold; }
+.defkwd { font-weight: bold; text-decoration: underline; }
+.var { font-style : italic;}
+.shortcut { text-decoration: underline; }
+
+/* Default of bold for definition list terms */
+.dlterm { font-weight: bold; }
+
+/* Use CSS to expand lists with @compact="no" */
+.dltermexpand { font-weight: bold; margin-top: 1em; }
+*[compact="yes"]>li { margin-top: 0;}
+*[compact="no"]>li { margin-top: .53em;}	
+.liexpand { margin-top: 1em; margin-bottom: 1em }
+.sliexpand { margin-top: 1em; margin-bottom: 1em }
+.dlexpand { margin-top: 1em; margin-bottom: 1em }
+.ddexpand { margin-top: 1em; margin-bottom: 1em }
+.stepexpand { margin-top: 1em; margin-bottom: 1em }
+.substepexpand { margin-top: 1em; margin-bottom: 1em }
+
+/* Align images based on @align on topic/image */
+div.imageleft { text-align: left }
+div.imagecenter { text-align: center }
+div.imageright { text-align: right }
+div.imagejustify { text-align: justify }
+
+
+
+
+
+pre.screen { padding:5px; border: 1px solid #ccc; background-color: #ddd; margin: 2px 0 2px 0; white-space: pre}
+
+span.filepath { font-family:monospace }
+
+
+/* The cell border can be turned on with
+   {border-right:solid}
+   This value creates a very thick border in Firefox (does not match other tables)
+
+   Firefox works with 
+   {border-right:solid 1pt}
+   but this causes a barely visible line in IE */
+
+
+.cellrowborder { border-top:none; border-bottom:solid 1px }
+
+.cellrowborder,
+*[dir] *[dir='ltr'] .cellrowborder,
+*[dir] *[dir] *[dir='ltr'] .cellrowborder,
+*[dir] *[dir] *[dir] *[dir='ltr'] .cellrowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .cellrowborder{ 
+	border-top:none; 
+	border-bottom:solid 1px;
+	border-right:solid 1px; 
+	border-left:none; 
+}
+*[dir='rtl'] .cellrowborder,
+*[dir] *[dir='rtl'] .cellrowborder,
+*[dir] *[dir] *[dir='rtl'] .cellrowborder,
+*[dir] *[dir] *[dir] *[dir='rtl'] .cellrowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .cellrowborder{ 
+	border-top:none; 
+	border-bottom:solid 1px;
+	border-right:none; 
+	border-left:solid 1px; 
+}
+
+
+ 
+.cell-norowborder { border-top:none; border-bottom:none; border-bottom: hidden; }
+
+.cell-norowborder,
+*[dir] *[dir='ltr'] .cell-norowborder,
+*[dir] *[dir] *[dir='ltr'] .cell-norowborder,
+*[dir] *[dir] *[dir] *[dir='ltr'] .cell-norowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .cell-norowborder{ 
+     border-top:none; border-bottom:none; border-bottom: hidden; 
+	 border-right:solid 1px;
+	 border-left:none; 
+}
+*[dir='rtl'] .cell-norowborder,
+*[dir] *[dir='rtl'] .cell-norowborder,
+*[dir] *[dir] *[dir='rtl'] .cell-norowborder,
+*[dir] *[dir] *[dir] *[dir='rtl'] .cell-norowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .cell-norowborder{ 
+	 border-top:none; border-bottom:none; border-bottom: hidden; 
+	 border-right:none; 
+	 border-left:solid 1px;
+}
+
+
+
+.nocellnorowborder { border:none; border-bottom: hidden }
+
+.nocellnorowborder,
+*[dir] *[dir='ltr'] .nocellnorowborder,
+*[dir] *[dir] *[dir='ltr'] .nocellnorowborder,
+*[dir] *[dir] *[dir] *[dir='ltr'] .nocellnorowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .nocellnorowborder{
+	border:none; border-bottom: hidden;
+	border-right:hidden; 
+	border-left:none; 
+}
+*[dir='rtl'] .nocellnorowborder,
+*[dir] *[dir='rtl'] .nocellnorowborder,
+*[dir] *[dir] *[dir='rtl'] .nocellnorowborder,
+*[dir] *[dir] *[dir] *[dir='rtl'] .nocellnorowborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .nocellnorowborder{
+	border:none; border-bottom: hidden;
+	border-left:hidden;
+	border-right:none;
+}
+
+
+
+.row-nocellborder {  border-top:none; border-bottom:solid 1px}
+
+.row-nocellborder,
+*[dir] *[dir='ltr'] .row-nocellborder,
+*[dir] *[dir] *[dir='ltr'] .row-nocellborder,
+*[dir] *[dir] *[dir] *[dir='ltr'] .row-nocellborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .row-nocellborder{
+	border-top:none; border-bottom:solid 1px;
+	border-left:none; 
+	border-right:hidden; 
+}
+*[dir='rtl'] .row-nocellborder,
+*[dir] *[dir='rtl'] .row-nocellborder,
+*[dir] *[dir] *[dir='rtl'] .row-nocellborder,
+*[dir] *[dir] *[dir] *[dir='rtl'] .row-nocellborder,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .row-nocellborder{ 
+	border-top:none; border-bottom:solid 1px;
+	border-left: hidden; 
+	border-right:none; 
+}
+
+
+
+
+/*
+
+ The right and left margins, padding, borders depend on the direction.
+
+ */
+pre.screen,
+*[dir] *[dir='ltr'] pre.screen,
+*[dir] *[dir] *[dir='ltr'] pre.screen,
+*[dir] *[dir] *[dir] *[dir='ltr'] pre.screen,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] pre.screen{ 
+	margin-right:0; 
+	margin-left:7px; 
+}
+
+*[dir='rtl'] pre.screen,
+*[dir] *[dir='rtl'] pre.screen,
+*[dir] *[dir] *[dir='rtl'] pre.screen,
+*[dir] *[dir] *[dir] *[dir='rtl'] pre.screen,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] pre.screen{ 
+	margin-right:7px; 
+	margin-left:0; 
+}
+
+
+
+ 
+
+dt.prereq,
+*[dir] *[dir='ltr'] dt.prereq,
+*[dir] *[dir] *[dir='ltr'] dt.prereq,
+*[dir] *[dir] *[dir] *[dir='ltr'] dt.prereq,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] dt.prereq{ 
+
+	margin-left:20px; 
+	margin-right:0;
+}
+*[dir='rtl'] dt.prereq,
+*[dir] *[dir='rtl'] dt.prereq,
+*[dir] *[dir] *[dir='rtl'] dt.prereq,
+*[dir] *[dir] *[dir] *[dir='rtl'] dt.prereq,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] dt.prereq{ 
+	margin-left:0;
+	margin-right:20px; 
+}
+  
+
+
+.linklistwithchild,
+*[dir] *[dir='ltr'] .linklistwithchild,
+*[dir] *[dir] *[dir='ltr'] .linklistwithchild,
+*[dir] *[dir] *[dir] *[dir='ltr'] .linklistwithchild,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .linklistwithchild{ 
+	margin-left:1.5em; 
+	margin-right: 0; 
+}
+*[dir='rtl'] .linklistwithchild,
+*[dir] *[dir='rtl'] .linklistwithchild,
+*[dir] *[dir] *[dir='rtl'] .linklistwithchild,
+*[dir] *[dir] *[dir] *[dir='rtl'] .linklistwithchild,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .linklistwithchild{ 
+	margin-left:0; 
+	margin-right: 1.5em; 
+}
+ 
+ 
+
+.sublinklist,
+*[dir] *[dir='ltr'] .sublinklist,
+*[dir] *[dir] *[dir='ltr'] .sublinklist,
+*[dir] *[dir] *[dir] *[dir='ltr'] .sublinklist,
+*[dir] *[dir] *[dir] *[dir] *[dir='ltr'] .sublinklist{ 
+	margin-left:1.5em; 
+	margin-right:0; 
+}
+*[dir='rtl'] .sublinklist,
+*[dir] *[dir='rtl'] .sublinklist,
+*[dir] *[dir] *[dir='rtl'] .sublinklist,
+*[dir] *[dir] *[dir] *[dir='rtl'] .sublinklist,
+*[dir] *[dir] *[dir] *[dir] *[dir='rtl'] .sublinklist{ 
+	margin-left:0; 
+	margin-right: 1.5em; 
+}
+  
+

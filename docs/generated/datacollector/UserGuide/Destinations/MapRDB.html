@@ -1,49 +1,390 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR DB" /><meta name="abstract" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="description" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_vxg_w2z_yv" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>MapR DB</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR DB" /><meta name="abstract" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="description" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_vxg_w2z_yv" /><title>MapR DB</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_vxg_w2z_yv-d46e85346" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write         data to MapR DB as text, binary
+                  data, or JSON strings. You can define the data format for         each column written to MapR DB.
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r" title="Local FS"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy" title="MapR DB JSON"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_vxg_w2z_yv">
- <h1 class="title topictitle1">MapR DB</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e74198" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e74222" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Aerospike destination writes data to Aerospike.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_avx_bnq_rt-d46e74279" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis         Firehose delivery system, use
+                        the Kinesis Firehose destination. To write data to Amazon         Kinesis Streams, use the Kinesis Producer destination.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jzm_kf4_zx-d46e75218" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e76151" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e76247" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e76403" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Cassandra destination writes data to a Cassandra cluster.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e76617" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
+                        Client destination writes data to a CoAP endpoint. Use         the destination to send requests to a CoAP resource URL.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e76716" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic         Cloud clusters (formerly
+                        Found clusters). The destination uses the Elasticsearch HTTP API to         write each record to Elasticsearch as a document.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hlx_r53_rx-d46e76936" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The         destination connects to Einstein
+                        Analytics to upload external data to a dataset.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e77226" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Flume destination writes data to a Flume source. When you write data to Flume, you     pass data to a Flume client. The
+                        Flume client passes data to hosts based on client configuration     properties. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e77325" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e77616" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li><span data-tocid="concept_p4n_jrl_nbb-d46e78197" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e79127" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e79412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e80642" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase destination writes data to an HBase cluster. The destination can write data       to HBase as text, binary data,
+                        or JSON strings. You can define the data format for each column       written to HBase.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e81025" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS         or MapR FS destination as
+                        part of the Drift Synchronization Solution for Hive. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e81620" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized   Row Columnar) file format.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_khl_sg5_lz-d46e81719" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client destination writes data to an HTTP endpoint. The destination sends         requests to an HTTP resource URL.
+                        Use the HTTP Client destination to perform a range of         standard requests or use an expression to determine the request
+                        for each record.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_inf_db_sr-d46e82544" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The InfluxDB destination writes data to an InfluxDB database.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e82602" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Producer destination uses a JDBC connection to write data to a database         table. You can also use the JDBC
+                        Producer to write change capture data from a Microsoft SQL         Server change log. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e82819" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li><span data-tocid="concept_oq2_5jl_zq-d46e83187" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kafka Producer destination writes data to a Kafka cluster. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e83993" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery         stream. Firehose automatically
+                        delivers the data to the Amazon S3 bucket or Amazon Redshift         table that you specify in the delivery stream.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_swk_h1j_yr-d46e84216" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Producer destination writes data to Amazon Kinesis Streams. To write data to         an Amazon Kinesis Firehose
+                        delivery system, use the Kinesis Firehose destination. To write         data to Amazon S3, use the Amazon S3 destination.
+                        
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e84373" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e84521" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e84672" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li class="active"><span data-tocid="concept_vxg_w2z_yv-d46e85346" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write         data to MapR DB as text, binary
+                        data, or JSON strings. You can define the data format for         each column written to MapR DB.
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_tr1_143_1w-d46e85432" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_tr1_143_1w">Field Mappings</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you configure the MapR DB destination, you map fields from records to MapR DB         columns.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_qxm_hq3_1w-d46e85457" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_qxm_hq3_1w">Time Basis</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The time basis determines the timestamp value added for each column written to MapR DB. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_fvq_r43_1w-d46e85492" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_fvq_r43_1w">Kerberos Authentication</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use Kerberos authentication to connect to MapR DB. When you use Kerberos         authentication, <span class="ph">Data Collector</span> uses         the Kerberos principal and keytab to connect to MapR DB. By default, <span class="ph">Data Collector</span> uses         the user account who started it to connect.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_hv2_4p3_1w-d46e85543" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_hv2_4p3_1w">Using an HBase User</a></span></span></li>
+               <li><span data-tocid="concept_fth_vq3_1w-d46e85595" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_fth_vq3_1w">HDFS Properties and Configuration File</a></span></span></li>
+               <li><span data-tocid="task_pgk_p2z_yv-d46e85657" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#task_pgk_p2z_yv">Configuring a MapR DB Destination</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e85729" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e86100" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat         files or Hadoop sequence files.
+                        
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e87187" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Producer destination writes messages to MapR Streams.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_eth_k5n_4v-d46e87486" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e87768" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The         destination functions as an MQTT
+                        client that publishes messages, writing each record as a         message.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e87922" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Named Pipe destination writes data to a UNIX named pipe. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e88308" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Producer writes AMQP messages to a single RabbitMQ queue. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e88407" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis destination writes data to Redis. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e88693" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce destination writes data to Salesforce objects.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e88910" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC     destination passes data to one
+                        or more SDC RPC origins. Use the SDC RPC destination as part of     an SDC RPC origin pipeline.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e89067" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Solr destination writes data to a Solr node or cluster. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e89227" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_htf_ydj_wq-d46e89251" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e89276" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client destination writes data to a WebSocket endpoint. Use the         destination to send data to a WebSocket
+                        resource URL. 
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_vxg_w2z_yv">
+ <h1 class="title topictitle1" id="ariaid-title1">MapR DB</h1>
 
  
  <div class="body conbody"><p class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write
@@ -51,7 +392,7 @@
         each column written to MapR DB.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> To write JSON documents to MapR DB JSON tables, use the MapR DB JSON destination. For
-            more information, see <a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">MapR DB JSON</a>.</div>
+            more information, see <a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a>.</div>
 
         <p class="p">When you configure the MapR DB destination, you
             specify the MapR DB configuration properties, including the table name. You specify the
@@ -70,9 +411,8 @@
         
     </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_tr1_143_1w">
- <h2 class="title topictitle2">Field Mappings</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_tr1_143_1w">
+ <h2 class="title topictitle2" id="ariaid-title2">Field Mappings</h2>
 
  
  <div class="body conbody"><p class="shortdesc">When you configure the MapR DB destination, you map fields from records to MapR DB
@@ -87,10 +427,10 @@
 
              <dd class="dd">By default, the MapR DB destination uses explicit field mappings. You select the
                     fields from records to map to MapR DB columns. Specify the MapR DB columns using
-                    the following format: <samp class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</samp>. You
+                    the following format: <code class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</code>. You
                     then define the storage type for the column in MapR DB. </dd>
 
-             <dd class="dd">When you use explicit field mappings, you can configure the destination to ignore
+             <dd class="dd ddexpand">When you use explicit field mappings, you can configure the destination to ignore
                     missing field paths. If the destination encounters a mapped field path that
                     doesn’t exist in the record, the destination ignores the missing field path and
                     writes the remaining fields in the record to MapR DB. </dd>
@@ -102,13 +442,12 @@
              <dd class="dd">When you configure the MapR DB destination to use implicit field mappings, the
                     destination writes data based on the matching field names. You can use implicit
                     field mappings when the field paths use the following
-                    format:<pre class="pre codeblock">&lt;column-family&gt;:&lt;qualifier&gt;</pre>
-</dd>
+                    format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre></dd>
 
-             <dd class="dd">For example, if a field path is "cf:a", the destination can implicitly map the
+             <dd class="dd ddexpand">For example, if a field path is "cf:a", the destination can implicitly map the
                     field to the MapR DB table with the column family "cf" and the qualifier "a". </dd>
 
-             <dd class="dd">When you use implicit field mappings, you can configure the destination to ignore
+             <dd class="dd ddexpand">When you use implicit field mappings, you can configure the destination to ignore
                     invalid columns. If the destination encounters a field path that cannot be
                     mapped to a valid MapR DB column, the destination ignores the invalid column and
                     writes the remaining fields in the record to MapR DB. </dd>
@@ -120,8 +459,8 @@
              <dd class="dd">You can configure the destination to use implicit field mappings and then you
                  can override the mappings by defining explicit mappings for specific fields. </dd>
 
-             <dd class="dd">For example, a record might contain some field paths that use the
-                        <samp class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</samp> format and other field
+             <dd class="dd ddexpand">For example, a record might contain some field paths that use the
+                        <code class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</code> format and other field
                     paths that don’t use the required format. You can add explicit field mappings
                     for the field paths that do not use the required format. Or, you can use
                     explicit field mappings for fields that use the required format, but need to be
@@ -132,9 +471,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_qxm_hq3_1w">
- <h2 class="title topictitle2">Time Basis</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_qxm_hq3_1w">
+ <h2 class="title topictitle2" id="ariaid-title3">Time Basis</h2>
 
  
  <div class="body conbody"><p class="shortdesc">The time basis determines the timestamp value added for each column written to MapR DB. </p>
@@ -149,8 +488,8 @@
                 <dd class="dd">When you use processing time as the time basis, the destination uses the <span class="ph">Data Collector</span> processing time as the timestamp value. The processing time is calculated
                     once per batch. </dd>
 
-                <dd class="dd">To use the processing time as the time basis, use the following expression:
-                        <samp class="ph codeph">${time:now()}</samp>. </dd>
+                <dd class="dd ddexpand">To use the processing time as the time basis, use the following expression:
+                        <code class="ph codeph">${time:now()}</code>. </dd>
 
             
             
@@ -160,9 +499,9 @@
                     Date or Datetime field in the record. The destination uses the field value as
                     the timestamp value. </dd>
 
-                <dd class="dd">To use a time associated with the record, use an expression that calls a field
+                <dd class="dd ddexpand">To use a time associated with the record, use an expression that calls a field
                     and resolves to a date or datetime value, such as
-                        <samp class="ph codeph">${record:value("/Timestamp")}</samp>. </dd>
+                        <code class="ph codeph">${record:value("/Timestamp")}</code>. </dd>
 
             
             
@@ -171,16 +510,16 @@
                 <dd class="dd"> When you leave the Time Basis field empty, the destination uses the timestamp
                     value automatically generated by MapR when the column is written to MapR DB. </dd>
 
-                <dd class="dd">This is the default time basis. </dd>
+                <dd class="dd ddexpand">This is the default time basis. </dd>
 
             
         </dl>
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_fvq_r43_1w">
- <h2 class="title topictitle2">Kerberos Authentication</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_fvq_r43_1w">
+ <h2 class="title topictitle2" id="ariaid-title4">Kerberos Authentication</h2>
 
  
  <div class="body conbody"><p class="shortdesc">You can use Kerberos authentication to connect to MapR DB. When you use Kerberos
@@ -190,7 +529,7 @@
 
   <p class="p">The Kerberos
             principal and keytab are defined in the <span class="ph">Data Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. To use Kerberos
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. To use Kerberos
             authentication, configure all Kerberos properties in the <span class="ph">Data Collector</span>
             configuration file.</p>
 
@@ -199,9 +538,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_hv2_4p3_1w">
- <h2 class="title topictitle2">Using an HBase User</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_hv2_4p3_1w">
+ <h2 class="title topictitle2" id="ariaid-title5">Using an HBase User</h2>
 
  <div class="body conbody">
         <p class="p"><span class="ph"><span class="ph">Data Collector</span>
@@ -212,7 +551,7 @@
         <p class="p">A <span class="ph">Data Collector</span> configuration property can be set that requires using the currently logged in
                         <span class="ph">Data Collector</span> user. When
                   this property is not set, you can specify a user in the origin. For more
-                  information about Hadoop impersonation and the Data Collector property, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop Impersonation Mode</a>. </p>
+                  information about Hadoop impersonation and the Data Collector property, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>. </p>
 
         <p class="p">Note that the destination uses a different user account to connect.<span class="ph">By default, <span class="ph">Data Collector</span> uses
                               the user account who started it to connect to external systems. When
@@ -233,9 +572,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_fth_vq3_1w">
- <h2 class="title topictitle2">HDFS Properties and Configuration File</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_fth_vq3_1w">
+ <h2 class="title topictitle2" id="ariaid-title6">HDFS Properties and Configuration File</h2>
 
  <div class="body conbody">
   <p class="p">You can configure the MapR DB destination to
@@ -253,7 +592,7 @@
             </ul>
 </dd>
 
-                    <dd class="dd">To use HDFS configuration files: <ol class="ol" id="concept_fth_vq3_1w__ol_rb2_2nr_bt">
+                    <dd class="dd ddexpand">To use HDFS configuration files: <ol class="ol" id="concept_fth_vq3_1w__ol_rb2_2nr_bt">
                             <li class="li">Store the files or a symlink to the files in the <span class="ph">Data Collector</span> resources directory. </li>
 
                             <li class="li">In the MapR DB destination, specify the location of the files. </li>
@@ -279,63 +618,59 @@
 
  </div>
 
-</div>
-<div class="topic task nested1" id="task_pgk_p2z_yv">
-    <h2 class="title topictitle2">Configuring a MapR DB Destination</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_pgk_p2z_yv">
+    <h2 class="title topictitle2" id="ariaid-title7">Configuring a MapR DB Destination</h2>
 
     <div class="body taskbody">
-        <div class="section context">
+        <section class="section context">
             <p class="p">Configure
                 a MapR DB destination to write data as text, binary data, or JSON strings to MapR DB
                 binary tables.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__d18242e5817" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__d16e5819" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d148222e484">General Property</th>
+                                    <th class="entry cellrowborder" id="d120197e568">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d148222e487">Description</th>
+                                    <th class="entry cellrowborder" id="d120197e571">Description</th>
 
                                 </tr>
 
                             </thead>
+<tbody class="tbody">
+                                <tr id="task_pgk_p2z_yv__d16e5841">
+                                    <td class="entry cellrowborder" headers="d120197e568 ">Name</td>
 
-                            <tbody class="tbody">
-                                <tr id="task_pgk_p2z_yv__d18242e5839">
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">Name</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_pgk_p2z_yv__d18242e5848">
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_pgk_p2z_yv__d18242e5857">
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">Stage Library</td>
+                                <tr id="task_pgk_p2z_yv__d16e5850">
+                                    <td class="entry cellrowborder" headers="d120197e568 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Library version that you want to use. </td>
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_pgk_p2z_yv__d16e5859">
+                                    <td class="entry cellrowborder" headers="d120197e568 ">Stage Library</td>
+
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_pgk_p2z_yv__d18242e5872" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d120197e568 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_pgk_p2z_yv__d16e5874" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -347,10 +682,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_pgk_p2z_yv__d18242e5888" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d120197e568 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_pgk_p2z_yv__d16e5890" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -360,11 +695,11 @@
 
                                 </tr>
 
-                                <tr id="task_pgk_p2z_yv__d18242e5900">
-                                    <td class="entry" valign="top" width="30%" headers="d148222e484 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_pgk_p2z_yv__d18242e5906" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_pgk_p2z_yv__d16e5902">
+                                    <td class="entry cellrowborder" headers="d120197e568 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_pgk_p2z_yv__d16e5908" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d148222e487 ">Error record handling for the stage: <ul class="ul" id="task_pgk_p2z_yv__d18242e5910">
+                                    <td class="entry cellrowborder" headers="d120197e571 ">Error record handling for the stage: <ul class="ul" id="task_pgk_p2z_yv__d16e5912">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -378,8 +713,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -389,24 +723,20 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__table_l5z_wcv_vr" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__table_l5z_wcv_vr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d148222e608">HBase Property</th>
+                                    <th class="entry cellrowborder" id="d120197e692">HBase Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d148222e611">Description</th>
+                                    <th class="entry cellrowborder" id="d120197e695">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Table Name</td>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Name of the MapR DB binary table to use. Enter a table
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Name of the MapR DB binary table to use. Enter a table
                                         name or a namespace and table name as follows:
                                         &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
                                             table name, MapR uses the default namespace.
@@ -416,24 +746,24 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Row Key</td>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Row Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Row key for the table. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Storage Type</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Storage type of the row key.</td>
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Row key for the table. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Fields <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Storage Type</td>
+
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Storage type of the row key.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Fields <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a3h_bfn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Explicitly map fields from records to MapR DB columns,
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Explicitly map fields from records to MapR DB columns,
                                         and then define the storage type for the column in MapR DB.
                                             <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to create additional
@@ -443,9 +773,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Ignore Missing Field Path</td>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Ignore Missing Field Path</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Ignores missing field paths. Used when you define
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Ignores missing field paths. Used when you define
                                         explicit field mappings.<p class="p">If selected and the destination
                                             encounters a mapped field path that doesn’t exist in the
                                             record, the destination ignores the missing field path
@@ -458,21 +788,20 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Implicit Field Mapping <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Implicit Field Mapping <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a7z_jfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Uses implicit field mappings so that the destination
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Uses implicit field mappings so that the destination
                                         writes data to MapR DB columns based on the matching field
                                         names. The field paths must use the following
-                                        format:<pre class="pre codeblock">&lt;column-family&gt;:&lt;qualifier&gt;</pre>
-</td>
+                                        format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Ignore Invalid Column</td>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Ignore Invalid Column</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Ignores invalid columns. Used when you configure implicit
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Ignores invalid columns. Used when you configure implicit
                                         field mappings.<p class="p">If selected and the destination encounters
                                             a field path that cannot be mapped to a valid MapR DB
                                             column, the destination ignores the invalid column and
@@ -485,43 +814,43 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase. By default, Data Collector uses the user account who started it to connect.">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase. By default, Data Collector uses the user account who started it to connect.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Uses Kerberos credentials to connect to MapR DB.<p class="p">When
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Uses Kerberos credentials to connect to MapR DB.<p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data Collector</span> configuration file,
-                                                <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.
+                                                <code class="ph codeph">$SDC_CONF/sdc.properties</code>.
                                         </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls">
                                             <img class="image" id="task_pgk_p2z_yv__image_ytm_zzx_kt" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">The HBase user to use to write to MapR DB. When using
+                                    <td class="entry cellrowborder" headers="d120197e695 ">The HBase user to use to write to MapR DB. When using
                                         this property, make sure MapR DB is configured
                                             appropriately.<p class="p">When not configured, the pipeline uses
                                             the currently logged in <span class="ph">Data Collector</span> user. </p>
-<p class="p">Not configurable when <span class="ph">Data Collector</span> is configured to use the currently logged in <span class="ph">Data Collector</span> user. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop Impersonation Mode</a>.</p>
+<p class="p">Not configurable when <span class="ph">Data Collector</span> is configured to use the currently logged in <span class="ph">Data Collector</span> user. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">Time Basis <a class="xref" href="HBase.html#concept_t4g_vc2_wv" title="The time basis determines the timestamp value added for each column written to HBase.">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">Time Basis <a class="xref" href="HBase.html#concept_t4g_vc2_wv" title="The time basis determines the timestamp value added for each column written to HBase.">
                                             <img class="image" id="task_pgk_p2z_yv__image_kr3_fgs_7r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Time basis to use for the timestamp value added to each
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Time basis to use for the timestamp value added to each
                                         column written to MapR DB. Use one of the following
                                             expressions:<ul class="ul" id="task_pgk_p2z_yv__ul_oc5_zb2_wv">
-                                            <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the <span class="ph">Data Collector</span> processing time as the time basis.</li>
+                                            <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the <span class="ph">Data Collector</span> processing time as the time basis.</li>
 
-                                            <li class="li"><samp class="ph codeph">${record:value(&lt;date field
-                                                  path&gt;)}</samp> - Uses the time associated with
+                                            <li class="li"><code class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</code> - Uses the time associated with
                                                 the record as the time basis.</li>
 
                                         </ul>
@@ -532,10 +861,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
+                                    <td class="entry cellrowborder" headers="d120197e692 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
                                             <img class="image" id="task_pgk_p2z_yv__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">Location of the HDFS configuration files. Use a directory
+                                    <td class="entry cellrowborder" headers="d120197e695 ">Location of the HDFS configuration files. Use a directory
                                         or symlink within the <span class="ph">Data Collector</span> resources directory.<div class="p">You can use the following file
                                             with the MapR DB destination:<ul class="ul" id="task_pgk_p2z_yv__ul_ezj_cvr_bt">
                   <li class="li">hbase-site.xml</li>
@@ -550,9 +879,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d148222e608 ">HBase Configuration</td>
+                                    <td class="entry cellrowborder" headers="d120197e692 ">HBase Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d148222e611 ">
+                                    <td class="entry cellrowborder" headers="d120197e695 ">
                                         <p class="p">Additional HBase configuration properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -564,8 +893,7 @@
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -574,10 +902,19 @@
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -585,6 +922,25 @@
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

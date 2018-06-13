@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Record","id":"concept_ckx_z3v_s1b","href":"datacollector\/UserGuide\/Origins\/SQLServerCDC.html#concept_ckx_z3v_s1b","menu": {"hasChildren":false,},"tocID":"concept_ckx_z3v_s1b-d46e58860","topics":[]}]});

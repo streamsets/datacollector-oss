@@ -1,56 +1,241 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="task" /><meta name="DC.Title" content="Working with Upgraded External Systems" /><meta name="abstract" content="When an external system is upgraded to a new version, you can continue to use existing Data Collector pipelines that connected to the previous version of the external system. You simply configure the pipelines to work with the upgraded system." /><meta name="description" content="When an external system is upgraded to a new version, you can continue to use existing Data Collector pipelines that connected to the previous version of the external system. You simply configure the pipelines to work with the upgraded system." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="task_ijh_wtw_xy" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Working with Upgraded External Systems</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="task" /><meta name="DC.Title" content="Working with Upgraded External Systems" /><meta name="abstract" content="When an external system is upgraded to a new version, you can continue to use existing Data Collector pipelines that connected to the previous version of the external system. You simply configure the pipelines to work with the upgraded system." /><meta name="description" content="When an external system is upgraded to a new version, you can continue to use existing Data Collector pipelines that connected to the previous version of the external system. You simply configure the pipelines to work with the upgraded system." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/UpgradeTroubleshooting.html#concept_dgz_p45_gy" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="task_ijh_wtw_xy" /><title>Working with Upgraded External Systems</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="task_ijh_wtw_xy-d46e17778" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy">Working with Upgraded External Systems</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When an external system is upgraded to a new version, you can continue to use         existing <span class="ph">Data Collector</span> pipelines that connected to the previous version of the external system. You simply         configure the pipelines to work
+                  with the upgraded system.
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw" title="Post Upgrade Tasks"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Upgrade/UpgradeTroubleshooting.html#concept_dgz_p45_gy" title="Troubleshooting an Upgrade"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="task_ijh_wtw_xy">
-    <h1 class="title topictitle1">Working with Upgraded External Systems</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_a2n_3fk_5v-d46e13379" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade.html#concept_a2n_3fk_5v">Upgrade</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vyy_sfp_hz-d46e13403" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PreUpgrade.html#concept_vyy_sfp_hz">Pre Upgrade Tasks</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In some situations, you must complete tasks before you upgrade.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ryn_4fk_5v-d46e13636" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Tarball.html#concept_ryn_4fk_5v">Upgrade an Installation from the Tarball</a></span></span></li>
+         <li><span data-tocid="concept_ws4_vq5_xv-d46e14489" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/RPM.html#concept_ws4_vq5_xv">Upgrade an Installation from the RPM Package</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you upgrade an installation from the RPM package, the new version uses the default         configuration, data, log,
+                        and resource directories. If the previous version used the default         directories, the new version has access to the
+                        files created in the previous         version.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_c45_chv_xv-d46e15085" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/CMUpgrade.html#concept_c45_chv_xv">Upgrade an Installation with Cloudera Manager</a></span></span></li>
+         <li><span data-tocid="concept_zll_vn5_zw-d46e15587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw">Post Upgrade Tasks</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In some situations, you must complete tasks within <span class="ph">Data Collector</span> or         your <span class="ph">Control Hub</span>         on-premises installation after you upgrade.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="task_ijh_wtw_xy-d46e17778" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy">Working with Upgraded External Systems</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When an external system is upgraded to a new version, you can continue to use         existing <span class="ph">Data Collector</span> pipelines that connected to the previous version of the external system. You simply         configure the pipelines to work
+                        with the upgraded system.
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_o1f_lq1_scb-d46e17836" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#concept_o1f_lq1_scb">Working with Kafka 0.11 or Later</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you upgrade to Kafka version 0.11 or later and your pipelines use Apache Kafka         stage libraries, you must enable
+                              Kerberos authentication for the Apache Kafka stages in the         Java Authentication and Authorization Service (JAAS) configuration
+                              file.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_spf_2gq_vz-d46e17861" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#concept_spf_2gq_vz">Working with Cloudera CDH 5.11 or Later</a></span></span></li>
+               <li><span data-tocid="concept_spt_33c_yy-d46e17893" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#concept_spt_33c_yy">Working with an Upgraded MapR System</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If you upgrade MapR, you must complete additional steps to continue using existing         pipelines that connected to the
+                              previous MapR version.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_dgz_p45_gy-d46e17938" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/UpgradeTroubleshooting.html#concept_dgz_p45_gy">Troubleshooting an Upgrade</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="task_ijh_wtw_xy">
+    <h1 class="title topictitle1" id="ariaid-title1">Working with Upgraded External Systems</h1>
 
     
     <div class="body taskbody"><p class="shortdesc">When an external system is upgraded to a new version, you can continue to use
         existing <span class="ph">Data Collector</span> pipelines that connected to the previous version of the external system. You simply
         configure the pipelines to work with the upgraded system.</p>
 
-        <div class="section context">
+        <section class="section context">
             <p class="p">For example, let's say that you have pipelines that read from Apache Kafka version
                 0.9. You upgrade Apache Kafka to version 0.10. You can continue to use the existing
                 pipelines after you configure the Kafka stages to use the Kafka version 0.10 stage
@@ -61,7 +246,7 @@
                 to use the imported pipeline after you configure the appropriate stages to use the
                 Cloudera CDH version 5.9 stage library.</p>
 
-        </div>
+        </section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Verify that the new stage library version is installed in <span class="ph">Data Collector</span>.</span>
@@ -83,9 +268,8 @@
 
     </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_o1f_lq1_scb">
-    <h2 class="title topictitle2">Working with Kafka 0.11 or Later</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_o1f_lq1_scb">
+    <h2 class="title topictitle2" id="ariaid-title2">Working with Kafka 0.11 or Later</h2>
 
     
     <div class="body conbody"><p class="shortdesc">When you upgrade to Kafka version 0.11 or later and your pipelines use Apache Kafka
@@ -101,7 +285,7 @@ For an Apache Kafka stage library version 0.10 or earlier, you can
                 
                     <dt class="dt dlterm">Data Collector configuration file</dt>
 
-                    <dd class="dd">Define the following Kerberos properties in the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>:<ul class="ul" id="concept_o1f_lq1_scb__ul_w1d_hpf_55">
+                    <dd class="dd">Define the following Kerberos properties in the <span class="ph">Data Collector</span> configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>:<ul class="ul" id="concept_o1f_lq1_scb__ul_w1d_hpf_55">
                         <li class="li">kerberos.client.enabled</li>
 
                         <li class="li">kerberos.client.principal</li>
@@ -116,7 +300,7 @@ For an Apache Kafka stage library version 0.10 or earlier, you can
                     <dt class="dt dlterm">JAAS configuration file</dt>
 
                     <dd class="dd">Configure the Kerberos properties in the JAAS configuration file. If <span class="ph">Data Collector</span> uses LDAP authentication, configure the properties in the
-                            <samp class="ph codeph">$SDC_CONF/ldap-login.conf</samp> file. If <span class="ph">Data Collector</span> does not use LDAP authentication, configure the properties in a separate
+                            <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. If <span class="ph">Data Collector</span> does not use LDAP authentication, configure the properties in a separate
                         JAAS configuration file on the <span class="ph">Data Collector</span> machine and modify the SDC_JAVA_OPTS environment variable to specify the
                         location of the file.</dd>
 
@@ -161,9 +345,9 @@ For an Apache Kafka stage library version 0.10 or earlier, you can
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_spf_2gq_vz">
- <h2 class="title topictitle2">Working with Cloudera CDH 5.11 or Later</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_spf_2gq_vz">
+ <h2 class="title topictitle2" id="ariaid-title3">Working with Cloudera CDH 5.11 or Later</h2>
 
  <div class="body conbody">
   <p class="p">When you upgrade to Cloudera CDH version 5.11 or later from a previous version, you must update
@@ -184,7 +368,7 @@ As of CDH 5.11, Cloudera changed how the minus and equals operators are evaluate
                     <p class="p">In previous CDH releases, the minus operator (-) grants the specified
                         permissions. In the current release, it removes the specified permissions. </p>
 
-                    <p class="p">For example, in previous releases, <samp class="ph codeph">a-rw</samp> grants read and
+                    <p class="p">For example, in previous releases, <code class="ph codeph">a-rw</code> grants read and
                         write permissions to all users. With CDH 5.11, it removes read and write
                         permissions from all users. </p>
 
@@ -194,7 +378,7 @@ As of CDH 5.11, Cloudera changed how the minus and equals operators are evaluate
                     <p class="p">In earlier CDH releases, the equals operator (=) removes the specified
                         permissions. In the current release, it grants the specified permissions. </p>
 
-                    <p class="p">For example, in previous releases, <samp class="ph codeph">a=we</samp> removes write and
+                    <p class="p">For example, in previous releases, <code class="ph codeph">a=we</code> removes write and
                         execute permission from all users. With CDH 5.11, it grants write and
                         execute permission to all users. </p>
 
@@ -209,9 +393,9 @@ To ensure that file permissions are set as expected, update all properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_spt_33c_yy">
- <h2 class="title topictitle2">Working with an Upgraded MapR System</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_spt_33c_yy">
+ <h2 class="title topictitle2" id="ariaid-title4">Working with an Upgraded MapR System</h2>
 
  
  <div class="body conbody"><p class="shortdesc">If you upgrade MapR, you must complete additional steps to continue using existing
@@ -222,19 +406,18 @@ To ensure that file permissions are set as expected, update all properties in
                 <li class="li">Stop <span class="ph">Data Collector</span>.</li>
 
                
-                <li class="li">In the <span class="ph">Data Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, add the
+                <li class="li">In the <span class="ph">Data Collector</span> configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, add the
                     previous MapR version stage library to the
                         <samp class="ph systemoutput">system.stagelibs.blacklist</samp> property.<div class="p">For example, if you upgraded MapR version 5.1 to 5.2, add MapR version 5.1 to the
                         blacklist property so that the property lists all supported MapR versions
                         like
-                        so:<pre class="pre codeblock">system.stagelibs.blacklist=\
+                        so:<pre class="pre codeblock"><code>system.stagelibs.blacklist=\
   streamsets-datacollector-mapr_5_0-lib,\
   streamsets-datacollector-mapr_5_1-lib,\
   streamsets-datacollector-mapr_5_2-lib,\
   streamsets-datacollector-mapr_6_0-lib,\
   streamsets-datacollector-mapr_6_0-mep4-lib,\
-  streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</pre>
-</div>
+  streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</code></pre></div>
 </li>
 
                 <li class="li">If the MapR cluster uses username/password login
@@ -244,38 +427,34 @@ To ensure that file permissions are set as expected, update all properties in
 <div class="p">
                         <ul class="ul" id="concept_spt_33c_yy__ul_n4l_dfc_1cb">
                         <li class="li">Manual start - Uncomment the following line in the
-                                    <samp class="ph codeph">sdc-env.sh</samp>
-                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
-</li>
+                                    <code class="ph codeph">sdc-env.sh</code>
+                              file:<pre class="pre codeblock"><code>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</code></pre></li>
 
                         <li class="li">Service start on operating systems that use the SysV init system - On
                                     <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
-                  LTS</span>, uncomment the following line in the <samp class="ph codeph">sdcd-env.sh</samp>
-                              file:<pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</pre>
-</li>
+                  LTS</span>, uncomment the following line in the <code class="ph codeph">sdcd-env.sh</code>
+                              file:<pre class="pre codeblock"><code>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"</code></pre></li>
 
                         <li class="li">Service start on operating systems that use the systemd init system - On
                                     <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
                   LTS</span>, add the following line to the file that overrides the default
-                              settings in the <samp class="ph codeph">sdc.service</samp>
-                                    file:<pre class="pre codeblock">Environment=SDC_JAVA_OPTS=-Dmaprlogin.password.enabled=true</pre>
-<p class="p">Override the default values in the
-                        <samp class="ph codeph">sdc.service</samp> file using the same procedure that you use to
+                              settings in the <code class="ph codeph">sdc.service</code>
+                                    file:<pre class="pre codeblock"><code>Environment=SDC_JAVA_OPTS=-Dmaprlogin.password.enabled=true</code></pre><p class="p">Override the default values in the
+                        <code class="ph codeph">sdc.service</code> file using the same procedure that you use to
                   override unit configuration files on a systemd init system. For an example, see
                   "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
 <p class="p">After
                                     overriding the default values, use the following command to
                                     reload the systemd manager
                               configuration:</p>
-<pre class="pre codeblock">systemctl daemon-reload</pre>
-</li>
+<pre class="pre codeblock"><code>systemctl daemon-reload</code></pre></li>
 
                   </ul>
 
                     </div>
 </li>
 
-                <li class="li">Run the <samp class="ph codeph">setup-mapr</samp> command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
+                <li class="li">Run the <code class="ph codeph">setup-mapr</code> command, as described in <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_pvx_wxp_xz" title="After installing the required client libraries, run the setup-mapr command. The command modifies configuration files, creates the required symbolic links, and installs the appropriate MapR stage libraries. You can run the command in interactive or non-interactive mode.">Step 2. Run the Command to Set Up MapR</a>.<p class="p">The command modifies configuration files and creates the required
                         symbolic links. You can run the command in interactive or non-interactive
                         mode.</p>
 </li>
@@ -286,14 +465,24 @@ To ensure that file permissions are set as expected, update all properties in
 
  </div>
 
-    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
-</div>
-</div>
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo relconcepts"><strong>Related concepts</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector Environment Configuration">Data Collector Environment Configuration</a></div></div>
+</nav>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -301,6 +490,25 @@ To ensure that file permissions are set as expected, update all properties in
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

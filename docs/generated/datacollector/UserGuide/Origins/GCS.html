@@ -1,48 +1,364 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Google Cloud Storage origin reads objects stored in Google Cloud Storage. The objects must be fully written and reside in a single bucket. The object names must share a prefix pattern. With the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Cloud Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_iyd_wql_nbb" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Google Cloud Storage</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Google Cloud Storage origin reads objects stored in Google Cloud Storage. The objects must be fully written and reside in a single bucket. The object names must share a prefix pattern. With the ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Cloud Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_iyd_wql_nbb" /><title>Google Cloud Storage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_iyd_wql_nbb-d46e29749" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b" title="Google BigQuery"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b" title="Google Pub/Sub Subscriber"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_iyd_wql_nbb">
- <h1 class="title topictitle1">Google Cloud Storage</h1>
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e23821" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e24391" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e25333" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e25797" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e26079" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
+                        Server origin is a multithreaded origin that listens on         a CoAP endpoint and processes the contents of all authorized
+                        CoAP requests. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e26374" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Directory origin reads data from files in a directory. The origin can use         multiple threads to enable the parallel
+                        processing of files. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e27646" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch         cluster, including Elastic
+                        Cloud clusters (formerly Found clusters). The origin generates a         record for each Elasticsearch document.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e28030" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The File Tail origin reads lines of data as they are written to an active file after         reading related archived files
+                        in the same directory. File Tail generates a record for each         line of data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e29279" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google BigQuery origin executes a query job and reads the result from Google         BigQuery. </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_iyd_wql_nbb-d46e29749" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_g1r_5rn_sbb-d46e29852" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_g1r_5rn_sbb">Credentials</a></span></span></li>
+               <li><span data-tocid="concept_gmw_2tn_sbb-d46e29948" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_gmw_2tn_sbb">Common Prefix, Prefix Pattern, and Wildcards</a></span></span></li>
+               <li><span data-tocid="concept_fkf_bmn_sbb-d46e30000" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_fkf_bmn_sbb">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_czx_ltn_sbb-d46e30134" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_czx_ltn_sbb">Data Formats</a></span></span></li>
+               <li><span data-tocid="task_wzm_2rl_nbb-d46e30217" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#task_wzm_2rl_nbb">Configuring a Google Cloud Storage Origin</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e30311" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub         subscription. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e30781" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from     other file systems using the Hadoop
+                        FileSystem interface. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e31251" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written. You can also configure
+                        the origin to read from         Azure HDInsight.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e33040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e35432" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and         processes the contents of all
+                        authorized HTTP POST and PUT requests. Use the HTTP Server         origin to read high volumes of HTTP POST and PUT requests
+                        using multiple threads. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e35899" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e36460" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e40326" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e42088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JMS Consumer origin reads data from a Java Messaging Service (JMS). </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_msz_wnr_5q-d46e42463" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e43272" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e44212" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Consumer origin reads data from Amazon Kinesis Streams. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e44685" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e44967" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin         converts each document into a record.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e45069" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS origin reads files from MapR FS. Use this origin only in pipelines         configured for cluster batch pipeline
+                        execution mode. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e45455" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS Standalone origin reads files in MapR. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e47068" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e47529" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Consumer origin reads messages from MapR Streams.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e47821" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e48382" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e48840" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages         from the broker. The origin functions
+                        as an MQTT client that receives messages, generating a         record for each message.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e49059" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e49630" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Omniture origin processes JSON website usage reports generated by the Omniture   reporting APIs. Omniture is also known
+                        as the Adobe Marketing Cloud.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e49687" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e49899" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e53477" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e53697" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Consumer origin reads messages from Redis. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e53851" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e56449" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC     origin reads data passed from an SDC
+                        RPC destination. Use the SDC RPC origin as part of an SDC     RPC destination pipeline.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e56506" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e57186" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SFTP/FTP Client origin reads files from a server using the Secure File Transfer         Protocol (SFTP) or the File Transfer
+                        Protocol (FTP). 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e57753" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e59147" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e60225" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e60683" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e61048" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e61196" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e61657" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin         to read data from a WebSocket
+                        resource URL. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e61810" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Server origin is a multithreaded origin that listens on a WebSocket         endpoint and processes the contents
+                        of all authorized WebSocket client requests. Use the         WebSocket Server origin to read high volumes of WebSocket client
+                        requests using multiple         threads. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e62187" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Windows Event Log origin reads data from a Microsoft Windows event log located on a         Windows machine. The origin
+                        generates a record for each event in the log. 
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_iyd_wql_nbb">
+ <h1 class="title topictitle1" id="ariaid-title1">Google Cloud Storage</h1>
 
  <div class="body conbody">
         <p class="p">The Google Cloud Storage origin
@@ -68,9 +384,8 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_g1r_5rn_sbb">
- <h2 class="title topictitle2">Credentials</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_g1r_5rn_sbb">
+ <h2 class="title topictitle2" id="ariaid-title2">Credentials</h2>
 
     <div class="body conbody">
         <p class="p">Before reading objects in Google
@@ -80,13 +395,13 @@
 
     </div>
 
-<div class="topic concept nested2" id="concept_vrh_yrn_sbb">
- <h3 class="title topictitle3">Default Credentials Provider</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_vrh_yrn_sbb">
+ <h3 class="title topictitle3" id="ariaid-title3">Default Credentials Provider</h3>
 
  <div class="body conbody">
         <p class="p">When configured to use the Google Application
             Default Credentials, the origin checks for the credentials file defined in the
-                <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp> environment variable. If the
+                <code class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</code> environment variable. If the
             environment variable doesn't exist and <span class="ph">Data Collector</span> is
             running on a virtual machine (VM) in Google Cloud Platform (GCP), the origin uses the
             built-in service account associated with the virtual machine instance. </p>
@@ -99,25 +414,23 @@
 
         <ol class="ol" id="concept_vrh_yrn_sbb__ol_o51_ttq_v1b">
                                     <li class="li">Use the Google Cloud Platform Console or the
-                                                <samp class="ph codeph">gcloud</samp> command-line tool to create
+                                                <code class="ph codeph">gcloud</code> command-line tool to create
                                           a Google service account and have your application use it
                                           for API access.<div class="p">For example, to use the command line
                                                 tool, run the following
-                                                commands:<pre class="pre codeblock">gcloud iam service-accounts create my-account
-gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</pre>
-</div>
+                                                commands:<pre class="pre codeblock"><code>gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</code></pre></div>
 </li>
 
                                     <li class="li">Store the generated credentials file on the <span class="ph">Data Collector</span> machine. </li>
 
-                                    <li class="li">Add the <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+                                    <li class="li">Add the <code class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</code>
                                           environment variable to the appropriate file and point it
                                           to the credentials file.<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
 <p class="p">Set the environment variable as
                                           follows:</p>
-<pre class="pre codeblock">export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</pre>
-</li>
+<pre class="pre codeblock"><code>export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</code></pre></li>
 
                                     <li class="li">Restart <span class="ph">Data Collector</span> to enable the changes.</li>
 
@@ -129,9 +442,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
     </div>
 
-</div>
-<div class="topic concept nested2" id="concept_qs2_nsn_sbb">
- <h3 class="title topictitle3">Service Account Credentials (JSON)</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_qs2_nsn_sbb">
+ <h3 class="title topictitle3" id="ariaid-title4">Service Account Credentials (JSON)</h3>
 
  <div class="body conbody">
   <p class="p">When configured to use the Google Cloud service
@@ -141,7 +454,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
         <div class="p">Complete the following steps to use the service account credentials file:<ol class="ol" id="concept_qs2_nsn_sbb__ol_ztr_wtq_v1b">
                                     <li class="li">Generate a service account credentials file in JSON
                                                 format.<p class="p">Use the Google Cloud Platform Console or
-                                                the <samp class="ph codeph">gcloud</samp> command-line tool to
+                                                the <code class="ph codeph">gcloud</code> command-line tool to
                                                 generate and download the credentials file. For more
                                                 information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a
                                                   service account credential</a> in the Google
@@ -150,7 +463,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                                     <li class="li">Store the generated credentials file on the <span class="ph">Data Collector</span> machine. <p class="p">As a best practice, store the file in the
                                                   <span class="ph">Data Collector</span> resources directory,
-                                                  <samp class="ph codeph">$SDC_RESOURCES</samp>. </p>
+                                                  <code class="ph codeph">$SDC_RESOURCES</code>. </p>
 </li>
 
                                     <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
@@ -163,10 +476,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_gmw_2tn_sbb">
- <h2 class="title topictitle2">Common Prefix, Prefix Pattern, and Wildcards</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_gmw_2tn_sbb">
+ <h2 class="title topictitle2" id="ariaid-title5">Common Prefix, Prefix Pattern, and Wildcards</h2>
 
     <div class="body conbody">
         <p class="p">The Google Cloud Storage origin appends the
@@ -184,27 +497,25 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
             </ul>
 </div>
 
-        <div class="p">For example, to process all log files in <samp class="ph codeph">US/East/MD/</samp> and all nested
+        <div class="p">For example, to process all log files in <code class="ph codeph">US/East/MD/</code> and all nested
             prefixes, you can use the following common prefix and prefix
-            pattern:<pre class="pre codeblock">Common Prefix: US/East/MD/
-Prefix Pattern: **/*.log</pre>
-</div>
+            pattern:<pre class="pre codeblock"><code>Common Prefix: US/East/MD/
+Prefix Pattern: **/*.log</code></pre></div>
 
         <div class="p">If the unnamed nested prefixes that you want to include appear earlier in the hierarchy,
-            such as <samp class="ph codeph"> US/**/weblogs/</samp>, you can include the nested prefixes in the
+            such as <code class="ph codeph"> US/**/weblogs/</code>, you can include the nested prefixes in the
             prefix pattern or define the entire hierarchy in the prefix pattern, as
-            follows:<pre class="pre codeblock">Common Prefix: US/
+            follows:<pre class="pre codeblock"><code>Common Prefix: US/
 Prefix Pattern: **/weblogs/*.log
 
 Common Prefix: 
-Prefix Pattern: US/**/weblogs/*.log</pre>
-</div>
+Prefix Pattern: US/**/weblogs/*.log</code></pre></div>
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_fkf_bmn_sbb">
- <h2 class="title topictitle2">Event Generation</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_fkf_bmn_sbb">
+ <h2 class="title topictitle2" id="ariaid-title6">Event Generation</h2>
 
     <div class="body conbody">
         <p class="p">The Google Cloud
@@ -233,31 +544,27 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
     </div>
 
-<div class="topic concept nested2" id="concept_nvj_cmn_sbb">
-    <h3 class="title topictitle3">Event Records</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_nvj_cmn_sbb">
+    <h3 class="title topictitle3" id="ariaid-title7">Event Records</h3>
 
     <div class="body conbody">
         <div class="p">Event records generated by the Google
             Cloud Storage origin have the following event-related record header attributes. Record
             header attributes are stored as String values:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_nvj_cmn_sbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_nvj_cmn_sbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d273258e355">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d233523e483">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d273258e358">Description</th>
+                            <th class="entry cellrowborder" id="d233523e486">Description</th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d273258e355 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d233523e483 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d273258e358 ">Event type. Uses the following type:<ul class="ul" id="concept_nvj_cmn_sbb__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d233523e486 ">Event type. Uses the following type:<ul class="ul" id="concept_nvj_cmn_sbb__ul_m12_mgp_qx">
                                     <li class="li">no-more-data - Generated after the origin completes
                                         processing all available objects and the number of seconds
                                         configured for Batch Wait Time has elapsed.</li>
@@ -268,23 +575,22 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e355 ">sdc.event.version</td>
+       <td class="entry cellrowborder" headers="d233523e483 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e358 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry cellrowborder" headers="d233523e486 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e355 ">sdc.event.creation_timestamp</td>
+       <td class="entry cellrowborder" headers="d233523e483 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_nvj_cmn_sbb__d47442e2127" valign="top" width="70%" headers="d273258e358 ">Epoch timestamp when the stage created the event.
+       <td class="entry cellrowborder" id="concept_nvj_cmn_sbb__d40e2120" headers="d233523e486 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
 
@@ -299,50 +605,45 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                     configured for Batch Wait Time elapses without any new objects appearing to be
                     processed. </dd>
 
-                <dd class="dd">No-more-data event records generated by the origin have the sdc.event.type set
+                <dd class="dd ddexpand">No-more-data event records generated by the origin have the sdc.event.type set
                     to no-more-data and include the following fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_nvj_cmn_sbb__table_fcv_xx4_j1b" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_nvj_cmn_sbb__table_fcv_xx4_j1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e427">Event Record Field</th>
+                                    <th class="entry cellrowborder" id="d233523e555">Event Record Field</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e430">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e558">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e427 ">record-count</td>
+       <td class="entry cellrowborder" headers="d233523e555 ">record-count</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e430 ">Number of records successfully generated since the pipeline started or since the last
+       <td class="entry cellrowborder" headers="d233523e558 ">Number of records successfully generated since the pipeline started or since the last
         no-more-data event was created. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e427 ">error-count</td>
+       <td class="entry cellrowborder" headers="d233523e555 ">error-count</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e430 ">Number of error records generated since the pipeline started or since the last
+       <td class="entry cellrowborder" headers="d233523e558 ">Number of error records generated since the pipeline started or since the last
         no-more-data event was created.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e427 ">file-count</td>
+                                    <td class="entry cellrowborder" headers="d233523e555 ">file-count</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e430 ">Number of objects that the origin attempted to process.
+                                    <td class="entry cellrowborder" headers="d233523e558 ">Number of objects that the origin attempted to process.
                                         Can include objects that were unable to be processed or were
                                         not fully processed.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 </dd>
 
@@ -351,10 +652,10 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_czx_ltn_sbb">
- <h2 class="title topictitle2">Data Formats</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_czx_ltn_sbb">
+ <h2 class="title topictitle2" id="ariaid-title8">Data Formats</h2>
 
  <div class="body conbody">
         <div class="p">The Google Cloud Storage origin processes data
@@ -366,12 +667,12 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                     and "scale" field attribute for each Decimal field. For more
                                     information about field attributes, see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a>. </dd>
 
-                              <dd class="dd">The origin writes the Avro schema to an avroSchema record header
+                              <dd class="dd ddexpand">The origin writes the Avro schema to an avroSchema record header
                                     attribute. For more information about record header attributes,
                                     see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>. </dd>
 
-                              <dd class="dd">You can use one of the following methods to specify the location
-                                    of the Avro schema definition:<ul class="ul" id="concept_czx_ltn_sbb__d47352e1047">
+                              <dd class="dd ddexpand">You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul class="ul" id="concept_czx_ltn_sbb__d13e1049">
                                           <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
                                                 Use the schema in the file.</li>
 
@@ -390,11 +691,11 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                     </ul>
 </dd>
 
-                              <dd class="dd">Using a schema in the stage configuration or retrieving a schema
+                              <dd class="dd ddexpand">Using a schema in the stage configuration or retrieving a schema
                                     from the Confluent Schema Registry overrides any schema that
                                     might be included in the file and can improve performance.</dd>
 
-                              <dd class="dd">The origin reads files compressed by Avro-supported compression
+                              <dd class="dd ddexpand">The origin reads files compressed by Avro-supported compression
                                     codecs without requiring additional configuration. To enable the
                                     origin to read files compressed by other codecs, use the
                                     compression format property in the stage.</dd>
@@ -430,24 +731,24 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                   </ul>
 </dd>
 
-                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                              <dd class="dd ddexpand">You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. For
                                     more information about the root field types, see <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
 
-                              <dd class="dd">When using a header line, you can allow processing records with
+                              <dd class="dd ddexpand">When using a header line, you can allow processing records with
                                     additional columns. The additional columns are named using a
                                     custom prefix and integers in sequential increasing order, such
                                     as _extra_1, _extra_2. When you disallow additional columns when
                                     using a header line, records that include additional columns are
                                     sent to error.</dd>
 
-                              <dd class="dd">You can also replace a string constant with null values.</dd>
+                              <dd class="dd ddexpand">You can also replace a string constant with null values.</dd>
 
-                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                              <dd class="dd ddexpand">When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_czx_ltn_sbb__d47352e1247">
+                                    configured for the stage:<ul class="ul" id="concept_czx_ltn_sbb__d13e1249">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -471,11 +772,11 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                     files that include multiple JSON objects or a single JSON
                                     array.</dd>
 
-                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                              <dd class="dd ddexpand">When an object exceeds the maximum object length defined for the
                                     origin, the origin cannot continue processing data in the file.
                                     Records already processed from the file are passed to the
                                     pipeline. The behavior of the origin is then based on the error
-                                    handling configured for the stage:<ul class="ul" id="concept_czx_ltn_sbb__d47352e1282">
+                                    handling configured for the stage:<ul class="ul" id="concept_czx_ltn_sbb__d13e1284">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -497,14 +798,14 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                               <dd class="dd">Generates a record for every log line. </dd>
 
-                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                              <dd class="dd ddexpand">When a line exceeds the user-defined maximum line length, the
                                     origin truncates longer lines. </dd>
 
-                              <dd class="dd">You can include the processed log line as a field in the record.
+                              <dd class="dd ddexpand">You can include the processed log line as a field in the record.
                                     If the log line is truncated, and you request the log line in
                                     the record, the origin includes the truncated line.</dd>
 
-                              <dd class="dd">You can define the <a class="xref" href="../Data_Formats/LogFormats.html#concept_tr1_spd_sr" title="When you use an origin to read log data, you define the format of the log files to be read.">log format</a> or type to be read.</dd>
+                              <dd class="dd ddexpand">You can define the <a class="xref" href="../Data_Formats/LogFormats.html#concept_tr1_spd_sr" title="When you use an origin to read log data, you define the format of the log files to be read.">log format</a> or type to be read.</dd>
 
                         
                 
@@ -512,14 +813,14 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                         <dd class="dd">Generates a record for every protobuf message. </dd>
 
-                        <dd class="dd">Protobuf messages must match the specified message type and be described
+                        <dd class="dd ddexpand">Protobuf messages must match the specified message type and be described
                               in the descriptor file. </dd>
 
-                        <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot continue
+                        <dd class="dd ddexpand">When the data for a record exceeds 1 MB, the origin cannot continue
                               processing data in the file. The origin handles the file based on file
                               error handling properties and continues reading the next file. </dd>
 
-                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+                        <dd class="dd ddexpand">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
 
                   
                 
@@ -529,11 +830,11 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                     generated by a <span class="ph">Data Collector</span>
                                     pipeline using the SDC Record data format.</dd>
 
-                              <dd class="dd">For error records, the origin provides the original record as read
+                              <dd class="dd ddexpand">For error records, the origin provides the original record as read
                                     from the origin in the original pipeline, as well as error
                                     information that you can use to correct the record. </dd>
 
-                              <dd class="dd">When processing error records, the origin expects the error file
+                              <dd class="dd ddexpand">When processing error records, the origin expects the error file
                                     names and contents as generated by the original pipeline.</dd>
 
                         
@@ -543,12 +844,12 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                               <dd class="dd">Generates a record for each line of text or for each section of
                                     text based on a custom delimiter.</dd>
 
-                              <dd class="dd">When a line or section exceeds the maximum line length defined for
+                              <dd class="dd ddexpand">When a line or section exceeds the maximum line length defined for
                                     the origin, the origin truncates it. The origin adds a boolean
                                     field named Truncated to indicate if the line was
                                     truncated.</dd>
 
-                              <dd class="dd">For more information about processing text with a custom
+                              <dd class="dd ddexpand">For more information about processing text with a custom
                                     delimiter, see <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Text Data Format with Custom Delimiters</a>.</dd>
 
                         
@@ -559,10 +860,10 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                     system. You can specify a transfer rate or use all available
                                     resources to perform the transfer. </dd>
 
-                              <dd class="dd">The origin uses checksums to verify the integrity of data
+                              <dd class="dd ddexpand">The origin uses checksums to verify the integrity of data
                                     transmission.</dd>
 
-                              <dd class="dd">The origin generates two fields: one for a file reference and one
+                              <dd class="dd ddexpand">The origin generates two fields: one for a file reference and one
                                     for file information. For more information, see <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">Whole File Data Format</a>.</dd>
 
                         
@@ -571,62 +872,58 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
     </div>
 
-</div>
-<div class="topic task nested1" id="task_wzm_2rl_nbb">
-    <h2 class="title topictitle2">Configuring a Google Cloud Storage Origin</h2>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title9" id="task_wzm_2rl_nbb">
+    <h2 class="title topictitle2" id="ariaid-title9">Configuring a Google Cloud Storage Origin</h2>
 
     <div class="body taskbody">
-        <div class="section context">Configure a Google Cloud Storage
-            origin to read data from objects in Google Cloud Storage.</div>
+        <section class="section context">Configure a Google Cloud Storage
+            origin to read data from objects in Google Cloud Storage.</section>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e796">General Property</th>
+                                    <th class="entry cellrowborder" id="d233523e928">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e799">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e931">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e796 ">Name</td>
+       <td class="entry cellrowborder" headers="d233523e928 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e799 ">Stage name.</td>
+       <td class="entry cellrowborder" headers="d233523e931 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e796 ">Description</td>
+       <td class="entry cellrowborder" headers="d233523e928 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e799 ">Optional description.</td>
+       <td class="entry cellrowborder" headers="d233523e931 ">Optional description.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e796 ">Produce Events <a class="xref" href="GCS.html#concept_fkf_bmn_sbb">
+                                    <td class="entry cellrowborder" headers="d233523e928 ">Produce Events <a class="xref" href="GCS.html#concept_fkf_bmn_sbb">
                                             <img class="image" id="task_wzm_2rl_nbb__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e799 ">Generates event records when events occur. Use for event
+                                    <td class="entry cellrowborder" headers="d233523e931 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_wzm_2rl_nbb__d40e800" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e796 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e928 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_wzm_2rl_nbb__d40e809" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e799 ">Error record handling for the stage: <ul class="ul" id="task_wzm_2rl_nbb__d47442e811">
+       <td class="entry cellrowborder" headers="d233523e931 ">Error record handling for the stage: <ul class="ul" id="task_wzm_2rl_nbb__d40e813">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -639,8 +936,7 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -650,43 +946,41 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_pmk_4gx_mv" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_pmk_4gx_mv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e892">GCS Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1024">GCS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e895">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1027">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e892 ">Bucket</td>
+                                    <td class="entry cellrowborder" headers="d233523e1024 ">Bucket</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e895 ">Bucket that contains the objects to be read.</td>
+                                    <td class="entry cellrowborder" headers="d233523e1027 ">Bucket that contains the objects to be read.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
+                  information about bucket naming conventions, see the <a class="xref" href="https://cloud.google.com/storage/docs/naming" target="_blank">Google Cloud Storage documentation</a>.</div>
+</td>
 
-      </tr>
+                                </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e892 ">Common Prefix <a class="xref" href="GCS.html#concept_gmw_2tn_sbb">
+                                    <td class="entry cellrowborder" headers="d233523e1024 ">Common Prefix <a class="xref" href="GCS.html#concept_gmw_2tn_sbb">
                                             <img class="image" id="task_wzm_2rl_nbb__image_wm3_212_wv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e895 ">Optional common prefix that describes the location of the
+                                    <td class="entry cellrowborder" headers="d233523e1027 ">Optional common prefix that describes the location of the
         objects. When defined, the common prefix acts as a root for the prefix pattern.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e892 ">Prefix Pattern <a class="xref" href="GCS.html#concept_gmw_2tn_sbb">
+                                    <td class="entry cellrowborder" headers="d233523e1024 ">Prefix Pattern <a class="xref" href="GCS.html#concept_gmw_2tn_sbb">
                                             <img class="image" id="task_wzm_2rl_nbb__image_aqx_gvn_sbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e895 ">Prefix pattern that describes the objects to be processed.
+                                    <td class="entry cellrowborder" headers="d233523e1027 ">Prefix pattern that describes the objects to be processed.
          <p class="p">You can include the entire path to the objects. You can also use Ant-style path patterns
          to read objects recursively. </p>
 </td>
@@ -694,9 +988,9 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e892 ">Max Batch Size (records)</td>
+       <td class="entry cellrowborder" headers="d233523e1024 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e895 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is
+       <td class="entry cellrowborder" headers="d233523e1027 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is
          1000. The <span class="ph">Data Collector</span> default is
          1000.</p>
 </td>
@@ -704,16 +998,15 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e892 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e895" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1024 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+         <img class="image" id="task_wzm_2rl_nbb__d40e897" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e895 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry cellrowborder" headers="d233523e1027 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -723,25 +1016,21 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e2842" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e2844" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d273258e998">Error Handling Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1136">Error Handling Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d273258e1001">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1139">Description</th>
 
                                 </tr>
 
                             </thead>
+<tbody class="tbody">
+                                <tr id="task_wzm_2rl_nbb__d61e2866">
+                                    <td class="entry cellrowborder" headers="d233523e1136 ">Error Handling Option</td>
 
-                            <tbody class="tbody">
-                                <tr id="task_wzm_2rl_nbb__d47645e2864">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e998 ">Error Handling Option</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1001 ">The action taken when an error occurs while processing an
-                                            object:<ul class="ul" id="task_wzm_2rl_nbb__d47645e2871">
+                                    <td class="entry cellrowborder" headers="d233523e1139 ">The action taken when an error occurs while processing an
+                                            object:<ul class="ul" id="task_wzm_2rl_nbb__d61e2873">
                                             <li class="li">None - Keeps the object in place.</li>
 
                                             <li class="li">Archive - Copies or moves the object to another
@@ -757,10 +1046,10 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2886">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e998 ">Archiving Option</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2888">
+                                    <td class="entry cellrowborder" headers="d233523e1136 ">Archiving Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1001 ">The action to take when archiving an object that cannot
+                                    <td class="entry cellrowborder" headers="d233523e1139 ">The action to take when archiving an object that cannot
                                         be processed. <p class="p">You can copy or move the object to another prefix or bucket.
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
@@ -769,23 +1058,22 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2897">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e998 ">Error Prefix</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2899">
+                                    <td class="entry cellrowborder" headers="d233523e1136 ">Error Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1001 ">Prefix for the objects that cannot be processed.</td>
+                                    <td class="entry cellrowborder" headers="d233523e1139 ">Prefix for the objects that cannot be processed.</td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2906">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e998 ">Error Bucket</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2908">
+                                    <td class="entry cellrowborder" headers="d233523e1136 ">Error Bucket</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1001 ">Bucket for the objects that cannot be processed.</td>
+                                    <td class="entry cellrowborder" headers="d233523e1139 ">Bucket for the objects that cannot be processed.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -795,25 +1083,21 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                     property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e1088">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1226">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e1091">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1229">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1088 ">Data Format <a class="xref" href="GCS.html#concept_czx_ltn_sbb">
+                                    <td class="entry cellrowborder" headers="d233523e1226 ">Data Format <a class="xref" href="GCS.html#concept_czx_ltn_sbb">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1091 ">Data format for source files. Use one of the following
+                                    <td class="entry cellrowborder" headers="d233523e1229 ">Data format for source files. Use one of the following
                                             formats:<ul class="ul" id="task_wzm_2rl_nbb__ul_y1t_wql_5q">
                                             <li class="li">Avro</li>
 
@@ -839,8 +1123,7 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -850,25 +1133,21 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e711" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e713" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e1182">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1320">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e1185">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1323">Description</th>
 
                                 </tr>
 
                             </thead>
+<tbody class="tbody">
+                                <tr id="task_wzm_2rl_nbb__d61e735">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Avro Schema Location</td>
 
-                            <tbody class="tbody">
-                                <tr id="task_wzm_2rl_nbb__d47645e733">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Avro Schema Location</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Location of the Avro schema definition to use when
-                                        processing data:<ul class="ul" id="task_wzm_2rl_nbb__d47645e740">
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_wzm_2rl_nbb__d61e742">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 file.</li>
 
@@ -886,10 +1165,10 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e755">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Avro Schema</td>
+                                <tr id="task_wzm_2rl_nbb__d61e757">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Avro schema definition used to process the data.
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the runtime:loadResource
                                             function to use a schema definition stored in a runtime
@@ -898,22 +1177,21 @@ Prefix Pattern: US/**/weblogs/*.log</pre>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e766">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Schema Registry URLs</td>
+                                <tr id="task_wzm_2rl_nbb__d61e768">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
                                         the following format to enter the
-                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
-</td>
+                                        URL:<pre class="pre codeblock"><code>http://&lt;host name&gt;:&lt;port number&gt;</code></pre></td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e780">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Lookup Schema By</td>
+                                <tr id="task_wzm_2rl_nbb__d61e782">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Lookup Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_wzm_2rl_nbb__d47645e787">
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_wzm_2rl_nbb__d61e789">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -926,10 +1204,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e798">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Schema Subject</td>
+                                <tr id="task_wzm_2rl_nbb__d61e800">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Avro schema subject to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Avro schema subject to look up in the Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the origin uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -940,17 +1218,16 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e813">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1182 ">Schema ID</td>
+                                <tr id="task_wzm_2rl_nbb__d61e815">
+                                    <td class="entry cellrowborder" headers="d233523e1320 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1185 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d233523e1323 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -960,25 +1237,21 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e1380" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e1382" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e1309">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1447">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e1312">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1450">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1447 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1312 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e1450 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -994,9 +1267,9 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1309 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e1447 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1312 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e1450 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1004,10 +1277,10 @@ Overrides any existing schema definitions associated
 
       </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1412">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Delimiter Format Type</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1414">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_wzm_2rl_nbb__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1036,49 +1309,49 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1425">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Header Line</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1427">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Indicates whether a file contains a header line, and
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1434">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Allow Extra Columns</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1436">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Allow Extra Columns</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">When processing data with a header line, allows
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1444">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Extra Column Prefix</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1446">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Extra Column Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
-                                            <samp class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</samp>. <p class="p">For
+                                            <code class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</code>. <p class="p">For
                                             example, _extra_1. Default is _extra_.</p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1458">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Max Record Length (chars)</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1460">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1469">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Delimiter Character</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1471">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1092,25 +1365,25 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1488">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Escape Character</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1490">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr id="task_wzm_2rl_nbb__d47645e1497">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Quote character for a custom file type.</td>
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1506">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
-                                            <img class="image" id="task_wzm_2rl_nbb__d47645e1512" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wzm_2rl_nbb__d61e1499">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Root field type to use:<ul class="ul" id="task_wzm_2rl_nbb__d47645e1516">
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr id="task_wzm_2rl_nbb__d61e1508">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
+                                            <img class="image" id="task_wzm_2rl_nbb__d61e1514" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Root field type to use:<ul class="ul" id="task_wzm_2rl_nbb__d61e1518">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1125,47 +1398,46 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1527">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Lines to Skip</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1529">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Lines to skip before reading data. </td>
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1536">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Parse NULLs</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1538">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Replaces the specified string constant with null
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1545">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1309 ">NULL Constant</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1547">
+                                    <td class="entry cellrowborder" headers="d233523e1447 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1312 ">String constant to replace with null values.</td>
+                                    <td class="entry cellrowborder" headers="d233523e1450 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Charset</td>
+       <td class="entry cellrowborder" headers="d233523e1447 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Character encoding of the files to be processed.</td>
+       <td class="entry cellrowborder" headers="d233523e1450 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1309 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1447 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1312 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry cellrowborder" headers="d233523e1450 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1175,25 +1447,21 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e1590" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e1592" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e1602">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1740">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e1605">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1743">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1602 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1740 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1605 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e1743 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1209,9 +1477,9 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1602 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e1740 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1605 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e1743 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1219,11 +1487,11 @@ Overrides any existing schema definitions associated
 
       </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1622">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1602 ">JSON Content</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1624">
+                                    <td class="entry cellrowborder" headers="d233523e1740 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1605 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_wzm_2rl_nbb__d47645e1631">
+                                    <td class="entry cellrowborder" headers="d233523e1743 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_wzm_2rl_nbb__d61e1633">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1235,10 +1503,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1642">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1602 ">Maximum Object Length (chars)</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1644">
+                                    <td class="entry cellrowborder" headers="d233523e1740 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1605 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry cellrowborder" headers="d233523e1743 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1248,24 +1516,23 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1602 ">Charset</td>
+       <td class="entry cellrowborder" headers="d233523e1740 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1605 ">Character encoding of the files to be processed.</td>
+       <td class="entry cellrowborder" headers="d233523e1743 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1602 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1740 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1605 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry cellrowborder" headers="d233523e1743 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1275,25 +1542,21 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e1701" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e1703" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e1747">Log Property</th>
+                                    <th class="entry cellrowborder" id="d233523e1885">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e1750">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e1888">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1885 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1750 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e1888 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1309,9 +1572,9 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1747 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e1885 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1750 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e1888 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1319,12 +1582,12 @@ Overrides any existing schema definitions associated
 
       </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1733">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
-                                            <img class="image" id="task_wzm_2rl_nbb__d47645e1739" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wzm_2rl_nbb__d61e1735">
+                                    <td class="entry cellrowborder" headers="d233523e1885 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_wzm_2rl_nbb__d61e1741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1750 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_wzm_2rl_nbb__d47645e1743">
+                                    <td class="entry cellrowborder" headers="d233523e1888 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_wzm_2rl_nbb__d61e1745">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1348,20 +1611,20 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1775">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Max Line Length</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1777">
+                                    <td class="entry cellrowborder" headers="d233523e1885 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1750 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry cellrowborder" headers="d233523e1888 ">Maximum length of a log line. The origin truncates longer
                                         lines. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e1786">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Retain Original Line</td>
+                                <tr id="task_wzm_2rl_nbb__d61e1788">
+                                    <td class="entry cellrowborder" headers="d233523e1885 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e1750 ">Determines how to treat the original log line. Select to
+                                    <td class="entry cellrowborder" headers="d233523e1888 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1370,27 +1633,26 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Charset</td>
+       <td class="entry cellrowborder" headers="d233523e1885 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1750 ">Character encoding of the files to be processed.</td>
+       <td class="entry cellrowborder" headers="d233523e1888 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e1747 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e1885 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e1750 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry cellrowborder" headers="d233523e1888 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
-                    <ul class="ul" id="task_wzm_2rl_nbb__d47645e1811">
+                    <ul class="ul" id="task_wzm_2rl_nbb__d61e1813">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1413,25 +1675,21 @@ Overrides any existing schema definitions associated
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e1856" class="table" frame="border" border="1" rules="all">
-                                        
-                                        
-                                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e1858" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d273258e1965">Log4j Property</th>
+                                                <th class="entry cellrowborder" id="d233523e2103">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d273258e1968">Description</th>
+                                                <th class="entry cellrowborder" id="d233523e2106">Description</th>
 
                                             </tr>
 
                                         </thead>
-
-                                        <tbody class="tbody">
+<tbody class="tbody">
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e1965 ">On Parse Error</td>
+                                                <td class="entry cellrowborder" headers="d233523e2103 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1968 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_wzm_2rl_nbb__d47645e1885">
+                                                <td class="entry cellrowborder" headers="d233523e2106 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_wzm_2rl_nbb__d61e1887">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1450,24 +1708,23 @@ Overrides any existing schema definitions associated
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e1965 ">Use Custom Log Format</td>
+                                                <td class="entry cellrowborder" headers="d233523e2103 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1968 ">Allows you to define a custom log
+                                                <td class="entry cellrowborder" headers="d233523e2106 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d273258e1965 ">Custom Format</td>
+                                                <td class="entry cellrowborder" headers="d233523e2103 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d273258e1968 ">Use log4j variables to define a custom log
+                                                <td class="entry cellrowborder" headers="d233523e2106 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
 
                                         </tbody>
-
-                                    </table>
+</table>
 </div>
 
                             </div>
@@ -1482,25 +1739,21 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e2055" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e2057" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e2042">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d233523e2180">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e2045">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e2183">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2042 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e2180 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2045 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e2183 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1516,9 +1769,9 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2042 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e2180 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2045 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e2183 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1527,40 +1780,39 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2042 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d233523e2180 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2045 ">Descriptor file (.desc) to use. The descriptor file must
-                                        be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                    <td class="entry cellrowborder" headers="d233523e2183 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
-                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
                                             see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2042 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d233523e2180 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2045 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d233523e2183 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
-                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
-                                            type&gt;</samp>. </p>
+                                                <code class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</code>. </p>
 Use a message type defined in the
                                         descriptor file.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2042 ">Delimited Messages</td>
+                                    <td class="entry cellrowborder" headers="d233523e2180 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2045 ">Indicates if a file might include more than one protobuf
+                                    <td class="entry cellrowborder" headers="d233523e2183 ">Indicates if a file might include more than one protobuf
                                         message.</td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1570,25 +1822,21 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e2157" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e2159" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e2204">SDC Record Property</th>
+                                    <th class="entry cellrowborder" id="d233523e2312">SDC Record Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e2207">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e2315">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2204 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e2312 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2207 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e2315 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1604,9 +1852,9 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2204 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e2312 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2207 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e2315 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1615,8 +1863,7 @@ Use a message type defined in the
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1626,25 +1873,21 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e2307" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e2309" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e2282">Text Property</th>
+                                    <th class="entry cellrowborder" id="d233523e2390">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e2285">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e2393">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e1229" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e2390 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e1222" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2285 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d47442e1233">
+       <td class="entry cellrowborder" headers="d233523e2393 ">The compression format of the files:<ul class="ul" id="task_wzm_2rl_nbb__d40e1226">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1660,9 +1903,9 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2282 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry cellrowborder" headers="d233523e2390 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2285 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry cellrowborder" headers="d233523e2393 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1670,10 +1913,10 @@ Use a message type defined in the
 
       </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2339">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Max Line Length</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2341">
+                                    <td class="entry cellrowborder" headers="d233523e2390 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2285 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry cellrowborder" headers="d233523e2393 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1683,48 +1926,47 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2352">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_wzm_2rl_nbb__d47645e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wzm_2rl_nbb__d61e2354">
+                                    <td class="entry cellrowborder" headers="d233523e2390 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_wzm_2rl_nbb__d61e2360" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2285 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry cellrowborder" headers="d233523e2393 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2364">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Custom Delimiter</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2366">
+                                    <td class="entry cellrowborder" headers="d233523e2390 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2285 ">One or more characters to use to define records. </td>
+                                    <td class="entry cellrowborder" headers="d233523e2393 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
-                                <tr id="task_wzm_2rl_nbb__d47645e2374">
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Include Custom Delimiter</td>
+                                <tr id="task_wzm_2rl_nbb__d61e2376">
+                                    <td class="entry cellrowborder" headers="d233523e2390 ">Include Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2285 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry cellrowborder" headers="d233523e2393 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Charset</td>
+       <td class="entry cellrowborder" headers="d233523e2390 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2285 ">Character encoding of the files to be processed.</td>
+       <td class="entry cellrowborder" headers="d233523e2393 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d273258e2282 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_wzm_2rl_nbb__d47442e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d233523e2390 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_wzm_2rl_nbb__d40e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d273258e2285 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry cellrowborder" headers="d233523e2393 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1734,32 +1976,28 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d47645e2493" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__d61e2495" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e2439">Whole File Property</th>
+                                    <th class="entry cellrowborder" id="d233523e2547">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e2442">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e2550">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2439 ">Buffer Size (bytes)</td>
+                                    <td class="entry cellrowborder" headers="d233523e2547 ">Buffer Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2442 ">Size of the buffer to use to transfer data.</td>
+                                    <td class="entry cellrowborder" headers="d233523e2550 ">Size of the buffer to use to transfer data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2439 ">Rate per Second <a class="xref" href="../Data_Formats/WholeFile.html#concept_prp_jzd_py">
-                                            <img class="image" id="task_wzm_2rl_nbb__d47645e2530" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d233523e2547 ">Rate per Second <a class="xref" href="../Data_Formats/WholeFile.html#concept_prp_jzd_py">
+                                            <img class="image" id="task_wzm_2rl_nbb__d61e2532" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2442 ">Transfer rate to use. <p class="p">Enter a number to specify a rate
+                                    <td class="entry cellrowborder" headers="d233523e2550 ">Transfer rate to use. <p class="p">Enter a number to specify a rate
                                             in bytes per second. Use an expression to specify a rate
                                             that uses a different unit of measure per second, e.g.
                                             ${5 * MB}. Use -1 to opt out of this property. </p>
@@ -1771,15 +2009,14 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2439 ">Verify Checksum</td>
+                                    <td class="entry cellrowborder" headers="d233523e2547 ">Verify Checksum</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2442 ">Verifies the checksum during the read. </td>
+                                    <td class="entry cellrowborder" headers="d233523e2550 ">Verifies the checksum during the read. </td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1789,32 +2026,28 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_inj_kqv_sbb" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzm_2rl_nbb__table_inj_kqv_sbb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d273258e2511">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d233523e2619">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d273258e2514">Description</th>
+                                    <th class="entry cellrowborder" id="d233523e2622">Description</th>
 
                                 </tr>
 
                             </thead>
-
-                            <tbody class="tbody">
+<tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2511 ">Project ID</td>
+                                    <td class="entry cellrowborder" headers="d233523e2619 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2514 ">Google Cloud Storage project ID to connect to.</td>
+                                    <td class="entry cellrowborder" headers="d233523e2622 ">Google Cloud Storage project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2511 ">Credentials Provider <a class="xref" href="GCS.html#concept_g1r_5rn_sbb">
+                                    <td class="entry cellrowborder" headers="d233523e2619 ">Credentials Provider <a class="xref" href="GCS.html#concept_g1r_5rn_sbb">
                                             <img class="image" id="task_wzm_2rl_nbb__image_jnj_kqv_sbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2514 ">Credentials provider to use to connect to Google Cloud
+                                    <td class="entry cellrowborder" headers="d233523e2622 ">Credentials provider to use to connect to Google Cloud
                                             Storage:<ul class="ul" id="task_wzm_2rl_nbb__ul_knj_kqv_sbb">
                                             <li class="li">Default credentials provider</li>
 
@@ -1826,20 +2059,19 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d273258e2511 ">Credentials File Path (JSON) </td>
+                                    <td class="entry cellrowborder" headers="d233523e2619 ">Credentials File Path (JSON) </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d273258e2514 ">When using a Google Cloud service account credentials
+                                    <td class="entry cellrowborder" headers="d233523e2622 ">When using a Google Cloud service account credentials
                                         file, path to the file that the origin uses to connect to
                                         Google Cloud Storage. The credentials file must be a JSON
-                                            file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
                                             or enter an absolute path. </p>
 </td>
 
                                 </tr>
 
                             </tbody>
-
-                        </table>
+</table>
 </div>
 
                 </div>
@@ -1848,10 +2080,19 @@ Use a message type defined in the
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1859,6 +2100,25 @@ Use a message type defined in the
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

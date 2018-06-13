@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Best Practices for SDC RPC","id":"concept_e1d_nzr_yy","href":"datacollector\/UserGuide\/DPM\/AggregatedStatistics.html#concept_e1d_nzr_yy","menu": {"hasChildren":false,},"tocID":"concept_e1d_nzr_yy-d46e96677","topics":[]}]});

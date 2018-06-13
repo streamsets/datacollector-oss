@@ -1,50 +1,202 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 3.3.0 includes the following new features and enhancements: Cluster Pipelines When using Spark 2.1 or later and Kafka 0.10.0.0 or later in a cluster pipeline that reads from a ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>What's New</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 3.3.0 includes the following new features and enhancements: Cluster Pipelines When using Spark 2.1 or later and Kafka 0.10.0.0 or later in a cluster pipeline that reads from a ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Install_title.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><title>What's New</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_hz3_5fk_fy-d46e557" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
 
-      http://www.apache.org/licenses/LICENSE-2.0
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
 
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" title="Getting Started"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Getting Started</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_hz3_5fk_fy">
- <h1 class="title topictitle1">What's New</h1>
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" title="Getting Started"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li class="active"><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_k42_pbc_xdb-d46e813" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_k42_pbc_xdb">What's New in 3.3.0</a></span></span></li>
+         <li><span data-tocid="concept_yv1_cm2_pdb-d46e835" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_yv1_cm2_pdb">What's New in 3.2.0.0</a></span></span></li>
+         <li><span data-tocid="concept_ozm_kxk_fdb-d46e867" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_ozm_kxk_fdb">What's New in 3.1.2.0</a></span></span></li>
+         <li><span data-tocid="concept_g3c_fn2_ycb-d46e909" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_g3c_fn2_ycb">What's New in 3.1.1.0</a></span></span></li>
+         <li><span data-tocid="concept_agl_4tw_scb-d46e961" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_agl_4tw_scb">What's New in 3.1.0.0</a></span></span></li>
+         <li><span data-tocid="concept_z4b_qrb_4cb-d46e1023" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_z4b_qrb_4cb">What's New in 3.0.3.0</a></span></span></li>
+         <li><span data-tocid="concept_lhn_cvv_lcb-d46e1095" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_lhn_cvv_lcb">What's New in 3.0.2.0</a></span></span></li>
+         <li><span data-tocid="concept_lgz_yp4_gcb-d46e1178" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_lgz_yp4_gcb">What's New in 3.0.1.0</a></span></span></li>
+         <li><span data-tocid="concept_cjx_y4k_wbb-d46e1271" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_cjx_y4k_wbb">What's New in 3.0.0.0</a></span></span></li>
+         <li><span data-tocid="concept_rrq_v3k_kbb-d46e1374" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rrq_v3k_kbb">What's New in 2.7.2.0</a></span></span></li>
+         <li><span data-tocid="concept_rr2_mbz_w1b-d46e1488" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b">What's New in 2.7.1.1</a></span></span></li>
+         <li><span data-tocid="unique_1494054607-d46e1611" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1494054607">What's New in 2.7.1.0</a></span></span></li>
+         <li><span data-tocid="unique_271163331-d46e1744" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_271163331">What's New in 2.7.0.0</a></span></span></li>
+         <li><span data-tocid="concept_avm_x1y_h1b-d46e1887" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b">What's New in 2.6.0.1</a></span></span></li>
+         <li><span data-tocid="concept_bsw_cky_11b-d46e2040" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_bsw_cky_11b">What's New in 2.6.0.0</a></span></span></li>
+         <li><span data-tocid="concept_afr_hly_tz-d46e2203" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_afr_hly_tz">What's New in 2.5.1.0</a></span></span></li>
+         <li><span data-tocid="concept_ddx_bpm_pz-d46e2376" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_ddx_bpm_pz">What's New in 2.5.0.0</a></span></span></li>
+         <li><span data-tocid="concept_cf2_sdz_fz-d46e2559" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_cf2_sdz_fz">What's New in 2.4.1.0</a></span></span></li>
+         <li><span data-tocid="concept_kzc_4sd_yy-d46e2753" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_kzc_4sd_yy">What's New in 2.4.0.0</a></span></span></li>
+         <li><span data-tocid="concept_bml_dbt_wy-d46e2957" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_bml_dbt_wy">What's New in 2.3.0.1</a></span></span></li>
+         <li><span data-tocid="concept_yym_xqt_5y-d46e3171" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_yym_xqt_5y">What's New in 2.3.0.0</a></span></span></li>
+         <li><span data-tocid="concept_wbf_dgk_fy-d46e3396" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_wbf_dgk_fy">What's New in 2.2.1.0</a></span></span></li>
+         <li><span data-tocid="concept_oyv_zfk_fy-d46e3630" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_oyv_zfk_fy">What's New in 2.2.0.0</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_hz3_5fk_fy">
+ <h1 class="title topictitle1" id="ariaid-title1">What's New</h1>
 
  
  <div class="body conbody"><p class="shortdesc"></p>
@@ -53,9 +205,8 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_k42_pbc_xdb">
-    <h2 class="title topictitle2">What's New in 3.3.0</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_k42_pbc_xdb">
+    <h2 class="title topictitle2" id="ariaid-title2">What's New in 3.3.0</h2>
 
     <div class="body conbody">
         <p class="p"><span class="ph">Data Collector</span>
@@ -68,7 +219,7 @@
                 <dd class="dd">
                     <p class="p">When using Spark 2.1 or later and Kafka 0.10.0.0 or later in a cluster
                         pipeline that reads from a Kafka cluster on YARN, you can now enable the
-                        pipeline to use <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_bb2_m5p_tdb" title="When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Kafka. You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS and Kerberos to connect to Kafka.">Kafka security features</a> such as SSL/TLS and Kerberos
+                        pipeline to use <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_bb2_m5p_tdb">Kafka security features</a> such as SSL/TLS and Kerberos
                         authentication.</p>
 
                 </dd>
@@ -130,7 +281,7 @@
                     <ul class="ul" id="concept_k42_pbc_xdb__ul_vqx_hdc_xdb">
                         <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Sensor
                                 Reader origin enhancement</a> - This development stage can now
-                            generate records with thermal data like that generated by BCM2835
+                            generate records with thermal data such as that generated by BCM2835
                             onboard thermal sensors.</li>
 
                     </ul>
@@ -156,9 +307,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_yv1_cm2_pdb">
-    <h2 class="title topictitle2">What's New in 3.2.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_yv1_cm2_pdb">
+    <h2 class="title topictitle2" id="ariaid-title3">What's New in 3.2.0.0</h2>
 
     <div class="body conbody">
         <p class="p"><span class="ph">Data Collector</span>
@@ -191,11 +342,11 @@
                             origin to process JSON files that include multiple JSON objects or a
                             single JSON array</li>
 
-                        <li class="li">JDBC Multitable Consumer origin enhancement - The origin can now
-                            generate table-finished and schema-finished events when it completes
-                            processing all rows in a table or schema. You can also configure the
-                            number of seconds that the origin delays generating the no-more-data
-                            event. You might want to configure a delay if you want the
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_h4j_4zs_kz">JDBC Multitable Consumer origin enhancements</a> - The origin
+                            can now generate table-finished and schema-finished events when it
+                            completes processing all rows in a table or schema. You can also
+                            configure the number of seconds that the origin delays generating the
+                            no-more-data event. You might want to configure a delay if you want the
                             table-finished or schema-finished events to appear in the event stream
                             before the no-more-data event. </li>
 
@@ -216,8 +367,9 @@
                     </ul>
 
                     <ul class="ul" id="concept_yv1_cm2_pdb__ul_s5l_bn2_pdb">
-                        <li class="li">TCP Server origin enhancement - You can now use the origin to read Flume
-                            Avro data. </li>
+                        <li class="li"><a class="xref" href="../Origins/TCPServer.html#concept_bqt_tl4_sz">TCP
+                                Server origin enhancement</a> - You can now use the origin to
+                            read the supported <span class="ph">Data Collector</span> data formats when passed in Flume events as Avro messages.</li>
 
                     </ul>
 
@@ -251,7 +403,7 @@
 
                 <dd class="dd">
                     <ul class="ul" id="concept_yv1_cm2_pdb__ul_tkd_2p2_pdb">
-                        <li class="li"><a class="xref" href="../Destinations/HadoopFS-destination.html#concept_awl_4km_zq" title="You can use the HDP stage libraries to write to Azure Blob storage using the WASB protocol. This enables the Hadoop FS destination to write directly to Azure HDInsight.">Hadoop FS</a>, <a class="xref" href="../Destinations/LocalFS.html#concept_zvc_bv5_1r">Local
+                        <li class="li"><a class="xref" href="../Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a>, <a class="xref" href="../Destinations/LocalFS.html#concept_zvc_bv5_1r">Local
                                 FS</a>, and <a class="xref" href="../Destinations/MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR FS</a>
                             destination enhancements - These destinations now support writing
                             records using the SDC Record format. </li>
@@ -269,7 +421,7 @@
 
                 <dd class="dd">
                     <ul class="ul" id="concept_yv1_cm2_pdb__ul_lr5_gp2_pdb">
-                        <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_jqk_g4y_mx" title="The MapReduce executor includes two predefined jobs: Avro to ORC and Avro to Parquet.">MapReduce executor enhancement</a> - You can now use the new
+                        <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_jqk_g4y_mx">MapReduce executor enhancement</a> - You can now use the new
                             Avro to ORC job to convert Avro files to ORC files.</li>
 
                     </ul>
@@ -340,9 +492,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_ozm_kxk_fdb">
-    <h2 class="title topictitle2">What's New in 3.1.2.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_ozm_kxk_fdb">
+    <h2 class="title topictitle2" id="ariaid-title4">What's New in 3.1.2.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -353,7 +505,7 @@
                     addition to the last modified timestamp to establish file processing order.</li>
 
                 <li class="li">Impersonation enhancement for Control Hub - You can now configure Data Collector
-                    to use a partial Control Hub user ID for <a class="xref" href="../Configuration/DCConfig.html#concept_rcn_gqk_fdb" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop impersonation mode</a> and <a class="xref" href="../Executors/Shell.html#concept_n2w_txv_vz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID for shell impersonation mode.">shell
+                    to use a partial Control Hub user ID for <a class="xref" href="../Configuration/DCConfig.html#concept_rcn_gqk_fdb" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop impersonation mode</a> and <a class="xref" href="../Executors/Shell.html#concept_n2w_txv_vz">shell
                         impersonation mode</a>. Use this feature when Data Collector is
                     registered with Control Hub, and when the Hadoop or target operating system has
                     user name requirements that do not allow using the full Control Hub user
@@ -368,9 +520,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_g3c_fn2_ycb">
-    <h2 class="title topictitle2">What's New in 3.1.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_g3c_fn2_ycb">
+    <h2 class="title topictitle2" id="ariaid-title5">What's New in 3.1.1.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -444,9 +596,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_agl_4tw_scb">
-    <h2 class="title topictitle2">What's New in 3.1.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_agl_4tw_scb">
+    <h2 class="title topictitle2" id="ariaid-title6">What's New in 3.1.0.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -455,16 +607,16 @@
                     <dt class="dt dlterm">Data Synchronization Solution for Postgres</dt>
 
                     <dd class="dd">This release includes a beta version of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb">Data Synchronization Solution for Postgres</a>. The solution uses
-                        the new <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">Postgres Metadata processor</a> to detect drift in incoming data and
+                        the new <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">Postgres Metadata processor</a> to detect drift in incoming data and
                         automatically create or alter corresponding PostgreSQL tables as needed
                         before the data is written. The solution also leverages the JDBC Producer
                         destination to perform the writes. </dd>
 
-                    <dd class="dd">As a beta feature, use the Data Synchronization Solution for Postgres for
+                    <dd class="dd ddexpand">As a beta feature, use the Data Synchronization Solution for Postgres for
                         development or testing only. Do not use the solution in production
                         environments.</dd>
 
-                    <dd class="dd">Support for additional databases is planned for future releases. To state a
+                    <dd class="dd ddexpand">Support for additional databases is planned for future releases. To state a
                         preference, leave a comment <a class="xref" href="https://issues.streamsets.com/browse/SDC-8051" target="_blank"><u class="ph u">on this issue</u></a>.</dd>
 
                 
@@ -513,7 +665,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_agl_4tw_scb__ul_jxt_jvw_scb">
-                            <li class="li"><a class="xref" href="../Origins/HTTPClient.html#concept_edk_j5t_zw">HTTP Client origin enhancement</a> - You can now configure
+                            <li class="li"><a class="xref" href="../Origins/HTTPClient.html#concept_edk_j5t_zw" title="You can use pagination to retrieve a large volume of data from a paginated API.">HTTP Client origin enhancement</a> - You can now configure
                                 the origin to use the Link in Response Field pagination type. After
                                 processing the current page, this pagination type uses a field in
                                 the response body to access the next page. </li>
@@ -575,7 +727,7 @@
                                 </p>
 </li>
 
-                            <li class="li"><a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">New
+                            <li class="li"><a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">New
                                     Postgres Metadata processor</a> - A new processor that
                                 determines when changes in data structure occur and creates and
                                 alters PostgreSQL tables accordingly. Use as part of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb">Drift Synchronization Solution for Postgres</a> in
@@ -651,7 +803,7 @@
 
                             <li class="li"><a class="xref" href="../Destinations/Elasticsearch.html#concept_w2r_ktb_ry">Elasticsearch destination enhancement</a> - You can now
                                 configure the destination to merge data which performs an update
-                                with <samp class="ph codeph">doc_as_upsert</samp>. </li>
+                                with <code class="ph codeph">doc_as_upsert</code>. </li>
 
                             <li class="li">Salesforce destination enhancement - The destination includes the
                                 following enhancements:<ul class="ul" id="concept_agl_4tw_scb__ul_rpj_2yw_scb">
@@ -768,7 +920,7 @@
 
                             <li class="li"><a class="xref" href="../DPM/DPMConfiguration.html#concept_hrn_zz3_fx" title="You can customize how a registered Data Collector works with StreamSets Control Hub by editing the Control Hub configuration file, $SDC_CONF/dpm.properties, located in the Data Collector installation.">Redirect registered Data Collector user logins property</a>
                                 - You can enable a property in the Control Hub configuration file,
-                                    <samp class="ph codeph">dpm.properties</samp>, to redirect Data Collector user
+                                    <code class="ph codeph">dpm.properties</code>, to redirect Data Collector user
                                 logins to Control Hub using the HTML meta refresh method.</li>
 
                             <li class="li"><a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors.">Runtime properties enhancement</a> - You can now use
@@ -784,9 +936,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_z4b_qrb_4cb">
-    <h2 class="title topictitle2">What's New in 3.0.3.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_z4b_qrb_4cb">
+    <h2 class="title topictitle2" id="ariaid-title7">What's New in 3.0.3.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -811,9 +963,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_lhn_cvv_lcb">
-    <h2 class="title topictitle2">What's New in 3.0.2.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_lhn_cvv_lcb">
+    <h2 class="title topictitle2" id="ariaid-title8">What's New in 3.0.2.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -827,9 +979,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_lgz_yp4_gcb">
-    <h2 class="title topictitle2">What's New in 3.0.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_lgz_yp4_gcb">
+    <h2 class="title topictitle2" id="ariaid-title9">What's New in 3.0.1.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -858,9 +1010,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_cjx_y4k_wbb">
-    <h2 class="title topictitle2">What's New in 3.0.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_cjx_y4k_wbb">
+    <h2 class="title topictitle2" id="ariaid-title10">What's New in 3.0.0.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -895,11 +1047,11 @@
                         pipelines are bidirectional. They can send edge data to other <span class="ph">Data Collector</span> pipelines for further processing. Or, they can receive data from other
                         pipelines and then act on that data to control the edge device. </dd>
 
-                    <dd class="dd">Edge pipelines run in edge execution mode on <span class="ph">StreamSets</span>
+                    <dd class="dd ddexpand">Edge pipelines run in edge execution mode on <span class="ph">StreamSets</span>
                         <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>). <span class="ph">SDC Edge</span> is a lightweight agent without a UI that runs pipelines on edge devices.
                         Install <span class="ph">SDC Edge</span> on each edge device where you want to run edge pipelines. </dd>
 
-                    <dd class="dd">You design edge pipelines in <span class="ph">Data Collector</span>, export the edge pipelines, and then use commands to run the edge
+                    <dd class="dd ddexpand">You design edge pipelines in <span class="ph">Data Collector</span>, export the edge pipelines, and then use commands to run the edge
                         pipelines on an <span class="ph">SDC Edge</span> installed on an edge device. </dd>
 
                 
@@ -908,7 +1060,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_cjx_y4k_wbb__ul_xdj_qvk_wbb">
-                            <li class="li"><a class="xref" href="../Origins/AmazonSQS.html#concept_xsh_knm_5bb" title="When Data Collector reads data from an Amazon SQS Consumer origin, it must pass credentials to Amazon Simple Queue Services.">New
+                            <li class="li"><a class="xref" href="../Origins/AmazonSQS.html#concept_xsh_knm_5bb">New
                                     Amazon SQS Consumer origin</a> - An origin that reads
                                 messages from Amazon Simple Queue Service (SQS). Can create multiple
                                 threads to enable parallel processing in a multithreaded
@@ -923,7 +1075,7 @@
                                 that has been written to MapR Streams. Can create multiple threads
                                 to enable parallel processing in a multithreaded pipeline.</li>
 
-                            <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb" title="You can add custom configuration properties to the MapR Multitopic Streams Consumer. You can use any MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams documentation.">New MapR Multitopic Streams Consumer origin</a> - An origin
+                            <li class="li"><a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">New MapR Multitopic Streams Consumer origin</a> - An origin
                                 that reads messages from multiple MapR Streams topics. It can create
                                 multiple threads to enable parallel processing in a multithreaded
                                 pipeline.</li>
@@ -1199,8 +1351,8 @@
                                 Salesforce Bulk API to update, insert, or upsert data, you can now
                                 use a colon (:) or period (.) as a field separator when defining the
                                 Salesforce field to map the Data Collector field to. For example,
-                                    <samp class="ph codeph">Parent__r:External_Id__c</samp> or
-                                    <samp class="ph codeph">Parent__r.External_Id__c</samp> are both valid
+                                    <code class="ph codeph">Parent__r:External_Id__c</code> or
+                                    <code class="ph codeph">Parent__r.External_Id__c</code> are both valid
                                 Salesforce fields. </li>
 
                             <li class="li">Wave Analytics destination rename - With this release, the Wave
@@ -1246,7 +1398,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_cjx_y4k_wbb__ul_o1b_mgl_wbb">
-                            <li class="li"><a class="xref" href="../Configuration/CredentialStores.html#concept_v21_nvd_fbb" title="By default, a full Data Collector installation includes the CyberArk credential store stage library. The core installation does not include the library.Use the credential:get() or credential:getWithOptions() function in pipeline stage properties to retrieve credential values from CyberArk.">CyberArk</a> - Data Collector now provides a credential
+                            <li class="li"><a class="xref" href="../Configuration/CredentialStores.html#concept_v21_nvd_fbb">CyberArk</a> - Data Collector now provides a credential
                                 store implementation for CyberArk Application Identity Manager. You
                                 can define the credentials required by external systems - user names
                                 or passwords - in CyberArk. Then you use credential expression
@@ -1269,8 +1421,8 @@
 
                     <dd class="dd">By default when <span class="ph">Data Collector</span> restarts, it automatically restarts all pipelines that were running
                         before Data Collector shut down. You can now disable the automatic restart
-                        of pipelines by <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r__table_k1y_drr_bx">configuring the <samp class="ph codeph">runner.boot.pipeline.restart</samp>
-                            property</a> in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file.
+                        of pipelines by <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r__table_k1y_drr_bx">configuring the <code class="ph codeph">runner.boot.pipeline.restart</code>
+                            property</a> in the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file.
                     </dd>
 
                 
@@ -1445,9 +1597,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_rrq_v3k_kbb">
- <h2 class="title topictitle2">What's New in 2.7.2.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_rrq_v3k_kbb">
+ <h2 class="title topictitle2" id="ariaid-title11">What's New in 2.7.2.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -1457,7 +1609,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_rrq_v3k_kbb__ul_ibg_djk_kbb">
-                            <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="The first time that a Kafka Multitopic Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in Kafka.You can set an initial offset for the consumer group so that the Kafka Multitopic Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">New Kafka Multitopic Consumer origin</a> - A new origin that
+                            <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">New Kafka Multitopic Consumer origin</a> - A new origin that
                                 reads messages from multiple Kafka topics. Creates multiple threads
                                 to enable parallel processing in a multithreaded pipeline. </li>
 
@@ -1475,7 +1627,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_rrq_v3k_kbb__ul_crw_frk_kbb">
-                            <li class="li"><a class="xref" href="../Destinations/BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination maps fields from records to BigQuery columns in existing tables based on matching names and compatible data types. If needed, the destination converts Data Collector data types to BigQuery data types.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">New
+                            <li class="li"><a class="xref" href="../Destinations/BigQuery.html#concept_hj4_brk_dbb">New
                                     Google BigQuery destination</a> - A new destination that
                                 streams data into Google BigQuery.</li>
 
@@ -1489,9 +1641,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_rr2_mbz_w1b">
-    <h2 class="title topictitle2">What's New in 2.7.1.1</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_rr2_mbz_w1b">
+    <h2 class="title topictitle2" id="ariaid-title12">What's New in 2.7.1.1</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -1541,9 +1693,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="unique_1105137014">
-    <h2 class="title topictitle2">What's New in 2.7.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="unique_1494054607">
+    <h2 class="title topictitle2" id="ariaid-title13">What's New in 2.7.1.0</h2>
 
     <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -1551,7 +1703,7 @@
                 
                     <dt class="dt dlterm">Stage Libraries</dt>
 
-                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1105137014__ul_s1w_cvr_1bb">
+                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1494054607__ul_s1w_cvr_1bb">
                             <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Jython 2.7.1</a></li>
 
                         </ul>
@@ -1562,7 +1714,7 @@
                     <dt class="dt dlterm">Origins</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1105137014__ul_gr5_hvr_1bb">
+                        <ul class="ul" id="unique_1494054607__ul_gr5_hvr_1bb">
                             <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">New
                                     Azure Event Hub Consumer origin</a> - A multithreaded origin
                                 that reads data from Microsoft Azure Event Hub.</li>
@@ -1580,7 +1732,7 @@
                     <dt class="dt dlterm">Processors</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1105137014__ul_rh5_3vr_1bb">
+                        <ul class="ul" id="unique_1494054607__ul_rh5_3vr_1bb">
                             <li class="li"><a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">New Schema Generator processor</a> - A processor that
                                 generates a schema for each record and writes the schema to a record
                                 header attribute. </li>
@@ -1594,11 +1746,11 @@
                     <dt class="dt dlterm">Destinations</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_1105137014__ul_s22_lvr_1bb">
+                        <ul class="ul" id="unique_1494054607__ul_s22_lvr_1bb">
                             <li class="li"><a class="xref" href="../Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">New Azure Event Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure Event Hub.</li>
 
-                            <li class="li"><a class="xref" href="../Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb" title="Data Collector functions as a simulated device that sends messages to Azure IoT Hub. Before you configure the Azure IoT Hub Producer destination, register Data Collector as a device in your IoT hub.">New Azure IoT Hub Producer destination</a> - A destination
+                            <li class="li"><a class="xref" href="../Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">New Azure IoT Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure IoT Hub.</li>
 
                         </ul>
@@ -1611,9 +1763,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="unique_972713950">
- <h2 class="title topictitle2">What's New in 2.7.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title14" id="unique_271163331">
+ <h2 class="title topictitle2" id="ariaid-title14">What's New in 2.7.0.0</h2>
 
  <div class="body conbody">
   <p class="p"><span class="ph">Data Collector</span>
@@ -1625,7 +1777,7 @@
 
                 <dd class="dd"><span class="ph">Data Collector</span> now has a <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
                         store</a> API that integrates with the following credential store
-                        systems:<ul class="ul" id="unique_972713950__ul_vgr_3cz_w1b">
+                        systems:<ul class="ul" id="unique_271163331__ul_vgr_3cz_w1b">
                         <li class="li">Java keystore</li>
 
                         <li class="li">Hashicorp Vault</li>
@@ -1633,7 +1785,7 @@
                     </ul>
 </dd>
 
-                <dd class="dd">
+                <dd class="dd ddexpand">
                     <p class="p">You define the credentials required by external systems - user names,
                         passwords, or access keys - in a Java keystore file or in Vault. Then you
                         use <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential expression language functions</a> in JDBC stage
@@ -1642,8 +1794,8 @@
 
                 </dd>
 
-                <dd class="dd">
-                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_972713950__ul_ezm_4cz_w1b">
+                <dd class="dd ddexpand">
+                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_271163331__ul_ezm_4cz_w1b">
                             <li class="li">JDBC Multitable Consumer origin</li>
 
                             <li class="li">JDBC Query Consumer origin</li>
@@ -1678,7 +1830,7 @@
 
                 </dd>
 
-                <dd class="dd">Feel free to try out this feature in a development or test <span class="ph">Data Collector</span>, and send us your feedback. We are continuing to refine metadata publishing
+                <dd class="dd ddexpand">Feel free to try out this feature in a development or test <span class="ph">Data Collector</span>, and send us your feedback. We are continuing to refine metadata publishing
                     as we gather input from the community and work with Cloudera.</dd>
 
             
@@ -1686,7 +1838,7 @@
                 <dt class="dt dlterm">Stage Libraries</dt>
 
                 <dd class="dd">
-                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_972713950__ul_cxp_d2z_w1b">
+                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_271163331__ul_cxp_d2z_w1b">
                             <li class="li">Apache Kudu version 1.4.0</li>
 
                             <li class="li">Cloudera CDH version 5.12 distribution of Hadoop</li>
@@ -1710,7 +1862,7 @@
                 <dt class="dt dlterm">Data Collector Configuration</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_hc5_q2z_w1b">
+                    <ul class="ul" id="unique_271163331__ul_hc5_q2z_w1b">
                         <li class="li"><a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Access  Hashicorp Vault secrets</a> - The Data Collector Vault
                             integration now relies on Vault's App Role authentication backend.
                             Previously, Data Collector relied on Vault's App ID authentication
@@ -1734,7 +1886,7 @@
                             caching the lookups for the lifetime of the JVM.</li>
 
                         <li class="li"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_cy3_r44_z1b">SDC_HEAPDUMP_PATH enhancement</a> - The new default file name,
-                                <samp class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</samp>, includes
+                                <code class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</code>, includes
                             a timestamp so you can write multiple heap dump files to the specified
                             directory.</li>
 
@@ -1747,7 +1899,7 @@
                 <dt class="dt dlterm">Dataflow Triggers</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_fg2_gfz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_fg2_gfz_w1b">
                         <li class="li"><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline events</a> - The event framework now generates pipeline
                             lifecycle events when the pipeline stops and starts. You can pass each
                             pipeline event to an executor or to another pipeline for more complex
@@ -1763,7 +1915,7 @@
                 <dt class="dt dlterm">Origins</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_tpp_sfz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_tpp_sfz_w1b">
                         <li class="li"><a class="xref" href="../Origins/BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">New Google
                                 BigQuery origin</a> - An origin that executes a query job and
                             reads the result from Google BigQuery.</li>
@@ -1776,11 +1928,11 @@
                                 Client origin</a> - An origin that processes data from an OPC UA
                             server.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">New SQL
+                        <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">New SQL
                                 Server CDC Client origin</a> - A multithreaded origin that reads
                             data from Microsoft SQL Server CDC tables. </li>
 
-                        <li class="li"><a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">New SQL
+                        <li class="li"><a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b">New SQL
                                 Server Change Tracking origin</a> - A multithreaded origin that
                             reads data from Microsoft SQL Server change tracking tables and
                             generates the latest version of each record.</li>
@@ -1809,7 +1961,7 @@
                             configure the behavior for the origin when it encounters data of an
                             unknown data type.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_972713950__ul_gnl_rhz_w1b">
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_271163331__ul_gnl_rhz_w1b">
                                 <li class="li">You can now use the origin to perform multithreaded processing
                                     of partitions within a table. Use partition processing to handle
                                     even larger volumes of data. This enhancement also includes new
@@ -1826,7 +1978,7 @@
 </li>
 
                         <li class="li"><a class="xref" href="../Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC
-                                Client origin enhancements</a>:<ul class="ul" id="unique_972713950__ul_ych_yhz_w1b">
+                                Client origin enhancements</a>:<ul class="ul" id="unique_271163331__ul_ych_yhz_w1b">
                                 <li class="li">The origin can now buffer data locally rather than utilizing
                                     Oracle LogMiner buffers.</li>
 
@@ -1862,7 +2014,7 @@
                                 origin enhancement</a> - The origin can now process binary and
                             character-based raw data.</li>
 
-                        <li class="li">New last-modified time record header attribute - <a class="xref" href="../Origins/Directory.html#concept_tlj_3g1_2z" title="The Directory origin creates record header attributes that include information about the originating file for the record.">Directory</a>, <a class="xref" href="../Origins/FileTail.html#concept_tlj_3g1_2z" title="A tag is an optional record header attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag attribute.">File Tail</a>, and <a class="xref" href="../Origins/SFTP.html#concept_tlj_3g1_2z">SFTP/FTP Client</a> origins now include the last modified time
+                        <li class="li">New last-modified time record header attribute - <a class="xref" href="../Origins/Directory.html#concept_tlj_3g1_2z" title="The Directory origin creates record header attributes that include information about the originating file for the record.">Directory</a>, <a class="xref" href="../Origins/FileTail.html#concept_tlj_3g1_2z">File Tail</a>, and <a class="xref" href="../Origins/SFTP.html#concept_tlj_3g1_2z">SFTP/FTP Client</a> origins now include the last modified time
                             for the originating file for a record in an mtime record header
                             attribute.</li>
 
@@ -1875,13 +2027,13 @@
                 <dt class="dt dlterm">Processors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_py4_vmz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_py4_vmz_w1b">
                         <li class="li"><a class="xref" href="../Processors/DataParser.html#concept_xw3_4xk_r1b" title="The Data Parser processor allows you to parse supported data formats embedded in a field. You can parse NetFlow embedded in a byte array field or syslog messages embedded in a string field.">New Data
                                 Parser processor</a> - Use the new processor to extract NetFlow
                             or syslog messages as well as other supported data formats that are
                             embedded in a field. </li>
 
-                        <li class="li"><a class="xref" href="../Processors/JSONParser.html#concept_bs1_4t3_yq" title="Configure a JSON Parser to parse a JSON object in a String field.">New JSON
+                        <li class="li"><a class="xref" href="../Processors/JSONParser.html#concept_bs1_4t3_yq">New JSON
                                 Generator processor</a> - Use the new processor to serialize data
                             from a record field to a JSON-encoded string.</li>
 
@@ -1901,15 +2053,15 @@
                 <dt class="dt dlterm">Destinations</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_wdl_lnz_w1b">
-                        <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" title="When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">New Google Pub/Sub Publisher destination</a> - A destination
+                    <ul class="ul" id="unique_271163331__ul_wdl_lnz_w1b">
+                        <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">New Google Pub/Sub Publisher destination</a> - A destination
                             that publishes messages to Google Pub/Sub.</li>
 
-                        <li class="li"><a class="xref" href="../Destinations/JMSProducer.html#concept_sfz_ww5_n1b" title="Before you use the JMS Producer, install the JMS drivers for the implementation that you are using.">New
+                        <li class="li"><a class="xref" href="../Destinations/JMSProducer.html#concept_sfz_ww5_n1b">New
                                 JMS Producer destination</a> - A destination that writes data to
                             JMS.</li>
 
-                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_972713950__ul_ls3_d4z_w1b">
+                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_271163331__ul_ls3_d4z_w1b">
                                 <li class="li">You can now use expressions in the <a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket property</a> for the Amazon S3 destination. This
                                     enables you to write records dynamically based expression
                                     evaluation.</li>
@@ -1943,7 +2095,7 @@
                         <li class="li"><a class="xref" href="../Destinations/Solr.html#task_ld1_phr_wr">Solr
                                 destination enhancement</a> - You can now configure the
                             destination to skip connection validation when the Solr configuration
-                            file, <samp class="ph codeph">solrconfig.xml</samp>, does not define the default
+                            file, <code class="ph codeph">solrconfig.xml</code>, does not define the default
                             search field (“df”) parameter.</li>
 
                     </ul>
@@ -1955,8 +2107,8 @@
                 <dt class="dt dlterm">Executors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_gqx_fpz_w1b">
-                        <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">New Amazon
+                    <ul class="ul" id="unique_271163331__ul_gqx_fpz_w1b">
+                        <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b">New Amazon
                                 S3 executor</a> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
                             each time it receives an event.</li>
@@ -1973,7 +2125,7 @@
                 <dt class="dt dlterm">Dataflow Performance Manager</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_dwx_lpz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_dwx_lpz_w1b">
                         <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_c4x_vff_p1b">Revert changes to published pipelines</a> - If you update a
                             published pipeline but decide not to publish the updates to DPM as a new
                             version, you can revert the changes made to the pipeline
@@ -1988,8 +2140,8 @@
                 <dt class="dt dlterm">Pipelines</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_ngb_qpz_w1b">
-                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_972713950__ul_rq1_tpz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_ngb_qpz_w1b">
+                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_271163331__ul_rq1_tpz_w1b">
                                 <li class="li">Use the new Error Record Policy to specify the version of the
                                     record to include in error records. </li>
 
@@ -2014,14 +2166,14 @@
                 <dt class="dt dlterm">Data Formats</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_btq_yqz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_btq_yqz_w1b">
                         <li class="li"><a class="xref" href="../Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing
                                 XML</a> - You can now use the Google Pub/Sub Publisher, JMS
                             Producer, and Kafka Producer destinations to write XML documents to
                             destination systems. Note the record structure requirement before you
                             use this data format. </li>
 
-                        <li class="li">Avro:<ul class="ul" id="unique_972713950__ul_k4b_yrz_w1b">
+                        <li class="li">Avro:<ul class="ul" id="unique_271163331__ul_k4b_yrz_w1b">
                                 <li class="li">Origins now write the Avro schema to an avroSchema record header
                                     attribute.</li>
 
@@ -2046,7 +2198,7 @@
                 <dt class="dt dlterm">Cluster Pipelines</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_972713950__ul_b14_nsz_w1b">
+                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_271163331__ul_b14_nsz_w1b">
                             <li class="li">Use a new Worker Count property to limit the number of worker nodes
                                 used in Cluster Yarn Streaming pipelines. By default, a Data
                                 Collector worker is spawned for each partition in the topic. </li>
@@ -2064,7 +2216,7 @@
                 <dt class="dt dlterm">Expression Language</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_972713950__ul_abf_qsz_w1b">
+                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_271163331__ul_abf_qsz_w1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential:get()</a> - Returns credential values from a
                                 credential store.</li>
 
@@ -2087,9 +2239,9 @@
 
                 </dd>
 
-                <dd class="dd">
+                <dd class="dd ddexpand">
                     <div class="p">
-                        <ul class="ul" id="unique_972713950__ul_k5c_rg4_z1b">
+                        <ul class="ul" id="unique_271163331__ul_k5c_rg4_z1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">str:indexOf()</a> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
 
@@ -2104,7 +2256,7 @@
                 <dt class="dt dlterm">Miscellaneous</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_972713950__ul_y2k_htz_w1b">
+                    <ul class="ul" id="unique_271163331__ul_y2k_htz_w1b">
                         <li class="li"><a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Global bulk edit mode</a> - In any property where you would
                             previously click an Add icon to add additional configurations, you can
                             now switch to bulk edit mode to enter a list of configurations in JSON
@@ -2125,9 +2277,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_avm_x1y_h1b">
- <h2 class="title topictitle2">What's New in 2.6.0.1</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title15" id="concept_avm_x1y_h1b">
+ <h2 class="title topictitle2" id="ariaid-title15">What's New in 2.6.0.1</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -2142,9 +2294,9 @@
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_bsw_cky_11b">
- <h2 class="title topictitle2">What's New in 2.6.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title16" id="concept_bsw_cky_11b">
+ <h2 class="title topictitle2" id="ariaid-title16">What's New in 2.6.0.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -2155,7 +2307,7 @@
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_s2s_lky_11b">
                             <li class="li"><a class="xref" href="../Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v" title="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR. Data Collector does not display MapR origins and destinations in stage library lists nor the MapR Streams statistics aggregator in the pipeline properties until you perform these prerequisites.">MapR prerequisites</a> - You can now run the
-                                    <samp class="ph codeph">setup-mapr</samp> command in interactive or
+                                    <code class="ph codeph">setup-mapr</code> command in interactive or
                                 non-interactive mode. In interactive mode, the command prompts you
                                 for the MapR version and home directory. In non-interactive mode,
                                 you define the MapR version and home directory in environment
@@ -2212,7 +2364,7 @@
                                 Parquet files. Previously, the Data Synchronization Solution
                                 supported only Avro data. This enhancement includes the following
                                     updates:<ul class="ul" id="concept_bsw_cky_11b__ul_dt1_sky_11b">
-                                    <li class="li"><a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries. You can configure the maximum size of the cache. When the cache reaches the specified limit, it uses the LRU eviction policy, which removes the least recently used data to allow for new entries to be written to the cache. You must configure Hive Metadata to use Hive and Hadoop configuration files and individual properties.">Hive Metadata processor</a> data format property -
+                                    <li class="li"><a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata processor</a> data format property -
                                         Use the new data format property to indicate the data format
                                         to use.</li>
 
@@ -2226,7 +2378,7 @@
 </li>
 
                         </ul>
-See the documentation for implementation details and a <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_vl3_v2f_zz" title="Now to process the metadata records - and to automatically create and update Parquet tables in Hive - you need the Hive Metastore destination.">Parquet case study</a>. </dd>
+See the documentation for implementation details and a <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_vl3_v2f_zz">Parquet case study</a>. </dd>
 
                 
                 
@@ -2267,7 +2419,7 @@ See the documentation for implementation details and a <a class="xref" href="../
                                 to perform tasks upon receiving an event:<ul class="ul" id="concept_bsw_cky_11b__ul_pd2_tsy_11b">
                                     <li class="li"><a class="xref" href="../Executors/Email.html#concept_sjs_sfp_qz">Email executor</a></li>
 
-                                    <li class="li"><a class="xref" href="../Executors/Shell.html#concept_jsr_zpw_tz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID for shell impersonation mode.">Shell executor</a>
+                                    <li class="li"><a class="xref" href="../Executors/Shell.html#concept_jsr_zpw_tz">Shell executor</a>
                                     </li>
 
                                 </ul>
@@ -2338,7 +2490,7 @@ See the documentation for implementation details and a <a class="xref" href="../
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_dvb_jty_11b">
-                            <li class="li"><a class="xref" href="../Processors/Groovy.html#concept_ldh_sct_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Groovy Evaluator. Simply install the external Java library to make it available to the Groovy Evaluator. Then, call the external Java code from the Groovy script that you develop for the processor.">Groovy</a>, <a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript</a>, and <a class="xref" href="../Processors/Jython.html#concept_a1h_lkf_lr" title="You can choose the processing mode that the Jython Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Jython Evaluator. Simply install the external Java library to make it available to the Jython Evaluator. Then, call the external Java code from the Jython script that you develop for the processor.">Jython
+                            <li class="li"><a class="xref" href="../Processors/Groovy.html#concept_ldh_sct_gv">Groovy</a>, <a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript</a>, and <a class="xref" href="../Processors/Jython.html#concept_a1h_lkf_lr">Jython
                                     Evaluator</a> processor enhancements:<ul class="ul" id="concept_bsw_cky_11b__ul_e4s_jty_11b">
                                     <li class="li">You can now include some methods of the sdcFunctions
                                         scripting object in the initialization and destroy scripts
@@ -2350,7 +2502,7 @@ See the documentation for implementation details and a <a class="xref" href="../
                                 </ul>
 </li>
 
-                            <li class="li"><a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries. You can configure the maximum size of the cache. When the cache reaches the specified limit, it uses the LRU eviction policy, which removes the least recently used data to allow for new entries to be written to the cache. You must configure Hive Metadata to use Hive and Hadoop configuration files and individual properties.">Hive
+                            <li class="li"><a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive
                                     Metadata processor enhancements</a>:<ul class="ul" id="concept_bsw_cky_11b__ul_v3b_lty_11b">
                                     <li class="li">The Hive Metadata processor can now <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_ndg_3zw_vz">process Parquet data as part of the Drift
                                             Synchronization Solution for Hive</a>. </li>
@@ -2399,7 +2551,7 @@ See the documentation for implementation details and a <a class="xref" href="../
                                     <li class="li">The destination can now <a class="xref" href="../Destinations/HiveMetastore.html#concept_wyr_5jv_hw">create and update Parquet tables in Hive</a>. </li>
 
                                     <li class="li">Also, the data format property has been removed. You now
-                                        specify the data format in the <a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries. You can configure the maximum size of the cache. When the cache reaches the specified limit, it uses the LRU eviction policy, which removes the least recently used data to allow for new entries to be written to the cache. You must configure Hive Metadata to use Hive and Hadoop configuration files and individual properties.">Hive Metadata processor.</a>
+                                        specify the data format in the <a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata processor.</a>
                                         <p class="p">Since the Hive Metastore previously supported only Avro
                                             data, there is no upgrade impact. </p>
 </li>
@@ -2429,7 +2581,7 @@ See the documentation for implementation details and a <a class="xref" href="../
                                     executor</a> - Use to send custom emails upon receiving an
                                 event. For a case study, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.<ul class="ul" id="concept_bsw_cky_11b__ul_ekw_b5y_11b">
                                     <li dir="ltr" class="li">
-                                        <p class="p"><a class="xref" href="../Executors/Shell.html#concept_jsr_zpw_tz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID for shell impersonation mode.">New Shell executor</a> - Use to execute shell
+                                        <p class="p"><a class="xref" href="../Executors/Shell.html#concept_jsr_zpw_tz">New Shell executor</a> - Use to execute shell
                                             scripts upon receiving an event. </p>
 
                                     </li>
@@ -2491,7 +2643,7 @@ See the documentation for implementation details and a <a class="xref" href="../
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_rlz_55y_11b">
-                            <li class="li"><a class="xref" href="../Administration/Administration_title.html#concept_szj_3mw_xz" title="When you generate a support bundle, you choose the information to include in the bundle. Only users with the admin role can generate support bundles.By default, the generators redact all passwords entered in pipelines, configuration files, or resource files. You can customize the generators to redact other sensitive information, such as machine names or usernames.">Support bundles</a> - You can now use Data Collector to
+                            <li class="li"><a class="xref" href="../Administration/Administration_title.html#concept_szj_3mw_xz">Support bundles</a> - You can now use Data Collector to
                                 generate a support bundle. A support bundle is a ZIP file that
                                 includes Data Collector logs, environment and configuration
                                 information, pipeline JSON files, resource files, and pipeline
@@ -2549,9 +2701,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_afr_hly_tz">
- <h2 class="title topictitle2">What's New in 2.5.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title17" id="concept_afr_hly_tz">
+ <h2 class="title topictitle2" id="ariaid-title17">What's New in 2.5.1.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -2568,9 +2720,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_ddx_bpm_pz">
- <h2 class="title topictitle2">What's New in 2.5.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title18" id="concept_ddx_bpm_pz">
+ <h2 class="title topictitle2" id="ariaid-title18">What's New in 2.5.0.0</h2>
 
  <div class="body conbody">
   <p class="p"><span class="ph">Data Collector</span>
@@ -2631,7 +2783,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                         <li class="li"><span class="ph">Data Collector</span>
                             <a class="xref" href="../Configuration/RolesandPermissions.html#concept_i1p_hzd_yy">pipeline permissions</a> change - With this release, pipeline
                             permissions are no longer enabled by default. To enable pipeline
-                            permissions, edit the <samp class="ph codeph">pipeline.access.control.enabled</samp>
+                            permissions, edit the <code class="ph codeph">pipeline.access.control.enabled</code>
                             <span class="ph">Data Collector</span> configuration property.</li>
 
                         <li class="li"><a class="xref" href="../Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Stop
@@ -2689,12 +2841,12 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                 <dd class="dd">
                     <div class="p">The following Salesforce stages include several enhancements:<ul class="ul" id="concept_ddx_bpm_pz__ul_gsv_prm_pz">
-                            <li class="li"><a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.If the origin reads custom Salesforce objects or fields, you might want to use a Field Renamer in the pipeline to rename the custom fields.The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce field attributes that provide additional information about each field, such as the data type of the Salesforce field. The origin receives these details from Salesforce.">Salesforce origin</a> and <a class="xref" href="../Processors/SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup processor</a><ul class="ul" id="concept_ddx_bpm_pz__ul_k1d_5rm_pz">
+                            <li class="li"><a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce origin</a> and <a class="xref" href="../Processors/SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup processor</a><ul class="ul" id="concept_ddx_bpm_pz__ul_k1d_5rm_pz">
                                     <li class="li">The origin and processor can use a proxy to connect to
                                         Salesforce.</li>
 
-                                    <li class="li">You can now specify <samp class="ph codeph">SELECT * FROM
-                                            &lt;object&gt;</samp> in a SOQL query. The origin or
+                                    <li class="li">You can now specify <code class="ph codeph">SELECT * FROM
+                                            &lt;object&gt;</code> in a SOQL query. The origin or
                                         processor expands * to all fields in the Salesforce object
                                         that are accessible to the configured user. </li>
 
@@ -2753,7 +2905,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             origin to generate events to test event handling functionality, you can
                             now specify the event type to use.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin can log request and response data to the Data Collector log.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP Client
+                        <li class="li"><a class="xref" href="../Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client
                                 origin enhancements</a> - When using pagination, the origin can
                             include all response fields in the resulting record in addition to the
                             fields in the specified result field path. The origin can now also
@@ -2766,7 +2918,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             application ID in a query parameter, rather than including the
                             application ID in request headers. </li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a> - The origin
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer origin enhancements</a> - The origin
                             now performs parallel processing and can generate multithreaded
                             pipelines. The origin can generate events when it completes processing
                             all available data. <p class="p">You can also configure the quote character to use
@@ -2775,7 +2927,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 after receiving an SQL error.</p>
 </li>
 
-                        <li class="li"><a class="xref" href="../Origins/JDBCConsumer.html#concept_qhf_hjr_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query. JDBC Query Consumer supports recovery after a deliberate or unexpected stop when it performs incremental queries. Recovery is not supported for full queries.The SQL query defines the data returned from the database.When you define the SQL query for incremental mode, JDBC Query Consumer requires a WHERE and ORDER BY clause in the query. You can define any type of SQL query for full mode.">JDBC Query
+                        <li class="li"><a class="xref" href="../Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query
                                 Consumer origin enhancements</a> - The origin can now generate
                             events when it completes processing all available data, and when it
                             successfully completes or fails to complete a query. <p class="p">To handle
@@ -2784,7 +2936,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 pipeline.</p>
 </li>
 
-                        <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration. You can set an initial offset for the consumer group so that the Kafka Consumer origin reads the topic from the beginning.You can add custom Kafka configuration properties to the Kafka Consumer.Configure a Kafka Consumer to read data from a Kafka cluster.">Kinesis
+                        <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q">Kinesis
                                 Consumer origin enhancement</a> - The origin now performs
                             parallel processing and can generate multithreaded pipelines. </li>
 
@@ -2811,8 +2963,8 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                         <li class="li">Field Flattener enhancement - You can now flatten a field in place to
                             raise it to the parent level.</li>
 
-                        <li class="li"><a class="xref" href="../Processors/Groovy.html#concept_ldh_sct_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Groovy Evaluator. Simply install the external Java library to make it available to the Groovy Evaluator. Then, call the external Java code from the Groovy script that you develop for the processor.">Groovy</a>,
-                                <a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript</a>, and <a class="xref" href="../Processors/Jython.html#concept_a1h_lkf_lr" title="You can choose the processing mode that the Jython Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Jython Evaluator. Simply install the external Java library to make it available to the Jython Evaluator. Then, call the external Java code from the Jython script that you develop for the processor.">Jython
+                        <li class="li"><a class="xref" href="../Processors/Groovy.html#concept_ldh_sct_gv">Groovy</a>,
+                                <a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript</a>, and <a class="xref" href="../Processors/Jython.html#concept_a1h_lkf_lr">Jython
                                 Evaluator</a> processor enhancement - You can now develop an
                             initialization script that the processor runs once when the pipeline
                             starts. Use an initialization script to set up connections or resources
@@ -2924,7 +3076,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             an empty file upon receiving an event. The executor can also generate a
                             file-created event when generating events. </li>
 
-                        <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_bj2_zlk_fx" title="The MapReduce executor includes two predefined jobs: Avro to ORC and Avro to Parquet.">MapReduce
+                        <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce
                                 executor enhancement</a> - When starting the provided Avro to
                             Parquet job, the executor can now overwrite any temporary files created
                             from a previous run of the job.</li>
@@ -2962,9 +3114,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                 <dd class="dd">
                     <ul class="ul" id="concept_ddx_bpm_pz__ul_ksn_tzm_pz">
-                        <li class="li"><a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Data Collector Hadoop impersonation enhancement</a> - You can
+                        <li class="li"><a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Data Collector Hadoop impersonation enhancement</a> - You can
                             use the
-                                <samp class="ph codeph">stage.conf_hadoop.always.impersonate.current.user</samp>
+                                <code class="ph codeph">stage.conf_hadoop.always.impersonate.current.user</code>
                             <span class="ph">Data Collector</span> configuration property to ensure that <span class="ph">Data Collector</span> uses the current <span class="ph">Data Collector</span> user to read from or write to Hadoop systems. <div class="p">When enabled, you
                                 cannot configure alternate users in the following Hadoop-related
                                     stages:<ul class="ul" id="concept_ddx_bpm_pz__ul_ztn_xzm_pz">
@@ -3007,9 +3159,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_cf2_sdz_fz">
- <h2 class="title topictitle2">What's New in 2.4.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title19" id="concept_cf2_sdz_fz">
+ <h2 class="title topictitle2" id="ariaid-title19">What's New in 2.4.1.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -3019,12 +3171,12 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                     query at regular intervals. The origin can repeat a full or incremental
                     query.</li>
 
-                <li class="li"><a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Log data
+                <li class="li"><a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br">Log data
                         display</a> - You can stop and restart the automatic display of the most
                     recent log data on the Data Collector Logs page.</li>
 
                 <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">New
-                        time function</a> - The <samp class="ph codeph">time:createDateFromStringTZ</samp>
+                        time function</a> - The <code class="ph codeph">time:createDateFromStringTZ</code>
                     function enables creating Date objects adjusted for time zones from string
                     datetime values.</li>
 
@@ -3038,9 +3190,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_kzc_4sd_yy">
- <h2 class="title topictitle2">What's New in 2.4.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title20" id="concept_kzc_4sd_yy">
+ <h2 class="title topictitle2" id="ariaid-title20">What's New in 2.4.0.0</h2>
 
  <div class="body conbody">
   <p class="p"><span class="ph">Data Collector</span>
@@ -3056,11 +3208,11 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                         create a multitenant environment, create groups of users and then share
                         pipelines with the groups to grant different levels of access.</dd>
 
-                    <dd class="dd">With this change, only the pipeline owner and users with the Admin role can
+                    <dd class="dd ddexpand">With this change, only the pipeline owner and users with the Admin role can
                         view a pipeline by default. If upgrading from a previous version of Data
                         Collector, see the following post-upgrade task, <a class="xref" href="../Upgrade/PostUpgrade.html#concept_zbn_fpw_xy">Configure Pipeline Permissions</a>.</dd>
 
-                    <dd class="dd">This feature includes the following components:<ul class="ul" id="concept_kzc_4sd_yy__ul_qhv_ds1_cz">
+                    <dd class="dd ddexpand">This feature includes the following components:<ul class="ul" id="concept_kzc_4sd_yy__ul_qhv_ds1_cz">
                             <li class="li"><a class="xref" href="../Configuration/RolesandPermissions.html#concept_i1p_hzd_yy">Pipeline permissions</a> - Pipelines now have read, write,
                                 and execute permissions. Pipeline permissions overlay existing Data
                                 Collector roles to provide greater security. For information, see
@@ -3147,7 +3299,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 </ul>
 </li>
 
-                            <li class="li"><a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install external libraries using the Data Collector user
+                            <li class="li"><a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install external libraries using the Data Collector user
                                     interface</a> - You can now use the Data Collector user
                                 interface to install external libraries to make them available to
                                 stages. For example, you can install JDBC drivers for stages that
@@ -3178,9 +3330,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_bml_dbt_wy">
- <h2 class="title topictitle2">What's New in 2.3.0.1</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title21" id="concept_bml_dbt_wy">
+ <h2 class="title topictitle2" id="ariaid-title21">What's New in 2.3.0.1</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -3205,9 +3357,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_yym_xqt_5y">
- <h2 class="title topictitle2">What's New in 2.3.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title22" id="concept_yym_xqt_5y">
+ <h2 class="title topictitle2" id="ariaid-title22">What's New in 2.3.0.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span>
@@ -3298,7 +3450,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                 
                     <dt class="dt dlterm">Multitable Copy</dt>
 
-                    <dd class="dd">You can use the new <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC
+                    <dd class="dd">You can use the new <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC
                             Multitable Consumer origin</a> when you need to copy multiple tables
                         to a destination system or for database replication. The JDBC Multitable
                         Consumer origin reads database data from multiple tables through a JDBC
@@ -3429,7 +3581,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                             </li>
 
-                            <li dir="ltr" class="li"><a class="xref" href="../Origins/JDBCConsumer.html#concept_qhf_hjr_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query. JDBC Query Consumer supports recovery after a deliberate or unexpected stop when it performs incremental queries. Recovery is not supported for full queries.The SQL query defines the data returned from the database.When you define the SQL query for incremental mode, JDBC Query Consumer requires a WHERE and ORDER BY clause in the query. You can define any type of SQL query for full mode.">JDBC
+                            <li dir="ltr" class="li"><a class="xref" href="../Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC
                                     Query Consumer origin enhancements</a> - The JDBC Consumer
                                 origin has been renamed to the JDBC Query Consumer origin. The
                                 origin functions the same as in previous releases. It reads database
@@ -3486,7 +3638,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5" title="Configure an XML Parser to parse XML data in a string field.">XML
+                                <p dir="ltr" class="p"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5">XML
                                         Parser enhancement</a> - A new Multiple Values Behavior
                                     property allows you to specify the behavior when you define a
                                     delimiter element and the document includes more than one value:
@@ -3505,7 +3657,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_uys_hwt_5y">
-                            <li dir="ltr" class="li"><a class="xref" href="../Destinations/MapRDBJSON.html#concept_i4h_2kj_dy" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">New
+                            <li dir="ltr" class="li"><a class="xref" href="../Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">New
                                     MapR DB JSON destination</a> - Writes data as JSON documents
                                 to MapR DB JSON tables.</li>
 
@@ -3713,9 +3865,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_wbf_dgk_fy">
- <h2 class="title topictitle2">What's New in 2.2.1.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title23" id="concept_wbf_dgk_fy">
+ <h2 class="title topictitle2" id="ariaid-title23">What's New in 2.2.1.0</h2>
 
  <div class="body conbody">
         <div class="p"><span class="ph">Data Collector</span>
@@ -3759,9 +3911,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_oyv_zfk_fy">
- <h2 class="title topictitle2">What's New in 2.2.0.0</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title24" id="concept_oyv_zfk_fy">
+ <h2 class="title topictitle2" id="ariaid-title24">What's New in 2.2.0.0</h2>
 
  <div class="body conbody">
   <div class="p"><span class="ph">Data Collector</span> version
@@ -3775,9 +3927,9 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                         also use the event framework to store event information, such as when an
                         origin starts or completes reading a file. </dd>
 
-                    <dd class="dd">For details, see the <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework chapter</a>. </dd>
+                    <dd class="dd ddexpand">For details, see the <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework chapter</a>. </dd>
 
-                    <dd class="dd">The event framework includes the following new features and enhancements:<ul class="ul" id="concept_oyv_zfk_fy__ul_ojf_xgk_fy">
+                    <dd class="dd ddexpand">The event framework includes the following new features and enhancements:<ul class="ul" id="concept_oyv_zfk_fy__ul_ojf_xgk_fy">
                             <li class="li"><a class="xref" href="../Executors/Executors-overview.html#concept_stt_2lk_fx">New executor stages</a>. A new type of stage that performs
                                 tasks in external systems upon receiving an event. This release
                                 includes the following executors:<ul class="ul" id="concept_oyv_zfk_fy__ul_bn4_ygk_fy">
@@ -3789,7 +3941,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                                     <li class="li"><a class="xref" href="../Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query executor</a> - Runs a SQL query. </li>
 
-                                    <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_bj2_zlk_fx" title="The MapReduce executor includes two predefined jobs: Avro to ORC and Avro to Parquet.">MapReduce executor</a> - Runs a custom MapReduce job
+                                    <li class="li"><a class="xref" href="../Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce executor</a> - Runs a custom MapReduce job
                                         or an Avro to Parquet MapReduce job. </li>
 
                                 </ul>
@@ -3908,7 +4060,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 modifying Java configuration options in the Data Collector
                                 environment configuration file.</li>
 
-                            <li class="li">Environment variables for <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.">Java configuration options</a>. Data Collector now uses
+                            <li class="li">Environment variables for <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_vrx_4fg_qr">Java configuration options</a>. Data Collector now uses
                                 three environment variables to define Java configuration options:
                                     <ul class="ul" id="concept_oyv_zfk_fy__ul_wym_thk_fy">
                                     <li class="li">SDC_JAVA_OPTS - Includes configuration options for all Java
@@ -3936,10 +4088,10 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                     <dd class="dd">
                         <ul class="ul" id="concept_oyv_zfk_fy__ul_kq1_whk_fy">
-                            <li class="li">New <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx" title="The MySQL Binary Log origin can process binary logs from a MySQL server configured to use row-based logging.You can configure the origin to start reading the binary log file from the beginning of the file or from an initial offset in the file.The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">MySQL Binary Log origin</a> - Reads MySQL binary logs to
+                            <li class="li">New <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log origin</a> - Reads MySQL binary logs to
                                 generate records with change data capture information. </li>
 
-                            <li class="li">New <a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.If the origin reads custom Salesforce objects or fields, you might want to use a Field Renamer in the pipeline to rename the custom fields.The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.The Salesforce origin generates Salesforce field attributes that provide additional information about each field, such as the data type of the Salesforce field. The origin receives these details from Salesforce.">Salesforce origin </a>- Reads data from Salesforce. The
+                            <li class="li">New <a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce origin </a>- Reads data from Salesforce. The
                                 origin can execute a SOQL query to read existing data from
                                 Salesforce. The origin can also subscribe to the Force.com Streaming
                                 API to receive notifications for changes to Salesforce data. </li>
@@ -3981,7 +4133,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 the Decimal data type, you can configure the scale to use in the
                                 conversion. </li>
 
-                            <li class="li"><a class="xref" href="../Processors/ListPivoter.html#concept_ekg_313_qw" title="Configure a Field Pivoter to pivot data in a list, map, or list-map field and generate a record for each item in the field.">Field
+                            <li class="li"><a class="xref" href="../Processors/ListPivoter.html#concept_ekg_313_qw">Field
                                     Pivoter processor</a> enhancements - The List Pivoter
                                 processor has been renamed to the Field Pivoter processor. You can
                                 now use the processor to pivot data in a list, map, or list-map
@@ -4004,7 +4156,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 a new output field. Previously, the processor wrote the flattened
                                 data to the same field. </li>
 
-                            <li class="li"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5" title="Configure an XML Parser to parse XML data in a string field.">XML
+                            <li class="li"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5">XML
                                     Parser processor</a> enhancement. You can now generate
                                 records from XML documents using simplified XPath expressions. This
                                 enables reading records from deeper within XML documents. </li>
@@ -4022,7 +4174,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             <li class="li">New <a class="xref" href="../Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store destination</a> - Writes data to
                                 Microsoft Azure Data Lake Store. </li>
 
-                            <li class="li">New <a class="xref" href="../Destinations/Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination requires the BoringSSL library. You must download and install the external library so that the Google Bigtable destination can access it.Configure the Google Application Default Credentials that the Google Bigtable destination uses to connect to Google Cloud Bigtable. Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key. When you map record fields to Google Cloud Bigtable columns, you specify whether the Cloud Bigtable storage type is text or binary. The destination converts the data types of the record fields to the Cloud Bigtable storage types. When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">Google Bigtable destination</a> - Writes data to Google
+                            <li class="li">New <a class="xref" href="../Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable destination</a> - Writes data to Google
                                 Cloud Bigtable. </li>
 
                             <li class="li">New <a class="xref" href="../Destinations/Salesforce.html#concept_rlb_rt3_rx" title="The Salesforce destination writes data to Salesforce objects.">Salesforce destination</a> - Writes data to Salesforce. New
@@ -4034,7 +4186,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 existing pipelines seamlessly. </li>
 
                             <li class="li">File suffix enhancement. You can now configure a file suffix, such
-                                as txt or json, for output files generated by <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_awl_4km_zq" title="You can use the HDP stage libraries to write to Azure Blob storage using the WASB protocol. This enables the Hadoop FS destination to write directly to Azure HDInsight.">Hadoop FS</a>, <a class="xref" href="../Destinations/LocalFS.html#concept_zvc_bv5_1r">Local
+                                as txt or json, for output files generated by <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a>, <a class="xref" href="../Destinations/LocalFS.html#concept_zvc_bv5_1r">Local
                                     FS</a>, <a class="xref" href="../Destinations/MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR
                                     FS</a>, and the <a class="xref" href="../Destinations/AmazonS3.html#concept_avx_bnq_rt" title="The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon Kinesis Streams, use the Kinesis Producer destination.">Amazon
                                     S3</a> destinations. </li>
@@ -4179,11 +4331,19 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
  </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" title="Getting Started"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Getting Started</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Installation/Install_title.html" title="Installation"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -4191,6 +4351,25 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

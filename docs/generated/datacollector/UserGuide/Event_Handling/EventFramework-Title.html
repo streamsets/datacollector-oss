@@ -1,53 +1,245 @@
 
 <!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Dataflow triggers are instructions for the event framework to kick off tasks in response to events that occur in the pipeline. For example, you can use dataflow triggers to start a MapReduce job after ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Dataflow Triggers" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Dataflow Triggers</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
-          
-          var prefix = "../../../index.html";
-          
-          --></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery-3.1.1.min.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../../../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/log.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script><script type="text/javascript" charset="utf-8" src="../../../oxygen-webhelp/resources/js/webhelp_topic.js?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></script>
-  <!--
-  Copyright 2018 StreamSets Inc.
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Dataflow triggers are instructions for the event framework to kick off tasks in response to events that occur in the pipeline. For example, you can use dataflow triggers to start a MapReduce job after ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Dataflow Triggers" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><title>Dataflow Triggers</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018032809.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_xxd_f5r_kx-d46e98523" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
 
-      http://www.apache.org/licenses/LICENSE-2.0
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-  <script type="text/javascript">
-    <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018032809" />
+        
 
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
--->
-  </script>
-</head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from Control Hub"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from Control Hub</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution for Hive"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Hive</span></a></span>  </span></td></tr></tbody></table>
-<div class="nested0" id="concept_xxd_f5r_kx">
- <h1 class="title topictitle1">Dataflow Triggers</h1>
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_cph_5h4_lx">
-    <h2 class="title topictitle2">Dataflow Triggers Overview</h2>
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018032809" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref"><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from Control Hub"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution for Hive"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e3876" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e5943" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13357" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e17961" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e19513" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22010" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e23799" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e62245" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e74176" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e89376" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e95199" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li class="active"><span data-tocid="concept_xxd_f5r_kx-d46e98523" class="topicref" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_cph_5h4_lx-d46e98799" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_amg_2qr_t1b-d46e98823" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline Event Generation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zrl_mhn_lx-d46e99020" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">Stage Event Generation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rxg_shn_lx-d46e99380" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_rxg_shn_lx">Executors</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_scs_3hh_tx-d46e99495" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_scs_3hh_tx">Logical Pairings</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gvh_5wm_xx-d46e99620" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_gvh_5wm_xx">Event Records</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_awx_xlq_cy-d46e99900" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_awx_xlq_cy">Viewing Events in Data Preview<span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">, </span> Snapshot<span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">, and Monitor Mode</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_spk_wm5_51b-d46e100401" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_spk_wm5_51b">Executing Pipeline Events in Data Preview</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jkm_rnz_kx-d46e100587" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_jkm_rnz_kx">Case Study: Parquet Conversion</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_szz_xwm_lx-d46e100783" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_d1q_xl4_lx-d46e100990" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_d1q_xl4_lx">Case Study: Output File Management</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kff_ykv_lz-d46e101206" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_kff_ykv_lz">Case Study: Stop the Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vrh_jrs_bbb-d46e101432" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_vrh_jrs_bbb">Case Study: Offloading Data from Relational Sources to Hadoop</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_t2t_lp5_xz-d46e101668" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ocb_nnl_px-d46e101914" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_azz_tq4_lx-d46e102170" class="topicref" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_azz_tq4_lx">Summary</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e102438" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e105264" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e106063" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e106645" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e108106" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e108587" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html#concept_fpz_5r4_vs">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e111446" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e112412" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e115040" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e116297" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e118088" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e121724" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e122938" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e126846" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e126901" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e127061" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e128542" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e128764" class="topicref" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div id="wh_topic_body" class="col-lg-7 col-md-9 col-sm-9 col-xs-12">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_xxd_f5r_kx">
+ <h1 class="title topictitle1" id="ariaid-title1">Dataflow Triggers</h1>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_cph_5h4_lx">
+    <h2 class="title topictitle2" id="ariaid-title2">Dataflow Triggers Overview</h2>
 
     <div class="body conbody">
         <p class="p"><dfn class="term">Dataflow
@@ -67,12 +259,12 @@
                         stage-related actions take place. The action that generates an event differs
                         from stage to stage and is related to how the stage processes data. </dd>
 
-                    <dd class="dd">For example, the Hive Metastore destination updates the Hive metastore, so
+                    <dd class="dd ddexpand">For example, the Hive Metastore destination updates the Hive metastore, so
                         it generates events each time it changes the metastore. In contrast, the
                         Hadoop FS destination writes files to HDFS, so it generates events each time
                         it closes a file. </dd>
 
-                    <dd class="dd">Events produce <dfn class="term">event records</dfn>. Pipeline-related event records
+                    <dd class="dd ddexpand">Events produce <dfn class="term">event records</dfn>. Pipeline-related event records
                         are passed immediately to the specified event consumer. Stage-related event
                         records are passed through the pipeline in an <dfn class="term">event stream</dfn>. </dd>
 
@@ -84,7 +276,7 @@
                         perform tasks in <span class="ph">Data Collector</span> or external systems. Each time an executor receives an event, it performs
                         the specified task.</dd>
 
-                    <dd class="dd">For example, the Hive Query executor runs user-defined Hive or Impala
+                    <dd class="dd ddexpand">For example, the Hive Query executor runs user-defined Hive or Impala
                         queries each time it receives an event, and the MapReduce executor triggers
                         a MapReduce job when it receives events. Within <span class="ph">Data Collector</span>, the Pipeline Finisher executor stops a pipeline upon receiving an event,
                         transitioning the pipeline to a Finished state. </dd>
@@ -97,7 +289,7 @@
                         writes the event records to the destination system, just like any other
                         data.</dd>
 
-                    <dd class="dd">For example, you might store event records to keep an audit trail of the
+                    <dd class="dd ddexpand">For example, you might store event records to keep an audit trail of the
                         files that the pipeline origin reads. </dd>
 
                 
@@ -106,9 +298,9 @@
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_amg_2qr_t1b">
-    <h2 class="title topictitle2">Pipeline Event Generation</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_amg_2qr_t1b">
+    <h2 class="title topictitle2" id="ariaid-title3">Pipeline Event Generation</h2>
 
     <div class="body conbody">
         <p class="p">The event
@@ -124,13 +316,13 @@
                         before individual stages are initialized</span>. This can allow time for an executor to perform a task before stages
                         initialize. </dd>
 
-                    <dd class="dd">Most executors wait for confirmation that a task completes. As a result, the
+                    <dd class="dd ddexpand">Most executors wait for confirmation that a task completes. As a result, the
                         pipeline waits for the executor to complete the task before continuing with
                         stage initialization. For example, if you configure the JDBC Query executor
                         to truncate a table before the pipeline begins, the pipeline waits until the
                         task is complete before processing any data. </dd>
 
-                    <dd class="dd">
+                    <dd class="dd ddexpand">
                         <p class="p">The MapReduce executor and Spark executor kick off jobs and do not wait
                             for the submitted jobs to complete. When you use one of these executors,
                             the pipeline waits only for successful job submission before continuing
@@ -153,7 +345,7 @@
                         files.</span> This allows an executor to perform a task after pipeline processing is
                         complete, before the pipeline fully stops.</dd>
 
-                    <dd class="dd">
+                    <dd class="dd ddexpand">
                         <p class="p">Similar to start event consumers, the behavior of the executor that
                             consumes the event determines whether the pipeline waits for the
                             executor task to complete before allowing the pipeline to stop. Also, if
@@ -190,8 +382,8 @@
 
     </div>
 
-<div class="topic concept nested2" id="concept_ggx_mtr_t1b">
-    <h3 class="title topictitle3">Using Pipeline Events</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_ggx_mtr_t1b">
+    <h3 class="title topictitle3" id="ariaid-title4">Using Pipeline Events</h3>
 
     <div class="body conbody">
         <p class="p">You can configure
@@ -207,8 +399,8 @@
 
     </div>
 
-<div class="topic concept nested3" id="concept_shm_2cy_t1b">
- <h4 class="title topictitle4">Pass to an Executor</h4>
+<article class="topic concept nested3" aria-labelledby="ariaid-title5" id="concept_shm_2cy_t1b">
+ <h4 class="title topictitle4" id="ariaid-title5">Pass to an Executor</h4>
 
  <div class="body conbody">
   <p class="p">You can
@@ -232,7 +424,7 @@
             </ol>
 </div>
 
-        <div class="section" id="concept_shm_2cy_t1b__section_lw4_jgj_v1b"><h5 class="title sectiontitle">Example</h5>
+        <section class="section" id="concept_shm_2cy_t1b__section_lw4_jgj_v1b"><h5 class="title sectiontitle">Example</h5>
             
             <p class="p">Say you want to send an email when the pipeline starts. First, you configure the
                 pipeline to use the Email executor for the pipeline start event. Since you don't
@@ -246,13 +438,13 @@
 
             <p class="p"><img class="image" id="concept_shm_2cy_t1b__image_x4y_3my_t1b" src="../Graphics/PEvent-ConfigConsumer.png" height="267" width="574" /></p>
 
-        </div>
+        </section>
 
  </div>
 
-</div>
-<div class="topic concept nested3" id="concept_sbh_fcy_t1b">
- <h4 class="title topictitle4">Pass to Another Pipeline</h4>
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title6" id="concept_sbh_fcy_t1b">
+ <h4 class="title topictitle4" id="ariaid-title6">Pass to Another Pipeline</h4>
 
  <div class="body conbody">
   <p class="p">Pass
@@ -292,7 +484,7 @@
             </ol>
 </div>
 
-        <div class="section" id="concept_sbh_fcy_t1b__section_bwq_pjj_v1b"><h5 class="title sectiontitle">Example</h5>
+        <section class="section" id="concept_sbh_fcy_t1b__section_bwq_pjj_v1b"><h5 class="title sectiontitle">Example</h5>
             
             <p class="p">Say you want the Stop event to trigger a shell script that kicks off another process
                 and a JDBC query. To do this, first configure the event-consuming pipeline. Use an
@@ -312,15 +504,15 @@
 
             <p class="p"><img class="image" id="concept_sbh_fcy_t1b__image_wb5_fyx_t1b" src="../Graphics/PEvent-Stop-PipelineConfig.png" height="298" width="477" /></p>
 
-        </div>
+        </section>
 
  </div>
 
-</div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_zrl_mhn_lx">
-    <h2 class="title topictitle2">Stage Event Generation</h2>
+</article>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_zrl_mhn_lx">
+    <h2 class="title topictitle2" id="ariaid-title7">Stage Event Generation</h2>
 
     <div class="body conbody">
         <p class="p">You can configure certain
@@ -330,24 +522,20 @@
 
         <div class="p">The following table lists event-generating stages and when they can generate events:
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zrl_mhn_lx__table_pzz_thf_lx" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zrl_mhn_lx__table_pzz_thf_lx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d186628e396">Stage</th>
+                            <th class="entry cellrowborder" id="d153535e689">Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d186628e399">Generates events when the stage...</th>
+                            <th class="entry cellrowborder" id="d153535e692">Generates events when the stage...</th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Amazon S3 origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Amazon S3 origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_opf_5ck_px">
                                     <li class="li">Completes processing all available objects and the
                                         configured batch wait time has elapsed.</li>
@@ -362,9 +550,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Directory origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Directory origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_hyl_sy4_jbb">
                                     <li class="li">Starts processing a file.</li>
 
@@ -382,9 +570,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">File Tail origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">File Tail origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_as2_12n_qx">
                                     <li class="li">Starts processing a file.</li>
 
@@ -400,9 +588,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Google BigQuery origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Google BigQuery origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_rns_2jx_q1b">
                                     <li class="li">Successfully completes a query.</li>
 
@@ -416,9 +604,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Google Cloud Storage origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Google Cloud Storage origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_wjb_jln_sbb">
                                     <li class="li">Completes processing all available objects and the
                                         configured batch wait time has elapsed.</li>
@@ -433,9 +621,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Hadoop FS Standalone origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Hadoop FS Standalone origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_gnj_wkv_ldb">
                                     <li class="li">Starts processing a file.</li>
 
@@ -454,9 +642,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">JDBC Multitable Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">JDBC Multitable Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul">
                                     <li class="li">Completes processing the data returned by the queries for
                                         all tables.</li>
@@ -472,9 +660,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">JDBC Query Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">JDBC Query Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fsn_ct5_lz">
                                     <li class="li">Completes processing all data returned by a query. </li>
 
@@ -492,9 +680,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">MapR FS Standalone origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">MapR FS Standalone origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_n5g_x3h_ndb">
                                     <li class="li">Starts processing a file.</li>
 
@@ -513,9 +701,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">MongoDB origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">MongoDB origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul">
                                     <li class="li">Completes processing all data returned by a query. </li>
 
@@ -529,9 +717,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Oracle CDC Client origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Oracle CDC Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_brj_zv1_vy">
                                     <li class="li">Reads DDL statements in the redo log. </li>
 
@@ -545,9 +733,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Salesforce origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Salesforce origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_djn_rfb_mz">
                                     <li class="li">Completes processing all data returned by a query. </li>
 
@@ -561,9 +749,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">SFTP/FTP Client origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">SFTP/FTP Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_xmd_1mr_mcb">
                                     <li class="li">Starts processing a file.</li>
 
@@ -581,9 +769,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">SQL Server CDC Client origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">SQL Server CDC Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_dfr_cxg_x1b">
                                     <li class="li">Completes processing the data in the associated CDC
                                         tables.</li>
@@ -605,9 +793,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">SQL Server Change Tracking origin</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">SQL Server Change Tracking origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_jmt_5gv_s1b">
                                     <li class="li">Completes processing the data in all specified change
                                         tracking tables.</li>
@@ -623,9 +811,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Aggregator processor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Aggregator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_kvg_rp2_wbb">
                                     <li class="li">Performs aggregations, based on the configured window type
                                         and time window.</li>
@@ -640,9 +828,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Groovy Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Groovy Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_cj5_tnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -656,9 +844,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">JavaScript Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qtz_vnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -673,9 +861,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Jython Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Jython Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_ujt_wnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -689,9 +877,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Amazon S3 destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Amazon S3 destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_lb3_zck_px">
                                     <li class="li">Completes writing to an object.</li>
 
@@ -707,9 +895,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Azure Data Lake Store destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Azure Data Lake Store destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_wny_nw4_vz">
                                     <li class="li">Closes a file.</li>
 
@@ -725,9 +913,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Google Cloud Storage destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Google Cloud Storage destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_my2_d4n_sbb">
                                     <li class="li">Completes writing to an object.</li>
 
@@ -743,9 +931,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Hadoop FS destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Hadoop FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_x5c_cdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -761,9 +949,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Hive Metastore destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Hive Metastore destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fgw_mt4_qx">
                                     <li class="li">Updates the Hive metastore by creating a table, adding
                                         columns, or creating a partition. </li>
@@ -780,9 +968,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Local FS destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Local FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_flq_ddk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -798,9 +986,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">MapR FS destination</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">MapR FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_m11_gdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -816,9 +1004,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">HDFS File Metadata executor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fmy_4t4_qx">
                                     <li class="li">Changes file metadata, such as the file name, location, or
                                         permissions.</li>
@@ -837,9 +1025,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Hive Query executor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qsl_bsk_my">
                                     <li class="li">Determines that the submitted query completed
                                         successfully.</li>
@@ -856,9 +1044,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">MapR FS File Metadata executor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">MapR FS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul">
                                     <li class="li">Changes file metadata, such as the file name, location, or
                                         permissions.</li>
@@ -877,9 +1065,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">MapReduce executor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fy2_qt4_qx">
                                     <li class="li">Starts a MapReduce job.</li>
 
@@ -893,9 +1081,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e396 ">Spark executor</td>
+                            <td class="entry cellrowborder" headers="d153535e689 ">Spark executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e399 ">
+                            <td class="entry cellrowborder" headers="d153535e692 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_xyc_hyg_gz">
                                     <li class="li">Starts a Spark application.</li>
 
@@ -909,15 +1097,14 @@
                         </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
 
     </div>
 
-<div class="topic concept nested2" id="concept_sjr_nrx_4x">
- <h3 class="title topictitle3">Using Stage Events</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_sjr_nrx_4x">
+ <h3 class="title topictitle3" id="ariaid-title8">Using Stage Events</h3>
 
  <div class="body conbody">
         <p class="p">You can use
@@ -939,8 +1126,8 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-<div class="topic concept nested3" id="concept_ivh_xy2_zx">
- <h4 class="title topictitle4">Task Execution Streams</h4>
+<article class="topic concept nested3" aria-labelledby="ariaid-title9" id="concept_ivh_xy2_zx">
+ <h4 class="title topictitle4" id="ariaid-title9">Task Execution Streams</h4>
 
  <div class="body conbody">
   <p class="p">A task execution stream
@@ -969,9 +1156,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-</div>
-<div class="topic concept nested3" id="concept_bfd_31f_zx">
- <h4 class="title topictitle4">Event Storage Streams</h4>
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title10" id="concept_bfd_31f_zx">
+ <h4 class="title topictitle4" id="ariaid-title10">Event Storage Streams</h4>
 
  <div class="body conbody">
         <p class="p">An event storage stream routes event records from the
@@ -999,13 +1186,11 @@ You can, of course, configure an event stream that performs both tasks by routin
             creation time in the sdc.event.creation_timestamp record header attribute. So you can
             use an Expression Evaluator with the following expression to add the creation date and
             time to the record:
-            <pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
-</div>
+            <pre class="pre codeblock"><code>${record:attribute('sdc.event.creation_timestamp')}</code></pre></div>
 
         <div class="p">And if you have multiple pipelines writing events to the same location, you can use the
             following expression to include the pipeline name in the event record as
-            well:<pre class="pre codeblock">${pipeline:name()}</pre>
-</div>
+            well:<pre class="pre codeblock"><code>${pipeline:name()}</code></pre></div>
 
         <p class="p">The Expression Evaluator and the final pipeline looks like this:</p>
 
@@ -1013,11 +1198,11 @@ You can, of course, configure an event stream that performs both tasks by routin
 
     </div>
 
-</div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_rxg_shn_lx">
- <h2 class="title topictitle2">Executors</h2>
+</article>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_rxg_shn_lx">
+ <h2 class="title topictitle2" id="ariaid-title11">Executors</h2>
 
  <div class="body conbody">
         <div class="p">
@@ -1030,7 +1215,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                     <dd class="dd">Creates new Amazon S3 objects for the specified content or adds tags to
                         existing Amazon S3 objects upon receiving an event. </dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as writing
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as writing
                         information from an event record to an S3 object or tagging objects after
                         they are written by the Amazon S3 destination.</span></dd>
 
@@ -1042,7 +1227,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                         You can optionally configure a condition that determines when to send the
                         email. </dd>
 
-                    <dd class="dd">You can use the executor in any logical way, such as sending an email each
+                    <dd class="dd ddexpand">You can use the executor in any logical way, such as sending an email each
                         time the Azure Data Lake Store destination completes streaming a whole file.
                     </dd>
 
@@ -1052,16 +1237,16 @@ You can, of course, configure an event stream that performs both tasks by routin
 
                     <dd class="dd">Executes user-defined Hive or Impala queries for each event.</dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as
                         running Hive or Impala queries after the Hive Metadata destination updates
                         the Hive metastore, or after the Hadoop FS or MapR FS destination closes
                         files.</span></dd>
 
-                    <dd class="dd">For example, you might use the Hive Query executor as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a> if you read data with
+                    <dd class="dd ddexpand">For example, you might use the Hive Query executor as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a> if you read data with
                         Impala. Impala requires you to run the Invalidate Metadata command when the
                         table structure or data changes. </dd>
 
-                    <dd class="dd">Instead of trying to time this action manually, you can use the Hive Query
+                    <dd class="dd ddexpand">Instead of trying to time this action manually, you can use the Hive Query
                         executor to submit the command automatically each time the Hive Metastore
                         destination changes the structure of a table and each time the Hadoop FS
                         destination closes a file. </dd>
@@ -1079,7 +1264,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                             and directories, the executor performs the task recursively.</p>
 </dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as
                         changing file metadata after receiving file closure events from the Hadoop
                         FS or Local FS destinations.</span>
                     </dd>
@@ -1092,13 +1277,13 @@ You can, of course, configure an event stream that performs both tasks by routin
                         a Finished state. Allows the pipeline to complete all expected processing
                         before stopping.</dd>
 
-                    <dd class="dd"><span class="ph">You can use the Pipeline Finisher in any logical way, such as
+                    <dd class="dd ddexpand"><span class="ph">You can use the Pipeline Finisher in any logical way, such as
                         stopping a pipeline upon receiving a no-more-data event from the JDBC Query
                         Consumer origin.</span> This enables you to achieve "batch" processing - stopping the pipeline
                         when all available data is processed rather than leaving the pipeline to sit
                         idle indefinitely. </dd>
 
-                    <dd class="dd">For example, you might use the Pipeline Finisher executor with the JDBC
+                    <dd class="dd ddexpand">For example, you might use the Pipeline Finisher executor with the JDBC
                         Multitable Consumer to stop the pipeline when it processes all queried data
                         in the specified tables.</dd>
 
@@ -1108,7 +1293,7 @@ You can, of course, configure an event stream that performs both tasks by routin
 
                     <dd class="dd">Connects to a database using JDBC and runs the specified SQL query. </dd>
 
-                    <dd class="dd">Use to run a SQL query on a database after an event occurs.</dd>
+                    <dd class="dd ddexpand">Use to run a SQL query on a database after an event occurs.</dd>
 
                 
                 
@@ -1122,7 +1307,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                         ACLs for the file. When removing files and directories, the executor
                         performs the task recursively.</dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as
                         creating an empty file after the MapR FS destination closes a file.</span>
                     </dd>
 
@@ -1132,7 +1317,7 @@ You can, of course, configure an event stream that performs both tasks by routin
 
                     <dd class="dd">Connects to HDFS or MapR FS and starts a MapReduce job for each event. </dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as running
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as running
                         MapReduce jobs after the Hadoop FS or MapR FS destination closes files.</span> For example, you might use the MapReduce executor with the Hadoop FS
                         destination to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
 
@@ -1149,7 +1334,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                     <dd class="dd">Connects to Spark on YARN or Databricks and starts a Spark application for
                         each event.</dd>
 
-                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as running Spark
+                    <dd class="dd ddexpand"><span class="ph">You can use the executor in any logical way, such as running Spark
                         applications after the Hadoop FS, MapR FS, or Amazon S3 destination closes
                         files.</span> For example, you might use the Spark executor with the Hadoop FS
                         destination to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
@@ -1160,37 +1345,33 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_scs_3hh_tx">
-    <h2 class="title topictitle2">Logical Pairings</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_scs_3hh_tx">
+    <h2 class="title topictitle2" id="ariaid-title12">Logical Pairings</h2>
 
     <div class="body conbody">
         <p class="p">You can use events in any way that works for
             your needs. The following tables outline some logical pairings of event generation with
             executors and destinations.</p>
 
-        <div class="section" id="concept_scs_3hh_tx__section_nnn_2ng_x1b"><h3 class="title sectiontitle">Pipeline Events</h3>
+        <section class="section" id="concept_scs_3hh_tx__section_nnn_2ng_x1b"><h3 class="title sectiontitle">Pipeline Events</h3>
             
             <div class="p">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_cyw_55r_t1b" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_cyw_55r_t1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d186628e1515">Pipeline Event Type</th>
+                                <th class="entry cellrowborder" id="d153535e1818">Pipeline Event Type</th>
 
-                                <th class="entry" valign="top" width="70%" id="d186628e1518">Event Consumer</th>
+                                <th class="entry cellrowborder" id="d153535e1821">Event Consumer</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1515 ">Pipeline Start</td>
+                                <td class="entry cellrowborder" headers="d153535e1818 ">Pipeline Start</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1518 ">
+                                <td class="entry cellrowborder" headers="d153535e1821 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_vrw_ypy_t1b">
                                         <li class="li">Any single executor, except Pipeline Finisher.</li>
 
@@ -1203,9 +1384,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1515 ">Pipeline Stop</td>
+                                <td class="entry cellrowborder" headers="d153535e1818 ">Pipeline Stop</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1518 ">
+                                <td class="entry cellrowborder" headers="d153535e1821 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_v2t_1qy_t1b">
                                         <li class="li">Any single executor, except Pipeline Finisher.</li>
 
@@ -1218,36 +1399,31 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="section" id="concept_scs_3hh_tx__section_rdr_fng_x1b"><h3 class="title sectiontitle">Origin Events</h3>
+        <section class="section" id="concept_scs_3hh_tx__section_rdr_fng_x1b"><h3 class="title sectiontitle">Origin Events</h3>
             
             <div class="p">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_pwj_d4p_1y" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_pwj_d4p_1y" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d186628e1585">Event Generating Origin</th>
+                                <th class="entry cellrowborder" id="d153535e1888">Event Generating Origin</th>
 
-                                <th class="entry" valign="top" width="70%" id="d186628e1588">Event Consumer</th>
+                                <th class="entry cellrowborder" id="d153535e1891">Event Consumer</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Amazon S3</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Amazon S3</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_wvy_h4p_1y">
                                         <li class="li">Pipeline Finisher executor to stop the pipeline after
                                             processing queried data from all objects.</li>
@@ -1264,9 +1440,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Directory</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Directory</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_fqy_bz4_jbb">
                                         <li class="li">Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
@@ -1283,9 +1459,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">File Tail</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">File Tail</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_hgh_34p_1y">
                                         <li class="li">Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
@@ -1299,9 +1475,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Google BigQuery</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Google BigQuery</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_u3c_hng_x1b">
                                         <li class="li">Email executor to send email each time the origin
                                             successfully completes a query.</li>
@@ -1315,9 +1491,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Google Cloud Storage</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Google Cloud Storage</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul">
                                         <li class="li">Pipeline Finisher executor to stop the pipeline after
                                             processing queried data from all objects.</li>
@@ -1334,9 +1510,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Hadoop FS Standalone</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Hadoop FS Standalone</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_jvn_clv_ldb">
                                         <li class="li">Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
@@ -1353,9 +1529,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">JDBC Multitable Consumer</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">JDBC Multitable Consumer</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_a1m_jx5_lz">
                                         <li class="li">Pipeline Finisher executor to stop the pipeline after
                                             processing queried data from all tables.</li>
@@ -1372,9 +1548,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">JDBC Query Consumer</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">JDBC Query Consumer</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_pn2_csc_yz">
                                         <li class="li">Route the no-more-data event to the Pipeline Finisher
                                             executor to stop the pipeline after processing queried
@@ -1393,9 +1569,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">MapR FS Standalone</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">MapR FS Standalone</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_t1m_v3h_ndb">
                                         <li class="li">Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
@@ -1412,9 +1588,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">MongoDB</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">MongoDB</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul">
                                         <li class="li">Route the no-more-data event to the Pipeline Finisher
                                             executor to stop the pipeline after processing queried
@@ -1432,9 +1608,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Oracle CDC Client</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Oracle CDC Client</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_xdj_1x1_vy">
                                         <li class="li">Email executor to send email each time it reads DDL
                                             statements in the redo logs.</li>
@@ -1448,9 +1624,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">Salesforce</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">Salesforce</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_v3c_hng_x1b">
                                         <li class="li">Pipeline Finisher executor to stop the pipeline after
                                             processing queried data.</li>
@@ -1467,9 +1643,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">SFTP/FTP Client</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">SFTP/FTP Client</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_zyf_wcs_mcb">
                                         <li class="li">Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
@@ -1486,9 +1662,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1585 ">SQL Server Change Tracking</td>
+                                <td class="entry cellrowborder" headers="d153535e1888 ">SQL Server Change Tracking</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1588 ">
+                                <td class="entry cellrowborder" headers="d153535e1891 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_qgj_4hv_s1b">
                                         <li class="li">Pipeline Finisher executor to stop the pipeline after
                                             processing available data.</li>
@@ -1500,36 +1676,31 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="section" id="concept_scs_3hh_tx__section_bcz_jng_x1b"><h3 class="title sectiontitle">Processor Events</h3>
+        <section class="section" id="concept_scs_3hh_tx__section_bcz_jng_x1b"><h3 class="title sectiontitle">Processor Events</h3>
             
             <div class="p">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_mc4_dfc_yz" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_mc4_dfc_yz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d186628e1900">Event Generating Processor</th>
+                                <th class="entry cellrowborder" id="d153535e2203">Event Generating Processor</th>
 
-                                <th class="entry" valign="top" width="70%" id="d186628e1903">Event Consumer</th>
+                                <th class="entry cellrowborder" id="d153535e2206">Event Consumer</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1900 ">Aggregator</td>
+                                <td class="entry cellrowborder" headers="d153535e2203 ">Aggregator</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1903 ">
+                                <td class="entry cellrowborder" headers="d153535e2206 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_qpx_jfc_yz">
                                         <li class="li">Email executor for notification when results pass
                                             specified thresholds.</li>
@@ -1543,9 +1714,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1900 ">Groovy Evaluator</td>
+                                <td class="entry cellrowborder" headers="d153535e2203 ">Groovy Evaluator</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1903 ">
+                                <td class="entry cellrowborder" headers="d153535e2206 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_exh_bcf_wbb">
                                         <li class="li">Any logical executor. </li>
 
@@ -1558,9 +1729,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1900 ">JavaScript Evaluator</td>
+                                <td class="entry cellrowborder" headers="d153535e2203 ">JavaScript Evaluator</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1903 ">
+                                <td class="entry cellrowborder" headers="d153535e2206 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_xsy_kfc_yz">
                                         <li class="li">Any logical executor. </li>
 
@@ -1573,9 +1744,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e1900 ">Jython Evaluator</td>
+                                <td class="entry cellrowborder" headers="d153535e2203 ">Jython Evaluator</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e1903 ">
+                                <td class="entry cellrowborder" headers="d153535e2206 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_gl1_lfc_yz">
                                         <li class="li">Any logical executor. </li>
 
@@ -1588,36 +1759,31 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="section" id="concept_scs_3hh_tx__section_rjw_kng_x1b"><h3 class="title sectiontitle">Destination Events</h3>
+        <section class="section" id="concept_scs_3hh_tx__section_rjw_kng_x1b"><h3 class="title sectiontitle">Destination Events</h3>
             
             <div class="p">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_r5m_b3h_tx" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_r5m_b3h_tx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d186628e2006">Event Generating Destination</th>
+                                <th class="entry cellrowborder" id="d153535e2309">Event Generating Destination</th>
 
-                                <th class="entry" valign="top" width="70%" id="d186628e2009">Event Consumer</th>
+                                <th class="entry cellrowborder" id="d153535e2312">Event Consumer</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Amazon S3 </td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Amazon S3 </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_tyv_24p_1y">
                                         <li class="li">Amazon S3 executor to add tags to closed objects or
                                             whole files.</li>
@@ -1637,9 +1803,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Azure Data Lake Store</td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Azure Data Lake Store</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_swb_lng_x1b">
                                         <li class="li">Email executor to send email after closing a file or
                                             streaming a whole file. </li>
@@ -1653,9 +1819,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Google Cloud Storage</td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Google Cloud Storage</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_ltl_yfv_sbb">
                                         <li class="li">Spark executor to run a Spark application after closing
                                             an object or whole file. </li>
@@ -1672,9 +1838,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Hadoop FS</td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Hadoop FS</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_hbx_blh_tx">
                                         <li class="li">HDFS File Metadata executor to change file metadata,
                                             create an empty file, or remove a file or directory
@@ -1704,9 +1870,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Hive Metastore </td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Hive Metastore </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_kkj_dlh_tx">
                                         <li class="li">Hive Query executor to run Hive or Impala queries after
                                             the destination changes table structures.
@@ -1731,9 +1897,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">Local FS</td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">Local FS</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_p3l_glh_tx">
                                         <li class="li">HDFS File Metadata executor to change file metadata,
                                             create an empty file, or remove a file or directory
@@ -1751,9 +1917,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2006 ">MapR FS</td>
+                                <td class="entry cellrowborder" headers="d153535e2309 ">MapR FS</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2009 ">
+                                <td class="entry cellrowborder" headers="d153535e2312 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_rvh_dsq_tx">
                                         <li class="li">MapR FS File Metadata executor to change file metadata,
                                             create an empty file, or remove a file or directory
@@ -1777,36 +1943,31 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="section" id="concept_scs_3hh_tx__section_tjh_lng_x1b"><h3 class="title sectiontitle">Executor Events</h3>
+        <section class="section" id="concept_scs_3hh_tx__section_tjh_lng_x1b"><h3 class="title sectiontitle">Executor Events</h3>
             
             <div class="p">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_sc4_4nh_tx" class="table" frame="border" border="1" rules="all">
-                        
-                        
-                        <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_sc4_4nh_tx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d186628e2212">Event Generating Executor</th>
+                                <th class="entry cellrowborder" id="d153535e2515">Event Generating Executor</th>
 
-                                <th class="entry" valign="top" width="70%" id="d186628e2215">Event Consumer</th>
+                                <th class="entry cellrowborder" id="d153535e2518">Event Consumer</th>
 
                             </tr>
 
                         </thead>
-
-                        <tbody class="tbody">
+<tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2212 ">HDFS File Metadata executor</td>
+                                <td class="entry cellrowborder" headers="d153535e2515 ">HDFS File Metadata executor</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2215 ">
+                                <td class="entry cellrowborder" headers="d153535e2518 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_i4j_wfc_yz">
                                         <li class="li">Email executor to send email each time the executor
                                             changes file metadata.</li>
@@ -1820,9 +1981,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2212 ">Hive Query executor</td>
+                                <td class="entry cellrowborder" headers="d153535e2515 ">Hive Query executor</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2215 ">
+                                <td class="entry cellrowborder" headers="d153535e2518 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_xmw_dk3_xz">
                                         <li class="li">Email executor to send email when a query succeeds or
                                             fails.</li>
@@ -1836,9 +1997,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2212 ">MapR FS File Metadata executor</td>
+                                <td class="entry cellrowborder" headers="d153535e2515 ">MapR FS File Metadata executor</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2215 ">
+                                <td class="entry cellrowborder" headers="d153535e2518 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_mjp_tr4_2bb">
                                         <li class="li">Email executor to send email each time the executor
                                             changes file metadata.</li>
@@ -1852,9 +2013,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2212 ">MapReduce executor</td>
+                                <td class="entry cellrowborder" headers="d153535e2515 ">MapReduce executor</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2215 ">
+                                <td class="entry cellrowborder" headers="d153535e2518 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_qlz_lng_x1b">
                                         <li class="li">Email executor to send email each time the executor
                                             starts a MapReduce job. </li>
@@ -1868,9 +2029,9 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d186628e2212 ">Spark executor</td>
+                                <td class="entry cellrowborder" headers="d153535e2515 ">Spark executor</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d186628e2215 ">
+                                <td class="entry cellrowborder" headers="d153535e2518 ">
                                     <ul class="ul" id="concept_scs_3hh_tx__ul_hf4_sk3_xz">
                                         <li class="li">Email executor to send email each time the Spark
                                             executor starts a Spark application. </li>
@@ -1884,19 +2045,18 @@ You can, of course, configure an event stream that performs both tasks by routin
                             </tr>
 
                         </tbody>
-
-                    </table>
+</table>
 </div>
 
             </div>
 
-        </div>
+        </section>
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_gvh_5wm_xx">
- <h2 class="title topictitle2">Event Records</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_gvh_5wm_xx">
+ <h2 class="title topictitle2" id="ariaid-title13">Event Records</h2>
 
  <div class="body conbody">
   <p class="p">Event records are records
@@ -1911,8 +2071,8 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-<div class="topic concept nested2" id="concept_zft_rdq_tx">
- <h3 class="title topictitle3">Event Record Header Attributes</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title14" id="concept_zft_rdq_tx">
+ <h3 class="title topictitle3" id="ariaid-title14">Event Record Header Attributes</h3>
 
  <div class="body conbody">
         <p class="p">In addition
@@ -1923,32 +2083,27 @@ You can, of course, configure an event stream that performs both tasks by routin
             record:attribute function to include record header attribute information as a field in
             the record. For example, when storing event records, you most likely want to include the
             time of the event in the event record, using the following expression in an Expression
-            Evaluator:<pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
-</div>
+            Evaluator:<pre class="pre codeblock"><code>${record:attribute('sdc.event.creation_timestamp')}</code></pre></div>
 
         <p class="p">Note that all record header attributes are String values. For more information about
             working with record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
 
         <div class="p">Most events include the following event record header attributes. The exception, File
             Tail, writes all of the event information to record fields. 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zft_rdq_tx__table_bxn_dhs_5x" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zft_rdq_tx__table_bxn_dhs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d186628e2385">Event Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d153535e2693">Event Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d186628e2388">Description</th>
+                            <th class="entry cellrowborder" id="d153535e2696">Description</th>
 
                         </tr>
 
                     </thead>
-
-                    <tbody class="tbody">
+<tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d186628e2385 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d153535e2693 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d186628e2388 ">Event type. Defined by the stage that generates the event. <p class="p">For
+                            <td class="entry cellrowborder" headers="d153535e2696 ">Event type. Defined by the stage that generates the event. <p class="p">For
                                     information about the event types available for an event
                                     generating stage, see the stage documentation.</p>
 </td>
@@ -1956,37 +2111,36 @@ You can, of course, configure an event stream that performs both tasks by routin
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d186628e2385 ">sdc.event.version</td>
+       <td class="entry cellrowborder" headers="d153535e2693 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d186628e2388 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry cellrowborder" headers="d153535e2696 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d186628e2385 ">sdc.event.creation_timestamp</td>
+       <td class="entry cellrowborder" headers="d153535e2693 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_zft_rdq_tx__d37402e2127" valign="top" width="70%" headers="d186628e2388 ">Epoch timestamp when the stage created the event.
+       <td class="entry cellrowborder" id="concept_zft_rdq_tx__d105e2120" headers="d153535e2696 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
 
                     </tbody>
-
-                </table>
+</table>
 </div>
 </div>
 
-        <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><span class="ph" id="concept_zft_rdq_tx__d37257e4289">Stage-generated event records
+        <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><span class="ph" id="concept_zft_rdq_tx__d106e4291">Stage-generated event records
                               differ from stage to stage.</span> For a description of stage events,
                         see "Event Record" in the documentation for the event-generating stage. For
                         a description of pipeline events, see <a class="xref" href="../Pipeline_Configuration/EventGeneration.html#concept_cv3_nqt_51b">Pipeline Event Records</a>.</span></div>
 
     </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_awx_xlq_cy">
-    <h2 class="title topictitle2">Viewing Events in Data Preview<span class="ph">, </span>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title15" id="concept_awx_xlq_cy">
+    <h2 class="title topictitle2" id="ariaid-title15">Viewing Events in Data Preview<span class="ph">, </span>
         Snapshot<span class="ph">, and Monitor Mode</span></h2>
 
     <div class="body conbody">
@@ -1999,8 +2153,8 @@ You can, of course, configure an event stream that performs both tasks by routin
 
     </div>
 
-<div class="topic concept nested2" id="concept_hfy_ryv_cy">
- <h3 class="title topictitle3">Viewing Stage Events in Data Preview and Snapshot</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title16" id="concept_hfy_ryv_cy">
+ <h3 class="title topictitle3" id="ariaid-title16">Viewing Stage Events in Data Preview and Snapshot</h3>
 
  <div class="body conbody">
   <p class="p">In data preview and when reviewing snapshots of
@@ -2022,9 +2176,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_zwr_kzv_cy">
- <h3 class="title topictitle3">Viewing Stage Events in Monitor Mode</h3>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title17" id="concept_zwr_kzv_cy">
+ <h3 class="title topictitle3" id="ariaid-title17">Viewing Stage Events in Monitor Mode</h3>
 
  <div class="body conbody">
   <p class="p">In Monitor mode, the
@@ -2048,10 +2202,10 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-</div>
-</div>
-<div class="topic concept nested1" id="concept_spk_wm5_51b">
- <h2 class="title topictitle2">Executing Pipeline Events in Data Preview</h2>
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title18" id="concept_spk_wm5_51b">
+ <h2 class="title topictitle2" id="ariaid-title18">Executing Pipeline Events in Data Preview</h2>
 
  <div class="body conbody">
   <p class="p">You can enable pipeline event execution in data preview to test event processing.</p>
@@ -2067,9 +2221,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_jkm_rnz_kx">
-    <h2 class="title topictitle2">Case Study: Parquet Conversion</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title19" id="concept_jkm_rnz_kx">
+    <h2 class="title topictitle2" id="ariaid-title19">Case Study: Parquet Conversion</h2>
 
     <div class="body conbody">
         <p class="p">Say you want to store data on HDFS using the
@@ -2124,7 +2278,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                         output directory information and related properties: </p>
 <p class="p"><img class="image" id="concept_jkm_rnz_kx__image_rzm_frb_tx" src="../Graphics/Event-Parquet-MapReduce.png" height="308" width="516" /></p>
 <p class="p">The <span class="ph uicontrol">Input Avro File</span> property
-                        default, <samp class="ph codeph">${record:value('/filepath')}</samp>, runs the job on the
+                        default, <code class="ph codeph">${record:value('/filepath')}</code>, runs the job on the
                         file specified in the Hadoop FS file closure event record. </p>
 <p class="p">Then, on
                         the <span class="keyword wintitle">Avro to Parquet</span> tab, optionally configure advanced
@@ -2141,9 +2295,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_szz_xwm_lx">
-    <h2 class="title topictitle2">Case Study: Impala Metadata Updates for DDS for Hive</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title20" id="concept_szz_xwm_lx">
+    <h2 class="title topictitle2" id="ariaid-title20">Case Study: Impala Metadata Updates for DDS for Hive</h2>
 
     <div class="body conbody">
         <p class="p">You love the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift
@@ -2194,8 +2348,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                     table name required by the Hive Query executor, but it contains the table name
                     in the file path. So add an Expression Evaluator processor to the event stream.
                     Create a new Table field and use the following
-                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d37257e4484">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
-<div class="p">This
+                        expression:<pre class="pre codeblock"><code><span class="ph" id="concept_szz_xwm_lx__d106e4486">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></code></pre><div class="p">This
                         expression uses the path in the Filepath field of the event record and
                         performs the following calculations:<ul class="ul" id="concept_szz_xwm_lx__ul_umt_2sm_5x">
                             <li class="li">Extracts the third-to-last section of the path and uses it as the
@@ -2225,8 +2378,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                         URL, see the Impala driver information in our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/" target="_blank">Ask StreamSets post</a>. </p>
 <div class="p">Then,
                         on the <span class="keyword wintitle">Query</span> tab, enter the following
-                        query:<pre class="pre codeblock">invalidate metadata ${record:value('/table')}</pre>
-</div>
+                        query:<pre class="pre codeblock"><code>invalidate metadata ${record:value('/table')}</code></pre></div>
 <p class="p">This
                         query refreshes the Impala cache for the specified table. And the table is
                         either the table in the Hive Metastore event record that was just updated or
@@ -2248,9 +2400,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_d1q_xl4_lx">
-    <h2 class="title topictitle2">Case Study: Output File Management</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title21" id="concept_d1q_xl4_lx">
+    <h2 class="title topictitle2" id="ariaid-title21">Case Study: Output File Management</h2>
 
     <div class="body conbody">
         <p class="p">By default, the Hadoop FS destination creates a
@@ -2311,9 +2463,9 @@ You can, of course, configure an event stream that performs both tasks by routin
 
     </div>
 
-</div>
-<div class="topic concept nested1" id="concept_kff_ykv_lz">
- <h2 class="title topictitle2">Case Study: Stop the Pipeline</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title22" id="concept_kff_ykv_lz">
+ <h2 class="title topictitle2" id="ariaid-title22">Case Study: Stop the Pipeline</h2>
 
  <div class="body conbody">
   <p class="p">Say your dataflow topology updates a database table
@@ -2326,7 +2478,7 @@ You can, of course, configure an event stream that performs both tasks by routin
             and configure notification.</p>
 
         <div class="p">The following origins generate no-more-data
-                        events:<ul class="ul" id="concept_kff_ykv_lz__d37257e4884">
+                        events:<ul class="ul" id="concept_kff_ykv_lz__d106e4886">
                         <li class="li">Amazon S3 origin</li>
 
                         <li class="li">Directory origin</li>
@@ -2392,8 +2544,7 @@ You can, of course, configure an event stream that performs both tasks by routin
                         ensure that only no-more-data events enter the stage, we can use the
                         following expression in the
                     precondition:</p>
-<pre class="pre codeblock">${record:eventType() == 'no-more-data'}</pre>
-</li>
+<pre class="pre codeblock"><code>${record:eventType() == 'no-more-data'}</code></pre></li>
 
                 <li class="li">Records that don't meet the precondition go to the stage for error handling, so
                     to avoid storing error records that we don't care about – that is, the query
@@ -2436,9 +2587,9 @@ That's it!</div>
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_vrh_jrs_bbb">
- <h2 class="title topictitle2">Case Study: Offloading Data from Relational Sources to Hadoop</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title23" id="concept_vrh_jrs_bbb">
+ <h2 class="title topictitle2" id="ariaid-title23">Case Study: Offloading Data from Relational Sources to Hadoop</h2>
 
  <div class="body conbody">
   <p class="p">Say you want to batch-load data from a set of
@@ -2474,7 +2625,7 @@ That's it!</div>
                         to perform a set of tasks before the processing begins, you could use the
                         Shell executor. </dd>
 
-                    <dd class="dd">To truncate Hive tables, we'll use the Hive Query executor.</dd>
+                    <dd class="dd ddexpand">To truncate Hive tables, we'll use the Hive Query executor.</dd>
 
                 
                 
@@ -2532,8 +2683,7 @@ That's it!</div>
                         then specify the query to use. In this case, you can use the following
                         query, filling in the table
                         name:</p>
-<pre class="pre codeblock">TRUNCATE TABLE IF EXISTS &lt;table name&gt;</pre>
-<p class="p">Also,
+<pre class="pre codeblock"><code>TRUNCATE TABLE IF EXISTS &lt;table name&gt;</code></pre><p class="p">Also,
                         select <span class="ph uicontrol">Stop on Query Failure</span>. This ensures that the
                         pipeline stops and avoids performing any processing when the executor cannot
                         complete the truncate query. The properties should look like
@@ -2571,9 +2721,9 @@ That's it!</div>
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_t2t_lp5_xz">
- <h2 class="title topictitle2">Case Study: Sending Email</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title24" id="concept_t2t_lp5_xz">
+ <h2 class="title topictitle2" id="ariaid-title24">Case Study: Sending Email</h2>
 
  <div class="body conbody">
   <p class="p">You can configure
@@ -2624,13 +2774,11 @@ That's it!</div>
                     query failure event:<ol class="ol" type="a" id="concept_t2t_lp5_xz__ol_ghk_ymc_yz">
                         <li class="li">The query failure event has the jdbc-query-failure event type, so on the
                                 <span class="keyword wintitle">Email</span> tab, you use the following condition:
-                            <pre class="pre codeblock">${record:eventType() == 'jdbc-query-failure'}</pre>
-</li>
+                            <pre class="pre codeblock"><code>${record:eventType() == 'jdbc-query-failure'}</code></pre></li>
 
                         <li class="li">All of the email properties allow expressions, so for the email subject,
                             you might include the pipeline name as
-                            follows:<pre class="pre codeblock">Query failure in ${pipeline:title()}!</pre>
-</li>
+                            follows:<pre class="pre codeblock"><code>Query failure in ${pipeline:title()}!</code></pre></li>
 
                         <li class="li">When you compose the email body, you might use additional expressions to
                             include information about the pipeline and information included in the
@@ -2640,13 +2788,12 @@ That's it!</div>
                                 about using expressions in email, see <a class="xref" href="../Executors/Email.html#concept_tgb_vbm_wz">Using Expressions</a>.</p>
 <div class="p">For this email, you might include the following
                                 information:
-                                <pre class="pre codeblock">Pipeline ${pipeline:title()} encountered an error. 
+                                <pre class="pre codeblock"><code>Pipeline ${pipeline:title()} encountered an error. 
 
 At ${time:millisecondsToDateTime(record:eventCreation() * 1000)}, the JDBC Query
 Consumer failed to complete the following query: ${record:value('/query')}
 
-Only the following number of rows were processed: ${record:value('/row-count')} </pre>
-</div>
+Only the following number of rows were processed: ${record:value('/row-count')} </code></pre></div>
 </li>
 
                     </ol>
@@ -2673,9 +2820,9 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_ocb_nnl_px">
- <h2 class="title topictitle2">Case Study: Event Storage </h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title25" id="concept_ocb_nnl_px">
+ <h2 class="title topictitle2" id="ariaid-title25">Case Study: Event Storage </h2>
 
  <div class="body conbody">
   <p class="p">Store
@@ -2707,8 +2854,7 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
                     sdc.event.creation_timestamp record header attribute, so you can add an
                     Expression Evaluator to the pipeline and use the following expression to include
                     the creation time in the
-                        record:<pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
-<p class="p">The
+                        record:<pre class="pre codeblock"><code>${record:attribute('sdc.event.creation_timestamp')}</code></pre><p class="p">The
                         resulting pipeline looks like this: </p>
 <p class="p"><img class="image" id="concept_ocb_nnl_px__image_sqc_3bq_tx" src="../Graphics/Event-Storage-EEval.png" height="318" width="742" /></p>
 <p class="p">Note that event creation time is expressed as an
@@ -2716,7 +2862,7 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
                         provide data as strings.</p>
 <div class="p">
                         <div class="note tip"><span class="tiptitle">Tip:</span> You can use time functions to convert timestamps to
-                            different data types. For more information, see <a class="xref" href="../Expression_Language/Functions.html#concept_lhz_pyp_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record. Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.Error record functions provide information about error records. Use error functions to process error records.Use Base64 functions to encode or decode data using Base64.Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.Use time functions to return the current time or to transform datetime data.">Functions</a>.</div>
+                            different data types. For more information, see <a class="xref" href="../Expression_Language/Functions.html#concept_lhz_pyp_1r">Functions</a>.</div>
 
                     </div>
 </li>
@@ -2726,9 +2872,9 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
 
  </div>
 
-</div>
-<div class="topic concept nested1" id="concept_azz_tq4_lx">
-    <h2 class="title topictitle2">Summary</h2>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title26" id="concept_azz_tq4_lx">
+    <h2 class="title topictitle2" id="ariaid-title26">Summary</h2>
 
     <div class="body conbody">
         <div class="p">Here are the key points about
@@ -2751,7 +2897,7 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
                     list of event-generating stages, see <a class="xref" href="EventFramework-Title.html#concept_zrl_mhn_lx">Stage Event Generation</a>.</li>
 
                 <li class="li">Events generate <dfn class="term">event records</dfn> to pass relevant information
-                    regarding the event, such as the path to the file that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d37257e4289">Stage-generated event records
+                    regarding the event, such as the path to the file that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d106e4291">Stage-generated event records
                               differ from stage to stage.</span> For a description of stage events,
                         see "Event Record" in the documentation for the event-generating stage. For
                         a description of pipeline events, see <a class="xref" href="../Pipeline_Configuration/EventGeneration.html#concept_cv3_nqt_51b">Pipeline Event Records</a>.</span>
@@ -2786,16 +2932,26 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
                 <li class="li">You can configure data preview to generate and execute pipeline events.</li>
 
             </ol>
- For examples of how you might use the event framework, see the case studies
-            earlier in this chapter. </div>
+</div>
+
+        <p class="p">For examples of how you might use the event framework, see the case studies earlier in
+            this chapter.</p>
 
     </div>
 
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from Control Hub"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from Control Hub</span></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution for Hive"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution for Hive</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -2803,6 +2959,25 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
 
   ga('create', 'UA-60917135-3', 'auto');
   ga('send', 'pageview');
-</script></div>
-</body>
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
 </html>

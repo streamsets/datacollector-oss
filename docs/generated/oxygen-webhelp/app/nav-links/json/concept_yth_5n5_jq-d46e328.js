@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring the Display","id":"task_r3q_fnx_pr","href":"datacollector\/UserGuide\/Getting_Started\/GettingStarted_Title.html#task_r3q_fnx_pr","menu": {"hasChildren":false,},"tocID":"task_r3q_fnx_pr-d46e406","topics":[]}]});
