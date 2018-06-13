@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.bundles;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.content.SimpleGenerator;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -36,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -64,6 +64,7 @@ public class TestSupportBundleManager {
     PipelineStoreTask pipelineStoreTask = mock(PipelineStoreTask.class);
     PipelineStateStore stateStore = mock(PipelineStateStore.class);
     SnapshotStore snapshotStore = mock(SnapshotStore.class);
+    BlobStoreTask blobStore = mock(BlobStoreTask.class);
 
     manager = new SupportBundleManager(
       new SafeScheduledExecutorService(1, "supportBundleExecutor"),
@@ -71,6 +72,7 @@ public class TestSupportBundleManager {
       pipelineStoreTask,
       stateStore,
       snapshotStore,
+      blobStore,
       runtimeInfo,
       buildInfo
     );

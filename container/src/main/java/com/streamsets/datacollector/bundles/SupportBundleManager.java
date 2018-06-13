@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -99,6 +100,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   private final PipelineStoreTask pipelineStore;
   private final PipelineStateStore stateStore;
   private final SnapshotStore snapshotStore;
+  private final BlobStoreTask blobStore;
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
 
@@ -120,6 +122,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     PipelineStoreTask pipelineStore,
     PipelineStateStore stateStore,
     SnapshotStore snapshotStore,
+    BlobStoreTask blobStore,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
@@ -129,6 +132,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     this.pipelineStore = pipelineStore;
     this.stateStore = stateStore;
     this.snapshotStore = snapshotStore;
+    this.blobStore = blobStore;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
   }
@@ -495,6 +499,11 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   @Override
   public SnapshotStore getSnapshotStore() {
     return snapshotStore;
+  }
+
+  @Override
+  public BlobStoreTask getBlobStore() {
+    return blobStore;
   }
 
   private static class BundleWriterImpl implements BundleWriter {

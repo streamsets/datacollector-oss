@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -242,5 +243,20 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
     }
 
     return objectMetadata;
+  }
+
+  @Override
+  public Set<String> listNamespaces() {
+    return Collections.unmodifiableSet(metadata.getNamespaces().keySet());
+  }
+
+  @Override
+  public Set<String> listObjects(String namespace) {
+    NamespaceMetadata namespaceMetadata = metadata.getNamespace(namespace);
+    if(namespaceMetadata == null) {
+      return Collections.emptySet();
+    }
+
+    return Collections.unmodifiableSet(namespaceMetadata.getObjects().keySet());
   }
 }

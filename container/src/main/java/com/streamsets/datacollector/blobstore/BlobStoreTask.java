@@ -18,8 +18,20 @@ package com.streamsets.datacollector.blobstore;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.BlobStore;
 
+import java.util.Set;
+
 /**
  * Extend the base BlobStore with our Task interface to plug it into runtime structure of data collector.
  */
 public interface BlobStoreTask extends Task, BlobStore {
+
+  /**
+   * List all namespaces that exists.
+   */
+  public Set<String> listNamespaces();
+
+  /**
+   * List all objects in given namespace.
+   */
+  public Set<String> listObjects(String namespace);
 }

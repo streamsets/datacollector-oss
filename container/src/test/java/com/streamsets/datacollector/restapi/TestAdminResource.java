@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -132,6 +133,7 @@ public class TestAdminResource extends JerseyTest {
       PipelineStoreTask pipelineStoreTask = mock(PipelineStoreTask.class);
       PipelineStateStore stateStore = mock(PipelineStateStore.class);
       SnapshotStore snapshotStore = mock(SnapshotStore.class);
+      BlobStoreTask blobStore = mock(BlobStoreTask.class);
       RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
       BuildInfo buildInfo = mock(BuildInfo.class);
       return new SupportBundleManager(
@@ -140,6 +142,7 @@ public class TestAdminResource extends JerseyTest {
         pipelineStoreTask,
         stateStore,
         snapshotStore,
+        blobStore,
         runtimeInfo,
         buildInfo
       );

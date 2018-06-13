@@ -53,6 +53,11 @@ public class NamespaceMetadata {
   }
 
   @JsonIgnore
+  public Map<String, ObjectMetadata> getObjects() {
+    return objects;
+  }
+
+  @JsonIgnore
   public boolean isEmpty() {
     return objects.isEmpty();
   }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -43,6 +44,7 @@ public class SupportBundleModule {
     PipelineStoreTask pipelineStoreTask,
     PipelineStateStore pipelineStateStore,
     SnapshotStore snapshotStore,
+    BlobStoreTask blobStore,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
@@ -52,6 +54,7 @@ public class SupportBundleModule {
       pipelineStoreTask,
       pipelineStateStore,
       snapshotStore,
+      blobStore,
       runtimeInfo,
       buildInfo
     );
