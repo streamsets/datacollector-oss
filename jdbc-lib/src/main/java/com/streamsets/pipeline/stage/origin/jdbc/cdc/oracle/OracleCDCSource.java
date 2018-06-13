@@ -295,7 +295,7 @@ public class OracleCDCSource extends BaseSource {
       if (!sentInitialSchemaEvent) {
         for (SchemaAndTable schemaAndTable : tableSchemas.keySet()) {
           getContext().toEvent(
-              createEventRecord(DDL_EVENT.STARTUP, null, schemaAndTable, ZERO, true));
+              createEventRecord(DDL_EVENT.STARTUP, null, schemaAndTable, ZERO, true, null));
         }
         sentInitialSchemaEvent = true;
       }
@@ -614,7 +614,7 @@ public class OracleCDCSource extends BaseSource {
                   sendSchema = refreshSchema(scnDecimal, new SchemaAndTable(schema, table));
                 }
                 recordQueue.put(new RecordOffset(
-                    createEventRecord(type, queryString, schemaAndTable, offset.toString(), sendSchema), offset));
+                    createEventRecord(type, queryString, schemaAndTable, offset.toString(), sendSchema, timestamp), offset));
               }
             }
             query.setLength(0);
@@ -905,7 +905,8 @@ public class OracleCDCSource extends BaseSource {
       String redoSQL,
       SchemaAndTable schemaAndTable,
       String scnSeq,
-      boolean sendSchema
+      boolean sendSchema,
+      String timestamp
   ) {
     EventRecord event = getContext().createEventRecord(type.name(), 1, scnSeq);
     event.getHeader().setAttribute(TABLE, schemaAndTable.getTable());
@@ -924,6 +925,9 @@ public class OracleCDCSource extends BaseSource {
         fields.put(column.getKey(), Field.create(JDBCTypeNames.get(column.getValue())));
       }
       event.set(Field.create(fields));
+    }
+    if (timestamp != null) {
+      event.getHeader().setAttribute(TIMESTAMP_HEADER, timestamp);
     }
 
     if (LOG.isDebugEnabled()) {
