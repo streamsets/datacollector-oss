@@ -474,7 +474,6 @@
         <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
-        <emr_hadoop_2_7_3-lib>emr_hadoop_2_7_3-lib</emr_hadoop_2_7_3-lib>
         <emr_hadoop_2_8_3-lib>emr_hadoop_2_8_3-lib</emr_hadoop_2_8_3-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
@@ -545,7 +544,6 @@
         <module>cdh-spark_2_2-lib</module>
         <module>cdh-spark_2_3-lib</module>
         <module>elasticsearch_5-lib</module>
-        <module>emr_hadoop_2_7_3-lib</module>
         <module>emr_hadoop_2_8_3-lib</module>
         <module>groovy_2_4-lib</module>
         <module>kinetica_6_0-lib</module>

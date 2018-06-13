@@ -536,11 +536,6 @@
     <!-- EMR libs -->
 
     <fileSet>
-      <directory>${basedir}/../${emr_hadoop_2_7_3-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
-    <fileSet>
       <directory>${basedir}/../${emr_hadoop_2_8_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
