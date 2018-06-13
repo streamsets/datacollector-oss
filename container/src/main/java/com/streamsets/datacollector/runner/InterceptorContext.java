@@ -32,6 +32,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,6 +81,11 @@ public class InterceptorContext implements Interceptor.Context {
     return Collections.unmodifiableList(stageRuntimes);
   }
 
+  /**
+   * Classloader that is used by the container module.
+   */
+  private final ClassLoader containerClassLoader;
+
   public InterceptorContext(
     BlobStore blobStore,
     Configuration configuration,
@@ -113,6 +120,7 @@ public class InterceptorContext implements Interceptor.Context {
     this.emailSender = emailSender;
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
+    this.containerClassLoader = Thread.currentThread().getContextClassLoader();
   }
 
   @Override
@@ -142,40 +150,50 @@ public class InterceptorContext implements Interceptor.Context {
       throw new IllegalArgumentException("This runtime does not support " + klass.getName());
     }
 
-    if(Strings.isNullOrEmpty(jsonDefinition)) {
-      return null;
-    }
+    ClassLoader interceptorClassLoader = Thread.currentThread().getContextClassLoader();
 
-    DetachedStageRuntime stageRuntime = DetachedStage.get().createDetachedStage(
-      jsonDefinition,
-      stageLibrary,
-      pipelineId,
-      pipelineTitle,
-      rev,
-      userContext,
-      metrics,
-      pipelineMaxMemory,
-      executionMode,
-      deliveryGuarantee,
-      runtimeInfo,
-      emailSender,
-      configuration,
-      startTime,
-      lineagePublisherDelegator,
-      issues
-    );
-    if(stageRuntime == null) {
-      return null;
-    }
+    return AccessController.doPrivileged((PrivilegedAction<S>) () -> {
+      try {
+        Thread.currentThread().setContextClassLoader(containerClassLoader);
 
-    stageRuntimes.add(stageRuntime);
+        if (Strings.isNullOrEmpty(jsonDefinition)) {
+          return null;
+        }
 
-    List localIssues = stageRuntime.runInit();
-    if(!localIssues.isEmpty()) {
-      issues.addAll(localIssues);
-      return null;
-    }
+        DetachedStageRuntime stageRuntime = DetachedStage.get().createDetachedStage(
+          jsonDefinition,
+          stageLibrary,
+          pipelineId,
+          pipelineTitle,
+          rev,
+          userContext,
+          metrics,
+          pipelineMaxMemory,
+          executionMode,
+          deliveryGuarantee,
+          runtimeInfo,
+          emailSender,
+          configuration,
+          startTime,
+          lineagePublisherDelegator,
+          issues
+        );
+        if (stageRuntime == null) {
+          return null;
+        }
 
-    return (S)stageRuntime;
+        stageRuntimes.add(stageRuntime);
+
+        List localIssues = stageRuntime.runInit();
+        if (!localIssues.isEmpty()) {
+          issues.addAll(localIssues);
+          return null;
+        }
+
+        return (S) stageRuntime;
+      } finally {
+        Thread.currentThread().setContextClassLoader(interceptorClassLoader);
+      }
+    });
   }
 }
